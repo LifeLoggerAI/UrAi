@@ -10,7 +10,7 @@ import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, BotMessageSquare, NotebookPen, Cog, LayoutDashboard, MessageCircle } from "lucide-react";
+import { Loader2, LogOut, Users, BotMessageSquare, NotebookPen, Cog, Home, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -29,13 +29,13 @@ import {
 import { DreamForm } from "@/components/dream-form";
 import { DreamList } from "@/components/dream-list";
 import { SettingsForm } from "@/components/settings-form";
-import { DashboardView } from "@/components/dashboard-view";
+import { HomeView } from "@/components/home-view";
 import { CompanionChatView } from "@/components/companion-chat-view";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextEntryForm } from "@/components/text-entry-form";
 import { TextEntryList } from "@/components/text-entry-list";
 
-export default function Home() {
+export default function Home_Page() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
@@ -43,7 +43,7 @@ export default function Home() {
   const [people, setPeople] = useState<Person[]>([]);
   const [dreams, setDreams] = useState<Dream[]>([]);
   const [textEntries, setTextEntries] = useState<InnerVoiceReflection[]>([]);
-  const [activeView, setActiveView] = useState<'dashboard' | 'journal' | 'social' | 'companion' | 'settings'>('dashboard');
+  const [activeView, setActiveView] = useState<'home' | 'journal' | 'social' | 'companion' | 'settings'>('home');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -114,8 +114,8 @@ export default function Home() {
 
   const renderActiveView = () => {
     switch(activeView) {
-      case 'dashboard':
-        return <DashboardView />;
+      case 'home':
+        return <HomeView />;
       case 'journal':
         return (
           <Tabs defaultValue="voice" className="w-full">
@@ -161,7 +161,7 @@ export default function Home() {
 
   const getActiveViewTitle = () => {
     switch(activeView) {
-      case 'dashboard': return 'Dashboard';
+      case 'home': return 'Home';
       case 'journal': return 'Journal';
       case 'social': return 'Social Constellation';
       case 'companion': return 'AI Companion';
@@ -185,12 +185,12 @@ export default function Home() {
           <SidebarMenu>
              <SidebarMenuItem>
               <SidebarMenuButton
-                onClick={() => setActiveView('dashboard')}
-                isActive={activeView === 'dashboard'}
-                tooltip="View your personal dashboard"
+                onClick={() => setActiveView('home')}
+                isActive={activeView === 'home'}
+                tooltip="View your emotional forecast"
               >
-                <LayoutDashboard />
-                Dashboard
+                <Home />
+                Home
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
