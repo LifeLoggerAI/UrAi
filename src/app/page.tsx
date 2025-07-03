@@ -1,18 +1,21 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import type { AppData, EmotionState, Transcription, VoiceEvent } from "@/lib/types";
+import type { AppData, EmotionState, Transcription, VoiceEvent, Person } from "@/lib/types";
 import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { Separator } from "@/components/ui/separator";
 import { TrendsSummary } from "@/components/trends-summary";
 import { db } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PeopleList } from "@/components/people-list";
 
 export default function Home() {
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
   const [emotionStates, setEmotionStates] = useState<EmotionState[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
   const [appData, setAppData] = useState<AppData[]>([]);
 
   // In a real app with authentication, this would be the logged-in user's ID.
@@ -36,11 +39,18 @@ export default function Home() {
         const emotions = snapshot.docs.map(doc => doc.data() as EmotionState);
         setEmotionStates(emotions);
     }, console.error);
+    
+    const qPeople = query(collection(db, "people"), where("userId", "==", userId), orderBy("familiarityIndex", "desc"));
+    const unsubPeople = onSnapshot(qPeople, (snapshot) => {
+      const peopleData = snapshot.docs.map(doc => doc.data() as Person);
+      setPeople(peopleData);
+    }, console.error);
 
     return () => {
         unsubEvents();
         unsubTranscriptions();
         unsubEmotions();
+        unsubPeople();
     };
   }, [userId]);
 
@@ -81,14 +91,35 @@ export default function Home() {
         
         <Recorder userId={userId} />
 
-        {appData.length > 0 && (
+        {(appData.length > 0 || people.length > 0) && (
           <section className="space-y-4">
             <Separator className="bg-border/50" />
-            <TrendsSummary items={appData} />
-            <div className="space-y-4">
-              <h2 className="text-2xl font-bold font-headline text-center">Your Memory Stream</h2>
-              <NoteList items={appData} />
-            </div>
+            
+            <Tabs defaultValue="memories" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="memories">Memory Stream</TabsTrigger>
+                <TabsTrigger value="people">Social Constellation</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="memories" className="pt-4 space-y-4">
+                <TrendsSummary items={appData} />
+                <div className="space-y-4">
+                  <h2 className="text-2xl font-bold font-headline text-center">Your Memory Stream</h2>
+                  {appData.length > 0 ? (
+                    <NoteList items={appData} />
+                  ) : (
+                     <div className="text-center text-muted-foreground py-8">
+                        <p>Your recorded memories will appear here.</p>
+                      </div>
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="people" className="pt-4 space-y-4">
+                <h2 className="text-2xl font-bold font-headline text-center">Your Social Constellation</h2>
+                <PeopleList items={people} />
+              </TabsContent>
+            </Tabs>
           </section>
         )}
       </div>
