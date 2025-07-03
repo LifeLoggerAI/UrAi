@@ -33,7 +33,8 @@ Based on the transcript, provide the following:
 1.  The primary emotion conveyed (e.g., 'joy', 'frustration', 'curiosity').
 2.  An sentiment score from -1 (very negative) to 1 (very positive).
 3.  A tone shift score from 0 (stable) to 1 (highly volatile).
-4.  The social archetype the speaker is embodying (e.g., 'Mentor', 'Friend', 'Reporter', 'Storyteller').`,
+4.  The social archetype the speaker is embodying (e.g., 'Mentor', 'Friend', 'Reporter', 'Storyteller').
+5.  A list of any proper nouns that are names of people mentioned.`,
 });
 
 const enrichVoiceEventFlow = ai.defineFlow(

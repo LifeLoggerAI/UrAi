@@ -1,10 +1,10 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { doc, writeBatch } from "firebase/firestore";
+import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 
 const addAudioEventSchema = z.object({
@@ -40,6 +40,9 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
         const voiceEventId = crypto.randomUUID();
         const timestamp = Date.now();
 
+        const batch = writeBatch(db);
+
+        // Create AudioEvent
         const newAudioEvent: AudioEvent = {
             id: audioEventId,
             uid: userId,
@@ -47,9 +50,11 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
             startTs: timestamp,
             endTs: timestamp, // Placeholder
             durationSec: 0, // Placeholder
-            transcriptionStatus: 'complete', // Mocked as complete
+            transcriptionStatus: 'complete',
         };
+        batch.set(doc(db, "audioEvents", newAudioEvent.id), newAudioEvent);
 
+        // Create VoiceEvent
         const newVoiceEvent: VoiceEvent = {
             id: voiceEventId,
             uid: userId,
@@ -61,13 +66,41 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
             sentimentScore: analysis.sentimentScore,
             toneShift: analysis.toneShift,
             voiceArchetype: analysis.voiceArchetype,
+            people: analysis.people || [],
         };
-
-
-        const batch = writeBatch(db);
-
-        batch.set(doc(db, "audioEvents", newAudioEvent.id), newAudioEvent);
         batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
+
+        // Update People collection
+        if (analysis.people && analysis.people.length > 0) {
+            const peopleRef = collection(db, "people");
+            for (const personName of analysis.people) {
+                const q = query(peopleRef, where("uid", "==", userId), where("name", "==", personName), limit(1));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    // Create new person
+                    const newPersonRef = doc(peopleRef);
+                    const newPerson: Person = {
+                        id: newPersonRef.id,
+                        uid: userId,
+                        name: personName,
+                        lastSeen: timestamp,
+                        familiarityIndex: 1,
+                        socialRoleHistory: [{ date: timestamp, role: analysis.voiceArchetype }],
+                        avatarUrl: `https://placehold.co/128x128.png?text=${personName.charAt(0).toUpperCase()}`
+                    };
+                    batch.set(newPersonRef, newPerson);
+                } else {
+                    // Update existing person
+                    const personDoc = querySnapshot.docs[0];
+                    batch.update(personDoc.ref, {
+                        lastSeen: timestamp,
+                        familiarityIndex: increment(1),
+                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchetype })
+                    });
+                }
+            }
+        }
         
         await batch.commit();
 

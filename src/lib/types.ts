@@ -46,8 +46,23 @@ export const VoiceEventSchema = z.object({
     toneShift: z.number(),
     voiceArchetype: z.string(),
     createdAt: z.number(),
+    people: z.array(z.string()).optional(),
 });
 export type VoiceEvent = z.infer<typeof VoiceEventSchema>;
+
+export const PersonSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    name: z.string(),
+    lastSeen: z.number(),
+    familiarityIndex: z.number(),
+    socialRoleHistory: z.array(z.object({
+        date: z.number(),
+        role: z.string(),
+    })),
+    avatarUrl: z.string().url().optional(),
+});
+export type Person = z.infer<typeof PersonSchema>;
 
 
 // Schemas for Genkit Flows
@@ -62,6 +77,7 @@ export const EnrichVoiceEventOutputSchema = z.object({
     sentimentScore: z.number().describe("A score from -1 (negative) to 1 (positive) representing the overall tone."),
     toneShift: z.number().describe("A score representing the change in tone within the text."),
     voiceArchetype: z.string().describe("The social archetype displayed (e.g., 'Mentor', 'Friend', 'Reporter')."),
+    people: z.array(z.string()).describe("A list of names of people mentioned in the transcript."),
 });
 export type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
 
