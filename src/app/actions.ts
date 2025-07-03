@@ -75,6 +75,7 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
             toneShift: analysis.toneShift,
             voiceArchetype: analysis.voiceArchetype,
             people: analysis.people || [],
+            tasks: analysis.tasks || [],
         };
         batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
 

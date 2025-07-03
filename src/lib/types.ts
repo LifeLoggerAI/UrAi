@@ -47,6 +47,7 @@ export const VoiceEventSchema = z.object({
     voiceArchetype: z.string(),
     createdAt: z.number(),
     people: z.array(z.string()).optional(),
+    tasks: z.array(z.string()).optional(),
 });
 export type VoiceEvent = z.infer<typeof VoiceEventSchema>;
 
@@ -78,6 +79,7 @@ export const EnrichVoiceEventOutputSchema = z.object({
     toneShift: z.number().describe("A score representing the change in tone within the text."),
     voiceArchetype: z.string().describe("The social archetype displayed (e.g., 'Mentor', 'Friend', 'Reporter')."),
     people: z.array(z.string()).describe("A list of names of people mentioned in the transcript."),
+    tasks: z.array(z.string()).describe("A list of actionable tasks or to-do items mentioned in the transcript."),
 });
 export type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
 

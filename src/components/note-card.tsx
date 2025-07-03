@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { SentimentIcon } from "@/components/sentiment-icon";
 import type { VoiceEvent } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
-import { BrainCircuit, TrendingUp, Zap, MicVocal, Users } from "lucide-react";
+import { BrainCircuit, TrendingUp, Zap, MicVocal, Users, ListTodo } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 export function NoteCard({ item }: { item: VoiceEvent }) {
@@ -73,6 +73,19 @@ export function NoteCard({ item }: { item: VoiceEvent }) {
                         <Badge key={name} variant="secondary">{name}</Badge>
                         ))}
                     </div>
+                </div>
+            )}
+            {item.tasks && item.tasks.length > 0 && (
+                <div className="flex flex-col gap-2 pt-4 border-t w-full mt-4">
+                    <div className="flex items-center gap-2">
+                        <ListTodo className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <h4 className="text-sm font-medium">Action Items</h4>
+                    </div>
+                    <ul className="list-disc list-inside pl-2 space-y-1 text-foreground/80">
+                        {item.tasks.map((task, index) => (
+                            <li key={index}>{task}</li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </CardFooter>
