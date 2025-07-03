@@ -1,18 +1,74 @@
 'use client';
 
-import { useState } from "react";
-import type { AppData } from "@/lib/types";
+import { useState, useEffect } from "react";
+import type { AppData, EmotionState, Transcription, VoiceEvent } from "@/lib/types";
 import { NoteForm } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { Separator } from "@/components/ui/separator";
 import { TrendsSummary } from "@/components/trends-summary";
+import { db } from "@/lib/firebase";
+import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 
 export default function Home() {
+  const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
+  const [transcriptions, setTranscriptions] = useState<Transcription[]>([]);
+  const [emotionStates, setEmotionStates] = useState<EmotionState[]>([]);
   const [appData, setAppData] = useState<AppData[]>([]);
 
-  const handleVoiceEventAdded = (newData: AppData) => {
-    setAppData((prevData) => [newData, ...prevData]);
-  };
+  useEffect(() => {
+    const placeholderUserId = 'user-placeholder';
+
+    const qEvents = query(collection(db, "voiceEvents"), where("userId", "==", placeholderUserId), orderBy("timestamp", "desc"));
+    const unsubEvents = onSnapshot(qEvents, (snapshot) => {
+      const events = snapshot.docs.map(doc => doc.data() as VoiceEvent);
+      setVoiceEvents(events);
+    }, console.error);
+
+    const qTranscriptions = query(collection(db, "transcriptions"), where("userId", "==", placeholderUserId));
+    const unsubTranscriptions = onSnapshot(qTranscriptions, (snapshot) => {
+        const trans = snapshot.docs.map(doc => doc.data() as Transcription);
+        setTranscriptions(trans);
+    }, console.error);
+
+    const qEmotions = query(collection(db, "emotionStates"), where("userId", "==", placeholderUserId));
+    const unsubEmotions = onSnapshot(qEmotions, (snapshot) => {
+        const emotions = snapshot.docs.map(doc => doc.data() as EmotionState);
+        setEmotionStates(emotions);
+    }, console.error);
+
+    return () => {
+        unsubEvents();
+        unsubTranscriptions();
+        unsubEmotions();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (voiceEvents.length === 0) {
+      setAppData([]);
+      return;
+    }
+
+    const transcriptMap = new Map(transcriptions.map(t => [t.voiceEventId, t]));
+    const emotionStateMap = new Map(emotionStates.map(e => [e.voiceEventId, e]));
+
+    const combinedData = voiceEvents.map(ve => {
+      const transcription = transcriptMap.get(ve.id);
+      const emotionState = emotionStateMap.get(ve.id);
+      
+      if (transcription && emotionState) {
+        return {
+          voiceEvent: ve,
+          transcription,
+          emotionState,
+        };
+      }
+      return null;
+    }).filter((item): item is AppData => item !== null);
+    
+    setAppData(combinedData);
+  }, [voiceEvents, transcriptions, emotionStates]);
+
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background p-4 sm:p-8 md:p-12">
@@ -22,7 +78,7 @@ export default function Home() {
             <p className="mt-2 text-lg text-muted-foreground">Capture your moments. Understand your life.</p>
         </header>
         
-        <NoteForm onNoteAdded={handleVoiceEventAdded} />
+        <NoteForm />
 
         {appData.length > 0 && (
           <section className="space-y-4">

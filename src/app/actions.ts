@@ -4,15 +4,18 @@ import { processVoiceEvent } from "@/ai/flows/analyze-sentiment";
 import { summarizeTrends } from "@/ai/flows/summarize-trends";
 import type { VoiceEvent, Transcription, EmotionState, AppData } from "@/lib/types";
 import { z } from "zod";
+import { db } from "@/lib/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const addVoiceEventSchema = z.object({
     transcript: z.string().min(1, "Transcript cannot be empty.").max(5000, "Transcript is too long."),
 });
 
-type AddVoiceEventReturn = {
-    data: AppData | null;
-    error: string | null;
-};
+const addVoiceEventReturnSchema = z.object({
+    data: z.object({ success: z.boolean() }).nullable(),
+    error: z.string().nullable(),
+});
+type AddVoiceEventReturn = z.infer<typeof addVoiceEventReturnSchema>;
 
 export async function addVoiceEventAction(prevState: any, formData: FormData): Promise<AddVoiceEventReturn> {
     const validatedFields = addVoiceEventSchema.safeParse({
@@ -30,12 +33,13 @@ export async function addVoiceEventAction(prevState: any, formData: FormData): P
         
         const eventId = crypto.randomUUID();
         const timestamp = Date.now();
+        const userId = 'user-placeholder'; // Replace with actual user ID after implementing auth
 
         const newVoiceEvent: VoiceEvent = {
             id: eventId,
-            userId: 'user-placeholder', 
+            userId, 
             timestamp,
-            rawAudioRef: `audio/user-placeholder/${eventId}.m4a`, 
+            rawAudioRef: `audio/${userId}/${eventId}.m4a`, 
             transcriptRef: `transcriptions/${eventId}`,
             detectedEmotions: analysis.detectedEmotions,
             toneScore: analysis.toneScore,
@@ -45,8 +49,8 @@ export async function addVoiceEventAction(prevState: any, formData: FormData): P
         };
 
         const newTranscription: Transcription = {
-            id: eventId, // Use same ID for 1-to-1 mapping
-            userId: 'user-placeholder',
+            id: eventId,
+            userId,
             voiceEventId: eventId,
             fullText: transcript,
             summary: analysis.summary,
@@ -58,8 +62,9 @@ export async function addVoiceEventAction(prevState: any, formData: FormData): P
 
         const newEmotionState: EmotionState = {
             id: crypto.randomUUID(),
-            userId: 'user-placeholder',
+            userId,
             timestamp,
+            voiceEventId: eventId,
             model: 'text-fusion-v1',
             dominantEmotion: analysis.detectedEmotions[0] || 'neutral',
             blendVector: analysis.detectedEmotions.reduce((acc, e) => ({...acc, [e]: 1}), {}),
@@ -67,7 +72,12 @@ export async function addVoiceEventAction(prevState: any, formData: FormData): P
             source: 'voice',
         };
 
-        return { data: { voiceEvent: newVoiceEvent, transcription: newTranscription, emotionState: newEmotionState }, error: null };
+        // Write to Firestore
+        await setDoc(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
+        await setDoc(doc(db, "transcriptions", newTranscription.id), newTranscription);
+        await setDoc(doc(db, "emotionStates", newEmotionState.id), newEmotionState);
+
+        return { data: { success: true }, error: null };
     } catch (e) {
         console.error(e);
         return { data: null, error: "Failed to process voice event. Please try again." };

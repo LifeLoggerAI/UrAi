@@ -96,6 +96,7 @@ export interface EmotionState {
     id: string;
     userId: string;
     timestamp: number;
+    voiceEventId: string;
     model: string;
     dominantEmotion: string;
     blendVector: Record<string, number>; // e.g., { joy: 0.8, sad: 0.1, ... }
