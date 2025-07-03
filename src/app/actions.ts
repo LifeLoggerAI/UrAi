@@ -7,39 +7,44 @@ import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { collection, doc, setDoc } from "firebase/firestore";
 
-const addVoiceEventSchema = z.object({
-    transcript: z.string().min(1, "Transcript cannot be empty.").max(5000, "Transcript is too long."),
+const addAudioEventSchema = z.object({
+    audioDataUri: z.string().min(1, "Audio data cannot be empty."),
+    userId: z.string().min(1, "User ID is required."),
 });
 
-const addVoiceEventReturnSchema = z.object({
-    data: z.object({ success: z.boolean() }).nullable(),
-    error: z.string().nullable(),
-});
-type AddVoiceEventReturn = z.infer<typeof addVoiceEventReturnSchema>;
+type AddAudioEventReturn = {
+    success: boolean;
+    error: string | null;
+};
 
-export async function addVoiceEventAction(prevState: any, formData: FormData): Promise<AddVoiceEventReturn> {
-    const validatedFields = addVoiceEventSchema.safeParse({
-        transcript: formData.get('content'),
+export async function addAudioEventAction(userId: string, audioDataUri: string): Promise<AddAudioEventReturn> {
+    const validatedFields = addAudioEventSchema.safeParse({
+        audioDataUri,
+        userId,
     });
 
     if (!validatedFields.success) {
-        return { data: null, error: validatedFields.error.flatten().fieldErrors.transcript?.[0] || "Invalid input." };
+        return { success: false, error: validatedFields.error.flatten().fieldErrors.audioDataUri?.[0] || "Invalid input." };
     }
 
-    const { transcript } = validatedFields.data;
+    // --- MOCK TRANSCRIPTION ---
+    // In a real application, you would send the audioDataUri to a speech-to-text
+    // service like Whisper via a Genkit flow here.
+    // For now, we'll use a mocked transcript.
+    const transcript = "I met with Sarah and we planned the project timeline. It feels like we're finally making progress, which is a huge relief. I need to remember to send her the follow-up email by Friday.";
+    // --- END MOCK ---
 
     try {
         const analysis = await processVoiceEvent({ transcript });
         
         const eventId = crypto.randomUUID();
         const timestamp = Date.now();
-        const userId = 'user-placeholder'; // Replace with actual user ID after implementing auth
 
         const newVoiceEvent: VoiceEvent = {
             id: eventId,
             userId, 
             timestamp,
-            rawAudioRef: `audio/${userId}/${eventId}.m4a`, 
+            rawAudioRef: `audio/${userId}/${eventId}.webm`, // Path for the new audio format
             transcriptRef: `transcriptions/${eventId}`,
             detectedEmotions: analysis.detectedEmotions,
             toneScore: analysis.toneScore,
@@ -73,14 +78,15 @@ export async function addVoiceEventAction(prevState: any, formData: FormData): P
         };
 
         // Write to Firestore
+        // In a real app, you would also upload the audioDataUri to Cloud Storage here.
         await setDoc(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
         await setDoc(doc(db, "transcriptions", newTranscription.id), newTranscription);
         await setDoc(doc(db, "emotionStates", newEmotionState.id), newEmotionState);
 
-        return { data: { success: true }, error: null };
+        return { success: true, error: null };
     } catch (e) {
         console.error(e);
-        return { data: null, error: "Failed to process voice event. Please try again." };
+        return { success: false, error: "Failed to process voice event. Please try again." };
     }
 }
 

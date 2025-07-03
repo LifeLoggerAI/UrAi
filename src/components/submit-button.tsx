@@ -1,24 +1,58 @@
 'use client'
 
-import { useFormStatus } from 'react-dom'
 import { Button } from '@/components/ui/button'
-import { Loader2, Mic } from 'lucide-react'
+import { Loader2, Mic, Square } from 'lucide-react'
 
-export function SubmitButton() {
-  const { pending } = useFormStatus()
+type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing';
+
+interface RecordButtonProps {
+    recordingState: RecordingState;
+    disabled?: boolean;
+    onClick: () => void;
+}
+
+export function RecordButton({ recordingState, disabled, onClick }: RecordButtonProps) {
+  const getButtonContent = () => {
+    switch (recordingState) {
+      case 'processing':
+        return (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Processing...
+          </>
+        );
+      case 'recording':
+        return (
+          <>
+            <Square className="mr-2 h-4 w-4 fill-current" />
+            Stop Recording
+          </>
+        );
+      case 'requesting':
+         return (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Requesting...
+          </>
+        );
+      case 'idle':
+      default:
+        return (
+          <>
+            <Mic className="mr-2 h-4 w-4" />
+            Start Recording
+          </>
+        );
+    }
+  };
 
   return (
-    <Button type="submit" disabled={pending} className="bg-accent text-accent-foreground hover:bg-accent/90 min-w-[140px]">
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Processing...
-        </>
-      ) : (
-        <>
-          <Mic className="mr-2 h-4 w-4" /> Log Event
-        </>
-      )}
+    <Button 
+      onClick={onClick} 
+      disabled={disabled} 
+      className={`bg-accent text-accent-foreground hover:bg-accent/90 min-w-[160px] transition-all duration-300 ${recordingState === 'recording' ? 'bg-red-500 hover:bg-red-600' : ''}`}
+    >
+      {getButtonContent()}
     </Button>
   )
 }

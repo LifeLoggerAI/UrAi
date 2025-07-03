@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AppData, EmotionState, Transcription, VoiceEvent } from "@/lib/types";
-import { NoteForm } from "@/components/note-form";
+import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { Separator } from "@/components/ui/separator";
 import { TrendsSummary } from "@/components/trends-summary";
@@ -15,22 +15,23 @@ export default function Home() {
   const [emotionStates, setEmotionStates] = useState<EmotionState[]>([]);
   const [appData, setAppData] = useState<AppData[]>([]);
 
-  useEffect(() => {
-    const placeholderUserId = 'user-placeholder';
+  // In a real app with authentication, this would be the logged-in user's ID.
+  const userId = 'user-placeholder';
 
-    const qEvents = query(collection(db, "voiceEvents"), where("userId", "==", placeholderUserId), orderBy("timestamp", "desc"));
+  useEffect(() => {
+    const qEvents = query(collection(db, "voiceEvents"), where("userId", "==", userId), orderBy("timestamp", "desc"));
     const unsubEvents = onSnapshot(qEvents, (snapshot) => {
       const events = snapshot.docs.map(doc => doc.data() as VoiceEvent);
       setVoiceEvents(events);
     }, console.error);
 
-    const qTranscriptions = query(collection(db, "transcriptions"), where("userId", "==", placeholderUserId));
+    const qTranscriptions = query(collection(db, "transcriptions"), where("userId", "==", userId));
     const unsubTranscriptions = onSnapshot(qTranscriptions, (snapshot) => {
         const trans = snapshot.docs.map(doc => doc.data() as Transcription);
         setTranscriptions(trans);
     }, console.error);
 
-    const qEmotions = query(collection(db, "emotionStates"), where("userId", "==", placeholderUserId));
+    const qEmotions = query(collection(db, "emotionStates"), where("userId", "==", userId));
     const unsubEmotions = onSnapshot(qEmotions, (snapshot) => {
         const emotions = snapshot.docs.map(doc => doc.data() as EmotionState);
         setEmotionStates(emotions);
@@ -41,7 +42,7 @@ export default function Home() {
         unsubTranscriptions();
         unsubEmotions();
     };
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (voiceEvents.length === 0) {
@@ -78,7 +79,7 @@ export default function Home() {
             <p className="mt-2 text-lg text-muted-foreground">Capture your moments. Understand your life.</p>
         </header>
         
-        <NoteForm />
+        <Recorder userId={userId} />
 
         {appData.length > 0 && (
           <section className="space-y-4">
