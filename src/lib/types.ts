@@ -166,3 +166,27 @@ export const UpdateUserSettingsSchema = z.object({
     dataExportEnabled: z.boolean().default(true),
 });
 export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
+
+// Schemas for Dashboard View
+export const SentimentDataPointSchema = z.object({
+  date: z.string(),
+  sentiment: z.number(),
+});
+export type SentimentDataPoint = z.infer<typeof SentimentDataPointSchema>;
+
+export const EmotionCountSchema = z.object({
+  name: z.string(),
+  count: z.number(),
+});
+export type EmotionCount = z.infer<typeof EmotionCountSchema>;
+
+export const DashboardDataSchema = z.object({
+  sentimentOverTime: z.array(SentimentDataPointSchema),
+  emotionBreakdown: z.array(EmotionCountSchema),
+  stats: z.object({
+    totalMemories: z.number(),
+    totalDreams: z.number(),
+    totalPeople: z.number(),
+  }),
+});
+export type DashboardData = z.infer<typeof DashboardDataSchema>;

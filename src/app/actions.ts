@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -11,7 +11,8 @@ import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
 import { generateAvatar } from "@/ai/flows/generate-avatar";
-import { UpdateUserSettingsSchema } from "@/lib/types";
+import { UpdateUserSettingsSchema, DashboardDataSchema } from "@/lib/types";
+import { format } from "date-fns";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -116,7 +117,7 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
                     batch.update(personDoc.ref, {
                         lastSeen: timestamp,
                         familiarityIndex: increment(1),
-                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchetype })
+                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchechetype })
                     });
                 }
             }
@@ -267,5 +268,104 @@ export async function updateUserSettingsAction(input: z.infer<typeof updateUserS
     } catch (e) {
         console.error("Failed to update user settings:", e);
         return { success: false, error: "Failed to update settings. Please try again." };
+    }
+}
+
+
+export async function getDashboardDataAction(userId: string): Promise<{ data: DashboardData | null; error: string | null; }> {
+    if (!userId) {
+        return { data: null, error: "User not authenticated." };
+    }
+
+    try {
+        const thirtyDaysAgo = Timestamp.fromMillis(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        
+        const voiceEventsQuery = query(
+            collection(db, "voiceEvents"), 
+            where("uid", "==", userId), 
+            where("createdAt", ">=", thirtyDaysAgo.toMillis()),
+            orderBy("createdAt", "asc")
+        );
+
+        const dreamsQuery = query(
+            collection(db, "dreams"),
+            where("uid", "==", userId),
+            where("createdAt", ">=", thirtyDaysAgo.toMillis()),
+            orderBy("createdAt", "asc")
+        );
+
+        const peopleQuery = query(collection(db, "people"), where("uid", "==", userId));
+
+        const [voiceEventsSnapshot, dreamsSnapshot, peopleSnapshot] = await Promise.all([
+            getDocs(voiceEventsQuery),
+            getDocs(dreamsQuery),
+            getDocs(peopleQuery),
+        ]);
+
+        const voiceEvents = voiceEventsSnapshot.docs.map(doc => doc.data() as VoiceEvent);
+        const dreams = dreamsSnapshot.docs.map(doc => doc.data() as Dream);
+
+        // Process sentiment data
+        const sentimentData = [...voiceEvents, ...dreams].map(event => ({
+            createdAt: event.createdAt,
+            sentiment: event.sentimentScore
+        })).sort((a, b) => a.createdAt - b.createdAt);
+        
+        // Aggregate sentiment by day (average)
+        const dailySentiment = sentimentData.reduce((acc, curr) => {
+            const day = format(new Date(curr.createdAt), "MMM d");
+            if (!acc[day]) {
+                acc[day] = { sentiment: 0, count: 0 };
+            }
+            acc[day].sentiment += curr.sentiment;
+            acc[day].count += 1;
+            return acc;
+        }, {} as Record<string, { sentiment: number; count: number }>);
+
+        const sentimentOverTime = Object.entries(dailySentiment).map(([date, { sentiment, count }]) => ({
+            date,
+            sentiment: parseFloat((sentiment / count).toFixed(2)),
+        }));
+
+        // Process emotion data
+        const emotionCounts: Record<string, number> = {};
+        voiceEvents.forEach(event => {
+            const emotion = event.emotion.charAt(0).toUpperCase() + event.emotion.slice(1);
+            emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+        });
+        dreams.forEach(dream => {
+            dream.emotions.forEach(emotionRaw => {
+                const emotion = emotionRaw.charAt(0).toUpperCase() + emotionRaw.slice(1);
+                emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
+            });
+        });
+
+        const emotionBreakdown = Object.entries(emotionCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        // Stats
+        const stats = {
+            totalMemories: voiceEvents.length,
+            totalDreams: dreams.length,
+            totalPeople: peopleSnapshot.size,
+        };
+        
+        const dashboardData: DashboardData = {
+            sentimentOverTime,
+            emotionBreakdown,
+            stats,
+        };
+        
+        const validatedData = DashboardDataSchema.safeParse(dashboardData);
+        if (!validatedData.success) {
+            console.error("Dashboard data validation error:", validatedData.error);
+            return { data: null, error: "Failed to validate dashboard data." };
+        }
+
+        return { data: validatedData.data, error: null };
+    } catch (e) {
+        console.error("Failed to get dashboard data:", e);
+        return { data: null, error: "An error occurred while fetching dashboard data." };
     }
 }

@@ -10,7 +10,7 @@ import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog } from "lucide-react";
+import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -29,6 +29,7 @@ import {
 import { DreamForm } from "@/components/dream-form";
 import { DreamList } from "@/components/dream-list";
 import { SettingsForm } from "@/components/settings-form";
+import { DashboardView } from "@/components/dashboard-view";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -37,7 +38,7 @@ export default function Home() {
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [dreams, setDreams] = useState<Dream[]>([]);
-  const [activeView, setActiveView] = useState<'memories' | 'social' | 'dreams' | 'settings'>('memories');
+  const [activeView, setActiveView] = useState<'dashboard' | 'memories' | 'social' | 'dreams' | 'settings'>('dashboard');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -100,6 +101,8 @@ export default function Home() {
 
   const renderActiveView = () => {
     switch(activeView) {
+      case 'dashboard':
+        return <DashboardView />;
       case 'memories':
         return (
           <>
@@ -137,6 +140,7 @@ export default function Home() {
 
   const getActiveViewTitle = () => {
     switch(activeView) {
+      case 'dashboard': return 'Dashboard';
       case 'memories': return 'Memory Stream';
       case 'social': return 'Social Constellation';
       case 'dreams': return 'Dream Journal';
@@ -158,6 +162,16 @@ export default function Home() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
+             <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveView('dashboard')}
+                isActive={activeView === 'dashboard'}
+                tooltip="View your personal dashboard"
+              >
+                <LayoutDashboard />
+                Dashboard
+              </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
                 onClick={() => setActiveView('memories')}
