@@ -2,10 +2,10 @@
 
 import { processVoiceEvent } from "@/ai/flows/analyze-sentiment";
 import { summarizeTrends } from "@/ai/flows/summarize-trends";
-import type { VoiceEvent, Transcription, EmotionState, AppData } from "@/lib/types";
+import type { VoiceEvent, Transcription, EmotionState, AppData, Person } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { collection, doc, query, where, getDocs, writeBatch } from "firebase/firestore";
 
 const addAudioEventSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -31,7 +31,7 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
     // In a real application, you would send the audioDataUri to a speech-to-text
     // service like Whisper via a Genkit flow here.
     // For now, we'll use a mocked transcript.
-    const transcript = "I met with Sarah and we planned the project timeline. It feels like we're finally making progress, which is a huge relief. I need to remember to send her the follow-up email by Friday.";
+    const transcript = "I met with Sarah and we planned the project timeline. It feels like we're finally making progress, which is a huge relief. I need to remember to send her the follow-up email by Friday. John was also there.";
     // --- END MOCK ---
 
     try {
@@ -77,11 +77,46 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
             source: 'voice',
         };
 
-        // Write to Firestore
-        // In a real app, you would also upload the audioDataUri to Cloud Storage here.
-        await setDoc(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
-        await setDoc(doc(db, "transcriptions", newTranscription.id), newTranscription);
-        await setDoc(doc(db, "emotionStates", newEmotionState.id), newEmotionState);
+        const batch = writeBatch(db);
+
+        // Add main documents to batch
+        batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
+        batch.set(doc(db, "transcriptions", newTranscription.id), newTranscription);
+        batch.set(doc(db, "emotionStates", newEmotionState.id), newEmotionState);
+
+        // Upsert people found in the transcript
+        if (analysis.people.length > 0) {
+            const peopleCol = collection(db, "people");
+            for (const personName of analysis.people) {
+                const q = query(peopleCol, where("userId", "==", userId), where("displayName", "==", personName));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    // New person, add to batch
+                    const newPersonId = crypto.randomUUID();
+                    const newPersonRef = doc(db, "people", newPersonId);
+                    const newPerson: Person = {
+                        id: newPersonId,
+                        userId,
+                        displayName: personName,
+                        voiceprintRef: '', // To be implemented
+                        firstDetected: timestamp,
+                        lastSeen: timestamp,
+                        socialRoleHistory: [],
+                        familiarityIndex: 10, // Start with a base value
+                        silenceDeltaDays: 0,
+                    };
+                    batch.set(newPersonRef, newPerson);
+                } else {
+                    // Existing person, update in batch
+                    const personDoc = querySnapshot.docs[0];
+                    batch.update(personDoc.ref, { lastSeen: timestamp });
+                }
+            }
+        }
+        
+        // Commit all writes at once
+        await batch.commit();
 
         return { success: true, error: null };
     } catch (e) {
