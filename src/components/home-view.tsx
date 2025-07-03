@@ -27,6 +27,7 @@ import { PersonCard } from './person-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
 import { SummarizationTool } from './summarization-tool';
+import { PeopleList } from './people-list';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
@@ -66,7 +67,7 @@ export function HomeView() {
             };
             
             // People
-            const qPeople = query(collection(db, "people"), where("uid", "==", user.uid));
+            const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"));
             unsubscribes.push(onSnapshot(qPeople, (snapshot) => {
                 setPeople(snapshot.docs.map(doc => doc.data() as Person));
                 checkLoadingDone();
@@ -182,13 +183,14 @@ export function HomeView() {
                 return;
             case 'limbs':
                  setPanelContent({ 
-                    title: 'Limbs: Actions & Social Life', 
-                    description: 'This is where your tasks, habits, and social interactions will appear.',
+                    title: 'Limbs: Actions & Social Constellation', 
+                    description: 'Review the people in your life and the roles they play.',
                     content: (
-                        <div className="text-center py-10 text-muted-foreground">
-                            <Footprints className="mx-auto h-12 w-12" />
-                            <p className="mt-4">Movement and Action tracking coming soon.</p>
-                        </div>
+                       <ScrollArea className="h-[60vh] -mx-6">
+                         <div className="px-6">
+                           <PeopleList people={people} />
+                         </div>
+                       </ScrollArea>
                     )
                 });
                 setActivePanel('limbs');
@@ -227,7 +229,7 @@ export function HomeView() {
     const handlePersonClick = (person: Person) => {
         setPanelContent({
             title: person.name,
-            description: "Social relationship details.",
+            description: `A summary of your relationship with ${person.name}.`,
             content: <PersonCard person={person} />
         });
         setActivePanel('person');
@@ -243,6 +245,7 @@ export function HomeView() {
             case 'head':
             case 'torso': return 'max-w-4xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
+            case 'limbs': return 'max-w-5xl';
             default: return 'max-w-lg';
         }
     }
@@ -364,6 +367,7 @@ export function HomeView() {
                                 {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5"/>}
                                 {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5"/>}
                                 {activePanel === 'torso' && <Mic className="text-primary h-5 w-5"/>}
+                                {activePanel === 'limbs' && <Users className="text-primary h-5 w-5"/>}
                                 {panelContent?.title}
                                 </AlertDialogTitle>
                                 {panelContent?.description && (

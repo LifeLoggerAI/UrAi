@@ -1,3 +1,4 @@
+
 import type { Person } from "@/lib/types";
 import { PersonCard } from "@/components/person-card";
 import { Users } from "lucide-react";
@@ -13,7 +14,7 @@ export function PeopleList({ people }: { people: Person[] }) {
     )
   }
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fadeIn">
       {people.map((person) => (
         <PersonCard key={person.id} person={person} />
       ))}
