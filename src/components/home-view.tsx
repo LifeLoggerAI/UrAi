@@ -26,6 +26,7 @@ import { CompanionChatView } from './companion-chat-view';
 import { PersonCard } from './person-card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
+import { SummarizationTool } from './summarization-tool';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
@@ -167,8 +168,9 @@ export function HomeView() {
                     title: 'Torso: Emotions & Memories', 
                     description: 'Record voice memos to capture your emotional state in the moment.',
                     content: (
-                        <div className="w-full">
+                        <div className="w-full space-y-6">
                             <NoteForm userId={user.uid} />
+                            <SummarizationTool />
                             <h3 className="text-xl font-headline mt-6 mb-4">Recent Voice Events</h3>
                             <ScrollArea className="h-[40vh] pr-4">
                                 <NoteList items={voiceEvents} />
