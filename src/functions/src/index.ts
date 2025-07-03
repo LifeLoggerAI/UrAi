@@ -35,4 +35,9 @@ export * from "./scheduled";
 // Export notification queue
 export * from "./notifications";
 
+// Export social engine triggers
+export * from "./social-engine";
+
+// Export timeline engine triggers
+export * from "./timeline-engine";
     

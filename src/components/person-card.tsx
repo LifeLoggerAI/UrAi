@@ -5,12 +5,12 @@ import { Progress } from "@/components/ui/progress";
 import type { Person } from "@/lib/types";
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from "./ui/badge";
-import { History, Zap } from "lucide-react";
+import { History, Zap, Hourglass, MemoryStick } from "lucide-react";
 
 export function PersonCard({ person }: { person: Person }) {
   const lastSeen = formatDistanceToNow(new Date(person.lastSeen), { addSuffix: true });
   // Cap progress at 100 for visualization, but show the real number.
-  const familiarityProgress = Math.min(person.familiarityIndex * 5, 100); 
+  const familiarityProgress = Math.min((person.familiarityIndex || 0) * 5, 100); 
 
   return (
     <div className="animate-fadeIn">
@@ -29,8 +29,24 @@ export function PersonCard({ person }: { person: Person }) {
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2"><Zap className="h-4 w-4" /> Familiarity Index</label>
                     <Progress value={familiarityProgress} className="h-2" />
-                    <p className="text-xs text-muted-foreground">{person.familiarityIndex} interaction{person.familiarityIndex === 1 ? '' : 's'} logged</p>
+                    <p className="text-xs text-muted-foreground">{person.familiarityIndex || 0} interaction{(person.familiarityIndex || 0) === 1 ? '' : 's'} logged</p>
                 </div>
+
+                {person.voiceMemoryStrength !== undefined && (
+                     <div className="space-y-2">
+                        <label className="text-sm font-medium text-muted-foreground flex items-center gap-2"><MemoryStick className="h-4 w-4" /> Voice Memory</label>
+                        <Progress value={person.voiceMemoryStrength} className="h-2" />
+                        <p className="text-xs text-muted-foreground">How impactful their voice has been recently.</p>
+                    </div>
+                )}
+
+                {person.silenceDurationDays !== undefined && person.silenceDurationDays > 0 && (
+                     <div className="space-y-2 text-sm">
+                        <label className="font-medium text-muted-foreground flex items-center gap-2"><Hourglass className="h-4 w-4" /> Period of Silence</label>
+                        <p className="font-semibold text-foreground">{person.silenceDurationDays} day{person.silenceDurationDays > 1 ? 's' : ''}</p>
+                    </div>
+                )}
+                
                 {person.socialRoleHistory && person.socialRoleHistory.length > 0 && (
                     <div className="space-y-2 pt-4 border-t">
                         <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">

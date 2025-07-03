@@ -66,12 +66,20 @@ export const PersonSchema = z.object({
     uid: z.string(),
     name: z.string(),
     lastSeen: z.number(),
-    familiarityIndex: z.number(),
+    familiarityIndex: z.number().optional(),
     socialRoleHistory: z.array(z.object({
         date: z.number(),
         role: z.string(),
     })),
     avatarUrl: z.string().optional(),
+    // New fields from 'socialContacts'
+    voiceprintId: z.string().optional(),
+    interactionCount: z.number().optional(),
+    voiceMemoryStrength: z.number().optional(), // 0-100
+    echoLoopScore: z.number().optional(), // 0-100
+    silenceDurationDays: z.number().optional(),
+    orbitRadius: z.number().optional(),
+    isFlagged: z.boolean().optional(),
 });
 export type Person = z.infer<typeof PersonSchema>;
 
@@ -243,6 +251,78 @@ export const RelationalGestureSchema = z.object({
     durationSecs: z.number(),
 });
 export type RelationalGesture = z.infer<typeof RelationalGestureSchema>;
+
+// Schemas for Social Constellation
+export const SocialEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    personId: z.string(),
+    timestamp: z.number(),
+    interactionType: z.enum(["voice", "text", "physical"]),
+    toneVector: z.record(z.number()),
+    emotionalAfterEffect: z.string(),
+    durationSecs: z.number(),
+});
+export type SocialEvent = z.infer<typeof SocialEventSchema>;
+
+// Schemas for Rotational Swipe Views
+export const TimelineEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    timestamp: z.number(),
+    tone: z.string(),
+    intensity: z.number(),
+    description: z.string(),
+    linkedZone: z.string(),
+});
+export type TimelineEvent = z.infer<typeof TimelineEventSchema>;
+
+export const ShadowEpisodeSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    startTimestamp: z.number(),
+    endTimestamp: z.number(),
+    shadowType: z.string(),
+    resolutionStatus: z.enum(["unresolved", "recovering"]),
+});
+export type ShadowEpisode = z.infer<typeof ShadowEpisodeSchema>;
+
+export const ForecastProfileSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    date: z.number(),
+    predictedTone: z.string(),
+    confidence: z.number(),
+    ritualSuggestionId: z.string().optional(),
+});
+export type ForecastProfile = z.infer<typeof ForecastProfileSchema>;
+
+export const ArchetypeStateSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    startDate: z.number(),
+    endDate: z.number().nullable(),
+    archetypeLabel: z.string(),
+    morphProgress: z.number(),
+});
+export type ArchetypeState = z.infer<typeof ArchetypeStateSchema>;
+
+export const LegacyThreadSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    theme: z.string(),
+    plannedOutcome: z.string(),
+    progressScore: z.number(),
+});
+export type LegacyThread = z.infer<typeof LegacyThreadSchema>;
+
+export const PresentMetricsSchema = z.object({
+    uid: z.string(),
+    currentAuraColor: z.string(),
+    heartbeat: z.number(),
+    updatedAt: z.number(),
+});
+export type PresentMetrics = z.infer<typeof PresentMetricsSchema>;
 
 
 // Schemas for Genkit Flows
