@@ -179,6 +179,45 @@ export const NarratorInsightSchema = z.object({
 export type NarratorInsight = z.infer<typeof NarratorInsightSchema>;
 
 
+// Schemas for Legs/Movement Module
+export const LegsMetricsSchema = z.object({
+    uid: z.string(),
+    dateKey: z.string(),
+    dailyStabilityScore: z.number(),
+    behaviorMomentum: z.number(),
+    routinePathType: z.enum(["linear", "loop", "fragmented"]),
+    avoidanceZoneScore: z.number(),
+    groundingQuality: z.number(),
+    updatedAt: z.number(),
+});
+export type LegsMetrics = z.infer<typeof LegsMetricsSchema>;
+
+export const MovementPathSchema = z.object({
+    uid: z.string(),
+    dateKey: z.string(),
+    polylineEncoded: z.string(),
+    distanceMeters: z.number(),
+    stepCount: z.number(),
+    stillnessSecs: z.number(),
+    runSecs: z.number(),
+    visitClusters: z.array(z.any()), // GeoPoint
+    updatedAt: z.number(),
+});
+export type MovementPath = z.infer<typeof MovementPathSchema>;
+
+export const AvoidanceEventSchema = z.object({
+    uid: z.string(),
+    eventId: z.string(),
+    timestamp: z.number(),
+    contextType: z.string(),
+    contextId: z.string(),
+    intensity: z.number(),
+    predictedCause: z.string(),
+    source: z.string(),
+});
+export type AvoidanceEvent = z.infer<typeof AvoidanceEventSchema>;
+
+
 // Schemas for Genkit Flows
 
 export const EnrichVoiceEventInputSchema = z.object({
@@ -567,5 +606,3 @@ export const AutomationSchema = z.object({
     enabled: z.boolean().default(true),
 });
 export type Automation = z.infer<typeof AutomationSchema>;
-
-    

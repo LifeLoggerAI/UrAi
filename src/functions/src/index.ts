@@ -20,8 +20,16 @@ export * from "./user-management";
 // Export emotion engine triggers
 export * from "./emotion-engine";
 
+// Export torso engine triggers
+export * from "./torso-engine";
+
+// Export legs engine triggers
+export * from "./legs-engine";
+
 // Export scheduled functions
 export * from "./scheduled";
 
 // Export notification queue
 export * from "./notifications";
+
+    

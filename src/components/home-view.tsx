@@ -26,6 +26,7 @@ import { Loader2 } from 'lucide-react';
 import { NoteList } from './note-list';
 import { NoteForm } from './note-form';
 import { TorsoView } from './torso-view';
+import { LegsView } from './legs-view';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
@@ -153,15 +154,9 @@ export function HomeView() {
                 return;
             case 'limbs':
                  setPanelContent({ 
-                    title: 'Limbs: Actions & Social Constellation', 
-                    description: 'Review the people in your life and the roles they play.',
-                    content: (
-                       <ScrollArea className="h-[60vh] -mx-6">
-                         <div className="px-6">
-                           <PeopleList people={people} />
-                         </div>
-                       </ScrollArea>
-                    )
+                    title: 'Legs: Movement & Direction', 
+                    description: 'Explore your physical path, stability, and forward momentum.',
+                    content: <LegsView />
                 });
                 setActivePanel('limbs');
                 return;
@@ -214,8 +209,8 @@ export function HomeView() {
             case 'settings': return 'max-w-3xl';
             case 'head': return 'max-w-6xl';
             case 'torso': return 'max-w-6xl';
+            case 'limbs': return 'max-w-3xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
-            case 'limbs': return 'max-w-5xl';
             default: return 'max-w-lg';
         }
     }
@@ -337,7 +332,7 @@ export function HomeView() {
                                 {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5"/>}
                                 {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5"/>}
                                 {activePanel === 'torso' && <Mic className="text-primary h-5 w-5"/>}
-                                {activePanel === 'limbs' && <Users className="text-primary h-5 w-5"/>}
+                                {activePanel === 'limbs' && <Footprints className="text-primary h-5 w-5"/>}
                                 {panelContent?.title}
                                 </AlertDialogTitle>
                                 {panelContent?.description && (
