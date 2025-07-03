@@ -1,15 +1,16 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { VoiceEvent, Person } from "@/lib/types";
+import type { VoiceEvent, Person, Dream } from "@/lib/types";
 import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History, BotMessageSquare } from "lucide-react";
+import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -25,6 +26,8 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar";
+import { DreamForm } from "@/components/dream-form";
+import { DreamList } from "@/components/dream-list";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -32,7 +35,8 @@ export default function Home() {
   const { toast } = useToast();
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
-  const [activeView, setActiveView] = useState<'memories' | 'social'>('memories');
+  const [dreams, setDreams] = useState<Dream[]>([]);
+  const [activeView, setActiveView] = useState<'memories' | 'social' | 'dreams'>('memories');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -54,9 +58,16 @@ export default function Home() {
           setPeople(peopleData);
       }, console.error);
 
+      const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+      const unsubDreams = onSnapshot(qDreams, (snapshot) => {
+        const dreamsData = snapshot.docs.map(doc => doc.data() as Dream);
+        setDreams(dreamsData);
+      }, console.error);
+
       return () => {
           unsubEvents();
           unsubPeople();
+          unsubDreams();
       };
     }
   }, [user]);
@@ -84,6 +95,50 @@ export default function Home() {
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </main>
     )
+  }
+
+  const renderActiveView = () => {
+    switch(activeView) {
+      case 'memories':
+        return (
+          <>
+            <Recorder userId={user.uid} />
+            <SummarizationTool />
+            {voiceEvents.length > 0 ? (
+              <section className="space-y-4 pt-4">
+                <NoteList items={voiceEvents} />
+              </section>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                <p>No memories logged yet.</p>
+                <p className="text-sm">Use the recorder to capture your first voice event.</p>
+              </div>
+            )}
+          </>
+        )
+      case 'social':
+        return <PeopleList people={people} />;
+      case 'dreams':
+        return (
+          <>
+            <DreamForm />
+            <section className="space-y-4 pt-4">
+              <DreamList dreams={dreams} />
+            </section>
+          </>
+        )
+      default:
+        return null;
+    }
+  }
+
+  const getActiveViewTitle = () => {
+    switch(activeView) {
+      case 'memories': return 'Memory Stream';
+      case 'social': return 'Social Constellation';
+      case 'dreams': return 'Dream Journal';
+      default: return 'Life Logger';
+    }
   }
 
   return (
@@ -119,6 +174,16 @@ export default function Home() {
                 Social Constellation
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveView('dreams')}
+                isActive={activeView === 'dreams'}
+                tooltip="Log and analyze your dreams"
+              >
+                <NotebookPen />
+                Dream Journal
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -143,30 +208,12 @@ export default function Home() {
         <main className="flex flex-1 flex-col bg-background">
             <header className="flex items-center justify-between md:justify-end p-4 md:p-6 border-b">
               <SidebarTrigger className="md:hidden" />
-              <h2 className="text-lg font-semibold md:hidden">{activeView === 'memories' ? 'Memory Stream' : 'Social Constellation'}</h2>
+              <h2 className="text-lg font-semibold md:hidden">{getActiveViewTitle()}</h2>
                <div className="w-7 h-7"></div>
             </header>
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
               <div className="w-full max-w-3xl mx-auto space-y-8">
-                <Recorder userId={user.uid} />
-                <SummarizationTool />
-                {activeView === 'memories' && (
-                  voiceEvents.length > 0 ? (
-                    <section className="space-y-4 pt-4">
-                      <NoteList items={voiceEvents} />
-                    </section>
-                  ) : (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <p>No memories logged yet.</p>
-                      <p className="text-sm">Use the recorder to capture your first voice event.</p>
-                    </div>
-                  )
-                )}
-                {activeView === 'social' && (
-                  <section className="space-y-4 pt-4">
-                    <PeopleList people={people} />
-                  </section>
-                )}
+                {renderActiveView()}
               </div>
             </div>
         </main>

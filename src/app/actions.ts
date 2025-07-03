@@ -1,13 +1,15 @@
+
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy } from "firebase/firestore";
+import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
+import { analyzeDream } from "@/ai/flows/analyze-dream";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -165,5 +167,55 @@ export async function summarizeWeekAction(userId: string): Promise<{ summary: st
     } catch (e) {
         console.error(e);
         return { summary: null, audioDataUri: null, error: "An error occurred while generating the summary." };
+    }
+}
+
+const addDreamInputSchema = z.object({
+    text: z.string().min(1, "Dream entry cannot be empty."),
+    userId: z.string().min(1, "User ID is required."),
+});
+
+type AddDreamInput = z.infer<typeof addDreamInputSchema>;
+
+type AddDreamReturn = {
+    success: boolean;
+    error: string | null;
+};
+
+export async function addDreamAction(input: AddDreamInput): Promise<AddDreamReturn> {
+    const validatedFields = addDreamInputSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+
+    const { userId, text } = validatedFields.data;
+
+    try {
+        const analysis = await analyzeDream({ text });
+        if (!analysis) {
+            return { success: false, error: "AI analysis of the dream failed." };
+        }
+
+        const dreamId = crypto.randomUUID();
+        const timestamp = Date.now();
+
+        const newDream: Dream = {
+            id: dreamId,
+            uid: userId,
+            text,
+            createdAt: timestamp,
+            emotions: analysis.emotions || [],
+            themes: analysis.themes || [],
+            symbols: analysis.symbols || [],
+            sentimentScore: analysis.sentimentScore,
+        };
+
+        await setDoc(doc(db, "dreams", newDream.id), newDream);
+
+        return { success: true, error: null };
+    } catch (e) {
+        console.error("Failed to add dream:", e);
+        return { success: false, error: "Failed to save dream. Please try again." };
     }
 }

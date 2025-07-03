@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 // Base sentiment type
@@ -65,6 +66,18 @@ export const PersonSchema = z.object({
 });
 export type Person = z.infer<typeof PersonSchema>;
 
+export const DreamSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    text: z.string(),
+    createdAt: z.number(),
+    emotions: z.array(z.string()),
+    themes: z.array(z.string()),
+    symbols: z.array(z.string()),
+    sentimentScore: z.number(),
+});
+export type Dream = z.infer<typeof DreamSchema>;
+
 
 // Schemas for Genkit Flows
 
@@ -119,3 +132,16 @@ export const SummarizeTextOutputSchema = z.object({
     summary: z.string().describe("A concise summary of the key themes, moments, and overall mood from the provided text."),
 });
 export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
+
+export const AnalyzeDreamInputSchema = z.object({
+  text: z.string().describe('The text of a dream entry.'),
+});
+export type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
+
+export const AnalyzeDreamOutputSchema = z.object({
+    emotions: z.array(z.string()).describe("A list of primary emotions present in the dream."),
+    themes: z.array(z.string()).describe("A list of recurring themes or topics in the dream."),
+    symbols: z.array(z.string()).describe("A list of key symbols and their potential meanings within the dream's context."),
+    sentimentScore: z.number().describe("A score from -1 (very negative) to 1 (very positive) for the dream's overall tone."),
+});
+export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
