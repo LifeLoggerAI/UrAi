@@ -16,8 +16,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { SettingsForm } from './settings-form';
-import { DreamList } from './dream-list';
-import { DreamForm } from './dream-form';
 import { TextEntryList } from './text-entry-list';
 import { TextEntryForm } from './text-entry-form';
 import { NoteList } from './note-list';
@@ -28,6 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
 import { SummarizationTool } from './summarization-tool';
 import { PeopleList } from './people-list';
+import { CognitiveZoneView } from './cognitive-zone-view';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
@@ -139,28 +138,9 @@ export function HomeView() {
         switch(zone) {
             case 'head':
                 setPanelContent({ 
-                    title: 'Head: Thoughts & Dreams', 
-                    description: 'Log dreams and reflections. Explore your cognitive patterns.',
-                    content: (
-                        <Tabs defaultValue="dreams" className="w-full">
-                            <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="dreams">Dreams</TabsTrigger>
-                                <TabsTrigger value="reflections">Reflections</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="dreams" className="mt-4">
-                                <DreamForm />
-                                <ScrollArea className="h-[40vh] mt-4 pr-4">
-                                    <DreamList dreams={dreams} />
-                                </ScrollArea>
-                            </TabsContent>
-                            <TabsContent value="reflections" className="mt-4">
-                                <TextEntryForm />
-                                <ScrollArea className="h-[40vh] mt-4 pr-4">
-                                    <TextEntryList entries={innerTexts} />
-                                </ScrollArea>
-                            </TabsContent>
-                        </Tabs>
-                    )
+                    title: 'Cognitive Zone', 
+                    description: 'A symbolic control room for introspection and analysis.',
+                    content: <CognitiveZoneView dreams={dreams} innerTexts={innerTexts} />
                 });
                 setActivePanel('head');
                 return;
@@ -242,7 +222,7 @@ export function HomeView() {
     const getPanelSize = () => {
         switch(activePanel) {
             case 'settings': return 'max-w-3xl';
-            case 'head':
+            case 'head': return 'max-w-6xl';
             case 'torso': return 'max-w-4xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
             case 'limbs': return 'max-w-5xl';
