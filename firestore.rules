@@ -2,16 +2,15 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // WARNING: These rules are open for development purposes.
-    // Before deploying to production, secure your database by restricting
-    // access to authenticated users.
-    //
-    // Example secure rule:
-    // match /{collection}/{docId} {
-    //   allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-    // }
-    match /{document=**} {
-      allow read, write: if true;
+    // Users can read and write to their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Generic rule for top-level collections where documents contain a userId field.
+    // This covers voiceEvents, transcriptions, people, and emotionStates.
+    match /{collection}/{docId} {
+      allow read, write: if request.auth != null && request.resource.data.userId == request.auth.uid;
     }
   }
 }
