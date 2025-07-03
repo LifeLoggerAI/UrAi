@@ -121,7 +121,7 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
                     batch.update(personDoc.ref, {
                         lastSeen: timestamp,
                         familiarityIndex: increment(1),
-                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchechetype })
+                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchetype })
                     });
                 }
             }
