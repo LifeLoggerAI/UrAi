@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
+import { generateSpeech } from "@/ai/flows/generate-speech";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -121,9 +122,9 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
     }
 }
 
-export async function summarizeWeekAction(userId: string): Promise<{ summary: string | null; error: string | null; }> {
+export async function summarizeWeekAction(userId: string): Promise<{ summary: string | null; audioDataUri: string | null; error: string | null; }> {
     if (!userId) {
-        return { summary: null, error: "User not authenticated." };
+        return { summary: null, audioDataUri: null, error: "User not authenticated." };
     }
 
     try {
@@ -139,23 +140,30 @@ export async function summarizeWeekAction(userId: string): Promise<{ summary: st
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            return { summary: "No memories were logged in the last week. Record some new voice notes to get your first summary!", error: null };
+            return { summary: "No memories were logged in the last week. Record some new voice notes to get your first summary!", audioDataUri: null, error: null };
         }
 
         const allTranscripts = querySnapshot.docs
             .map(doc => doc.data().text)
             .join("\n\n---\n\n");
 
-        const result = await summarizeText({ text: allTranscripts });
+        const summaryResult = await summarizeText({ text: allTranscripts });
 
-        if (!result) {
-            return { summary: null, error: "Failed to generate summary." };
+        if (!summaryResult?.summary) {
+            return { summary: null, audioDataUri: null, error: "Failed to generate summary." };
+        }
+        
+        const speechResult = await generateSpeech({ text: summaryResult.summary });
+
+        if (!speechResult?.audioDataUri) {
+            console.warn("TTS generation failed, returning summary text only.");
+            return { summary: summaryResult.summary, audioDataUri: null, error: null };
         }
 
-        return { summary: result.summary, error: null };
+        return { summary: summaryResult.summary, audioDataUri: speechResult.audioDataUri, error: null };
 
     } catch (e) {
         console.error(e);
-        return { summary: null, error: "An error occurred while generating the summary." };
+        return { summary: null, audioDataUri: null, error: "An error occurred while generating the summary." };
     }
 }

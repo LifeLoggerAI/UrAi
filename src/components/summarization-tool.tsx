@@ -22,12 +22,14 @@ export function SummarizationTool() {
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [summary, setSummary] = useState<string | null>(null);
+    const [audioDataUri, setAudioDataUri] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleSummarize = async () => {
         if (!user) return;
         setIsLoading(true);
         setSummary(null);
+        setAudioDataUri(null);
 
         try {
             const result = await summarizeWeekAction(user.uid);
@@ -39,6 +41,7 @@ export function SummarizationTool() {
                 });
             } else if (result.summary) {
                 setSummary(result.summary);
+                setAudioDataUri(result.audioDataUri);
                 setIsDialogOpen(true);
             }
         } catch (error) {
@@ -80,6 +83,14 @@ export function SummarizationTool() {
                 <AlertDialogDescription className="whitespace-pre-wrap pt-4 text-foreground/80">
                     {summary}
                 </AlertDialogDescription>
+                 {audioDataUri && (
+                    <div className="pt-4">
+                        <audio controls className="w-full">
+                            <source src={audioDataUri} type="audio/wav" />
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                )}
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogAction>Close</AlertDialogAction>
