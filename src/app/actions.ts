@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -15,6 +15,7 @@ import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
 import { analyzeFace } from "@/ai/flows/analyze-face";
+import { analyzeTextSentiment } from "@/ai/flows/analyze-text-sentiment";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -438,5 +439,48 @@ export async function addFaceSnapshotAction(input: AddFaceSnapshotInput): Promis
     } catch (e) {
         console.error("Failed to add face snapshot:", e);
         return { success: false, error: "Failed to save face snapshot. Please try again." };
+    }
+}
+
+
+const addInnerTextSchema = z.object({
+    text: z.string().min(1, "Text entry cannot be empty."),
+    userId: z.string().min(1, "User ID is required."),
+});
+
+type AddInnerTextInput = z.infer<typeof addInnerTextSchema>;
+
+export async function addInnerTextAction(input: AddInnerTextInput): Promise<{ success: boolean, error: string | null }> {
+    const validatedFields = addInnerTextSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+
+    const { userId, text } = validatedFields.data;
+
+    try {
+        const analysis = await analyzeTextSentiment({ text });
+        if (!analysis) {
+            return { success: false, error: "AI analysis of the text failed." };
+        }
+
+        const reflectionId = crypto.randomUUID();
+        const timestamp = Date.now();
+
+        const newReflection: InnerVoiceReflection = {
+            id: reflectionId,
+            uid: userId,
+            text,
+            createdAt: timestamp,
+            sentimentScore: analysis.sentimentScore,
+        };
+
+        await setDoc(doc(db, "innerTexts", newReflection.id), newReflection);
+
+        return { success: true, error: null };
+    } catch (e) {
+        console.error("Failed to add inner text reflection:", e);
+        return { success: false, error: "Failed to save reflection. Please try again." };
     }
 }

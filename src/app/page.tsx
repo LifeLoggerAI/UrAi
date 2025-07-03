@@ -3,14 +3,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { VoiceEvent, Person, Dream } from "@/lib/types";
+import type { VoiceEvent, Person, Dream, InnerVoiceReflection } from "@/lib/types";
 import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog, LayoutDashboard, MessageCircle } from "lucide-react";
+import { Loader2, LogOut, Users, BotMessageSquare, NotebookPen, Cog, LayoutDashboard, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -31,6 +31,9 @@ import { DreamList } from "@/components/dream-list";
 import { SettingsForm } from "@/components/settings-form";
 import { DashboardView } from "@/components/dashboard-view";
 import { CompanionChatView } from "@/components/companion-chat-view";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TextEntryForm } from "@/components/text-entry-form";
+import { TextEntryList } from "@/components/text-entry-list";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -39,7 +42,8 @@ export default function Home() {
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [dreams, setDreams] = useState<Dream[]>([]);
-  const [activeView, setActiveView] = useState<'dashboard' | 'memories' | 'social' | 'dreams' | 'companion' | 'settings'>('dashboard');
+  const [textEntries, setTextEntries] = useState<InnerVoiceReflection[]>([]);
+  const [activeView, setActiveView] = useState<'dashboard' | 'journal' | 'social' | 'companion' | 'settings'>('dashboard');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -67,10 +71,18 @@ export default function Home() {
         setDreams(dreamsData);
       }, console.error);
 
+      const qTexts = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+      const unsubTexts = onSnapshot(qTexts, (snapshot) => {
+        const textsData = snapshot.docs.map(doc => doc.data() as InnerVoiceReflection);
+        setTextEntries(textsData);
+      }, console.error);
+
+
       return () => {
           unsubEvents();
           unsubPeople();
           unsubDreams();
+          unsubTexts();
       };
     }
   }, [user]);
@@ -104,38 +116,40 @@ export default function Home() {
     switch(activeView) {
       case 'dashboard':
         return <DashboardView />;
-      case 'memories':
+      case 'journal':
         return (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Recorder userId={user.uid} />
-              <SummarizationTool />
-            </div>
-            <div className="space-y-4 pt-4">
-              <h2 className="text-2xl font-headline font-bold">Recent Memories</h2>
-              {voiceEvents.length > 0 ? (
+          <Tabs defaultValue="voice" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="voice">Voice Memos</TabsTrigger>
+              <TabsTrigger value="text">Text Entries</TabsTrigger>
+              <TabsTrigger value="dreams">Dreams</TabsTrigger>
+            </TabsList>
+            <TabsContent value="voice" className="mt-6 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Recorder userId={user.uid} />
+                <SummarizationTool />
+              </div>
+              <div className="space-y-4 pt-4">
+                <h2 className="text-2xl font-headline font-bold">Recent Voice Memos</h2>
                 <NoteList items={voiceEvents} />
-              ) : (
-                <div className="text-center py-16 text-muted-foreground bg-card border rounded-lg">
-                  <History className="mx-auto h-12 w-12 text-primary/50" />
-                  <h3 className="mt-4 text-lg font-medium text-foreground">No Memories Logged Yet</h3>
-                  <p className="mt-1 text-sm">Use the recorder above to capture your first voice note.</p>
-                </div>
-              )}
-            </div>
-          </>
+              </div>
+            </TabsContent>
+            <TabsContent value="text" className="mt-6 space-y-8">
+                <TextEntryForm />
+                <section className="space-y-4 pt-4">
+                    <TextEntryList entries={textEntries} />
+                </section>
+            </TabsContent>
+            <TabsContent value="dreams" className="mt-6 space-y-8">
+                <DreamForm />
+                <section className="space-y-4 pt-4">
+                  <DreamList dreams={dreams} />
+                </section>
+            </TabsContent>
+          </Tabs>
         )
       case 'social':
         return <PeopleList people={people} />;
-      case 'dreams':
-        return (
-          <>
-            <DreamForm />
-            <section className="space-y-4 pt-4">
-              <DreamList dreams={dreams} />
-            </section>
-          </>
-        );
       case 'companion':
         return <CompanionChatView />;
       case 'settings':
@@ -148,9 +162,8 @@ export default function Home() {
   const getActiveViewTitle = () => {
     switch(activeView) {
       case 'dashboard': return 'Dashboard';
-      case 'memories': return 'Memory Stream';
+      case 'journal': return 'Journal';
       case 'social': return 'Social Constellation';
-      case 'dreams': return 'Dream Journal';
       case 'companion': return 'AI Companion';
       case 'settings': return 'Settings';
       default: return 'Life Logger';
@@ -182,12 +195,12 @@ export default function Home() {
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
-                onClick={() => setActiveView('memories')}
-                isActive={activeView === 'memories'}
-                tooltip="View your recorded memories"
+                onClick={() => setActiveView('journal')}
+                isActive={activeView === 'journal'}
+                tooltip="View your journal entries"
               >
-                <History />
-                Memory Stream
+                <NotebookPen />
+                Journal
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -198,16 +211,6 @@ export default function Home() {
               >
                 <Users />
                 Social Constellation
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveView('dreams')}
-                isActive={activeView === 'dreams'}
-                tooltip="Log and analyze your dreams"
-              >
-                <NotebookPen />
-                Dream Journal
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

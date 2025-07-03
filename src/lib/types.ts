@@ -78,6 +78,16 @@ export const DreamSchema = z.object({
 });
 export type Dream = z.infer<typeof DreamSchema>;
 
+export const InnerVoiceReflectionSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    text: z.string(),
+    createdAt: z.number(),
+    sentimentScore: z.number(),
+});
+export type InnerVoiceReflection = z.infer<typeof InnerVoiceReflectionSchema>;
+
+
 export const FaceSnapshotSchema = z.object({
     id: z.string(),
     uid: z.string(),
@@ -181,6 +191,16 @@ export const AnalyzeFaceOutputSchema = z.object({
   confidence: z.number().describe('The confidence score for the detected emotion (0 to 1).'),
 });
 export type AnalyzeFaceOutput = z.infer<typeof AnalyzeFaceOutputSchema>;
+
+export const AnalyzeTextSentimentInputSchema = z.object({
+    text: z.string().describe('The text to analyze.'),
+});
+export type AnalyzeTextSentimentInput = z.infer<typeof AnalyzeTextSentimentInputSchema>;
+
+export const AnalyzeTextSentimentOutputSchema = z.object({
+    sentimentScore: z.number().describe("A score from -1 (negative) to 1 (positive) representing the overall tone."),
+});
+export type AnalyzeTextSentimentOutput = z.infer<typeof AnalyzeTextSentimentOutputSchema>;
 
 
 // Schema for Settings Form

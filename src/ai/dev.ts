@@ -10,3 +10,4 @@ import '@/ai/flows/analyze-dream.ts';
 import '@/ai/flows/generate-avatar.ts';
 import '@/ai/flows/companion-chat.ts';
 import '@/ai/flows/analyze-face.ts';
+import '@/ai/flows/analyze-text-sentiment.ts';
