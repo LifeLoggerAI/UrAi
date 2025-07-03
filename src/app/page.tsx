@@ -1,23 +1,61 @@
 
 'use client';
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import { Loader2 } from "lucide-react";
 import { HomeView } from "@/components/home-view";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import type { User as AppUser } from "@/lib/types";
 
 export default function Home_Page() {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [onboardingComplete, setOnboardingComplete] = useState(false);
   
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
+    if (authLoading) return;
 
-  if (loading || !user) {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+
+    const checkOnboardingStatus = async () => {
+      setProfileLoading(true);
+      try {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data() as AppUser;
+          if (userData.onboardingComplete) {
+            setOnboardingComplete(true);
+          } else {
+            router.push('/onboarding/permissions');
+          }
+        } else {
+          // This case might happen if user is created in Auth but Firestore doc creation fails.
+          // Forcing to onboarding seems like a safe fallback.
+          router.push('/onboarding/permissions');
+        }
+      } catch (error) {
+        console.error("Error checking onboarding status:", error);
+        // Fallback to onboarding on error
+        router.push('/onboarding/permissions');
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    checkOnboardingStatus();
+
+  }, [user, authLoading, router]);
+
+  if (authLoading || profileLoading || !onboardingComplete) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8 md:p-12">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />

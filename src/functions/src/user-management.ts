@@ -33,6 +33,7 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
             symbolLexicon: {},
             subscriptionTier: 'free',
             isProUser: false,
+            onboardingComplete: false,
         };
 
         await db.collection("users").doc(uid).set(newUserDoc);

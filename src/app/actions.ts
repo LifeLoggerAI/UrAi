@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput, Permissions } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -11,7 +11,7 @@ import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
 import { generateAvatar } from "@/ai/flows/generate-avatar";
-import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema } from "@/lib/types";
+import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema, PermissionsSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
 import { analyzeFace } from "@/ai/flows/analyze-face";
@@ -507,5 +507,36 @@ export async function suggestRitualAction(input: z.infer<typeof SuggestRitualInp
     } catch (e) {
         console.error("Suggest ritual action failed:", e);
         return { suggestion: null, error: "An error occurred while generating a suggestion." };
+    }
+}
+
+const savePermissionsInputSchema = z.object({
+    userId: z.string().min(1, "User ID is required."),
+    permissions: PermissionsSchema,
+});
+
+export async function savePermissionsAction(input: z.infer<typeof savePermissionsInputSchema>): Promise<{success: boolean, error: string | null}> {
+    const validatedFields = savePermissionsInputSchema.safeParse(input);
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+    
+    const { userId, permissions } = validatedFields.data;
+    
+    try {
+        const batch = writeBatch(db);
+        
+        const permissionsRef = doc(db, "permissions", userId);
+        batch.set(permissionsRef, permissions);
+        
+        const userRef = doc(db, "users", userId);
+        batch.update(userRef, { onboardingComplete: true });
+        
+        await batch.commit();
+        
+        return { success: true, error: null };
+    } catch (e) {
+        console.error("Failed to save permissions:", e);
+        return { success: false, error: "Failed to save permissions. Please try again." };
     }
 }

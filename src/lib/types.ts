@@ -12,6 +12,7 @@ export const UserSchema = z.object({
     createdAt: z.number(),
     avatarUrl: z.string().url().optional(),
     isProUser: z.boolean().default(false),
+    onboardingComplete: z.boolean().default(false),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
         passiveAudioEnabled: z.boolean().default(true),
@@ -36,6 +37,18 @@ export const UserSchema = z.object({
     subscriptionTier: z.string().optional(),
 });
 export type User = z.infer<typeof UserSchema>;
+
+export const PermissionsSchema = z.object({
+    micPermission: z.boolean(),
+    gpsPermission: z.boolean(),
+    motionPermission: z.boolean(),
+    notificationsPermission: z.boolean(),
+    shareAnonymizedData: z.boolean(),
+    acceptedTerms: z.boolean(),
+    acceptedPrivacyPolicy: z.boolean(),
+    consentTimestamp: z.number(),
+});
+export type Permissions = z.infer<typeof PermissionsSchema>;
 
 export const AudioEventSchema = z.object({
     id: z.string(),
