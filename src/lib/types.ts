@@ -97,3 +97,25 @@ export const TranscribeAudioOutputSchema = z.object({
     transcript: z.string().describe("The transcribed text from the audio."),
 });
 export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
+
+export const GenerateSpeechInputSchema = z.object({
+  text: z.string().describe('The text to be converted to speech.'),
+});
+export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
+
+export const GenerateSpeechOutputSchema = z.object({
+  audioDataUri: z
+    .string()
+    .describe('The generated speech as a data URI in WAV format.'),
+});
+export type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
+
+export const SummarizeTextInputSchema = z.object({
+  text: z.string().describe('A concatenation of text entries to be summarized.'),
+});
+export type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
+
+export const SummarizeTextOutputSchema = z.object({
+    summary: z.string().describe("A concise summary of the key themes, moments, and overall mood from the provided text."),
+});
+export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;

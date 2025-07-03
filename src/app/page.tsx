@@ -6,15 +6,25 @@ import type { VoiceEvent, Person } from "@/lib/types";
 import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
 import { PeopleList } from "@/components/people-list";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History } from "lucide-react";
+import { Loader2, LogOut, Users, History, BotMessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger
+} from "@/components/ui/sidebar";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -22,6 +32,7 @@ export default function Home() {
   const { toast } = useToast();
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
+  const [activeView, setActiveView] = useState<'memories' | 'social'>('memories');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -76,56 +87,90 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background p-4 sm:p-8 md:p-12">
-      <div className="w-full max-w-3xl space-y-8">
-        <header className="text-center relative">
-            <h1 className="text-4xl font-headline font-bold tracking-tight text-primary-foreground">Life Logger</h1>
-            <p className="mt-2 text-lg text-muted-foreground">Capture your moments. Understand your life.</p>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSignOut}
-              className="absolute top-0 right-0"
-              aria-label="Sign Out"
-            >
-              <LogOut className="h-5 w-5" />
-            </Button>
-        </header>
-        
-        <Recorder userId={user.uid} />
-
-        <SummarizationTool />
-        
-        <Tabs defaultValue="memories" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="memories">
-              <History className="mr-2 h-4 w-4" />
-              Memory Stream
-            </TabsTrigger>
-            <TabsTrigger value="social">
-              <Users className="mr-2 h-4 w-4" />
-              Social Constellation
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="memories">
-            {voiceEvents.length > 0 ? (
-              <section className="space-y-4 pt-4">
-                <NoteList items={voiceEvents} />
-              </section>
-            ) : (
-                <div className="text-center py-12 text-muted-foreground">
-                    <p>No memories logged yet.</p>
-                    <p className="text-sm">Use the recorder to capture your first voice event.</p>
-                </div>
-            )}
-          </TabsContent>
-          <TabsContent value="social">
-             <section className="space-y-4 pt-4">
-                <PeopleList people={people} />
-              </section>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </main>
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="flex items-center gap-2">
+            <BotMessageSquare className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-headline font-bold tracking-tight">
+              Life Logger
+            </h1>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveView('memories')}
+                isActive={activeView === 'memories'}
+                tooltip="View your recorded memories"
+              >
+                <History />
+                Memory Stream
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveView('social')}
+                isActive={activeView === 'social'}
+                tooltip="View your social connections"
+              >
+                <Users />
+                Social Constellation
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter>
+          <div className="flex items-center gap-2 p-2">
+            <img src={user.photoURL || `https://placehold.co/128x128.png?text=${(user.displayName || user.email || "A").charAt(0).toUpperCase()}`} alt="User avatar" className="h-8 w-8 rounded-full" />
+            <div className="flex flex-col text-sm overflow-hidden">
+                <span className="font-semibold text-sidebar-foreground truncate">{user.displayName || 'Anonymous'}</span>
+                <span className="text-muted-foreground text-xs truncate">{user.email}</span>
+            </div>
+          </div>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={handleSignOut} >
+                  <LogOut />
+                  Sign Out
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      <SidebarInset>
+        <main className="flex flex-1 flex-col bg-background">
+            <header className="flex items-center justify-between md:justify-end p-4 md:p-6 border-b">
+              <SidebarTrigger className="md:hidden" />
+              <h2 className="text-lg font-semibold md:hidden">{activeView === 'memories' ? 'Memory Stream' : 'Social Constellation'}</h2>
+               <div className="w-7 h-7"></div>
+            </header>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+              <div className="w-full max-w-3xl mx-auto space-y-8">
+                <Recorder userId={user.uid} />
+                <SummarizationTool />
+                {activeView === 'memories' && (
+                  voiceEvents.length > 0 ? (
+                    <section className="space-y-4 pt-4">
+                      <NoteList items={voiceEvents} />
+                    </section>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p>No memories logged yet.</p>
+                      <p className="text-sm">Use the recorder to capture your first voice event.</p>
+                    </div>
+                  )
+                )}
+                {activeView === 'social' && (
+                  <section className="space-y-4 pt-4">
+                    <PeopleList people={people} />
+                  </section>
+                )}
+              </div>
+            </div>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
