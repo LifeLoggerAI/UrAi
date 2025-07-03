@@ -14,6 +14,7 @@ import { useAuth } from "@/components/auth-provider";
 import { Loader2, LogOut, Users, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { SummarizationTool } from "@/components/summarization-tool";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -92,6 +93,8 @@ export default function Home() {
         </header>
         
         <Recorder userId={user.uid} />
+
+        <SummarizationTool />
         
         <Tabs defaultValue="memories" className="w-full">
           <TabsList className="grid w-full grid-cols-2">

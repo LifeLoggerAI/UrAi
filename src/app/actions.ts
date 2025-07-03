@@ -4,8 +4,9 @@ import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
 import type { VoiceEvent, AudioEvent, Person } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion } from "firebase/firestore";
+import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
+import { summarizeText } from "@/ai/flows/summarize-text";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -117,5 +118,44 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
     } catch (e) {
         console.error(e);
         return { success: false, error: "Failed to process voice event. Please try again." };
+    }
+}
+
+export async function summarizeWeekAction(userId: string): Promise<{ summary: string | null; error: string | null; }> {
+    if (!userId) {
+        return { summary: null, error: "User not authenticated." };
+    }
+
+    try {
+        const oneWeekAgo = Timestamp.fromMillis(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        
+        const q = query(
+            collection(db, "voiceEvents"), 
+            where("uid", "==", userId), 
+            where("createdAt", ">=", oneWeekAgo.toMillis()),
+            orderBy("createdAt", "desc")
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            return { summary: "No memories were logged in the last week. Record some new voice notes to get your first summary!", error: null };
+        }
+
+        const allTranscripts = querySnapshot.docs
+            .map(doc => doc.data().text)
+            .join("\n\n---\n\n");
+
+        const result = await summarizeText({ text: allTranscripts });
+
+        if (!result) {
+            return { summary: null, error: "Failed to generate summary." };
+        }
+
+        return { summary: result.summary, error: null };
+
+    } catch (e) {
+        console.error(e);
+        return { summary: null, error: "An error occurred while generating the summary." };
     }
 }
