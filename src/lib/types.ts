@@ -324,6 +324,49 @@ export const PresentMetricsSchema = z.object({
 });
 export type PresentMetrics = z.infer<typeof PresentMetricsSchema>;
 
+// Schemas for Orb AI Coach System
+export const OrbStateSchema = z.object({
+    uid: z.string(),
+    currentMode: z.enum(["idle", "chat", "ritual", "coreView"]),
+    lastInsightAt: z.number(),
+    moodColor: z.string(),
+    forecastTrigger: z.string().optional(),
+    isSpeaking: z.boolean().default(false),
+});
+export type OrbState = z.infer<typeof OrbStateSchema>;
+
+export const OrbEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    eventType: z.enum(["tap", "triggered", "voiceReply", "ritualStart"]),
+    timestamp: z.number(),
+    promptUsed: z.string().optional(),
+    aiResponseSummary: z.string().optional(),
+    deliveryMethod: z.enum(["text", "tts", "symbolic"]),
+    linkedView: z.string().optional(),
+});
+export type OrbEvent = z.infer<typeof OrbEventSchema>;
+
+export const OrbDialogMemorySchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    timestamp: z.number(),
+    userPrompt: z.string(),
+    aiNarration: z.string(),
+    moodContext: z.string(),
+    voicePlayed: z.boolean(),
+});
+export type OrbDialogMemory = z.infer<typeof OrbDialogMemorySchema>;
+
+export const OrbSymbolicMapSchema = z.object({
+    uid: z.string(),
+    dominantSymbols: z.array(z.string()),
+    toneMetaphors: z.record(z.string()),
+    archetypeOverlay: z.string().optional(),
+    preferredTone: z.string(),
+});
+export type OrbSymbolicMap = z.infer<typeof OrbSymbolicMapSchema>;
+
 
 // Schemas for Genkit Flows
 
@@ -713,3 +756,49 @@ export const AutomationSchema = z.object({
     enabled: z.boolean().default(true),
 });
 export type Automation = z.infer<typeof AutomationSchema>;
+
+export const CulturalSettingsSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    language: z.string().default('en'),
+    seasonalTheme: z.string().optional(),
+});
+export type CulturalSettings = z.infer<typeof CulturalSettingsSchema>;
+
+export const MetaMetricsSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    date: z.number(),
+    regretLoopScore: z.number().optional(),
+    growthArcProgress: z.number().optional(),
+    symbolicResonance: z.number().optional(),
+});
+export type MetaMetrics = z.infer<typeof MetaMetricsSchema>;
+
+export const ThresholdEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    timestamp: z.number(),
+    eventType: z.string(),
+    payload: z.record(z.any()),
+});
+export type ThresholdEvent = z.infer<typeof ThresholdEventSchema>;
+
+export const LockedMomentSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    eventId: z.string(),
+    lockedAt: z.number(),
+    reason: z.string(),
+});
+export type LockedMoment = z.infer<typeof LockedMomentSchema>;
+
+export const CompanionThreadSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    archetypeId: z.string(),
+    createdAt: z.number(),
+    lastInteractionAt: z.number(),
+    symbolicMemory: z.record(z.any()),
+});
+export type CompanionThread = z.infer<typeof CompanionThreadSchema>;
