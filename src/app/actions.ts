@@ -5,7 +5,7 @@ import { summarizeTrends } from "@/ai/flows/summarize-trends";
 import type { VoiceEvent, Transcription, EmotionState, AppData, Person } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { collection, doc, query, where, getDocs, writeBatch } from "firebase/firestore";
+import { collection, doc, query, where, getDocs, writeBatch, arrayUnion } from "firebase/firestore";
 
 const addAudioEventSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -103,7 +103,7 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
                         firstDetected: timestamp,
                         lastSeen: timestamp,
                         avatarUrl: 'https://placehold.co/128x128.png',
-                        socialRoleHistory: [],
+                        socialRoleHistory: [{ date: timestamp, role: analysis.socialArchetype }],
                         familiarityIndex: 10, // Start with a base value
                         silenceDeltaDays: 0,
                     };
@@ -111,7 +111,15 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
                 } else {
                     // Existing person, update in batch
                     const personDoc = querySnapshot.docs[0];
-                    batch.update(personDoc.ref, { lastSeen: timestamp });
+                    const personData = personDoc.data() as Person;
+                    const newFamiliarity = Math.min(100, (personData.familiarityIndex || 0) + 5);
+                    const newHistoryEntry = { date: timestamp, role: analysis.socialArchetype };
+
+                    batch.update(personDoc.ref, { 
+                        lastSeen: timestamp,
+                        familiarityIndex: newFamiliarity,
+                        socialRoleHistory: arrayUnion(newHistoryEntry)
+                    });
                 }
             }
         }
