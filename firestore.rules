@@ -1,59 +1,37 @@
 
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check ownership
-    function isOwner(uid) {
-      return request.auth.uid == uid;
-    }
-
-    // users: A user can only access their own document.
-    match /users/{uid} {
-      allow read, update, delete: if isOwner(uid);
-      allow create: if isOwner(uid);
-    }
-
-    // Subcollections under users/{uid} (e.g., auraStates, memoryBlooms)
-    match /users/{uid}/{subcollection}/{docId} {
-        allow read, write, delete: if isOwner(uid);
-    }
-    
-    // Most root collections are protected by a 'uid' field in the document.
-    // Users can read/write their own documents.
-    match /{collection}/{docId} 
-      where collection in ['audioEvents', 'voiceEvents', 'people', 'dreams', 'faceSnapshots', 'innerTexts', 'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap', 'torsoMetrics', 'habitEvents', 'legsMetrics', 'movementPaths', 'avoidanceEvents', 'armMetrics', 'relationalGestures', 'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates', 'legacyThreads'] {
+    // User can read/write their own documents in most collections
+    match /{collection}/{userId}/{document=**} {
+      function isUserOwnedCollection() {
+        return collection in [
+          'users', 'permissions', 'audioEvents', 'voiceEvents', 'people', 
+          'dreams', 'innerTexts', 'faceSnapshots', 'auraStates', 'memoryBlooms', 
+          'emotionCycles', 'moodLogs', 'torsoMetrics', 'habitEvents', 
+          'narratorInsights', 'legsMetrics', 'movementPaths', 'avoidanceEvents',
+          'armMetrics', 'relationalGestures', 'socialContacts', 'socialEvents',
+          'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates',
+          'legacyThreads', 'presentMetrics', 'orbState', 'orbEvents', 
+          'orbDialogMemory', 'orbSymbolicMap'
+        ];
+      }
       
-      allow read, delete: if isOwner(resource.data.uid);
-      allow create: if isOwner(request.resource.data.uid);
-      allow update: if isOwner(resource.data.uid) && isOwner(request.resource.data.uid);
+      allow read, write: if request.auth != null && request.auth.uid == userId && isUserOwnedCollection();
     }
     
-    // presentMetrics is keyed by UID
-    match /presentMetrics/{uid} {
-        allow read, write: if isOwner(uid);
-    }
-
-    // notifications: Users can read their own, but only backend can write.
-    match /notifications/{uid}/{noteId} {
-      allow read: if isOwner(uid);
-      allow write: if false; 
-    }
-    
-    // narratorInsights: Users can read/write their own.
-     match /narratorInsights/{uid}/{insightId} {
-      allow read, write: if isOwner(uid);
-    }
-    
-    // Anonymized data is not readable or writable from the client.
+    // B2B collections are admin/function only
     match /anonymizedData/{hashId}/{metricId} {
-        allow read, write: if false;
+      allow read, write: if false; // Only backend access
+    }
+    match /b2bExports/{week}/{reportId} {
+      allow read, write: if false; // Only backend access
     }
     
-    // B2B exports are not readable or writable from the client.
-    match /b2bExports/{week}/{reportId} {
-        allow read, write: if false;
+    // Notifications are write-only by backend
+    match /notifications/{userId}/{noteId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false; // Functions only
     }
   }
 }
