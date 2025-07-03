@@ -106,18 +106,22 @@ export default function Home() {
       case 'memories':
         return (
           <>
-            <Recorder userId={user.uid} />
-            <SummarizationTool />
-            {voiceEvents.length > 0 ? (
-              <section className="space-y-4 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Recorder userId={user.uid} />
+              <SummarizationTool />
+            </div>
+            <div className="space-y-4 pt-4">
+              <h2 className="text-2xl font-headline font-bold">Recent Memories</h2>
+              {voiceEvents.length > 0 ? (
                 <NoteList items={voiceEvents} />
-              </section>
-            ) : (
-              <div className="text-center py-12 text-muted-foreground">
-                <p>No memories logged yet.</p>
-                <p className="text-sm">Use the recorder to capture your first voice event.</p>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-16 text-muted-foreground bg-card border rounded-lg">
+                  <History className="mx-auto h-12 w-12 text-primary/50" />
+                  <h3 className="mt-4 text-lg font-medium text-foreground">No Memories Logged Yet</h3>
+                  <p className="mt-1 text-sm">Use the recorder above to capture your first voice note.</p>
+                </div>
+              )}
+            </div>
           </>
         )
       case 'social':
@@ -242,7 +246,7 @@ export default function Home() {
                <div className="w-7 h-7"></div>
             </header>
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-              <div className="w-full max-w-3xl mx-auto space-y-8">
+              <div className="w-full max-w-5xl mx-auto space-y-8">
                 {renderActiveView()}
               </div>
             </div>
