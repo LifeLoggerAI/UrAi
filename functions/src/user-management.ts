@@ -26,10 +26,19 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
                 passiveAudioEnabled: true,
                 faceEmotionEnabled: false,
                 dataExportEnabled: true,
+                narratorVolume: 0.8,
+                ttsVoice: 'warmCalm',
+                pushNotifications: true,
+            },
+            narratorPrefs: {
+                toneStyle: 'poetic-soft',
+                metaphorLexicon: ['sunrise', 'fog', 'seeds'],
+                ttsConfig: { pitch: 1.0, speed: 1.0 },
             },
             personaProfile: {},
             symbolLexicon: {},
             subscriptionTier: 'free',
+            isProUser: false,
         };
 
         await db.collection("users").doc(uid).set(newUserDoc);

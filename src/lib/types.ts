@@ -19,6 +19,12 @@ export const UserSchema = z.object({
         dataExportEnabled: z.boolean().default(true),
         narratorVolume: z.number().min(0).max(1).default(0.8),
         ttsVoice: z.string().default('warmCalm'),
+        pushNotifications: z.boolean().default(true),
+    }).optional(),
+    narratorPrefs: z.object({
+        toneStyle: z.string(),
+        metaphorLexicon: z.array(z.string()),
+        ttsConfig: z.object({ pitch: z.number(), speed: z.number() }),
     }).optional(),
     personaProfile: z.record(z.any()).optional(),
     symbolLexicon: z.record(z.any()).optional(),
@@ -311,7 +317,7 @@ export const SuggestRitualOutputSchema = z.object({
 });
 export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
 
-// Schemas for Advanced Optional Systems
+// Schemas for Advanced Optional Systems from Master Prompt
 export const SafetyTriggerSchema = z.object({
     id: z.string(),
     uid: z.string(),
@@ -390,3 +396,139 @@ export const SubscriptionSchema = z.object({
     status: z.enum(["active", "paused", "expired"]),
 });
 export type Subscription = z.infer<typeof SubscriptionSchema>;
+
+// Additional Schemas from Final Master Prompt
+export const LocationLogSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    timestamp: z.number(),
+    coords: z.object({
+        lat: z.number(),
+        lng: z.number(),
+        accuracy: z.number().optional(),
+    }),
+    placeId: z.string().optional(),
+    eventType: z.enum(["motion", "stationary", "visit"]),
+    source: z.enum(["gps", "wifi", "ble"]),
+});
+export type LocationLog = z.infer<typeof LocationLogSchema>;
+
+export const ShadowMetricsWeeklySchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    weekStart: z.number(),
+    frictionTaps: z.number().optional(),
+    motionAnxietyScore: z.number().optional(),
+    bedtimeScrollingMins: z.number().optional(),
+    stillnessEpisodes: z.number().optional(),
+    compositeShadowStress: z.number().min(0).max(100),
+});
+export type ShadowMetricsWeekly = z.infer<typeof ShadowMetricsWeeklySchema>;
+
+export const ObscuraPatternsWeeklySchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    weekStart: z.number(),
+    faceTiltVariance: z.number().optional(),
+    microCancelRate: z.number().optional(),
+    sensorStillnessScore: z.number().optional(),
+    behavioralFatigue: z.number().min(0).max(100),
+});
+export type ObscuraPatternsWeekly = z.infer<typeof ObscuraPatternsWeeklySchema>;
+
+const BaseClusterSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    month: z.number(),
+});
+
+export const PsycheMirrorsMonthlySchema = BaseClusterSchema.extend({
+    selfConceptFragmentation: z.number(),
+    influenceEcho: z.number(),
+    emotionalCompassDrift: z.number(),
+    memoryMutationRate: z.number(),
+});
+export type PsycheMirrorsMonthly = z.infer<typeof PsycheMirrorsMonthlySchema>;
+
+export const SubconsciousSignalsMonthlySchema = BaseClusterSchema.extend({
+    dreamSymptomSync: z.number(),
+    moralConflictIndex: z.number(),
+    narrativeCollapseProbability: z.number(),
+});
+export type SubconsciousSignalsMonthly = z.infer<typeof SubconsciousSignalsMonthlySchema>;
+
+export const SoulSignalsMonthlySchema = BaseClusterSchema.extend({
+    spiritualVoidDepth: z.number(),
+    invisibleIdentityShift: z.number(),
+    narrativeTruthDelta: z.number(),
+});
+export type SoulSignalsMonthly = z.infer<typeof SoulSignalsMonthlySchema>;
+
+export const MythosMeaningMonthlySchema = BaseClusterSchema.extend({
+    archetypalOverloadScore: z.number(),
+    selfConceptDrift: z.number(),
+    mythicAlignmentVector: z.record(z.number()),
+});
+export type MythosMeaningMonthly = z.infer<typeof MythosMeaningMonthlySchema>;
+
+export const GoogleDataSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    dataType: z.enum(["calendar", "photos", "history", "gmail"]),
+    externalId: z.string(),
+    timestamp: z.number(),
+    meta: z.record(z.any()),
+    processed: z.boolean().default(false),
+});
+export type GoogleData = z.infer<typeof GoogleDataSchema>;
+
+export const RitualSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    type: z.string(),
+    createdAt: z.number(),
+    status: z.enum(["planned", "done", "shared"]),
+    mediaRef: z.string().optional(),
+    archetype: z.string().optional(),
+    triggers: z.array(z.object({
+        type: z.string(),
+        sourceId: z.string(),
+    })).optional(),
+    replyChainRef: z.string().optional(),
+});
+export type Ritual = z.infer<typeof RitualSchema>;
+
+export const StoryExportSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    type: z.enum(["seasonal", "scroll", "dream", "companion"]),
+    createdAt: z.number(),
+    fileRef: z.string(),
+    ttsRef: z.string().optional(),
+    publicUrl: z.string().url().optional(),
+    reactions: z.record(z.number()).optional(),
+});
+export type StoryExport = z.infer<typeof StoryExportSchema>;
+
+export const ForecastsDailySchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    date: z.number(),
+    moodForecastVector: z.record(z.number()),
+    rhythmState: z.string(),
+    stressIndex: z.number(),
+    skyShaderParams: z.record(z.any()),
+    narratorScriptRef: z.string().optional(),
+});
+export type ForecastsDaily = z.infer<typeof ForecastsDailySchema>;
+
+export const AutomationSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    category: z.enum(["trigger", "schedule", "conditional"]),
+    sourceRef: z.string().optional(),
+    action: z.enum(["notification", "narration", "ritualSuggestion"]),
+    scheduleCron: z.string().optional(),
+    enabled: z.boolean().default(true),
+});
+export type Automation = z.infer<typeof AutomationSchema>;
