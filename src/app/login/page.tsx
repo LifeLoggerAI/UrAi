@@ -4,7 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,12 +17,21 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
+const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <title>Google</title>
+        <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.34 1.97-4.51 1.97-3.67 0-6.55-3.04-6.55-6.8s2.88-6.8 6.55-6.8c1.98 0 3.33.83 4.1 1.59l2.42-2.42C17.82.7 15.36 0 12.48 0 5.88 0 .02 5.88.02 12.9s5.86 12.9 12.46 12.9c3.1 0 5.4-1.02 7.15-2.79 1.78-1.8 2.5-4.28 2.5-6.88 0-.8-.08-1.55-.2-2.23H12.48z" />
+    </svg>
+);
+
+
 export default function LoginPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEmailSubmitting, setIsEmailSubmitting] = useState(false);
+  const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -25,6 +39,8 @@ export default function LoginPage() {
       router.push('/');
     }
   }, [user, loading, router]);
+
+  const isSubmitting = isEmailSubmitting || isGoogleSubmitting;
 
   const handleAuthAction = async (action: 'signIn' | 'signUp') => {
     if (!email || !password) {
@@ -35,7 +51,7 @@ export default function LoginPage() {
         });
         return;
     }
-    setIsSubmitting(true);
+    setIsEmailSubmitting(true);
     try {
       if (action === 'signUp') {
         await createUserWithEmailAndPassword(auth, email, password);
@@ -54,9 +70,30 @@ export default function LoginPage() {
         description: error.message,
       });
     } finally {
-      setIsSubmitting(false);
+      setIsEmailSubmitting(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleSubmitting(true);
+    try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        toast({
+            title: 'Success!',
+            description: `You have successfully signed in with Google.`,
+        });
+        // Redirect is handled by AuthProvider
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Google Sign-In Failed",
+            description: error.message,
+        });
+    } finally {
+        setIsGoogleSubmitting(false);
+    }
+  }
 
   if (loading || user) {
     return (
@@ -74,6 +111,31 @@ export default function LoginPage() {
           <CardDescription>Sign in or create an account to continue to Life Logger.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
+            <Button
+              variant="outline"
+              onClick={handleGoogleSignIn}
+              disabled={isSubmitting}
+              className="w-full"
+            >
+              {isGoogleSubmitting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <GoogleIcon className="mr-2 h-4 w-4 fill-current" />
+              )}
+              Sign in with Google
+            </Button>
+            
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                    Or continue with email
+                    </span>
+                </div>
+            </div>
+
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -105,7 +167,7 @@ export default function LoginPage() {
               className="w-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isEmailSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Sign In
             </Button>
             <Button
@@ -114,7 +176,7 @@ export default function LoginPage() {
               variant="outline"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isEmailSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
               Sign Up
             </Button>
           </div>
