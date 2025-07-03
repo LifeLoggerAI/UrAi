@@ -1,53 +1,52 @@
-// This file contains the Genkit flow for analyzing the sentiment of notes.
-
 'use server';
 
 /**
- * @fileOverview Sentiment analysis AI agent.
+ * @fileOverview A voice event processing AI agent.
  *
- * - analyzeSentiment - A function that handles the sentiment analysis process.
- * - AnalyzeSentimentInput - The input type for the analyzeSentiment function.
- * - AnalyzeSentimentOutput - The return type for the analyzeSentiment function.
+ * - processVoiceEvent - A function that handles the full analysis of a voice transcript.
+ * - ProcessVoiceEventInput - The input type for the function.
+ * - ProcessVoiceEventOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {
+  ProcessVoiceEventInputSchema,
+  ProcessVoiceEventOutputSchema,
+  type ProcessVoiceEventInput,
+  type ProcessVoiceEventOutput,
+} from '@/lib/types';
 
-const AnalyzeSentimentInputSchema = z.object({
-  note: z.string().describe('The text content of the note to analyze.'),
-});
-export type AnalyzeSentimentInput = z.infer<typeof AnalyzeSentimentInputSchema>;
-
-const AnalyzeSentimentOutputSchema = z.object({
-  sentiment: z
-    .string()
-    .describe(
-      'The sentiment of the note, can be positive, negative, or neutral.'
-    ),
-  score: z.number().describe('The sentiment score, ranging from -1 to 1.'),
-});
-export type AnalyzeSentimentOutput = z.infer<typeof AnalyzeSentimentOutputSchema>;
-
-export async function analyzeSentiment(input: AnalyzeSentimentInput): Promise<AnalyzeSentimentOutput> {
-  return analyzeSentimentFlow(input);
+export async function processVoiceEvent(input: ProcessVoiceEventInput): Promise<ProcessVoiceEventOutput> {
+  return processVoiceEventFlow(input);
 }
 
 const prompt = ai.definePrompt({
-  name: 'analyzeSentimentPrompt',
-  input: {schema: AnalyzeSentimentInputSchema},
-  output: {schema: AnalyzeSentimentOutputSchema},
-  prompt: `You are a sentiment analysis expert. Analyze the sentiment of the following note and provide a sentiment (positive, negative, or neutral) and a sentiment score between -1 and 1.
+  name: 'processVoiceEventPrompt',
+  input: {schema: ProcessVoiceEventInputSchema},
+  output: {schema: ProcessVoiceEventOutputSchema},
+  prompt: `You are an expert in analyzing human conversation. Analyze the following transcript to extract key information.
 
-Note: {{{note}}}`,
+Transcript:
+{{{transcript}}}
+
+Based on the transcript, provide the following:
+1.  A concise one-sentence summary.
+2.  A list of relevant tags (e.g., 'work', 'family', 'planning').
+3.  A list of all proper names of people mentioned.
+4.  Any actionable tasks or to-do items. If none, return an empty array.
+5.  The primary emotions conveyed (e.g., 'joy', 'frustration', 'curiosity').
+6.  An overall tone score from -1 (very negative) to 1 (very positive).
+7.  The social archetype the speaker is embodying (e.g., 'Mentor', 'Friend', 'Reporter', 'Storyteller').
+8.  An "emotional echo score" from -100 (highly negative resonance) to 100 (highly positive resonance), representing the lasting emotional impact of the conversation.`,
 });
 
-const analyzeSentimentFlow = ai.defineFlow(
+const processVoiceEventFlow = ai.defineFlow(
   {
-    name: 'analyzeSentimentFlow',
-    inputSchema: AnalyzeSentimentInputSchema,
-    outputSchema: AnalyzeSentimentOutputSchema,
+    name: 'processVoiceEventFlow',
+    inputSchema: ProcessVoiceEventInputSchema,
+    outputSchema: ProcessVoiceEventOutputSchema,
   },
-  async input => {
+  async (input) => {
     const {output} = await prompt(input);
     return output!;
   }

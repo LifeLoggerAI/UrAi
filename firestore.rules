@@ -1,18 +1,39 @@
-rules_version='2'
+rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      // This rule allows anyone with your database reference to view, edit,
-      // and delete all data in your database. It is useful for getting
-      // started, but it is configured to expire after 30 days because it
-      // leaves your app open to attackers. At that time, all client
-      // requests to your database will be denied.
-      //
-      // Make sure to write security rules for your app before that time, or
-      // else all client requests to your database will be denied until you
-      // update your rules.
-      allow read, write: if request.time < timestamp.date(2025, 8, 2);
+    // Users can read and write their own profile and related subcollections.
+    match /users/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // This function checks if the requesting user is the owner of a document.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Secure all top-level collections by checking the userId field.
+    match /voiceEvents/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /transcriptions/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /people/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /emotionStates/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /faceSnapshots/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /locationLogs/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /shadowMetrics_weekly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /obscuraPatterns_weekly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /psycheMirrors_monthly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /subconsciousSignals_monthly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /soulSignals_monthly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /mythosMeaning_monthly/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /innerVoiceReflections/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /googleData/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /rituals/{docId} { allow read, write: if isOwner(resource.data.userId); }
+    match /automations/{docId} { allow read, write: if isOwner(resource.data.userId); }
+
+    // Story exports can be written by the owner, and read by the owner or if public.
+    match /storyExports/{docId} {
+      allow write: if isOwner(request.resource.data.userId);
+      allow read: if isOwner(resource.data.userId) || resource.data.publicUrl != null;
     }
   }
 }

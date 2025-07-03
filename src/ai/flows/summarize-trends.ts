@@ -9,17 +9,12 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const SummarizeTrendsInputSchema = z.object({
-  notes: z.array(z.string()).describe('An array of text notes to summarize.'),
-});
-export type SummarizeTrendsInput = z.infer<typeof SummarizeTrendsInputSchema>;
-
-const SummarizeTrendsOutputSchema = z.object({
-  summary: z.string().describe('A summary of the trends and themes found in the notes.'),
-});
-export type SummarizeTrendsOutput = z.infer<typeof SummarizeTrendsOutputSchema>;
+import {
+  SummarizeTrendsInputSchema,
+  SummarizeTrendsOutputSchema,
+  type SummarizeTrendsInput,
+  type SummarizeTrendsOutput,
+} from '@/lib/types';
 
 export async function summarizeTrends(input: SummarizeTrendsInput): Promise<SummarizeTrendsOutput> {
   return summarizeTrendsFlow(input);

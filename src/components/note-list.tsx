@@ -1,11 +1,11 @@
-import type { Note } from "@/lib/types";
+import type { AppData } from "@/lib/types";
 import { NoteCard } from "@/components/note-card";
 
-export function NoteList({ notes }: { notes: Note[] }) {
+export function NoteList({ items }: { items: AppData[] }) {
   return (
     <div className="w-full space-y-4">
-      {notes.map((note) => (
-        <NoteCard key={note.id} note={note} />
+      {items.map((item) => (
+        <NoteCard key={item.voiceEvent.id} item={item} />
       ))}
     </div>
   );
