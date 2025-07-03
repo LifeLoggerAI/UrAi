@@ -8,9 +8,9 @@ import { useAuth } from './auth-provider';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Skeleton } from './ui/skeleton';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
-import { BarChart, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Bar, Area, CartesianGrid } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from './ui/chart';
-import { BrainCircuit, NotebookPen, Users, TrendingUp, AlertCircle, Sparkles } from 'lucide-react';
+import { Bar, BarChart, Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from './ui/chart';
+import { BrainCircuit, Users, TrendingUp, AlertCircle, Sparkles, Mic } from 'lucide-react';
 
 export function DashboardView() {
     const { user } = useAuth();

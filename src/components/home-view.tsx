@@ -27,6 +27,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { SummarizationTool } from './summarization-tool';
 import { PeopleList } from './people-list';
 import { CognitiveZoneView } from './cognitive-zone-view';
+import { Loader2 } from 'lucide-react';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
