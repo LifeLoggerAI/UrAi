@@ -1,108 +1,21 @@
 
 'use client';
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { VoiceEvent, Person, Dream, InnerVoiceReflection } from "@/lib/types";
-import { Recorder } from "@/components/note-form";
-import { NoteList } from "@/components/note-list";
-import { PeopleList } from "@/components/people-list";
-import { db, auth } from "@/lib/firebase";
-import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, BotMessageSquare, NotebookPen, Cog, Home, MessageCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { SummarizationTool } from "@/components/summarization-tool";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarTrigger
-} from "@/components/ui/sidebar";
-import { DreamForm } from "@/components/dream-form";
-import { DreamList } from "@/components/dream-list";
-import { SettingsForm } from "@/components/settings-form";
+import { Loader2 } from "lucide-react";
 import { HomeView } from "@/components/home-view";
-import { CompanionChatView } from "@/components/companion-chat-view";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TextEntryForm } from "@/components/text-entry-form";
-import { TextEntryList } from "@/components/text-entry-list";
 
 export default function Home_Page() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
-  const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
-  const [people, setPeople] = useState<Person[]>([]);
-  const [dreams, setDreams] = useState<Dream[]>([]);
-  const [textEntries, setTextEntries] = useState<InnerVoiceReflection[]>([]);
-  const [activeView, setActiveView] = useState<'home' | 'journal' | 'social' | 'companion' | 'settings'>('home');
-
+  
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
-
-  useEffect(() => {
-    if (user) {
-      const qEvents = query(collection(db, "voiceEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
-      const unsubEvents = onSnapshot(qEvents, (snapshot) => {
-        const events = snapshot.docs.map(doc => doc.data() as VoiceEvent);
-        setVoiceEvents(events);
-      }, console.error);
-
-      const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"));
-      const unsubPeople = onSnapshot(qPeople, (snapshot) => {
-          const peopleData = snapshot.docs.map(doc => doc.data() as Person);
-          setPeople(peopleData);
-      }, console.error);
-
-      const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
-      const unsubDreams = onSnapshot(qDreams, (snapshot) => {
-        const dreamsData = snapshot.docs.map(doc => doc.data() as Dream);
-        setDreams(dreamsData);
-      }, console.error);
-
-      const qTexts = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
-      const unsubTexts = onSnapshot(qTexts, (snapshot) => {
-        const textsData = snapshot.docs.map(doc => doc.data() as InnerVoiceReflection);
-        setTextEntries(textsData);
-      }, console.error);
-
-
-      return () => {
-          unsubEvents();
-          unsubPeople();
-          unsubDreams();
-          unsubTexts();
-      };
-    }
-  }, [user]);
-
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-      toast({
-        title: "Signed Out",
-        description: "You have been successfully signed out.",
-      });
-      router.push('/login');
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Sign Out Failed",
-        description: "An error occurred while signing out. Please try again.",
-      });
-    }
-  };
 
   if (loading || !user) {
     return (
@@ -112,163 +25,9 @@ export default function Home_Page() {
     )
   }
 
-  const renderActiveView = () => {
-    switch(activeView) {
-      case 'home':
-        return <HomeView />;
-      case 'journal':
-        return (
-          <Tabs defaultValue="voice" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="voice">Voice Memos</TabsTrigger>
-              <TabsTrigger value="text">Text Entries</TabsTrigger>
-              <TabsTrigger value="dreams">Dreams</TabsTrigger>
-            </TabsList>
-            <TabsContent value="voice" className="mt-6 space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <Recorder userId={user.uid} />
-                <SummarizationTool />
-              </div>
-              <div className="space-y-4 pt-4">
-                <h2 className="text-2xl font-headline font-bold">Recent Voice Memos</h2>
-                <NoteList items={voiceEvents} />
-              </div>
-            </TabsContent>
-            <TabsContent value="text" className="mt-6 space-y-8">
-                <TextEntryForm />
-                <section className="space-y-4 pt-4">
-                    <TextEntryList entries={textEntries} />
-                </section>
-            </TabsContent>
-            <TabsContent value="dreams" className="mt-6 space-y-8">
-                <DreamForm />
-                <section className="space-y-4 pt-4">
-                  <DreamList dreams={dreams} />
-                </section>
-            </TabsContent>
-          </Tabs>
-        )
-      case 'social':
-        return <PeopleList people={people} />;
-      case 'companion':
-        return <CompanionChatView />;
-      case 'settings':
-        return <SettingsForm />;
-      default:
-        return null;
-    }
-  }
-
-  const getActiveViewTitle = () => {
-    switch(activeView) {
-      case 'home': return 'Home';
-      case 'journal': return 'Journal';
-      case 'social': return 'Social Constellation';
-      case 'companion': return 'AI Companion';
-      case 'settings': return 'Settings';
-      default: return 'Life Logger';
-    }
-  }
-
   return (
-    <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="flex items-center gap-2">
-            <BotMessageSquare className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-headline font-bold tracking-tight">
-              Life Logger
-            </h1>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-             <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveView('home')}
-                isActive={activeView === 'home'}
-                tooltip="View your emotional forecast"
-              >
-                <Home />
-                Home
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveView('journal')}
-                isActive={activeView === 'journal'}
-                tooltip="View your journal entries"
-              >
-                <NotebookPen />
-                Journal
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveView('social')}
-                isActive={activeView === 'social'}
-                tooltip="View your social connections"
-              >
-                <Users />
-                Social Constellation
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={() => setActiveView('companion')}
-                isActive={activeView === 'companion'}
-                tooltip="Chat with your AI Companion"
-              >
-                <MessageCircle />
-                Companion
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-           <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => setActiveView('settings')}
-                  isActive={activeView === 'settings'}
-                  tooltip="Manage your profile and settings"
-                >
-                  <Cog />
-                  Settings
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          <div className="flex items-center gap-2 p-2 border-t mt-2">
-            <img src={user.photoURL || `https://placehold.co/128x128.png?text=${(user.displayName || user.email || "A").charAt(0).toUpperCase()}`} alt="User avatar" className="h-8 w-8 rounded-full" />
-            <div className="flex flex-col text-sm overflow-hidden">
-                <span className="font-semibold text-sidebar-foreground truncate">{user.displayName || 'Anonymous'}</span>
-                <span className="text-muted-foreground text-xs truncate">{user.email}</span>
-            </div>
-          </div>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleSignOut} >
-                  <LogOut />
-                  Sign Out
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset>
-        <main className="flex flex-1 flex-col bg-background">
-            <header className="flex items-center justify-between md:justify-end p-4 md:p-6 border-b">
-              <SidebarTrigger className="md:hidden" />
-              <h2 className="text-lg font-semibold md:hidden">{getActiveViewTitle()}</h2>
-               <div className="w-7 h-7"></div>
-            </header>
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
-              <div className="w-full max-w-5xl mx-auto space-y-8">
-                {renderActiveView()}
-              </div>
-            </div>
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+    <main className="min-h-screen bg-background">
+      <HomeView />
+    </main>
   );
 }
