@@ -26,6 +26,9 @@ export * from "./torso-engine";
 // Export legs engine triggers
 export * from "./legs-engine";
 
+// Export arms engine triggers
+export * from "./arms-engine";
+
 // Export scheduled functions
 export * from "./scheduled";
 

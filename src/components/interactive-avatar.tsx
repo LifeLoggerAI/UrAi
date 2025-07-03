@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { Loader2 } from "lucide-react";
 
-type BodyZone = 'head' | 'torso' | 'limbs' | 'aura';
+type BodyZone = 'head' | 'torso' | 'arms' | 'legs' | 'aura';
 type AvatarProps = {
     mood: number; // -1 to 1
     onZoneClick: (zone: BodyZone) => void;
@@ -76,17 +76,26 @@ export function InteractiveAvatar({ mood, onZoneClick, isLoading = false, overla
                              <TooltipContent><p>Torso - Emotions & Memories</p></TooltipContent>
                         </Tooltip>
 
-                        {/* Limbs */}
+                        {/* Arms */}
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <g onClick={() => handleZoneClick('limbs')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")}>
+                                <g onClick={() => handleZoneClick('arms')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")}>
                                     <rect x="20" y="45" width="10" height="70" rx="5" />
                                     <rect x="70" y="45" width="10" height="70" rx="5" />
+                                </g>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Arms - Actions & Connections</p></TooltipContent>
+                        </Tooltip>
+
+                        {/* Legs */}
+                         <Tooltip>
+                            <TooltipTrigger asChild>
+                                <g onClick={() => handleZoneClick('legs')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")}>
                                     <rect x="35" y="95" width="10" height="60" rx="5" />
                                     <rect x="55" y="95" width="10" height="60" rx="5" />
                                 </g>
                             </TooltipTrigger>
-                            <TooltipContent><p>Limbs - Actions & Social Interactions</p></TooltipContent>
+                            <TooltipContent><p>Legs - Movement & Direction</p></TooltipContent>
                         </Tooltip>
                     </g>
                 </svg>

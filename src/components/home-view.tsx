@@ -6,7 +6,7 @@ import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom
 import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
-import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints } from 'lucide-react';
+import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { collection, query, where, onSnapshot, doc, orderBy } from 'firebase/firestore';
@@ -27,8 +27,9 @@ import { NoteList } from './note-list';
 import { NoteForm } from './note-form';
 import { TorsoView } from './torso-view';
 import { LegsView } from './legs-view';
+import { ArmsView } from './arms-view';
 
-type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
+type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | null;
 
 export function HomeView() {
     const { user } = useAuth();
@@ -132,7 +133,7 @@ export function HomeView() {
         return "A balanced and neutral state.";
     }
 
-    const handleZoneClick = async (zone: 'head' | 'torso' | 'limbs' | 'aura') => {
+    const handleZoneClick = async (zone: 'head' | 'torso' | 'legs' | 'arms' | 'aura') => {
         if (isRitualLoading || !user) return;
         
         switch(zone) {
@@ -152,13 +153,21 @@ export function HomeView() {
                 });
                 setActivePanel('torso');
                 return;
-            case 'limbs':
+            case 'legs':
                  setPanelContent({ 
-                    title: 'Legs: Movement & Direction', 
+                    title: 'Movement & Direction',
                     description: 'Explore your physical path, stability, and forward momentum.',
                     content: <LegsView />
                 });
-                setActivePanel('limbs');
+                setActivePanel('legs');
+                return;
+            case 'arms':
+                setPanelContent({
+                    title: 'Action & Connection',
+                    description: 'Explore your patterns of action, effort, and social connection.',
+                    content: <ArmsView />
+                });
+                setActivePanel('arms');
                 return;
             case 'aura':
                 setIsRitualLoading(true);
@@ -209,7 +218,8 @@ export function HomeView() {
             case 'settings': return 'max-w-3xl';
             case 'head': return 'max-w-6xl';
             case 'torso': return 'max-w-6xl';
-            case 'limbs': return 'max-w-3xl';
+            case 'legs': return 'max-w-3xl';
+            case 'arms': return 'max-w-6xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
             default: return 'max-w-lg';
         }
@@ -332,7 +342,8 @@ export function HomeView() {
                                 {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5"/>}
                                 {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5"/>}
                                 {activePanel === 'torso' && <Mic className="text-primary h-5 w-5"/>}
-                                {activePanel === 'limbs' && <Footprints className="text-primary h-5 w-5"/>}
+                                {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5"/>}
+                                {activePanel === 'arms' && <Hand className="text-primary h-5 w-5"/>}
                                 {panelContent?.title}
                                 </AlertDialogTitle>
                                 {panelContent?.description && (

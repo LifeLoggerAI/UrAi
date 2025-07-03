@@ -217,6 +217,33 @@ export const AvoidanceEventSchema = z.object({
 });
 export type AvoidanceEvent = z.infer<typeof AvoidanceEventSchema>;
 
+// Schemas for Arms Module
+export const ArmMetricsSchema = z.object({
+    uid: z.string(),
+    dateKey: z.string(),
+    actionFollowThroughScore: z.number().min(0).max(100),
+    emotionalEffortLoad: z.number().min(0).max(100),
+    relationalInitiationRatio: z.number().min(0).max(1),
+    delegationIndex: z.number().min(0).max(100),
+    connectionEchoScore: z.number().min(0).max(100),
+    leftRightBias: z.enum(["left", "right", "balanced"]),
+    updatedAt: z.number(),
+});
+export type ArmMetrics = z.infer<typeof ArmMetricsSchema>;
+
+export const RelationalGestureSchema = z.object({
+    uid: z.string(),
+    eventId: z.string(),
+    timestamp: z.number(),
+    gestureType: z.enum(["reach", "support", "withdrawal"]),
+    contextType: z.enum(["call", "text", "voice", "touch"]),
+    direction: z.enum(["initiated", "received"]),
+    armSide: z.enum(["left", "right"]),
+    toneAnalysis: z.record(z.number()),
+    durationSecs: z.number(),
+});
+export type RelationalGesture = z.infer<typeof RelationalGestureSchema>;
+
 
 // Schemas for Genkit Flows
 
@@ -379,7 +406,7 @@ export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
 
 // Schemas for Ritual Suggestions
 export const SuggestRitualInputSchema = z.object({
-  zone: z.enum(['head', 'torso', 'limbs', 'aura']).describe("The area of the symbolic avatar that was clicked."),
+  zone: z.enum(['head', 'torso', 'legs', 'arms', 'aura']).describe("The area of the symbolic avatar that was clicked."),
   context: z.string().describe("Brief context about the user's current state, like overall mood or recent themes."),
 });
 export type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
