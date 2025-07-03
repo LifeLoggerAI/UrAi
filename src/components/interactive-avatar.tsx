@@ -3,19 +3,26 @@
 
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { Loader2 } from "lucide-react";
 
 type BodyZone = 'head' | 'torso' | 'limbs' | 'aura';
 type AvatarProps = {
     mood: number; // -1 to 1
     onZoneClick: (zone: BodyZone) => void;
+    isLoading?: boolean;
 };
 
-export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
+export function InteractiveAvatar({ mood, onZoneClick, isLoading = false }: AvatarProps) {
     // mood -1 -> hsl(0, 80%, 60%) (red)
     // mood 0 -> hsl(60, 80%, 60%) (yellow)
     // mood 1 -> hsl(120, 80%, 60%) (green)
     const hue = (mood + 1) * 60; // maps -1..1 to 0..120
     const auraColor = `hsl(${hue}, 80%, 60%)`;
+
+    const handleZoneClick = (zone: BodyZone) => {
+        if (isLoading) return;
+        onZoneClick(zone);
+    }
 
     return (
         <TooltipProvider>
@@ -45,7 +52,7 @@ export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
                     {/* Aura - clickable background */}
                      <Tooltip>
                         <TooltipTrigger asChild>
-                           <rect width="100" height="160" fill="transparent" onClick={() => onZoneClick('aura')} className="cursor-pointer" />
+                           <rect width="100" height="160" fill="transparent" onClick={() => handleZoneClick('aura')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")} />
                         </TooltipTrigger>
                         <TooltipContent><p>Aura - Overall Mood</p></TooltipContent>
                     </Tooltip>
@@ -54,7 +61,7 @@ export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
                         {/* Head */}
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <circle cx="50" cy="20" r="15" onClick={() => onZoneClick('head')} className="cursor-pointer" />
+                                <circle cx="50" cy="20" r="15" onClick={() => handleZoneClick('head')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")} />
                             </TooltipTrigger>
                             <TooltipContent><p>Head - Dreams & Thoughts</p></TooltipContent>
                         </Tooltip>
@@ -62,7 +69,7 @@ export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
                         {/* Torso */}
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <path d="M35,40 Q50,35 65,40 L70,90 Q50,100 30,90 Z" onClick={() => onZoneClick('torso')} className="cursor-pointer" />
+                                <path d="M35,40 Q50,35 65,40 L70,90 Q50,100 30,90 Z" onClick={() => handleZoneClick('torso')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")} />
                             </TooltipTrigger>
                              <TooltipContent><p>Torso - Emotions & Memories</p></TooltipContent>
                         </Tooltip>
@@ -70,7 +77,7 @@ export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
                         {/* Limbs */}
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <g onClick={() => onZoneClick('limbs')} className="cursor-pointer">
+                                <g onClick={() => handleZoneClick('limbs')} className={cn(isLoading ? "cursor-wait" : "cursor-pointer")}>
                                     <rect x="20" y="45" width="10" height="70" rx="5" />
                                     <rect x="70" y="45" width="10" height="70" rx="5" />
                                     <rect x="35" y="95" width="10" height="60" rx="5" />
@@ -81,6 +88,12 @@ export function InteractiveAvatar({ mood, onZoneClick }: AvatarProps) {
                         </Tooltip>
                     </g>
                 </svg>
+
+                {isLoading && (
+                    <div className="absolute inset-0 bg-background/50 flex items-center justify-center rounded-lg backdrop-blur-sm z-20">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                )}
             </div>
         </TooltipProvider>
     );

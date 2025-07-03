@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -11,11 +11,12 @@ import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
 import { generateAvatar } from "@/ai/flows/generate-avatar";
-import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema } from "@/lib/types";
+import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
 import { analyzeFace } from "@/ai/flows/analyze-face";
 import { analyzeTextSentiment } from "@/ai/flows/analyze-text-sentiment";
+import { suggestRitual } from "@/ai/flows/suggest-ritual";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -482,5 +483,29 @@ export async function addInnerTextAction(input: AddInnerTextInput): Promise<{ su
     } catch (e) {
         console.error("Failed to add inner text reflection:", e);
         return { success: false, error: "Failed to save reflection. Please try again." };
+    }
+}
+
+
+type SuggestRitualReturn = {
+    suggestion: SuggestRitualOutput | null;
+    error: string | null;
+}
+
+export async function suggestRitualAction(input: z.infer<typeof SuggestRitualInputSchema>): Promise<SuggestRitualReturn> {
+    const validatedFields = SuggestRitualInputSchema.safeParse(input);
+    if (!validatedFields.success) {
+        return { suggestion: null, error: "Invalid input." };
+    }
+    
+    try {
+        const result = await suggestRitual(validatedFields.data);
+        if (!result) {
+             return { suggestion: null, error: "Could not generate a suggestion at this time." };
+        }
+        return { suggestion: result, error: null };
+    } catch (e) {
+        console.error("Suggest ritual action failed:", e);
+        return { suggestion: null, error: "An error occurred while generating a suggestion." };
     }
 }

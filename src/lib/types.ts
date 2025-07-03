@@ -254,3 +254,18 @@ export const CompanionChatOutputSchema = z.object({
   response: z.string().describe('The AI companion\'s response.'),
 });
 export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+
+
+// Schemas for Ritual Suggestions
+export const SuggestRitualInputSchema = z.object({
+  zone: z.enum(['head', 'torso', 'limbs', 'aura']).describe("The area of the symbolic avatar that was clicked."),
+  context: z.string().describe("Brief context about the user's current state, like overall mood or recent themes."),
+});
+export type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
+
+export const SuggestRitualOutputSchema = z.object({
+  title: z.string().describe("A short, engaging title for the suggested ritual or reflection."),
+  description: z.string().describe("A one or two-sentence description of the ritual, framed as a gentle suggestion."),
+  suggestion: z.string().describe("A concrete action or journaling prompt for the user."),
+});
+export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
