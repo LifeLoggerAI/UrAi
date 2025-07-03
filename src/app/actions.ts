@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -14,6 +14,7 @@ import { generateAvatar } from "@/ai/flows/generate-avatar";
 import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
+import { analyzeFace } from "@/ai/flows/analyze-face";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -393,5 +394,49 @@ export async function companionChatAction(input: CompanionChatInput): Promise<Co
     } catch (e) {
         console.error("Companion chat action failed:", e);
         return { response: null, error: "An error occurred while talking to the companion." };
+    }
+}
+
+
+const addFaceSnapshotInputSchema = z.object({
+    imageDataUri: z.string().min(1, "Image data cannot be empty."),
+    userId: z.string().min(1, "User ID is required."),
+});
+
+type AddFaceSnapshotInput = z.infer<typeof addFaceSnapshotInputSchema>;
+
+export async function addFaceSnapshotAction(input: AddFaceSnapshotInput): Promise<{ success: boolean, error: string | null }> {
+    const validatedFields = addFaceSnapshotInputSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+    
+    const { userId, imageDataUri } = validatedFields.data;
+
+    try {
+        const analysis = await analyzeFace({ imageDataUri });
+        if (!analysis) {
+            return { success: false, error: "AI analysis of the face failed." };
+        }
+
+        const snapshotId = crypto.randomUUID();
+        const timestamp = Date.now();
+        
+        const newSnapshot: FaceSnapshot = {
+            id: snapshotId,
+            uid: userId,
+            storagePath: `faces/${userId}/${snapshotId}.jpg`,
+            createdAt: timestamp,
+            dominantEmotion: analysis.dominantEmotion,
+            confidence: analysis.confidence,
+        };
+
+        await setDoc(doc(db, "faceSnapshots", newSnapshot.id), newSnapshot);
+
+        return { success: true, error: null };
+    } catch (e) {
+        console.error("Failed to add face snapshot:", e);
+        return { success: false, error: "Failed to save face snapshot. Please try again." };
     }
 }

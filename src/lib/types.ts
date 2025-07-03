@@ -78,6 +78,16 @@ export const DreamSchema = z.object({
 });
 export type Dream = z.infer<typeof DreamSchema>;
 
+export const FaceSnapshotSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    storagePath: z.string(),
+    createdAt: z.number(),
+    dominantEmotion: z.string(),
+    confidence: z.number(),
+});
+export type FaceSnapshot = z.infer<typeof FaceSnapshotSchema>;
+
 
 // Schemas for Genkit Flows
 
@@ -156,6 +166,22 @@ export const GenerateAvatarOutputSchema = z.object({
   avatarDataUri: z.string().describe('The generated avatar image as a data URI.'),
 });
 export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
+
+export const AnalyzeFaceInputSchema = z.object({
+  imageDataUri: z
+    .string()
+    .describe(
+      "A photo of a face, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+    ),
+});
+export type AnalyzeFaceInput = z.infer<typeof AnalyzeFaceInputSchema>;
+
+export const AnalyzeFaceOutputSchema = z.object({
+  dominantEmotion: z.string().describe('The primary emotion detected in the face (e.g., "joy", "sorrow", "anger").'),
+  confidence: z.number().describe('The confidence score for the detected emotion (0 to 1).'),
+});
+export type AnalyzeFaceOutput = z.infer<typeof AnalyzeFaceOutputSchema>;
+
 
 // Schema for Settings Form
 export const UpdateUserSettingsSchema = z.object({
