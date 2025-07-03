@@ -1,15 +1,35 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read and write their own user document
+
+    // Helper function to verify a user is authenticated and is the owner of a document.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // A user can only read and update their own profile.
+    // Creation and deletion are handled by backend Cloud Functions.
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, update: if isOwner(userId);
+    }
+
+    // Users can perform all actions on their own audio events.
+    match /audioEvents/{audioEventId} {
+      allow read, update, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
     }
     
-    // Any collection where the document has a `uid` field matching the user
-    // can be read or written by that user.
-    match /{collection}/{docId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.uid;
+    // Users can perform all actions on their own voice events.
+    match /voiceEvents/{voiceEventId} {
+      allow read, update, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
+    }
+
+    // Users can perform all actions on their own 'person' documents.
+    match /people/{personId} {
+      allow read, update, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
     }
   }
 }
