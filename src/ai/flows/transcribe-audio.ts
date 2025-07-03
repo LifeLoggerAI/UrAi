@@ -19,9 +19,6 @@ export async function transcribeAudio(input: TranscribeAudioInput): Promise<Tran
   return transcribeAudioFlow(input);
 }
 
-// In a real implementation, this flow would call a speech-to-text model
-// like Whisper via a Genkit extension. For now, it returns a hardcoded
-// transcript for demonstration purposes to allow UI development.
 const transcribeAudioFlow = ai.defineFlow(
   {
     name: 'transcribeAudioFlow',
@@ -29,9 +26,13 @@ const transcribeAudioFlow = ai.defineFlow(
     outputSchema: TranscribeAudioOutputSchema,
   },
   async (input) => {
-    // MOCK TRANSCRIPTION
-    const transcript = "I had a meeting with Alex about the Q3 projections, it went pretty well. I need to remember to send the follow-up notes by the end of the day. We also briefly discussed the upcoming team offsite, and Maria seemed excited about the new venue.";
+    const { text } = await ai.generate({
+        prompt: [{
+            text: "Transcribe the following audio file.",
+            media: { url: input.audioDataUri },
+        }]
+    });
     
-    return { transcript };
+    return { transcript: text };
   }
 );
