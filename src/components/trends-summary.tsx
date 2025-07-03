@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { summarizeTrendsAction } from '@/app/actions'
-import type { Note } from '@/lib/types'
+import type { AppData } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Loader2, Sparkles, Terminal } from 'lucide-react'
 import {
@@ -16,15 +16,15 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
-export function TrendsSummary({ notes }: { notes: Note[] }) {
+export function TrendsSummary({ items }: { items: AppData[] }) {
   const [summary, setSummary] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleSummarize = async () => {
-    if (notes.length < 2) {
-        setError("You need at least two notes to identify trends.");
+    if (items.length < 2) {
+        setError("You need at least two memories to identify trends.");
         setIsDialogOpen(true);
         return;
     }
@@ -34,7 +34,7 @@ export function TrendsSummary({ notes }: { notes: Note[] }) {
     setSummary(null)
     setIsDialogOpen(true)
     
-    const noteContents = notes.map((n) => n.content)
+    const noteContents = items.map((item) => item.transcription.fullText)
     const result = await summarizeTrendsAction(noteContents)
     
     if (result.summary) {
@@ -48,8 +48,8 @@ export function TrendsSummary({ notes }: { notes: Note[] }) {
 
   return (
     <>
-      <div className="w-full flex justify-center">
-        <Button onClick={handleSummarize} disabled={isLoading || notes.length === 0} variant="outline">
+      <div className="w-full flex justify-center py-4">
+        <Button onClick={handleSummarize} disabled={isLoading || items.length === 0} variant="outline" className="bg-accent/20 border-accent/50 hover:bg-accent/40">
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (

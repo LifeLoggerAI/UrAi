@@ -3,14 +3,6 @@ import { z } from "zod";
 // Base sentiment type
 export type Sentiment = "positive" | "negative" | "neutral";
 
-// Type for the old note structure, potentially used in trends-summary
-export interface Note {
-  id: string;
-  content: string;
-  timestamp: number;
-  sentiment: Sentiment;
-}
-
 // Combined type for client-side state management
 export interface AppData {
     voiceEvent: VoiceEvent;

@@ -13,7 +13,7 @@ export function NoteCard({ item }: { item: AppData }) {
 
   return (
     <div className="animate-fadeIn">
-      <Card className="shadow-lg border-border/60 hover:border-accent/80 transition-all duration-300 bg-secondary/20">
+      <Card className="shadow-lg border-border/60 hover:border-accent/80 transition-all duration-300 bg-card">
         <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
           <div>
             <CardTitle className="text-lg font-headline">{transcription.summary}</CardTitle>
@@ -21,7 +21,7 @@ export function NoteCard({ item }: { item: AppData }) {
           </div>
           <div className="flex flex-col items-end gap-2">
             <SentimentIcon sentiment={transcription.sentiment} />
-            <Badge variant="outline" className="capitalize text-xs border-accent/50 text-accent">
+            <Badge variant="outline" className="capitalize text-xs border-accent/50 text-accent-foreground">
               {voiceEvent.socialArchetype}
             </Badge>
           </div>
