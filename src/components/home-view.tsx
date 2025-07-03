@@ -2,93 +2,128 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom } from '@/lib/types';
+import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection } from '@/lib/types';
 import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
 import { Skeleton } from './ui/skeleton';
-import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut } from 'lucide-react';
+import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
-import { FacialEmotionCapture } from './facial-emotion-capture';
-import { collection, query, where, onSnapshot, doc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, orderBy } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { SettingsForm } from './settings-form';
+import { DreamList } from './dream-list';
+import { DreamForm } from './dream-form';
+import { TextEntryList } from './text-entry-list';
+import { TextEntryForm } from './text-entry-form';
+import { NoteList } from './note-list';
+import { Recorder as NoteForm } from './note-form';
+import { CompanionChatView } from './companion-chat-view';
+import { PersonCard } from './person-card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { ScrollArea } from './ui/scroll-area';
 
-type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'aura' | null;
+type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
 export function HomeView() {
     const { user } = useAuth();
     const router = useRouter();
     const { toast } = useToast();
-    const [data, setData] = useState<DashboardData | null>(null);
+    
+    // Data states
     const [people, setPeople] = useState<Person[]>([]);
     const [auraState, setAuraState] = useState<AuraState | null>(null);
     const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[]>([]);
+    const [dreams, setDreams] = useState<Dream[]>([]);
+    const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
+    const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[]>([]);
+
     const [isLoading, setIsLoading] = useState(true);
     const [isRitualLoading, setIsRitualLoading] = useState(false);
     
+    // UI states
     const [activePanel, setActivePanel] = useState<ActivePanel>(null);
     const [panelContent, setPanelContent] = useState<{ title: string; description: string; content?: React.ReactNode } | null>(null);
 
+    const overallMood = voiceEvents[0]?.sentimentScore ?? dreams[0]?.sentimentScore ?? 0;
 
     useEffect(() => {
         if (user) {
             const unsubscribes: (() => void)[] = [];
+            let loadedCount = 0;
+            const totalToLoad = 6;
 
-            getDashboardDataAction(user.uid)
-                .then(result => {
-                    if (result.data) setData(result.data);
-                })
-                .finally(() => setIsLoading(false));
-
+            const checkLoadingDone = () => {
+                loadedCount++;
+                if (loadedCount >= totalToLoad) {
+                    setIsLoading(false);
+                }
+            };
+            
+            // People
             const qPeople = query(collection(db, "people"), where("uid", "==", user.uid));
             unsubscribes.push(onSnapshot(qPeople, (snapshot) => {
                 setPeople(snapshot.docs.map(doc => doc.data() as Person));
+                checkLoadingDone();
             }));
 
+            // Aura
             const auraRef = doc(db, 'users', user.uid, 'auraStates', 'current');
             unsubscribes.push(onSnapshot(auraRef, (doc) => {
                 setAuraState(doc.data() as AuraState);
+                checkLoadingDone();
             }));
-
+            
+            // Blooms
             const bloomsRef = collection(db, 'users', user.uid, 'memoryBlooms');
             unsubscribes.push(onSnapshot(bloomsRef, (snapshot) => {
                 setMemoryBlooms(snapshot.docs.map(doc => doc.data() as MemoryBloom).sort((a,b) => a.triggeredAt - b.triggeredAt));
+                checkLoadingDone();
+            }));
+            
+            // Dreams
+            const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            unsubscribes.push(onSnapshot(qDreams, snapshot => {
+                setDreams(snapshot.docs.map(d => d.data() as Dream));
+                checkLoadingDone();
+            }));
+            
+            // Voice Events
+            const qVoice = query(collection(db, "voiceEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            unsubscribes.push(onSnapshot(qVoice, snapshot => {
+                setVoiceEvents(snapshot.docs.map(d => d.data() as VoiceEvent));
+                checkLoadingDone();
             }));
 
-            return () => {
-                unsubscribes.forEach(unsub => unsub());
-            };
+            // Inner Texts
+            const qInner = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            unsubscribes.push(onSnapshot(qInner, snapshot => {
+                setInnerTexts(snapshot.docs.map(d => d.data() as InnerVoiceReflection));
+                checkLoadingDone();
+            }));
+
+
+            return () => unsubscribes.forEach(unsub => unsub());
         }
     }, [user]);
     
     const handleSignOut = async () => {
         try {
           await auth.signOut();
-          toast({
-            title: "Signed Out",
-            description: "You have been successfully signed out.",
-          });
+          toast({ title: "Signed Out", description: "You have been successfully signed out." });
           router.push('/login');
         } catch (error) {
-          toast({
-            variant: "destructive",
-            title: "Sign Out Failed",
-            description: "An error occurred while signing out. Please try again.",
-          });
+          toast({ variant: "destructive", title: "Sign Out Failed", description: "An error occurred while signing out. Please try again." });
         }
     };
 
 
     const moodDescription = () => {
-        if (auraState?.currentEmotion) {
-            return `Currently feeling ${auraState.currentEmotion}.`;
-        }
+        if (auraState?.currentEmotion) return `Currently feeling ${auraState.currentEmotion}.`;
         if (overallMood > 0.5) return "Feeling bright and optimistic.";
         if (overallMood > 0.1) return "A sense of calm and positivity.";
         if (overallMood < -0.5) return "Reflecting on some challenges.";
@@ -97,27 +132,69 @@ export function HomeView() {
     }
 
     const handleZoneClick = async (zone: 'head' | 'torso' | 'limbs' | 'aura') => {
-        if (isRitualLoading) return;
+        if (isRitualLoading || !user) return;
         
-        // Navigation logic based on zone
         switch(zone) {
             case 'head':
-                setPanelContent({ title: 'Thought Panel', description: 'This is where your dreams and journal entries will appear.' });
+                setPanelContent({ 
+                    title: 'Head: Thoughts & Dreams', 
+                    description: 'Log dreams and reflections. Explore your cognitive patterns.',
+                    content: (
+                        <Tabs defaultValue="dreams" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="dreams">Dreams</TabsTrigger>
+                                <TabsTrigger value="reflections">Reflections</TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="dreams" className="mt-4">
+                                <DreamForm />
+                                <ScrollArea className="h-[40vh] mt-4 pr-4">
+                                    <DreamList dreams={dreams} />
+                                </ScrollArea>
+                            </TabsContent>
+                            <TabsContent value="reflections" className="mt-4">
+                                <TextEntryForm />
+                                <ScrollArea className="h-[40vh] mt-4 pr-4">
+                                    <TextEntryList entries={innerTexts} />
+                                </ScrollArea>
+                            </TabsContent>
+                        </Tabs>
+                    )
+                });
                 setActivePanel('head');
                 return;
             case 'torso':
-                setPanelContent({ title: 'Emotion Logs', description: 'This is where your detailed emotion history will be visualized.' });
+                 setPanelContent({ 
+                    title: 'Torso: Emotions & Memories', 
+                    description: 'Record voice memos to capture your emotional state in the moment.',
+                    content: (
+                        <div className="w-full">
+                            <NoteForm userId={user.uid} />
+                            <h3 className="text-xl font-headline mt-6 mb-4">Recent Voice Events</h3>
+                            <ScrollArea className="h-[40vh] pr-4">
+                                <NoteList items={voiceEvents} />
+                            </ScrollArea>
+                        </div>
+                    )
+                });
                 setActivePanel('torso');
                 return;
             case 'limbs':
-                 setPanelContent({ title: 'Action & Social Panel', description: 'This panel will show your tasks, habits, and social interactions.' });
+                 setPanelContent({ 
+                    title: 'Limbs: Actions & Social Life', 
+                    description: 'This is where your tasks, habits, and social interactions will appear.',
+                    content: (
+                        <div className="text-center py-10 text-muted-foreground">
+                            <Footprints className="mx-auto h-12 w-12" />
+                            <p className="mt-4">Movement and Action tracking coming soon.</p>
+                        </div>
+                    )
+                });
                 setActivePanel('limbs');
                 return;
             case 'aura':
                 setIsRitualLoading(true);
-                const context = `Overall mood is ${moodDescription()}.`;
                 try {
-                    const result = await suggestRitualAction({ zone, context });
+                    const result = await suggestRitualAction({ zone, context: `Overall mood is ${moodDescription()}.` });
                     if (result.error) throw new Error(result.error);
                     if (result.suggestion) {
                         setPanelContent({ 
@@ -145,9 +222,29 @@ export function HomeView() {
         setActivePanel('bloom');
     };
 
-    const overallMood = data?.sentimentOverTime.length 
-        ? data.sentimentOverTime[data.sentimentOverTime.length - 1].sentiment 
-        : 0;
+    const handlePersonClick = (person: Person) => {
+        setPanelContent({
+            title: person.name,
+            description: "Social relationship details.",
+            content: <PersonCard person={person} />
+        });
+        setActivePanel('person');
+    }
+
+    const handleCompanionOrbClick = () => {
+        setActivePanel('companion');
+    };
+
+    const getPanelSize = () => {
+        switch(activePanel) {
+            case 'settings': return 'max-w-3xl';
+            case 'head':
+            case 'torso': return 'max-w-4xl';
+            case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
+            default: return 'max-w-lg';
+        }
+    }
+
 
     const getSkyStyle = () => {
         const hue = (overallMood + 1) * 60; // red -> yellow -> green
@@ -161,9 +258,8 @@ export function HomeView() {
     if (isLoading) {
         return (
             <div className="w-full h-screen flex flex-col items-center justify-center p-4">
-                <Skeleton className="h-10 w-64 mb-4" />
-                <Skeleton className="h-6 w-96 mb-8" />
-                <Skeleton className="h-[500px] w-full max-w-lg" />
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                <p className="mt-4 text-muted-foreground">Awakening the dreamscape...</p>
             </div>
         );
     }
@@ -194,7 +290,6 @@ export function HomeView() {
                     </TooltipProvider>
                 </div>
 
-
                 <div className="relative z-10 w-full max-w-4xl animate-fadeIn">
                     <h1 className="text-3xl font-bold font-headline text-foreground">Today's Emotional Outlook</h1>
                     <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
@@ -204,11 +299,11 @@ export function HomeView() {
                 <div className="absolute inset-x-0 top-10 flex justify-center gap-8 opacity-50 z-10">
                     {people.slice(0, 5).map((person, i) => (
                         <Tooltip key={person.id}>
-                            <TooltipTrigger>
-                                <div className="flex flex-col items-center animate-fadeIn cursor-pointer" style={{ animationDelay: `${i * 100}ms`}}>
+                            <TooltipTrigger asChild>
+                                <button onClick={() => handlePersonClick(person)} className="flex flex-col items-center animate-fadeIn cursor-pointer" style={{ animationDelay: `${i * 100}ms`}}>
                                     <Users className="h-6 w-6" />
                                     <span className="text-xs mt-1">{person.name}</span>
-                                </div>
+                                </button>
                             </TooltipTrigger>
                             <TooltipContent><p>Social Silhouette: {person.name}</p></TooltipContent>
                         </Tooltip>
@@ -216,35 +311,25 @@ export function HomeView() {
                 </div>
                 </TooltipProvider>
 
-                <div className="relative z-10 w-full max-w-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-4">
-                    <InteractiveAvatar 
+                <div className="relative z-10 w-full max-w-lg mt-4">
+                     <InteractiveAvatar 
                         mood={overallMood} 
                         onZoneClick={handleZoneClick} 
                         isLoading={isRitualLoading}
                         overlayColor={auraState?.overlayColor}
                         overlayStyle={auraState?.overlayStyle}
                     />
-                    <div className="space-y-8">
-                        <Card>
-                        <CardHeader>
-                                <CardTitle>AI Companion Orb</CardTitle>
-                                <CardDescription>Your guide to self-discovery.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                                <div 
-                                    onClick={() => handleZoneClick('aura')} 
-                                    className="h-24 w-24 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer transition-all duration-500 hover:scale-110"
-                                    style={{
-                                        boxShadow: auraState?.overlayColor ? `0 0 20px 5px ${auraState.overlayColor}` : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
-                                    }}
-                                >
-                                    <BotMessageSquare className="h-10 w-10 text-primary animate-pulse" />
-                                </div>
-                        </CardContent>
-                        </Card>
-                        <FacialEmotionCapture />
-                    </div>
                 </div>
+                 <div 
+                    onClick={handleCompanionOrbClick} 
+                    className="relative z-20 mt-8 h-20 w-20 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer transition-all duration-500 hover:scale-110"
+                    style={{
+                        boxShadow: auraState?.overlayColor ? `0 0 20px 5px ${auraState.overlayColor}` : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
+                    }}
+                >
+                    <BotMessageSquare className="h-9 w-9 text-primary animate-pulse" />
+                </div>
+
 
                 <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
                     <TooltipProvider>
@@ -267,31 +352,43 @@ export function HomeView() {
             </div>
 
             <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
-                <AlertDialogContent className={activePanel === 'settings' ? 'max-w-3xl' : ''}>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle className="flex items-center gap-2">
-                           {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5"/>}
-                           {panelContent?.title}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription className="pt-2">
-                           {panelContent?.description}
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    {activePanel === 'settings' ? (
-                       <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
-                         <SettingsForm />
-                       </div>
+                <AlertDialogContent className={getPanelSize()}>
+                    {activePanel === 'companion' ? (
+                        <CompanionChatView />
                     ) : (
-                        panelContent?.content && (
-                            <div className="py-4 px-4 my-2 text-sm bg-muted/50 rounded-md border">
-                                {panelContent.content}
+                        <>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle className="flex items-center gap-2">
+                                {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5"/>}
+                                {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5"/>}
+                                {activePanel === 'torso' && <Mic className="text-primary h-5 w-5"/>}
+                                {panelContent?.title}
+                                </AlertDialogTitle>
+                                {panelContent?.description && (
+                                     <AlertDialogDescription className="pt-2">
+                                        {panelContent.description}
+                                     </AlertDialogDescription>
+                                )}
+                            </AlertDialogHeader>
+                            
+                            {activePanel === 'settings' ? (
+                            <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
+                                <SettingsForm />
                             </div>
-                        )
+                            ) : (
+                                panelContent?.content && (
+                                    <div className="py-4 my-2 text-sm rounded-md">
+                                        {panelContent.content}
+                                    </div>
+                                )
+                            )}
+                            
+                            <AlertDialogFooter>
+                                {activePanel !== 'settings' && <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>}
+                                {activePanel === 'settings' && <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>}
+                            </AlertDialogFooter>
+                         </>
                     )}
-                    <AlertDialogFooter>
-                        {activePanel !== 'settings' && <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>}
-                        {activePanel === 'settings' && <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>}
-                    </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
         </>

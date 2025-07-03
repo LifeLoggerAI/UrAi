@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { addInnerTextAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -51,22 +50,17 @@ export function TextEntryForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Card className="w-full shadow-lg border-border/60">
-                <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Inner Voice</CardTitle>
-                    <CardDescription>Type your thoughts, feelings, or reflections. The AI will analyze the sentiment.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Textarea
-                        placeholder="What's on your mind?..."
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        disabled={isSubmitting}
-                        rows={6}
-                    />
-                </CardContent>
-                <CardFooter className="flex justify-center">
+        <form onSubmit={handleSubmit} className="p-4 border rounded-lg bg-background">
+            <div className="space-y-4">
+                 <h3 className="font-headline text-xl">Inner Voice</h3>
+                 <Textarea
+                    placeholder="What's on your mind?..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    disabled={isSubmitting}
+                    rows={6}
+                />
+                <div className="flex justify-end">
                     <Button type="submit" disabled={isSubmitting || !text.trim()}>
                         {isSubmitting ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -75,8 +69,8 @@ export function TextEntryForm() {
                         )}
                         Save Reflection
                     </Button>
-                </CardFooter>
-            </Card>
+                </div>
+            </div>
         </form>
     );
 }

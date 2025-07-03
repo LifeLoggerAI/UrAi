@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { addDreamAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -51,32 +50,27 @@ export function DreamForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Card className="w-full shadow-lg border-border/60">
-                <CardHeader>
-                    <CardTitle className="font-headline text-2xl">Log a New Dream</CardTitle>
-                    <CardDescription>Describe your dream below. The AI will analyze it for symbols, themes, and emotions.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Textarea
-                        placeholder="Last night I dreamt of..."
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        disabled={isSubmitting}
-                        rows={6}
-                    />
-                </CardContent>
-                <CardFooter className="flex justify-center">
+        <form onSubmit={handleSubmit} className="p-4 border rounded-lg bg-background">
+             <div className="space-y-4">
+                <h3 className="font-headline text-xl">Log a New Dream</h3>
+                <Textarea
+                    placeholder="Last night I dreamt of..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    disabled={isSubmitting}
+                    rows={6}
+                />
+                <div className="flex justify-end">
                     <Button type="submit" disabled={isSubmitting || !text.trim()}>
                         {isSubmitting ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         ) : (
                             <PenLine className="mr-2 h-4 w-4" />
                         )}
-                        Save and Analyze Dream
+                        Save and Analyze
                     </Button>
-                </CardFooter>
-            </Card>
+                </div>
+            </div>
         </form>
     );
 }
