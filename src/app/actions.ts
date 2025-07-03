@@ -7,25 +7,29 @@ import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 
-const addAudioEventSchema = z.object({
+const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
     userId: z.string().min(1, "User ID is required."),
+    durationSec: z.number().nonnegative(),
 });
+
+type AddAudioEventInput = z.infer<typeof addAudioEventInputSchema>;
+
 
 type AddAudioEventReturn = {
     success: boolean;
     error: string | null;
 };
 
-export async function addAudioEventAction(userId: string, audioDataUri: string): Promise<AddAudioEventReturn> {
-    const validatedFields = addAudioEventSchema.safeParse({
-        audioDataUri,
-        userId,
-    });
+export async function addAudioEventAction(input: AddAudioEventInput): Promise<AddAudioEventReturn> {
+    const validatedFields = addAudioEventInputSchema.safeParse(input);
 
     if (!validatedFields.success) {
-        return { success: false, error: validatedFields.error.flatten().fieldErrors.audioDataUri?.[0] || "Invalid input." };
+        const firstError = Object.values(validatedFields.error.flatten().fieldErrors)[0]?.[0];
+        return { success: false, error: firstError || "Invalid input." };
     }
+
+    const { userId, audioDataUri, durationSec } = validatedFields.data;
 
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
@@ -35,6 +39,10 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
         }
 
         const analysis = await enrichVoiceEvent({ text: transcript });
+        
+        if (!analysis) {
+            return { success: false, error: "AI analysis of the transcript failed." };
+        }
         
         const audioEventId = crypto.randomUUID();
         const voiceEventId = crypto.randomUUID();
@@ -47,9 +55,9 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
             id: audioEventId,
             uid: userId,
             storagePath: `audio/${userId}/${audioEventId}.webm`,
-            startTs: timestamp,
-            endTs: timestamp, // Placeholder
-            durationSec: 0, // Placeholder
+            startTs: timestamp - Math.round(durationSec * 1000),
+            endTs: timestamp,
+            durationSec: Math.round(durationSec),
             transcriptionStatus: 'complete',
         };
         batch.set(doc(db, "audioEvents", newAudioEvent.id), newAudioEvent);

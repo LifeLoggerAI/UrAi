@@ -16,7 +16,7 @@ import {
   type EnrichVoiceEventOutput,
 } from '@/lib/types';
 
-export async function enrichVoiceEvent(input: EnrichVoiceEventInput): Promise<EnrichVoiceEventOutput> {
+export async function enrichVoiceEvent(input: EnrichVoiceEventInput): Promise<EnrichVoiceEventOutput | null> {
   return enrichVoiceEventFlow(input);
 }
 
@@ -45,10 +45,6 @@ const enrichVoiceEventFlow = ai.defineFlow(
   },
   async (input) => {
     const {output} = await prompt(input);
-    // Add a mock value for toneShift as it's hard for the LLM to derive consistently
-    if (output) {
-        output.toneShift = Math.random() * 0.5;
-    }
-    return output!;
+    return output;
   }
 );

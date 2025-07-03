@@ -11,6 +11,7 @@ type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing';
 
 export function Recorder({ userId }: { userId: string }) {
   const [recordingState, setRecordingState] = useState<RecordingState>('idle');
+  const [recordingStart, setRecordingStart] = useState<number>(0);
   const [hasPermission, setHasPermission] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -43,6 +44,7 @@ export function Recorder({ userId }: { userId: string }) {
 
   const handleRecordingStop = async () => {
     setRecordingState('processing');
+    const durationSec = (Date.now() - recordingStart) / 1000;
     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
     
     // Convert blob to data URI
@@ -52,7 +54,7 @@ export function Recorder({ userId }: { userId: string }) {
       const base64Data = reader.result as string;
 
       try {
-        const result = await addAudioEventAction(userId, base64Data);
+        const result = await addAudioEventAction({ userId, audioDataUri: base64Data, durationSec });
         if (result.success) {
           toast({
             title: "Voice Event Logged",
@@ -80,6 +82,7 @@ export function Recorder({ userId }: { userId: string }) {
       mediaRecorderRef.current?.stop();
     } else {
       audioChunksRef.current = []; // Clear previous chunks
+      setRecordingStart(Date.now());
       mediaRecorderRef.current?.start();
       setRecordingState('recording');
     }
