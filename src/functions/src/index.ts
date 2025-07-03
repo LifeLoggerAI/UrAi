@@ -1,3 +1,4 @@
+
 /**
  * Import function triggers from their respective submodules:
  *
@@ -15,3 +16,12 @@ export * from "./genkit-sample";
 
 // Export user management triggers
 export * from "./user-management";
+
+// Export emotion engine triggers
+export * from "./emotion-engine";
+
+// Export scheduled functions
+export * from "./scheduled";
+
+// Export notification queue
+export * from "./notifications";

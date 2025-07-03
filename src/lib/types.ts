@@ -11,15 +11,18 @@ export const UserSchema = z.object({
     email: z.string().email().optional(),
     createdAt: z.number(),
     avatarUrl: z.string().url().optional(),
-    personaProfile: z.record(z.any()).optional(),
-    symbolLexicon: z.record(z.any()).optional(),
-    subscriptionTier: z.string().optional(),
+    isProUser: z.boolean().default(false),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
         passiveAudioEnabled: z.boolean().default(true),
         faceEmotionEnabled: z.boolean().default(false),
         dataExportEnabled: z.boolean().default(true),
+        narratorVolume: z.number().min(0).max(1).default(0.8),
+        ttsVoice: z.string().default('warmCalm'),
     }).optional(),
+    personaProfile: z.record(z.any()).optional(),
+    symbolLexicon: z.record(z.any()).optional(),
+    subscriptionTier: z.string().optional(),
 });
 export type User = z.infer<typeof UserSchema>;
 
@@ -246,6 +249,8 @@ export const UpdateUserSettingsSchema = z.object({
     passiveAudioEnabled: z.boolean().default(true),
     faceEmotionEnabled: z.boolean().default(false),
     dataExportEnabled: z.boolean().default(true),
+    narratorVolume: z.number().min(0).max(1).default(0.8),
+    ttsVoice: z.string().default('warmCalm'),
 });
 export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
 
@@ -305,3 +310,83 @@ export const SuggestRitualOutputSchema = z.object({
   suggestion: z.string().describe("A concrete action or journaling prompt for the user."),
 });
 export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
+
+// Schemas for Advanced Optional Systems
+export const SafetyTriggerSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    triggerType: z.enum(["shout", "cry", "hypervent"]),
+    detectedAt: z.number(),
+    intensityScore: z.number(),
+    ritualLaunched: z.boolean(),
+});
+export type SafetyTrigger = z.infer<typeof SafetyTriggerSchema>;
+
+export const CrossAppContextCorrelationSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    summary: z.string(),
+    correlatedApps: z.array(z.string()),
+    emotionImpact: z.string(),
+    lastDetected: z.number(),
+    companionPrompted: z.boolean(),
+});
+export type CrossAppContextCorrelation = z.infer<typeof CrossAppContextCorrelationSchema>;
+
+export const VisualStrainEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    durationMinutes: z.number(),
+    postureAngle: z.number(),
+    ambientLight: z.number(),
+    detectedAt: z.number(),
+    fatigueIndex: z.number(),
+    recommendedBreakIssued: z.boolean(),
+});
+export type VisualStrainEvent = z.infer<typeof VisualStrainEventSchema>;
+
+// Schemas for Monetization, Gamification, and B2B Systems
+export const AchievementSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    name: z.string(),
+    description: z.string(),
+    unlockedAt: z.number(),
+    visibleInGallery: z.boolean(),
+});
+export type Achievement = z.infer<typeof AchievementSchema>;
+
+export const RitualStreakSchema = z.object({
+    uid: z.string(),
+    currentStreak: z.number(),
+    longestStreak: z.number(),
+    lastCompleted: z.number(),
+});
+export type RitualStreak = z.infer<typeof RitualStreakSchema>;
+
+export const CurrencySchema = z.object({
+    uid: z.string(),
+    seeds: z.number(),
+    threads: z.number(),
+    lastEarned: z.number(),
+});
+export type Currency = z.infer<typeof CurrencySchema>;
+
+export const MarketplaceItemSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string(),
+    costSeeds: z.number(),
+    type: z.string(),
+    unlockEffect: z.string(),
+});
+export type MarketplaceItem = z.infer<typeof MarketplaceItemSchema>;
+
+export const SubscriptionSchema = z.object({
+    uid: z.string(),
+    plan: z.enum(["free", "pro", "therapist"]),
+    startedAt: z.number(),
+    renewsAt: z.number(),
+    status: z.enum(["active", "paused", "expired"]),
+});
+export type Subscription = z.infer<typeof SubscriptionSchema>;

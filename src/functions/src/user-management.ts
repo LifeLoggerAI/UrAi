@@ -26,10 +26,13 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
                 passiveAudioEnabled: true,
                 faceEmotionEnabled: false,
                 dataExportEnabled: true,
+                narratorVolume: 0.8,
+                ttsVoice: 'warmCalm',
             },
             personaProfile: {},
             symbolLexicon: {},
             subscriptionTier: 'free',
+            isProUser: false,
         };
 
         await db.collection("users").doc(uid).set(newUserDoc);

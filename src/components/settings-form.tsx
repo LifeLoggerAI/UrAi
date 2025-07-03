@@ -20,6 +20,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save } from 'lucide-react';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Skeleton } from './ui/skeleton';
+import { Slider } from './ui/slider';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 export function SettingsForm() {
   const { user } = useAuth();
@@ -35,6 +37,8 @@ export function SettingsForm() {
       passiveAudioEnabled: true,
       faceEmotionEnabled: false,
       dataExportEnabled: true,
+      narratorVolume: 0.8,
+      ttsVoice: 'warmCalm',
     },
   });
 
@@ -147,6 +151,51 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
+            
+            <div className="space-y-4">
+                <h3 className="text-lg font-medium">Narration &amp; Voice</h3>
+                 <FormField
+                    control={form.control}
+                    name="narratorVolume"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Narrator Volume</FormLabel>
+                             <FormControl>
+                                <Slider
+                                    defaultValue={[field.value * 100]}
+                                    max={100}
+                                    step={1}
+                                    onValueChange={(value) => field.onChange(value[0] / 100)}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                 <FormField
+                    control={form.control}
+                    name="ttsVoice"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Narrator Voice</FormLabel>
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a voice" />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="warmCalm">Warm & Calm</SelectItem>
+                                    <SelectItem value="neutralAnalytical">Neutral & Analytical</SelectItem>
+                                    <SelectItem value="poeticSoft">Poetic & Soft</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+            </div>
+
 
             <div className="space-y-4">
                  <h3 className="text-lg font-medium">Data Collection</h3>
