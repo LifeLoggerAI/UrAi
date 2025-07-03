@@ -10,7 +10,7 @@ import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen } from "lucide-react";
+import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 import { DreamForm } from "@/components/dream-form";
 import { DreamList } from "@/components/dream-list";
+import { SettingsForm } from "@/components/settings-form";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -36,7 +37,7 @@ export default function Home() {
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [dreams, setDreams] = useState<Dream[]>([]);
-  const [activeView, setActiveView] = useState<'memories' | 'social' | 'dreams'>('memories');
+  const [activeView, setActiveView] = useState<'memories' | 'social' | 'dreams' | 'settings'>('memories');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -126,7 +127,9 @@ export default function Home() {
               <DreamList dreams={dreams} />
             </section>
           </>
-        )
+        );
+      case 'settings':
+        return <SettingsForm />;
       default:
         return null;
     }
@@ -137,6 +140,7 @@ export default function Home() {
       case 'memories': return 'Memory Stream';
       case 'social': return 'Social Constellation';
       case 'dreams': return 'Dream Journal';
+      case 'settings': return 'Settings';
       default: return 'Life Logger';
     }
   }
@@ -187,7 +191,19 @@ export default function Home() {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <div className="flex items-center gap-2 p-2">
+           <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => setActiveView('settings')}
+                  isActive={activeView === 'settings'}
+                  tooltip="Manage your profile and settings"
+                >
+                  <Cog />
+                  Settings
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          <div className="flex items-center gap-2 p-2 border-t mt-2">
             <img src={user.photoURL || `https://placehold.co/128x128.png?text=${(user.displayName || user.email || "A").charAt(0).toUpperCase()}`} alt="User avatar" className="h-8 w-8 rounded-full" />
             <div className="flex flex-col text-sm overflow-hidden">
                 <span className="font-semibold text-sidebar-foreground truncate">{user.displayName || 'Anonymous'}</span>

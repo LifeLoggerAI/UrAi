@@ -156,3 +156,13 @@ export const GenerateAvatarOutputSchema = z.object({
   avatarDataUri: z.string().describe('The generated avatar image as a data URI.'),
 });
 export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
+
+// Schema for Settings Form
+export const UpdateUserSettingsSchema = z.object({
+    displayName: z.string().min(2, "Display name must be at least 2 characters.").max(50, "Display name cannot exceed 50 characters."),
+    moodTrackingEnabled: z.boolean().default(true),
+    passiveAudioEnabled: z.boolean().default(true),
+    faceEmotionEnabled: z.boolean().default(false),
+    dataExportEnabled: z.boolean().default(true),
+});
+export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;

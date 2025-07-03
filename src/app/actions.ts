@@ -2,15 +2,16 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
-import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc } from "firebase/firestore";
+import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
 import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
 import { generateAvatar } from "@/ai/flows/generate-avatar";
+import { UpdateUserSettingsSchema } from "@/lib/types";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -223,5 +224,48 @@ export async function addDreamAction(input: AddDreamInput): Promise<AddDreamRetu
     } catch (e) {
         console.error("Failed to add dream:", e);
         return { success: false, error: "Failed to save dream. Please try again." };
+    }
+}
+
+
+const updateUserSettingsActionInputSchema = z.object({
+    userId: z.string().min(1, "User ID is required."),
+    data: UpdateUserSettingsSchema,
+});
+
+type UpdateUserSettingsReturn = {
+    success: boolean;
+    error: string | null;
+};
+
+export async function updateUserSettingsAction(input: z.infer<typeof updateUserSettingsActionInputSchema>): Promise<UpdateUserSettingsReturn> {
+    const validatedFields = updateUserSettingsActionInputSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+
+    const { userId, data } = validatedFields.data;
+    
+    try {
+        const userRef = doc(db, "users", userId);
+        
+        const updateData = {
+            displayName: data.displayName,
+            settings: {
+                moodTrackingEnabled: data.moodTrackingEnabled,
+                passiveAudioEnabled: data.passiveAudioEnabled,
+                faceEmotionEnabled: data.faceEmotionEnabled,
+                dataExportEnabled: data.dataExportEnabled,
+            }
+        };
+
+        await updateDoc(userRef, updateData);
+
+        return { success: true, error: null };
+
+    } catch (e) {
+        console.error("Failed to update user settings:", e);
+        return { success: false, error: "Failed to update settings. Please try again." };
     }
 }
