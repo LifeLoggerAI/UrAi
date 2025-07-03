@@ -1,5 +1,6 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import type { Person } from "@/lib/types";
 import { formatDistanceToNow } from 'date-fns';
@@ -16,7 +17,9 @@ export function PersonCard({ person }: { person: Person }) {
         <Card className="shadow-lg border-border/60 hover:border-accent/80 transition-all duration-300 bg-card">
             <CardHeader className="flex flex-row items-center gap-4">
                 <Avatar className="h-12 w-12 border">
-                    <AvatarImage src={person.avatarUrl} alt={person.name} data-ai-hint="person portrait" />
+                    {person.avatarUrl && (
+                      <img src={person.avatarUrl} alt={person.name} className="aspect-square h-full w-full object-cover" />
+                    )}
                     <AvatarFallback>{person.name.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex-grow">

@@ -62,7 +62,7 @@ export const PersonSchema = z.object({
         date: z.number(),
         role: z.string(),
     })),
-    avatarUrl: z.string().url().optional(),
+    avatarUrl: z.string().optional(),
 });
 export type Person = z.infer<typeof PersonSchema>;
 
@@ -145,3 +145,14 @@ export const AnalyzeDreamOutputSchema = z.object({
     sentimentScore: z.number().describe("A score from -1 (very negative) to 1 (very positive) for the dream's overall tone."),
 });
 export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
+
+export const GenerateAvatarInputSchema = z.object({
+  name: z.string().describe('The name of the person for whom to generate an avatar.'),
+  role: z.string().describe('The social role associated with the person.'),
+});
+export type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
+
+export const GenerateAvatarOutputSchema = z.object({
+  avatarDataUri: z.string().describe('The generated avatar image as a data URI.'),
+});
+export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;

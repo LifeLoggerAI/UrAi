@@ -10,6 +10,7 @@ import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
+import { generateAvatar } from "@/ai/flows/generate-avatar";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -93,6 +94,11 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
                 if (querySnapshot.empty) {
                     // Create new person
                     const newPersonRef = doc(peopleRef);
+                    
+                    // Generate avatar
+                    const avatarResult = await generateAvatar({ name: personName, role: analysis.voiceArchetype });
+                    const avatarUrl = avatarResult?.avatarDataUri || `https://placehold.co/128x128.png?text=${personName.charAt(0).toUpperCase()}`;
+
                     const newPerson: Person = {
                         id: newPersonRef.id,
                         uid: userId,
@@ -100,7 +106,7 @@ export async function addAudioEventAction(input: AddAudioEventInput): Promise<Ad
                         lastSeen: timestamp,
                         familiarityIndex: 1,
                         socialRoleHistory: [{ date: timestamp, role: analysis.voiceArchetype }],
-                        avatarUrl: `https://placehold.co/128x128.png?text=${personName.charAt(0).toUpperCase()}`
+                        avatarUrl: avatarUrl
                     };
                     batch.set(newPersonRef, newPerson);
                 } else {

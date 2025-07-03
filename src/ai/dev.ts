@@ -7,3 +7,4 @@ import '@/ai/flows/transcribe-audio.ts';
 import '@/ai/flows/summarize-text.ts';
 import '@/ai/flows/generate-speech.ts';
 import '@/ai/flows/analyze-dream.ts';
+import '@/ai/flows/generate-avatar.ts';
