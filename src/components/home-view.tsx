@@ -16,18 +16,16 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation';
 import { SettingsForm } from './settings-form';
-import { TextEntryList } from './text-entry-list';
-import { TextEntryForm } from './text-entry-form';
-import { NoteList } from './note-list';
-import { Recorder as NoteForm } from './note-form';
 import { CompanionChatView } from './companion-chat-view';
 import { PersonCard } from './person-card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
 import { SummarizationTool } from './summarization-tool';
 import { PeopleList } from './people-list';
 import { CognitiveZoneView } from './cognitive-zone-view';
 import { Loader2 } from 'lucide-react';
+import { NoteList } from './note-list';
+import { NoteForm } from './note-form';
+import { TorsoView } from './torso-view';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'limbs' | 'companion' | 'person' | null;
 
@@ -147,18 +145,9 @@ export function HomeView() {
                 return;
             case 'torso':
                  setPanelContent({ 
-                    title: 'Torso: Emotions & Memories', 
-                    description: 'Record voice memos to capture your emotional state in the moment.',
-                    content: (
-                        <div className="w-full space-y-6">
-                            <NoteForm userId={user.uid} />
-                            <SummarizationTool />
-                            <h3 className="text-xl font-headline mt-6 mb-4">Recent Voice Events</h3>
-                            <ScrollArea className="h-[40vh] pr-4">
-                                <NoteList items={voiceEvents} />
-                            </ScrollArea>
-                        </div>
-                    )
+                    title: 'Core-Self View', 
+                    description: 'Explore your inner drive, rhythms, and somatic memories.',
+                    content: <TorsoView />
                 });
                 setActivePanel('torso');
                 return;
@@ -224,7 +213,7 @@ export function HomeView() {
         switch(activePanel) {
             case 'settings': return 'max-w-3xl';
             case 'head': return 'max-w-6xl';
-            case 'torso': return 'max-w-4xl';
+            case 'torso': return 'max-w-6xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
             case 'limbs': return 'max-w-5xl';
             default: return 'max-w-lg';
@@ -381,3 +370,5 @@ export function HomeView() {
         </>
     );
 }
+
+    

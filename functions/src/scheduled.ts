@@ -8,54 +8,6 @@ if (admin.apps.length === 0) {
 }
 
 /**
- * Aggregates raw device motion logs into weekly shadow metrics.
- * Placeholder for a more complex aggregation pipeline.
- */
-export const shadowMetricsAggregator = functions.pubsub
-  .schedule('every 6 hours')
-  .onRun(async (context) => {
-    functions.logger.info('Running shadow metrics aggregator job.');
-    // Logic to ingest raw device motion logs -> weekly shadowMetrics
-    return null;
-  });
-
-/**
- * Fuses sensor stillness and app usage data into weekly obscura patterns.
- * Placeholder for a more complex aggregation pipeline.
- */
-export const obscuraPatternAggregator = functions.pubsub
-  .schedule('every day 01:30')
-  .onRun(async (context) => {
-    functions.logger.info('Running obscura pattern aggregator job.');
-    // Logic to fuse sensor stillness, app usage -> obscuraPatterns_weekly
-    return null;
-  });
-
-/**
- * Synthesizes high-level monthly psychological metrics.
- * Placeholder for a complex AI analysis pipeline.
- */
-export const weeklyPsycheMirrorSynth = functions.pubsub
-  .schedule('every monday 04:00')
-  .onRun(async (context) => {
-    functions.logger.info('Running weekly psyche mirror synthesis job.');
-    // Logic to compose psycheMirrors/subconsciousSignals/soulSignals
-    return null;
-  });
-
-/**
- * Generates the user's daily emotional forecast.
- * Placeholder for a predictive AI model.
- */
-export const forecastGenerator = functions.pubsub
-  .schedule('every day 05:00')
-  .onRun(async (context) => {
-    functions.logger.info('Running daily forecast generator job.');
-    // Logic to use recent emotionStates + shadowStress -> forecasts_daily
-    return null;
-  });
-
-/**
  * Generates a weekly scroll export for all users.
  * This is a placeholder; a real implementation would generate a PDF or interactive export.
  */
@@ -107,3 +59,21 @@ export const exportToBigQuery = functions.pubsub
     // 3. This is a complex operation that requires setting up BigQuery and defining table schemas.
     return null;
   });
+
+/**
+ * Aggregates torso metrics and generates a daily summary.
+ * This is a placeholder.
+ */
+export const scheduleDailyTorsoSummary = functions.pubsub
+  .schedule('every day 02:15')
+  .timeZone('UTC')
+  .onRun(async () => {
+    functions.logger.info('Running daily torso summary job.');
+    // For every user:
+    // 1. Aggregate yesterday’s torsoMetrics.
+    // 2. Write a summary document.
+    // 3. Create a notification: “Your Core-Self pulse for {{date}} is ready.”
+    return null;
+  });
+
+    

@@ -143,6 +143,41 @@ export const MemoryBloomSchema = z.object({
 });
 export type MemoryBloom = z.infer<typeof MemoryBloomSchema>;
 
+// Schemas for Torso Module
+export const TorsoMetricsSchema = z.object({
+    uid: z.string(),
+    dateKey: z.string(),
+    vitalityScore: z.number(),
+    valueAlignmentScore: z.number(),
+    selfConsistencyScore: z.number(),
+    overstimIndex: z.number(),
+    motivatorRankings: z.record(z.number()),
+    updatedAt: z.number(),
+});
+export type TorsoMetrics = z.infer<typeof TorsoMetricsSchema>;
+
+export const HabitEventSchema = z.object({
+    uid: z.string(),
+    eventId: z.string(),
+    timestamp: z.number(),
+    category: z.string(),
+    intensity: z.number(),
+    detectedBy: z.string(),
+    source: z.string(),
+});
+export type HabitEvent = z.infer<typeof HabitEventSchema>;
+
+export const NarratorInsightSchema = z.object({
+    uid: z.string(),
+    insightId: z.string(),
+    insightType: z.string(),
+    payload: z.record(z.any()),
+    suggestedRitualId: z.string().optional(),
+    consumed: z.boolean(),
+    createdAt: z.number(),
+});
+export type NarratorInsight = z.infer<typeof NarratorInsightSchema>;
+
 
 // Schemas for Genkit Flows
 
@@ -532,3 +567,5 @@ export const AutomationSchema = z.object({
     enabled: z.boolean().default(true),
 });
 export type Automation = z.infer<typeof AutomationSchema>;
+
+    

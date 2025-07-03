@@ -1,15 +1,16 @@
+
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
 import { addAudioEventAction } from '@/app/actions';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { RecordButton } from '@/components/submit-button';
+import { RecordButton } from '@/components/record-button';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing';
 
-export function Recorder({ userId }: { userId: string }) {
+export function NoteForm({ userId }: { userId: string }) {
   const [recordingState, setRecordingState] = useState<RecordingState>('idle');
   const [recordingStart, setRecordingStart] = useState<number>(0);
   const [hasPermission, setHasPermission] = useState(false);
@@ -114,3 +115,5 @@ export function Recorder({ userId }: { userId: string }) {
     </Card>
   );
 }
+
+    
