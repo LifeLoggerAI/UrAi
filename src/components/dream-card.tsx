@@ -25,7 +25,7 @@ export function DreamCard({ dream }: { dream: Dream }) {
     return (
         <div className="animate-fadeIn">
             <Card className="shadow-lg border-border/60 hover:border-accent/80 transition-all duration-300 bg-card">
-                <CardHeader>
+                <CardHeader className="flex flex-row items-start justify-between pb-2 gap-4">
                      <div>
                         <CardTitle className="text-lg font-headline line-clamp-2">{dream.text}</CardTitle>
                         <p className="text-sm text-muted-foreground pt-1">{date}</p>
