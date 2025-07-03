@@ -102,6 +102,7 @@ export async function addAudioEventAction(userId: string, audioDataUri: string):
                         voiceprintRef: '', // To be implemented
                         firstDetected: timestamp,
                         lastSeen: timestamp,
+                        avatarUrl: 'https://placehold.co/128x128.png',
                         socialRoleHistory: [],
                         familiarityIndex: 10, // Start with a base value
                         silenceDeltaDays: 0,
