@@ -1,4 +1,5 @@
 
+
 /**
  * Import function triggers from their respective submodules:
  *
@@ -37,6 +38,9 @@ export * from "./social-engine";
 
 // Export timeline engine triggers
 export * from "./timeline-engine";
+
+// Export data privacy triggers
+export * from "./data-privacy";
 
 // Export scheduled functions
 export * from "./scheduled";

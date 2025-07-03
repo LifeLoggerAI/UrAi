@@ -1,35 +1,59 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read and write to their own user document.
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
 
-      // Rules for all subcollections under a user document.
-      // This ensures that moodLogs, auraStates, etc., are also private.
-      match /{subcollection}/{docId} {
-         allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
+    // Helper function to check ownership
+    function isOwner(uid) {
+      return request.auth.uid == uid;
     }
 
-    // This rule covers all other top-level collections.
-    // It allows read/write if the document has a 'uid' or 'userId' field
-    // that matches the authenticated user's ID.
-    match /{collection}/{docId} {
-       allow read, write: if request.auth != null && (
-         (resource.data.uid == request.auth.uid) ||
-         ('userId' in resource.data && resource.data.userId == request.auth.uid)
-       );
+    // users: A user can only access their own document.
+    match /users/{uid} {
+      allow read, update, delete: if isOwner(uid);
+      allow create: if isOwner(uid);
     }
-  }
-}
 
-service firebase.storage {
-  match /b/{bucket}/o {
-    // Allow users to read/write their own files in designated folders.
-    match /{folder}/{userId}/{allPaths=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+    // Subcollections under users/{uid} (e.g., auraStates, memoryBlooms)
+    match /users/{uid}/{subcollection}/{docId} {
+        allow read, write, delete: if isOwner(uid);
+    }
+    
+    // Most root collections are protected by a 'uid' field in the document.
+    // Users can read/write their own documents.
+    match /{collection}/{docId} 
+      where collection in ['audioEvents', 'voiceEvents', 'people', 'dreams', 'faceSnapshots', 'innerTexts', 'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap', 'torsoMetrics', 'habitEvents', 'legsMetrics', 'movementPaths', 'avoidanceEvents', 'armMetrics', 'relationalGestures', 'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates', 'legacyThreads'] {
+      
+      allow read, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
+      allow update: if isOwner(resource.data.uid) && isOwner(request.resource.data.uid);
+    }
+    
+    // presentMetrics is keyed by UID
+    match /presentMetrics/{uid} {
+        allow read, write: if isOwner(uid);
+    }
+
+    // notifications: Users can read their own, but only backend can write.
+    match /notifications/{uid}/{noteId} {
+      allow read: if isOwner(uid);
+      allow write: if false; 
+    }
+    
+    // narratorInsights: Users can read/write their own.
+     match /narratorInsights/{uid}/{insightId} {
+      allow read, write: if isOwner(uid);
+    }
+    
+    // Anonymized data is not readable or writable from the client.
+    match /anonymizedData/{hashId}/{metricId} {
+        allow read, write: if false;
+    }
+    
+    // B2B exports are not readable or writable from the client.
+    match /b2bExports/{week}/{reportId} {
+        allow read, write: if false;
     }
   }
 }

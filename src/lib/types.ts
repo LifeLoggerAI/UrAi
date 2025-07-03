@@ -20,6 +20,11 @@ export const UserSchema = z.object({
         narratorVolume: z.number().min(0).max(1).default(0.8),
         ttsVoice: z.string().default('warmCalm'),
         pushNotifications: z.boolean().default(true),
+        // New privacy fields
+        gpsAllowed: z.boolean().default(false),
+        contributeMoodData: z.boolean().default(true),
+        allowAnonymizedExport: z.boolean().default(false),
+        allowVoiceRetention: z.boolean().default(true),
     }).optional(),
     narratorPrefs: z.object({
         toneStyle: z.string(),
@@ -481,6 +486,11 @@ export const UpdateUserSettingsSchema = z.object({
     dataExportEnabled: z.boolean().default(true),
     narratorVolume: z.number().min(0).max(1).default(0.8),
     ttsVoice: z.string().default('warmCalm'),
+    // New privacy fields
+    gpsAllowed: z.boolean().default(false),
+    contributeMoodData: z.boolean().default(true),
+    allowAnonymizedExport: z.boolean().default(false),
+    allowVoiceRetention: z.boolean().default(true),
 });
 export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
 
@@ -802,3 +812,24 @@ export const CompanionThreadSchema = z.object({
     symbolicMemory: z.record(z.any()),
 });
 export type CompanionThread = z.infer<typeof CompanionThreadSchema>;
+
+// Data Privacy Schemas
+export const AnonymizedDataSchema = z.object({
+    hashId: z.string(),
+    metricId: z.string(),
+    moodVector: z.array(z.number()),
+    patternCluster: z.string(),
+    recoveryArc: z.number(),
+    metadata: z.object({
+        timezoneGroup: z.string(),
+        deviceType: z.string(),
+    }),
+});
+export type AnonymizedData = z.infer<typeof AnonymizedDataSchema>;
+
+export const B2BExportSchema = z.object({
+    reportId: z.string(),
+    week: z.string(),
+    data: z.record(z.any()), // This would be structured reports
+});
+export type B2BExport = z.infer<typeof B2BExportSchema>;

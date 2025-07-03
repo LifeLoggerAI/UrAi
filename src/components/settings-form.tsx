@@ -14,14 +14,15 @@ import { updateUserSettingsAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Save } from 'lucide-react';
+import { Loader2, Save, FileDown, Trash2 } from 'lucide-react';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Skeleton } from './ui/skeleton';
 import { Slider } from './ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { Separator } from './ui/separator';
 
 export function SettingsForm() {
   const { user } = useAuth();
@@ -39,6 +40,10 @@ export function SettingsForm() {
       dataExportEnabled: true,
       narratorVolume: 0.8,
       ttsVoice: 'warmCalm',
+      gpsAllowed: false,
+      contributeMoodData: true,
+      allowAnonymizedExport: false,
+      allowVoiceRetention: true,
     },
   });
 
@@ -87,6 +92,7 @@ export function SettingsForm() {
         title: 'Settings Updated',
         description: 'Your profile and settings have been saved.',
       });
+      form.reset(data); // to update the form's dirty state
     } catch (error) {
       console.error(error);
       toast({
@@ -97,6 +103,13 @@ export function SettingsForm() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+  
+  const handleDataAction = (action: 'export' | 'delete') => {
+      toast({
+        title: `${action === 'export' ? 'Export' : 'Deletion'} Initiated`,
+        description: `This is a placeholder. A real implementation would trigger a cloud function.`,
+      });
   }
 
   if (isLoadingData) {
@@ -196,30 +209,9 @@ export function SettingsForm() {
                     />
             </div>
 
-
             <div className="space-y-4">
                  <h3 className="text-lg font-medium">Data Collection</h3>
                 <FormField
-                control={form.control}
-                name="moodTrackingEnabled"
-                render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                        <div className="space-y-0.5">
-                            <FormLabel>Enable Mood Tracking</FormLabel>
-                            <FormDescription>
-                                Allow AI to analyze emotions and sentiment from your entries.
-                            </FormDescription>
-                        </div>
-                         <FormControl>
-                            <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            />
-                        </FormControl>
-                    </FormItem>
-                )}
-                />
-                 <FormField
                 control={form.control}
                 name="passiveAudioEnabled"
                 render={({ field }) => (
@@ -261,13 +253,57 @@ export function SettingsForm() {
                 />
                  <FormField
                 control={form.control}
-                name="dataExportEnabled"
+                name="gpsAllowed"
                 render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                            <FormLabel>Enable Data Export</FormLabel>
+                            <FormLabel>Enable Location Tracking</FormLabel>
                             <FormDescription>
-                                Allow your data to be exported in the future.
+                                Allow GPS access to track movement and location patterns.
+                            </FormDescription>
+                        </div>
+                         <FormControl>
+                            <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )}
+                />
+            </div>
+
+             <div className="space-y-4">
+                 <h3 className="text-lg font-medium">Privacy &amp; Data Sharing</h3>
+                <FormField
+                control={form.control}
+                name="allowAnonymizedExport"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel>Share Anonymized Data</FormLabel>
+                            <FormDescription>
+                                Contribute anonymous patterns to help researchers.
+                            </FormDescription>
+                        </div>
+                         <FormControl>
+                            <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )}
+                />
+                 <FormField
+                control={form.control}
+                name="allowVoiceRetention"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel>Allow Voice Retention</FormLabel>
+                            <FormDescription>
+                               Keep voice clips to improve voiceprint accuracy.
                             </FormDescription>
                         </div>
                          <FormControl>
@@ -294,6 +330,51 @@ export function SettingsForm() {
           </CardFooter>
         </Card>
       </form>
+      
+      <Separator className="my-8"/>
+      
+      <Card>
+        <CardHeader>
+            <CardTitle className="font-headline text-2xl">Data Management</CardTitle>
+            <CardDescription>Export or delete your personal data.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="outline"><FileDown className="mr-2"/> Export My Data</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Data Export</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will start the process of exporting all your data. You will receive an email with a secure download link when it's ready. This may take some time.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDataAction('export')}>Confirm</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button variant="destructive"><Trash2 className="mr-2"/> Erase My Logs</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete all your data, including your profile, memories, and insights from our servers.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDataAction('delete')} className="bg-destructive hover:bg-destructive/90">Yes, delete everything</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </CardContent>
+      </Card>
     </Form>
   );
 }
