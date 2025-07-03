@@ -2,23 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import type { VoiceEvent } from "@/lib/types";
+import type { VoiceEvent, Person } from "@/lib/types";
 import { Recorder } from "@/components/note-form";
 import { NoteList } from "@/components/note-list";
+import { PeopleList } from "@/components/people-list";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut } from "lucide-react";
+import { Loader2, LogOut, Users, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-
 
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const { toast } = useToast();
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -34,8 +36,15 @@ export default function Home() {
         setVoiceEvents(events);
       }, console.error);
 
+      const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"));
+      const unsubPeople = onSnapshot(qPeople, (snapshot) => {
+          const peopleData = snapshot.docs.map(doc => doc.data() as Person);
+          setPeople(peopleData);
+      }, console.error);
+
       return () => {
           unsubEvents();
+          unsubPeople();
       };
     }
   }, [user]);
@@ -56,7 +65,6 @@ export default function Home() {
       });
     }
   };
-
 
   if (loading || !user) {
     return (
@@ -84,16 +92,36 @@ export default function Home() {
         </header>
         
         <Recorder userId={user.uid} />
-
-        {voiceEvents.length > 0 && (
-          <section className="space-y-4">
-            <Separator className="bg-border/50" />
-            <div className="space-y-4 pt-4">
-              <h2 className="text-2xl font-bold font-headline text-center">Your Memory Stream</h2>
-              <NoteList items={voiceEvents} />
-            </div>
-          </section>
-        )}
+        
+        <Tabs defaultValue="memories" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="memories">
+              <History className="mr-2 h-4 w-4" />
+              Memory Stream
+            </TabsTrigger>
+            <TabsTrigger value="social">
+              <Users className="mr-2 h-4 w-4" />
+              Social Constellation
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="memories">
+            {voiceEvents.length > 0 ? (
+              <section className="space-y-4 pt-4">
+                <NoteList items={voiceEvents} />
+              </section>
+            ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                    <p>No memories logged yet.</p>
+                    <p className="text-sm">Use the recorder to capture your first voice event.</p>
+                </div>
+            )}
+          </TabsContent>
+          <TabsContent value="social">
+             <section className="space-y-4 pt-4">
+                <PeopleList people={people} />
+              </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </main>
   );
