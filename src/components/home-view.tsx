@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { DashboardData, Person, SuggestRitualOutput } from '@/lib/types';
+import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom } from '@/lib/types';
 import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
@@ -11,7 +11,7 @@ import { BotMessageSquare, Users, Sprout, Wand2 } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { FacialEmotionCapture } from './facial-emotion-capture';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
@@ -21,6 +21,8 @@ export function HomeView() {
     const { toast } = useToast();
     const [data, setData] = useState<DashboardData | null>(null);
     const [people, setPeople] = useState<Person[]>([]);
+    const [auraState, setAuraState] = useState<AuraState | null>(null);
+    const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isRitualLoading, setIsRitualLoading] = useState(false);
     const [ritualSuggestion, setRitualSuggestion] = useState<SuggestRitualOutput | null>(null);
@@ -28,6 +30,8 @@ export function HomeView() {
 
     useEffect(() => {
         if (user) {
+            const unsubscribes: (() => void)[] = [];
+
             getDashboardDataAction(user.uid)
                 .then(result => {
                     if (result.data) setData(result.data);
@@ -35,17 +39,30 @@ export function HomeView() {
                 .finally(() => setIsLoading(false));
 
             const qPeople = query(collection(db, "people"), where("uid", "==", user.uid));
-            const unsubPeople = onSnapshot(qPeople, (snapshot) => {
+            unsubscribes.push(onSnapshot(qPeople, (snapshot) => {
                 setPeople(snapshot.docs.map(doc => doc.data() as Person));
-            });
+            }));
+
+            const auraRef = doc(db, 'users', user.uid, 'auraStates', 'current');
+            unsubscribes.push(onSnapshot(auraRef, (doc) => {
+                setAuraState(doc.data() as AuraState);
+            }));
+
+            const bloomsRef = collection(db, 'users', user.uid, 'memoryBlooms');
+            unsubscribes.push(onSnapshot(bloomsRef, (snapshot) => {
+                setMemoryBlooms(snapshot.docs.map(doc => doc.data() as MemoryBloom));
+            }));
 
             return () => {
-                unsubPeople();
+                unsubscribes.forEach(unsub => unsub());
             };
         }
     }, [user]);
 
     const moodDescription = () => {
+        if (auraState?.currentEmotion) {
+            return `Currently feeling ${auraState.currentEmotion}.`;
+        }
         if (overallMood > 0.5) return "Feeling bright and optimistic.";
         if (overallMood > 0.1) return "A sense of calm and positivity.";
         if (overallMood < -0.5) return "Reflecting on some challenges.";
@@ -91,9 +108,6 @@ export function HomeView() {
         };
     };
     
-    const positiveMemoryCount = data?.sentimentOverTime.filter(d => d.sentiment > 0.2).length || 0;
-    const bloomCount = Math.min(Math.floor(positiveMemoryCount / 2), 10); // up to 10 blooms
-
     if (isLoading) {
         return (
             <div className="w-full min-h-[calc(100vh-10rem)] flex flex-col items-center justify-center p-4">
@@ -131,7 +145,13 @@ export function HomeView() {
                 </TooltipProvider>
 
                 <div className="relative z-10 w-full max-w-lg grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-4">
-                    <InteractiveAvatar mood={overallMood} onZoneClick={handleZoneClick} isLoading={isRitualLoading} />
+                    <InteractiveAvatar 
+                        mood={overallMood} 
+                        onZoneClick={handleZoneClick} 
+                        isLoading={isRitualLoading}
+                        overlayColor={auraState?.overlayColor}
+                        overlayStyle={auraState?.overlayStyle}
+                    />
                     <div className="space-y-8">
                         <Card>
                         <CardHeader>
@@ -143,7 +163,7 @@ export function HomeView() {
                                     onClick={() => handleZoneClick('aura')} 
                                     className="h-24 w-24 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer transition-all duration-500 hover:scale-110"
                                     style={{
-                                        boxShadow: `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
+                                        boxShadow: auraState?.overlayColor ? `0 0 20px 5px ${auraState.overlayColor}` : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
                                     }}
                                 >
                                     <BotMessageSquare className="h-10 w-10 text-primary animate-pulse" />
@@ -156,14 +176,14 @@ export function HomeView() {
 
                 <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
                     <TooltipProvider>
-                        {[...Array(bloomCount)].map((_, i) => (
-                            <Tooltip key={i}>
+                        {memoryBlooms.map((bloom, i) => (
+                            <Tooltip key={bloom.bloomId}>
                                 <TooltipTrigger>
                                     <div className="animate-fadeIn" style={{ animationDelay: `${500 + i * 150}ms`}}>
-                                        <Sprout className="h-5 w-5 text-green-400" />
+                                        <Sprout className="h-5 w-5" style={{color: bloom.bloomColor}} />
                                     </div>
                                 </TooltipTrigger>
-                                <TooltipContent><p>Recovery Bloom: A sign of positive reflection.</p></TooltipContent>
+                                <TooltipContent><p>{bloom.description}</p></TooltipContent>
                             </Tooltip>
                         ))}
                     </TooltipProvider>

@@ -83,3 +83,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.overlay-style-flicker {
+  animation: flicker 2s infinite ease-in-out;
+}

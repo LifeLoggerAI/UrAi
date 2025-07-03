@@ -98,6 +98,42 @@ export const FaceSnapshotSchema = z.object({
 });
 export type FaceSnapshot = z.infer<typeof FaceSnapshotSchema>;
 
+// Schemas for Emotion Overlay Engine
+export const MoodLogSchema = z.object({
+    timestamp: z.number(),
+    emotion: z.string(),
+    intensity: z.number(),
+    physicalState: z.string().optional(),
+    source: z.string(),
+});
+export type MoodLog = z.infer<typeof MoodLogSchema>;
+
+export const AuraStateSchema = z.object({
+    currentEmotion: z.string(),
+    overlayColor: z.string(),
+    overlayStyle: z.string(),
+    startedAt: z.number(),
+    lastUpdated: z.number(),
+});
+export type AuraState = z.infer<typeof AuraStateSchema>;
+
+export const EmotionCycleSchema = z.object({
+    windowStart: z.number(),
+    dominantEmotion: z.string(),
+    avgIntensity: z.number(),
+    cycleType: z.string(),
+});
+export type EmotionCycle = z.infer<typeof EmotionCycleSchema>;
+
+export const MemoryBloomSchema = z.object({
+    bloomId: z.string(),
+    emotion: z.string(),
+    bloomColor: z.string(),
+    triggeredAt: z.number(),
+    description: z.string(),
+});
+export type MemoryBloom = z.infer<typeof MemoryBloomSchema>;
+
 
 // Schemas for Genkit Flows
 

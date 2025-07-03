@@ -10,14 +10,16 @@ type AvatarProps = {
     mood: number; // -1 to 1
     onZoneClick: (zone: BodyZone) => void;
     isLoading?: boolean;
+    overlayColor?: string;
+    overlayStyle?: string;
 };
 
-export function InteractiveAvatar({ mood, onZoneClick, isLoading = false }: AvatarProps) {
-    // mood -1 -> hsl(0, 80%, 60%) (red)
-    // mood 0 -> hsl(60, 80%, 60%) (yellow)
-    // mood 1 -> hsl(120, 80%, 60%) (green)
-    const hue = (mood + 1) * 60; // maps -1..1 to 0..120
-    const auraColor = `hsl(${hue}, 80%, 60%)`;
+export function InteractiveAvatar({ mood, onZoneClick, isLoading = false, overlayColor, overlayStyle }: AvatarProps) {
+    // Default hue calculation if no overlay is present
+    const defaultHue = (mood + 1) * 60; // maps -1..1 to 0..120
+    const auraColor = overlayColor || `hsl(${defaultHue}, 80%, 60%)`;
+    
+    const overlayClassName = overlayStyle === 'flicker' ? 'overlay-style-flicker' : '';
 
     const handleZoneClick = (zone: BodyZone) => {
         if (isLoading) return;
@@ -26,7 +28,7 @@ export function InteractiveAvatar({ mood, onZoneClick, isLoading = false }: Avat
 
     return (
         <TooltipProvider>
-            <div className="relative flex items-center justify-center w-full max-w-xs mx-auto aspect-[3/5]">
+            <div className={cn("relative flex items-center justify-center w-full max-w-xs mx-auto aspect-[3/5]", overlayClassName)}>
                 <div 
                     className="absolute inset-0 transition-all duration-1000"
                     style={{

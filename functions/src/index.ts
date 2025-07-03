@@ -15,3 +15,6 @@ export * from "./genkit-sample";
 
 // Export user management triggers
 export * from "./user-management";
+
+// Export emotion engine triggers
+export * from "./emotion-engine";
