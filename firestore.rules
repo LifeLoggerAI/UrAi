@@ -1,16 +1,15 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read and write to their own user document
+    // Users can read and write their own user document
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
-
-    // Generic rule for top-level collections where documents contain a userId field.
-    // This covers voiceEvents, transcriptions, people, and emotionStates.
+    
+    // Any collection where the document has a `uid` field matching the user
+    // can be read or written by that user.
     match /{collection}/{docId} {
-      allow read, write: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.uid;
     }
   }
 }
