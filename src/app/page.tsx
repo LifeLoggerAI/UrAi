@@ -10,7 +10,7 @@ import { PeopleList } from "@/components/people-list";
 import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import { useAuth } from "@/components/auth-provider";
-import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog, LayoutDashboard } from "lucide-react";
+import { Loader2, LogOut, Users, History, BotMessageSquare, NotebookPen, Cog, LayoutDashboard, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { SummarizationTool } from "@/components/summarization-tool";
@@ -30,6 +30,7 @@ import { DreamForm } from "@/components/dream-form";
 import { DreamList } from "@/components/dream-list";
 import { SettingsForm } from "@/components/settings-form";
 import { DashboardView } from "@/components/dashboard-view";
+import { CompanionChatView } from "@/components/companion-chat-view";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -38,7 +39,7 @@ export default function Home() {
   const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
   const [dreams, setDreams] = useState<Dream[]>([]);
-  const [activeView, setActiveView] = useState<'dashboard' | 'memories' | 'social' | 'dreams' | 'settings'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard' | 'memories' | 'social' | 'dreams' | 'companion' | 'settings'>('dashboard');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -135,6 +136,8 @@ export default function Home() {
             </section>
           </>
         );
+      case 'companion':
+        return <CompanionChatView />;
       case 'settings':
         return <SettingsForm />;
       default:
@@ -148,6 +151,7 @@ export default function Home() {
       case 'memories': return 'Memory Stream';
       case 'social': return 'Social Constellation';
       case 'dreams': return 'Dream Journal';
+      case 'companion': return 'AI Companion';
       case 'settings': return 'Settings';
       default: return 'Life Logger';
     }
@@ -204,6 +208,16 @@ export default function Home() {
               >
                 <NotebookPen />
                 Dream Journal
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                onClick={() => setActiveView('companion')}
+                isActive={activeView === 'companion'}
+                tooltip="Chat with your AI Companion"
+              >
+                <MessageCircle />
+                Companion
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>

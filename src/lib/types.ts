@@ -190,3 +190,21 @@ export const DashboardDataSchema = z.object({
   }),
 });
 export type DashboardData = z.infer<typeof DashboardDataSchema>;
+
+// Schemas for Companion Chat
+export const ChatMessageSchema = z.object({
+  role: z.enum(['user', 'model']),
+  content: z.string(),
+});
+export type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
+export const CompanionChatInputSchema = z.object({
+  history: z.array(ChatMessageSchema),
+  message: z.string().describe('The latest message from the user.'),
+});
+export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
+
+export const CompanionChatOutputSchema = z.object({
+  response: z.string().describe('The AI companion\'s response.'),
+});
+export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;

@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -11,8 +11,9 @@ import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
 import { generateAvatar } from "@/ai/flows/generate-avatar";
-import { UpdateUserSettingsSchema, DashboardDataSchema } from "@/lib/types";
+import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema } from "@/lib/types";
 import { format } from "date-fns";
+import { companionChat } from "@/ai/flows/companion-chat";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -367,5 +368,30 @@ export async function getDashboardDataAction(userId: string): Promise<{ data: Da
     } catch (e) {
         console.error("Failed to get dashboard data:", e);
         return { data: null, error: "An error occurred while fetching dashboard data." };
+    }
+}
+
+
+type CompanionChatReturn = {
+    response: string | null;
+    error: string | null;
+};
+
+export async function companionChatAction(input: CompanionChatInput): Promise<CompanionChatReturn> {
+    const validatedFields = CompanionChatInputSchema.safeParse(input);
+
+    if (!validatedFields.success) {
+        return { response: null, error: "Invalid input." };
+    }
+
+    try {
+        const result = await companionChat(validatedFields.data);
+        if (!result?.response) {
+            return { response: null, error: "The AI companion failed to respond." };
+        }
+        return { response: result.response, error: null };
+    } catch (e) {
+        console.error("Companion chat action failed:", e);
+        return { response: null, error: "An error occurred while talking to the companion." };
     }
 }
