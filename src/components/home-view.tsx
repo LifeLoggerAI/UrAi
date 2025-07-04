@@ -6,7 +6,7 @@ import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom
 import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
-import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand, Cloud } from 'lucide-react';
+import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand, Cloud, Spade } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { collection, query, where, onSnapshot, doc, orderBy, limit } from 'firebase/firestore';
@@ -28,8 +28,9 @@ import { NoteForm } from './note-form';
 import { TorsoView } from './torso-view';
 import { LegsView } from './legs-view';
 import { ArmsView } from './arms-view';
+import { GroundView } from './ground-view';
 
-type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | null;
+type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | 'ground' | null;
 
 export function HomeView() {
     const { user } = useAuth();
@@ -133,7 +134,7 @@ export function HomeView() {
         return "A balanced and neutral state.";
     }
 
-    const handleZoneClick = async (zone: 'head' | 'torso' | 'legs' | 'arms' | 'aura' | 'sky') => {
+    const handleZoneClick = async (zone: 'head' | 'torso' | 'legs' | 'arms' | 'aura' | 'sky' | 'ground') => {
         if (isRitualLoading || !user) return;
         
         switch(zone) {
@@ -176,6 +177,14 @@ export function HomeView() {
                     content: <p className="text-center text-muted-foreground mt-8">Sky view with weather animations and constellation overlays coming soon.</p>
                 });
                 setActivePanel('sky');
+                return;
+            case 'ground':
+                 setPanelContent({ 
+                    title: 'Ground View', 
+                    description: 'Your emotional garden: soil health, recovery events, and roots of memory.',
+                    content: <GroundView />
+                });
+                setActivePanel('ground');
                 return;
             case 'aura':
                 setIsRitualLoading(true);
@@ -229,6 +238,7 @@ export function HomeView() {
             case 'legs': return 'max-w-3xl';
             case 'arms': return 'max-w-6xl';
             case 'sky': return 'max-w-4xl';
+            case 'ground': return 'max-w-4xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
             default: return 'max-w-lg';
         }
@@ -262,6 +272,11 @@ export function HomeView() {
                     className="absolute top-0 left-0 right-0 h-1/3 cursor-pointer z-10"
                     onClick={() => handleZoneClick('sky')}
                     aria-label="Open sky view"
+                />
+                 <div 
+                    className="absolute bottom-0 left-0 right-0 h-1/4 cursor-pointer z-10"
+                    onClick={() => handleZoneClick('ground')}
+                    aria-label="Open ground view"
                 />
 
                 <div className="absolute top-4 right-4 z-20 flex gap-2">
@@ -360,6 +375,7 @@ export function HomeView() {
                                 {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5"/>}
                                 {activePanel === 'arms' && <Hand className="text-primary h-5 w-5"/>}
                                 {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5"/>}
+                                {activePanel === 'ground' && <Spade className="text-primary h-5 w-5"/>}
                                 {panelContent?.title}
                                 </AlertDialogTitle>
                                 {panelContent?.description && (
