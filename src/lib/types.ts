@@ -31,6 +31,10 @@ export const UserSchema = z.object({
         contributeMoodData: z.boolean().default(true),
         allowAnonymizedExport: z.boolean().default(false),
         allowVoiceRetention: z.boolean().default(true),
+        // New email fields
+        receiveWeeklyEmail: z.boolean().default(true),
+        receiveMilestones: z.boolean().default(true),
+        emailTone: z.string().default('poetic'),
     }).optional(),
     narratorPrefs: z.object({
         toneStyle: z.string(),
@@ -570,6 +574,10 @@ export const UpdateUserSettingsSchema = z.object({
     contributeMoodData: z.boolean().default(true),
     allowAnonymizedExport: z.boolean().default(false),
     allowVoiceRetention: z.boolean().default(true),
+    // New email fields
+    receiveWeeklyEmail: z.boolean().default(true),
+    receiveMilestones: z.boolean().default(true),
+    emailTone: z.enum(["poetic", "calm", "analytical"]).default("poetic"),
 });
 export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
 
@@ -912,3 +920,33 @@ export const B2BExportSchema = z.object({
     data: z.record(z.any()), // This would be structured reports
 });
 export type B2BExport = z.infer<typeof B2BExportSchema>;
+
+// Email System Schemas
+export const MailSchema = z.object({
+    to: z.string().email(),
+    subject: z.string(),
+    html: z.string(),
+    template: z.string().optional(),
+    attachments: z.array(z.object({ url: z.string(), type: z.string() })).optional(),
+    ttsVoiceUrl: z.string().url().optional(),
+});
+export type Mail = z.infer<typeof MailSchema>;
+
+export const EmailThreadReplySchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    originalRitualId: z.string(),
+    replyText: z.string(),
+    timestamp: z.number(),
+});
+export type EmailThreadReply = z.infer<typeof EmailThreadReplySchema>;
+
+export const DailyDigestQueueSchema = z.object({
+    uid: z.string(),
+    moodTrend: z.array(z.any()),
+    ritualsPerformed: z.array(z.any()),
+    dreamSummary: z.record(z.any()),
+    stressScore: z.number(),
+    narratorReflection: z.string(),
+});
+export type DailyDigestQueue = z.infer<typeof DailyDigestQueueSchema>;
