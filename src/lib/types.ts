@@ -159,7 +159,6 @@ export const AuraStateSchema = z.object({
     currentEmotion: z.string(),
     overlayColor: z.string(),
     overlayStyle: z.string(),
-    startedAt: z.number(),
     lastUpdated: z.number(),
 });
 export type AuraState = z.infer<typeof AuraStateSchema>;
@@ -861,8 +860,6 @@ export const GoogleDataSchema = z.object({
     uid: z.string(),
     dataType: z.enum(["calendar", "photos", "history", "gmail"]),
     externalId: z.string(),
-    timestamp: z.number(),
-    meta: z.record(z.any()),
     processed: z.boolean().default(false),
 });
 export type GoogleData = z.infer<typeof GoogleDataSchema>;

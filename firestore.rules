@@ -1,69 +1,42 @@
+
 rules_version = '2';
-
 service cloud.firestore {
-  match /databases/{database}/documents {
-
-    // --- User-Scoped Data ---
-    // Generic rule for collections where documents are owned by a user.
-    match /{collection}/{uid}/{docId}
-      where collection in ['users', 'permissions', 'tasks', 'moodTrends', 'voiceTranscripts', 'b2bExportOptIn',
-                           'audioEvents', 'voiceEvents', 'dreams', 'innerTexts', 'faceSnapshots', 'goals',
-                           'calendarEvents', 'habitWatch', 'onboardIntake', 'people', 'socialEvents',
-                           'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates',
-                           'legacyThreads', 'presentMetrics', 'orbState', 'orbEvents', 'orbDialogMemory',
-                           'orbSymbolicMap', 'emotionEvents', 'socialOverlays', 'recoveryBlooms',
-                           'ritualCards', 'monetizationLog'] {
+  match /databases/{db}/documents {
+    // User-specific data
+    match /{collection=users,permissions,tasks,moodTrends,voiceTranscripts,b2bExportOptIn,audioEvents,voiceEvents,dreams,innerTexts,faceSnapshots,goals,calendarEvents,habitWatch,onboardIntake,people,consentAudit,monetizationLog,emotionEvents,socialOverlays,recoveryBlooms,ritualCards}/{uid}/{docId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
-    // Allow users to read their own monetization log, but not write to it.
-    match /monetizationLog/{uid}/{docId} {
-        allow write: if false;
+    
+    // User subcollections
+    match /users/{uid}/auraStates/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
     }
-
-    // --- User Sub-collections ---
-    match /users/{uid}/{subcollection}/{docId}
-      where subcollection in ['auraStates', 'emotionCycles', 'memoryBlooms'] {
+    match /users/{uid}/emotionCycles/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+    match /users/{uid}/memoryBlooms/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // --- Data Marketplace & B2B ---
-    // partnerAuth collection is only accessible by backend functions
+    // Internal data, not client-accessible
+    match /anonymizedData/{hashId}/{metricId} {
+      allow read, write: if false; 
+    }
+    match /b2bExports/{week}/{reportId} {
+      allow read: if false;
+    }
+
+    // B2B Partner Data Access
     match /partnerAuth/{pid} {
-      allow read, write: if false;
+       allow read, write: if false; // Cloud Functions only
     }
-
-    // Data packages are public to read, but only admins can write.
-    match /dataMarketplace/packages/{packageId} {
-        allow read: if true;
-        allow write: if request.auth.token.admin == true; // Admin can write
-    }
-
-    // Data Access Requests are only accessible by admins.
     match /darRequests/{rid} {
       allow read, write: if request.auth.token.admin == true;
     }
-
-    // Export summaries are readable by admins and the specific partner who owns it.
-    // This assumes the partner's auth token has a custom claim 'partnerId'.
     match /exportSummaries/{eid} {
       allow read: if request.auth.token.admin == true ||
-                     (request.auth.token.partnerId != null && request.auth.token.partnerId == resource.data.partnerId);
+                  (resource.data.partnerId != null && request.auth.token.partnerId != null && resource.data.partnerId == request.auth.token.partnerId);
       allow write: if request.auth.token.admin == true;
     }
-
-    // --- Internal System Collections ---
-    // These collections are not accessible from the client SDKs.
-    match /anonymizedData/{any}/{documents=**} {
-      allow read, write: if false;
-    }
-    match /b2bExports/{any}/{documents=**} {
-      allow read, write: if false;
-    }
-    match /messages/{any}/{documents=**} {
-      allow read, write: if false;
-    }
-     match /consentAudit/{any}/{documents=**} {
-        allow read, write: if false;
-     }
   }
 }
