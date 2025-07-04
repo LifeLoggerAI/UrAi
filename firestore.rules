@@ -1,48 +1,49 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Helper function to check if the requesting user is the owner of the document.
+
+    // Helper function to check if the user is authenticated and is the owner.
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
     }
-    
-    // Helper function to check if a user is creating a document for themselves.
-    function isCreatingOwnDocument() {
-      return request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
 
-    // --- Specific Collection Rules ---
-
-    // Users can read and update their own profile document.
-    // Creation is handled by a Cloud Function trigger, so we don't allow client-side creation.
+    // A user can read, update, and create their own user document.
     match /users/{userId} {
-      allow read, update: if isOwner(userId);
+      allow read, update, create: if isOwner(userId);
     }
     
-    // Permissions can be created, read, and updated by the document owner.
+    // A user can create, read and update their own permissions document.
     match /permissions/{userId} {
-      allow read, update: if isOwner(userId);
-      // On create, the user's ID must match the document ID and the `uid` field inside the document.
-      allow create: if isOwner(userId) && request.resource.data.uid == userId;
+      allow read, write: if isOwner(userId);
     }
 
-    // --- Generic Rules for User-Owned Data ---
-    
-    // This rule applies to all other top-level collections (voiceEvents, dreamEvents, goals, etc.)
-    // It assumes every document has a `uid` field indicating the owner.
-    match /{collection}/{docId} {
-      allow create: if isCreatingOwnDocument();
-      allow read, update, delete: if isOwner(resource.data.uid);
+    // Helper function for collections where documents contain a 'uid' field.
+    // This handles checking ownership for create, update, and read operations.
+    function isDocumentOwner() {
+      // For create, `resource` is null, so we check the incoming data.
+      // For update/read, we check the existing data on the server.
+      return isOwner(request.resource.data.uid) || isOwner(resource.data.uid);
     }
+
+    // Apply the owner-only rule to all data collections.
+    match /audioEvents/{docId} { allow read, write: if isDocumentOwner(); }
+    match /voiceEvents/{docId} { allow read, write: if isDocumentOwner(); }
+    match /dreamEvents/{docId} { allow read, write: if isDocumentOwner(); }
+    match /people/{docId} { allow read, write: if isDocumentOwner(); }
+    match /innerTexts/{docId} { allow read, write: if isDocumentOwner(); }
+    match /cameraCaptures/{docId} { allow read, write: if isDocumentOwner(); }
+    match /symbolicImageInsights/{docId} { allow read, write: if isDocumentOwner(); }
+    match /onboardIntake/{docId} { allow read, write: if isDocumentOwner(); }
+    match /goals/{docId} { allow read, write: if isDocumentOwner(); }
+    match /tasks/{docId} { allow read, write: if isDocumentOwner(); }
+    match /calendarEvents/{docId} { allow read, write: if isDocumentOwner(); }
+    match /habitWatch/{docId} { allow read, write: if isDocumentOwner(); }
     
-    // --- Subcollection Rules ---
-    
-    // This allows users to read and write to any subcollection under their own user document,
-    // which is needed for features like `auraStates` and `memoryBlooms`.
+    // Rules for any subcollections under a user's document.
     match /users/{userId}/{subcollection}/{docId} {
-        allow read, write: if isOwner(userId);
+      allow read, write: if isOwner(userId);
     }
   }
 }
