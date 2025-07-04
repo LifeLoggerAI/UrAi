@@ -3,16 +3,64 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
-import { Flame, Activity, Repeat, HeartPulse, Scan } from "lucide-react";
+import { Flame, Activity, Repeat, HeartPulse, Scan, CheckCircle2, Circle, Clock } from "lucide-react";
+import type { Goal, Task } from "@/lib/types";
+import { format } from 'date-fns';
 
-export function TorsoView() {
+interface TorsoViewProps {
+    goals: Goal[];
+    tasks: Task[];
+}
+
+export function TorsoView({ goals, tasks }: TorsoViewProps) {
+
+    const innerDriveContent = (
+        <div className="w-full text-left space-y-6 h-full overflow-y-auto px-1">
+            <div>
+                <h3 className="font-semibold text-lg mb-2">Your Primary Goal</h3>
+                {goals.length > 0 ? (
+                    goals.map(goal => (
+                        <div key={goal.id} className="text-foreground/90 p-4 bg-muted rounded-lg border">
+                            <p>{goal.title}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-muted-foreground text-sm p-4 bg-muted rounded-lg border">You haven't set a primary goal during onboarding yet.</p>
+                )}
+            </div>
+            <div>
+                <h3 className="font-semibold text-lg mb-2">Your Next Steps</h3>
+                {tasks.length > 0 ? (
+                    <ul className="space-y-3">
+                        {tasks.map(task => (
+                            <li key={task.id} className="flex items-start gap-3 p-3 bg-muted rounded-lg border">
+                                {task.status === 'complete' ? 
+                                    <CheckCircle2 className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" /> : 
+                                    <Circle className="h-5 w-5 text-amber-500 mt-1 flex-shrink-0" />
+                                }
+                                <div className="flex-1">
+                                    <p className="text-foreground/90">{task.title}</p>
+                                    <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                                        <Clock className="h-3 w-3" />
+                                        Due: {format(new Date(task.dueDate), "PPP")}
+                                    </p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                     <p className="text-muted-foreground text-sm p-4 bg-muted rounded-lg border">You haven't set any next steps during onboarding yet.</p>
+                )}
+            </div>
+        </div>
+    );
 
     const panels = [
         {
             title: 'Inner Drive',
             icon: <Flame className="h-6 w-6 text-primary" />,
             description: "Motivation, goals, and your core values.",
-            content: <p className="text-center text-muted-foreground mt-8">Inner Drive insights coming soon.</p>
+            content: innerDriveContent
         },
         {
             title: 'Rhythm Map',

@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState }from 'react';
-import type { Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection } from '@/lib/types';
+import type { Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection, Goal, Task } from '@/lib/types';
 import { suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
@@ -38,6 +38,8 @@ export function HomeView() {
     const [dreams, setDreams] = useState<Dream[] | undefined>(undefined);
     const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[] | undefined>(undefined);
     const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[] | undefined>(undefined);
+    const [goals, setGoals] = useState<Goal[] | undefined>(undefined);
+    const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
 
     const [isRitualLoading, setIsRitualLoading] = useState(false);
     
@@ -68,6 +70,12 @@ export function HomeView() {
 
             const qInner = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
             unsubscribes.push(onSnapshot(qInner, snapshot => setInnerTexts(snapshot.docs.map(d => d.data() as InnerVoiceReflection))));
+
+            const qGoals = query(collection(db, "goals"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            unsubscribes.push(onSnapshot(qGoals, (snapshot) => setGoals(snapshot.docs.map(doc => doc.data() as Goal))));
+            
+            const qTasks = query(collection(db, "tasks"), where("uid", "==", user.uid), orderBy("dueDate", "asc"));
+            unsubscribes.push(onSnapshot(qTasks, (snapshot) => setTasks(snapshot.docs.map(doc => doc.data() as Task))));
 
             return () => unsubscribes.forEach(unsub => unsub());
         }
@@ -109,7 +117,7 @@ export function HomeView() {
                  setPanelContent({ 
                     title: 'Core-Self View', 
                     description: 'Explore your inner drive, rhythms, and somatic memories.',
-                    content: <TorsoView />
+                    content: <TorsoView goals={goals || []} tasks={tasks || []} />
                 });
                 setActivePanel('torso');
                 return;
