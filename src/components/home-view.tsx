@@ -6,7 +6,7 @@ import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom
 import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
-import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand } from 'lucide-react';
+import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand, Cloud } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
 import { collection, query, where, onSnapshot, doc, orderBy, limit } from 'firebase/firestore';
@@ -29,7 +29,7 @@ import { TorsoView } from './torso-view';
 import { LegsView } from './legs-view';
 import { ArmsView } from './arms-view';
 
-type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | null;
+type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | null;
 
 export function HomeView() {
     const { user } = useAuth();
@@ -133,7 +133,7 @@ export function HomeView() {
         return "A balanced and neutral state.";
     }
 
-    const handleZoneClick = async (zone: 'head' | 'torso' | 'legs' | 'arms' | 'aura') => {
+    const handleZoneClick = async (zone: 'head' | 'torso' | 'legs' | 'arms' | 'aura' | 'sky') => {
         if (isRitualLoading || !user) return;
         
         switch(zone) {
@@ -168,6 +168,14 @@ export function HomeView() {
                     content: <ArmsView />
                 });
                 setActivePanel('arms');
+                return;
+            case 'sky':
+                setPanelContent({
+                    title: 'Sky View',
+                    description: 'Explore the weather, time of day, and celestial patterns influencing your mood.',
+                    content: <p className="text-center text-muted-foreground mt-8">Sky view with weather animations and constellation overlays coming soon.</p>
+                });
+                setActivePanel('sky');
                 return;
             case 'aura':
                 setIsRitualLoading(true);
@@ -220,6 +228,7 @@ export function HomeView() {
             case 'torso': return 'max-w-6xl';
             case 'legs': return 'max-w-3xl';
             case 'arms': return 'max-w-6xl';
+            case 'sky': return 'max-w-4xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
             default: return 'max-w-lg';
         }
@@ -249,6 +258,12 @@ export function HomeView() {
             <div className="relative w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden text-center">
                 <div style={getSkyStyle()} className="absolute inset-0 z-0 transition-all duration-1000" />
                 
+                 <div 
+                    className="absolute top-0 left-0 right-0 h-1/3 cursor-pointer z-10"
+                    onClick={() => handleZoneClick('sky')}
+                    aria-label="Open sky view"
+                />
+
                 <div className="absolute top-4 right-4 z-20 flex gap-2">
                     <TooltipProvider>
                         <Tooltip>
@@ -344,6 +359,7 @@ export function HomeView() {
                                 {activePanel === 'torso' && <Mic className="text-primary h-5 w-5"/>}
                                 {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5"/>}
                                 {activePanel === 'arms' && <Hand className="text-primary h-5 w-5"/>}
+                                {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5"/>}
                                 {panelContent?.title}
                                 </AlertDialogTitle>
                                 {panelContent?.description && (
@@ -376,5 +392,3 @@ export function HomeView() {
         </>
     );
 }
-
-    
