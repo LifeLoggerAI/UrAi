@@ -41,8 +41,10 @@ export function SettingsForm() {
       narratorVolume: 0.8,
       ttsVoice: 'warmCalm',
       gpsAllowed: false,
-      contributeMoodData: true,
-      allowAnonymizedExport: false,
+      dataConsent: {
+          shareAnonymousData: false,
+          optedOutAt: null,
+      },
       allowVoiceRetention: true,
       receiveWeeklyEmail: true,
       receiveMilestones: true,
@@ -58,9 +60,11 @@ export function SettingsForm() {
           const userDocSnap = await getDoc(userDocRef);
           if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
+            const settings = userData.settings || {};
             form.reset({
               displayName: userData.displayName || user.displayName || '',
-              ...userData.settings,
+              ...settings,
+              dataConsent: settings.dataConsent || { shareAnonymousData: false, optedOutAt: null },
             });
           }
         } catch (error) {
@@ -82,6 +86,18 @@ export function SettingsForm() {
     if (!user) return;
     setIsSubmitting(true);
     try {
+      // When user toggles sharing off, set the optedOutAt timestamp
+      const currentConsent = form.getValues('dataConsent.shareAnonymousData');
+      if (currentConsent && !data.dataConsent?.shareAnonymousData) {
+          if (data.dataConsent) {
+              data.dataConsent.optedOutAt = Date.now();
+          }
+      } else if (!currentConsent && data.dataConsent?.shareAnonymousData) {
+          if (data.dataConsent) {
+              data.dataConsent.optedOutAt = null;
+          }
+      }
+
       const serverUpdatePromise = updateUserSettingsAction({ userId: user.uid, data });
       const authUpdatePromise = updateProfile(user, { displayName: data.displayName });
       
@@ -346,7 +362,7 @@ export function SettingsForm() {
                  <h3 className="text-lg font-medium">Privacy &amp; Data Sharing</h3>
                 <FormField
                 control={form.control}
-                name="allowAnonymizedExport"
+                name="dataConsent.shareAnonymousData"
                 render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">

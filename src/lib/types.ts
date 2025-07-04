@@ -28,13 +28,15 @@ export const UserSchema = z.object({
         pushNotifications: z.boolean().default(true),
         // New privacy fields
         gpsAllowed: z.boolean().default(false),
-        contributeMoodData: z.boolean().default(true),
-        allowAnonymizedExport: z.boolean().default(false),
         allowVoiceRetention: z.boolean().default(true),
         // New email fields
         receiveWeeklyEmail: z.boolean().default(true),
         receiveMilestones: z.boolean().default(true),
         emailTone: z.string().default('poetic'),
+        dataConsent: z.object({
+            shareAnonymousData: z.boolean(),
+            optedOutAt: z.number().nullable(),
+        }).optional(),
     }).optional(),
     narratorPrefs: z.object({
         toneStyle: z.string(),
@@ -573,8 +575,10 @@ export const UpdateUserSettingsSchema = z.object({
     ttsVoice: z.string().default('warmCalm'),
     // New privacy fields
     gpsAllowed: z.boolean().default(false),
-    contributeMoodData: z.boolean().default(true),
-    allowAnonymizedExport: z.boolean().default(false),
+    dataConsent: z.object({
+        shareAnonymousData: z.boolean(),
+        optedOutAt: z.number().nullable(),
+    }).default({ shareAnonymousData: false, optedOutAt: null }),
     allowVoiceRetention: z.boolean().default(true),
     // New email fields
     receiveWeeklyEmail: z.boolean().default(true),
@@ -719,6 +723,60 @@ export const SubscriptionSchema = z.object({
     status: z.enum(["active", "paused", "expired"]),
 });
 export type Subscription = z.infer<typeof SubscriptionSchema>;
+
+// Data Marketplace Schemas
+export const PartnerAuthSchema = z.object({
+    apiKey: z.string(),
+    displayName: z.string(),
+    industry: z.string(),
+    contactEmail: z.string().email(),
+    licenseTier: z.enum(["trial", "standard", "premium"]),
+    createdAt: z.number(),
+    isApproved: z.boolean(),
+});
+export type PartnerAuth = z.infer<typeof PartnerAuthSchema>;
+
+export const DataMarketplacePackageSchema = z.object({
+    name: z.string(),
+    description: z.string(),
+    dataScope: z.string(),
+    pricePerMonthUSD: z.number(),
+    segmentFilter: z.record(z.any()),
+    anonymisationLevel: z.enum(["high", "medium"]),
+    watermarkSalt: z.string(),
+});
+export type DataMarketplacePackage = z.infer<typeof DataMarketplacePackageSchema>;
+
+export const DarRequestSchema = z.object({
+    partnerId: z.string(),
+    packageId: z.string(),
+    status: z.enum(["pending", "approved", "rejected"]),
+    requestedAt: z.number(),
+    reviewedAt: z.number().nullable(),
+    reviewerUid: z.string().nullable(),
+    notes: z.string().nullable(),
+});
+export type DarRequest = z.infer<typeof DarRequestSchema>;
+
+export const ExportSummarySchema = z.object({
+    partnerId: z.string(),
+    packageId: z.string(),
+    generatedAt: z.number(),
+    recordCount: z.number(),
+    anonymisationFlags: z.record(z.any()),
+    watermarkId: z.string(),
+});
+export type ExportSummary = z.infer<typeof ExportSummarySchema>;
+
+export const MonetizationLogSchema = z.object({
+    exportId: z.string(),
+    packageId: z.string(),
+    partnerId: z.string(),
+    shareValueUSD: z.number(),
+    timestamp: z.number(),
+});
+export type MonetizationLog = z.infer<typeof MonetizationLogSchema>;
+
 
 // Additional Schemas from Final Master Prompt
 export const LocationLogSchema = z.object({

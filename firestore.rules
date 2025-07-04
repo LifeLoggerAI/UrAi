@@ -1,49 +1,85 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // User-owned data. Users can read and write their own documents in these collections.
-    // This rule is a consolidation of all user-scoped data from the master prompts.
-    match /{collection}/{uid}/{docId}
+    // Helper function to check if a user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if the user is the owner of the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Helper function to check if the user is an admin
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // User-specific data collections
+    match /{collection}/{uid}/{**} {
       where collection in [
-        'users', 'permissions', 'people',
-        'voiceEvents', 'audioEvents', 'dreams', 'innerTexts', 'faceSnapshots',
-        'onboardIntake', 'goals', 'tasks', 'calendarEvents', 'habitWatch',
-        'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap',
-        'narratorInsights', 'voiceClips', 'voiceTranscripts', 'transcriptTags', 'ambientTone',
+        'users', 'permissions', 'tasks', 'moodTrends', 'voiceTranscripts',
+        'b2bExportOptIn', 'onboardIntake', 'goals', 'calendarEvents', 'habitWatch',
+        'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap', 'narratorInsights',
         'emotionEvents', 'socialOverlays', 'recoveryBlooms', 'ritualCards',
-        'moodLogs', 'emotionCycles', 'memoryBlooms'
-      ] {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+        'voiceClips', 'ambientTone', 'transcriptTags'
+      ]
+      allow read, write: if isOwner(uid);
+    }
+    
+    // People collection can be read by any authenticated user, but only owner can write
+    match /people/{personId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(resource.data.uid);
     }
 
-    // Subcollections under a user document
-    match /users/{uid}/{subcollection}/{docId}
-      where subcollection in ['auraStates', 'memoryBlooms', 'emotionCycles'] {
-        allow read, write: if request.auth != null && request.auth.uid == uid;
+    // Dreams collection is private to the user
+    match /dreams/{dreamId} {
+        allow read, write: if isOwner(resource.data.uid);
+    }
+    
+    // innerTexts collection is private to the user
+    match /innerTexts/{textId} {
+        allow read, write: if isOwner(resource.data.uid);
+    }
+    
+    // faceSnapshots collection is private to the user
+    match /faceSnapshots/{snapshotId} {
+      allow read, write: if isOwner(resource.data.uid);
     }
 
-    // Special collections from B2B/Anonymization prompt are firewalled.
+    // Data Marketplace Rules
+    match /partnerAuth/{pid} {
+      allow read, write: if false; // Accessed by backend only
+    }
+
+    match /darRequests/{rid} {
+      allow read, write: if isAdmin();
+    }
+
+    match /exportSummaries/{eid} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.partnerId == request.auth.token.partnerId);
+      allow write: if isAdmin();
+    }
+
+    match /monetizationLog/{uid}/{doc} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // Anonymized data is not readable by clients
     match /anonymizedData/{hashId}/{metricId} {
       allow read: if false;
-      allow write: if request.auth != null; // Should be restricted to service roles in production.
+      allow write: if isAuthenticated(); // Or more specific server-side identity
     }
 
+    // B2B exports are not readable by clients
     match /b2bExports/{week}/{reportId} {
       allow read: if false;
-    }
-
-    // Consent audit log is write-only for authenticated users, not readable.
-    match /consentAudit/{auditId} {
-      allow read: if false;
-      allow write: if request.auth != null;
-    }
-
-    // Notification queue is write-only for authenticated users.
-    match /messages/queue/{messageId} {
-      allow read: if false;
-      allow write: if request.auth != null;
     }
   }
 }

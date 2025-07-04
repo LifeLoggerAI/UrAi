@@ -256,17 +256,23 @@ export async function updateUserSettingsAction(input: z.infer<typeof updateUserS
     try {
         const userRef = doc(db, "users", userId);
         
-        const updateData = {
+        const updatePayload: Record<string, any> = {
             displayName: data.displayName,
-            settings: {
-                moodTrackingEnabled: data.moodTrackingEnabled,
-                passiveAudioEnabled: data.passiveAudioEnabled,
-                faceEmotionEnabled: data.faceEmotionEnabled,
-                dataExportEnabled: data.dataExportEnabled,
-            }
+            'settings.moodTrackingEnabled': data.moodTrackingEnabled,
+            'settings.passiveAudioEnabled': data.passiveAudioEnabled,
+            'settings.faceEmotionEnabled': data.faceEmotionEnabled,
+            'settings.dataExportEnabled': data.dataExportEnabled,
+            'settings.narratorVolume': data.narratorVolume,
+            'settings.ttsVoice': data.ttsVoice,
+            'settings.gpsAllowed': data.gpsAllowed,
+            'settings.dataConsent': data.dataConsent,
+            'settings.allowVoiceRetention': data.allowVoiceRetention,
+            'settings.receiveWeeklyEmail': data.receiveWeeklyEmail,
+            'settings.receiveMilestones': data.receiveMilestones,
+            'settings.emailTone': data.emailTone,
         };
 
-        await updateDoc(userRef, updateData);
+        await updateDoc(userRef, updatePayload);
 
         return { success: true, error: null };
 
