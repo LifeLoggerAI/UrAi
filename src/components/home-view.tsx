@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState }from 'react';
@@ -56,7 +55,7 @@ export function HomeView() {
             const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"), limit(5));
             unsubscribes.push(onSnapshot(qPeople, (snapshot) => setPeople(snapshot.docs.map(doc => doc.data() as Person))));
 
-            const auraRef = doc(db, 'users', user.uid, 'auraStates', 'current');
+            const auraRef = doc(db, `users/${user.uid}/auraStates/current`);
             unsubscribes.push(onSnapshot(auraRef, (doc) => setAuraState(doc.exists() ? doc.data() as AuraState : null)));
             
             const qBlooms = query(collection(db, 'users', user.uid, 'memoryBlooms'), orderBy("triggeredAt", "desc"), limit(10));
