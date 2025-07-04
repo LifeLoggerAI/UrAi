@@ -3,76 +3,87 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if a user is signed in and is the owner of a document.
-    function isOwner(uid) {
-      return request.auth != null && request.auth.uid == uid;
+    // HELPER
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
     
-    // ====== USER DATA ======
-    // Users can manage their own user document.
+    // GENERIC OWNERSHIP CHECK
+    function isDocOwner() {
+      return isOwner(resource.data.uid);
+    }
+    function isCreatingDocForSelf() {
+      return isOwner(request.resource.data.uid);
+    }
+
+    // USER PROFILE
     match /users/{userId} {
-      allow read, update, delete: if isOwner(userId);
+      allow get, list, update: if isOwner(userId);
       allow create: if isOwner(userId);
     }
 
-    // Users can manage data in subcollections of their own user document.
+    // USER SUBCOLLECTIONS
     match /users/{userId}/{subcollection}/{docId} {
-      allow read, write: if isOwner(userId);
+        allow read, write: if isOwner(userId);
     }
-
-    // ====== ONBOARDING & PERMISSIONS ======
-    // A user can create and manage their own permissions document.
+    
+    // PERMISSIONS
     match /permissions/{userId} {
-      allow read, write: if isOwner(userId);
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.uid == userId;
+      allow update: if isOwner(userId);
     }
-    
-    // The `onboardIntake` collection stores the transcript from onboarding.
+
+    // ONBOARDING DATA
     match /onboardIntake/{docId} {
-      allow create: if isOwner(request.resource.data.uid);
-      allow read, update, delete: if isOwner(resource.data.uid);
+      allow create: if isCreatingDocForSelf();
+      allow read, update, delete: if isDocOwner();
     }
-
-    // ====== CORE APP DATA ======
-    // The following collections store user-generated content.
-    // Access is granted if the document's `uid` field matches the user's auth uid.
-    
-    function canAccessOwnedDocument() {
-      return (request.method == 'create' && isOwner(request.resource.data.uid)) ||
-             (request.method != 'create' && isOwner(resource.data.uid));
-    }
-
     match /goals/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, update, delete: if isDocOwner();
     }
     match /tasks/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, update, delete: if isDocOwner();
     }
     match /calendarEvents/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, update, delete: if isDocOwner();
     }
     match /habitWatch/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, update, delete: if isDocOwner();
     }
+
+    // MAIN APP DATA
     match /audioEvents/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
     match /voiceEvents/{docId} {
-      allow read, write: if canAccessOwnedDocument();
-    }
-    match /dreamEvents/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
     match /people/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
+    }
+    match /dreamEvents/{docId} {
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
     match /innerTexts/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
     match /cameraCaptures/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
     match /symbolicImageInsights/{docId} {
-      allow read, write: if canAccessOwnedDocument();
+      allow create: if isCreatingDocForSelf();
+      allow read, list, update, delete: if isDocOwner();
     }
   }
 }

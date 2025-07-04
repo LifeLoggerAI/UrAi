@@ -13,9 +13,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mic, MapPin, Activity, Bell, ShieldQuestion, Users } from 'lucide-react';
 import type { Permissions } from '@/lib/types';
-import { analytics } from '@/lib/firebase';
+import { analytics, db } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
-import { savePermissionsAction } from '@/app/actions';
+import { doc, setDoc } from 'firebase/firestore';
 
 const permissionItems = [
     {
@@ -123,24 +123,25 @@ export default function PermissionsPage() {
             if (an) logEvent(an, 'consent_agreed');
         });
 
-        const finalPermissionsData: Permissions = {
+        const finalPermissionsData: Permissions & { uid: string } = {
             ...permissions,
             acceptedTerms: true,
             acceptedPrivacyPolicy: true,
             consentTimestamp: Date.now(),
             acceptedTermsVersion: "1.1",
+            uid: user.uid,
         };
 
         try {
-            const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissionsData });
-            if (result.success) {
-                toast({ title: 'Permissions Saved', description: "Now for the final step." });
-                router.push('/onboarding/voice');
-            } else {
-                throw new Error(result.error || 'An unknown error occurred.');
-            }
+            const permissionsRef = doc(db, "permissions", user.uid);
+            await setDoc(permissionsRef, finalPermissionsData, { merge: true });
+
+            toast({ title: 'Permissions Saved', description: "Now for the final step." });
+            router.push('/onboarding/voice');
         } catch (error) {
-            toast({ variant: 'destructive', title: 'Error', description: (error as Error).message });
+            const err = error as { code?: string, message: string };
+            toast({ variant: 'destructive', title: 'Error Saving Permissions', description: err.message });
+            console.error("Error saving permissions:", err);
         } finally {
             setIsSubmitting(false);
         }

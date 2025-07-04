@@ -1497,3 +1497,12 @@ export const InnerVoiceMomentSchema = z.object({
     linkedEmotionState: z.string(),
 });
 export type InnerVoiceMoment = z.infer<typeof InnerVoiceMomentSchema>;
+
+export const ProcessedOnboardingDataSchema = z.object({
+    onboardIntake: OnboardIntakeSchema,
+    goal: GoalSchema.optional(),
+    task: TaskSchema.optional(),
+    calendarEvent: CalendarEventSchema.optional(),
+    habitWatch: HabitWatchSchema.optional(),
+});
+export type ProcessedOnboardingData = z.infer<typeof ProcessedOnboardingDataSchema>;
