@@ -1,3 +1,4 @@
+
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
@@ -112,45 +113,90 @@ export const storeConsentAudit = functions.firestore
 
 /**
  * Creates a Data Access Request from an external partner.
- * Placeholder callable function.
+ * Requires partnerId, packageId, and apiKey in the data payload.
  */
 export const createDarRequest = functions.https.onCall(async (data, context) => {
-    // In a real app:
-    // 1. Verify partner API key.
-    // 2. Validate packageId exists.
-    // 3. Write a new document to /darRequests with status 'pending'.
-    functions.logger.info("Placeholder for createDarRequest", { data });
-    return { success: true, requestId: "dummy-request-id" };
+    const { partnerId, packageId, apiKey } = data;
+    if (!partnerId || !packageId || !apiKey) {
+        throw new functions.https.HttpsError('invalid-argument', 'Missing partnerId, packageId, or apiKey.');
+    }
+
+    const partnerRef = db.collection('partnerAuth').doc(partnerId);
+    const partnerDoc = await partnerRef.get();
+
+    if (!partnerDoc.exists || partnerDoc.data()?.apiKey !== apiKey || !partnerDoc.data()?.isApproved) {
+        throw new functions.https.HttpsError('unauthenticated', 'Invalid partner ID or API key.');
+    }
+    
+    const packageRef = db.doc(`dataMarketplace/packages/${packageId}`);
+    const packageDoc = await packageRef.get();
+    if (!packageDoc.exists) {
+        throw new functions.https.HttpsError('not-found', 'The specified data package does not exist.');
+    }
+    
+    const darRef = db.collection('darRequests').doc();
+    await darRef.set({
+        partnerId,
+        packageId,
+        status: 'pending',
+        requestedAt: admin.firestore.FieldValue.serverTimestamp(),
+        reviewedAt: null,
+        reviewerUid: null,
+        notes: null,
+    });
+    
+    functions.logger.info(`New DAR created: ${darRef.id} for partner ${partnerId}`);
+    return { success: true, requestId: darRef.id };
 });
 
 /**
  * Approves a Data Access Request. Admin-only.
- * Placeholder callable function.
+ * Requires requestId in the data payload.
  */
 export const approveDarRequest = functions.https.onCall(async (data, context) => {
     if (!context.auth?.token.admin) {
         throw new functions.https.HttpsError('permission-denied', 'Must be an admin to approve requests.');
     }
-    // In a real app:
-    // 1. Update /darRequests status to 'approved'.
-    // 2. Schedule BigQuery export job, filtering by consent.
-    // 3. Write to /exportSummaries.
-    // 4. Create /monetizationLog entries for affected users.
-    functions.logger.info("Placeholder for approveDarRequest", { data });
+    const { requestId } = data;
+    if (!requestId) {
+        throw new functions.https.HttpsError('invalid-argument', 'Request ID is required.');
+    }
+    
+    const darRef = db.collection('darRequests').doc(requestId);
+    await darRef.update({
+        status: 'approved',
+        reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
+        reviewerUid: context.auth?.uid,
+    });
+
+    functions.logger.info(`DAR ${requestId} approved by admin ${context.auth?.uid}.`);
+    functions.logger.info(`Placeholder: Triggering BigQuery export for DAR ${requestId}.`);
+    
     return { success: true };
 });
 
 /**
  * Rejects a Data Access Request. Admin-only.
- * Placeholder callable function.
+ * Requires requestId and notes in the data payload.
  */
 export const rejectDarRequest = functions.https.onCall(async (data, context) => {
     if (!context.auth?.token.admin) {
         throw new functions.https.HttpsError('permission-denied', 'Must be an admin to reject requests.');
     }
-    // In a real app:
-    // 1. Update /darRequests status to 'rejected' with a note.
-    functions.logger.info("Placeholder for rejectDarRequest", { data });
+    const { requestId, notes } = data;
+    if (!requestId || !notes) {
+        throw new functions.https.HttpsError('invalid-argument', 'Request ID and rejection notes are required.');
+    }
+    
+    const darRef = db.collection('darRequests').doc(requestId);
+    await darRef.update({
+        status: 'rejected',
+        notes: notes,
+        reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
+        reviewerUid: context.auth?.uid,
+    });
+    
+    functions.logger.info(`DAR ${requestId} rejected by admin ${context.auth?.uid}.`);
     return { success: true };
 });
 
@@ -161,17 +207,27 @@ export const rejectDarRequest = functions.https.onCall(async (data, context) => 
 export const cleanupOptOut = functions.firestore
     .document('users/{uid}')
     .onUpdate(async (change, context) => {
-        const beforeSettings = change.before.data().settings;
-        const afterSettings = change.after.data().settings;
+        const beforeSettings = change.before.data().settings || {};
+        const afterSettings = change.after.data().settings || {};
 
         const beforeConsent = beforeSettings.dataConsent?.shareAnonymousData;
         const afterConsent = afterSettings.dataConsent?.shareAnonymousData;
         
         if (beforeConsent === true && afterConsent === false) {
-            functions.logger.info(`User ${context.params.uid} has opted out of data sharing.`);
-            // The frontend action already sets the optedOutAt timestamp.
-            // This function could be used for additional cleanup if needed,
-            // such as removing them from active B2B cohorts.
+            const uid = context.params.uid;
+            functions.logger.info(`User ${uid} has opted out of data sharing.`);
+            
+            if (!afterSettings.dataConsent?.optedOutAt) {
+                 functions.logger.info(`Client did not set optedOutAt, setting it now for user ${uid}.`);
+                 await change.after.ref.set({
+                     settings: {
+                         dataConsent: {
+                             shareAnonymousData: false,
+                             optedOutAt: admin.firestore.FieldValue.serverTimestamp()
+                         }
+                     }
+                 }, { merge: true });
+            }
         }
         return null;
     });
@@ -186,8 +242,9 @@ export const dailyWatermarkChecker = functions.pubsub
   .onRun(async () => {
     functions.logger.info("Running daily watermark checker job.");
     // In a real app:
-    // 1. Scan new /exportSummaries.
-    // 2. Verify watermark IDs against valid salts in /dataMarketplace/packages.
-    // 3. Flag any discrepancies for review.
+    // 1. Scan new /exportSummaries from the last 24 hours.
+    // 2. For each summary, get the package from /dataMarketplace/packages.
+    // 3. Verify watermark IDs against valid salts in the package.
+    // 4. Flag any discrepancies for review by writing to an alerts collection.
     return null;
   });
