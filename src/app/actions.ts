@@ -656,7 +656,7 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
         return { success: true, error: null };
 
     } catch (e) {
-        console.error("Failed to process onboarding voice:", e);
-        return { success: false, error: "Failed to process onboarding. Please try again." };
+        console.error("Error processing onboarding:", e);
+        return { success: false, error: (e as Error).message || "An error occurred during processing." };
     }
 }

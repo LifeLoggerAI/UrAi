@@ -489,10 +489,10 @@ export const ProcessOnboardingTranscriptInputSchema = z.object({
 export type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
 
 export const ProcessOnboardingTranscriptOutputSchema = z.object({
-    goal: z.string().describe("The primary goal or dream the user mentioned."),
-    task: z.string().describe("A single, small, actionable first step towards that goal."),
-    reminderDate: z.string().describe("An ISO 8601 date string for when the user wants a reminder."),
-    habitToTrack: z.string().describe("A habit the user wants to track related to their goal."),
+    goal: z.string().optional().describe("The primary goal or dream the user mentioned."),
+    task: z.string().optional().describe("A single, small, actionable first step towards that goal."),
+    reminderDate: z.string().optional().describe("An ISO 8601 date string for when the user wants a reminder."),
+    habitToTrack: z.string().optional().describe("A habit the user wants to track related to their goal."),
 });
 export type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
 
