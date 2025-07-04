@@ -10,7 +10,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { User as AppUser } from "@/lib/types";
 
-export default function Home_Page() {
+export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [profileLoading, setProfileLoading] = useState(true);
