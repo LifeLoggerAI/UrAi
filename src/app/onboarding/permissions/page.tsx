@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -122,7 +123,7 @@ export default function PermissionsPage() {
             if (an) logEvent(an, 'consent_agreed');
         });
 
-        const finalPermissions: Omit<Permissions, 'onboardingComplete'> = {
+        const finalPermissionsData: Permissions = {
             ...permissions,
             acceptedTerms: true,
             acceptedPrivacyPolicy: true,
@@ -130,7 +131,7 @@ export default function PermissionsPage() {
             acceptedTermsVersion: "1.1",
         };
 
-        const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissions as Permissions });
+        const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissionsData });
         
         if (result.success) {
             toast({ title: 'Permissions Saved', description: "Now for the final step." });
