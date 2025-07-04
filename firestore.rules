@@ -1,40 +1,60 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // Helper function to check ownership
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
     }
-    
-    // Users collection can be read/updated by the owner. Creation is handled by a function.
+
+    // Users can only read and update their own user document
     match /users/{userId} {
       allow read, update: if isOwner(userId);
-      // Deny create/delete to prevent users from creating their own profiles
-      // or deleting them outside of the auth flow.
+      // Deny client-side creation/deletion of user docs for security.
+      // These are created by the createDefaultProfile Cloud Function on user creation.
       allow create, delete: if false;
     }
-    
-    // Any document in these collections can be managed by the owner.
-    // This covers onboarding and general app usage.
-    match /{collection}/{docId} 
-        where collection in [
-            'permissions', 'onboardIntake', 'goals', 'tasks', 
-            'calendarEvents', 'habitWatch', 'voiceEvents', 
-            'audioEvents', 'dreamEvents', 'people', 'innerTexts', 
-            'cameraCaptures', 'symbolicImageInsights'
-        ] {
-      // For create, check the UID in the incoming document data.
+
+    // Permissions can be created and managed by the owner
+    match /permissions/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Onboarding data can be created and managed by the owner
+    match /onboardIntake/{docId} {
       allow create: if isOwner(request.resource.data.uid);
-      // For read/update/delete, check the UID in the existing document data.
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    match /goals/{docId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    match /tasks/{docId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    match /calendarEvents/{docId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    match /habitWatch/{docId} {
+      allow create: if isOwner(request.resource.data.uid);
       allow read, update, delete: if isOwner(resource.data.uid);
     }
 
-    // Subcollections under a user's document
-    match /users/{userId}/{subcollection}/{docId} 
-        where subcollection in ['auraStates', 'memoryBlooms'] {
-      allow read, write: if isOwner(userId);
+    // General rule for top-level collections where documents have a `uid` field.
+    // This covers: voiceEvents, dreamEvents, innerTexts, cameraCaptures, symbolicImageInsights, people
+    match /{collection}/{docId} {
+       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+       allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
+    
+    // Rules for subcollections within the user document
+    match /users/{userId}/{subcollection}/{docId} {
+        // Covers auraStates, memoryBlooms
+        allow read, write: if isOwner(userId);
     }
   }
 }
