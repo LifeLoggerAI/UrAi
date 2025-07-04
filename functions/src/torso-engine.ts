@@ -22,7 +22,7 @@ export const ingestPassiveSensors = functions.https.onCall(async (data, context)
     
     functions.logger.info(`Ingesting passive sensor data for user ${uid}.`);
     // Logic to write to /torsoMetrics and /habitEvents
-    // ...
+    // For now, this remains a placeholder for the data ingestion endpoint.
     
     return { success: true };
 });
@@ -36,7 +36,11 @@ export const calcValueAlignment = functions.firestore
   .document('torsoMetrics/{uid}/{dateKey}')
   .onWrite(async (change, context) => {
     functions.logger.info(`Calculating value alignment for user ${context.params.uid}.`);
-    // Logic to call OpenAI 'valueAlignment' function and update score.
+    // This function would call an AI model (e.g., via a Genkit flow) to
+    // compare habitEvents and torsoMetrics against user-defined values.
+    // Placeholder for AI call.
+    // const alignmentScore = await callValueAlignmentAI(change.after.data());
+    // await change.after.ref.update({ valueAlignmentScore: alignmentScore });
     return null;
   });
 
@@ -49,9 +53,33 @@ export const detectSelfConflict = functions.firestore
   .document('torsoMetrics/{uid}/{dateKey}')
   .onWrite(async (change, context) => {
     const data = change.after.data();
-    if (data?.selfConsistencyScore < 40) {
-        functions.logger.info(`Self-conflict detected for user ${context.params.uid}.`);
-        // Logic to create narratorInsights and push a notification.
+    const uid = context.params.uid;
+
+    if (data?.selfConsistencyScore < 40 && (!change.before.exists || change.before.data()?.selfConsistencyScore >= 40)) {
+        functions.logger.info(`Self-conflict detected for user ${uid}.`);
+        
+        // Create a narratorInsight document
+        const insightPayload = {
+            uid: uid,
+            insightId: `conflict-${context.params.dateKey}`,
+            insightType: "self_conflict_detected",
+            payload: {
+                score: data.selfConsistencyScore,
+                date: context.params.dateKey,
+            },
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            consumed: false,
+            ttsUrl: null,
+        };
+        await db.collection('narratorInsights').doc(insightPayload.insightId).set(insightPayload);
+        
+        // Enqueue a push notification
+        const notificationPayload = {
+            uid: uid,
+            type: "insight",
+            body: "A moment of self-conflict was detected. It might be a good time to reflect.",
+        };
+        await db.collection('messages/queue').add(notificationPayload);
     }
     return null;
   });
@@ -64,14 +92,38 @@ export const detectSelfConflict = functions.firestore
 export const checkProLimits = functions.firestore
   .document('torsoMetrics/{uid}/{dateKey}')
   .onCreate(async (snap, context) => {
-      const userRef = db.doc(`users/${context.params.uid}`);
+      const uid = context.params.uid;
+      const userRef = db.doc(`users/${uid}`);
       const userSnap = await userRef.get();
       const userData = userSnap.data();
 
       if (userData && !userData.isProUser) {
-          functions.logger.info(`Checking pro limits for free user ${context.params.uid}.`);
+          functions.logger.info(`Checking pro limits for free user ${uid}.`);
+          
           // Logic to check if metrics > 7 days old and delete oldest.
+          const sevenDaysAgo = new Date();
+          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+          const dateKeySevenDaysAgo = sevenDaysAgo.toISOString().split('T')[0];
+
+          const oldMetricsQuery = db.collection(`torsoMetrics/${uid}`)
+            .where(admin.firestore.FieldPath.documentId(), '<', dateKeySevenDaysAgo)
+            .orderBy(admin.firestore.FieldPath.documentId());
+          
+          const oldMetricsSnap = await oldMetricsQuery.get();
+          const batch = db.batch();
+          oldMetricsSnap.docs.forEach(doc => {
+              functions.logger.info(`Deleting old metric ${doc.id} for free user ${uid}.`);
+              batch.delete(doc.ref);
+          });
+          await batch.commit();
+
           // Logic to enqueue an upsell notification.
+           const notificationPayload = {
+                uid: uid,
+                type: "upsell",
+                body: "Unlock your full history and deeper insights with Life Logger Pro.",
+            };
+           await db.collection('messages/queue').add(notificationPayload);
       }
       return null;
   });
