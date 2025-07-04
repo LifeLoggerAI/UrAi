@@ -24,27 +24,29 @@ export function NoteForm({ userId }: { userId: string }) {
 
   useEffect(() => {
     // Request permission on component mount
-    setRecordingState('requesting');
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        setHasPermission(true);
-        setRecordingState('idle');
-        mediaRecorderRef.current = new MediaRecorder(stream);
-        mediaRecorderRef.current.ondataavailable = (event) => {
-          audioChunksRef.current.push(event.data);
-        };
-        mediaRecorderRef.current.onstop = handleRecordingStop;
-      })
-      .catch(err => {
-        console.error("Error accessing microphone:", err);
-        setHasPermission(false);
-        setRecordingState('idle');
-        toast({
-            variant: "destructive",
-            title: "Microphone Access Denied",
-            description: "Please enable microphone permissions in your browser settings.",
+    if (typeof window !== "undefined") {
+      setRecordingState('requesting');
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          setHasPermission(true);
+          setRecordingState('idle');
+          mediaRecorderRef.current = new MediaRecorder(stream);
+          mediaRecorderRef.current.ondataavailable = (event) => {
+            audioChunksRef.current.push(event.data);
+          };
+          mediaRecorderRef.current.onstop = handleRecordingStop;
+        })
+        .catch(err => {
+          console.error("Error accessing microphone:", err);
+          setHasPermission(false);
+          setRecordingState('idle');
+          toast({
+              variant: "destructive",
+              title: "Microphone Access Denied",
+              description: "Please enable microphone permissions in your browser settings.",
+          });
         });
-      });
+    }
   }, [toast]);
 
   const handleRecordingStop = async () => {
@@ -52,7 +54,6 @@ export function NoteForm({ userId }: { userId: string }) {
     const durationSec = (Date.now() - recordingStart) / 1000;
     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
     
-    // Convert blob to data URI
     const reader = new FileReader();
     reader.readAsDataURL(audioBlob);
     reader.onloadend = async () => {
@@ -154,7 +155,7 @@ export function NoteForm({ userId }: { userId: string }) {
   const toggleRecording = () => {
     if (recordingState === 'recording') {
       mediaRecorderRef.current?.stop();
-    } else {
+    } else if (recordingState === 'idle' && mediaRecorderRef.current) {
       audioChunksRef.current = []; // Clear previous chunks
       setRecordingStart(Date.now());
       mediaRecorderRef.current?.start();

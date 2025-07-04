@@ -248,66 +248,6 @@ export async function companionChatAction(input: CompanionChatInput): Promise<Co
 }
 
 
-const addCameraCaptureInputSchema = z.object({
-    imageDataUri: z.string().min(1, "Image data cannot be empty."),
-    userId: z.string().min(1, "User ID is required."),
-    triggerType: z.enum(['emotional_spike', 'ritual_end', 'gps_change', 'manual', 'forecast_trigger', 'voice_peak']),
-});
-
-type AddCameraCaptureInput = z.infer<typeof addCameraCaptureInputSchema>;
-
-export async function addCameraCaptureAction(input: AddCameraCaptureInput): Promise<{ success: boolean, error: string | null }> {
-    const validatedFields = addCameraCaptureInputSchema.safeParse(input);
-
-    if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
-    }
-    
-    const { userId, imageDataUri, triggerType } = validatedFields.data;
-
-    try {
-        const analysis: AnalyzeCameraImageOutput | null = await analyzeCameraImage({ imageDataUri });
-        if (!analysis) {
-            return { success: false, error: "AI analysis of the image failed." };
-        }
-
-        const batch = writeBatch(db);
-        const captureId = crypto.randomUUID();
-        const timestamp = Date.now();
-        
-        const newCapture: CameraCapture = {
-            id: captureId,
-            uid: userId,
-            imageUrl: `captures/${userId}/${captureId}.jpg`, // Placeholder path
-            createdAt: timestamp,
-            triggerType,
-            ...analysis,
-        };
-
-        batch.set(doc(db, "cameraCaptures", newCapture.id), newCapture);
-
-        const insight = await generateSymbolicInsight({ analysis });
-        if(insight) {
-            const insightId = crypto.randomUUID();
-            const newInsight: SymbolicImageInsight = {
-                id: insightId,
-                uid: userId,
-                cameraCaptureId: captureId,
-                ...insight
-            };
-            batch.set(doc(db, "symbolicImageInsights", insightId), newInsight);
-        }
-        
-        await batch.commit();
-
-        return { success: true, error: null };
-    } catch (e) {
-        console.error("Failed to add camera capture:", e);
-        return { success: false, error: "Failed to save camera capture. Please try again." };
-    }
-}
-
-
 export async function analyzeInnerTextAction(input: { text: string }): Promise<{ analysis: AnalyzeTextSentimentOutput | null; error: string | null }> {
     const validatedFields = z.object({ text: z.string().min(1) }).safeParse(input);
     if (!validatedFields.success) {

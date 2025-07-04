@@ -1,60 +1,63 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- Helper Functions ---
-    // Checks if the requesting user's UID matches the document ID.
+    // Helper function to check ownership
     function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
-    // Checks if the user is creating a document for themselves (compares UID to the new document's 'uid' field).
-    function isCreatingForSelf() {
-      return request.auth != null && request.auth.uid == request.resource.data.uid;
-    }
-    // Checks if the user owns the existing document (compares UID to the existing document's 'uid' field).
-    function isDataOwner() {
-      return request.auth != null && request.auth.uid == resource.data.uid;
+      return request.auth.uid == userId;
     }
 
-    // --- Collection Rules ---
-
-    // User profile documents, keyed by user ID.
+    // Users can read their own profile, and can only update their own profile.
     match /users/{userId} {
-      allow create: if request.auth != null;
-      allow read, update: if isOwner(userId);
+      allow read: if isOwner(userId);
+      allow update: if isOwner(userId);
+      // Deny create/delete on the /users collection itself
+      allow create, delete: if false;
     }
-
-    // Permissions documents, keyed by user ID.
+    
+    // Users can create and read their own permissions document once.
     match /permissions/{userId} {
-      allow read, write: if isOwner(userId);
+        allow read, create: if isOwner(userId);
+        // Prevent modification after creation
+        allow update, delete: if false;
     }
-
-    // User-specific subcollections.
-    match /users/{userId}/{subcollection}/{docId} {
-      allow read, write: if isOwner(userId);
+    
+    // This rule covers all top-level collections where documents are directly
+    // owned by a user and should only be accessible by that user.
+    // The `resource.data.uid` is used for existing documents (read, update, delete)
+    // The `request.resource.data.uid` is used for new documents (create)
+    match /{collection}/{docId}
+      where collection in [
+        'audioEvents',
+        'voiceEvents',
+        'people',
+        'dreamEvents',
+        'innerTexts',
+        'cameraCaptures',
+        'symbolicImageInsights',
+        'onboardIntake',
+        'goals',
+        'tasks',
+        'calendarEvents',
+        'habitWatch',
+        'rituals',
+        'timelineEvents'
+      ] {
+      allow read, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
+      allow update: if isOwner(resource.data.uid) && isOwner(request.resource.data.uid);
     }
-
-    // The following collections store user data, keyed by a random ID.
-    // Access is granted if the document's 'uid' field matches the requesting user's UID.
-    function canAccessOwnedDocument() {
-      // Allow create if the user is creating a document for themselves.
-      // Allow read, list, update, delete if the user owns the existing document.
-      return (request.method == 'create' && isCreatingForSelf()) ||
-             ((request.method == 'get' || request.method == 'list' || request.method == 'update' || request.method == 'delete') && isDataOwner());
+    
+    // This rule covers collections that are subcollections of a user document.
+    match /users/{userId}/{subcollection}/{docId}
+       where subcollection in [
+        'auraStates',
+        'memoryBlooms',
+        'emotionCycles'
+      ] {
+        allow read, write: if isOwner(userId);
     }
-
-    match /audioEvents/{docId}           { allow read, write: if canAccessOwnedDocument(); }
-    match /cameraCaptures/{docId}        { allow read, write: if canAccessOwnedDocument(); }
-    match /dreamEvents/{docId}           { allow read, write: if canAccessOwnedDocument(); }
-    match /goals/{docId}                 { allow read, write: if canAccessOwnedDocument(); }
-    match /habitWatch/{docId}            { allow read, write: if canAccessOwnedDocument(); }
-    match /innerTexts/{docId}            { allow read, write: if canAccessOwnedDocument(); }
-    match /onboardIntake/{docId}         { allow read, write: if canAccessOwnedDocument(); }
-    match /people/{docId}                { allow read, write: if canAccessOwnedDocument(); }
-    match /symbolicImageInsights/{docId} { allow read, write: if canAccessOwnedDocument(); }
-    match /tasks/{docId}                 { allow read, write: if canAccessOwnedDocument(); }
-    match /voiceEvents/{docId}           { allow read, write: if canAccessOwnedDocument(); }
-    match /calendarEvents/{docId}        { allow read, write: if canAccessOwnedDocument(); }
   }
 }
