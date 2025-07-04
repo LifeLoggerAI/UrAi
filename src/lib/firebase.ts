@@ -12,17 +12,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Check if all required environment variables are present and not placeholder values
-const hasValidFirebaseKeys = 
-    firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_") &&
-    firebaseConfig.authDomain &&
-    firebaseConfig.projectId;
-
-if (!hasValidFirebaseKeys) {
-    throw new Error("Firebase configuration keys are missing or are still using placeholder values. Please update the .env.local file with your Firebase project's credentials.");
-}
-
-
 // Initialize Firebase
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db: Firestore = getFirestore(app);
