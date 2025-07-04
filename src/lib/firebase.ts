@@ -1,7 +1,7 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getFirestore, enableIndexedDbPersistence, type Firestore } from "firebase/firestore";
+import { getAuth, type Auth } from "firebase/auth";
+import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,11 +12,22 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Check if all required environment variables are present and not placeholder values
+const hasValidFirebaseKeys = 
+    firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("YOUR_") &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId;
+
+if (!hasValidFirebaseKeys) {
+    throw new Error("Firebase configuration keys are missing or are still using placeholder values. Please update the .env.local file with your Firebase project's credentials.");
+}
+
+
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const db = getFirestore(app);
-const auth = getAuth(app);
-const analytics = isSupported().then(yes => yes ? getAnalytics(app) : null);
+const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const db: Firestore = getFirestore(app);
+const auth: Auth = getAuth(app);
+const analytics: Promise<Analytics | null> = isSupported().then(yes => yes ? getAnalytics(app) : null);
 
 // Enable Firestore offline persistence
 try {
