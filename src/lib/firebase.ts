@@ -27,14 +27,11 @@ const db: Firestore = initializeFirestore(app, {
 const auth: Auth = getAuth(app);
 
 // --- START EMULATOR CONNECTION ---
-// This block ensures the app connects to the local Firebase emulators.
-// It uses a check on the auth object's emulatorConfig to prevent re-connecting
-// during hot reloads in development, which is a robust way to avoid race conditions.
 if (typeof window !== 'undefined' && !auth.emulatorConfig) {
-    console.log("Connecting to Firebase Emulators...");
+    console.log("Connecting to Firebase Emulators using 127.0.0.1...");
     try {
-        connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, 'localhost', 8080);
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
         console.log("Successfully connected to Firebase Emulators.");
     } catch (error) {
         console.error("CRITICAL: Failed to connect to Firebase Emulators.", error);
