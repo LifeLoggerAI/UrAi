@@ -92,6 +92,7 @@ export default function PermissionsPage() {
             acceptedTerms: true,
             acceptedPrivacyPolicy: true,
             consentTimestamp: Date.now(),
+            acceptedTermsVersion: "1.1",
         };
 
         const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissions as Permissions });

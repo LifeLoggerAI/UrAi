@@ -52,6 +52,7 @@ export const PermissionsSchema = z.object({
     acceptedTerms: z.boolean(),
     acceptedPrivacyPolicy: z.boolean(),
     consentTimestamp: z.number(),
+    acceptedTermsVersion: z.string().optional(),
 });
 export type Permissions = z.infer<typeof PermissionsSchema>;
 

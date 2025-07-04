@@ -6,6 +6,8 @@ import * as admin from "firebase-admin";
 if (admin.apps.length === 0) {
     admin.initializeApp();
 }
+const db = admin.firestore();
+
 
 /**
  * Anonymizes user data upon request or based on settings.
@@ -77,3 +79,34 @@ export const exportUserData = functions.https.onCall(async (data, context) => {
     // 5. Send the URL to the user's email.
     return { success: true, message: "Data export process initiated. You will receive an email with a download link shortly." };
 });
+
+/**
+ * Creates an audit log whenever a user's permissions document is written.
+ */
+export const storeConsentAudit = functions.firestore
+  .document('permissions/{uid}')
+  .onWrite(async (change, context) => {
+    const { uid } = context.params;
+    const consentData = change.after.data();
+
+    if (!consentData) {
+      functions.logger.info(`Consent data for ${uid} deleted, skipping audit.`);
+      return null;
+    }
+
+    const auditLog = {
+      uid: uid,
+      ...consentData,
+      auditTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+      changeType: change.before.exists ? 'update' : 'create',
+    };
+
+    try {
+      // Creates a new document in the consentAudit collection for each change
+      await db.collection('consentAudit').add(auditLog);
+      functions.logger.info(`Successfully logged consent audit for user ${uid}.`);
+    } catch (error) {
+      functions.logger.error(`Failed to log consent audit for user ${uid}:`, error);
+    }
+    return null;
+  });
