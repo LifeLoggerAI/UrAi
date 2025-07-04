@@ -2,66 +2,38 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if a user is authenticated and is the owner of a document
-    function isOwner(docOwnerId) {
-      return request.auth != null && request.auth.uid == docOwnerId;
-    }
-
-    // Helper function to check if incoming data for a write has the correct owner uid
-    function incomingDataIsOwnedByRequestor() {
-      return request.auth != null && request.resource.data.uid == request.auth.uid;
+    
+    // Helper function to check ownership
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
     
-    // --- ONBOARDING-CRITICAL COLLECTIONS ---
-
-    // A user can create/update their own permissions document.
-    match /permissions/{userId} {
-      allow read, update: if isOwner(userId);
-      allow create: if isOwner(userId) && incomingDataIsOwnedByRequestor();
-    }
-    
-    // During voice onboarding, a user document is updated
+    // Users collection can be read/updated by the owner. Creation is handled by a function.
     match /users/{userId} {
-       allow read, update: if isOwner(userId);
-       // Creation is handled by a Cloud Function on auth trigger, not by the client
-       allow create: if false;
-    }
-
-    // During voice onboarding, new documents are created in these collections
-    match /onboardIntake/{docId} {
-      allow create: if incomingDataIsOwnedByRequestor();
-    }
-    match /goals/{docId} {
-       allow create: if incomingDataIsOwnedByRequestor();
-    }
-    match /tasks/{docId} {
-       allow create: if incomingDataIsOwnedByRequestor();
-    }
-    match /calendarEvents/{docId} {
-       allow create: if incomingDataIsOwnedByRequestor();
-    }
-    match /habitWatch/{docId} {
-       allow create: if incomingDataIsOwnedByRequestor();
-    }
-
-    // --- GENERAL APP DATA ---
-    
-    // Collections where documents are owned by users
-    match /{collection}/{docId} {
-      // Allow creation if the new document has the owner's uid
-      allow create: if incomingDataIsOwnedByRequestor();
-      
-      // Allow read, update, delete only on documents they own
-      allow get, update, delete: if isOwner(resource.data.uid);
-      
-      // Allow listing of documents for authenticated users.
-      // Client-side queries MUST filter by uid to be successful, which they do.
-      allow list: if request.auth != null;
+      allow read, update: if isOwner(userId);
+      // Deny create/delete to prevent users from creating their own profiles
+      // or deleting them outside of the auth flow.
+      allow create, delete: if false;
     }
     
-    // User subcollections (e.g., auraStates, memoryBlooms)
-    match /users/{userId}/{subcollection}/{docId} {
+    // Any document in these collections can be managed by the owner.
+    // This covers onboarding and general app usage.
+    match /{collection}/{docId} 
+        where collection in [
+            'permissions', 'onboardIntake', 'goals', 'tasks', 
+            'calendarEvents', 'habitWatch', 'voiceEvents', 
+            'audioEvents', 'dreamEvents', 'people', 'innerTexts', 
+            'cameraCaptures', 'symbolicImageInsights'
+        ] {
+      // For create, check the UID in the incoming document data.
+      allow create: if isOwner(request.resource.data.uid);
+      // For read/update/delete, check the UID in the existing document data.
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    // Subcollections under a user's document
+    match /users/{userId}/{subcollection}/{docId} 
+        where subcollection in ['auraStates', 'memoryBlooms'] {
       allow read, write: if isOwner(userId);
     }
   }
