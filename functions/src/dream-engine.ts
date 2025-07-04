@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 
 /**
@@ -12,8 +12,8 @@ if (admin.apps.length === 0) {
  * Placeholder function.
  */
 export const detectDreamSignal = functions.pubsub
-  .schedule('every day 04:00')
-  .timeZone('UTC')
+  .schedule("every day 04:00")
+  .timeZone("UTC")
   .onRun(async (context) => {
     functions.logger.info("Running daily dream signal detection job.");
     // In a real implementation:
@@ -28,7 +28,7 @@ export const detectDreamSignal = functions.pubsub
  * Placeholder function.
  */
 export const generateDreamSymbols = functions.firestore
-  .document('dreamEvents/{dreamId}')
+  .document("dreamEvents/{dreamId}")
   .onCreate(async (snap, context) => {
     const dreamData = snap.data();
     functions.logger.info(`Generating dream symbols for dream: ${context.params.dreamId}`, dreamData);
@@ -44,7 +44,7 @@ export const generateDreamSymbols = functions.firestore
  * Placeholder function.
  */
 export const generateDreamNarration = functions.firestore
-  .document('dreamEvents/{dreamId}')
+  .document("dreamEvents/{dreamId}")
   .onUpdate(async (change, context) => {
     const after = change.after.data();
     // Generate narration only if tags are present and narration is missing.
@@ -62,13 +62,13 @@ export const generateDreamNarration = functions.firestore
  * Placeholder function.
  */
 export const updateDreamConstellation = functions.pubsub
-  .schedule('every sunday 05:00')
-  .timeZone('UTC')
+  .schedule("every sunday 05:00")
+  .timeZone("UTC")
   .onRun(async (context) => {
-      functions.logger.info("Running weekly dream constellation update job.");
-      // In a real implementation:
-      // 1. For each user, query all `dreamEvents` from the past week.
-      // 2. Identify dominant symbols and the overall emotional arc.
-      // 3. Create or update the `dreamConstellations` document for that week.
-      return null;
+    functions.logger.info("Running weekly dream constellation update job.");
+    // In a real implementation:
+    // 1. For each user, query all `dreamEvents` from the past week.
+    // 2. Identify dominant symbols and the overall emotional arc.
+    // 3. Create or update the `dreamConstellations` document for that week.
+    return null;
   });

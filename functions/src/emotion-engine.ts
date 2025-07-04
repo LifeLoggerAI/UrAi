@@ -1,11 +1,11 @@
 
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -17,21 +17,21 @@ const db = admin.firestore();
  * @return {{color: string, style: string}} The visual properties for the overlay.
  */
 function mapEmotionToOverlay(emotion: string, intensity: number): { color: string, style: string } {
-    const intensityAlpha = 0.5 + (intensity / 100) * 0.5;
-    switch (emotion.toLowerCase()) {
-        case "joy":
-            return { color: `hsla(120, 80%, 60%, ${intensityAlpha})`, style: "glow" };
-        case "sadness":
-            return { color: `hsla(240, 70%, 50%, ${intensityAlpha})`, style: "fog" };
-        case "anger":
-            return { color: `hsla(0, 90%, 60%, ${intensityAlpha})`, style: "flicker" };
-        case "calm":
-            return { color: `hsla(200, 80%, 70%, ${intensityAlpha})`, style: "glow" };
-        case "anxiety":
-             return { color: `hsla(60, 80%, 50%, ${intensityAlpha})`, style: "flicker" };
-        default:
-            return { color: `hsla(0, 0%, 80%, ${intensityAlpha})`, style: "glow" };
-    }
+  const intensityAlpha = 0.5 + (intensity / 100) * 0.5;
+  switch (emotion.toLowerCase()) {
+  case "joy":
+    return {color: `hsla(120, 80%, 60%, ${intensityAlpha})`, style: "glow"};
+  case "sadness":
+    return {color: `hsla(240, 70%, 50%, ${intensityAlpha})`, style: "fog"};
+  case "anger":
+    return {color: `hsla(0, 90%, 60%, ${intensityAlpha})`, style: "flicker"};
+  case "calm":
+    return {color: `hsla(200, 80%, 70%, ${intensityAlpha})`, style: "glow"};
+  case "anxiety":
+    return {color: `hsla(60, 80%, 50%, ${intensityAlpha})`, style: "flicker"};
+  default:
+    return {color: `hsla(0, 0%, 80%, ${intensityAlpha})`, style: "glow"};
+  }
 }
 
 
@@ -42,58 +42,58 @@ function mapEmotionToOverlay(emotion: string, intensity: number): { color: strin
  * @return {string} A hex color code.
  */
 function mapEmotionToColor(emotion: string): string {
-     switch (emotion.toLowerCase()) {
-        case "joy": return "#7CFC00";
-        case "recovery": return "#32CD32";
-        case "sadness": return "#1E90FF";
-        case "anger": return "#DC143C";
-        default: return "#A9A9A9";
-    }
+  switch (emotion.toLowerCase()) {
+  case "joy": return "#7CFC00";
+  case "recovery": return "#32CD32";
+  case "sadness": return "#1E90FF";
+  case "anger": return "#DC143C";
+  default: return "#A9A9A9";
+  }
 }
 
 
 // 1. updateAuraState – triggered on new moodLog
 export const updateAuraState = functions.firestore
-  .document('users/{uid}/moodLogs/{logId}')
+  .document("users/{uid}/moodLogs/{logId}")
   .onCreate(async (snap, ctx) => {
     const data = snap.data();
-    const { uid } = ctx.params;
+    const {uid} = ctx.params;
 
-    if (!data.emotion || typeof data.intensity !== 'number') {
-        functions.logger.warn(`Missing emotion or intensity for moodLog ${ctx.params.logId}`);
-        return;
+    if (!data.emotion || typeof data.intensity !== "number") {
+      functions.logger.warn(`Missing emotion or intensity for moodLog ${ctx.params.logId}`);
+      return;
     }
 
     const overlay = mapEmotionToOverlay(data.emotion, data.intensity);
     functions.logger.info(`Updating aura for user ${uid} to emotion: ${data.emotion}`);
 
     try {
-        await db.doc(`users/${uid}/auraStates/current`).set({
-            currentEmotion: data.emotion,
-            overlayColor: overlay.color,
-            overlayStyle: overlay.style,
-            lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
-    } catch(error) {
-        functions.logger.error(`Failed to update auraState for user ${uid}:`, error);
+      await db.doc(`users/${uid}/auraStates/current`).set({
+        currentEmotion: data.emotion,
+        overlayColor: overlay.color,
+        overlayStyle: overlay.style,
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+      }, {merge: true});
+    } catch (error) {
+      functions.logger.error(`Failed to update auraState for user ${uid}:`, error);
     }
   });
 
 
 // 2. emotionOverTimeWatcher – trend detector (hourly)
 export const emotionOverTimeWatcher = functions.pubsub
-  .schedule('every 60 minutes')
+  .schedule("every 60 minutes")
   .onRun(async () => {
     functions.logger.info("Running hourly emotionOverTimeWatcher job.");
-    const usersSnap = await db.collection('users').get();
+    const usersSnap = await db.collection("users").get();
 
     const promises = usersSnap.docs.map(async (userDoc) => {
       const uid = userDoc.id;
       const oneHourAgo = Date.now() - 60 * 60 * 1000;
-      
+
       const moodLogsQuery = db.collection(`users/${uid}/moodLogs`)
-        .where('timestamp', '>=', oneHourAgo);
-      
+        .where("timestamp", ">=", oneHourAgo);
+
       const moodLogsSnap = await moodLogsQuery.get();
 
       if (moodLogsSnap.empty) {
@@ -101,38 +101,38 @@ export const emotionOverTimeWatcher = functions.pubsub
         return;
       }
 
-      const logs = moodLogsSnap.docs.map(doc => doc.data());
-      
+      const logs = moodLogsSnap.docs.map((doc) => doc.data());
+
       const emotionCounts: { [key: string]: number } = {};
       let totalIntensity = 0;
-      logs.forEach(log => {
+      logs.forEach((log) => {
         emotionCounts[log.emotion] = (emotionCounts[log.emotion] || 0) + 1;
         totalIntensity += log.intensity;
       });
 
       const dominantEmotion = Object.keys(emotionCounts).reduce((a, b) => emotionCounts[a] > emotionCounts[b] ? a : b);
       const avgIntensity = totalIntensity / logs.length;
-      
-      let cycleType = 'neutral';
-      const positiveEmotions = ['joy', 'calm', 'recovery'];
-      const negativeEmotions = ['sadness', 'anger', 'anxiety'];
+
+      let cycleType = "neutral";
+      const positiveEmotions = ["joy", "calm", "recovery"];
+      const negativeEmotions = ["sadness", "anger", "anxiety"];
 
       if (positiveEmotions.includes(dominantEmotion.toLowerCase()) && avgIntensity > 50) {
-        cycleType = 'recovery';
+        cycleType = "recovery";
       } else if (negativeEmotions.includes(dominantEmotion.toLowerCase()) && avgIntensity > 50) {
-        cycleType = 'strain';
+        cycleType = "strain";
       }
 
       const cycleId = uuidv4();
       const windowStart = oneHourAgo;
-      
+
       try {
         await db.collection(`users/${uid}/emotionCycles`).doc(cycleId).set({
           windowStart,
           dominantEmotion,
           avgIntensity,
           cycleType,
-          createdAt: admin.firestore.FieldValue.serverTimestamp()
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
         functions.logger.info(`Created new emotion cycle ${cycleId} for user ${uid}.`);
       } catch (error) {
@@ -147,23 +147,23 @@ export const emotionOverTimeWatcher = functions.pubsub
 
 // 3. triggerBloom – milestone bloom when recovery detected
 export const triggerBloom = functions.firestore
-  .document('users/{uid}/emotionCycles/{cycleId}')
+  .document("users/{uid}/emotionCycles/{cycleId}")
   .onCreate(async (snap, ctx) => {
     const cycleData = snap.data();
-    const { uid } = ctx.params;
+    const {uid} = ctx.params;
 
-    if (cycleData.cycleType === 'recovery') {
-        functions.logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
-        try {
-            await db.collection(`users/${uid}/memoryBlooms`).add({
-                bloomId: uuidv4(),
-                emotion: cycleData.dominantEmotion || 'recovery',
-                bloomColor: mapEmotionToColor(cycleData.dominantEmotion || 'recovery'),
-                triggeredAt: admin.firestore.FieldValue.serverTimestamp(),
-                description: 'A moment of positive recovery was detected.'
-            });
-        } catch (error) {
-            functions.logger.error(`Failed to create memoryBloom for user ${uid}:`, error);
-        }
+    if (cycleData.cycleType === "recovery") {
+      functions.logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
+      try {
+        await db.collection(`users/${uid}/memoryBlooms`).add({
+          bloomId: uuidv4(),
+          emotion: cycleData.dominantEmotion || "recovery",
+          bloomColor: mapEmotionToColor(cycleData.dominantEmotion || "recovery"),
+          triggeredAt: admin.firestore.FieldValue.serverTimestamp(),
+          description: "A moment of positive recovery was detected.",
+        });
+      } catch (error) {
+        functions.logger.error(`Failed to create memoryBloom for user ${uid}:`, error);
+      }
     }
   });

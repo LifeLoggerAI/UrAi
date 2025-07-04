@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -13,19 +13,19 @@ const db = admin.firestore();
  * This is a placeholder for a complex data ingestion pipeline.
  */
 export const voiceInteractionIngest = functions.https.onCall(async (data, context) => {
-    const uid = context.auth?.uid;
-    if (!uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
-    }
-    
-    functions.logger.info(`Ingesting voice interaction for user ${uid}.`);
-    // Logic to:
-    // 1. Match or create a /people record.
-    // 2. Update interactionCount, voiceMemoryStrength, lastHeardAt, silenceDurationDays.
-    // 3. Write a /socialEvents document.
-    // 4. Recalculate echoLoopScore.
-    
-    return { success: true };
+  const uid = context.auth?.uid;
+  if (!uid) {
+    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+  }
+
+  functions.logger.info(`Ingesting voice interaction for user ${uid}.`);
+  // Logic to:
+  // 1. Match or create a /people record.
+  // 2. Update interactionCount, voiceMemoryStrength, lastHeardAt, silenceDurationDays.
+  // 3. Write a /socialEvents document.
+  // 4. Recalculate echoLoopScore.
+
+  return {success: true};
 });
 
 /**
@@ -33,7 +33,7 @@ export const voiceInteractionIngest = functions.https.onCall(async (data, contex
  * Triggered when social contact data is updated. Placeholder.
  */
 export const socialArchetypeEngine = functions.firestore
-  .document('people/{personId}')
+  .document("people/{personId}")
   .onUpdate(async (change, context) => {
     const personData = change.after.data();
     if (!personData) return null;
@@ -47,65 +47,65 @@ export const socialArchetypeEngine = functions.firestore
  * Daily check for contacts that have gone silent.
  */
 export const checkSilenceThresholds = functions.pubsub
-  .schedule('every day 04:30')
-  .timeZone('UTC')
+  .schedule("every day 04:30")
+  .timeZone("UTC")
   .onRun(async () => {
     functions.logger.info("Running daily social silence check for all users.");
 
-    const usersSnap = await db.collection('users').get();
-    
+    const usersSnap = await db.collection("users").get();
+
     for (const userDoc of usersSnap.docs) {
-        const uid = userDoc.id;
-        const contactsRef = db.collection('people').where('uid', '==', uid);
-        const contactsSnap = await contactsRef.get();
-        
-        if (contactsSnap.empty) {
+      const uid = userDoc.id;
+      const contactsRef = db.collection("people").where("uid", "==", uid);
+      const contactsSnap = await contactsRef.get();
+
+      if (contactsSnap.empty) {
+        continue;
+      }
+
+      const sixtyDaysAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
+
+      for (const contactDoc of contactsSnap.docs) {
+        const contact = contactDoc.data();
+        const lastSeen = contact.lastSeen || 0;
+
+        if (lastSeen < sixtyDaysAgo) {
+          // Silence threshold met.
+          const daysSilent = Math.floor((Date.now() - lastSeen) / (1000 * 60 * 60 * 24));
+          const insightId = `silence-${uid}-${contactDoc.id}-${new Date().toISOString().split("T")[0]}`;
+          const existingInsight = await db.collection("narratorInsights").doc(insightId).get();
+
+          if (existingInsight.exists) {
+            // Insight for this user/contact/day already exists, skip.
             continue;
+          }
+
+          functions.logger.info(`Silence threshold met for user ${uid}, contact ${contact.name} (${daysSilent} days). Creating insight.`);
+
+          const insightPayload = {
+            uid: uid,
+            insightId: insightId,
+            insightType: "silence_threshold",
+            payload: {
+              personId: contactDoc.id,
+              personName: contact.name,
+              daysSilent: daysSilent,
+            },
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            consumed: false,
+            ttsUrl: null,
+          };
+          await db.collection("narratorInsights").doc(insightId).set(insightPayload);
+
+          // Enqueue a push notification
+          const notificationPayload = {
+            uid: uid,
+            type: "insight",
+            body: `It's been a while since you've connected with ${contact.name}. A little silence can mean many things.`,
+          };
+          await db.collection("messages/queue").add(notificationPayload);
         }
-
-        const sixtyDaysAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
-
-        for (const contactDoc of contactsSnap.docs) {
-            const contact = contactDoc.data();
-            const lastSeen = contact.lastSeen || 0;
-
-            if (lastSeen < sixtyDaysAgo) {
-                // Silence threshold met.
-                const daysSilent = Math.floor((Date.now() - lastSeen) / (1000 * 60 * 60 * 24));
-                const insightId = `silence-${uid}-${contactDoc.id}-${new Date().toISOString().split('T')[0]}`;
-                const existingInsight = await db.collection('narratorInsights').doc(insightId).get();
-
-                if (existingInsight.exists) {
-                    // Insight for this user/contact/day already exists, skip.
-                    continue;
-                }
-                
-                functions.logger.info(`Silence threshold met for user ${uid}, contact ${contact.name} (${daysSilent} days). Creating insight.`);
-
-                const insightPayload = {
-                    uid: uid,
-                    insightId: insightId,
-                    insightType: "silence_threshold",
-                    payload: {
-                        personId: contactDoc.id,
-                        personName: contact.name,
-                        daysSilent: daysSilent,
-                    },
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    consumed: false,
-                    ttsUrl: null,
-                };
-                await db.collection('narratorInsights').doc(insightId).set(insightPayload);
-                
-                // Enqueue a push notification
-                 const notificationPayload = {
-                    uid: uid,
-                    type: "insight",
-                    body: `It's been a while since you've connected with ${contact.name}. A little silence can mean many things.`,
-                };
-                await db.collection('messages/queue').add(notificationPayload);
-            }
-        }
+      }
     }
     return null;
   });
@@ -116,7 +116,7 @@ export const checkSilenceThresholds = functions.pubsub
  * Triggered on new social events. Placeholder.
  */
 export const echoLoopDetection = functions.firestore
-  .document('socialEvents/{eventId}')
+  .document("socialEvents/{eventId}")
   .onWrite(async (change, context) => {
     const eventData = change.after.data();
     if (!eventData) return null;

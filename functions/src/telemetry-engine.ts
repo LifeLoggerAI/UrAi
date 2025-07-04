@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 
 /**
@@ -12,7 +12,7 @@ if (admin.apps.length === 0) {
  * Placeholder function.
  */
 export const processTelemetryEvent = functions.firestore
-  .document('telemetryEvents/{eventId}')
+  .document("telemetryEvents/{eventId}")
   .onCreate(async (snap, context) => {
     const eventData = snap.data();
     functions.logger.info(`Processing telemetry event: ${context.params.eventId}`, eventData);
@@ -29,7 +29,7 @@ export const processTelemetryEvent = functions.firestore
  * Placeholder function.
  */
 export const calculateOverstimulationScore = functions.firestore
-  .document('dailyTelemetrySummary/{summaryId}')
+  .document("dailyTelemetrySummary/{summaryId}")
   .onUpdate(async (change, context) => {
     const summaryData = change.after.data();
     functions.logger.info(`Calculating overstimulation for summary: ${context.params.summaryId}`, summaryData);
@@ -46,7 +46,7 @@ export const calculateOverstimulationScore = functions.firestore
  * Placeholder function.
  */
 export const linkTelemetryToMood = functions.firestore
-  .document('dailyTelemetrySummary/{summaryId}')
+  .document("dailyTelemetrySummary/{summaryId}")
   .onUpdate(async (change, context) => {
     const summaryData = change.after.data();
     functions.logger.info(`Linking telemetry to mood for summary: ${context.params.summaryId}`);

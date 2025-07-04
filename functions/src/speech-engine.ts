@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 
 /**
@@ -13,14 +13,14 @@ if (admin.apps.length === 0) {
  * Trigger: onFinalize(Storage) on `lifelogger-voice/{uid}/{...}/{clipId}.opus`
  */
 export const transcribeVoiceClip = functions.storage.object().onFinalize(async (object) => {
-    functions.logger.info(`Placeholder for transcribing file: ${object.name}`);
-    // In a real implementation:
-    // 1. Download .opus clip from Cloud Storage.
-    // 2. Call a transcription service like Whisper AI.
-    // 3. Save the resulting transcript to Firestore in `/voiceTranscripts`.
-    // 4. Update the original `/voiceClips` document to mark it as processed.
-    // 5. Publish a message to a Pub/Sub topic like `transcriptReady` to trigger further analysis.
-    return null;
+  functions.logger.info(`Placeholder for transcribing file: ${object.name}`);
+  // In a real implementation:
+  // 1. Download .opus clip from Cloud Storage.
+  // 2. Call a transcription service like Whisper AI.
+  // 3. Save the resulting transcript to Firestore in `/voiceTranscripts`.
+  // 4. Update the original `/voiceClips` document to mark it as processed.
+  // 5. Publish a message to a Pub/Sub topic like `transcriptReady` to trigger further analysis.
+  return null;
 });
 
 /**
@@ -28,14 +28,14 @@ export const transcribeVoiceClip = functions.storage.object().onFinalize(async (
  * This is a placeholder for a function that would be triggered by a Pub/Sub message.
  * Trigger: Pub/Sub message on topic `transcriptReady`
  */
-export const analyzeTranscript = functions.pubsub.topic('transcriptReady').onPublish(async (message) => {
-    functions.logger.info(`Placeholder for analyzing transcript. Message:`, message.json);
-    // In a real implementation:
-    // 1. Parse the message to get the transcript details (e.g., clipId, uid).
-    // 2. Call an NLP service (like OpenAI with function calling) to extract entities.
-    // 3. Write the extracted tags to `/transcriptTags`.
-    // 4. Create related documents (e.g., in /goals, /tasks) based on the extracted intents.
-    return null;
+export const analyzeTranscript = functions.pubsub.topic("transcriptReady").onPublish(async (message) => {
+  functions.logger.info("Placeholder for analyzing transcript. Message:", message.json);
+  // In a real implementation:
+  // 1. Parse the message to get the transcript details (e.g., clipId, uid).
+  // 2. Call an NLP service (like OpenAI with function calling) to extract entities.
+  // 3. Write the extracted tags to `/transcriptTags`.
+  // 4. Create related documents (e.g., in /goals, /tasks) based on the extracted intents.
+  return null;
 });
 
 
@@ -45,7 +45,7 @@ export const analyzeTranscript = functions.pubsub.topic('transcriptReady').onPub
  * Trigger: onCreate /narratorInsights/{uid}/{insightId}
  */
 export const synthesizeNarratorVoice = functions.firestore
-  .document('narratorInsights/{uid}/{insightId}')
+  .document("narratorInsights/{uid}/{insightId}")
   .onCreate(async (snap, context) => {
     const insight = snap.data();
     functions.logger.info(`Synthesizing narrator voice for insight ${context.params.insightId}`, insight);

@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 
 /**
@@ -13,7 +13,7 @@ if (admin.apps.length === 0) {
  * Trigger: onCreate /recoveryBlooms/{uid}/{bloomId}
  */
 export const triggerConstellationGlow = functions.firestore
-  .document('recoveryBlooms/{uid}/{bloomId}')
+  .document("recoveryBlooms/{uid}/{bloomId}")
   .onCreate(async (snap, context) => {
     const bloom = snap.data();
     functions.logger.info(`Constellation glow triggered for user ${context.params.uid}`, bloom);
@@ -29,8 +29,8 @@ export const triggerConstellationGlow = functions.firestore
  * This is a placeholder.
  */
 export const fadeOldShadows = functions.pubsub
-  .schedule('every day 05:00')
-  .timeZone('UTC')
+  .schedule("every day 05:00")
+  .timeZone("UTC")
   .onRun(async (context) => {
     functions.logger.info("Running daily job to fade old social shadows.");
     const thirtyDaysAgo = admin.firestore.Timestamp.fromMillis(Date.now() - 30 * 24 * 60 * 60 * 1000);

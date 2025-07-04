@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -13,18 +13,18 @@ const db = admin.firestore();
  * This is a placeholder for a complex data ingestion pipeline.
  */
 export const ingestPassiveSensors = functions.https.onCall(async (data, context) => {
-    // In a real app, data would be a batch of sensor readings.
-    // {motion[], micSentiment[], appUse[], ambientAudio[]}
-    const uid = context.auth?.uid;
-    if (!uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
-    }
-    
-    functions.logger.info(`Ingesting passive sensor data for user ${uid}.`);
-    // Logic to write to /torsoMetrics and /habitEvents
-    // For now, this remains a placeholder for the data ingestion endpoint.
-    
-    return { success: true };
+  // In a real app, data would be a batch of sensor readings.
+  // {motion[], micSentiment[], appUse[], ambientAudio[]}
+  const uid = context.auth?.uid;
+  if (!uid) {
+    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+  }
+
+  functions.logger.info(`Ingesting passive sensor data for user ${uid}.`);
+  // Logic to write to /torsoMetrics and /habitEvents
+  // For now, this remains a placeholder for the data ingestion endpoint.
+
+  return {success: true};
 });
 
 
@@ -33,7 +33,7 @@ export const ingestPassiveSensors = functions.https.onCall(async (data, context)
  * Triggered when torsoMetrics are updated. Placeholder.
  */
 export const calcValueAlignment = functions.firestore
-  .document('torsoMetrics/{uid}/{dateKey}')
+  .document("torsoMetrics/{uid}/{dateKey}")
   .onWrite(async (change, context) => {
     functions.logger.info(`Calculating value alignment for user ${context.params.uid}.`);
     // This function would call an AI model (e.g., via a Genkit flow) to
@@ -50,36 +50,36 @@ export const calcValueAlignment = functions.firestore
  * Triggered when torsoMetrics are updated. Placeholder.
  */
 export const detectSelfConflict = functions.firestore
-  .document('torsoMetrics/{uid}/{dateKey}')
+  .document("torsoMetrics/{uid}/{dateKey}")
   .onWrite(async (change, context) => {
     const data = change.after.data();
     const uid = context.params.uid;
 
     if (data?.selfConsistencyScore < 40 && (!change.before.exists || change.before.data()?.selfConsistencyScore >= 40)) {
-        functions.logger.info(`Self-conflict detected for user ${uid}.`);
-        
-        // Create a narratorInsight document
-        const insightPayload = {
-            uid: uid,
-            insightId: `conflict-${context.params.dateKey}`,
-            insightType: "self_conflict_detected",
-            payload: {
-                score: data.selfConsistencyScore,
-                date: context.params.dateKey,
-            },
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            consumed: false,
-            ttsUrl: null,
-        };
-        await db.collection('narratorInsights').doc(insightPayload.insightId).set(insightPayload);
-        
-        // Enqueue a push notification
-        const notificationPayload = {
-            uid: uid,
-            type: "insight",
-            body: "A moment of self-conflict was detected. It might be a good time to reflect.",
-        };
-        await db.collection('messages/queue').add(notificationPayload);
+      functions.logger.info(`Self-conflict detected for user ${uid}.`);
+
+      // Create a narratorInsight document
+      const insightPayload = {
+        uid: uid,
+        insightId: `conflict-${context.params.dateKey}`,
+        insightType: "self_conflict_detected",
+        payload: {
+          score: data.selfConsistencyScore,
+          date: context.params.dateKey,
+        },
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        consumed: false,
+        ttsUrl: null,
+      };
+      await db.collection("narratorInsights").doc(insightPayload.insightId).set(insightPayload);
+
+      // Enqueue a push notification
+      const notificationPayload = {
+        uid: uid,
+        type: "insight",
+        body: "A moment of self-conflict was detected. It might be a good time to reflect.",
+      };
+      await db.collection("messages/queue").add(notificationPayload);
     }
     return null;
   });
@@ -90,40 +90,40 @@ export const detectSelfConflict = functions.firestore
  * Triggered on new torsoMetrics. Placeholder.
  */
 export const checkProLimits = functions.firestore
-  .document('torsoMetrics/{uid}/{dateKey}')
+  .document("torsoMetrics/{uid}/{dateKey}")
   .onCreate(async (snap, context) => {
-      const uid = context.params.uid;
-      const userRef = db.doc(`users/${uid}`);
-      const userSnap = await userRef.get();
-      const userData = userSnap.data();
+    const uid = context.params.uid;
+    const userRef = db.doc(`users/${uid}`);
+    const userSnap = await userRef.get();
+    const userData = userSnap.data();
 
-      if (userData && !userData.isProUser) {
-          functions.logger.info(`Checking pro limits for free user ${uid}.`);
-          
-          // Logic to check if metrics > 7 days old and delete oldest.
-          const sevenDaysAgo = new Date();
-          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-          const dateKeySevenDaysAgo = sevenDaysAgo.toISOString().split('T')[0];
+    if (userData && !userData.isProUser) {
+      functions.logger.info(`Checking pro limits for free user ${uid}.`);
 
-          const oldMetricsQuery = db.collection(`torsoMetrics/${uid}`)
-            .where(admin.firestore.FieldPath.documentId(), '<', dateKeySevenDaysAgo)
-            .orderBy(admin.firestore.FieldPath.documentId());
-          
-          const oldMetricsSnap = await oldMetricsQuery.get();
-          const batch = db.batch();
-          oldMetricsSnap.docs.forEach(doc => {
-              functions.logger.info(`Deleting old metric ${doc.id} for free user ${uid}.`);
-              batch.delete(doc.ref);
-          });
-          await batch.commit();
+      // Logic to check if metrics > 7 days old and delete oldest.
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const dateKeySevenDaysAgo = sevenDaysAgo.toISOString().split("T")[0];
 
-          // Logic to enqueue an upsell notification.
-           const notificationPayload = {
-                uid: uid,
-                type: "upsell",
-                body: "Unlock your full history and deeper insights with Life Logger Pro.",
-            };
-           await db.collection('messages/queue').add(notificationPayload);
-      }
-      return null;
+      const oldMetricsQuery = db.collection(`torsoMetrics/${uid}`)
+        .where(admin.firestore.FieldPath.documentId(), "<", dateKeySevenDaysAgo)
+        .orderBy(admin.firestore.FieldPath.documentId());
+
+      const oldMetricsSnap = await oldMetricsQuery.get();
+      const batch = db.batch();
+      oldMetricsSnap.docs.forEach((doc) => {
+        functions.logger.info(`Deleting old metric ${doc.id} for free user ${uid}.`);
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      // Logic to enqueue an upsell notification.
+      const notificationPayload = {
+        uid: uid,
+        type: "upsell",
+        body: "Unlock your full history and deeper insights with Life Logger Pro.",
+      };
+      await db.collection("messages/queue").add(notificationPayload);
+    }
+    return null;
   });
