@@ -27,14 +27,25 @@ const db: Firestore = initializeFirestore(app, {
 const auth: Auth = getAuth(app);
 
 // In a development environment, connect to the emulators
-if (process.env.NODE_ENV === 'development') {
-    console.log("Connecting to Firebase emulators because NODE_ENV is 'development'");
+// This check is more robust for cloud development environments.
+if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname.includes('cloudworkstations.dev'))) {
+    console.log("Connecting to Firebase emulators for development.");
     try {
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        // @ts-ignore - Check if emulators are already connected to prevent errors on hot reloads
+        if (!auth.emulatorConfig) {
+            connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+            console.log("Auth emulator connected.");
+        }
+        // @ts-ignore - Check if emulators are already connected
+        if (!db.emulatorConfig) {
+            connectFirestoreEmulator(db, '127.0.0.1', 8080);
+            console.log("Firestore emulator connected.");
+        }
     } catch (e) {
-        console.error("Error connecting to emulators:", e);
+        console.error("Error connecting to Firebase emulators:", e);
     }
+} else {
+    console.log("Not in a known dev environment, connecting to live Firebase services.");
 }
 
 
