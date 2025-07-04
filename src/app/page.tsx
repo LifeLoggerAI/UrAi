@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -6,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import { Loader2 } from "lucide-react";
 import { HomeView } from "@/components/home-view";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { User as AppUser } from "@/lib/types";
 
@@ -16,6 +15,15 @@ export default function HomePage() {
   const [profileLoading, setProfileLoading] = useState(true);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   
+  useEffect(() => {
+    // Test Firestore connection
+    getDocs(collection(db, "test")).then(snapshot => {
+      snapshot.forEach(doc => console.log(doc.id, doc.data()));
+    }).catch(error => {
+      console.error("Error fetching test collection:", error);
+    });
+  }, []);
+
   useEffect(() => {
     if (authLoading) return;
 
