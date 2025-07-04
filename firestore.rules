@@ -1,55 +1,49 @@
-
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read/write their own profile and top-level data collections.
-    // This rule is designed to be comprehensive for all user-scoped data.
-    match /{collection}/{uid}/{docId} 
+
+    // User-owned data. Users can read and write their own documents in these collections.
+    // This rule is a consolidation of all user-scoped data from the master prompts.
+    match /{collection}/{uid}/{docId}
       where collection in [
-        'users', 'permissions', 'onboardIntake', 'goals', 'tasks', 'calendarEvents', 
-        'habitWatch', 'armMetrics', 'relationalGestures', 'torsoMetrics', 'habitEvents', 
-        'legsMetrics', 'movementPaths', 'avoidanceEvents', 'orbState', 'orbEvents', 
-        'orbDialogMemory', 'orbSymbolicMap', 'socialContacts', 'socialEvents', 
-        'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates', 
-        'legacyThreads', 'presentMetrics', 'voiceClips', 'voiceTranscripts', 'transcriptTags',
-        'ambientTone', 'emotionStars', 'forecastZones', 'cognitiveSeasons', 'dreamConstellations',
-        'audioEvents', 'voiceEvents', 'dreams', 'innerTexts', 'faceSnapshots', 'people'
+        'users', 'permissions', 'people',
+        'voiceEvents', 'audioEvents', 'dreams', 'innerTexts', 'faceSnapshots',
+        'onboardIntake', 'goals', 'tasks', 'calendarEvents', 'habitWatch',
+        'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap',
+        'narratorInsights', 'voiceClips', 'voiceTranscripts', 'transcriptTags', 'ambientTone',
+        'emotionEvents', 'socialOverlays', 'recoveryBlooms', 'ritualCards',
+        'moodLogs', 'emotionCycles', 'memoryBlooms'
       ] {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // Secure user-specific sub-collections
-    match /users/{uid}/{subcollection}/{docId} {
-       allow read, write: if request.auth != null && request.auth.uid == uid;
-    }
-    
-    // Narrator insights can be read/written by the user.
-    match /narratorInsights/{uid}/{insightId} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
-    }
-    
-    // Backend-only write collections, readable by the user.
-    match /{collection}/{uid}/{docId}
-      where collection in ['notifications', 'mail', 'dailyDigestQueue'] {
-      allow read: if request.auth.uid == uid;
-      allow write: if false; // Only backend can write
+    // Subcollections under a user document
+    match /users/{uid}/{subcollection}/{docId}
+      where subcollection in ['auraStates', 'memoryBlooms', 'emotionCycles'] {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // Collections for internal or anonymized data with restricted access.
+    // Special collections from B2B/Anonymization prompt are firewalled.
     match /anonymizedData/{hashId}/{metricId} {
       allow read: if false;
-      // Write access should be locked down to specific service accounts in production.
-      allow write: if request.auth != null; 
+      allow write: if request.auth != null; // Should be restricted to service roles in production.
     }
-    
+
     match /b2bExports/{week}/{reportId} {
-      allow read, write: if false;
+      allow read: if false;
     }
-    
-    // Audit logs are write-only by the backend, readable by the user.
-    match /consentAudit/{uid}/{docId} {
-      allow read: if request.auth.uid == uid;
-      allow write: if false; // Backend only
+
+    // Consent audit log is write-only for authenticated users, not readable.
+    match /consentAudit/{auditId} {
+      allow read: if false;
+      allow write: if request.auth != null;
+    }
+
+    // Notification queue is write-only for authenticated users.
+    match /messages/queue/{messageId} {
+      allow read: if false;
+      allow write: if request.auth != null;
     }
   }
 }

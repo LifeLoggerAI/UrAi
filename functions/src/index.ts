@@ -1,5 +1,3 @@
-
-
 /**
  * Import function triggers from their respective submodules:
  *
@@ -53,4 +51,6 @@ export * from "./email-engine";
 
 // Export speech and AI pipeline engine
 export * from "./speech-engine";
-    
+
+// Export visuals engine
+export * from "./visuals-engine";

@@ -991,7 +991,6 @@ export const AmbientToneSchema = z.object({
 });
 export type AmbientTone = z.infer<typeof AmbientToneSchema>;
 
-
 // Schemas for Visual Animations & Overlays
 export const EmotionEventVisualSchema = z.object({
     id: z.string(),
@@ -1017,7 +1016,6 @@ export const SocialOverlaySchema = z.object({
     archetypeSymbol: z.string().nullable(),
 });
 export type SocialOverlay = z.infer<typeof SocialOverlaySchema>;
-
 
 export const RecoveryBloomSchema = z.object({
     id: z.string(),
