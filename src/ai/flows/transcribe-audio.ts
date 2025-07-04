@@ -14,7 +14,7 @@ import {
   type TranscribeAudioInput,
   type TranscribeAudioOutput,
 } from '@/lib/types';
-import { gemini15Flash } from '@genkit-ai/googleai';
+import { googleAI } from '@genkit-ai/googleai';
 
 export async function transcribeAudio(input: TranscribeAudioInput): Promise<TranscribeAudioOutput> {
   return transcribeAudioFlow(input);
@@ -28,11 +28,8 @@ const transcribeAudioFlow = ai.defineFlow(
   },
   async (input) => {
     const { text } = await ai.generate({
-        model: gemini15Flash,
-        prompt: [{
-            text: "Transcribe the following audio file.",
-            media: { url: input.audioDataUri },
-        }]
+        model: googleAI.model('gemini-1.5-flash'),
+        prompt: [{ media: { url: input.audioDataUri } }],
     });
     
     return { transcript: text };
