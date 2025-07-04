@@ -44,6 +44,9 @@ export function SettingsForm() {
       contributeMoodData: true,
       allowAnonymizedExport: false,
       allowVoiceRetention: true,
+      receiveWeeklyEmail: true,
+      receiveMilestones: true,
+      emailTone: 'poetic',
     },
   });
 
@@ -198,9 +201,75 @@ export function SettingsForm() {
                                 </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="warmCalm">Warm & Calm</SelectItem>
-                                    <SelectItem value="neutralAnalytical">Neutral & Analytical</SelectItem>
-                                    <SelectItem value="poeticSoft">Poetic & Soft</SelectItem>
+                                    <SelectItem value="warmCalm">Warm &amp; Calm</SelectItem>
+                                    <SelectItem value="neutralAnalytical">Neutral &amp; Analytical</SelectItem>
+                                    <SelectItem value="poeticSoft">Poetic &amp; Soft</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+            </div>
+
+             <div className="space-y-4">
+                 <h3 className="text-lg font-medium">Email &amp; Notifications</h3>
+                <FormField
+                control={form.control}
+                name="receiveWeeklyEmail"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel>Receive Weekly Digest Emails</FormLabel>
+                            <FormDescription>
+                                Get a weekly summary of your journey.
+                            </FormDescription>
+                        </div>
+                         <FormControl>
+                            <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )}
+                />
+                 <FormField
+                control={form.control}
+                name="receiveMilestones"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel>Receive Milestone Emails</FormLabel>
+                            <FormDescription>
+                                Get notified of significant moments and achievements.
+                            </FormDescription>
+                        </div>
+                         <FormControl>
+                            <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="emailTone"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email Tone</FormLabel>
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select an email tone" />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="poetic">Poetic</SelectItem>
+                                    <SelectItem value="calm">Calm</SelectItem>
+                                    <SelectItem value="analytical">Analytical</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
