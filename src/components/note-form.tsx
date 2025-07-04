@@ -2,11 +2,15 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { addAudioEventAction } from '@/app/actions';
+import { processAudioForAI } from '@/app/actions';
+import { generateAvatar } from '@/ai/flows/generate-avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RecordButton } from '@/components/record-button';
 import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { db } from '@/lib/firebase';
+import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion } from "firebase/firestore";
+import type { AudioEvent, VoiceEvent, Person } from '@/lib/types';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing';
 
@@ -52,18 +56,87 @@ export function NoteForm({ userId }: { userId: string }) {
     const reader = new FileReader();
     reader.readAsDataURL(audioBlob);
     reader.onloadend = async () => {
-      const base64Data = reader.result as string;
+      const audioDataUri = reader.result as string;
 
       try {
-        const result = await addAudioEventAction({ userId, audioDataUri: base64Data, durationSec });
-        if (result.success) {
-          toast({
-            title: "Voice Event Logged",
-            description: "Your memory has been successfully processed and saved.",
-          });
-        } else {
-          throw new Error(result.error || "An unknown error occurred.");
+        const aiResult = await processAudioForAI({ audioDataUri });
+
+        if (aiResult.error || !aiResult.analysis) {
+            throw new Error(aiResult.error || "AI processing failed.");
         }
+
+        const { transcript, analysis } = aiResult;
+
+        const audioEventId = crypto.randomUUID();
+        const voiceEventId = crypto.randomUUID();
+        const timestamp = Date.now();
+        const batch = writeBatch(db);
+
+        const newAudioEvent: AudioEvent = {
+            id: audioEventId,
+            uid: userId,
+            storagePath: `audio/${userId}/${audioEventId}.webm`,
+            startTs: timestamp - Math.round(durationSec * 1000),
+            endTs: timestamp,
+            durationSec: Math.round(durationSec),
+            transcriptionStatus: 'complete',
+        };
+        batch.set(doc(db, "audioEvents", newAudioEvent.id), newAudioEvent);
+
+        const newVoiceEvent: VoiceEvent = {
+            id: voiceEventId,
+            uid: userId,
+            audioEventId: audioEventId,
+            speakerLabel: 'user',
+            text: transcript,
+            createdAt: timestamp,
+            emotion: analysis.emotion,
+            sentimentScore: analysis.sentimentScore,
+            toneShift: analysis.toneShift,
+            voiceArchetype: analysis.voiceArchetype,
+            people: analysis.people || [],
+            tasks: analysis.tasks || [],
+        };
+        batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
+
+        if (analysis.people && analysis.people.length > 0) {
+            const peopleRef = collection(db, "people");
+            for (const personName of analysis.people) {
+                const q = query(peopleRef, where("uid", "==", userId), where("name", "==", personName), limit(1));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    const newPersonRef = doc(peopleRef);
+                    const avatarResult = await generateAvatar({ name: personName, role: analysis.voiceArchetype });
+                    const avatarUrl = avatarResult?.avatarDataUri || `https://placehold.co/128x128.png?text=${personName.charAt(0).toUpperCase()}`;
+
+                    const newPerson: Person = {
+                        id: newPersonRef.id,
+                        uid: userId,
+                        name: personName,
+                        lastSeen: timestamp,
+                        familiarityIndex: 1,
+                        socialRoleHistory: [{ date: timestamp, role: analysis.voiceArchetype }],
+                        avatarUrl: avatarUrl
+                    };
+                    batch.set(newPersonRef, newPerson);
+                } else {
+                    const personDoc = querySnapshot.docs[0];
+                    batch.update(personDoc.ref, {
+                        lastSeen: timestamp,
+                        familiarityIndex: increment(1),
+                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchetype })
+                    });
+                }
+            }
+        }
+        
+        await batch.commit();
+
+        toast({
+          title: "Voice Event Logged",
+          description: "Your memory has been successfully processed and saved.",
+        });
       } catch (error) {
         console.error("Failed to process audio:", error);
         toast({
@@ -115,5 +188,3 @@ export function NoteForm({ userId }: { userId: string }) {
     </Card>
   );
 }
-
-    

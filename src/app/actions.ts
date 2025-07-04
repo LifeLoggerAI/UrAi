@@ -1,8 +1,7 @@
 
 'use server';
 
-import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -10,7 +9,6 @@ import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
-import { generateAvatar } from "@/ai/flows/generate-avatar";
 import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
@@ -19,124 +17,48 @@ import { generateSymbolicInsight } from "@/ai/flows/generate-symbolic-insight";
 import { analyzeTextSentiment } from "@/ai/flows/analyze-text-sentiment";
 import { suggestRitual } from "@/ai/flows/suggest-ritual";
 import { processOnboardingTranscript } from "@/ai/flows/process-onboarding-transcript";
+import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
 
-const addAudioEventInputSchema = z.object({
+
+const processAudioForAISchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
-    userId: z.string().min(1, "User ID is required."),
-    durationSec: z.number().nonnegative(),
 });
 
-type AddAudioEventInput = z.infer<typeof addAudioEventInputSchema>;
+type ProcessAudioForAIInput = z.infer<typeof processAudioForAISchema>;
 
-
-type AddAudioEventReturn = {
-    success: boolean;
+type ProcessAudioForAIReturn = {
+    transcript: string;
+    analysis: EnrichVoiceEventOutput | null;
     error: string | null;
 };
 
-export async function addAudioEventAction(input: AddAudioEventInput): Promise<AddAudioEventReturn> {
-    const validatedFields = addAudioEventInputSchema.safeParse(input);
+export async function processAudioForAI(input: ProcessAudioForAIInput): Promise<ProcessAudioForAIReturn> {
+    const validatedFields = processAudioForAISchema.safeParse(input);
 
     if (!validatedFields.success) {
-        const firstError = Object.values(validatedFields.error.flatten().fieldErrors)[0]?.[0];
-        return { success: false, error: firstError || "Invalid input." };
+        return { transcript: "", analysis: null, error: "Invalid input." };
     }
-
-    const { userId, audioDataUri, durationSec } = validatedFields.data;
+    
+    const { audioDataUri } = validatedFields.data;
 
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
-
         if (!transcript) {
-            return { success: false, error: "Failed to transcribe audio." };
+            return { transcript: "", analysis: null, error: "Failed to transcribe audio." };
         }
 
         const analysis = await enrichVoiceEvent({ text: transcript });
-        
         if (!analysis) {
-            return { success: false, error: "AI analysis of the transcript failed." };
+            return { transcript, analysis: null, error: "AI analysis of the transcript failed." };
         }
         
-        const audioEventId = crypto.randomUUID();
-        const voiceEventId = crypto.randomUUID();
-        const timestamp = Date.now();
-
-        const batch = writeBatch(db);
-
-        // Create AudioEvent
-        const newAudioEvent: AudioEvent = {
-            id: audioEventId,
-            uid: userId,
-            storagePath: `audio/${userId}/${audioEventId}.webm`,
-            startTs: timestamp - Math.round(durationSec * 1000),
-            endTs: timestamp,
-            durationSec: Math.round(durationSec),
-            transcriptionStatus: 'complete',
-        };
-        batch.set(doc(db, "audioEvents", newAudioEvent.id), newAudioEvent);
-
-        // Create VoiceEvent
-        const newVoiceEvent: VoiceEvent = {
-            id: voiceEventId,
-            uid: userId,
-            audioEventId: audioEventId,
-            speakerLabel: 'user', // Mocked speaker
-            text: transcript,
-            createdAt: timestamp,
-            emotion: analysis.emotion,
-            sentimentScore: analysis.sentimentScore,
-            toneShift: analysis.toneShift,
-            voiceArchetype: analysis.voiceArchetype,
-            people: analysis.people || [],
-            tasks: analysis.tasks || [],
-        };
-        batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
-
-        // Update People collection
-        if (analysis.people && analysis.people.length > 0) {
-            const peopleRef = collection(db, "people");
-            for (const personName of analysis.people) {
-                const q = query(peopleRef, where("uid", "==", userId), where("name", "==", personName), limit(1));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    // Create new person
-                    const newPersonRef = doc(peopleRef);
-                    
-                    // Generate avatar
-                    const avatarResult = await generateAvatar({ name: personName, role: analysis.voiceArchetype });
-                    const avatarUrl = avatarResult?.avatarDataUri || `https://placehold.co/128x128.png?text=${personName.charAt(0).toUpperCase()}`;
-
-                    const newPerson: Person = {
-                        id: newPersonRef.id,
-                        uid: userId,
-                        name: personName,
-                        lastSeen: timestamp,
-                        familiarityIndex: 1,
-                        socialRoleHistory: [{ date: timestamp, role: analysis.voiceArchetype }],
-                        avatarUrl: avatarUrl
-                    };
-                    batch.set(newPersonRef, newPerson);
-                } else {
-                    // Update existing person
-                    const personDoc = querySnapshot.docs[0];
-                    batch.update(personDoc.ref, {
-                        lastSeen: timestamp,
-                        familiarityIndex: increment(1),
-                        socialRoleHistory: arrayUnion({ date: timestamp, role: analysis.voiceArchetype })
-                    });
-                }
-            }
-        }
-        
-        await batch.commit();
-
-        return { success: true, error: null };
+        return { transcript, analysis, error: null };
     } catch (e) {
         console.error(e);
-        return { success: false, error: "Failed to process voice event. Please try again." };
+        return { transcript: "", analysis: null, error: "Failed to process voice event with AI." };
     }
 }
+
 
 export async function summarizeWeekAction(userId: string): Promise<{ summary: string | null; audioDataUri: string | null; error: string | null; }> {
     if (!userId) {
