@@ -61,3 +61,4 @@ export * from "./visuals-engine";
 export * from "./telemetry-engine";
 export * from "./avatar-engine";
 export * from "./dream-engine";
+export * from "./symbolic-engine";

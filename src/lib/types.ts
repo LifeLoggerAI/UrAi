@@ -598,7 +598,7 @@ export const AnalyzeCameraImageOutputSchema = z.object({
 export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
 
 export const GenerateSymbolicInsightInputSchema = z.object({
-    analysis: AnalyzeCameraImageOutputSchema.describe("The structured analysis result from the AnalyzeCameraImage flow."),
+    analysis: z.string().describe("The stringified JSON of the structured analysis result from the AnalyzeCameraImage flow."),
 });
 export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
 
@@ -1282,3 +1282,218 @@ export const AnonymizedBehaviorExportSchema = z.object({
 });
 export type AnonymizedBehaviorExport = z.infer<typeof AnonymizedBehaviorExportSchema>;
 
+// Advanced Symbolic Systems
+export const SymbolicMemoryNodeSchema = z.object({
+    nodeId: z.string(),
+    userId: z.string(),
+    sourceType: z.enum(['scroll', 'dream', 'ritual', 'threshold', 'voiceEvent', 'companion', 'innerVoice']),
+    linkedEventId: z.string(), // reference
+    symbolTags: z.array(z.string()),
+    emotionState: z.record(z.number()),
+    archetypeInvolved: z.string(),
+    memoryWeight: z.number().min(0).max(1),
+    timestamp: z.number(),
+    isKeyNode: z.boolean(),
+});
+export type SymbolicMemoryNode = z.infer<typeof SymbolicMemoryNodeSchema>;
+
+export const SymbolicMemoryLinkSchema = z.object({
+    linkId: z.string(),
+    userId: z.string(),
+    fromNodeId: z.string(), // reference
+    toNodeId: z.string(), // reference
+    linkType: z.enum(['echo', 'transformation', 'loop', 'inversion', 'resolution']),
+    linkStrength: z.number().min(0).max(1),
+    symbolicMeaning: z.string(),
+});
+export type SymbolicMemoryLink = z.infer<typeof SymbolicMemoryLinkSchema>;
+
+export const SymbolicMetaPatternSummarySchema = z.object({
+    userId: z.string(),
+    lastUpdated: z.number(),
+    dominantPatterns: z.array(z.string()),
+    archetypeTrajectoryMap: z.string(), // e.g. 'Seeker -> Ghost -> Witness'
+    forecastedSymbolStates: z.array(z.string()),
+    memoryDensityIndex: z.number(),
+});
+export type SymbolicMetaPatternSummary = z.infer<typeof SymbolicMetaPatternSummarySchema>;
+
+export const SharedConstellationLinkSchema = z.object({
+    linkId: z.string(),
+    userIds: z.array(z.string()),
+    sharedScrollId: z.string(),
+    createdAt: z.number(),
+});
+export type SharedConstellationLink = z.infer<typeof SharedConstellationLinkSchema>;
+
+export const GenerationalLinkSchema = z.object({
+    linkId: z.string(),
+    userId: z.string(),
+    linkedScrolls: z.array(z.string()),
+    symbolicTheme: z.string(),
+    sharedSymbols: z.array(z.string()),
+    emotionalArcType: z.enum(['repeat', 'resolve', 'mutate', 'invert']),
+    narratorLinkReflection: z.string(),
+    visualOverlay: z.enum(['thread', 'root', 'loop', 'constellation', 'fracture']),
+    ancestralLinkId: z.string().optional(),
+    relationType: z.string().optional(),
+    inheritedEmotionArcs: z.array(z.string()).optional(),
+});
+export type GenerationalLink = z.infer<typeof GenerationalLinkSchema>;
+
+export const DreamVisualStorySchema = z.object({
+    storyId: z.string(),
+    userId: z.string(),
+    dreamId: z.string(),
+    videoUrl: z.string().url(),
+    createdAt: z.number(),
+});
+export type DreamVisualStory = z.infer<typeof DreamVisualStorySchema>;
+
+export const CompanionMessageSchema = z.object({
+    messageId: z.string(),
+    threadId: z.string(),
+    userId: z.string(),
+    companionId: z.string(),
+    role: z.enum(['user', 'companion']),
+    content: z.string(),
+    timestamp: z.number(),
+});
+export type CompanionMessage = z.infer<typeof CompanionMessageSchema>;
+
+export const WeeklyForecastReportSchema = z.object({
+    reportId: z.string(),
+    userId: z.string(),
+    weekStartDate: z.number(),
+    symbolicTrends: z.array(z.string()),
+    dreamArcSummary: z.string(),
+    auraShiftSummary: z.string(),
+    narratorQuote: z.string(),
+    suggestedRitual: z.string(),
+});
+export type WeeklyForecastReport = z.infer<typeof WeeklyForecastReportSchema>;
+
+export const RecoveryEventSchema = z.object({
+    eventId: z.string(),
+    userId: z.string(),
+    timestamp: z.number(),
+    recoveryType: z.enum(['emotional', 'identity', 'relational', 'health', 'creative', 'spiritual']),
+    linkedThresholdId: z.string().optional(),
+    symbolicTags: z.array(z.string()),
+    voiceNarrationUrl: z.string().url().optional(),
+    memoryBloomId: z.string().optional(),
+});
+export type RecoveryEvent = z.infer<typeof RecoveryEventSchema>;
+
+export const RecoveryAnniversarySchema = z.object({
+    anniversaryId: z.string(),
+    userId: z.string(),
+    eventRef: z.string(),
+    anniversaryDate: z.number(),
+    yearCount: z.number(),
+    triggered: z.boolean(),
+    reflectionText: z.string(),
+    suggestedRitual: z.string().optional(),
+    visualOverlay: z.enum(['sunburst', 'aurora', 'garden_return', 'light_pulse', 'sky_bridge']),
+});
+export type RecoveryAnniversary = z.infer<typeof RecoveryAnniversarySchema>;
+
+export const MirrorOfBecomingSchema = z.object({
+    id: z.string(),
+    userId: z.string(),
+    createdAt: z.number(),
+    scrollFragmentsUsed: z.array(z.string()),
+    dominantArchetypeThreads: z.array(z.string()),
+    emotionTrajectory: z.record(z.number()),
+    auraColorMap: z.record(z.string()),
+    symbolicMilestoneTags: z.array(z.string()),
+    narrativeScrollText: z.string(),
+    voiceNarrationUrl: z.string().url().optional(),
+    finalAvatarStyle: z.record(z.string()),
+    visualConstellationMapUrl: z.string().url().optional(),
+});
+export type MirrorOfBecoming = z.infer<typeof MirrorOfBecomingSchema>;
+
+export const LifeStoryExportSchema = z.object({
+    exportId: z.string(),
+    userId: z.string(),
+    formatType: z.enum(['pdf', 'mp3', 'mp4', 'gif', 'zip']),
+    fileUrl: z.string().url(),
+    createdAt: z.number(),
+    includedSections: z.record(z.boolean()),
+    sharedPublicly: z.boolean(),
+});
+export type LifeStoryExport = z.infer<typeof LifeStoryExportSchema>;
+
+export const ScrollRemixSchema = z.object({
+    remixId: z.string(),
+    userId: z.string(),
+    originalScrollId: z.string(),
+    remixTitle: z.string(),
+    remixType: z.enum(['alternate_ending', 'shadow_path', 'ritual_insert', 'symbolic_mirror', 'healing_thread']),
+    originalThemes: z.array(z.string()),
+    alternateSymbols: z.array(z.string()),
+    removedSymbols: z.array(z.string()),
+    remixNarrativeText: z.string(),
+    remixVoiceNarrationUrl: z.string().url().optional(),
+    remixVisualOverlay: z.enum(['shattered_scroll', 'mirror_scroll', 'new_bloom', 'storm_resolve']),
+});
+export type ScrollRemix = z.infer<typeof ScrollRemixSchema>;
+
+export const PublicGalleryPostSchema = z.object({
+    postId: z.string(),
+    userId: z.string(),
+    scrollId: z.string().optional(),
+    remixId: z.string().optional(),
+    postType: z.enum(['scroll', 'remix', 'ritualThread']),
+    publishedAt: z.number(),
+    themeTags: z.array(z.string()),
+    symbolOverlay: z.enum(['bloom', 'storm', 'mirror', 'night_fire', 'tree']),
+    visibility: z.enum(['public', 'gallery_only', 'reply_only']),
+    archetypeTone: z.string(),
+});
+export type PublicGalleryPost = z.infer<typeof PublicGalleryPostSchema>;
+
+export const ViewerReactionSchema = z.object({
+    reactionId: z.string(),
+    postId: z.string(),
+    viewerId: z.string(),
+    reactionSymbol: z.string(),
+    timestamp: z.number(),
+});
+export type ViewerReaction = z.infer<typeof ViewerReactionSchema>;
+
+export const PublicReplyChainSchema = z.object({
+    replyId: z.string(),
+    postId: z.string(),
+    replyType: z.enum(['text', 'audio', 'visual_symbol']),
+    content: z.string(),
+    replyerArchetype: z.string().optional(),
+    timestamp: z.number(),
+    isThreadLink: z.boolean(),
+});
+export type PublicReplyChain = z.infer<typeof PublicReplyChainSchema>;
+
+export const InnerVoiceModelSchema = z.object({
+    userId: z.string(),
+    lastUpdated: z.number(),
+    dominantToneProfile: z.record(z.number()),
+    symbolicSelfView: z.enum(['child', 'warrior', 'wanderer', 'ghost', 'mirror', 'observer']),
+    emotionalDefaultState: z.string(),
+    moodContrastWithNarrator: z.record(z.number()),
+    lastContrastEventId: z.string(),
+    innerVoiceQuoteExamples: z.array(z.string()),
+});
+export type InnerVoiceModel = z.infer<typeof InnerVoiceModelSchema>;
+
+export const InnerVoiceMomentSchema = z.object({
+    id: z.string(),
+    userId: z.string(),
+    timestamp: z.number(),
+    sourceType: z.enum(['ritual', 'dream', 'voiceEvent', 'threshold']),
+    detectedInnerTone: z.record(z.number()),
+    contrastWithNarrator: z.boolean(),
+    summaryText: z.string(),
+    linkedEmotionState: z.string(),
+});
+export type InnerVoiceMoment = z.infer<typeof InnerVoiceMomentSchema>;
