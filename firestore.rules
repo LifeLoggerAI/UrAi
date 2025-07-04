@@ -1,89 +1,37 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // HELPER
+    // Helper function to check ownership
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
     }
-    
-    // GENERIC OWNERSHIP CHECK
-    function isDocOwner() {
-      return isOwner(resource.data.uid);
-    }
-    function isCreatingDocForSelf() {
-      return isOwner(request.resource.data.uid);
-    }
 
-    // USER PROFILE
+    // Users can read their own profile, and only update their own profile.
+    // The create rule allows the initial user document to be created by the `createDefaultProfile` function.
     match /users/{userId} {
-      allow get, list, update: if isOwner(userId);
-      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId);
+      allow create: if isOwner(userId) && request.resource.data.uid == userId;
+
+      // Allow users to manage their own subcollections (auraStates, memoryBlooms, etc.)
+      match /{subcollection}/{docId} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
-    // USER SUBCOLLECTIONS
-    match /users/{userId}/{subcollection}/{docId} {
-        allow read, write: if isOwner(userId);
+    // Users can create and manage their own permissions document.
+    match /permissions/{userId} {
+      allow read, write: if isOwner(userId);
     }
     
-    // PERMISSIONS
-    match /permissions/{userId} {
-      allow get: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.uid == userId;
-      allow update: if isOwner(userId);
-    }
-
-    // ONBOARDING DATA
-    match /onboardIntake/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /goals/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /tasks/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /calendarEvents/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /habitWatch/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, update, delete: if isDocOwner();
-    }
-
-    // MAIN APP DATA
-    match /audioEvents/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /voiceEvents/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /people/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /dreamEvents/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /innerTexts/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /cameraCaptures/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
-    }
-    match /symbolicImageInsights/{docId} {
-      allow create: if isCreatingDocForSelf();
-      allow read, list, update, delete: if isDocOwner();
+    // Generic rule for top-level collections where each document has a 'uid' field.
+    // This covers: voiceEvents, dreamEvents, innerTexts, cameraCaptures, symbolicImageInsights,
+    // people, goals, tasks, calendarEvents, habitWatch, and onboardIntake.
+    match /{collection}/{docId} {
+      allow read, update, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
     }
   }
 }

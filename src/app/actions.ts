@@ -541,10 +541,10 @@ const processOnboardingVoiceSchema = z.object({
 
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
-export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<{ data: ProcessedOnboardingData | null, error: string | null }> {
+export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<{ success: boolean, error: string | null }> {
     const validatedFields = processOnboardingVoiceSchema.safeParse(input);
     if (!validatedFields.success) {
-        return { data: null, error: "Invalid input." };
+        return { success: false, error: "Invalid input." };
     }
 
     const { userId, audioDataUri } = validatedFields.data;
@@ -552,12 +552,15 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
         if (!transcript) {
-            return { data: null, error: "Failed to transcribe audio." };
+            return { success: false, error: "Failed to transcribe audio." };
         }
         
         const analysis = await processOnboardingTranscript({ transcript });
         const timestamp = Date.now();
         
+        // This server action now performs the write itself for security and atomicity.
+        const batch = writeBatch(db);
+
         const intakeId = crypto.randomUUID();
         const intakeDoc: OnboardIntake = {
             id: intakeId,
@@ -565,43 +568,41 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
             fullTranscript: transcript,
             createdAt: timestamp
         };
+        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
 
-        let goal: Goal | undefined;
-        let task: Task | undefined;
-        let calendarEvent: CalendarEvent | undefined;
-        let habitWatch: HabitWatch | undefined;
-        
         if (analysis) {
             if (analysis.goal) {
                 const goalId = crypto.randomUUID();
-                goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
+                const goal: Goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
+                batch.set(doc(db, "goals", goalId), goal);
             }
             if (analysis.task && analysis.reminderDate) {
                 const taskId = crypto.randomUUID();
-                task = { id: taskId, uid: userId, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
+                const task: Task = { id: taskId, uid: userId, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
+                batch.set(doc(db, "tasks", taskId), task);
+                
                 const eventId = crypto.randomUUID();
-                calendarEvent = { id: eventId, uid: userId, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
+                const calendarEvent: CalendarEvent = { id: eventId, uid: userId, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
+                batch.set(doc(db, "calendarEvents", eventId), calendarEvent);
             }
             if (analysis.habitToTrack) {
                 const habitId = crypto.randomUUID();
-                habitWatch = { id: habitId, uid: userId, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
+                const habitWatch: HabitWatch = { id: habitId, uid: userId, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
+                batch.set(doc(db, "habitWatch", habitId), habitWatch);
             }
         }
         
-        const processedData: ProcessedOnboardingData = {
-            onboardIntake: intakeDoc,
-            goal,
-            task,
-            calendarEvent,
-            habitWatch
-        };
+        const userRef = doc(db, "users", userId);
+        batch.update(userRef, { onboardingComplete: true });
 
-        return { data: processedData, error: null };
+        await batch.commit();
+
+        return { success: true, error: null };
 
     } catch (e) {
         console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
         const firebaseError = e as {code?: string, message: string};
         const errorMessage = firebaseError.message || "An unknown error occurred during onboarding.";
-        return { data: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
+        return { success: false, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }

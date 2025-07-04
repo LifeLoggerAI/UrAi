@@ -8,10 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { processOnboardingVoiceAction } from '@/app/actions';
-import { Loader2, Mic, BotMessageSquare, CheckCircle2 } from 'lucide-react';
+import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { db } from '@/lib/firebase';
-import { writeBatch, doc, updateDoc } from 'firebase/firestore';
 
 const prompts = [
     "To begin, tell me a dream or a goal you care about right now.",
@@ -64,41 +62,19 @@ export default function VoiceOnboardingPage() {
                         reader.onloadend = async () => {
                             const audioDataUri = reader.result as string;
                             
-                            // 1. Call server action to get processed data
+                            // Call the refactored server action. It now handles the database write.
                             const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
 
-                            if (result.error || !result.data) {
+                            if (result.error || !result.success) {
                                 toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
                                 setRecordingState('idle');
                                 return;
                             }
-
-                            // 2. Perform batch write on the client
-                            try {
-                                const batch = writeBatch(db);
-                                const { onboardIntake, goal, task, calendarEvent, habitWatch } = result.data;
-
-                                batch.set(doc(db, "onboardIntake", onboardIntake.id), onboardIntake);
-                                if (goal) batch.set(doc(db, "goals", goal.id), goal);
-                                if (task) batch.set(doc(db, "tasks", task.id), task);
-                                if (calendarEvent) batch.set(doc(db, "calendarEvents", calendarEvent.id), calendarEvent);
-                                if (habitWatch) batch.set(doc(db, "habitWatch", habitWatch.id), habitWatch);
-
-                                const userRef = doc(db, "users", user.uid);
-                                batch.update(userRef, { onboardingComplete: true });
-
-                                await batch.commit();
-
-                                // 3. Success
-                                setRecordingState('done');
-                                toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
-                                setTimeout(() => router.push('/'), 2000);
-
-                            } catch (writeError) {
-                                console.error("Firestore write error:", writeError);
-                                toast({ variant: 'destructive', title: 'Onboarding Failed', description: "Could not save your onboarding data. Please try again." });
-                                setRecordingState('idle');
-                            }
+                            
+                            // Success!
+                            setRecordingState('done');
+                            toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
+                            setTimeout(() => router.push('/'), 2000);
                         };
                         audioChunksRef.current = [];
                     };
@@ -172,7 +148,15 @@ export default function VoiceOnboardingPage() {
                         size="lg"
                         className="w-48"
                     >
-                        {recordingState === 'recording' ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Listening...</> : 'Start Reflection'}
+                        {recordingState === 'recording' ? (
+                            <>
+                                <Square className="mr-2 h-4 w-4 fill-current text-red-500" />Listening...
+                            </>
+                        ) : (
+                             <>
+                                <Mic className="mr-2 h-4 w-4" /> Start Reflection
+                             </>
+                        )}
                     </Button>
                     
                      <div className="h-10">
