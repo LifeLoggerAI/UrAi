@@ -6,8 +6,7 @@ import { AuthProvider } from '@/components/auth-provider';
 
 const inter = Inter({ 
   subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-sans',
 });
 
 export const metadata: Metadata = {
@@ -21,11 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="hsl(0 0% 100%)" />
       </head>
-      <body className="font-sans antialiased">
+      <body className={`font-sans antialiased ${inter.variable}`}>
         <AuthProvider>
             {children}
             <Toaster />
