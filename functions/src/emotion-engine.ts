@@ -56,20 +56,20 @@ function mapEmotionToColor(emotion: string): string {
 export const updateAuraState = functions.firestore
   .document('users/{uid}/moodLogs/{logId}')
   .onCreate(async (snap, ctx) => {
-    const { emotion, intensity } = snap.data();
+    const data = snap.data();
     const { uid } = ctx.params;
 
-    if (!emotion || typeof intensity !== 'number') {
+    if (!data.emotion || typeof data.intensity !== 'number') {
         functions.logger.warn(`Missing emotion or intensity for moodLog ${ctx.params.logId}`);
         return;
     }
 
-    const overlay = mapEmotionToOverlay(emotion, intensity);
-    functions.logger.info(`Updating aura for user ${uid} to emotion: ${emotion}`);
+    const overlay = mapEmotionToOverlay(data.emotion, data.intensity);
+    functions.logger.info(`Updating aura for user ${uid} to emotion: ${data.emotion}`);
 
     try {
         await db.doc(`users/${uid}/auraStates/current`).set({
-            currentEmotion: emotion,
+            currentEmotion: data.emotion,
             overlayColor: overlay.color,
             overlayStyle: overlay.style,
             lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
@@ -85,12 +85,62 @@ export const emotionOverTimeWatcher = functions.pubsub
   .schedule('every 60 minutes')
   .onRun(async () => {
     functions.logger.info("Running hourly emotionOverTimeWatcher job.");
-    // In a real application, this function would:
-    // 1. Query for all users.
-    // 2. For each user, query the last hour of `moodLogs`.
-    // 3. Aggregate the data to find the dominant emotion and average intensity.
-    // 4. Determine the `cycleType` (e.g., 'recovery', 'strain').
-    // 5. Write a new document to the `users/{uid}/emotionCycles` subcollection.
+    const usersSnap = await db.collection('users').get();
+
+    const promises = usersSnap.docs.map(async (userDoc) => {
+      const uid = userDoc.id;
+      const oneHourAgo = Date.now() - 60 * 60 * 1000;
+      
+      const moodLogsQuery = db.collection(`users/${uid}/moodLogs`)
+        .where('timestamp', '>=', oneHourAgo);
+      
+      const moodLogsSnap = await moodLogsQuery.get();
+
+      if (moodLogsSnap.empty) {
+        functions.logger.info(`No mood logs in the last hour for user ${uid}. Skipping.`);
+        return;
+      }
+
+      const logs = moodLogsSnap.docs.map(doc => doc.data());
+      
+      const emotionCounts: { [key: string]: number } = {};
+      let totalIntensity = 0;
+      logs.forEach(log => {
+        emotionCounts[log.emotion] = (emotionCounts[log.emotion] || 0) + 1;
+        totalIntensity += log.intensity;
+      });
+
+      const dominantEmotion = Object.keys(emotionCounts).reduce((a, b) => emotionCounts[a] > emotionCounts[b] ? a : b);
+      const avgIntensity = totalIntensity / logs.length;
+      
+      let cycleType = 'neutral';
+      const positiveEmotions = ['joy', 'calm', 'recovery'];
+      const negativeEmotions = ['sadness', 'anger', 'anxiety'];
+
+      if (positiveEmotions.includes(dominantEmotion.toLowerCase()) && avgIntensity > 50) {
+        cycleType = 'recovery';
+      } else if (negativeEmotions.includes(dominantEmotion.toLowerCase()) && avgIntensity > 50) {
+        cycleType = 'strain';
+      }
+
+      const cycleId = uuidv4();
+      const windowStart = oneHourAgo;
+      
+      try {
+        await db.collection(`users/${uid}/emotionCycles`).doc(cycleId).set({
+          windowStart,
+          dominantEmotion,
+          avgIntensity,
+          cycleType,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        functions.logger.info(`Created new emotion cycle ${cycleId} for user ${uid}.`);
+      } catch (error) {
+        functions.logger.error(`Failed to create emotionCycle for user ${uid}:`, error);
+      }
+    });
+
+    await Promise.all(promises);
     return null;
   });
 
@@ -98,19 +148,17 @@ export const emotionOverTimeWatcher = functions.pubsub
 // 3. triggerBloom – milestone bloom when recovery detected
 export const triggerBloom = functions.firestore
   .document('users/{uid}/emotionCycles/{cycleId}')
-  .onUpdate(async (change, ctx) => {
-    const before = change.before.data();
-    const after = change.after.data();
+  .onCreate(async (snap, ctx) => {
+    const cycleData = snap.data();
     const { uid } = ctx.params;
 
-    // Check if the cycleType has changed to 'recovery'
-    if (before.cycleType !== 'recovery' && after.cycleType === 'recovery') {
+    if (cycleData.cycleType === 'recovery') {
         functions.logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
         try {
             await db.collection(`users/${uid}/memoryBlooms`).add({
                 bloomId: uuidv4(),
-                emotion: after.dominantEmotion || 'recovery',
-                bloomColor: mapEmotionToColor(after.dominantEmotion || 'recovery'),
+                emotion: cycleData.dominantEmotion || 'recovery',
+                bloomColor: mapEmotionToColor(cycleData.dominantEmotion || 'recovery'),
                 triggeredAt: admin.firestore.FieldValue.serverTimestamp(),
                 description: 'A moment of positive recovery was detected.'
             });
