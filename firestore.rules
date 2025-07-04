@@ -4,91 +4,33 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to ensure the user is authenticated and is the owner of the data.
-    function isOwner(uid) {
-      return request.auth != null && request.auth.uid == uid;
+    // Helper function to check if the user is the owner of a document.
+    // It checks that the user is authenticated and their UID matches the provided userId.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
-
-    // --- Core User and Permissions ---
-    // The user can read and update their own profile document.
-    // Client-side creation is denied because it's handled by a secure backend function (Auth Trigger).
+    
+    // Rule for the 'users' collection.
+    // A user can create their own user document.
+    // They can only read or update their own user document.
     match /users/{userId} {
+      allow create: if isOwner(userId) && request.resource.data.uid == userId;
       allow read, update: if isOwner(userId);
-      allow create, delete: if false;
     }
 
-    // A user can create and manage their own permissions document.
+    // Rule for the 'permissions' collection.
+    // A user can read and write to their own permissions document.
     match /permissions/{userId} {
       allow read, write: if isOwner(userId);
     }
     
-    // --- User Subcollections ---
-    // A user can read and write to subcollections within their own user document.
-    match /users/{userId}/{subcollection}/{docId} {
-      allow read, write: if isOwner(userId);
-    }
-
-    // --- User-Owned Content Collections ---
-    // These functions check if the user owns the document being accessed.
-    function isDocOwner() {
-      // For reads, updates, and deletes, check the `uid` of the document already in the database.
-      return isOwner(resource.data.uid);
-    }
-    function isCreatingDocAsOwner() {
-      // For creates, check the `uid` of the new document being sent.
-      return isOwner(request.resource.data.uid);
-    }
-    
-    // The following rules apply to all collections that store user-generated content.
-    // Each document in these collections is expected to have a `uid` field.
-    
-    match /onboardIntake/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /goals/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /tasks/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /calendarEvents/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /habitWatch/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /audioEvents/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /voiceEvents/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /people/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /dreamEvents/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /innerTexts/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /cameraCaptures/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
-    }
-    match /symbolicImageInsights/{docId} {
-      allow create: if isCreatingDocAsOwner();
-      allow read, update, delete: if isDocOwner();
+    // Generic rules for all other user-specific collections like goals, tasks, etc.
+    // These collections must contain documents with a 'uid' field matching the user's ID.
+    match /{collection}/{docId} {
+      // Allow a user to create a document if it includes their own UID.
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Allow a user to read, update, or delete a document if the existing document's UID matches their own.
+      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }
