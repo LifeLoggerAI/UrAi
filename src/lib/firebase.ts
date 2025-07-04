@@ -27,13 +27,13 @@ const db: Firestore = initializeFirestore(app, {
 const auth: Auth = getAuth(app);
 
 // In a development environment, connect to the emulators
-if (typeof window !== 'undefined' && window.location.hostname === "localhost") {
-    console.log("Connecting to Firebase emulators");
+if (process.env.NODE_ENV === 'development') {
+    console.log("Connecting to Firebase emulators because NODE_ENV is 'development'");
     try {
         connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
         connectFirestoreEmulator(db, '127.0.0.1', 8080);
     } catch (e) {
-        console.error("Error connecting to emulators. This is expected in production.", e);
+        console.error("Error connecting to emulators:", e);
     }
 }
 
