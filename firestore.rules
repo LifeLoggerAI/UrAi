@@ -1,37 +1,38 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check ownership
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
-
-    // Users can read their own profile, and only update their own profile.
-    // The create rule allows the initial user document to be created by the `createDefaultProfile` function.
+    // Users can read and update their own user document.
+    // Creation is handled by a Cloud Function on account creation.
     match /users/{userId} {
-      allow read, update: if isOwner(userId);
-      allow create: if isOwner(userId) && request.resource.data.uid == userId;
-
-      // Allow users to manage their own subcollections (auraStates, memoryBlooms, etc.)
-      match /{subcollection}/{docId} {
-        allow read, write: if isOwner(userId);
-      }
+      allow read, update: if request.auth.uid == userId;
     }
 
-    // Users can create and manage their own permissions document.
-    match /permissions/{userId} {
-      allow read, write: if isOwner(userId);
+    // A user's private subcollections (like auraStates, memoryBlooms) are only accessible to them.
+    match /users/{userId}/{subcollection}/{docId} {
+      allow read, write: if request.auth.uid == userId;
     }
-    
-    // Generic rule for top-level collections where each document has a 'uid' field.
-    // This covers: voiceEvents, dreamEvents, innerTexts, cameraCaptures, symbolicImageInsights,
-    // people, goals, tasks, calendarEvents, habitWatch, and onboardIntake.
+
+    // This generic rule secures all top-level collections by requiring a `uid` field
+    // that matches the authenticated user. This covers:
+    // permissions, audioEvents, voiceEvents, people, dreamEvents, innerTexts,
+    // cameraCaptures, symbolicImageInsights, onboardIntake, goals, tasks,
+    // calendarEvents, habitWatch, and narratorInsights.
     match /{collection}/{docId} {
-      allow read, update, delete: if isOwner(resource.data.uid);
-      allow create: if isOwner(request.resource.data.uid);
+      // Allow a user to read any document in any collection if it belongs to them.
+      allow read: if request.auth.uid == resource.data.uid;
+
+      // Allow a user to create a document in any collection if they set themselves as the owner.
+      allow create: if request.auth.uid == request.resource.data.uid;
+      
+      // Allow a user to update or delete a document in any collection if it belongs to them.
+      allow update, delete: if request.auth.uid == resource.data.uid;
+    }
+
+    // The notification queue can be written to by any authenticated user,
+    // to be processed by a backend function.
+    match /messages/queue/{messageId} {
+      allow create: if request.auth.uid != null;
     }
   }
 }
