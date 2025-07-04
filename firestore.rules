@@ -3,52 +3,18 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // By default, deny all reads and writes
-    match /{document=**} {
-      allow read, write: if false;
-    }
-    
-    // Allow users to read and write their own documents.
-    // This is a common pattern for user-specific data.
+
+    // Users can read and update their own user document.
+    // Creation of the user document is handled by a Cloud Function.
     match /users/{userId} {
-      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow read, update: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Allow users to create their own user document.
-    match /users/{userId} {
-      allow create: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Allow users to manage documents in their own subcollections
-    match /users/{userId}/{collectionId}/{docId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Allow any authenticated user to create documents in these collections,
-    // as long as the 'uid' field in the document matches their own auth uid.
-    // This is a secure pattern for user-generated content.
-    match /onboardIntake/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-    match /goals/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-    match /tasks/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-    match /calendarEvents/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-    match /habitWatch/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-
-    // Generic rule for user-owned content where the document has a `uid` field.
+    // This rule applies to all other collections (e.g., voiceEvents, dreamEvents, goals).
+    // It allows a user to create a new document if the document's `uid` field matches their own.
+    // It also allows them to read, update, or delete documents they already own.
     match /{collection}/{docId} {
-      // Users can create documents if the new document's uid matches their own.
       allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      // Users can read, update, or delete documents if the existing document's uid matches their own.
       allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
