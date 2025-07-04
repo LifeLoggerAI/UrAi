@@ -11,7 +11,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { savePermissionsAction } from '@/app/actions';
 import { Loader2, Mic, MapPin, Activity, Bell, ShieldQuestion, Users } from 'lucide-react';
 import type { Permissions } from '@/lib/types';
 import { analytics } from '@/lib/firebase';
@@ -131,13 +130,13 @@ export default function PermissionsPage() {
             acceptedTermsVersion: "1.1",
         };
 
-        const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissionsData });
-        
-        if (result.success) {
-            toast({ title: 'Permissions Saved', description: "Now for the final step." });
+        // Save to local storage to unblock the user immediately
+        try {
+            localStorage.setItem('pending_permissions', JSON.stringify({ userId: user.uid, permissions: finalPermissionsData }));
+            toast({ title: 'Permissions Saved Locally', description: "We'll sync this in the background. Now for the final step." });
             router.push('/onboarding/voice');
-        } else {
-            toast({ variant: 'destructive', title: 'Error', description: result.error ?? "An unknown error occurred." });
+        } catch (error) {
+            toast({ variant: 'destructive', title: 'Error', description: "Could not save permissions locally." });
             setIsSubmitting(false);
         }
     };

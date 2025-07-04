@@ -2,33 +2,56 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Default-deny all access for safety.
-    match /{document=**} {
-      allow read, write: if false;
-    }
 
-    // Allow users to manage their own profile document.
+    // Users can read, update, and create their own document.
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
-    }
-    
-    // Allow users to create and manage their own permissions document.
-    // This is the critical rule for the current error.
-    match /permissions/{userId} {
-      allow read, create, update: if request.auth.uid == userId;
-    }
-    
-    // Allow users to manage documents within their own subcollections.
-    match /users/{userId}/{subcollection}/{docId} {
-        allow read, write: if request.auth.uid == userId;
+      allow read, update, create: if request.auth.uid == userId;
     }
 
-    // For other top-level collections, allow users to create and manage
-    // documents that are explicitly associated with their user ID.
-    match /{collection}/{docId} {
-      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    // Rules for other collections, allowing users to create/read their own content.
+    match /voiceEvents/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /dreamEvents/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /people/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read, update: if request.auth.uid == resource.data.uid;
+    }
+    match /cameraCaptures/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /symbolicImageInsights/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /innerTexts/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /onboardIntake/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /goals/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /tasks/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read, update: if request.auth.uid == resource.data.uid;
+    }
+    match /calendarEvents/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
+    }
+    match /habitWatch/{docId} {
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read: if request.auth.uid == resource.data.uid;
     }
   }
 }

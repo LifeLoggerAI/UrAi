@@ -548,12 +548,13 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
     const { userId, permissions } = validatedFields.data;
     
     try {
-        const permissionsRef = doc(db, "permissions", userId);
-        await setDoc(permissionsRef, permissions);
+        const userRef = doc(db, "users", userId);
+        // Using set with merge is a safe way to update or create fields on a document
+        // without overwriting the entire document.
+        await setDoc(userRef, { permissions: permissions }, { merge: true });
         return { success: true, error: null };
     } catch (e: any) {
         console.error("Failed to save permissions:", e);
-        // Return a more specific error message if available
         const firebaseError = e.code ? `Firebase error: ${e.code}` : "An unknown error occurred.";
         return { success: false, error: firebaseError };
     }
