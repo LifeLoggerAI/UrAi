@@ -551,9 +551,11 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
         const permissionsRef = doc(db, "permissions", userId);
         await setDoc(permissionsRef, permissions);
         return { success: true, error: null };
-    } catch (e) {
+    } catch (e: any) {
         console.error("Failed to save permissions:", e);
-        return { success: false, error: "Failed to save permissions. Please try again." };
+        // Return a more specific error message if available
+        const firebaseError = e.code ? `Firebase error: ${e.code}` : "An unknown error occurred.";
+        return { success: false, error: firebaseError };
     }
 }
 
