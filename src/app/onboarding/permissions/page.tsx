@@ -87,18 +87,18 @@ export default function PermissionsPage() {
         
         setIsSubmitting(true);
         
-        const finalPermissions: Permissions = {
+        const finalPermissions: Omit<Permissions, 'onboardingComplete'> = {
             ...permissions,
             acceptedTerms: true,
             acceptedPrivacyPolicy: true,
             consentTimestamp: Date.now(),
         };
 
-        const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissions });
+        const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissions as Permissions });
         
         if (result.success) {
-            toast({ title: 'Welcome!', description: 'Your journey begins now.' });
-            router.push('/');
+            toast({ title: 'Permissions Saved', description: "Now for the final step." });
+            router.push('/onboarding/voice');
         } else {
             toast({ variant: 'destructive', title: 'Error', description: result.error ?? "An unknown error occurred." });
             setIsSubmitting(false);
@@ -188,7 +188,7 @@ export default function PermissionsPage() {
                         <CardFooter className="flex flex-col gap-4">
                              <Button className="w-full" onClick={handleFinalSubmit} disabled={isSubmitting || !acceptedConsent}>
                                 {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                                Begin My Journey
+                                Save and Continue
                             </Button>
                             <Button variant="ghost" className="w-full" onClick={() => setStep('permissions')} disabled={isSubmitting}>Back to Permissions</Button>
                         </CardFooter>

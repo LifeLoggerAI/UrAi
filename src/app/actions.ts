@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput, Permissions } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput, Permissions, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -17,6 +17,7 @@ import { companionChat } from "@/ai/flows/companion-chat";
 import { analyzeFace } from "@/ai/flows/analyze-face";
 import { analyzeTextSentiment } from "@/ai/flows/analyze-text-sentiment";
 import { suggestRitual } from "@/ai/flows/suggest-ritual";
+import { processOnboardingTranscript } from "@/ai/flows/process-onboarding-transcript";
 
 const addAudioEventInputSchema = z.object({
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
@@ -524,19 +525,112 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
     const { userId, permissions } = validatedFields.data;
     
     try {
-        const batch = writeBatch(db);
-        
         const permissionsRef = doc(db, "permissions", userId);
-        batch.set(permissionsRef, permissions);
-        
-        const userRef = doc(db, "users", userId);
-        batch.update(userRef, { onboardingComplete: true });
-        
-        await batch.commit();
-        
+        await setDoc(permissionsRef, permissions);
         return { success: true, error: null };
     } catch (e) {
         console.error("Failed to save permissions:", e);
         return { success: false, error: "Failed to save permissions. Please try again." };
+    }
+}
+
+
+const processOnboardingVoiceSchema = z.object({
+    userId: z.string().min(1, "User ID is required."),
+    audioDataUri: z.string().min(1, "Audio data cannot be empty."),
+});
+
+type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
+
+export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<{success: boolean, error: string | null}> {
+    const validatedFields = processOnboardingVoiceSchema.safeParse(input);
+    if (!validatedFields.success) {
+        return { success: false, error: "Invalid input." };
+    }
+
+    const { userId, audioDataUri } = validatedFields.data;
+    const timestamp = Date.now();
+
+    try {
+        const { transcript } = await transcribeAudio({ audioDataUri });
+
+        if (!transcript) {
+            return { success: false, error: "Failed to transcribe audio." };
+        }
+
+        const intakeId = crypto.randomUUID();
+        const intakeDoc: OnboardIntake = {
+            id: intakeId,
+            uid: userId,
+            fullTranscript: transcript,
+            createdAt: timestamp
+        };
+
+        const analysis = await processOnboardingTranscript({ transcript });
+
+        if (!analysis) {
+            return { success: false, error: "Failed to analyze onboarding transcript." };
+        }
+
+        const batch = writeBatch(db);
+
+        // 1. Save the raw intake
+        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
+
+        // 2. Create Goal
+        if (analysis.goal) {
+            const goalId = crypto.randomUUID();
+            const newGoal: Goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
+            batch.set(doc(db, "goals", goalId), newGoal);
+        }
+
+        // 3. Create Task
+        if (analysis.task && analysis.reminderDate) {
+            const taskId = crypto.randomUUID();
+            const newTask: Task = { 
+                id: taskId, 
+                uid: userId, 
+                title: analysis.task, 
+                dueDate: new Date(analysis.reminderDate).getTime(), 
+                status: 'pending' 
+            };
+            batch.set(doc(db, "tasks", taskId), newTask);
+
+            // 4. Create Calendar Event (mirroring task)
+            const eventId = crypto.randomUUID();
+            const newEvent: CalendarEvent = {
+                id: eventId,
+                uid: userId,
+                title: analysis.task,
+                startTime: new Date(analysis.reminderDate).getTime(),
+                contextSource: 'onboarding'
+            };
+            batch.set(doc(db, "calendarEvents", eventId), newEvent);
+        }
+
+        // 5. Create Habit to Watch
+        if (analysis.habitToTrack) {
+            const habitId = crypto.randomUUID();
+            const newHabit: HabitWatch = {
+                id: habitId,
+                uid: userId,
+                name: analysis.habitToTrack,
+                frequency: "daily", // default
+                context: "userOnboard"
+            };
+            batch.set(doc(db, "habitWatch", habitId), newHabit);
+        }
+
+        // 6. Mark onboarding as complete
+        const userRef = doc(db, "users", userId);
+        batch.update(userRef, { onboardingComplete: true });
+
+        await batch.commit();
+
+        return { success: true, error: null };
+
+    } catch (e) {
+        console.error("Failed to process onboarding voice:", e);
+        return { success: false, error: "Failed to process onboarding. Please try again." };
     }
 }

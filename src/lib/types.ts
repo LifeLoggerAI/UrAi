@@ -13,6 +13,11 @@ export const UserSchema = z.object({
     avatarUrl: z.string().url().optional(),
     isProUser: z.boolean().default(false),
     onboardingComplete: z.boolean().default(false),
+    pronouns: z.string().optional(),
+    moodColor: z.string().optional(),
+    avatarStyle: z.string().optional(),
+    lastLoginAt: z.number().optional(),
+    lastLogoutAt: z.number().optional(),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
         passiveAudioEnabled: z.boolean().default(true),
@@ -386,7 +391,67 @@ export const OrbSymbolicMapSchema = z.object({
 export type OrbSymbolicMap = z.infer<typeof OrbSymbolicMapSchema>;
 
 
+// Schemas for Onboarding
+export const OnboardIntakeSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    fullTranscript: z.string(),
+    createdAt: z.number(),
+    detectedLanguage: z.string().optional(),
+    audioUrl: z.string().url().optional(),
+});
+export type OnboardIntake = z.infer<typeof OnboardIntakeSchema>;
+
+export const GoalSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    title: z.string(),
+    createdAt: z.number(),
+});
+export type Goal = z.infer<typeof GoalSchema>;
+
+export const TaskSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    title: z.string(),
+    dueDate: z.number(),
+    status: z.enum(["pending", "complete"]),
+});
+export type Task = z.infer<typeof TaskSchema>;
+
+export const CalendarEventSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    title: z.string(),
+    startTime: z.number(),
+    contextSource: z.string(),
+});
+export type CalendarEvent = z.infer<typeof CalendarEventSchema>;
+
+export const HabitWatchSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    name: z.string(),
+    frequency: z.string(),
+    context: z.string(),
+});
+export type HabitWatch = z.infer<typeof HabitWatchSchema>;
+
+
 // Schemas for Genkit Flows
+
+export const ProcessOnboardingTranscriptInputSchema = z.object({
+    transcript: z.string().describe("The full transcript of the user's onboarding conversation."),
+});
+export type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
+
+export const ProcessOnboardingTranscriptOutputSchema = z.object({
+    goal: z.string().describe("The primary goal or dream the user mentioned."),
+    task: z.string().describe("A single, small, actionable first step towards that goal."),
+    reminderDate: z.string().describe("An ISO 8601 date string for when the user wants a reminder."),
+    habitToTrack: z.string().describe("A habit the user wants to track related to their goal."),
+});
+export type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
 
 export const EnrichVoiceEventInputSchema = z.object({
   text: z.string().describe('The full text transcript from a voice recording.'),
