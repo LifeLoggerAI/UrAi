@@ -549,14 +549,23 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
     
     try {
         const userRef = doc(db, "users", userId);
-        // Using set with merge is a safe way to update or create fields on a document
-        // without overwriting the entire document.
-        await setDoc(userRef, { permissions: permissions }, { merge: true });
+        
+        await updateDoc(userRef, {
+            'settings.micPermission': permissions.micPermission,
+            'settings.gpsPermission': permissions.gpsPermission,
+            'settings.motionPermission': permissions.motionPermission,
+            'settings.notificationsPermission': permissions.notificationsPermission,
+            'settings.dataConsent.shareAnonymousData': permissions.shareAnonymizedData,
+        });
+
+        const permissionsRef = doc(db, "permissions", userId);
+        await setDoc(permissionsRef, permissions, { merge: true });
+
         return { success: true, error: null };
-    } catch (e: any) {
-        console.error("Failed to save permissions:", e);
-        const firebaseError = e.code ? `Firebase error: ${e.code}` : "An unknown error occurred.";
-        return { success: false, error: firebaseError };
+    } catch (e) {
+        const firebaseError = e as {code?: string, message: string};
+        console.error("FULL ERROR saving permissions:", JSON.stringify(firebaseError, null, 2));
+        return { success: false, error: `Firebase error: ${firebaseError.code} - ${firebaseError.message}` };
     }
 }
 
@@ -656,7 +665,9 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
         return { success: true, error: null };
 
     } catch (e) {
-        console.error("Error processing onboarding:", e);
-        return { success: false, error: (e as Error).message || "An error occurred during processing." };
+        console.error("FULL ERROR during onboarding:", JSON.stringify(e, null, 2));
+        const firebaseError = e as {code?: string, message: string};
+        const errorMessage = firebaseError.code ? `${firebaseError.code}: ${firebaseError.message}` : firebaseError.message;
+        return { success: false, error: `Onboarding process failed. Reason: ${errorMessage}` };
     }
 }
