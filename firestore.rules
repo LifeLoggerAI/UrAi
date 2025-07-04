@@ -1,85 +1,42 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if a user is authenticated
-    function isAuthenticated() {
-      return request.auth != null;
+    // User-specific data is only accessible by the owner.
+    match /{collection=users,permissions,audioEvents,voiceEvents,dreams,innerTexts,faceSnapshots,onboardIntake,goals,tasks,calendarEvents,habitWatch,people,voiceTranscripts,transcriptTags,ambientTone,emotionEvents,narratorInsights,socialOverlays,recoveryBlooms,ritualCards,monetizationLog}/{uid}/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // Helper function to check if the user is the owner of the document
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-    
-    // Helper function to check if the user is an admin
-    function isAdmin() {
-      return isAuthenticated() && request.auth.token.admin == true;
+    // Specific collections for user sub-data, also owned by the user.
+    match /users/{uid}/{subcollection=auraStates,memoryBlooms}/{docId} {
+       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // User-specific data collections
-    match /{collection}/{uid}/{**} {
-      where collection in [
-        'users', 'permissions', 'tasks', 'moodTrends', 'voiceTranscripts',
-        'b2bExportOptIn', 'onboardIntake', 'goals', 'calendarEvents', 'habitWatch',
-        'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap', 'narratorInsights',
-        'emotionEvents', 'socialOverlays', 'recoveryBlooms', 'ritualCards',
-        'voiceClips', 'ambientTone', 'transcriptTags'
-      ]
-      allow read, write: if isOwner(uid);
-    }
-    
-    // People collection can be read by any authenticated user, but only owner can write
-    match /people/{personId} {
-      allow read: if isAuthenticated();
-      allow write: if isOwner(resource.data.uid);
-    }
-
-    // Dreams collection is private to the user
-    match /dreams/{dreamId} {
-        allow read, write: if isOwner(resource.data.uid);
-    }
-    
-    // innerTexts collection is private to the user
-    match /innerTexts/{textId} {
-        allow read, write: if isOwner(resource.data.uid);
-    }
-    
-    // faceSnapshots collection is private to the user
-    match /faceSnapshots/{snapshotId} {
-      allow read, write: if isOwner(resource.data.uid);
-    }
-
-    // Data Marketplace Rules
+    // Partner auth data is not client-readable or writable.
     match /partnerAuth/{pid} {
-      allow read, write: if false; // Accessed by backend only
+      allow read, write: if false;
     }
 
+    // Data Access Requests are only manageable by admins.
     match /darRequests/{rid} {
-      allow read, write: if isAdmin();
+      allow read, write: if request.auth.token.admin == true;
     }
 
+    // Export summaries are readable by admins and the specific partner.
+    // Only admins can create them.
     match /exportSummaries/{eid} {
-      allow read: if isAdmin() || (isAuthenticated() && resource.data.partnerId == request.auth.token.partnerId);
-      allow write: if isAdmin();
+      allow read: if request.auth.token.admin == true ||
+                  (resource.data.partnerId != null && request.auth.token.partnerId != null && resource.data.partnerId == request.auth.token.partnerId);
+      allow write: if request.auth.token.admin == true;
     }
 
-    match /monetizationLog/{uid}/{doc} {
-      allow read: if isOwner(uid);
-      allow write: if false;
-    }
-
-    // Anonymized data is not readable by clients
+    // Anonymized and B2B data are not client-accessible.
     match /anonymizedData/{hashId}/{metricId} {
-      allow read: if false;
-      allow write: if isAuthenticated(); // Or more specific server-side identity
+      allow read, write: if false;
     }
 
-    // B2B exports are not readable by clients
     match /b2bExports/{week}/{reportId} {
-      allow read: if false;
+      allow read, write: if false;
     }
   }
 }
