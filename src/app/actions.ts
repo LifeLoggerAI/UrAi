@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -541,68 +541,35 @@ const processOnboardingVoiceSchema = z.object({
 
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
-export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<{ success: boolean, error: string | null }> {
+type ProcessOnboardingReturn = {
+    success: boolean;
+    transcript: string | null;
+    analysis: ProcessOnboardingTranscriptOutput | null;
+    error: string | null;
+};
+
+export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<ProcessOnboardingReturn> {
     const validatedFields = processOnboardingVoiceSchema.safeParse(input);
     if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
+        return { success: false, transcript: null, analysis: null, error: "Invalid input." };
     }
 
-    const { userId, audioDataUri } = validatedFields.data;
+    const { audioDataUri } = validatedFields.data;
 
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
         if (!transcript) {
-            return { success: false, error: "Failed to transcribe audio." };
+            return { success: false, transcript: null, analysis: null, error: "Failed to transcribe audio." };
         }
         
         const analysis = await processOnboardingTranscript({ transcript });
-        const timestamp = Date.now();
         
-        // This server action now performs the write itself for security and atomicity.
-        const batch = writeBatch(db);
-
-        const intakeId = crypto.randomUUID();
-        const intakeDoc: OnboardIntake = {
-            id: intakeId,
-            uid: userId,
-            fullTranscript: transcript,
-            createdAt: timestamp
-        };
-        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
-
-        if (analysis) {
-            if (analysis.goal) {
-                const goalId = crypto.randomUUID();
-                const goal: Goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
-                batch.set(doc(db, "goals", goalId), goal);
-            }
-            if (analysis.task && analysis.reminderDate) {
-                const taskId = crypto.randomUUID();
-                const task: Task = { id: taskId, uid: userId, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
-                batch.set(doc(db, "tasks", taskId), task);
-                
-                const eventId = crypto.randomUUID();
-                const calendarEvent: CalendarEvent = { id: eventId, uid: userId, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
-                batch.set(doc(db, "calendarEvents", eventId), calendarEvent);
-            }
-            if (analysis.habitToTrack) {
-                const habitId = crypto.randomUUID();
-                const habitWatch: HabitWatch = { id: habitId, uid: userId, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
-                batch.set(doc(db, "habitWatch", habitId), habitWatch);
-            }
-        }
-        
-        const userRef = doc(db, "users", userId);
-        batch.update(userRef, { onboardingComplete: true });
-
-        await batch.commit();
-
-        return { success: true, error: null };
+        return { success: true, transcript, analysis, error: null };
 
     } catch (e) {
         console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
         const firebaseError = e as {code?: string, message: string};
         const errorMessage = firebaseError.message || "An unknown error occurred during onboarding.";
-        return { success: false, error: `Onboarding processing failed. Reason: ${errorMessage}` };
+        return { success: false, transcript: null, analysis: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }

@@ -10,6 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { processOnboardingVoiceAction } from '@/app/actions';
 import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { db } from '@/lib/firebase';
+import { doc, writeBatch } from 'firebase/firestore';
+import type { OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from '@/lib/types';
 
 const prompts = [
     "To begin, tell me a dream or a goal you care about right now.",
@@ -69,15 +72,62 @@ export default function VoiceOnboardingPage() {
                     
                     const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
 
-                    if (result.error || !result.success) {
+                    if (result.error || !result.success || !result.transcript) {
                         toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
                         setRecordingState('idle');
                         return;
                     }
-                    
-                    setRecordingState('done');
-                    toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
-                    setTimeout(() => router.push('/'), 2000);
+
+                    try {
+                        const { transcript, analysis } = result;
+                        const timestamp = Date.now();
+                        const batch = writeBatch(db);
+
+                        const intakeId = crypto.randomUUID();
+                        const intakeDoc: OnboardIntake = {
+                            id: intakeId,
+                            uid: user.uid,
+                            fullTranscript: transcript,
+                            createdAt: timestamp
+                        };
+                        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
+
+                        if (analysis) {
+                            if (analysis.goal) {
+                                const goalId = crypto.randomUUID();
+                                const goal: Goal = { id: goalId, uid: user.uid, title: analysis.goal, createdAt: timestamp };
+                                batch.set(doc(db, "goals", goalId), goal);
+                            }
+                            if (analysis.task && analysis.reminderDate) {
+                                const taskId = crypto.randomUUID();
+                                const task: Task = { id: taskId, uid: user.uid, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
+                                batch.set(doc(db, "tasks", taskId), task);
+                                
+                                const eventId = crypto.randomUUID();
+                                const calendarEvent: CalendarEvent = { id: eventId, uid: user.uid, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
+                                batch.set(doc(db, "calendarEvents", eventId), calendarEvent);
+                            }
+                            if (analysis.habitToTrack) {
+                                const habitId = crypto.randomUUID();
+                                const habitWatch: HabitWatch = { id: habitId, uid: user.uid, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
+                                batch.set(doc(db, "habitWatch", habitId), habitWatch);
+                            }
+                        }
+                        
+                        const userRef = doc(db, "users", user.uid);
+                        batch.update(userRef, { onboardingComplete: true });
+
+                        await batch.commit();
+
+                        setRecordingState('done');
+                        toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
+                        setTimeout(() => router.push('/'), 2000);
+
+                    } catch (dbError) {
+                        toast({ variant: 'destructive', title: 'Database Error', description: "Could not save your onboarding data. Please try again." });
+                        console.error("Onboarding DB Error:", dbError);
+                        setRecordingState('idle');
+                    }
                 };
                 audioChunksRef.current = [];
             };
