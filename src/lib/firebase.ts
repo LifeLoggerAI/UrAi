@@ -26,23 +26,13 @@ const db: Firestore = initializeFirestore(app, {
 
 const auth: Auth = getAuth(app);
 
-// In a development environment, connect to the emulators
-// This is now unconditional to ensure reliability in the dev environment.
-console.log("Attempting to connect to Firebase emulators for development.");
-try {
-    // @ts-ignore - Check if emulators are already connected to prevent errors on hot reloads
-    if (!auth.emulatorConfig) {
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        console.log("Auth emulator connected.");
-    }
-    // @ts-ignore - Check if emulators are already connected
-    if (!db.emulatorConfig) {
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
-        console.log("Firestore emulator connected.");
-    }
-} catch (e) {
-    console.error("Error connecting to Firebase emulators:", e);
-}
+// In a development environment, connect to the emulators unconditionally.
+// This is the most reliable way to ensure the app connects to the local
+// emulators instead of the production backend.
+console.log("Connecting to Firebase emulators...");
+connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+connectFirestoreEmulator(db, 'localhost', 8080);
+console.log("Firebase emulators connected.");
 
 
 // Initialize Analytics
