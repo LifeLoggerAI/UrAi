@@ -3,101 +3,41 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // A user is authenticated if the request has an auth object.
-    function isAuthenticated() {
-      return request.auth != null;
+    
+    // Helper function to check if the requesting user is the owner of the data.
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+    
+    // Users can read/update their own profile.
+    // Anyone authenticated can create a user profile (e.g., during signup).
+    match /users/{uid} {
+      allow read, update: if isOwner(uid);
+      allow create: if request.auth != null;
+    }
+    
+    // Users can create and manage their own permissions document.
+    // The {uid} in the path must match the authenticated user's uid.
+    match /permissions/{uid} {
+      allow read, write: if isOwner(uid);
     }
 
-    // A user owns a document if their UID matches the document's `uid` field.
-    // This is for reads/deletes on existing data.
-    function isDocumentOwner(doc) {
-      return isAuthenticated() && request.auth.uid == doc.uid;
+    // All other top-level collections owned by a user (e.g., voiceEvents, dreams, goals).
+    // This rule requires that any document in these collections has a 'uid' field
+    // that matches the authenticated user's uid.
+    match /{collection}/{docId} {
+      // Allow read, update, and delete if the user is the owner of the existing document.
+      allow read, update, delete: if request.auth.uid == resource.data.uid;
+      
+      // Allow create if the user is the owner of the NEW document being created.
+      // This uses request.resource.data, which refers to the document as it would be after the write.
+      allow create: if request.auth.uid == request.resource.data.uid;
     }
-
-    // A user owns an incoming document if their UID matches the `uid` field
-    // in the data being written. This is for creates/updates.
-    function isIncomingDocumentOwner(doc) {
-      return isAuthenticated() && request.auth.uid == doc.uid;
-    }
-
-    // Rules for the 'users' collection. The document ID is the user's UID.
-    match /users/{userId} {
-      allow read, update, delete: if isAuthenticated() && request.auth.uid == userId;
-      allow create: if isAuthenticated() && request.auth.uid == userId;
-
-      // Rules for subcollections within a user's document.
-      match /{subcollection}/{docId} {
-        allow read, write: if isAuthenticated() && request.auth.uid == userId;
-      }
-    }
-
-    // Rules for the 'permissions' collection. The document ID is the user's UID.
-    match /permissions/{userId} {
-      allow read, write: if isAuthenticated() && request.auth.uid == userId;
-    }
-
-    // The following collections contain documents that each have a `uid` field
-    // identifying the owner. A user can do anything with documents they own.
-    match /audioEvents/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /voiceEvents/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /dreamEvents/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /innerTexts/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /cameraCaptures/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /symbolicImageInsights/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /people/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /goals/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /tasks/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /calendarEvents/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /habitWatch/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
-    }
-    match /onboardIntake/{docId} {
-      allow read, delete: if isDocumentOwner(resource.data);
-      allow create: if isIncomingDocumentOwner(request.resource.data);
-      allow update: if isDocumentOwner(resource.data) && isIncomingDocumentOwner(request.resource.data);
+    
+    // Rules for user-specific subcollections (e.g., aura states, memory blooms).
+    // This allows access to any subcollection under a user's own document.
+    match /users/{uid}/{subcollection}/{docId} {
+      allow read, write: if isOwner(uid);
     }
   }
 }
