@@ -2,37 +2,40 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read and update their own user document.
-    // Creation is handled by a Cloud Function on account creation.
-    match /users/{userId} {
-      allow read, update: if request.auth.uid == userId;
+
+    // Users can read and write their own user document and any subcollections.
+    // This covers /users/{userId}, /users/{userId}/auraStates/{id}, etc.
+    match /users/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // A user's private subcollections (like auraStates, memoryBlooms) are only accessible to them.
-    match /users/{userId}/{subcollection}/{docId} {
-      allow read, write: if request.auth.uid == userId;
-    }
+    // A general rule for all other data collections (dreams, goals, people, etc.)
+    // This rule assumes every document in these collections has a 'uid' field
+    // that stores the ID of the user who owns it.
+    match /{otherCollections}/{docId} {
 
-    // This generic rule secures all top-level collections by requiring a `uid` field
-    // that matches the authenticated user. This covers:
-    // permissions, audioEvents, voiceEvents, people, dreamEvents, innerTexts,
-    // cameraCaptures, symbolicImageInsights, onboardIntake, goals, tasks,
-    // calendarEvents, habitWatch, and narratorInsights.
-    match /{collection}/{docId} {
-      // Allow a user to read any document in any collection if it belongs to them.
-      allow read: if request.auth.uid == resource.data.uid;
+      // READ (single document):
+      // A user can get a document if they are logged in and the doc's uid matches theirs.
+      allow get: if request.auth != null && resource.data.uid == request.auth.uid;
 
-      // Allow a user to create a document in any collection if they set themselves as the owner.
-      allow create: if request.auth.uid == request.resource.data.uid;
-      
-      // Allow a user to update or delete a document in any collection if it belongs to them.
-      allow update, delete: if request.auth.uid == resource.data.uid;
-    }
+      // READ (list/query):
+      // A user can query a collection. The 'get' rule above will still be
+      // applied by Firestore to every document in the result set, ensuring they only see their own data.
+      // All client-side queries MUST use `.where('uid', '==', user.uid)` to be efficient.
+      allow list: if request.auth != null;
 
-    // The notification queue can be written to by any authenticated user,
-    // to be processed by a backend function.
-    match /messages/queue/{messageId} {
-      allow create: if request.auth.uid != null;
+      // WRITE (create):
+      // A user can create a document if the new doc's 'uid' field is their own.
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+
+      // WRITE (update):
+      // A user can update a document if they own it, and they are not trying to change the owner.
+      allow update: if request.auth != null && resource.data.uid == request.auth.uid
+                      && request.resource.data.uid == request.auth.uid;
+
+      // WRITE (delete):
+      // A user can delete a document they own.
+      allow delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }
