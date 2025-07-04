@@ -4,28 +4,85 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isOwner(userId) {
-      return request.auth.uid == userId;
+    // Helper function to check if the user is signed in and is the owner of the document.
+    function isOwner(doc_uid) {
+      return request.auth != null && request.auth.uid == doc_uid;
     }
 
-    // Users can read and write their own user document
+    // Users can create their own user document, and can only read/update their own.
     match /users/{userId} {
+      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId);
+    }
+
+    // Users can manage documents in their own subcollections (e.g., auraStates, memoryBlooms).
+    match /users/{userId}/{collection}/{docId} {
       allow read, write: if isOwner(userId);
     }
 
-    // Users can create and write their own permissions document
-    match /permissions/{userId} {
-      allow write: if isOwner(userId);
+    // Rules for user-owned data in top-level collections.
+    match /people/{personId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
     }
 
-    // Any other collection where documents have a `uid` field
-    // pointing to the owner. This covers almost all other data.
-    match /{collection}/{docId} {
-      // User can create documents if the new document's uid matches their own.
-      allow create: if request.auth.uid == request.resource.data.uid;
+    match /voiceEvents/{eventId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    
+    match /dreamEvents/{dreamId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
 
-      // User can read, update, or delete their own documents.
-      allow read, update, delete: if request.auth.uid == resource.data.uid;
+    match /innerTexts/{textId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /goals/{goalId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    
+    match /tasks/{taskId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /audioEvents/{eventId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+    
+    match /cameraCaptures/{captureId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /symbolicImageInsights/{insightId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /permissions/{userId} {
+      allow create, read, update, delete: if isOwner(userId);
+    }
+
+    match /onboardIntake/{intakeId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /calendarEvents/{eventId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
+    }
+
+    match /habitWatch/{habitId} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, update, delete: if isOwner(resource.data.uid);
     }
   }
 }
