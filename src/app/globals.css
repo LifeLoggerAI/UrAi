@@ -84,6 +84,13 @@
   }
 }
 
+@layer components {
+    .login-background {
+        background: radial-gradient(ellipse at bottom, hsl(var(--primary) / 0.2), transparent 70%),
+                    radial-gradient(ellipse at top, hsl(var(--accent) / 0.2), transparent 70%);
+    }
+}
+
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }

@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -104,11 +104,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl font-headline">Welcome</CardTitle>
-          <CardDescription>Sign in or create an account to continue to Life Logger.</CardDescription>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 login-background">
+      <Card className="w-full max-w-sm bg-card/80 backdrop-blur-sm border-white/20 shadow-xl">
+        <CardHeader className="text-center">
+            <div className="mx-auto bg-primary/20 p-3 rounded-full mb-4 border border-primary/30">
+                <Sparkles className="h-8 w-8 text-primary" />
+            </div>
+          <CardTitle className="text-2xl font-headline">Welcome to Life Logger</CardTitle>
+          <CardDescription>Your personal AI for symbolic self-reflection.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
             <Button
@@ -130,7 +133,7 @@ export default function LoginPage() {
                     <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
+                    <span className="bg-card/80 px-2 text-muted-foreground">
                     Or continue with email
                     </span>
                 </div>
@@ -173,7 +176,7 @@ export default function LoginPage() {
             <Button
               onClick={() => handleAuthAction('signUp')}
               className="w-full"
-              variant="outline"
+              variant="secondary"
               disabled={isSubmitting}
             >
               {isEmailSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}

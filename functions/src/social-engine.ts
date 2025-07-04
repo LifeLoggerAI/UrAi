@@ -20,7 +20,7 @@ export const voiceInteractionIngest = functions.https.onCall(async (data, contex
     
     functions.logger.info(`Ingesting voice interaction for user ${uid}.`);
     // Logic to:
-    // 1. Match or create a /socialContacts record.
+    // 1. Match or create a /people record.
     // 2. Update interactionCount, voiceMemoryStrength, lastHeardAt, silenceDurationDays.
     // 3. Write a /socialEvents document.
     // 4. Recalculate echoLoopScore.
