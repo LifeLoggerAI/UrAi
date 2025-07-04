@@ -1,42 +1,59 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User-specific data is only accessible by the owner.
-    match /{collection=users,permissions,audioEvents,voiceEvents,dreams,innerTexts,faceSnapshots,onboardIntake,goals,tasks,calendarEvents,habitWatch,people,voiceTranscripts,transcriptTags,ambientTone,emotionEvents,narratorInsights,socialOverlays,recoveryBlooms,ritualCards,monetizationLog}/{uid}/{docId} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+    
+    // User-specific data collections
+    match /{collection}/{uid}/{document=**} {
+      where collection in ['users', 'permissions', 'tasks', 'moodTrends', 'voiceTranscripts', 'b2bExportOptIn', 'audioEvents', 'voiceEvents', 'people', 'dreams', 'innerTexts', 'faceSnapshots', 'auraStates', 'memoryBlooms', 'emotionCycles', 'onboardIntake', 'goals', 'calendarEvents', 'habitWatch', 'emotionEvents', 'socialOverlays', 'recoveryBlooms', 'ritualCards', 'monetizationLog', 'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates', 'legacyThreads', 'presentMetrics', 'orbState', 'orbEvents', 'orbDialogMemory', 'orbSymbolicMap', 'voiceClips', 'transcriptTags', 'ambientTone', 'narratorInsights', 'torsoMetrics', 'habitEvents', 'legsMetrics', 'movementPaths', 'avoidanceEvents', 'armMetrics', 'relationalGestures', 'socialEvents', 'messages'] {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
     }
 
-    // Specific collections for user sub-data, also owned by the user.
-    match /users/{uid}/{subcollection=auraStates,memoryBlooms}/{docId} {
-       allow read, write: if request.auth != null && request.auth.uid == uid;
+    // Partner & B2B collections - restricted access
+    match /partnerAuth/{partnerId} {
+      allow read, write: if false; // Only accessible via Admin SDK in Cloud Functions
     }
 
-    // Partner auth data is not client-readable or writable.
-    match /partnerAuth/{pid} {
-      allow read, write: if false;
+    match /dataMarketplace/packages/{packageId} {
+      allow read: if request.auth != null; // Allow authenticated users to see packages
+      allow write: if request.auth.token.admin == true; // Admin only
     }
 
-    // Data Access Requests are only manageable by admins.
-    match /darRequests/{rid} {
-      allow read, write: if request.auth.token.admin == true;
+    match /darRequests/{requestId} {
+      allow read, write: if request.auth.token.admin == true; // Admin only
     }
 
-    // Export summaries are readable by admins and the specific partner.
-    // Only admins can create them.
-    match /exportSummaries/{eid} {
-      allow read: if request.auth.token.admin == true ||
-                  (resource.data.partnerId != null && request.auth.token.partnerId != null && resource.data.partnerId == request.auth.token.partnerId);
+    match /exportSummaries/{exportId} {
+      allow read: if request.auth.token.admin == true || get(/databases/$(database)/documents/partnerAuth/$(request.auth.token.partnerId)).data.apiKey == resource.data.partnerApiKey; // Admin or the correct partner
       allow write: if request.auth.token.admin == true;
     }
-
-    // Anonymized and B2B data are not client-accessible.
+    
+    // Anonymized and exported data is not readable by clients
     match /anonymizedData/{hashId}/{metricId} {
       allow read, write: if false;
     }
-
+    
     match /b2bExports/{week}/{reportId} {
       allow read, write: if false;
+    }
+
+    // Consent audit is append-only by Cloud Functions
+    match /consentAudit/{auditId} {
+        allow read: if request.auth.token.admin == true;
+        allow write: if false;
+    }
+
+    // Daily digest queue is write-only for functions, not readable by client
+    match /dailyDigestQueue/{uid} {
+        allow read, write: if false;
+    }
+
+    // Mail collection for Trigger Email extension
+    match /mail/{docId} {
+      allow create: if true; // Allow clients or functions to queue emails
+      allow read, update, delete: if false;
     }
   }
 }

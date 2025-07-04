@@ -75,5 +75,3 @@ export const checkProLimits = functions.firestore
       }
       return null;
   });
-
-    

@@ -748,6 +748,7 @@ export const DataMarketplacePackageSchema = z.object({
 export type DataMarketplacePackage = z.infer<typeof DataMarketplacePackageSchema>;
 
 export const DarRequestSchema = z.object({
+    requestId: z.string(),
     partnerId: z.string(),
     packageId: z.string(),
     status: z.enum(["pending", "approved", "rejected"]),
@@ -759,6 +760,7 @@ export const DarRequestSchema = z.object({
 export type DarRequest = z.infer<typeof DarRequestSchema>;
 
 export const ExportSummarySchema = z.object({
+    exportId: z.string(),
     partnerId: z.string(),
     packageId: z.string(),
     generatedAt: z.number(),
@@ -769,6 +771,8 @@ export const ExportSummarySchema = z.object({
 export type ExportSummary = z.infer<typeof ExportSummarySchema>;
 
 export const MonetizationLogSchema = z.object({
+    entryId: z.string(),
+    uid: z.string(),
     exportId: z.string(),
     packageId: z.string(),
     partnerId: z.string(),
