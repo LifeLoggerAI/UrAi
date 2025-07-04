@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { processOnboardingVoiceAction } from '@/app/actions';
-import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square } from 'lucide-react';
+import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const prompts = [
@@ -19,7 +19,8 @@ const prompts = [
     "Thank you for sharing. I'm ready to begin this journey with you."
 ];
 
-type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing' | 'done';
+type RecordingState = 'idle' | 'recording' | 'processing' | 'done';
+type PermissionState = 'idle' | 'requesting' | 'granted' | 'denied';
 
 export default function VoiceOnboardingPage() {
     const { user, loading } = useAuth();
@@ -27,8 +28,8 @@ export default function VoiceOnboardingPage() {
     const { toast } = useToast();
     
     const [promptIndex, setPromptIndex] = useState(0);
-    
     const [recordingState, setRecordingState] = useState<RecordingState>('idle');
+    const [permissionState, setPermissionState] = useState<PermissionState>('idle');
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
 
@@ -37,56 +38,56 @@ export default function VoiceOnboardingPage() {
             router.push('/login');
         }
     }, [user, loading, router]);
-    
-    useEffect(() => {
-        if (typeof window !== 'undefined' && navigator.mediaDevices) {
-            setRecordingState('requesting');
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    const recorder = new MediaRecorder(stream);
-                    mediaRecorderRef.current = recorder;
-                    
-                    recorder.ondataavailable = (event) => {
-                        if (event.data.size > 0) {
-                            audioChunksRef.current.push(event.data);
-                        }
-                    };
-                    
-                    recorder.onstop = async () => {
-                        if (!user) return;
-                        setRecordingState('processing');
-                        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-                        
-                        const reader = new FileReader();
-                        reader.readAsDataURL(audioBlob);
-                        reader.onloadend = async () => {
-                            const audioDataUri = reader.result as string;
-                            
-                            // Call the refactored server action. It now handles the database write.
-                            const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
 
-                            if (result.error || !result.success) {
-                                toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
-                                setRecordingState('idle');
-                                return;
-                            }
-                            
-                            // Success!
-                            setRecordingState('done');
-                            toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
-                            setTimeout(() => router.push('/'), 2000);
-                        };
-                        audioChunksRef.current = [];
-                    };
-                    setRecordingState('idle');
-                })
-                .catch(err => {
-                    console.error("Mic access error:", err);
-                    toast({ variant: 'destructive', title: 'Microphone Access Denied' });
-                    setRecordingState('idle');
-                });
+    const requestMicPermission = async () => {
+        if (typeof window === 'undefined' || !navigator.mediaDevices) {
+            toast({ variant: 'destructive', title: 'Unsupported Browser' });
+            setPermissionState('denied');
+            return;
         }
-    }, [user, toast, router]);
+        setPermissionState('requesting');
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const recorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = recorder;
+
+            recorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    audioChunksRef.current.push(event.data);
+                }
+            };
+
+            recorder.onstop = async () => {
+                if (!user) return;
+                setRecordingState('processing');
+                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+                
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = async () => {
+                    const audioDataUri = reader.result as string;
+                    
+                    const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
+
+                    if (result.error || !result.success) {
+                        toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
+                        setRecordingState('idle');
+                        return;
+                    }
+                    
+                    setRecordingState('done');
+                    toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
+                    setTimeout(() => router.push('/'), 2000);
+                };
+                audioChunksRef.current = [];
+            };
+            setPermissionState('granted');
+        } catch (err) {
+            console.error("Mic access error:", err);
+            toast({ variant: 'destructive', title: 'Microphone Access Denied', description: 'Please enable microphone access in your browser settings to continue.' });
+            setPermissionState('denied');
+        }
+    };
 
     const handleRecordClick = () => {
         if (recordingState === 'idle' && mediaRecorderRef.current) {
@@ -117,6 +118,26 @@ export default function VoiceOnboardingPage() {
     
     if (loading || !user) {
         return <main className="flex min-h-screen flex-col items-center justify-center bg-background"><Loader2 className="h-12 w-12 animate-spin text-primary" /></main>;
+    }
+    
+    if (permissionState !== 'granted') {
+        return (
+            <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8">
+                <Card className="w-full max-w-lg animate-fadeIn text-center">
+                    <CardHeader>
+                        <ShieldCheck className="mx-auto h-12 w-12 text-primary" />
+                        <CardTitle className="font-headline text-3xl mt-4">Microphone Permission</CardTitle>
+                        <CardDescription>To capture your voice, Life Logger needs access to your microphone. Your recordings are processed securely.</CardDescription>
+                    </CardHeader>
+                    <CardFooter>
+                        <Button className="w-full" onClick={requestMicPermission} disabled={permissionState === 'requesting'}>
+                            {permissionState === 'requesting' ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mic className="mr-2 h-4 w-4" />}
+                            Grant Microphone Access
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </main>
+        );
     }
 
     return (
