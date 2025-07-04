@@ -3,19 +3,19 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Users can read and update their own user document.
-    // Creation of the user document is handled by a Cloud Function.
-    match /users/{userId} {
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-    }
     
-    // This rule applies to all other collections (e.g., voiceEvents, dreamEvents, goals).
-    // It allows a user to create a new document if the document's `uid` field matches their own.
-    // It also allows them to read, update, or delete documents they already own.
+    // Users can create their own user document when signing up.
+    // They can read and update their own user document.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == userId;
+    }
+
+    // This rule applies to all other collections (voiceEvents, dreamEvents, etc.)
+    // It enforces that a user can only interact with their own documents.
     match /{collection}/{docId} {
-      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create: if request.auth.uid == request.resource.data.uid;
+      allow read, update, delete: if request.auth.uid == resource.data.uid;
     }
   }
 }
