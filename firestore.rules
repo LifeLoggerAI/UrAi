@@ -3,58 +3,11 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny all reads and writes
+    // Default rule: Allow read/write access to authenticated users.
+    // This is a permissive rule for development. For production, you should
+    // implement more granular rules to secure your data.
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if request.auth != null;
     }
-
-    // Allow logged-in users to read their own user document
-    match /users/{userId} {
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Allow logged-in users to manage their own subcollections and documents.
-    // This covers permissions, goals, tasks, etc.
-    match /users/{userId}/{document=**} {
-        allow read, write, create, delete: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Allow a logged-in user to create their own permissions document
-    match /permissions/{userId} {
-      allow create: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Allow any logged-in user to create documents in these collections,
-    // as long as the 'uid' field in the document matches their own auth uid.
-    match /{collection}/{docId} {
-      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
-    }
-
-    // Allow read access to documents if the user's uid matches the uid in the document.
-    match /voiceEvents/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-    match /dreamEvents/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-    match /innerTexts/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-    match /people/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-    match /cameraCaptures/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-    match /symbolicImageInsights/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-     match /goals/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-     match /tasks/{docId} {
-        allow read: if request.auth != null && resource.data.uid == request.auth.uid;
-    }
-
   }
 }
