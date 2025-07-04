@@ -3,41 +3,10 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if the requesting user is the owner of the data.
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
-
-    // USERS
-    // Users can read and update their own profile document.
-    // Creation is handled by a Cloud Function. Deletion is disallowed from the client.
-    match /users/{userId} {
-      allow read, update: if isOwner(userId);
-      allow create, delete: if false;
-
-      // Allow users to read/write to any subcollection under their own user document.
-      // This covers auraStates, memoryBlooms, etc.
-      match /{subcollection}/{docId} {
-        allow read, write: if isOwner(userId);
-      }
-    }
-
-    // PERMISSIONS
-    // Users can create and manage their own permissions document during onboarding.
-    match /permissions/{userId} {
-      allow read, create, update: if isOwner(userId);
-    }
-    
-    // OTHER TOP-LEVEL COLLECTIONS
-    // This is a generic rule for any other collection where documents are owned by users.
-    // It covers: people, dreamEvents, voiceEvents, innerTexts, goals, tasks, calendarEvents, etc.
-    match /{collection}/{docId} {
-      // Allow creation if the new document contains a 'uid' field matching the user's ID.
-      allow create: if isOwner(request.resource.data.uid);
-
-      // Allow read, update, and delete if the existing document's 'uid' field matches.
-      allow read, update, delete: if isOwner(resource.data.uid);
+    // This rule allows any authenticated user to read and write to any document.
+    // This is a permissive rule for development and debugging.
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }
