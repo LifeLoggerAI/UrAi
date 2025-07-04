@@ -10,6 +10,9 @@ import { useToast } from '@/hooks/use-toast';
 import { processOnboardingVoiceAction } from '@/app/actions';
 import { Loader2, Mic, BotMessageSquare, CheckCircle2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { doc, writeBatch, setDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import type { OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from '@/lib/types';
 
 const prompts = [
     "To begin, tell me a dream or a goal you care about right now.",
@@ -27,7 +30,6 @@ export default function VoiceOnboardingPage() {
     const { toast } = useToast();
     
     const [promptIndex, setPromptIndex] = useState(0);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const [recordingState, setRecordingState] = useState<RecordingState>('idle');
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -62,13 +64,67 @@ export default function VoiceOnboardingPage() {
                         reader.readAsDataURL(audioBlob);
                         reader.onloadend = async () => {
                             const audioDataUri = reader.result as string;
-                            const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
-                            if (result.success) {
+                            
+                            // 1. Call the refactored server action to get the processed data
+                            const processResult = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
+
+                            if (processResult.error || !processResult.data) {
+                                toast({ variant: 'destructive', title: 'Onboarding Failed', description: processResult.error || "Could not process your reflection." });
+                                setRecordingState('idle');
+                                return;
+                            }
+
+                            const { transcript, analysis } = processResult.data;
+                            const timestamp = Date.now();
+
+                            // 2. Perform the database write on the client side
+                            try {
+                                const batch = writeBatch(db);
+                                const intakeId = crypto.randomUUID();
+                                const intakeDoc: OnboardIntake = {
+                                    id: intakeId,
+                                    uid: user.uid,
+                                    fullTranscript: transcript,
+                                    createdAt: timestamp
+                                };
+                                batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
+
+                                if (analysis) {
+                                    if (analysis.goal) {
+                                        const goalId = crypto.randomUUID();
+                                        const newGoal: Goal = { id: goalId, uid: user.uid, title: analysis.goal, createdAt: timestamp };
+                                        batch.set(doc(db, "goals", goalId), newGoal);
+                                    }
+                                    if (analysis.task && analysis.reminderDate) {
+                                        const taskId = crypto.randomUUID();
+                                        const newTask: Task = { id: taskId, uid: user.uid, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
+                                        batch.set(doc(db, "tasks", taskId), newTask);
+                                        const eventId = crypto.randomUUID();
+                                        const newEvent: CalendarEvent = { id: eventId, uid: user.uid, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
+                                        batch.set(doc(db, "calendarEvents", eventId), newEvent);
+                                    }
+                                    if (analysis.habitToTrack) {
+                                        const habitId = crypto.randomUUID();
+                                        const newHabit: HabitWatch = { id: habitId, uid: user.uid, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
+                                        batch.set(doc(db, "habitWatch", habitId), newHabit);
+                                    }
+                                }
+                                
+                                const userRef = doc(db, "users", user.uid);
+                                batch.update(userRef, { onboardingComplete: true });
+
+                                await batch.commit();
+
+                                // 3. Success
                                 setRecordingState('done');
                                 toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });
                                 setTimeout(() => router.push('/'), 2000);
-                            } else {
-                                toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
+
+                            } catch (e) {
+                                const firebaseError = e as {code?: string, message: string};
+                                console.error("FULL CLIENT-SIDE ERROR during onboarding:", JSON.stringify(firebaseError, null, 2));
+                                const errorMessage = `Onboarding process failed. Reason: ${firebaseError.code} - ${firebaseError.message}`;
+                                toast({ variant: 'destructive', title: 'Onboarding Failed', description: errorMessage });
                                 setRecordingState('idle');
                             }
                         };

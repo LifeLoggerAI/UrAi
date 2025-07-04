@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, Permissions, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, Permissions, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessOnboardingTranscriptOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -548,16 +548,6 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
     const { userId, permissions } = validatedFields.data;
     
     try {
-        const userRef = doc(db, "users", userId);
-        
-        await updateDoc(userRef, {
-            'settings.micPermission': permissions.micPermission,
-            'settings.gpsPermission': permissions.gpsPermission,
-            'settings.motionPermission': permissions.motionPermission,
-            'settings.notificationsPermission': permissions.notificationsPermission,
-            'settings.dataConsent.shareAnonymousData': permissions.shareAnonymizedData,
-        });
-
         const permissionsRef = doc(db, "permissions", userId);
         await setDoc(permissionsRef, permissions, { merge: true });
 
@@ -577,97 +567,40 @@ const processOnboardingVoiceSchema = z.object({
 
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
-export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<{success: boolean, error: string | null}> {
+export type OnboardingData = {
+    transcript: string;
+    analysis: ProcessOnboardingTranscriptOutput | null;
+};
+
+type ProcessOnboardingVoiceReturn = {
+    data: OnboardingData | null;
+    error: string | null;
+}
+
+export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<ProcessOnboardingVoiceReturn> {
     const validatedFields = processOnboardingVoiceSchema.safeParse(input);
     if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
+        return { data: null, error: "Invalid input." };
     }
 
-    const { userId, audioDataUri } = validatedFields.data;
-    const timestamp = Date.now();
+    const { audioDataUri } = validatedFields.data;
 
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
 
         if (!transcript) {
-            return { success: false, error: "Failed to transcribe audio." };
+            return { data: null, error: "Failed to transcribe audio." };
         }
-
-        const intakeId = crypto.randomUUID();
-        const intakeDoc: OnboardIntake = {
-            id: intakeId,
-            uid: userId,
-            fullTranscript: transcript,
-            createdAt: timestamp
-        };
 
         const analysis = await processOnboardingTranscript({ transcript });
 
-        if (!analysis) {
-            return { success: false, error: "Failed to analyze onboarding transcript." };
-        }
-
-        const batch = writeBatch(db);
-
-        // 1. Save the raw intake
-        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
-
-        // 2. Create Goal
-        if (analysis.goal) {
-            const goalId = crypto.randomUUID();
-            const newGoal: Goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
-            batch.set(doc(db, "goals", goalId), newGoal);
-        }
-
-        // 3. Create Task
-        if (analysis.task && analysis.reminderDate) {
-            const taskId = crypto.randomUUID();
-            const newTask: Task = { 
-                id: taskId, 
-                uid: userId, 
-                title: analysis.task, 
-                dueDate: new Date(analysis.reminderDate).getTime(), 
-                status: 'pending' 
-            };
-            batch.set(doc(db, "tasks", taskId), newTask);
-
-            // 4. Create Calendar Event (mirroring task)
-            const eventId = crypto.randomUUID();
-            const newEvent: CalendarEvent = {
-                id: eventId,
-                uid: userId,
-                title: analysis.task,
-                startTime: new Date(analysis.reminderDate).getTime(),
-                contextSource: 'onboarding'
-            };
-            batch.set(doc(db, "calendarEvents", eventId), newEvent);
-        }
-
-        // 5. Create Habit to Watch
-        if (analysis.habitToTrack) {
-            const habitId = crypto.randomUUID();
-            const newHabit: HabitWatch = {
-                id: habitId,
-                uid: userId,
-                name: analysis.habitToTrack,
-                frequency: "daily", // default
-                context: "userOnboard"
-            };
-            batch.set(doc(db, "habitWatch", habitId), newHabit);
-        }
-
-        // 6. Mark onboarding as complete
-        const userRef = doc(db, "users", userId);
-        batch.update(userRef, { onboardingComplete: true });
-
-        await batch.commit();
-
-        return { success: true, error: null };
+        // Don't write, just return the data
+        return { data: { transcript, analysis }, error: null };
 
     } catch (e) {
-        console.error("FULL ERROR during onboarding:", JSON.stringify(e, null, 2));
+        console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
         const firebaseError = e as {code?: string, message: string};
         const errorMessage = firebaseError.code ? `${firebaseError.code}: ${firebaseError.message}` : firebaseError.message;
-        return { success: false, error: `Onboarding process failed. Reason: ${errorMessage}` };
+        return { data: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }
