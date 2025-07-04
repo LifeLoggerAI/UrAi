@@ -9,7 +9,7 @@ import { Skeleton } from './ui/skeleton';
 import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand } from 'lucide-react';
 import { InteractiveAvatar } from './interactive-avatar';
 import { useToast } from '@/hooks/use-toast';
-import { collection, query, where, onSnapshot, doc, orderBy } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, doc, orderBy, limit } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
@@ -67,7 +67,7 @@ export function HomeView() {
             };
             
             // People
-            const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"));
+            const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"), limit(5));
             unsubscribes.push(onSnapshot(qPeople, (snapshot) => {
                 setPeople(snapshot.docs.map(doc => doc.data() as Person));
                 checkLoadingDone();
@@ -81,28 +81,28 @@ export function HomeView() {
             }));
             
             // Blooms
-            const bloomsRef = collection(db, 'users', user.uid, 'memoryBlooms');
-            unsubscribes.push(onSnapshot(bloomsRef, (snapshot) => {
+            const qBlooms = query(collection(db, 'users', user.uid, 'memoryBlooms'), orderBy("triggeredAt", "desc"), limit(10));
+            unsubscribes.push(onSnapshot(qBlooms, (snapshot) => {
                 setMemoryBlooms(snapshot.docs.map(doc => doc.data() as MemoryBloom).sort((a,b) => a.triggeredAt - b.triggeredAt));
                 checkLoadingDone();
             }));
             
             // Dreams
-            const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
             unsubscribes.push(onSnapshot(qDreams, snapshot => {
                 setDreams(snapshot.docs.map(d => d.data() as Dream));
                 checkLoadingDone();
             }));
             
             // Voice Events
-            const qVoice = query(collection(db, "voiceEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            const qVoice = query(collection(db, "voiceEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
             unsubscribes.push(onSnapshot(qVoice, snapshot => {
                 setVoiceEvents(snapshot.docs.map(d => d.data() as VoiceEvent));
                 checkLoadingDone();
             }));
 
             // Inner Texts
-            const qInner = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"));
+            const qInner = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
             unsubscribes.push(onSnapshot(qInner, snapshot => {
                 setInnerTexts(snapshot.docs.map(d => d.data() as InnerVoiceReflection));
                 checkLoadingDone();
