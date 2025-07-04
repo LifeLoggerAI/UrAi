@@ -990,3 +990,52 @@ export const AmbientToneSchema = z.object({
     locationBucket: z.string(),
 });
 export type AmbientTone = z.infer<typeof AmbientToneSchema>;
+
+
+// Schemas for Visual Animations & Overlays
+export const EmotionEventVisualSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    valence: z.number().min(-1).max(1),
+    arousal: z.number().min(0).max(1),
+    detectedAt: z.number(),
+    source: z.enum(["ambient", "voice", "interaction"]),
+    auraColor: z.string(),
+    moodGradient: z.string(),
+    constellationGlow: z.boolean(),
+    triggeredOverlay: z.string().nullable(),
+});
+export type EmotionEventVisual = z.infer<typeof EmotionEventVisualSchema>;
+
+export const SocialOverlaySchema = z.object({
+    personId: z.string(),
+    uid: z.string(),
+    lastInteraction: z.number(),
+    silhouetteVisible: z.boolean(),
+    shadowFracture: z.boolean(),
+    orbitGlowIntensity: z.number(),
+    archetypeSymbol: z.string().nullable(),
+});
+export type SocialOverlay = z.infer<typeof SocialOverlaySchema>;
+
+
+export const RecoveryBloomSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    bloomTriggeredAt: z.number(),
+    bloomType: z.enum(["insight", "ritual", "dream"]),
+    bloomLocation: z.string(), // "left_foot", "chest"
+    replayAvailable: z.boolean(),
+    constellationLinked: z.boolean(),
+});
+export type RecoveryBloom = z.infer<typeof RecoveryBloomSchema>;
+
+export const RitualCardSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    animationVariant: z.enum(["petal", "seed", "flame"]),
+    displayGlyph: z.string(),
+    glowState: z.enum(["active", "archived"]),
+    voiceOverlayUrl: z.string().url().nullable(),
+});
+export type RitualCard = z.infer<typeof RitualCardSchema>;
