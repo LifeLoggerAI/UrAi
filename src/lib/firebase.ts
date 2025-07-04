@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, type Firestore } from "firebase/firestore";
-import { getAuth, type Auth } from "firebase/auth";
+import { initializeFirestore, memoryLocalCache, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
 import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -16,12 +16,23 @@ const firebaseConfig = {
 // Initialize Firebase
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Updated Firestore initialization with offline persistence
 const db: Firestore = initializeFirestore(app, {
     cache: memoryLocalCache({})
 });
 
 const auth: Auth = getAuth(app);
+
+// In a development environment, connect to the emulators
+if (typeof window !== 'undefined' && window.location.hostname === "localhost") {
+    console.log("Connecting to Firebase emulators");
+    try {
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+    } catch (e) {
+        console.error("Error connecting to emulators. This is expected in production.", e);
+    }
+}
+
 
 // Initialize Analytics
 const analytics: Promise<Analytics | null> = isSupported().then(yes => (yes ? getAnalytics(app) : null));

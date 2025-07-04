@@ -1,12 +1,55 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // This is an insecure rule for development purposes only.
-    // It allows all reads and writes to the entire database.
-    // TODO: Replace with secure rules before production.
+    
+    // By default, deny all reads and writes
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if false;
+    }
+    
+    // Allow users to read and write their own documents.
+    // This is a common pattern for user-specific data.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to create their own user document.
+    match /users/{userId} {
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow users to manage documents in their own subcollections
+    match /users/{userId}/{collectionId}/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow any authenticated user to create documents in these collections,
+    // as long as the 'uid' field in the document matches their own auth uid.
+    // This is a secure pattern for user-generated content.
+    match /onboardIntake/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+    match /goals/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+    match /tasks/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+    match /calendarEvents/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+    match /habitWatch/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Generic rule for user-owned content where the document has a `uid` field.
+    match /{collection}/{docId} {
+      // Users can create documents if the new document's uid matches their own.
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Users can read, update, or delete documents if the existing document's uid matches their own.
+      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }
