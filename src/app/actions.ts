@@ -549,7 +549,7 @@ export async function savePermissionsAction(input: z.infer<typeof savePermission
     
     try {
         const permissionsRef = doc(db, "permissions", userId);
-        await setDoc(permissionsRef, permissions, { merge: true });
+        await setDoc(permissionsRef, { ...permissions, uid: userId }, { merge: true });
 
         return { success: true, error: null };
     } catch (e) {
@@ -567,40 +567,70 @@ const processOnboardingVoiceSchema = z.object({
 
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
-export type OnboardingData = {
-    transcript: string;
-    analysis: ProcessOnboardingTranscriptOutput | null;
-};
-
 type ProcessOnboardingVoiceReturn = {
-    data: OnboardingData | null;
+    success: boolean;
     error: string | null;
 }
 
 export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<ProcessOnboardingVoiceReturn> {
     const validatedFields = processOnboardingVoiceSchema.safeParse(input);
     if (!validatedFields.success) {
-        return { data: null, error: "Invalid input." };
+        return { success: false, error: "Invalid input." };
     }
 
-    const { audioDataUri } = validatedFields.data;
+    const { userId, audioDataUri } = validatedFields.data;
 
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
-
         if (!transcript) {
-            return { data: null, error: "Failed to transcribe audio." };
+            return { success: false, error: "Failed to transcribe audio." };
         }
-
+        
         const analysis = await processOnboardingTranscript({ transcript });
+        const timestamp = Date.now();
+        
+        const batch = writeBatch(db);
+        const intakeId = crypto.randomUUID();
+        const intakeDoc: OnboardIntake = {
+            id: intakeId,
+            uid: userId,
+            fullTranscript: transcript,
+            createdAt: timestamp
+        };
+        batch.set(doc(db, "onboardIntake", intakeId), intakeDoc);
 
-        // Don't write, just return the data
-        return { data: { transcript, analysis }, error: null };
+        if (analysis) {
+            if (analysis.goal) {
+                const goalId = crypto.randomUUID();
+                const newGoal: Goal = { id: goalId, uid: userId, title: analysis.goal, createdAt: timestamp };
+                batch.set(doc(db, "goals", goalId), newGoal);
+            }
+            if (analysis.task && analysis.reminderDate) {
+                const taskId = crypto.randomUUID();
+                const newTask: Task = { id: taskId, uid: userId, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
+                batch.set(doc(db, "tasks", taskId), newTask);
+                const eventId = crypto.randomUUID();
+                const newEvent: CalendarEvent = { id: eventId, uid: userId, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
+                batch.set(doc(db, "calendarEvents", eventId), newEvent);
+            }
+            if (analysis.habitToTrack) {
+                const habitId = crypto.randomUUID();
+                const newHabit: HabitWatch = { id: habitId, uid: userId, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
+                batch.set(doc(db, "habitWatch", habitId), newHabit);
+            }
+        }
+        
+        const userRef = doc(db, "users", userId);
+        batch.update(userRef, { onboardingComplete: true });
+
+        await batch.commit();
+        
+        return { success: true, error: null };
 
     } catch (e) {
         console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
         const firebaseError = e as {code?: string, message: string};
-        const errorMessage = firebaseError.code ? `${firebaseError.code}: ${firebaseError.message}` : firebaseError.message;
-        return { data: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
+        const errorMessage = firebaseError.message || "An unknown error occurred during onboarding.";
+        return { success: false, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }
