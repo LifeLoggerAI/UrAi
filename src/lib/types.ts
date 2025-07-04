@@ -643,6 +643,27 @@ export const SuggestRitualOutputSchema = z.object({
 });
 export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
 
+// Schemas for Sky & Ground Module
+export const GroundSnapshotSchema = z.object({
+    gardenJSON: z.record(z.any()),
+    soilHealthScore: z.number(),
+    recoveryEvents: z.array(z.object({
+        eventId: z.string(),
+        label: z.string(),
+        emoji: z.string(),
+        ts: z.number(),
+    })),
+});
+export type GroundSnapshot = z.infer<typeof GroundSnapshotSchema>;
+
+export const GestureEventSchema = z.object({
+    layer: z.enum(["sky", "ground"]),
+    action: z.enum(["tap", "zoomIn", "zoomOut", "swipe"]),
+    meta: z.record(z.any()),
+    ts: z.number(),
+});
+export type GestureEvent = z.infer<typeof GestureEventSchema>;
+
 // Schemas for Advanced Optional Systems from Master Prompt
 export const SafetyTriggerSchema = z.object({
     id: z.string(),
@@ -1096,24 +1117,3 @@ export const RitualCardSchema = z.object({
     voiceOverlayUrl: z.string().url().nullable(),
 });
 export type RitualCard = z.infer<typeof RitualCardSchema>;
-
-// Schemas for Sky & Ground Module
-export const GroundSnapshotSchema = z.object({
-    gardenJSON: z.record(z.any()),
-    soilHealthScore: z.number(),
-    recoveryEvents: z.array(z.object({
-        eventId: z.string(),
-        label: z.string(),
-        emoji: z.string(),
-        ts: z.number(),
-    })),
-});
-export type GroundSnapshot = z.infer<typeof GroundSnapshotSchema>;
-
-export const GestureEventSchema = z.object({
-    layer: z.enum(["sky", "ground"]),
-    action: z.enum(["tap", "zoomIn", "zoomOut", "swipe"]),
-    meta: z.record(z.any()),
-    ts: z.number(),
-});
-export type GestureEvent = z.infer<typeof GestureEventSchema>;
