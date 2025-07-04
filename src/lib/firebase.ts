@@ -26,15 +26,30 @@ const db: Firestore = initializeFirestore(app, {
 
 const auth: Auth = getAuth(app);
 
-// In a development environment, connect to the emulators unconditionally.
+// In this development environment, we connect to the emulators unconditionally.
 // This is the most reliable way to ensure the app connects to the local
 // emulators instead of the production backend.
-console.log("Connecting to Firebase emulators using 127.0.0.1...");
-// Using the IP address instead of 'localhost' to avoid potential name resolution issues in some containerized environments.
-connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-connectFirestoreEmulator(db, '127.0.0.1', 8080);
-console.log("Firebase emulators connection configured.");
+try {
+    // @ts-ignore - emulatorConfig is a private property but a reliable way to check for emulator connection.
+    if (!auth.emulatorConfig) {
+        console.log("Attempting to connect to Firebase Auth emulator at http://localhost:9099...");
+        connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+        console.log("Auth emulator connection configured.");
+    }
+} catch (e) {
+    console.error("Error connecting to Auth emulator:", e);
+}
 
+try {
+    // @ts-ignore - _isInitialized is a private property but a reliable way to check for emulator connection.
+    if (!db.emulator) {
+        console.log("Attempting to connect to Firestore emulator at localhost:8080...");
+        connectFirestoreEmulator(db, 'localhost', 8080);
+        console.log("Firestore emulator connection configured.");
+    }
+} catch (e) {
+    console.error("Error connecting to Firestore emulator:", e);
+}
 
 // Initialize Analytics
 const analytics: Promise<Analytics | null> = isSupported().then(yes => (yes ? getAnalytics(app) : null));
