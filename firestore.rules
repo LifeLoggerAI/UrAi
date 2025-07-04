@@ -4,81 +4,80 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isAuthenticated() {
-      return request.auth != null;
+    // Default-deny all access
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-    
-    function isAdmin() {
-      return isAuthenticated() && request.auth.token.admin == true;
-    }
-
+    // Allow users to read/write their own documents
     match /users/{userId} {
-      allow read, update, delete: if isOwner(userId);
-      allow create: if isAuthenticated();
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    
+    // Most collections are user-specific and can be covered by a single rule
+    match /voiceEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /dreamEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /innerTexts/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /cameraCaptures/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /symbolicImageInsights/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /people/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /goals/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /tasks/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /calendarEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /habitWatch/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    match /onboardIntake/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
+    
+    // User subcollections
+    match /users/{userId}/auraStates/{docId} { allow read: if request.auth.uid == userId; }
+    match /users/{userId}/memoryBlooms/{docId} { allow read: if request.auth.uid == userId; }
+    match /users/{userId}/emotionCycles/{docId} { allow read: if request.auth.uid == userId; }
+
+    // Permissions can be read and written by the user
     match /permissions/{userId} {
-      allow read, write: if isOwner(userId);
+        allow read, write: if request.auth.uid == userId;
     }
     
-    match /{collection}/{userId}/{docId} 
-      where collection in [
-        'voiceEvents', 'audioEvents', 'dreams', 'people', 'faceSnapshots', 
-        'innerTexts', 'onboardIntake', 'goals', 'tasks', 'calendarEvents', 
-        'habitWatch', 'emotionEvents', 'socialOverlays', 'recoveryBlooms', 
-        'ritualCards', 'voiceClips', 'voiceTranscripts', 'transcriptTags', 
-        'ambientTone', 'narratorInsights', 'socialContacts', 'socialEvents', 
-        'timelineEvents', 'shadowEpisodes', 'forecastProfiles', 'archetypeStates', 
-        'legacyThreads', 'presentMetrics', 'torsoMetrics', 'habitEvents', 
-        'legsMetrics', 'movementPaths', 'avoidanceEvents', 'armMetrics', 
-        'relationalGestures'
-      ] {
-      allow read, write: if isOwner(userId);
-    }
-    
-    match /users/{userId}/{subcollection}/{docId}
-      where subcollection in [
-        'auraStates', 'moodLogs', 'emotionCycles', 'memoryBlooms'
-      ] {
-       allow read, write: if isOwner(userId);
-    }
-
-    // === Data Marketplace & Admin Rules ===
-
-    match /partnerAuth/{partnerId} {
-      allow read, write: if false; // Backend access only
-    }
-    
-    match /dataMarketplace/packages/{packageId} {
-        allow read: if isAuthenticated();
-        allow write: if isAdmin();
-    }
-
-    match /darRequests/{requestId} {
-      allow read, write: if isAdmin();
-    }
-    
-    match /exportSummaries/{exportId} {
-        allow read: if isAdmin() || (isAuthenticated() && request.auth.token.partnerId != null && resource.data.partnerId == request.auth.token.partnerId);
-        allow write: if isAdmin();
-    }
-    
-    match /monetizationLog/{userId}/{entryId} {
-        allow read: if isOwner(userId);
-        allow write: if false; // Backend access only
-    }
-    
-    // === System-level Collections (backend access only) ===
-    
-    match /consentAudit/{auditId} {
+    // Audit logs are write-only for functions, no client access
+    match /consentAudit/{docId} {
         allow read, write: if false;
     }
     
-    match /mail/{mailId} {
-        allow read, write: if false;
+    // Notifications queue is write-only for clients
+    match /messages/queue/{messageId} {
+        allow create: if request.auth != null;
+        allow read, update, delete: if false;
+    }
+
+    // Publicly readable but only writable by the owner
+    match /scrollStories/{docId} {
+      allow read: if resource.data.public == true || request.auth.uid == resource.data.userId;
+      allow write: if request.auth.uid == resource.data.userId;
+    }
+
+    match /rituals/{docId} {
+      allow read: if resource.data.public == true || request.auth.uid == resource.data.userId;
+      allow write: if request.auth.uid == resource.data.userId;
+    }
+
+    // partnerAuth — read by Cloud Functions only
+    match /partnerAuth/{pid} { allow read,write: if false; }
+
+    // DAR requests — admin only
+    match /darRequests/{rid} {
+      allow read,write: if request.auth.token.admin == true;
+    }
+
+    // exportSummaries — admin + specific partner
+    match /exportSummaries/{eid} {
+      allow read: if request.auth.token.admin == true ||
+                  resource.data.partnerId == request.auth.token.partnerId;
+      allow write: if request.auth.token.admin == true;
+    }
+
+    // monetizationLog — user only
+    match /monetizationLog/{uid}/{doc} {
+      allow read: if request.auth.uid == uid;
+      allow write: if false;
     }
   }
 }

@@ -89,7 +89,7 @@ export function HomeView() {
             }));
             
             // Dreams
-            const qDreams = query(collection(db, "dreams"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
+            const qDreams = query(collection(db, "dreamEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
             unsubscribes.push(onSnapshot(qDreams, snapshot => {
                 setDreams(snapshot.docs.map(d => d.data() as Dream));
                 checkLoadingDone();
