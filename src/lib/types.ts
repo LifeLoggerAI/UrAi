@@ -211,6 +211,8 @@ export const NarratorInsightSchema = z.object({
     suggestedRitualId: z.string().optional(),
     consumed: z.boolean(),
     createdAt: z.number(),
+    ttsUrl: z.string().url().optional(),
+    ttsVoicePreset: z.string().optional(),
 });
 export type NarratorInsight = z.infer<typeof NarratorInsightSchema>;
 
@@ -950,3 +952,41 @@ export const DailyDigestQueueSchema = z.object({
     narratorReflection: z.string(),
 });
 export type DailyDigestQueue = z.infer<typeof DailyDigestQueueSchema>;
+
+// Speech, TTS, and AI Pipeline Schemas
+export const VoiceClipSchema = z.object({
+    clipUrl: z.string().url(),
+    type: z.enum(["ambient", "prompt", "ritual", "reply"]),
+    triggerContext: z.string(),
+    recordedAt: z.number(),
+    processed: z.boolean().default(false),
+});
+export type VoiceClip = z.infer<typeof VoiceClipSchema>;
+
+export const VoiceTranscriptSchema = z.object({
+    text: z.string(),
+    language: z.string(),
+    words: z.number(),
+    whisperModel: z.string(),
+    finishedAt: z.number(),
+});
+export type VoiceTranscript = z.infer<typeof VoiceTranscriptSchema>;
+
+export const TranscriptTagsSchema = z.object({
+    goal: z.string().nullable(),
+    task: z.string().nullable(),
+    reminderDate: z.number().nullable(),
+    emotionTag: z.string(),
+    peopleMentioned: z.array(z.string()),
+    sentimentScore: z.number(),
+});
+export type TranscriptTags = z.infer<typeof TranscriptTagsSchema>;
+
+export const AmbientToneSchema = z.object({
+    valence: z.number(),
+    arousal: z.number(),
+    clipId: z.string(),
+    timestamp: z.number(),
+    locationBucket: z.string(),
+});
+export type AmbientTone = z.infer<typeof AmbientToneSchema>;

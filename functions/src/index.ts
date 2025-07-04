@@ -1,4 +1,5 @@
 
+
 /**
  * Import function triggers from their respective submodules:
  *
@@ -23,10 +24,33 @@ export * from "./emotion-engine";
 // Export torso engine triggers
 export * from "./torso-engine";
 
+// Export legs engine triggers
+export * from "./legs-engine";
+
+// Export arms engine triggers
+export * from "./arms-engine";
+
+// Export orb engine triggers
+export * from "./orb-engine";
+
+// Export social engine triggers
+export * from "./social-engine";
+
+// Export timeline engine triggers
+export * from "./timeline-engine";
+
+// Export data privacy triggers
+export * from "./data-privacy";
+
 // Export scheduled functions
 export * from "./scheduled";
 
 // Export notification queue
 export * from "./notifications";
 
+// Export email engine
+export * from "./email-engine";
+
+// Export speech and AI pipeline engine
+export * from "./speech-engine";
     
