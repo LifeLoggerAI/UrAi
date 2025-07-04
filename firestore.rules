@@ -3,81 +3,10 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Default-deny all access
+    // Allow read and write access only to authenticated users.
+    // This is a common starting point for development.
     match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // Allow users to read/write their own documents
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Most collections are user-specific and can be covered by a single rule
-    match /voiceEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /dreamEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /innerTexts/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /cameraCaptures/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /symbolicImageInsights/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /people/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /goals/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /tasks/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /calendarEvents/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /habitWatch/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    match /onboardIntake/{docId} { allow read, write: if request.auth.uid == resource.data.uid; }
-    
-    // User subcollections
-    match /users/{userId}/auraStates/{docId} { allow read: if request.auth.uid == userId; }
-    match /users/{userId}/memoryBlooms/{docId} { allow read: if request.auth.uid == userId; }
-    match /users/{userId}/emotionCycles/{docId} { allow read: if request.auth.uid == userId; }
-
-    // Permissions can be read and written by the user
-    match /permissions/{userId} {
-        allow read, write: if request.auth.uid == userId;
-    }
-    
-    // Audit logs are write-only for functions, no client access
-    match /consentAudit/{docId} {
-        allow read, write: if false;
-    }
-    
-    // Notifications queue is write-only for clients
-    match /messages/queue/{messageId} {
-        allow create: if request.auth != null;
-        allow read, update, delete: if false;
-    }
-
-    // Publicly readable but only writable by the owner
-    match /scrollStories/{docId} {
-      allow read: if resource.data.public == true || request.auth.uid == resource.data.userId;
-      allow write: if request.auth.uid == resource.data.userId;
-    }
-
-    match /rituals/{docId} {
-      allow read: if resource.data.public == true || request.auth.uid == resource.data.userId;
-      allow write: if request.auth.uid == resource.data.userId;
-    }
-
-    // partnerAuth — read by Cloud Functions only
-    match /partnerAuth/{pid} { allow read,write: if false; }
-
-    // DAR requests — admin only
-    match /darRequests/{rid} {
-      allow read,write: if request.auth.token.admin == true;
-    }
-
-    // exportSummaries — admin + specific partner
-    match /exportSummaries/{eid} {
-      allow read: if request.auth.token.admin == true ||
-                  resource.data.partnerId == request.auth.token.partnerId;
-      allow write: if request.auth.token.admin == true;
-    }
-
-    // monetizationLog — user only
-    match /monetizationLog/{uid}/{doc} {
-      allow read: if request.auth.uid == uid;
-      allow write: if false;
+      allow read, write: if request.auth != null;
     }
   }
 }
