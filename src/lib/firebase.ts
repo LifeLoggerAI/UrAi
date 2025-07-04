@@ -26,13 +26,24 @@ const db: Firestore = initializeFirestore(app, {
 
 const auth: Auth = getAuth(app);
 
-// In this development environment, we connect to the emulators unconditionally.
-// This is the most reliable way to ensure the app connects to the local
-// emulators instead of the production backend.
-console.log("Connecting to Firebase Emulators...");
-connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
-connectFirestoreEmulator(db, 'localhost', 8080);
-console.log("Firebase Emulators connected.");
+// --- START EMULATOR CONNECTION ---
+// This block ensures the app connects to the local Firebase emulators.
+// It includes checks to prevent re-connecting during hot reloads.
+// We use 127.0.0.1 to avoid any potential DNS/hostname resolution issues
+// within the development environment's sandboxed network.
+if (typeof window !== 'undefined' && !(window as any)._firebaseEmulatorsConnected) {
+    console.log("Attempting to connect to Firebase Emulators...");
+    try {
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        console.log("Successfully connected to Firebase Emulators.");
+        // Set a flag to indicate that the emulators are connected.
+        (window as any)._firebaseEmulatorsConnected = true;
+    } catch (error) {
+        console.error("CRITICAL: Failed to connect to Firebase Emulators.", error);
+    }
+}
+// --- END EMULATOR CONNECTION ---
 
 
 // Initialize Analytics
