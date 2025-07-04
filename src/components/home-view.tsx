@@ -1,9 +1,9 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import type { DashboardData, Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection } from '@/lib/types';
-import { getDashboardDataAction, suggestRitualAction } from '@/app/actions';
+import { useEffect, useState }from 'react';
+import type { Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection } from '@/lib/types';
+import { suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
 import { BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand, Cloud, Spade } from 'lucide-react';
@@ -18,13 +18,7 @@ import { useRouter } from 'next/navigation';
 import { SettingsForm } from './settings-form';
 import { CompanionChatView } from './companion-chat-view';
 import { PersonCard } from './person-card';
-import { ScrollArea } from './ui/scroll-area';
-import { SummarizationTool } from './summarization-tool';
-import { PeopleList } from './people-list';
 import { CognitiveZoneView } from './cognitive-zone-view';
-import { Loader2 } from 'lucide-react';
-import { NoteList } from './note-list';
-import { NoteForm } from './note-form';
 import { TorsoView } from './torso-view';
 import { LegsView } from './legs-view';
 import { ArmsView } from './arms-view';
@@ -37,78 +31,43 @@ export function HomeView() {
     const router = useRouter();
     const { toast } = useToast();
     
-    // Data states
-    const [people, setPeople] = useState<Person[]>([]);
-    const [auraState, setAuraState] = useState<AuraState | null>(null);
-    const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[]>([]);
-    const [dreams, setDreams] = useState<Dream[]>([]);
-    const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
-    const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[]>([]);
+    // Data states - undefined means loading, null means no data, array means data is present
+    const [people, setPeople] = useState<Person[] | undefined>(undefined);
+    const [auraState, setAuraState] = useState<AuraState | null | undefined>(undefined);
+    const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[] | undefined>(undefined);
+    const [dreams, setDreams] = useState<Dream[] | undefined>(undefined);
+    const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[] | undefined>(undefined);
+    const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[] | undefined>(undefined);
 
-    const [isLoading, setIsLoading] = useState(true);
     const [isRitualLoading, setIsRitualLoading] = useState(false);
     
     // UI states
     const [activePanel, setActivePanel] = useState<ActivePanel>(null);
     const [panelContent, setPanelContent] = useState<{ title: string; description: string; content?: React.ReactNode } | null>(null);
 
-    const overallMood = voiceEvents[0]?.sentimentScore ?? dreams[0]?.sentimentScore ?? 0;
+    const overallMood = voiceEvents?.[0]?.sentimentScore ?? dreams?.[0]?.sentimentScore ?? 0;
 
     useEffect(() => {
         if (user) {
             const unsubscribes: (() => void)[] = [];
-            let loadedCount = 0;
-            const totalToLoad = 6;
-
-            const checkLoadingDone = () => {
-                loadedCount++;
-                if (loadedCount >= totalToLoad) {
-                    setIsLoading(false);
-                }
-            };
             
-            // People
             const qPeople = query(collection(db, "people"), where("uid", "==", user.uid), orderBy("lastSeen", "desc"), limit(5));
-            unsubscribes.push(onSnapshot(qPeople, (snapshot) => {
-                setPeople(snapshot.docs.map(doc => doc.data() as Person));
-                checkLoadingDone();
-            }));
+            unsubscribes.push(onSnapshot(qPeople, (snapshot) => setPeople(snapshot.docs.map(doc => doc.data() as Person))));
 
-            // Aura
             const auraRef = doc(db, 'users', user.uid, 'auraStates', 'current');
-            unsubscribes.push(onSnapshot(auraRef, (doc) => {
-                setAuraState(doc.data() as AuraState);
-                checkLoadingDone();
-            }));
+            unsubscribes.push(onSnapshot(auraRef, (doc) => setAuraState(doc.exists() ? doc.data() as AuraState : null)));
             
-            // Blooms
             const qBlooms = query(collection(db, 'users', user.uid, 'memoryBlooms'), orderBy("triggeredAt", "desc"), limit(10));
-            unsubscribes.push(onSnapshot(qBlooms, (snapshot) => {
-                setMemoryBlooms(snapshot.docs.map(doc => doc.data() as MemoryBloom).sort((a,b) => a.triggeredAt - b.triggeredAt));
-                checkLoadingDone();
-            }));
+            unsubscribes.push(onSnapshot(qBlooms, (snapshot) => setMemoryBlooms(snapshot.docs.map(doc => doc.data() as MemoryBloom).sort((a,b) => a.triggeredAt - b.triggeredAt))));
             
-            // Dreams
             const qDreams = query(collection(db, "dreamEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
-            unsubscribes.push(onSnapshot(qDreams, snapshot => {
-                setDreams(snapshot.docs.map(d => d.data() as Dream));
-                checkLoadingDone();
-            }));
+            unsubscribes.push(onSnapshot(qDreams, snapshot => setDreams(snapshot.docs.map(d => d.data() as Dream))));
             
-            // Voice Events
             const qVoice = query(collection(db, "voiceEvents"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
-            unsubscribes.push(onSnapshot(qVoice, snapshot => {
-                setVoiceEvents(snapshot.docs.map(d => d.data() as VoiceEvent));
-                checkLoadingDone();
-            }));
+            unsubscribes.push(onSnapshot(qVoice, snapshot => setVoiceEvents(snapshot.docs.map(d => d.data() as VoiceEvent))));
 
-            // Inner Texts
             const qInner = query(collection(db, "innerTexts"), where("uid", "==", user.uid), orderBy("createdAt", "desc"), limit(10));
-            unsubscribes.push(onSnapshot(qInner, snapshot => {
-                setInnerTexts(snapshot.docs.map(d => d.data() as InnerVoiceReflection));
-                checkLoadingDone();
-            }));
-
+            unsubscribes.push(onSnapshot(qInner, snapshot => setInnerTexts(snapshot.docs.map(d => d.data() as InnerVoiceReflection))));
 
             return () => unsubscribes.forEach(unsub => unsub());
         }
@@ -142,7 +101,7 @@ export function HomeView() {
                 setPanelContent({ 
                     title: 'Cognitive Zone', 
                     description: 'A symbolic control room for introspection and analysis.',
-                    content: <CognitiveZoneView dreams={dreams} innerTexts={innerTexts} />
+                    content: <CognitiveZoneView dreams={dreams || []} innerTexts={innerTexts || []} />
                 });
                 setActivePanel('head');
                 return;
@@ -253,15 +212,6 @@ export function HomeView() {
             opacity: 0.15
         };
     };
-    
-    if (isLoading) {
-        return (
-            <div className="w-full h-screen flex flex-col items-center justify-center p-4">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Awakening the dreamscape...</p>
-            </div>
-        );
-    }
 
     return (
         <>
@@ -301,13 +251,22 @@ export function HomeView() {
                 </div>
 
                 <div className="relative z-10 w-full max-w-4xl animate-fadeIn">
-                    <h1 className="text-3xl font-bold font-headline text-foreground">Today's Emotional Outlook</h1>
-                    <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
+                    {voiceEvents === undefined || dreams === undefined ? (
+                        <div className="space-y-3">
+                           <Skeleton className="h-8 w-3/4 mx-auto" />
+                           <Skeleton className="h-4 w-1/2 mx-auto" />
+                        </div>
+                    ) : (
+                       <>
+                         <h1 className="text-3xl font-bold font-headline text-foreground">Today's Emotional Outlook</h1>
+                         <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
+                       </>
+                    )}
                 </div>
 
                 <TooltipProvider>
                 <div className="absolute inset-x-0 top-10 flex justify-center gap-8 opacity-50 z-10">
-                    {people.slice(0, 5).map((person, i) => (
+                    {people && people.slice(0, 5).map((person, i) => (
                         <Tooltip key={person.id}>
                             <TooltipTrigger asChild>
                                 <button onClick={() => handlePersonClick(person)} className="flex flex-col items-center animate-fadeIn cursor-pointer" style={{ animationDelay: `${i * 100}ms`}}>
@@ -322,13 +281,19 @@ export function HomeView() {
                 </TooltipProvider>
 
                 <div className="relative z-10 w-full max-w-lg mt-4">
-                     <InteractiveAvatar 
-                        mood={overallMood} 
-                        onZoneClick={handleZoneClick} 
-                        isLoading={isRitualLoading}
-                        overlayColor={auraState?.overlayColor}
-                        overlayStyle={auraState?.overlayStyle}
-                    />
+                    {auraState === undefined ? (
+                        <div className="relative flex items-center justify-center w-full max-w-xs mx-auto aspect-[3/5]">
+                            <Skeleton className="w-full h-full rounded-lg" />
+                        </div>
+                    ) : (
+                         <InteractiveAvatar 
+                            mood={overallMood} 
+                            onZoneClick={handleZoneClick} 
+                            isLoading={isRitualLoading}
+                            overlayColor={auraState?.overlayColor}
+                            overlayStyle={auraState?.overlayStyle}
+                        />
+                    )}
                 </div>
                  <div 
                     onClick={handleCompanionOrbClick} 
@@ -343,7 +308,7 @@ export function HomeView() {
 
                 <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
                     <TooltipProvider>
-                        {memoryBlooms.map((bloom, i) => (
+                        {memoryBlooms && memoryBlooms.map((bloom, i) => (
                             <Tooltip key={bloom.bloomId}>
                                 <TooltipTrigger asChild>
                                     <button onClick={() => handleBloomClick(bloom)} className="animate-fadeIn" style={{ animationDelay: `${500 + i * 150}ms`}}>
