@@ -2,12 +2,15 @@
 'use client'
 
 import React, { useState } from 'react';
-import { addInnerTextAction } from '@/app/actions';
+import { analyzeInnerTextAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PenLine } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import type { InnerVoiceReflection } from '@/lib/types';
 
 export function TextEntryForm() {
     const { user } = useAuth();
@@ -28,16 +31,30 @@ export function TextEntryForm() {
 
         setIsSubmitting(true);
         try {
-            const result = await addInnerTextAction({ userId: user.uid, text });
-            if (result.success) {
-                toast({
-                    title: "Reflection Logged",
-                    description: "Your entry has been saved.",
-                });
-                setText('');
-            } else {
-                throw new Error(result.error || "An unknown error occurred.");
+            const result = await analyzeInnerTextAction({ text });
+            if (result.error || !result.analysis) {
+                throw new Error(result.error || "AI analysis of the text failed.");
             }
+            
+            const reflectionId = crypto.randomUUID();
+            const timestamp = Date.now();
+
+            const newReflection: InnerVoiceReflection = {
+                id: reflectionId,
+                uid: user.uid,
+                text,
+                createdAt: timestamp,
+                sentimentScore: result.analysis.sentimentScore,
+            };
+
+            await setDoc(doc(db, "innerTexts", newReflection.id), newReflection);
+            
+            toast({
+                title: "Reflection Logged",
+                description: "Your entry has been saved.",
+            });
+            setText('');
+
         } catch (error) {
             toast({
                 variant: "destructive",

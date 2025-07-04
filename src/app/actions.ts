@@ -1,7 +1,7 @@
 
 'use server';
 
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput, AnalyzeDreamOutput, AnalyzeTextSentimentOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -106,102 +106,20 @@ export async function summarizeWeekAction(userId: string): Promise<{ summary: st
     }
 }
 
-const addDreamInputSchema = z.object({
-    text: z.string().min(1, "Dream entry cannot be empty."),
-    userId: z.string().min(1, "User ID is required."),
-});
-
-type AddDreamInput = z.infer<typeof addDreamInputSchema>;
-
-type AddDreamReturn = {
-    success: boolean;
-    error: string | null;
-};
-
-export async function addDreamAction(input: AddDreamInput): Promise<AddDreamReturn> {
-    const validatedFields = addDreamInputSchema.safeParse(input);
-
+export async function analyzeDreamAction(input: { text: string }): Promise<{ analysis: AnalyzeDreamOutput | null; error: string | null }> {
+    const validatedFields = z.object({ text: z.string().min(1) }).safeParse(input);
     if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
+        return { analysis: null, error: "Invalid input." };
     }
-
-    const { userId, text } = validatedFields.data;
-
     try {
-        const analysis = await analyzeDream({ text });
+        const analysis = await analyzeDream({ text: validatedFields.data.text });
         if (!analysis) {
-            return { success: false, error: "AI analysis of the dream failed." };
+            return { analysis: null, error: "AI analysis of the dream failed." };
         }
-
-        const dreamId = crypto.randomUUID();
-        const timestamp = Date.now();
-
-        const newDream: Dream = {
-            id: dreamId,
-            uid: userId,
-            text,
-            createdAt: timestamp,
-            emotions: analysis.emotions || [],
-            themes: analysis.themes || [],
-            symbols: analysis.symbols || [],
-            sentimentScore: analysis.sentimentScore,
-        };
-
-        await setDoc(doc(db, "dreamEvents", newDream.id), newDream);
-
-        return { success: true, error: null };
+        return { analysis, error: null };
     } catch (e) {
-        console.error("Failed to add dream:", e);
-        return { success: false, error: "Failed to save dream. Please try again." };
-    }
-}
-
-
-const updateUserSettingsActionInputSchema = z.object({
-    userId: z.string().min(1, "User ID is required."),
-    data: UpdateUserSettingsSchema,
-});
-
-type UpdateUserSettingsReturn = {
-    success: boolean;
-    error: string | null;
-};
-
-export async function updateUserSettingsAction(input: z.infer<typeof updateUserSettingsActionInputSchema>): Promise<UpdateUserSettingsReturn> {
-    const validatedFields = updateUserSettingsActionInputSchema.safeParse(input);
-
-    if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
-    }
-
-    const { userId, data } = validatedFields.data;
-    
-    try {
-        const userRef = doc(db, "users", userId);
-        
-        const updatePayload: Record<string, any> = {
-            displayName: data.displayName,
-            'settings.moodTrackingEnabled': data.moodTrackingEnabled,
-            'settings.passiveAudioEnabled': data.passiveAudioEnabled,
-            'settings.faceEmotionEnabled': data.faceEmotionEnabled,
-            'settings.dataExportEnabled': data.dataExportEnabled,
-            'settings.narratorVolume': data.narratorVolume,
-            'settings.ttsVoice': data.ttsVoice,
-            'settings.gpsAllowed': data.gpsAllowed,
-            'settings.dataConsent': data.dataConsent,
-            'settings.allowVoiceRetention': data.allowVoiceRetention,
-            'settings.receiveWeeklyEmail': data.receiveWeeklyEmail,
-            'settings.receiveMilestones': data.receiveMilestones,
-            'settings.emailTone': data.emailTone,
-        };
-
-        await updateDoc(userRef, updatePayload);
-
-        return { success: true, error: null };
-
-    } catch (e) {
-        console.error("Failed to update user settings:", e);
-        return { success: false, error: "Failed to update settings. Please try again." };
+        console.error("Failed to analyze dream:", e);
+        return { analysis: null, error: "Failed to analyze dream. Please try again." };
     }
 }
 
@@ -390,45 +308,20 @@ export async function addCameraCaptureAction(input: AddCameraCaptureInput): Prom
 }
 
 
-const addInnerTextSchema = z.object({
-    text: z.string().min(1, "Text entry cannot be empty."),
-    userId: z.string().min(1, "User ID is required."),
-});
-
-type AddInnerTextInput = z.infer<typeof addInnerTextSchema>;
-
-export async function addInnerTextAction(input: AddInnerTextInput): Promise<{ success: boolean, error: string | null }> {
-    const validatedFields = addInnerTextSchema.safeParse(input);
-
+export async function analyzeInnerTextAction(input: { text: string }): Promise<{ analysis: AnalyzeTextSentimentOutput | null; error: string | null }> {
+    const validatedFields = z.object({ text: z.string().min(1) }).safeParse(input);
     if (!validatedFields.success) {
-        return { success: false, error: "Invalid input." };
+        return { analysis: null, error: "Invalid input." };
     }
-
-    const { userId, text } = validatedFields.data;
-
     try {
-        const analysis = await analyzeTextSentiment({ text });
+        const analysis = await analyzeTextSentiment({ text: validatedFields.data.text });
         if (!analysis) {
-            return { success: false, error: "AI analysis of the text failed." };
+            return { analysis: null, error: "AI analysis of the text failed." };
         }
-
-        const reflectionId = crypto.randomUUID();
-        const timestamp = Date.now();
-
-        const newReflection: InnerVoiceReflection = {
-            id: reflectionId,
-            uid: userId,
-            text,
-            createdAt: timestamp,
-            sentimentScore: analysis.sentimentScore,
-        };
-
-        await setDoc(doc(db, "innerTexts", newReflection.id), newReflection);
-
-        return { success: true, error: null };
-    } catch (e) {
-        console.error("Failed to add inner text reflection:", e);
-        return { success: false, error: "Failed to save reflection. Please try again." };
+        return { analysis, error: null };
+    } catch(e) {
+        console.error("Failed to analyze inner text:", e);
+        return { analysis: null, error: "Failed to save reflection. Please try again." };
     }
 }
 

@@ -4,13 +4,12 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import type { UpdateUserSettings } from '@/lib/types';
 import { UpdateUserSettingsSchema } from '@/lib/types';
 import { useAuth } from './auth-provider';
 import { db, auth } from '@/lib/firebase';
-import { updateUserSettingsAction } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -97,15 +96,28 @@ export function SettingsForm() {
               data.dataConsent.optedOutAt = null;
           }
       }
-
-      const serverUpdatePromise = updateUserSettingsAction({ userId: user.uid, data });
-      const authUpdatePromise = updateProfile(user, { displayName: data.displayName });
       
-      const [serverResult] = await Promise.all([serverUpdatePromise, authUpdatePromise]);
+      const userRef = doc(db, "users", user.uid);
+      const updatePayload: Record<string, any> = {
+          displayName: data.displayName,
+          'settings.moodTrackingEnabled': data.moodTrackingEnabled,
+          'settings.passiveAudioEnabled': data.passiveAudioEnabled,
+          'settings.faceEmotionEnabled': data.faceEmotionEnabled,
+          'settings.dataExportEnabled': data.dataExportEnabled,
+          'settings.narratorVolume': data.narratorVolume,
+          'settings.ttsVoice': data.ttsVoice,
+          'settings.gpsAllowed': data.gpsAllowed,
+          'settings.dataConsent': data.dataConsent,
+          'settings.allowVoiceRetention': data.allowVoiceRetention,
+          'settings.receiveWeeklyEmail': data.receiveWeeklyEmail,
+          'settings.receiveMilestones': data.receiveMilestones,
+          'settings.emailTone': data.emailTone,
+      };
 
-      if (!serverResult.success) {
-        throw new Error(serverResult.error || 'Server update failed');
-      }
+      const dbUpdatePromise = updateDoc(userRef, updatePayload);
+      const authUpdatePromise = updateProfile(auth.currentUser!, { displayName: data.displayName });
+      
+      await Promise.all([dbUpdatePromise, authUpdatePromise]);
 
       toast({
         title: 'Settings Updated',

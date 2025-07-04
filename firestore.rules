@@ -3,41 +3,37 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Helper function to check if the requesting user is the owner of the data.
+
     function isOwner(uid) {
-      return request.auth.uid == uid;
-    }
-    
-    // Users can read/update their own profile.
-    // Anyone authenticated can create a user profile (e.g., during signup).
-    match /users/{uid} {
-      allow read, update: if isOwner(uid);
-      allow create: if request.auth != null;
-    }
-    
-    // Users can create and manage their own permissions document.
-    // The {uid} in the path must match the authenticated user's uid.
-    match /permissions/{uid} {
-      allow read, write: if isOwner(uid);
+      return request.auth != null && request.auth.uid == uid;
     }
 
-    // All other top-level collections owned by a user (e.g., voiceEvents, dreams, goals).
-    // This rule requires that any document in these collections has a 'uid' field
-    // that matches the authenticated user's uid.
-    match /{collection}/{docId} {
-      // Allow read, update, and delete if the user is the owner of the existing document.
-      allow read, update, delete: if request.auth.uid == resource.data.uid;
-      
-      // Allow create if the user is the owner of the NEW document being created.
-      // This uses request.resource.data, which refers to the document as it would be after the write.
-      allow create: if request.auth.uid == request.resource.data.uid;
+    // Secure user profiles specifically.
+    // The document ID is the user's UID.
+    match /users/{userId} {
+      allow read, create: if isOwner(userId);
+      // Only allow specific, safe fields to be updated by the user.
+      allow update: if isOwner(userId) && request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['displayName', 'settings', 'onboardingComplete']);
     }
-    
-    // Rules for user-specific subcollections (e.g., aura states, memory blooms).
-    // This allows access to any subcollection under a user's own document.
-    match /users/{uid}/{subcollection}/{docId} {
-      allow read, write: if isOwner(uid);
+
+    // Secure permissions collection, where the doc ID is the UID.
+    match /permissions/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Secure all user-specific subcollections.
+    match /users/{userId}/{subcollection}/{docId} {
+        allow read, write: if isOwner(userId);
+    }
+
+    // Generic rule for user-owned top-level collections.
+    // This rule assumes that every document in these collections has a 'uid' field
+    // that stores the ID of the user who owns it.
+    match /{collection}/{docId}
+      where collection in ['dreamEvents', 'innerTexts', 'voiceEvents', 'audioEvents', 'people', 'cameraCaptures', 'symbolicImageInsights', 'onboardIntake', 'goals', 'tasks', 'calendarEvents', 'habitWatch'] {
+        allow create: if isOwner(request.resource.data.uid);
+        allow read, update, delete: if isOwner(resource.data.uid);
     }
   }
 }

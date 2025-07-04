@@ -2,12 +2,15 @@
 'use client'
 
 import React, { useState } from 'react';
-import { addDreamAction } from '@/app/actions';
+import { analyzeDreamAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PenLine } from 'lucide-react';
+import { db } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import type { Dream } from '@/lib/types';
 
 export function DreamForm() {
     const { user } = useAuth();
@@ -28,16 +31,32 @@ export function DreamForm() {
 
         setIsSubmitting(true);
         try {
-            const result = await addDreamAction({ userId: user.uid, text });
-            if (result.success) {
-                toast({
-                    title: "Dream Logged",
-                    description: "Your dream has been saved and analyzed.",
-                });
-                setText('');
-            } else {
-                throw new Error(result.error || "An unknown error occurred.");
+            const result = await analyzeDreamAction({ text });
+            if (result.error || !result.analysis) {
+                throw new Error(result.error || "AI analysis of the dream failed.");
             }
+
+            const dreamId = crypto.randomUUID();
+            const timestamp = Date.now();
+            const newDream: Dream = {
+                id: dreamId,
+                uid: user.uid,
+                text,
+                createdAt: timestamp,
+                emotions: result.analysis.emotions || [],
+                themes: result.analysis.themes || [],
+                symbols: result.analysis.symbols || [],
+                sentimentScore: result.analysis.sentimentScore,
+            };
+    
+            await setDoc(doc(db, "dreamEvents", newDream.id), newDream);
+
+            toast({
+                title: "Dream Logged",
+                description: "Your dream has been saved and analyzed.",
+            });
+            setText('');
+            
         } catch (error) {
             toast({
                 variant: "destructive",
