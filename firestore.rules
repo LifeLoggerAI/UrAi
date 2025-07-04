@@ -3,24 +3,48 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+  
+    // Function to check if the user is authenticated and is the owner of a document.
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
 
-    // Users can read and write their own document in the 'users' collection.
-    // This is the main rule for profile settings and permissions.
+    // Users can read and write to their own user document.
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isOwner(userId);
     }
 
-    // This rule allows a user to create any document in any collection
-    // as long as the document's `uid` field matches their own user ID.
-    match /{collection}/{docId} {
-        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+    // The following collections store data owned by a user.
+    // A user can create, read, update, and delete documents where their UID matches.
+    match /{collection}/{docId} 
+      where collection in [
+        'audioEvents', 
+        'voiceEvents', 
+        'dreamEvents', 
+        'people',
+        'cameraCaptures',
+        'symbolicImageInsights',
+        'innerTexts',
+        'onboardIntake',
+        'goals',
+        'tasks',
+        'calendarEvents',
+        'habitWatch'
+        ] {
+      allow read, delete: if isOwner(resource.data.uid);
+      allow create: if isOwner(request.resource.data.uid);
+      allow update: if isOwner(resource.data.uid) && isOwner(request.resource.data.uid);
     }
-
-    // This rule allows a user to read, update, and delete documents in other collections
-    // as long as the document's `uid` field matches their own user ID.
-    // This covers collections like 'voiceEvents', 'dreamEvents', etc.
-    match /{collection}/{docId} {
-      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    
+    // Rules for user subcollections
+    match /users/{userId}/{collection}/{docId}
+        where collection in [
+            'auraStates',
+            'memoryBlooms',
+            'moodLogs',
+            'emotionCycles'
+        ] {
+        allow read, write: if isOwner(userId);
     }
   }
 }
