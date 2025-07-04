@@ -8,14 +8,11 @@ import { Loader2 } from "lucide-react";
 import { HomeView } from "@/components/home-view";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import type { User as AppUser, Permissions } from "@/lib/types";
-import { savePermissionsAction } from "./actions";
-import { useToast } from "@/hooks/use-toast";
+import type { User as AppUser } from "@/lib/types";
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const { toast } = useToast();
   const [profileLoading, setProfileLoading] = useState(true);
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   
@@ -27,37 +24,9 @@ export default function HomePage() {
       return;
     }
 
-    const syncPermissions = async () => {
-        const pendingData = localStorage.getItem('pending_permissions');
-        if (!pendingData) return;
-
-        try {
-            const { userId, permissions } = JSON.parse(pendingData) as { userId: string; permissions: Permissions };
-            
-            if (userId === user.uid) {
-                console.log("Syncing pending permissions from onboarding...");
-                const result = await savePermissionsAction({ userId, permissions });
-                
-                if (result.success) {
-                    toast({ title: 'Onboarding data synced', description: 'Your permissions have been saved to the cloud.' });
-                    localStorage.removeItem('pending_permissions');
-                } else {
-                    toast({ variant: 'destructive', title: 'Background Sync Failed', description: `Could not sync permissions: ${result.error}. Will try again later.` });
-                }
-            } else {
-                localStorage.removeItem('pending_permissions');
-            }
-        } catch (error) {
-            console.error("Error syncing permissions:", error);
-            localStorage.removeItem('pending_permissions');
-        }
-    };
-
     const checkOnboardingStatus = async () => {
       setProfileLoading(true);
       try {
-        await syncPermissions(); // Attempt to sync permissions before checking status
-        
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -66,19 +35,15 @@ export default function HomePage() {
           if (userData.onboardingComplete) {
             setOnboardingComplete(true);
           } else {
-            // If onboarding isn't complete, check if permissions have at least been stored locally.
-            const hasPendingPermissions = !!localStorage.getItem('pending_permissions');
-            if(window.location.pathname.includes('/onboarding/voice') || hasPendingPermissions){
-               // User is already in the final stages, let them continue
-            } else {
-               router.push('/onboarding/permissions');
-            }
+            router.push('/onboarding/permissions');
           }
         } else {
+          // If the user doc doesn't exist, it means onboarding was never started/completed.
           router.push('/onboarding/permissions');
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
+        // Fallback to onboarding in case of error.
         router.push('/onboarding/permissions');
       } finally {
         setProfileLoading(false);
@@ -87,7 +52,7 @@ export default function HomePage() {
 
     checkOnboardingStatus();
 
-  }, [user, authLoading, router, toast]);
+  }, [user, authLoading, router]);
 
   if (authLoading || profileLoading || !onboardingComplete) {
     return (

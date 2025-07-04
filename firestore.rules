@@ -1,57 +1,26 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read, update, and create their own document.
+    // Users can read and write their own document in the 'users' collection.
+    // This is the main rule for profile settings and permissions.
     match /users/{userId} {
-      allow read, update, create: if request.auth.uid == userId;
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Rules for other collections, allowing users to create/read their own content.
-    match /voiceEvents/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
+    // This rule allows a user to create any document in any collection
+    // as long as the document's `uid` field matches their own user ID.
+    match /{collection}/{docId} {
+        allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
     }
-    match /dreamEvents/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /people/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read, update: if request.auth.uid == resource.data.uid;
-    }
-    match /cameraCaptures/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /symbolicImageInsights/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /innerTexts/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /onboardIntake/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /goals/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /tasks/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read, update: if request.auth.uid == resource.data.uid;
-    }
-    match /calendarEvents/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
-    }
-    match /habitWatch/{docId} {
-      allow create: if request.auth.uid == request.resource.data.uid;
-      allow read: if request.auth.uid == resource.data.uid;
+
+    // This rule allows a user to read, update, and delete documents in other collections
+    // as long as the document's `uid` field matches their own user ID.
+    // This covers collections like 'voiceEvents', 'dreamEvents', etc.
+    match /{collection}/{docId} {
+      allow read, update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }

@@ -15,6 +15,7 @@ import { Loader2, Mic, MapPin, Activity, Bell, ShieldQuestion, Users } from 'luc
 import type { Permissions } from '@/lib/types';
 import { analytics } from '@/lib/firebase';
 import { logEvent } from 'firebase/analytics';
+import { savePermissionsAction } from '@/app/actions';
 
 const permissionItems = [
     {
@@ -130,13 +131,17 @@ export default function PermissionsPage() {
             acceptedTermsVersion: "1.1",
         };
 
-        // Save to local storage to unblock the user immediately
         try {
-            localStorage.setItem('pending_permissions', JSON.stringify({ userId: user.uid, permissions: finalPermissionsData }));
-            toast({ title: 'Permissions Saved Locally', description: "We'll sync this in the background. Now for the final step." });
-            router.push('/onboarding/voice');
+            const result = await savePermissionsAction({ userId: user.uid, permissions: finalPermissionsData });
+            if (result.success) {
+                toast({ title: 'Permissions Saved', description: "Now for the final step." });
+                router.push('/onboarding/voice');
+            } else {
+                throw new Error(result.error || 'An unknown error occurred.');
+            }
         } catch (error) {
-            toast({ variant: 'destructive', title: 'Error', description: "Could not save permissions locally." });
+            toast({ variant: 'destructive', title: 'Error', description: (error as Error).message });
+        } finally {
             setIsSubmitting(false);
         }
     };
