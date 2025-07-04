@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -21,14 +20,14 @@ const permissionItems = [
     {
         key: 'micPermission' as const,
         icon: Mic,
-        title: 'Microphone for Passive Audio',
-        description: 'Can I quietly listen to the world around you? I’ll never record words unless you ask, only the emotional tone.',
+        title: 'Microphone (Passive Audio)',
+        description: 'Can I quietly listen to the world around you? I’ll never record words unless you ask.',
     },
     {
         key: 'gpsPermission' as const,
         icon: MapPin,
         title: 'Location (GPS)',
-        description: 'Knowing your place in space helps me find meaning in your movement and routines.',
+        description: 'Knowing your place in space helps me find meaning in movement and routines.',
     },
     {
         key: 'motionPermission' as const,
@@ -46,7 +45,7 @@ const permissionItems = [
         key: 'shareAnonymizedData' as const,
         icon: Users,
         title: 'Data Contribution (Optional)',
-        description: 'Would you like your growth to guide others? I’ll share only anonymized patterns — never your identity.',
+        description: 'Would you like to let your growth guide others? I’ll share only patterns — never identity.',
     },
 ];
 
