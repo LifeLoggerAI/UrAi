@@ -56,3 +56,8 @@ export * from "./speech-engine";
 
 // Export visuals engine
 export * from "./visuals-engine";
+
+// Export new engines
+export * from "./telemetry-engine";
+export * from "./avatar-engine";
+export * from "./dream-engine";

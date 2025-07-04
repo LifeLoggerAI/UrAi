@@ -2,7 +2,7 @@
 'use server';
 
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, FaceSnapshot, InnerVoiceReflection, SuggestRitualOutput, Permissions, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, CameraCapture, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, Permissions, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -14,7 +14,8 @@ import { generateAvatar } from "@/ai/flows/generate-avatar";
 import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema, PermissionsSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
-import { analyzeFace } from "@/ai/flows/analyze-face";
+import { analyzeCameraImage } from "@/ai/flows/analyze-camera-image";
+import { generateSymbolicInsight } from "@/ai/flows/generate-symbolic-insight";
 import { analyzeTextSentiment } from "@/ai/flows/analyze-text-sentiment";
 import { suggestRitual } from "@/ai/flows/suggest-ritual";
 import { processOnboardingTranscript } from "@/ai/flows/process-onboarding-transcript";
@@ -224,7 +225,7 @@ export async function addDreamAction(input: AddDreamInput): Promise<AddDreamRetu
             sentimentScore: analysis.sentimentScore,
         };
 
-        await setDoc(doc(db, "dreams", newDream.id), newDream);
+        await setDoc(doc(db, "dreamEvents", newDream.id), newDream);
 
         return { success: true, error: null };
     } catch (e) {
@@ -299,7 +300,7 @@ export async function getDashboardDataAction(userId: string): Promise<{ data: Da
         );
 
         const dreamsQuery = query(
-            collection(db, "dreams"),
+            collection(db, "dreamEvents"),
             where("uid", "==", userId),
             where("createdAt", ">=", thirtyDaysAgo.toMillis()),
             orderBy("createdAt", "asc")
@@ -407,46 +408,62 @@ export async function companionChatAction(input: CompanionChatInput): Promise<Co
 }
 
 
-const addFaceSnapshotInputSchema = z.object({
+const addCameraCaptureInputSchema = z.object({
     imageDataUri: z.string().min(1, "Image data cannot be empty."),
     userId: z.string().min(1, "User ID is required."),
+    triggerType: z.enum(['emotional_spike', 'ritual_end', 'gps_change', 'manual', 'forecast_trigger', 'voice_peak']),
 });
 
-type AddFaceSnapshotInput = z.infer<typeof addFaceSnapshotInputSchema>;
+type AddCameraCaptureInput = z.infer<typeof addCameraCaptureInputSchema>;
 
-export async function addFaceSnapshotAction(input: AddFaceSnapshotInput): Promise<{ success: boolean, error: string | null }> {
-    const validatedFields = addFaceSnapshotInputSchema.safeParse(input);
+export async function addCameraCaptureAction(input: AddCameraCaptureInput): Promise<{ success: boolean, error: string | null }> {
+    const validatedFields = addCameraCaptureInputSchema.safeParse(input);
 
     if (!validatedFields.success) {
         return { success: false, error: "Invalid input." };
     }
     
-    const { userId, imageDataUri } = validatedFields.data;
+    const { userId, imageDataUri, triggerType } = validatedFields.data;
 
     try {
-        const analysis = await analyzeFace({ imageDataUri });
+        const analysis: AnalyzeCameraImageOutput | null = await analyzeCameraImage({ imageDataUri });
         if (!analysis) {
-            return { success: false, error: "AI analysis of the face failed." };
+            return { success: false, error: "AI analysis of the image failed." };
         }
 
-        const snapshotId = crypto.randomUUID();
+        const batch = writeBatch(db);
+        const captureId = crypto.randomUUID();
         const timestamp = Date.now();
         
-        const newSnapshot: FaceSnapshot = {
-            id: snapshotId,
+        const newCapture: CameraCapture = {
+            id: captureId,
             uid: userId,
-            storagePath: `faces/${userId}/${snapshotId}.jpg`,
+            imageUrl: `captures/${userId}/${captureId}.jpg`, // Placeholder path
             createdAt: timestamp,
-            dominantEmotion: analysis.dominantEmotion,
-            confidence: analysis.confidence,
+            triggerType,
+            ...analysis,
         };
 
-        await setDoc(doc(db, "faceSnapshots", newSnapshot.id), newSnapshot);
+        batch.set(doc(db, "cameraCaptures", newCapture.id), newCapture);
+
+        const insight = await generateSymbolicInsight({ analysis });
+        if(insight) {
+            const insightId = crypto.randomUUID();
+            const newInsight: SymbolicImageInsight = {
+                id: insightId,
+                uid: userId,
+                cameraCaptureId: captureId,
+                ...insight
+            };
+            batch.set(doc(db, "symbolicImageInsights", insightId), newInsight);
+        }
+        
+        await batch.commit();
 
         return { success: true, error: null };
     } catch (e) {
-        console.error("Failed to add face snapshot:", e);
-        return { success: false, error: "Failed to save face snapshot. Please try again." };
+        console.error("Failed to add camera capture:", e);
+        return { success: false, error: "Failed to save camera capture. Please try again." };
     }
 }
 

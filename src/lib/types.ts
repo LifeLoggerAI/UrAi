@@ -37,6 +37,9 @@ export const UserSchema = z.object({
             shareAnonymousData: z.boolean(),
             optedOutAt: z.number().nullable(),
         }).optional(),
+        telemetryPermissionsGranted: z.boolean().default(false),
+        cameraCapturePermissionsGranted: z.boolean().default(false),
+        identityModelOptIn: z.boolean().default(false),
     }).optional(),
     narratorPrefs: z.object({
         toneStyle: z.string(),
@@ -113,7 +116,7 @@ export const PersonSchema = z.object({
 });
 export type Person = z.infer<typeof PersonSchema>;
 
-export const DreamSchema = z.object({
+export const DreamEventSchema = z.object({
     id: z.string(),
     uid: z.string(),
     text: z.string(),
@@ -122,8 +125,17 @@ export const DreamSchema = z.object({
     themes: z.array(z.string()),
     symbols: z.array(z.string()),
     sentimentScore: z.number(),
+    inferredSleepTime: z.number().optional(),
+    wakeTime: z.number().optional(),
+    dreamSignalStrength: z.number().optional(),
+    dreamSymbolTags: z.array(z.string()).optional(),
+    emotionBeforeSleep: z.string().optional(),
+    emotionUponWaking: z.string().optional(),
+    dreamNarrationText: z.string().optional(),
+    dreamReplayStyle: z.string().optional(),
+    audioMemoryOverlayId: z.string().optional(),
 });
-export type Dream = z.infer<typeof DreamSchema>;
+export type Dream = z.infer<typeof DreamEventSchema>;
 
 export const InnerVoiceReflectionSchema = z.object({
     id: z.string(),
@@ -134,16 +146,39 @@ export const InnerVoiceReflectionSchema = z.object({
 });
 export type InnerVoiceReflection = z.infer<typeof InnerVoiceReflectionSchema>;
 
-
-export const FaceSnapshotSchema = z.object({
+export const CameraCaptureSchema = z.object({
     id: z.string(),
     uid: z.string(),
-    storagePath: z.string(),
+    imageUrl: z.string(),
     createdAt: z.number(),
-    dominantEmotion: z.string(),
-    confidence: z.number(),
+    triggerType: z.enum(['emotional_spike', 'ritual_end', 'gps_change', 'manual', 'forecast_trigger', 'voice_peak']),
+    emotionInference: z.record(z.number()).optional(),
+    environmentInference: z.array(z.string()).optional(),
+    objectTags: z.array(z.string()).optional(),
+    lightLevel: z.number().optional(),
+    faceCount: z.number().optional(),
+    dominantColor: z.string().optional(),
+    symbolicTagSummary: z.string().optional(),
+    cameraAngle: z.string().optional(),
+    faceLayoutSummary: z.string().optional(),
+    backgroundMoodTags: z.array(z.string()).optional(),
+    contextualSymbolMatches: z.array(z.string()).optional(),
+    linkedArchetype: z.string().optional(),
 });
-export type FaceSnapshot = z.infer<typeof FaceSnapshotSchema>;
+export type CameraCapture = z.infer<typeof CameraCaptureSchema>;
+
+export const SymbolicImageInsightSchema = z.object({
+    id: z.string(),
+    cameraCaptureId: z.string(),
+    uid: z.string(),
+    archetypeOverlay: z.string().optional(),
+    narratorReflection: z.string(),
+    linkedMoodState: z.string().optional(),
+    symbolAnimationTrigger: z.enum(["aura_shift", "fog", "memory_bloom", "none"]),
+    interpretiveConfidence: z.number().optional(),
+});
+export type SymbolicImageInsight = z.infer<typeof SymbolicImageInsightSchema>;
+
 
 // Schemas for Emotion Overlay Engine
 export const MoodLogSchema = z.object({
@@ -537,20 +572,41 @@ export const GenerateAvatarOutputSchema = z.object({
 });
 export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
 
-export const AnalyzeFaceInputSchema = z.object({
+export const AnalyzeCameraImageInputSchema = z.object({
   imageDataUri: z
     .string()
     .describe(
       "A photo of a face, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
-export type AnalyzeFaceInput = z.infer<typeof AnalyzeFaceInputSchema>;
+export type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
 
-export const AnalyzeFaceOutputSchema = z.object({
-  dominantEmotion: z.string().describe('The primary emotion detected in the face (e.g., "joy", "sorrow", "anger").'),
-  confidence: z.number().describe('The confidence score for the detected emotion (0 to 1).'),
+export const AnalyzeCameraImageOutputSchema = z.object({
+  emotionInference: z.record(z.number()).describe("A map of detected emotions and their confidence scores."),
+  environmentInference: z.array(z.string()).describe("An array of tags describing the environment."),
+  objectTags: z.array(z.string()).describe("An array of significant objects recognized in the image."),
+  lightLevel: z.number().describe("A numerical score from 0 (dark) to 1 (bright)."),
+  faceCount: z.number().describe("The number of faces detected."),
+  dominantColor: z.string().describe("The primary color of the image in hex format."),
+  symbolicTagSummary: z.string().describe("A short, poetic summary of the image's symbolic meaning."),
+  cameraAngle: z.string().describe("The inferred angle of the camera."),
+  faceLayoutSummary: z.string().describe("A description of the composition of faces."),
+  backgroundMoodTags: z.array(z.string()).describe("An array of tags describing the emotional mood of the background."),
+  contextualSymbolMatches: z.array(z.string()).describe("An array of recognized symbolic fusions."),
+  linkedArchetype: z.string().describe("The primary Jungian archetype that this image seems to represent."),
 });
-export type AnalyzeFaceOutput = z.infer<typeof AnalyzeFaceOutputSchema>;
+export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
+
+export const GenerateSymbolicInsightInputSchema = z.object({
+    analysis: AnalyzeCameraImageOutputSchema.describe("The structured analysis result from the AnalyzeCameraImage flow."),
+});
+export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
+
+export const GenerateSymbolicInsightOutputSchema = z.object({
+    narratorReflection: z.string().describe("A short, insightful, and empathetic reflection for the user."),
+    symbolAnimationTrigger: z.enum(["aura_shift", "fog", "memory_bloom", "none"]).describe("A suggested symbolic animation trigger."),
+});
+export type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
 
 export const AnalyzeTextSentimentInputSchema = z.object({
     text: z.string().describe('The text to analyze.'),
@@ -1117,3 +1173,112 @@ export const RitualCardSchema = z.object({
     voiceOverlayUrl: z.string().url().nullable(),
 });
 export type RitualCard = z.infer<typeof RitualCardSchema>;
+
+// Passive Telemetry Schemas
+export const TelemetryEventSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  timestamp: z.number(),
+  eventType: z.enum([
+    'screen_on',
+    'screen_off',
+    'notification_received',
+    'app_opened',
+    'charging_started',
+    'motion_event',
+    'idle',
+  ]),
+  packageName: z.string().optional(),
+  eventDuration: z.number().optional(),
+  screenBrightnessLevel: z.number().optional(),
+  batteryLevel: z.number().optional(),
+  isUserInteracting: z.boolean(),
+  gpsLocation: z.any().optional(), // GeoPoint
+});
+export type TelemetryEvent = z.infer<typeof TelemetryEventSchema>;
+
+export const DailyTelemetrySummarySchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  date: z.string(), // YYYY-MM-DD
+  totalScreenTimeMs: z.number(),
+  numNotifications: z.number(),
+  numAppSwitches: z.number(),
+  mostUsedApps: z.array(z.string()),
+  nighttimeUsageScore: z.number(),
+  overstimulationScore: z.number(),
+  attentionFragmentationIndex: z.number(),
+  notificationInterruptionsScore: z.number(),
+  digitalFatigueLevel: z.enum(['LOW', 'MEDIUM', 'HIGH']),
+  emotionLinkedInsights: z.record(z.number()),
+  linkedVoiceEvents: z.array(z.string()),
+});
+export type DailyTelemetrySummary = z.infer<typeof DailyTelemetrySummarySchema>;
+
+// Avatar Identity Schemas
+export const AvatarIdentityProgressSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  dayOnSystem: z.number(),
+  inferredSkinTone: z.string().optional(),
+  inferredGenderSignal: z.record(z.number()).optional(),
+  inferredRaceTag: z.string().optional(),
+  inferredOrientationHint: z.string().optional(),
+  featureStage: z.enum([
+    'blank',
+    'limbs',
+    'tone',
+    'faceShape',
+    'clothing',
+    'artifact',
+    'locked',
+  ]),
+  customizationAllowed: z.boolean(),
+  avatarArtDetails: z.record(z.string()),
+});
+export type AvatarIdentityProgress = z.infer<typeof AvatarIdentityProgressSchema>;
+
+export const NarratorIdentityMomentSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  timestamp: z.number(),
+  triggerStage: z.string(),
+  reflectionText: z.string(),
+});
+export type NarratorIdentityMoment = z.infer<typeof NarratorIdentityMomentSchema>;
+
+// Dream Intelligence Schemas
+export const DreamSymbolLibrarySchema = z.object({
+  symbolId: z.string(),
+  name: z.string(),
+  symbolType: z.string(),
+  archetypalTag: z.string(),
+  visualOverlay: z.string(),
+  interpretationHint: z.string(),
+});
+export type DreamSymbolLibrary = z.infer<typeof DreamSymbolLibrarySchema>;
+
+export const DreamConstellationSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  week: z.string(), // YYYY-WW
+  dominantSymbols: z.array(z.string()),
+  emotionalArc: z.string(),
+  linkedMoodShifts: z.array(z.string()),
+  memoryBloomLink: z.string().optional(),
+});
+export type DreamConstellation = z.infer<typeof DreamConstellationSchema>;
+
+// B2B Export Schema
+export const AnonymizedBehaviorExportSchema = z.object({
+  id: z.string(),
+  hashedUserId: z.string(),
+  date: z.string(),
+  screenTimeCategory: z.string(),
+  notificationDensity: z.string(),
+  attentionSwitchRate: z.number(),
+  emotionCorrelationSummary: z.record(z.number()),
+  shadowFatigueIndex: z.number(),
+});
+export type AnonymizedBehaviorExport = z.infer<typeof AnonymizedBehaviorExportSchema>;
+
