@@ -28,29 +28,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // Connect to emulators only in development and only once
     if (process.env.NODE_ENV === 'development' && !emulatorsConnected) {
-      // A robust delay to ensure the cloud environment's network proxies are ready.
-      setTimeout(() => {
-        try {
-          console.log("Connecting to Firebase Emulators in cloud dev environment...");
-
-          const originalHost = window.location.hostname;
-          
-          // Construct the correct URLs for the proxied emulators
-          const authHost = originalHost.replace("6000-", "9099-");
-          const authUrl = `https://${authHost}`;
-          
-          const firestoreHost = originalHost.replace("6000-", "8080-");
-
-          // Connect using the proxied URLs
-          connectAuthEmulator(auth, authUrl, { disableWarnings: true });
-          connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-
-          emulatorsConnected = true;
-          console.log(`✅ Firebase Emulators connected. Auth: ${authUrl}, Firestore: ${firestoreHost}:443`);
-        } catch (error) {
-          console.error("!!! Failed to connect to emulators:", error);
-        }
-      }, 2000); // 2 second delay for network stability
+      console.log("Connecting to Firebase Emulators...");
+      try {
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+      } catch (error) {
+        console.error("!!! Failed to connect to emulators:", error);
+      }
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
