@@ -30,17 +30,27 @@ const connectToEmulators = () => {
             const authHost = `9099-${baseHost}`;
             const firestoreHost = `8080-${baseHost}`;
             
+            console.log(`- Auth Host: https://${authHost}`);
+            console.log(`- Firestore Host: ${firestoreHost} (SSL)`);
+            
+            // connectAuthEmulator accepts a full URL
             connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
+            
+            // connectFirestoreEmulator accepts host and port, and has an ssl option.
+            // When connecting to the HTTPS proxy, the port is 443.
             connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
 
         } else {
+            console.log("- Connecting to localhost emulators");
             connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
             connectFirestoreEmulator(db, 'localhost', 8080);
         }
         
         console.log("Successfully configured Firebase Emulator connections.");
     } catch (error) {
-        console.error("Error connecting to Firebase Emulators during initial attempt:", error);
+        // This catch block might not catch the async 'Failed to fetch' error, 
+        // as it's a promise rejection inside the SDK.
+        console.error("Error initiating connection to Firebase Emulators:", error);
     }
 };
 
@@ -63,7 +73,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!isMounted) return;
 
     if (process.env.NODE_ENV === 'development') {
-        connectToEmulators();
+        // Defer connection to avoid race condition with network proxies
+        setTimeout(connectToEmulators, 0);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
