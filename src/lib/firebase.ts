@@ -1,9 +1,8 @@
-
 'use client';
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
-import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getAuth, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "dummy-key",
@@ -18,48 +17,4 @@ const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseCon
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 
-if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  // Use a global flag to prevent reconnecting on every hot reload
-  if (!(globalThis as any)._firebaseEmulatorsConnected) {
-    // Defer the connection slightly to avoid race conditions on initial load in some environments.
-    setTimeout(() => {
-        if ((globalThis as any)._firebaseEmulatorsConnected) {
-            return;
-        }
-        console.log("Connecting to Firebase Emulators for the first time...");
-        try {
-            const isSecure = window.location.protocol === 'https:';
-            
-            if (isSecure) {
-                // In a secure cloud IDE, ports are often forwarded to subdomains.
-                const originalHost = window.location.hostname;
-                const baseHost = originalHost.substring(originalHost.indexOf('-') + 1);
-                
-                const authHost = `9099-${baseHost}`;
-                const firestoreHost = `8080-${baseHost}`;
-
-                console.log(`Configuring emulators for secure cloud host:`);
-                console.log(`- Auth URL: https://${authHost}`);
-                console.log(`- Firestore Host: ${firestoreHost} (SSL)`);
-                
-                connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
-                connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-
-            } else {
-                // Standard local development (e.g., http://localhost)
-                console.log("Configuring emulators for local http host...");
-                connectAuthEmulator(auth, `http://localhost:9099`, { disableWarnings: true });
-                connectFirestoreEmulator(db, 'localhost', 8080);
-            }
-            
-            (globalThis as any)._firebaseEmulatorsConnected = true;
-            console.log("Emulator connections configured successfully.");
-
-        } catch (error) {
-            console.error("Fatal error connecting to emulators:", error);
-        }
-    }, 0);
-  }
-}
-
-export { db, auth };
+export { app, db, auth };
