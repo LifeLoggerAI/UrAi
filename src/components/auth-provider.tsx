@@ -12,7 +12,8 @@ import { Loader2 } from 'lucide-react';
 let emulatorsConnected = false;
 
 const connectToEmulators = () => {
-    if (emulatorsConnected) {
+    // Only run this logic in a development environment and only once.
+    if (process.env.NODE_ENV !== 'development' || emulatorsConnected) {
         return;
     }
 
