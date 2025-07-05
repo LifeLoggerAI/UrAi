@@ -3,55 +3,37 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Helper function to check ownership.
-    // For reads/updates, we check the existing resource.
-    // For creates, we check the incoming resource data.
-    function isOwner(uid) {
-      return request.auth.uid == uid;
-    }
-    
-    function isOwnerOfResource() {
-      return isOwner(resource.data.uid);
-    }
-    
-    function isOwnerOfRequest() {
-      return isOwner(request.resource.data.uid);
+
+    // Users can create their own user doc, and can only read/update/delete their own.
+    match /users/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid == userId;
     }
 
-    // USERS: Can only read/update their own profile. Create is handled by a Cloud Function.
-    match /users/{uid} {
-      allow read, update: if isOwner(uid);
-    }
-    
-    // PERMISSIONS: Can create, read, and update their own permissions document.
-    match /permissions/{uid} {
-      allow read, update: if isOwner(uid);
-      allow create: if isOwner(uid) && isOwnerOfRequest();
+    // Users can create their own permissions doc, and can only read/update their own.
+    match /permissions/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      // On create, check the incoming document's uid matches the authenticated user.
+      allow create: if request.auth.uid == userId && request.resource.data.uid == request.auth.uid;
     }
 
-    // ONBOARDING: Can only create their own intake document.
-    match /onboardIntake/{docId} {
-        allow create: if isOwnerOfRequest();
-    }
-    
-    // GOALS, TASKS, HABITS, CALENDAR: Can manage their own items.
-    match /{collection}/{docId} where collection in ['goals', 'tasks', 'habitWatch', 'calendarEvents'] {
-      allow read: if isOwnerOfResource();
-      allow create: if isOwnerOfRequest();
-      allow update, delete: if isOwnerOfResource();
+    // Generic rule for user-owned data in top-level collections.
+    // This will cover: audioEvents, voiceEvents, dreamEvents, innerTexts,
+    // people, goals, tasks, calendarEvents, habitWatch, onboardIntake.
+    match /{collection}/{docId} {
+      // Allow read, update, delete if the document has a 'uid' field matching the user.
+      allow read, update, delete: if request.auth.uid == resource.data.uid;
+      // Allow create if the incoming document has a 'uid' field matching the user.
+      allow create: if request.auth.uid == request.resource.data.uid;
     }
 
-    // CORE DATA (Events, People): Can manage their own items.
-    match /{collection}/{docId} where collection in ['audioEvents', 'voiceEvents', 'dreamEvents', 'innerTexts', 'people'] {
-       allow read: if isOwnerOfResource();
-       allow create: if isOwnerOfRequest();
-       allow update, delete: if isOwnerOfResource();
+    // Subcollections under /users
+    match /users/{userId}/auraStates/{stateId} {
+        allow read, write: if request.auth.uid == userId;
     }
-    
-    // USER SUBCOLLECTIONS (Aura, Blooms): Can manage their own subcollection items.
-    match /users/{uid}/{collection}/{docId} {
-       allow read, write: if isOwner(uid);
+
+    match /users/{userId}/memoryBlooms/{bloomId} {
+        allow read, write: if request.auth.uid == userId;
     }
   }
 }
