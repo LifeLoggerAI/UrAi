@@ -8,14 +8,16 @@ import { connectFirestoreEmulator } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
+let emulatorsConnected = false;
+
 const connectToEmulators = () => {
     // This function should only run in a browser environment.
     if (typeof window === 'undefined') {
         return;
     }
 
-    // Prevent re-initializing emulators, which can happen with hot-reloading
-    if ((globalThis as any)._firebaseEmulatorsConnected) {
+    // Prevent re-initializing emulators
+    if (emulatorsConnected) {
         return;
     }
 
@@ -45,12 +47,9 @@ const connectToEmulators = () => {
             connectFirestoreEmulator(db, 'localhost', 8080);
         }
         
-        (globalThis as any)._firebaseEmulatorsConnected = true;
+        emulatorsConnected = true;
 
     } catch (error) {
-        // Don't crash the app if emulators fail to connect.
-        // This can happen on the first load due to a race condition.
-        // A hot reload will trigger the useEffect again and it should succeed.
         console.error("Error initiating connection to Firebase Emulators:", error);
     }
 };
@@ -69,10 +68,11 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // In development, connect to emulators.
-    // Defer connection to allow network proxies to initialize.
+    setIsClient(true);
+    
     if (process.env.NODE_ENV === 'development') {
         setTimeout(connectToEmulators, 100);
     }
@@ -85,6 +85,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
+  if (!isClient) {
+    return null;
+  }
+
   if (loading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
@@ -94,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading: false }}>
         {children}
     </AuthContext.Provider>
   );
