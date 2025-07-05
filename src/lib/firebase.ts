@@ -21,20 +21,24 @@ const db: Firestore = getFirestore(app);
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   // Use a global flag to prevent reconnecting on hot reloads
   if (!(globalThis as any)._firebaseEmulatorsConnected) {
-    console.log("Connecting to Firebase Emulators...");
+    console.log("Connecting to Firebase Emulators for the first time...");
 
     try {
-      // In a secure cloud IDE, we must connect to the emulators via HTTPS
-      const isSecure = window.location.protocol === 'https:';
-
-      // The hostname for the emulators in the cloud IDE is the same as the app's,
-      // just on a different port, which the IDE forwards.
       const host = window.location.hostname;
+      const isSecure = window.location.protocol === 'https:';
       
       console.log(`Configuring emulators on host: ${host} with SSL: ${isSecure}`);
 
-      connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
-      connectFirestoreEmulator(db, host, 8080);
+      if (isSecure) {
+        // When in a secure context (like a cloud IDE), connect via HTTPS.
+        // The IDE's proxy will handle forwarding to the correct http port.
+        connectAuthEmulator(auth, `https://${host}:9099`, { disableWarnings: true });
+        connectFirestoreEmulator(db, host, 8080, { ssl: true });
+      } else {
+        // For local development without HTTPS.
+        connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
+        connectFirestoreEmulator(db, host, 8080);
+      }
       
       (globalThis as any)._firebaseEmulatorsConnected = true;
       console.log("Emulator connections configured.");
