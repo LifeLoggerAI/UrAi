@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
@@ -6,9 +8,17 @@ import type { Person } from "@/lib/types";
 import { formatDistanceToNow } from 'date-fns';
 import { Badge } from "./ui/badge";
 import { History, Zap, Hourglass, MemoryStick } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function PersonCard({ person }: { person: Person }) {
-  const lastSeen = formatDistanceToNow(new Date(person.lastSeen), { addSuffix: true });
+  const [lastSeen, setLastSeen] = useState('');
+
+  useEffect(() => {
+    if (person.lastSeen) {
+      setLastSeen(formatDistanceToNow(new Date(person.lastSeen), { addSuffix: true }));
+    }
+  }, [person.lastSeen]);
+
   // Cap progress at 100 for visualization, but show the real number.
   const familiarityProgress = Math.min((person.familiarityIndex || 0) * 5, 100); 
 

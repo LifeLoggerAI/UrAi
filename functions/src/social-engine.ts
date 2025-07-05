@@ -50,63 +50,57 @@ export const checkSilenceThresholds = functions.pubsub
   .schedule("every day 04:30")
   .timeZone("UTC")
   .onRun(async () => {
-    functions.logger.info("Running daily social silence check for all users.");
+    functions.logger.info("Running daily social silence check.");
 
-    const usersSnap = await db.collection("users").get();
+    const sixtyDaysAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
+    const staleContactsQuery = db.collection("people").where("lastSeen", "<", sixtyDaysAgo);
 
-    for (const userDoc of usersSnap.docs) {
-      const uid = userDoc.id;
-      const contactsRef = db.collection("people").where("uid", "==", uid);
-      const contactsSnap = await contactsRef.get();
+    const staleContactsSnap = await staleContactsQuery.get();
 
-      if (contactsSnap.empty) {
+    if (staleContactsSnap.empty) {
+      functions.logger.info("No stale contacts found.");
+      return null;
+    }
+
+    for (const contactDoc of staleContactsSnap.docs) {
+      const contact = contactDoc.data();
+      const {uid, name: personName} = contact;
+      const daysSilent = Math.floor((Date.now() - contact.lastSeen) / (1000 * 60 * 60 * 24));
+      
+      // Prevents sending multiple notifications for the same stale contact on the same day
+      const insightId = `silence-${uid}-${contactDoc.id}-${new Date().toISOString().split("T")[0]}`;
+      const existingInsight = await db.collection("narratorInsights").doc(insightId).get();
+
+      if (existingInsight.exists) {
         continue;
       }
 
-      const sixtyDaysAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
+      functions.logger.info(`Silence threshold met for user ${uid}, contact ${personName} (${daysSilent} days). Creating insight.`);
 
-      for (const contactDoc of contactsSnap.docs) {
-        const contact = contactDoc.data();
-        const lastSeen = contact.lastSeen || 0;
+      const insightPayload = {
+        uid: uid,
+        insightId: insightId,
+        insightType: "silence_threshold",
+        payload: {
+          personId: contactDoc.id,
+          personName: personName,
+          daysSilent: daysSilent,
+        },
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        consumed: false,
+        ttsUrl: null,
+      };
+      await db.collection("narratorInsights").doc(insightId).set(insightPayload);
 
-        if (lastSeen < sixtyDaysAgo) {
-          // Silence threshold met.
-          const daysSilent = Math.floor((Date.now() - lastSeen) / (1000 * 60 * 60 * 24));
-          const insightId = `silence-${uid}-${contactDoc.id}-${new Date().toISOString().split("T")[0]}`;
-          const existingInsight = await db.collection("narratorInsights").doc(insightId).get();
-
-          if (existingInsight.exists) {
-            // Insight for this user/contact/day already exists, skip.
-            continue;
-          }
-
-          functions.logger.info(`Silence threshold met for user ${uid}, contact ${contact.name} (${daysSilent} days). Creating insight.`);
-
-          const insightPayload = {
-            uid: uid,
-            insightId: insightId,
-            insightType: "silence_threshold",
-            payload: {
-              personId: contactDoc.id,
-              personName: contact.name,
-              daysSilent: daysSilent,
-            },
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            consumed: false,
-            ttsUrl: null,
-          };
-          await db.collection("narratorInsights").doc(insightId).set(insightPayload);
-
-          // Enqueue a push notification
-          const notificationPayload = {
-            uid: uid,
-            type: "insight",
-            body: `It's been a while since you've connected with ${contact.name}. A little silence can mean many things.`,
-          };
-          await db.collection("messages/queue").add(notificationPayload);
-        }
-      }
+      // Enqueue a push notification
+      const notificationPayload = {
+        uid: uid,
+        type: "insight",
+        body: `It's been a while since you've connected with ${personName}. A little silence can mean many things.`,
+      };
+      await db.collection("messages/queue").add(notificationPayload);
     }
+    
     return null;
   });
 
