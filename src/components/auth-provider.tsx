@@ -13,31 +13,16 @@ const connectToEmulators = () => {
     if ((globalThis as any).emulatorsConnected) {
         return;
     }
-
-    // A 1-second delay is a pragmatic solution to a race condition in some
-    // cloud development environments where network proxies need time to initialize.
-    setTimeout(() => {
-        try {
-            const host = window.location.hostname;
-            // In proxied cloud environments, service ports are mapped to subdomains.
-            const authHost = host.replace('6000-', '9099-');
-            const firestoreHost = host.replace('6000-', '8080-');
-            const authUrl = `https://` + authHost;
     
-            console.log(`Connecting to proxied emulators...`);
-            console.log(`Auth URL: ${authUrl}`);
-            console.log(`Firestore Host: ${firestoreHost}`);
-    
-            // Connect to the emulators using their secure proxy URLs.
-            connectAuthEmulator(auth, authUrl, { disableWarnings: true });
-            connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-    
-            (globalThis as any).emulatorsConnected = true;
-            console.log("✅ Firebase Emulators connected.");
-        } catch (error) {
-            console.error("!!! Failed to connect to emulators:", error);
-        }
-    }, 1000); 
+    try {
+        console.log("Connecting to Firebase Emulators...");
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        (globalThis as any).emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+    } catch (error) {
+        console.error("!!! Failed to connect to emulators:", error);
+    }
 };
 
 type AuthContextType = {
