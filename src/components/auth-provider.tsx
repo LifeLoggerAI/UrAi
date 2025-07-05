@@ -72,9 +72,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     setIsClient(true);
-    
-    if (process.env.NODE_ENV === 'development') {
-        setTimeout(connectToEmulators, 100);
+  }, []);
+
+  useEffect(() => {
+    if (isClient && process.env.NODE_ENV === 'development') {
+        // Adding a more robust delay to ensure network proxies are ready.
+        setTimeout(connectToEmulators, 1000);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -83,13 +86,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [isClient]);
 
-  if (!isClient) {
-    return null;
-  }
-
-  if (loading) {
+  if (!isClient || loading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
