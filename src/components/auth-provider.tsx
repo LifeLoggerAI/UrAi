@@ -19,23 +19,26 @@ const connectToEmulators = () => {
     // A robust delay to ensure the cloud environment's network proxies are ready.
     setTimeout(() => {
         try {
-            console.log("Connecting to Firebase Emulators...");
+            console.log("Connecting to Firebase Emulators in cloud dev environment...");
 
-            const host = window.location.hostname;
-            const firestoreHost = host.replace("6000-", "8080-");
-            const authHost = host.replace("6000-", "9099-");
+            const originalHost = window.location.hostname;
             
-            const authUrl = `https://_workstation-dev-ext.${authHost}`;
+            // Construct the correct URLs for the proxied emulators
+            const authHost = originalHost.replace("6000-", "9099-");
+            const authUrl = `https://${authHost}`;
+            
+            const firestoreHost = originalHost.replace("6000-", "8080-");
 
+            // Connect using the proxied URLs
             connectAuthEmulator(auth, authUrl, { disableWarnings: true });
             connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
 
             emulatorsConnected = true;
-            console.log("✅ Firebase Emulators connected.");
+            console.log(`✅ Firebase Emulators connected. Auth: ${authUrl}, Firestore: ${firestoreHost}:443`);
         } catch (error) {
             console.error("!!! Failed to connect to emulators:", error);
         }
-    }, 1500); // Increased delay for stability
+    }, 1500); // 1.5 second delay for network stability
 };
 
 
@@ -54,6 +57,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // This logic now *only* runs in development mode.
+    // In a production build, it will be skipped.
     if (process.env.NODE_ENV === 'development') {
       connectToEmulators();
     }
