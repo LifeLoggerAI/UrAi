@@ -3,15 +3,15 @@ import type { NextConfig } from 'next';
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com;
+    style-src 'self' 'unsafe-inline' https://accounts.google.com;
     img-src 'self' data: https://placehold.co;
-    connect-src 'self' wss://*.googleapis.com https://*.googleapis.com https://*.cloudworkstations.dev http://127.0.0.1:9099 ws://127.0.0.1:8080;
+    connect-src 'self' wss://*.googleapis.com https://*.googleapis.com https://accounts.google.com https://*.cloudworkstations.dev http://127.0.0.1:9099 ws://127.0.0.1:8080;
     font-src 'self';
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-ancestors 'none';
+    frame-ancestors 'self' https://accounts.google.com;
     upgrade-insecure-requests;
 `.replace(/\s{2,}/g, ' ').trim();
 
