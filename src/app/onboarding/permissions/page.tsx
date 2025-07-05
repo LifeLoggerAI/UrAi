@@ -116,13 +116,10 @@ export default function PermissionsPage() {
         }
     };
     
+    // The AuthProvider shows a global loader. We will just return null here to prevent
+    // rendering the page with a null user object before the redirect happens.
     if (loading || !user) {
-        return (
-            <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8 md:p-12">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                <p className="mt-4 text-muted-foreground">Loading...</p>
-            </main>
-        )
+        return null;
     }
 
     return (

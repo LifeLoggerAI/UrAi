@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { auth } from '@/lib/firebase';
@@ -36,6 +36,13 @@ export default function LoginPage() {
   const { toast } = useToast();
 
   const isSubmitting = isEmailSubmitting || isGoogleSubmitting;
+
+  useEffect(() => {
+    // If auth is done loading and we have a user, redirect them away from login.
+    if (!loading && user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
 
   const handleAuthAction = async (action: 'signIn' | 'signUp') => {
     if (!email || !password) {
@@ -90,12 +97,10 @@ export default function LoginPage() {
     }
   }
 
+  // The AuthProvider shows a global loader. We will just return null here if
+  // a user is logged in to prevent a flash of the login form during redirect.
   if (loading || user) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    );
+    return null;
   }
 
   return (
