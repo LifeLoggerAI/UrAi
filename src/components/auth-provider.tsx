@@ -13,22 +13,19 @@ const connectToEmulators = () => {
     if (typeof window === 'undefined' || (window as any).emulatorsConnected) {
         return;
     }
-
-    console.log("Attempting to connect to Firebase emulators...");
+    
+    console.log("Attempting to connect to Firebase emulators on http://127.0.0.1...");
 
     try {
-        // In both local and cloud IDE environments, we connect to the emulators via localhost.
-        // The cloud environment's proxy will forward these requests correctly.
         connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
         connectFirestoreEmulator(db, "127.0.0.1", 8080);
         
         console.log("✅ Firebase Emulators connected successfully.");
-        (window as any).emulatorsConnected = true; // Set the global flag
+        (window as any).emulatorsConnected = true;
     } catch (error) {
         console.error("Failed to connect to emulators:", error);
     }
 };
-
 
 type AuthContextType = {
   user: User | null;
@@ -50,16 +47,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (isClient && process.env.NODE_ENV === 'development') {
-        connectToEmulators();
+    if (isClient) {
+        if (process.env.NODE_ENV === 'development') {
+            connectToEmulators();
+        }
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setUser(user);
+          setLoading(false);
+        });
+
+        return () => unsubscribe();
     }
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
   }, [isClient]);
 
   if (!isClient) {
