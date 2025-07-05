@@ -9,34 +9,20 @@ import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
 const connectToEmulators = () => {
-    // This global flag prevents re-connecting on every hot-reload, which is a major source of instability.
+    // This global flag prevents re-connecting on every hot-reload
     if ((globalThis as any).emulatorsConnected) {
         return;
     }
 
-    console.log("Attempting to connect to Firebase Emulators...");
-
-    // A robust delay to ensure the cloud environment's network proxies are ready.
-    setTimeout(() => {
-        try {
-            // In the cloud dev environment, we connect to the proxied URLs, not localhost.
-            const host = window.location.hostname;
-            const authHost = `9099-${host}`;
-            const firestoreHost = `8080-${host}`;
-            
-            console.log(`Auth host: https://${authHost}`);
-            console.log(`Firestore host: ${firestoreHost}:443`);
-
-            connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
-            connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-            
-            (globalThis as any).emulatorsConnected = true;
-            console.log("✅ Firebase Emulators connected successfully.");
-
-        } catch (error) {
-            console.error("!!! Failed to connect to emulators:", error);
-        }
-    }, 1000); // 1-second delay for stability.
+    console.log("Connecting to Firebase emulators on localhost...");
+    try {
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        (globalThis as any).emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+    } catch (error) {
+        console.error("!!! Failed to connect to emulators:", error);
+    }
 };
 
 type AuthContextType = {
