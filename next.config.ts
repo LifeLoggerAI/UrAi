@@ -13,7 +13,6 @@ const cspHeader = `
     form-action 'self';
     frame-src 'self' https://accounts.google.com;
     frame-ancestors 'self' https://accounts.google.com;
-    upgrade-insecure-requests;
 `.replace(/\s{2,}/g, ' ').trim();
 
 const nextConfig: NextConfig = {

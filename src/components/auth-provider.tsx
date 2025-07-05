@@ -26,24 +26,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This logic should only run in the browser and in development mode.
-    if (process.env.NODE_ENV === 'development' && !emulatorsConnected) {
-      console.log("Attempting to connect to Firebase Emulators...");
-
-      const connectToEmulators = () => {
-        try {
-          // Standard localhost connection for emulators
-          connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-          connectFirestoreEmulator(db, '127.0.0.1', 8080);
-          emulatorsConnected = true;
-          console.log("✅ Firebase Emulators connected.");
-        } catch (error) {
-          console.error("!!! Critical error connecting to emulators:", error);
-        }
-      };
-      
-      // A robust delay to ensure the entire environment is ready.
-      setTimeout(connectToEmulators, 2000);
+    if (!emulatorsConnected) {
+      try {
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+      } catch (error) {
+        console.error("!!! Critical error connecting to emulators:", error);
+      }
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
