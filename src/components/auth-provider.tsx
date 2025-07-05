@@ -8,11 +8,6 @@ import { connectFirestoreEmulator } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
-type AuthContextType = {
-  user: User | null;
-  loading: boolean;
-};
-
 const connectToEmulators = () => {
     // This function should only run in a browser environment.
     if (typeof window === 'undefined') {
@@ -26,16 +21,16 @@ const connectToEmulators = () => {
 
     try {
         const host = window.location.hostname;
-        const protocol = window.location.protocol;
 
-        if (protocol === 'https:' && host.includes('cloudworkstations.dev')) {
+        if (host.includes('cloudworkstations.dev')) {
             const baseHost = host.substring(host.indexOf('-') + 1);
             
             const authHost = `9099-${baseHost}`;
             const firestoreHost = `8080-${baseHost}`;
             
-            console.log(`- Auth Host: https://${authHost}`);
-            console.log(`- Firestore Host: ${firestoreHost} (SSL)`);
+            console.log(`- Connecting to Cloud Emulators...`);
+            console.log(`  - Auth Host: https://${authHost}`);
+            console.log(`  - Firestore Host: ${firestoreHost} (SSL)`);
             
             // connectAuthEmulator accepts a full URL
             connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
@@ -54,11 +49,17 @@ const connectToEmulators = () => {
 
     } catch (error) {
         // Don't crash the app if emulators fail to connect.
-        // This can happen in production or if the emulators are not running.
+        // This can happen on the first load due to a race condition.
+        // A hot reload will trigger the useEffect again and it should succeed.
         console.error("Error initiating connection to Firebase Emulators:", error);
     }
 };
 
+
+type AuthContextType = {
+  user: User | null;
+  loading: boolean;
+};
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -68,14 +69,11 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isClient, setIsClient] = useState(false);
 
-  // This effect runs only once on the client, after the initial render.
   useEffect(() => {
-    setIsClient(true);
-
+    // In development, connect to emulators.
+    // Defer connection to allow network proxies to initialize.
     if (process.env.NODE_ENV === 'development') {
-        // Defer connection to allow network proxies to initialize.
         setTimeout(connectToEmulators, 100);
     }
 
@@ -87,14 +85,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  // On the server, and on the initial client render, `isClient` is false.
-  // In this case, we render nothing to guarantee a match and avoid hydration errors.
-  if (!isClient) {
-    return null;
-  }
-  
-  // After the component has mounted on the client, `isClient` is true.
-  // Now we can safely render the loader or the children based on the auth state.
   if (loading) {
     return (
         <div className="flex h-screen w-full items-center justify-center">
