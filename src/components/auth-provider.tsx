@@ -14,18 +14,17 @@ const connectToEmulators = () => {
         return;
     }
 
-    const host = window.location.hostname;
+    try {
+        console.log("Connecting to local Firebase Emulators...");
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        
+        (globalThis as any).emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
 
-    // In a cloud IDE, we connect to the proxied HTTPS endpoints.
-    const baseHost = host.substring(host.indexOf('-') + 1);
-    const authUrl = `https://9099-${baseHost}`;
-    const firestoreHost = `8080-${baseHost}`;
-    
-    console.log(`Cloud Dev environment detected. Connecting to proxied emulators at ${authUrl} and ${firestoreHost}`);
-    connectAuthEmulator(auth, authUrl, { disableWarnings: true });
-    connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-    
-    (globalThis as any).emulatorsConnected = true;
+    } catch (error) {
+        console.error("Failed to connect to emulators:", error);
+    }
 };
 
 type AuthContextType = {
@@ -41,15 +40,17 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // This ensures client-side-only code runs after the component has mounted.
+    setIsClient(true);
+  }, []);
+  
+  useEffect(() => {
+    // We only want to connect to emulators in the development environment.
     if (process.env.NODE_ENV === 'development') {
-        try {
-            // A sufficient delay to ensure network proxies are ready in the cloud IDE.
-            setTimeout(connectToEmulators, 1000);
-        } catch (error) {
-            console.error("Failed to connect to emulators during initial setup:", error);
-        }
+        connectToEmulators();
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -57,10 +58,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
+    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
+  // Show a loader until the client has mounted and auth state is determined.
+  if (!isClient || loading) {
     return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -69,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading: false }}>
         {children}
     </AuthContext.Provider>
   );
