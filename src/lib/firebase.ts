@@ -2,7 +2,6 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { initializeFirestore, memoryLocalCache, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
 import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
-import { getAnalytics, isSupported, type Analytics } from "firebase/analytics";
 
 // For local development and testing with emulators, we use a dummy project config.
 // This is a robust strategy to prevent the Firebase SDK from ever attempting to
@@ -22,22 +21,20 @@ const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : get
 const db: Firestore = initializeFirestore(app, { cache: memoryLocalCache({}) });
 const auth: Auth = getAuth(app);
 
-// Conditionally initialize Analytics only in production to avoid Installations API errors with dummy keys.
-let analytics: Promise<Analytics | null>;
-if (process.env.NODE_ENV === 'production') {
-    analytics = isSupported().then(yes => (yes ? getAnalytics(app) : null));
-} else {
-    analytics = Promise.resolve(null);
-}
+// Dummy exports to prevent breaking other files that might import these.
+// Firebase Analytics is not used in this project to avoid installation issues.
+const analytics = Promise.resolve(null);
+const logEvent = () => {};
 
-// --- EMULATOR CONNECTION ---
-// In a development environment, we unconditionally connect to the emulators.
-// The Firebase SDKs are designed to handle this gracefully and will not
-// create duplicate connections or throw errors on hot-reloading.
+// In a development environment, we connect to the emulators.
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
-    connectFirestoreEmulator(db, 'localhost', 8080);
+    // Check if emulators are already connected to prevent errors on hot-reloads
+    if (!auth.emulatorConfig) {
+        console.log("Connecting to Firebase emulators...");
+        connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, 'localhost', 8080);
+        console.log("Successfully connected to Firebase emulators.");
+    }
 }
-// --- END EMULATOR CONNECTION ---
 
-export { db, auth, analytics };
+export { db, auth, analytics, logEvent };

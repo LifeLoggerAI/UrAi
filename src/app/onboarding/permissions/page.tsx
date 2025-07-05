@@ -13,8 +13,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Mic, MapPin, Activity, Bell, ShieldQuestion, Users } from 'lucide-react';
 import type { Permissions } from '@/lib/types';
-import { analytics, db } from '@/lib/firebase';
-import { logEvent } from 'firebase/analytics';
+import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 
 const permissionItems = [
@@ -72,38 +71,12 @@ export default function PermissionsPage() {
             router.push('/login');
         }
     }, [user, loading, router]);
-
-    useEffect(() => {
-        analytics.then(an => {
-            if (an) {
-                permissionItems.forEach(item => {
-                    let eventKey = item.key.replace('Permission', '');
-                    if (item.key === 'shareAnonymizedData') {
-                        eventKey = 'data_contribution';
-                    }
-                    logEvent(an, `permission_viewed_${eventKey}`);
-                });
-            }
-        });
-    }, []);
     
     const handleToggle = (key: keyof typeof permissions, value: boolean) => {
         setPermissions(prev => ({...prev, [key]: value}));
-        analytics.then(an => {
-            if (!an) return;
-            let eventKey = key.replace('Permission', '');
-             if (key === 'shareAnonymizedData') {
-                eventKey = 'data_contribution';
-            }
-            const eventName = `permission_${value ? 'accepted' : 'rejected'}_${eventKey}`;
-            logEvent(an, eventName);
-        });
     };
 
     const handleBackToPermissions = () => {
-        analytics.then(an => {
-            if(an) logEvent(an, 'consent_skipped');
-        });
         setStep('permissions');
     };
     
@@ -118,10 +91,6 @@ export default function PermissionsPage() {
         }
         
         setIsSubmitting(true);
-        
-        analytics.then(an => {
-            if (an) logEvent(an, 'consent_agreed');
-        });
 
         const finalPermissionsData: Permissions & { uid: string } = {
             ...permissions,
