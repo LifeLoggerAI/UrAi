@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (process.env.NODE_ENV === 'development') {
         // Defer connection to avoid race condition with network proxies
-        setTimeout(connectToEmulators, 0);
+        setTimeout(connectToEmulators, 100);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -84,8 +84,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => unsubscribe();
   }, [isMounted]);
-
-  const value = { user, loading };
 
   if (!isMounted) {
     // On the server, and the first render on the client, return null.
