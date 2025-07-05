@@ -3,16 +3,20 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
-import { Flame, Activity, Repeat, HeartPulse, Scan, CheckCircle2, Circle, Clock } from "lucide-react";
-import type { Goal, Task } from "@/lib/types";
+import { Flame, Activity, Repeat, HeartPulse, Scan, CheckCircle2, Circle, Clock, Mic } from "lucide-react";
+import type { Goal, Task, VoiceEvent } from "@/lib/types";
 import { format } from 'date-fns';
+import { NoteForm } from "./note-form";
+import { NoteList } from "./note-list";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface TorsoViewProps {
     goals: Goal[];
     tasks: Task[];
+    voiceEvents: VoiceEvent[];
 }
 
-export function TorsoView({ goals, tasks }: TorsoViewProps) {
+export function TorsoView({ goals, tasks, voiceEvents }: TorsoViewProps) {
 
     const innerDriveContent = (
         <div className="w-full text-left space-y-6 h-full overflow-y-auto px-1">
@@ -55,12 +59,27 @@ export function TorsoView({ goals, tasks }: TorsoViewProps) {
         </div>
     );
 
+    const voiceEventContent = (
+        <div className="flex flex-col gap-4 h-full">
+            <NoteForm />
+            <ScrollArea className="h-[40vh] mt-4">
+                <NoteList items={voiceEvents} />
+            </ScrollArea>
+        </div>
+    );
+
     const panels = [
         {
             title: 'Inner Drive',
             icon: <Flame className="h-6 w-6 text-primary" />,
             description: "Motivation, goals, and your core values.",
             content: innerDriveContent
+        },
+        {
+            title: 'Voice Notes',
+            icon: <Mic className="h-6 w-6 text-primary" />,
+            description: "Log and review your voice notes and memories.",
+            content: voiceEventContent
         },
         {
             title: 'Rhythm Map',
@@ -104,7 +123,7 @@ export function TorsoView({ goals, tasks }: TorsoViewProps) {
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="h-[55vh] flex items-center justify-center p-4">
+                                <CardContent className="h-[65vh] flex items-center justify-center p-4">
                                     {panel.content}
                                 </CardContent>
                             </Card>
@@ -117,5 +136,3 @@ export function TorsoView({ goals, tasks }: TorsoViewProps) {
         </Carousel>
     );
 }
-
-    

@@ -116,7 +116,7 @@ export function HomeView() {
                  setPanelContent({ 
                     title: 'Core-Self View', 
                     description: 'Explore your inner drive, rhythms, and somatic memories.',
-                    content: <TorsoView goals={goals || []} tasks={tasks || []} />
+                    content: <TorsoView goals={goals || []} tasks={tasks || []} voiceEvents={voiceEvents || []} />
                 });
                 setActivePanel('torso');
                 return;

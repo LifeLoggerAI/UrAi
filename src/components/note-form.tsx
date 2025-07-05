@@ -1,7 +1,7 @@
-
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useAuth } from './auth-provider';
 import { transcribeAudio } from '@/ai/flows/transcribe-audio';
 import { enrichVoiceEvent } from '@/ai/flows/enrich-voice-event';
 import { generateAvatar } from '@/ai/flows/generate-avatar';
@@ -15,7 +15,8 @@ import type { AudioEvent, VoiceEvent, Person } from '@/lib/types';
 
 type RecordingState = 'idle' | 'requesting' | 'recording' | 'processing';
 
-export function NoteForm({ userId }: { userId: string }) {
+export function NoteForm() {
+  const { user } = useAuth();
   const [recordingState, setRecordingState] = useState<RecordingState>('idle');
   const [recordingStart, setRecordingStart] = useState<number>(0);
   const [hasPermission, setHasPermission] = useState(false);
@@ -24,7 +25,7 @@ export function NoteForm({ userId }: { userId: string }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Request permission on component mount
+    // We need to check for `window` to ensure this runs only on the client.
     if (typeof window !== "undefined") {
       setRecordingState('requesting');
       navigator.mediaDevices.getUserMedia({ audio: true })
@@ -51,6 +52,18 @@ export function NoteForm({ userId }: { userId: string }) {
   }, [toast]);
 
   const handleRecordingStop = async () => {
+    if (!user) {
+        toast({
+            variant: "destructive",
+            title: "Not Authenticated",
+            description: "You must be logged in to save a voice note.",
+        });
+        setRecordingState('idle');
+        audioChunksRef.current = [];
+        return;
+    }
+    const userId = user.uid;
+
     setRecordingState('processing');
     const durationSec = (Date.now() - recordingStart) / 1000;
     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
