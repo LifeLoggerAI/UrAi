@@ -11,8 +11,8 @@ const cspHeader = `
     object-src 'none';
     base-uri 'self';
     form-action 'self';
-    frame-src 'self' https://accounts.google.com https://apis.google.com;
-    frame-ancestors 'self' https://accounts.google.com;
+    frame-src 'self' https://accounts.google.com https://*.cloudworkstations.dev;
+    frame-ancestors 'self' https://accounts.google.com https://*.cloudworkstations.dev;
     upgrade-insecure-requests;
 `.replace(/\s{2,}/g, ' ').trim();
 
