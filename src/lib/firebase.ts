@@ -25,14 +25,17 @@ const db: Firestore = initializeFirestore(app, { cache: memoryLocalCache({}) });
 const auth: Auth = getAuth(app);
 
 // In a development environment, we connect to the emulators.
-// This logic runs on the client-side.
+// We use a global flag to ensure this only runs once, even with hot-reloading.
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log("Connecting to Firebase emulators...");
-    // Unconditionally connect to the emulators.
-    // The Firebase SDK is idempotent and will handle this gracefully.
-    connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-    connectFirestoreEmulator(db, '127.0.0.1', 8080);
-    console.log("Emulator connection configured.");
+    // @ts-ignore
+    if (!globalThis._firebaseEmulatorsConnected) {
+        console.log("Attempting to connect to Firebase emulators...");
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        console.log("Successfully connected to Firebase emulators.");
+        // @ts-ignore
+        globalThis._firebaseEmulatorsConnected = true;
+    }
 }
 
 export { db, auth };
