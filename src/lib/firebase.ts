@@ -14,17 +14,20 @@ const firebaseConfig = {
   appId: "dummy-app-id"
 };
 
+// Initialize Firebase App
 const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 
+// Connect to emulators in development
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  // Use a global flag to prevent reconnecting on hot reloads
+  // Use a global flag to prevent reconnecting on every hot reload
   if (!(globalThis as any)._firebaseEmulatorsConnected) {
     console.log("Connecting to Firebase Emulators for the first time...");
 
     try {
       const host = window.location.hostname;
+      // Correctly check if the protocol is https:
       const isSecure = window.location.protocol === 'https:';
       
       console.log(`Configuring emulators on host: ${host} with SSL: ${isSecure}`);
@@ -36,14 +39,14 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
         connectFirestoreEmulator(db, host, 8080, { ssl: true });
       } else {
         // For local development without HTTPS.
-        connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
-        connectFirestoreEmulator(db, host, 8080);
+        connectAuthEmulator(auth, `http://localhost:9099`, { disableWarnings: true });
+        connectFirestoreEmulator(db, 'localhost', 8080);
       }
       
       (globalThis as any)._firebaseEmulatorsConnected = true;
-      console.log("Emulator connections configured.");
+      console.log("Emulator connections configured successfully.");
     } catch (error) {
-      console.error("Error connecting to emulators:", error);
+      console.error("Fatal error connecting to emulators:", error);
     }
   }
 }
