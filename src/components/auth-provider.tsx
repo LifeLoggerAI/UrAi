@@ -48,8 +48,6 @@ const connectToEmulators = () => {
         
         console.log("Successfully configured Firebase Emulator connections.");
     } catch (error) {
-        // This catch block might not catch the async 'Failed to fetch' error, 
-        // as it's a promise rejection inside the SDK.
         console.error("Error initiating connection to Firebase Emulators:", error);
     }
 };
@@ -62,16 +60,8 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  useEffect(() => {
-    // Don't run Firebase logic until the component has mounted on the client
-    if (!isMounted) return;
-
     if (process.env.NODE_ENV === 'development') {
         // Defer connection to avoid race condition with network proxies
         setTimeout(connectToEmulators, 100);
@@ -83,13 +73,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => unsubscribe();
-  }, [isMounted]);
+  }, []);
 
-  if (!isMounted) {
-    // On the server, and the first render on the client, return null.
-    // This guarantees the server and client HTML match, preventing a hydration error.
-    return null;
-  }
+  const value = { user, loading };
   
   if (loading) {
     return (
