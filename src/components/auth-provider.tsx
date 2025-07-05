@@ -8,11 +8,6 @@ import { connectFirestoreEmulator } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
-/**
- * Connects to the Firebase emulators.
- * This is wrapped in a timeout and a global flag to handle race conditions
- * in cloud development environments where network proxies may take time to initialize.
- */
 const connectToEmulators = () => {
     // Use a global flag to ensure this logic only runs once per full page load.
     if (typeof window === 'undefined' || (window as any).emulatorsConnected) {
@@ -73,9 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (isClient && process.env.NODE_ENV === 'development') {
-        // A timeout is used to delay the connection attempt, giving the
-        // cloud environment's network proxies time to initialize.
-        setTimeout(connectToEmulators, 1000);
+        // This timeout gives the cloud environment's network proxies time to initialize.
+        // A longer delay is used here to be more robust against slow startup times.
+        setTimeout(connectToEmulators, 3000);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
