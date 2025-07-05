@@ -35,10 +35,6 @@ export default function LoginPage() {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const { toast } = useToast();
 
-  if (user && !loading) {
-      router.push('/');
-  }
-
   const isSubmitting = isEmailSubmitting || isGoogleSubmitting;
 
   const handleAuthAction = async (action: 'signIn' | 'signUp') => {
@@ -61,7 +57,7 @@ export default function LoginPage() {
         title: 'Success!',
         description: `You have successfully ${action === 'signIn' ? 'signed in' : 'signed up'}.`,
       });
-      // The onAuthStateChanged listener in AuthProvider will handle the redirect.
+      router.push('/');
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -82,7 +78,7 @@ export default function LoginPage() {
             title: 'Success!',
             description: `You have successfully signed in with Google.`,
         });
-        // Redirect is handled by AuthProvider
+        router.push('/');
     } catch (error: any) {
         toast({
             variant: "destructive",
