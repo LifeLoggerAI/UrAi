@@ -19,6 +19,11 @@ const connectToEmulators = () => {
         return;
     }
 
+    // Prevent re-initializing emulators, which can happen with hot-reloading
+    if ((globalThis as any)._firebaseEmulatorsConnected) {
+        return;
+    }
+
     try {
         const host = window.location.hostname;
         const protocol = window.location.protocol;
@@ -45,6 +50,8 @@ const connectToEmulators = () => {
             connectFirestoreEmulator(db, 'localhost', 8080);
         }
         
+        (globalThis as any)._firebaseEmulatorsConnected = true;
+
     } catch (error) {
         // Don't crash the app if emulators fail to connect.
         // This can happen in production or if the emulators are not running.
@@ -80,8 +87,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const value = { user, loading };
-  
   // On the server, and on the initial client render, `isClient` is false.
   // In this case, we render nothing to guarantee a match and avoid hydration errors.
   if (!isClient) {
@@ -99,7 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, loading }}>
         {children}
     </AuthContext.Provider>
   );
