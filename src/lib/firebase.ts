@@ -1,7 +1,9 @@
 
+'use client'; // This ensures the code only runs on the client
+
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "dummy-key",
@@ -13,23 +15,29 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase App
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth: Auth = getAuth(app);
+const db: Firestore = getFirestore(app);
 
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// In a development environment, connect to the emulators.
-// We use a global flag to ensure this only runs once per full page load,
-// which is the most robust way to handle Next.js's hot-reloading.
-if (process.env.NODE_ENV === 'development') {
-    const globalWithEmulators = globalThis as typeof globalThis & {
-        _firebaseEmulatorsConnected: boolean
-    }
+// This block will only run on the client side, where window is defined.
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    // Check if emulators have already been connected to avoid re-connecting on hot reloads.
+    const globalWithEmulators = window as typeof window & {
+        _firebaseEmulatorsConnected?: boolean;
+    };
 
     if (!globalWithEmulators._firebaseEmulatorsConnected) {
-        console.log("Connecting to Firebase Emulators for the first time...");
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        console.log("Connecting to Firebase Emulators on host:", window.location.hostname);
+        
+        // Use the current page's hostname to connect to the emulators.
+        // This is crucial for cloud development environments where the emulators
+        // are not on 'localhost' from the browser's perspective.
+        const host = window.location.hostname;
+        
+        connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
+        connectFirestoreEmulator(db, host, 8080);
+        
+        // Set a flag to indicate that the emulators are connected.
         globalWithEmulators._firebaseEmulatorsConnected = true;
         console.log("Connection to emulators established.");
     }

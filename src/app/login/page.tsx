@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { auth } from '@/lib/firebase';
@@ -34,11 +35,9 @@ export default function LoginPage() {
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (!loading && user) {
+  if (user && !loading) {
       router.push('/');
-    }
-  }, [user, loading, router]);
+  }
 
   const isSubmitting = isEmailSubmitting || isGoogleSubmitting;
 
