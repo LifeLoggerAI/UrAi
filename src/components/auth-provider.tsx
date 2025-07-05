@@ -14,36 +14,19 @@ const connectToEmulators = () => {
         return;
     }
 
-    const host = window.location.hostname;
-    const isCloudDev = host.includes('cloudworkstations.dev');
+    console.log("Attempting to connect to Firebase emulators...");
 
-    // In a cloud IDE, we connect to the emulators via HTTPS proxies.
-    // Otherwise, we connect to them directly via HTTP on localhost.
-    if (isCloudDev) {
-        const baseHost = host.substring(host.indexOf('-') + 1);
-        const authHost = `9099-${baseHost}`;
-        const firestoreHost = `8080-${baseHost}`;
-        
-        console.log("Attempting to connect to Cloud IDE emulators...");
-        console.log(`- Auth Host: https://${authHost}`);
-        console.log(`- Firestore Host: ${firestoreHost} (SSL)`);
-        
-        // connectAuthEmulator accepts a full URL
-        connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
-        
-        // connectFirestoreEmulator accepts host and port, and has an ssl option.
-        // When connecting to the HTTPS proxy, the port is 443.
-        connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-
-    } else {
-        console.log("Attempting to connect to local emulators...");
-        // For local development, connect to standard localhost ports.
+    try {
+        // In both local and cloud IDE environments, we connect to the emulators via localhost.
+        // The cloud environment's proxy will forward these requests correctly.
         connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
         connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        
+        console.log("✅ Firebase Emulators connected successfully.");
+        (window as any).emulatorsConnected = true; // Set the global flag
+    } catch (error) {
+        console.error("Failed to connect to emulators:", error);
     }
-    
-    console.log("✅ Firebase Emulators connected successfully.");
-    (window as any).emulatorsConnected = true; // Set the global flag
 };
 
 
@@ -68,9 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (isClient && process.env.NODE_ENV === 'development') {
-        // This timeout gives the cloud environment's network proxies time to initialize.
-        // A longer delay is used here to be more robust against slow startup times.
-        setTimeout(connectToEmulators, 3000);
+        connectToEmulators();
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
