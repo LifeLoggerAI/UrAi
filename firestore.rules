@@ -1,39 +1,58 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can create their own user doc, and can only read/update/delete their own.
+    // Helper function to check ownership
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Users can read and update their own profile.
     match /users/{userId} {
-      allow read, update, delete: if request.auth.uid == userId;
-      allow create: if request.auth.uid == userId;
+      allow read, update: if isOwner(userId);
+      
+      // Subcollections owned by the user
+      match /auraStates/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /moodLogs/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /emotionCycles/{docId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /memoryBlooms/{docId} {
+        allow read, write: if isOwner(userId);
+      }
     }
-
-    // Users can create their own permissions doc, and can only read/update their own.
+    
+    // Permissions
     match /permissions/{userId} {
-      allow read, update, delete: if request.auth.uid == userId;
-      // On create, check the incoming document's uid matches the authenticated user.
-      allow create: if request.auth.uid == userId && request.resource.data.uid == request.auth.uid;
+      allow read, write: if isOwner(userId);
     }
 
-    // Generic rule for user-owned data in top-level collections.
-    // This will cover: audioEvents, voiceEvents, dreamEvents, innerTexts,
-    // people, goals, tasks, calendarEvents, habitWatch, onboardIntake.
-    match /{collection}/{docId} {
-      // Allow read, update, delete if the document has a 'uid' field matching the user.
-      allow read, update, delete: if request.auth.uid == resource.data.uid;
-      // Allow create if the incoming document has a 'uid' field matching the user.
-      allow create: if request.auth.uid == request.resource.data.uid;
+    // Generic rule for top-level collections that store user-owned data
+    function userOwnedCollection() {
+      return request.path[1] in [
+        'audioEvents', 'voiceEvents', 'dreamEvents', 'innerTexts', 
+        'onboardIntake', 'goals', 'tasks', 'calendarEvents', 'habitWatch',
+        'people'
+      ];
     }
 
-    // Subcollections under /users
-    match /users/{userId}/auraStates/{stateId} {
-        allow read, write: if request.auth.uid == userId;
+    match /{collection}/{docId}
+      where userOwnedCollection() {
+        // READ, UPDATE, DELETE: Check existing resource
+        allow read, update, delete: if isOwner(resource.data.uid);
+        // CREATE: Check incoming resource
+        allow create: if isOwner(request.resource.data.uid);
     }
 
-    match /users/{userId}/memoryBlooms/{bloomId} {
-        allow read, write: if request.auth.uid == userId;
+    // The messages queue is write-only for authenticated users.
+    match /messages/queue/{messageId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if false;
     }
   }
 }

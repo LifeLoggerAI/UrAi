@@ -11,7 +11,7 @@ import { processOnboardingVoiceAction } from '@/app/actions';
 import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { db } from '@/lib/firebase';
-import { doc, writeBatch, updateDoc } from 'firebase/firestore';
+import { doc, writeBatch, updateDoc, collection } from 'firebase/firestore';
 import type { OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from '@/lib/types';
 
 const prompts = [
@@ -70,6 +70,7 @@ export default function VoiceOnboardingPage() {
                 reader.onloadend = async () => {
                     const audioDataUri = reader.result as string;
                     
+                    // Call server action for AI processing ONLY
                     const result = await processOnboardingVoiceAction({ audioDataUri });
 
                     if (result.error || !result.transcript) {
@@ -78,6 +79,7 @@ export default function VoiceOnboardingPage() {
                         return;
                     }
 
+                    // Perform database writes on the CLIENT
                     try {
                         const { transcript, analysis } = result;
                         const timestamp = Date.now();
@@ -114,6 +116,7 @@ export default function VoiceOnboardingPage() {
                             }
                         }
                         
+                        // All setup docs are in the batch, now commit.
                         await batch.commit();
                         
                         // Final step: mark user as onboarded

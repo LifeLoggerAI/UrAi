@@ -1,7 +1,7 @@
 
 'use server';
 
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessedOnboardingData, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput, AnalyzeDreamOutput, AnalyzeTextSentimentOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput, AnalyzeDreamOutput, AnalyzeTextSentimentOutput } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -243,12 +243,13 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
         
         const analysis = await processOnboardingTranscript({ transcript });
         
+        // Return the transcript and analysis to the client for DB operations
         return { transcript, analysis, error: null };
 
     } catch (e) {
-        console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
+        console.error("Error during onboarding AI processing:", e);
         const firebaseError = e as {code?: string, message: string};
-        const errorMessage = firebaseError.message || "An unknown error occurred during onboarding.";
+        const errorMessage = firebaseError.message || "An unknown error occurred during AI processing.";
         return { transcript: null, analysis: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }
