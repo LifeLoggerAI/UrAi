@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { initializeFirestore, memoryLocalCache, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
-import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 // Use a dummy project config for local development to prevent production connections.
 const firebaseConfig = {
@@ -14,28 +14,19 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase App
-let app: FirebaseApp;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApp();
-}
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-const db: Firestore = initializeFirestore(app, { cache: memoryLocalCache({}) });
-const auth: Auth = getAuth(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
 // In a development environment, we connect to the emulators.
-// We use a global flag to ensure this only runs once, even with hot-reloading.
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    // @ts-ignore
-    if (!globalThis._firebaseEmulatorsConnected) {
-        console.log("Attempting to connect to Firebase emulators...");
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
-        console.log("Successfully connected to Firebase emulators.");
-        // @ts-ignore
-        globalThis._firebaseEmulatorsConnected = true;
-    }
+// This is done unconditionally on every load in dev. The Firebase SDKs are
+// idempotent and will not create duplicate connections. This is the most
+// robust way to ensure emulators are used in a hot-reloading dev environment.
+if (process.env.NODE_ENV === 'development') {
+    console.log("Connecting to Firebase Emulators...");
+    connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+    connectFirestoreEmulator(db, '127.0.0.1', 8080);
 }
 
 export { db, auth };
