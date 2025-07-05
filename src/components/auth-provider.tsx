@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
@@ -14,39 +13,16 @@ const connectToEmulators = () => {
         return;
     }
 
-    // A delay helps ensure the network proxies in the cloud dev env are ready.
-    setTimeout(() => {
-        try {
-            // This logic is specific to the cloud development environment.
-            const hostname = window.location.hostname;
-            if (hostname.includes('cloudworkstations.dev')) {
-                const authHost = hostname.replace('6000-', '9099-');
-                const firestoreHost = hostname.replace('6000-', '8080-');
-                
-                const authUrl = `https://${authHost}`;
-
-                console.log(`Cloud Dev environment detected. Connecting to proxied emulators...`);
-                connectAuthEmulator(auth, authUrl, { disableWarnings: true });
-                
-                // When connecting to the HTTPS proxy for Firestore, the port is 443.
-                connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-                
-                (globalThis as any).emulatorsConnected = true;
-                console.log("✅ Firebase Emulators connected.");
-            } else {
-                 // For local development, connect to localhost.
-                console.log("Local environment detected. Connecting to localhost emulators...");
-                connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-                connectFirestoreEmulator(db, "127.0.0.1", 8080);
-
-                (globalThis as any).emulatorsConnected = true;
-                console.log("✅ Firebase Emulators connected.");
-            }
-
-        } catch (error) {
-            console.error("Failed to connect to emulators:", error);
-        }
-    }, 1000); // 1-second delay for safety
+    try {
+        console.log("Connecting to Firebase Emulators...");
+        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+        connectFirestoreEmulator(db, "127.0.0.1", 8080);
+        
+        (globalThis as any).emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+    } catch (error) {
+        console.error("Failed to connect to emulators:", error);
+    }
 };
 
 type AuthContextType = {
