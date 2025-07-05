@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
@@ -12,51 +13,46 @@ type AuthContextType = {
   loading: boolean;
 };
 
-// A one-time flag to ensure emulators are connected only once.
-let emulatorsConnected = false;
-
 const connectToEmulators = () => {
-    if (emulatorsConnected) {
+    // This function should only run in a browser environment during development.
+    if (process.env.NODE_ENV !== 'development' || typeof window === 'undefined') {
         return;
     }
 
-    // This code will only run in the browser, in a development environment.
-    if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-        console.log("Connecting to Firebase Emulators...");
-        try {
-            const isSecure = window.location.protocol === 'https:';
-            
-            if (isSecure) {
-                // In a secure cloud IDE, ports are often forwarded to subdomains.
-                const originalHost = window.location.hostname;
-                const baseHost = originalHost.substring(originalHost.indexOf('-') + 1);
-                
-                const authHost = `9099-${baseHost}`;
-                const firestoreHost = `8080-${baseHost}`;
+    console.log("Attempting to connect to Firebase Emulators...");
+    try {
+        const host = window.location.hostname;
+        const protocol = window.location.protocol;
 
-                console.log(`Configuring emulators for secure cloud host:`);
-                console.log(`- Auth URL: https://${authHost}`);
-                console.log(`- Firestore Host: ${firestoreHost} (SSL)`);
-                
-                // connectAuthEmulator accepts a full URL
-                connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
-                
-                // connectFirestoreEmulator accepts host and port, and has an ssl option.
-                // When connecting to the HTTPS proxy, the port is 443.
-                connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-
-            } else {
-                // Standard local development (e.g., http://localhost)
-                console.log("Configuring emulators for local http host...");
-                connectAuthEmulator(auth, `http://localhost:9099`, { disableWarnings: true });
-                connectFirestoreEmulator(db, 'localhost', 8080);
-            }
+        // In a secure cloud IDE, ports are often forwarded to subdomains over HTTPS.
+        if (protocol === 'https:' && host.includes('cloudworkstations.dev')) {
+            // Construct the base hostname by removing the port prefix (e.g., '6000-')
+            const baseHost = host.substring(host.indexOf('-') + 1);
             
-            emulatorsConnected = true;
-            console.log("Emulator connections configured successfully.");
-        } catch (error) {
-            console.error("Fatal error connecting to emulators:", error);
+            const authHost = `9099-${baseHost}`;
+            const firestoreHost = `8080-${baseHost}`;
+
+            console.log(`Secure Cloud IDE detected. Connecting via HTTPS proxy...`);
+            console.log(`- Auth URL: https://${authHost}`);
+            console.log(`- Firestore Host: ${firestoreHost}, Port: 443 (SSL)`);
+            
+            // Auth emulator requires the full HTTPS URL
+            connectAuthEmulator(auth, `https://${authHost}`, { disableWarnings: true });
+            
+            // Firestore emulator has a specific SSL option for this proxy scenario
+            connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
+
+        } else {
+            // Standard local development environment
+            console.log("Local development environment detected. Connecting via HTTP...");
+            connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+            connectFirestoreEmulator(db, 'localhost', 8080);
         }
+        
+        console.log("Successfully configured Firebase Emulator connections.");
+    } catch (error) {
+        // We log the error but don't crash the app. The SDK will retry.
+        console.error("Error connecting to Firebase Emulators during initial attempt:", error);
     }
 };
 
@@ -70,8 +66,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Connect to emulators on initial mount.
-  // This is more robust than connecting when the module is imported.
+  // Connect to emulators on initial mount. The useEffect hook ensures this runs
+  // only on the client after the component has mounted.
   useEffect(() => {
     connectToEmulators();
   }, []);
@@ -87,15 +83,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = { user, loading };
 
+  if (loading) {
+    return (
+        <div className="flex h-screen w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    )
+  }
+
   return (
     <AuthContext.Provider value={value}>
-      {loading ? (
-         <div className="flex h-screen w-full items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin" />
-         </div>
-      ) : (
-        children
-      )}
+        {children}
     </AuthContext.Provider>
   );
 };
