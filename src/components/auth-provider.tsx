@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
@@ -8,29 +9,21 @@ import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
 const connectToEmulators = () => {
-    // This global flag is the most important part to prevent re-connecting on every hot-reload.
+    // This global flag prevents re-connecting on every hot-reload.
     if ((globalThis as any).emulatorsConnected) {
         return;
     }
 
     const host = window.location.hostname;
-    const isCloudDev = host.includes('cloudworkstations.dev') || host.includes('gitpod.io');
 
-    if (isCloudDev) {
-        // In a cloud IDE, we connect to the proxied HTTPS endpoints.
-        const baseHost = host.substring(host.indexOf('-') + 1);
-        const authUrl = `https://9099-${baseHost}`;
-        const firestoreHost = `8080-${baseHost}`;
-        
-        console.log(`Cloud Dev environment detected. Connecting to proxied emulators...`);
-        connectAuthEmulator(auth, authUrl, { disableWarnings: true });
-        connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
-    } else {
-        // For local development, connect to localhost.
-        console.log("Local environment detected. Connecting to localhost emulators...");
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, "127.0.0.1", 8080);
-    }
+    // In a cloud IDE, we connect to the proxied HTTPS endpoints.
+    const baseHost = host.substring(host.indexOf('-') + 1);
+    const authUrl = `https://9099-${baseHost}`;
+    const firestoreHost = `8080-${baseHost}`;
+    
+    console.log(`Cloud Dev environment detected. Connecting to proxied emulators at ${authUrl} and ${firestoreHost}`);
+    connectAuthEmulator(auth, authUrl, { disableWarnings: true });
+    connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
     
     (globalThis as any).emulatorsConnected = true;
 };
@@ -52,10 +45,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
         try {
-            // A small delay can help prevent race conditions in some cloud dev environments
-            setTimeout(() => {
-                connectToEmulators();
-            }, 200);
+            // A sufficient delay to ensure network proxies are ready in the cloud IDE.
+            setTimeout(connectToEmulators, 1000);
         } catch (error) {
             console.error("Failed to connect to emulators during initial setup:", error);
         }
