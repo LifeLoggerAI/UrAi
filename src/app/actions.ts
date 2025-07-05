@@ -20,58 +20,19 @@ import { processOnboardingTranscript } from "@/ai/flows/process-onboarding-trans
 import { enrichVoiceEvent } from "@/ai/flows/enrich-voice-event";
 
 
-const processAudioForAISchema = z.object({
-    audioDataUri: z.string().min(1, "Audio data cannot be empty."),
-});
-
-type ProcessAudioForAIInput = z.infer<typeof processAudioForAISchema>;
-
-type ProcessAudioForAIReturn = {
-    transcript: string;
-    analysis: EnrichVoiceEventOutput | null;
-    error: string | null;
-};
-
-export async function processAudioForAI(input: ProcessAudioForAIInput): Promise<ProcessAudioForAIReturn> {
-    const validatedFields = processAudioForAISchema.safeParse(input);
-
-    if (!validatedFields.success) {
-        return { transcript: "", analysis: null, error: "Invalid input." };
-    }
-    
-    const { audioDataUri } = validatedFields.data;
-
-    try {
-        const { transcript } = await transcribeAudio({ audioDataUri });
-        if (!transcript) {
-            return { transcript: "", analysis: null, error: "Failed to transcribe audio." };
-        }
-
-        const analysis = await enrichVoiceEvent({ text: transcript });
-        if (!analysis) {
-            return { transcript, analysis: null, error: "AI analysis of the transcript failed." };
-        }
-        
-        return { transcript, analysis, error: null };
-    } catch (e) {
-        console.error(e);
-        return { transcript: "", analysis: null, error: "Failed to process voice event with AI." };
-    }
-}
-
-
 export async function summarizeWeekAction(userId: string): Promise<{ summary: string | null; audioDataUri: string | null; error: string | null; }> {
     if (!userId) {
         return { summary: null, audioDataUri: null, error: "User not authenticated." };
     }
 
     try {
-        const oneWeekAgo = Timestamp.fromMillis(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
         
         const q = query(
             collection(db, "voiceEvents"), 
             where("uid", "==", userId), 
-            where("createdAt", ">=", oneWeekAgo.toMillis()),
+            where("createdAt", ">=", oneWeekAgo.getTime()),
             orderBy("createdAt", "desc")
         );
 
@@ -106,23 +67,6 @@ export async function summarizeWeekAction(userId: string): Promise<{ summary: st
     }
 }
 
-export async function analyzeDreamAction(input: { text: string }): Promise<{ analysis: AnalyzeDreamOutput | null; error: string | null }> {
-    const validatedFields = z.object({ text: z.string().min(1) }).safeParse(input);
-    if (!validatedFields.success) {
-        return { analysis: null, error: "Invalid input." };
-    }
-    try {
-        const analysis = await analyzeDream({ text: validatedFields.data.text });
-        if (!analysis) {
-            return { analysis: null, error: "AI analysis of the dream failed." };
-        }
-        return { analysis, error: null };
-    } catch (e) {
-        console.error("Failed to analyze dream:", e);
-        return { analysis: null, error: "Failed to analyze dream. Please try again." };
-    }
-}
-
 
 export async function getDashboardDataAction(userId: string): Promise<{ data: DashboardData | null; error: string | null; }> {
     if (!userId) {
@@ -130,19 +74,20 @@ export async function getDashboardDataAction(userId: string): Promise<{ data: Da
     }
 
     try {
-        const thirtyDaysAgo = Timestamp.fromMillis(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         
         const voiceEventsQuery = query(
             collection(db, "voiceEvents"), 
             where("uid", "==", userId), 
-            where("createdAt", ">=", thirtyDaysAgo.toMillis()),
+            where("createdAt", ">=", thirtyDaysAgo.getTime()),
             orderBy("createdAt", "asc")
         );
 
         const dreamsQuery = query(
             collection(db, "dreamEvents"),
             where("uid", "==", userId),
-            where("createdAt", ">=", thirtyDaysAgo.toMillis()),
+            where("createdAt", ">=", thirtyDaysAgo.getTime()),
             orderBy("createdAt", "asc")
         );
 
@@ -247,25 +192,6 @@ export async function companionChatAction(input: CompanionChatInput): Promise<Co
     }
 }
 
-
-export async function analyzeInnerTextAction(input: { text: string }): Promise<{ analysis: AnalyzeTextSentimentOutput | null; error: string | null }> {
-    const validatedFields = z.object({ text: z.string().min(1) }).safeParse(input);
-    if (!validatedFields.success) {
-        return { analysis: null, error: "Invalid input." };
-    }
-    try {
-        const analysis = await analyzeTextSentiment({ text: validatedFields.data.text });
-        if (!analysis) {
-            return { analysis: null, error: "AI analysis of the text failed." };
-        }
-        return { analysis, error: null };
-    } catch(e) {
-        console.error("Failed to analyze inner text:", e);
-        return { analysis: null, error: "Failed to save reflection. Please try again." };
-    }
-}
-
-
 type SuggestRitualReturn = {
     suggestion: SuggestRitualOutput | null;
     error: string | null;
@@ -290,14 +216,12 @@ export async function suggestRitualAction(input: z.infer<typeof SuggestRitualInp
 }
 
 const processOnboardingVoiceSchema = z.object({
-    userId: z.string().min(1, "User ID is required."),
     audioDataUri: z.string().min(1, "Audio data cannot be empty."),
 });
 
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
 type ProcessOnboardingReturn = {
-    success: boolean;
     transcript: string | null;
     analysis: ProcessOnboardingTranscriptOutput | null;
     error: string | null;
@@ -306,7 +230,7 @@ type ProcessOnboardingReturn = {
 export async function processOnboardingVoiceAction(input: ProcessOnboardingVoiceInput): Promise<ProcessOnboardingReturn> {
     const validatedFields = processOnboardingVoiceSchema.safeParse(input);
     if (!validatedFields.success) {
-        return { success: false, transcript: null, analysis: null, error: "Invalid input." };
+        return { transcript: null, analysis: null, error: "Invalid input." };
     }
 
     const { audioDataUri } = validatedFields.data;
@@ -314,17 +238,17 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
     try {
         const { transcript } = await transcribeAudio({ audioDataUri });
         if (!transcript) {
-            return { success: false, transcript: null, analysis: null, error: "Failed to transcribe audio." };
+            return { transcript: null, analysis: null, error: "Failed to transcribe audio." };
         }
         
         const analysis = await processOnboardingTranscript({ transcript });
         
-        return { success: true, transcript, analysis, error: null };
+        return { transcript, analysis, error: null };
 
     } catch (e) {
         console.error("FULL ERROR during onboarding AI processing:", JSON.stringify(e, null, 2));
         const firebaseError = e as {code?: string, message: string};
         const errorMessage = firebaseError.message || "An unknown error occurred during onboarding.";
-        return { success: false, transcript: null, analysis: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
+        return { transcript: null, analysis: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
     }
 }

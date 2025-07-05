@@ -19,28 +19,24 @@ if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("REPLACE_WITH")) 
 
 // Initialize Firebase
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-
-const db: Firestore = initializeFirestore(app, {
-    cache: memoryLocalCache({})
-});
-
+const db: Firestore = initializeFirestore(app, { cache: memoryLocalCache({}) });
 const auth: Auth = getAuth(app);
+const analytics: Promise<Analytics | null> = isSupported().then(yes => (yes ? getAnalytics(app) : null));
 
-// --- START EMULATOR CONNECTION ---
-if (typeof window !== 'undefined' && !auth.emulatorConfig) {
-    console.log("Connecting to Firebase Emulators using 127.0.0.1...");
+// --- EMULATOR CONNECTION ---
+// Use a global flag to ensure this only runs once per page load, preventing
+// issues with hot-reloading in development.
+if (typeof window !== 'undefined' && !(window as any).firebase_emulators_connected) {
+    console.log("Connecting to Firebase Emulators at 127.0.0.1...");
     try {
         connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
         connectFirestoreEmulator(db, '127.0.0.1', 8080);
         console.log("Successfully connected to Firebase Emulators.");
+        (window as any).firebase_emulators_connected = true; // Set the flag
     } catch (error) {
         console.error("CRITICAL: Failed to connect to Firebase Emulators.", error);
     }
 }
 // --- END EMULATOR CONNECTION ---
-
-
-// Initialize Analytics
-const analytics: Promise<Analytics | null> = isSupported().then(yes => (yes ? getAnalytics(app) : null));
 
 export { db, auth, analytics };

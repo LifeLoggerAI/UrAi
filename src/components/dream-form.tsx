@@ -2,14 +2,14 @@
 'use client'
 
 import React, { useState } from 'react';
-import { analyzeDreamAction } from '@/app/actions';
+import { analyzeDream } from '@/ai/flows/analyze-dream';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PenLine } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection } from 'firebase/firestore';
 import type { Dream } from '@/lib/types';
 
 export function DreamForm() {
@@ -31,22 +31,22 @@ export function DreamForm() {
 
         setIsSubmitting(true);
         try {
-            const result = await analyzeDreamAction({ text });
-            if (result.error || !result.analysis) {
-                throw new Error(result.error || "AI analysis of the dream failed.");
+            const result = await analyzeDream({ text });
+            if (!result) {
+                throw new Error("AI analysis of the dream failed.");
             }
 
-            const dreamId = crypto.randomUUID();
+            const dreamId = doc(collection(db, "dreamEvents")).id;
             const timestamp = Date.now();
             const newDream: Dream = {
                 id: dreamId,
                 uid: user.uid,
                 text,
                 createdAt: timestamp,
-                emotions: result.analysis.emotions || [],
-                themes: result.analysis.themes || [],
-                symbols: result.analysis.symbols || [],
-                sentimentScore: result.analysis.sentimentScore,
+                emotions: result.emotions || [],
+                themes: result.themes || [],
+                symbols: result.symbols || [],
+                sentimentScore: result.sentimentScore,
             };
     
             await setDoc(doc(db, "dreamEvents", newDream.id), newDream);

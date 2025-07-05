@@ -11,7 +11,7 @@ import { processOnboardingVoiceAction } from '@/app/actions';
 import { Loader2, Mic, BotMessageSquare, CheckCircle2, Square, ShieldCheck } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { db } from '@/lib/firebase';
-import { doc, writeBatch } from 'firebase/firestore';
+import { doc, writeBatch, updateDoc } from 'firebase/firestore';
 import type { OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from '@/lib/types';
 
 const prompts = [
@@ -70,9 +70,9 @@ export default function VoiceOnboardingPage() {
                 reader.onloadend = async () => {
                     const audioDataUri = reader.result as string;
                     
-                    const result = await processOnboardingVoiceAction({ userId: user.uid, audioDataUri });
+                    const result = await processOnboardingVoiceAction({ audioDataUri });
 
-                    if (result.error || !result.success || !result.transcript) {
+                    if (result.error || !result.transcript) {
                         toast({ variant: 'destructive', title: 'Onboarding Failed', description: result.error || "Could not process your reflection." });
                         setRecordingState('idle');
                         return;
@@ -83,7 +83,7 @@ export default function VoiceOnboardingPage() {
                         const timestamp = Date.now();
                         const batch = writeBatch(db);
 
-                        const intakeId = crypto.randomUUID();
+                        const intakeId = doc(collection(db, "onboardIntake")).id;
                         const intakeDoc: OnboardIntake = {
                             id: intakeId,
                             uid: user.uid,
@@ -94,30 +94,31 @@ export default function VoiceOnboardingPage() {
 
                         if (analysis) {
                             if (analysis.goal) {
-                                const goalId = crypto.randomUUID();
+                                const goalId = doc(collection(db, "goals")).id;
                                 const goal: Goal = { id: goalId, uid: user.uid, title: analysis.goal, createdAt: timestamp };
                                 batch.set(doc(db, "goals", goalId), goal);
                             }
                             if (analysis.task && analysis.reminderDate) {
-                                const taskId = crypto.randomUUID();
+                                const taskId = doc(collection(db, "tasks")).id;
                                 const task: Task = { id: taskId, uid: user.uid, title: analysis.task, dueDate: new Date(analysis.reminderDate).getTime(), status: 'pending' };
                                 batch.set(doc(db, "tasks", taskId), task);
                                 
-                                const eventId = crypto.randomUUID();
+                                const eventId = doc(collection(db, "calendarEvents")).id;
                                 const calendarEvent: CalendarEvent = { id: eventId, uid: user.uid, title: analysis.task, startTime: new Date(analysis.reminderDate).getTime(), contextSource: 'onboarding' };
                                 batch.set(doc(db, "calendarEvents", eventId), calendarEvent);
                             }
                             if (analysis.habitToTrack) {
-                                const habitId = crypto.randomUUID();
+                                const habitId = doc(collection(db, "habitWatch")).id;
                                 const habitWatch: HabitWatch = { id: habitId, uid: user.uid, name: analysis.habitToTrack, frequency: "daily", context: "userOnboard" };
                                 batch.set(doc(db, "habitWatch", habitId), habitWatch);
                             }
                         }
                         
-                        const userRef = doc(db, "users", user.uid);
-                        batch.update(userRef, { onboardingComplete: true });
-
                         await batch.commit();
+                        
+                        // Final step: mark user as onboarded
+                        const userRef = doc(db, "users", user.uid);
+                        await updateDoc(userRef, { onboardingComplete: true });
 
                         setRecordingState('done');
                         toast({ title: "Welcome to Life Logger!", description: "Your journey begins now." });

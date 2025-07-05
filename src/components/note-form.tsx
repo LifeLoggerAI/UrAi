@@ -2,7 +2,8 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react';
-import { processAudioForAI } from '@/app/actions';
+import { transcribeAudio } from '@/ai/flows/transcribe-audio';
+import { enrichVoiceEvent } from '@/ai/flows/enrich-voice-event';
 import { generateAvatar } from '@/ai/flows/generate-avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { RecordButton } from '@/components/record-button';
@@ -60,16 +61,22 @@ export function NoteForm({ userId }: { userId: string }) {
       const audioDataUri = reader.result as string;
 
       try {
-        const aiResult = await processAudioForAI({ audioDataUri });
-
-        if (aiResult.error || !aiResult.analysis) {
-            throw new Error(aiResult.error || "AI processing failed.");
+        // Step 1: Transcribe audio
+        const transcriptionResult = await transcribeAudio({ audioDataUri });
+        if (!transcriptionResult?.transcript) {
+          throw new Error("AI transcription failed.");
+        }
+        const { transcript } = transcriptionResult;
+        
+        // Step 2: Enrich transcript
+        const analysis = await enrichVoiceEvent({ text: transcript });
+        if (!analysis) {
+          throw new Error("AI analysis of the transcript failed.");
         }
 
-        const { transcript, analysis } = aiResult;
-
-        const audioEventId = crypto.randomUUID();
-        const voiceEventId = crypto.randomUUID();
+        // Step 3: Write all data to Firestore in a batch
+        const audioEventId = doc(collection(db, "audioEvents")).id;
+        const voiceEventId = doc(collection(db, "voiceEvents")).id;
         const timestamp = Date.now();
         const batch = writeBatch(db);
 
@@ -100,9 +107,10 @@ export function NoteForm({ userId }: { userId: string }) {
         };
         batch.set(doc(db, "voiceEvents", newVoiceEvent.id), newVoiceEvent);
 
+        // Step 4: Handle people mentioned
         if (analysis.people && analysis.people.length > 0) {
-            const peopleRef = collection(db, "people");
             for (const personName of analysis.people) {
+                const peopleRef = collection(db, "people");
                 const q = query(peopleRef, where("uid", "==", userId), where("name", "==", personName), limit(1));
                 const querySnapshot = await getDocs(q);
 

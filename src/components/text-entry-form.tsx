@@ -2,14 +2,14 @@
 'use client'
 
 import React, { useState } from 'react';
-import { analyzeInnerTextAction } from '@/app/actions';
+import { analyzeTextSentiment } from '@/ai/flows/analyze-text-sentiment';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, PenLine } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection } from 'firebase/firestore';
 import type { InnerVoiceReflection } from '@/lib/types';
 
 export function TextEntryForm() {
@@ -31,12 +31,12 @@ export function TextEntryForm() {
 
         setIsSubmitting(true);
         try {
-            const result = await analyzeInnerTextAction({ text });
-            if (result.error || !result.analysis) {
-                throw new Error(result.error || "AI analysis of the text failed.");
+            const result = await analyzeTextSentiment({ text });
+            if (!result) {
+                throw new Error("AI analysis of the text failed.");
             }
             
-            const reflectionId = crypto.randomUUID();
+            const reflectionId = doc(collection(db, "innerTexts")).id;
             const timestamp = Date.now();
 
             const newReflection: InnerVoiceReflection = {
@@ -44,7 +44,7 @@ export function TextEntryForm() {
                 uid: user.uid,
                 text,
                 createdAt: timestamp,
-                sentimentScore: result.analysis.sentimentScore,
+                sentimentScore: result.sentimentScore,
             };
 
             await setDoc(doc(db, "innerTexts", newReflection.id), newReflection);
