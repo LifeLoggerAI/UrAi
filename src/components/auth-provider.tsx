@@ -14,17 +14,36 @@ const connectToEmulators = () => {
         return;
     }
 
-    try {
-        console.log("Connecting to local Firebase Emulators...");
-        connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
-        connectFirestoreEmulator(db, "127.0.0.1", 8080);
-        
-        (globalThis as any).emulatorsConnected = true;
-        console.log("✅ Firebase Emulators connected.");
+    // A delay helps ensure the network proxies in the cloud dev env are ready.
+    setTimeout(() => {
+        try {
+            const isCloudDev = window.location.hostname.includes('cloudworkstations.dev');
+            if (isCloudDev) {
+                const hostname = window.location.hostname;
+                const authHost = hostname.replace('6000-', '9099-');
+                const firestoreHost = hostname.replace('6000-', '8080-');
+                
+                const authUrl = `https://${authHost}`;
 
-    } catch (error) {
-        console.error("Failed to connect to emulators:", error);
-    }
+                console.log(`Cloud Dev environment detected. Connecting to proxied emulators...`);
+                connectAuthEmulator(auth, authUrl, { disableWarnings: true });
+                
+                // When connecting to the HTTPS proxy for Firestore, the port is 443.
+                connectFirestoreEmulator(db, firestoreHost, 443, { ssl: true });
+            } else {
+                // For local development, connect to localhost.
+                console.log("Local environment detected. Connecting to localhost emulators...");
+                connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+                connectFirestoreEmulator(db, "127.0.0.1", 8080);
+            }
+
+            (globalThis as any).emulatorsConnected = true;
+            console.log("✅ Firebase Emulators connected.");
+
+        } catch (error) {
+            console.error("Failed to connect to emulators:", error);
+        }
+    }, 1000); // 1-second delay for safety
 };
 
 type AuthContextType = {
@@ -43,12 +62,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This ensures client-side-only code runs after the component has mounted.
     setIsClient(true);
   }, []);
   
   useEffect(() => {
-    // We only want to connect to emulators in the development environment.
     if (process.env.NODE_ENV === 'development') {
         connectToEmulators();
     }
@@ -58,12 +75,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
-  // Show a loader until the client has mounted and auth state is determined.
-  if (!isClient || loading) {
+  if (!isClient) {
+    return null;
+  }
+  
+  if (loading) {
     return (
         <div className="flex h-screen w-full items-center justify-center bg-background">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
