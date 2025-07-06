@@ -9,13 +9,16 @@ if (admin.apps.length === 0) {
 const db = admin.firestore();
 
 /**
- * Triggered on new user creation to create a default profile in Firestore.
- * This aligns with the "ONBOARDING SETUP TASK" from the blueprint.
+ * Triggered on new user creation to create a default profile and companion in Firestore.
  */
 export const createDefaultProfile = functions.auth.user().onCreate(async (user) => {
   const {uid, email, displayName, photoURL} = user;
 
   try {
+    const batch = db.batch();
+
+    // 1. Create User Profile
+    const userRef = db.collection("users").doc(uid);
     const newUserDoc = {
       displayName: displayName || email?.split("@")[0] || "Anonymous",
       email: email || "",
@@ -44,9 +47,26 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
       isProUser: false,
       onboardingComplete: false,
     };
+    batch.set(userRef, newUserDoc);
 
-    await db.collection("users").doc(uid).set(newUserDoc);
-    functions.logger.info(`Successfully created profile for user: ${uid}`);
+    // 2. Create Default Companion
+    const companionRef = db.collection("companions").doc(); // Let Firestore generate ID
+    const newCompanion = {
+        id: companionRef.id,
+        uid: uid,
+        archetype: "Healer",
+        tone: "supportive",
+        memoryThread: [],
+        evolutionStage: "Healer → Reclaimer",
+        voicePreset: "soft_neutral_female",
+        isActive: true,
+    };
+    batch.set(companionRef, newCompanion);
+
+
+    await batch.commit();
+
+    functions.logger.info(`Successfully created profile and companion for user: ${uid}`);
 
     // As per blueprint: "enqueue welcome notification"
     functions.logger.info(`Enqueued welcome notification for user ${uid}`);

@@ -1535,3 +1535,15 @@ export const WeeklyScrollSchema = z.object({
     createdAt: z.number(),
 });
 export type WeeklyScroll = z.infer<typeof WeeklyScrollSchema>;
+
+export const CompanionSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    archetype: z.string(),
+    tone: z.string(),
+    memoryThread: z.array(z.string()),
+    evolutionStage: z.string(),
+    voicePreset: z.string(),
+    isActive: z.boolean(),
+});
+export type Companion = z.infer<typeof CompanionSchema>;
