@@ -25,19 +25,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // A one-time flag to connect to the emulators and a timeout
-    // to ensure the cloud environment's network is ready.
+    // In this development environment, we always want to connect to the emulators.
+    // The emulatorsConnected flag prevents re-connecting on component re-renders.
     if (!emulatorsConnected) {
-      setTimeout(() => {
-        try {
-          connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-          connectFirestoreEmulator(db, '127.0.0.1', 8080);
-          emulatorsConnected = true;
-          console.log("✅ Firebase Emulators connected.");
-        } catch (error) {
-          console.error("!!! Critical error connecting to emulators:", error);
-        }
-      }, 1000); // 1-second delay
+      try {
+        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+        connectFirestoreEmulator(db, '127.0.0.1', 8080);
+        emulatorsConnected = true;
+        console.log("✅ Firebase Emulators connected.");
+      } catch (error) {
+        console.error("!!! Critical error connecting to emulators:", error);
+      }
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
