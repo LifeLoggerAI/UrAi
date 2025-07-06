@@ -21,7 +21,6 @@ export async function seedDemoData(userId: string) {
             email: "test@lifelogger.app",
             onboardingComplete: true,
             createdAt: Date.now(),
-            // Fields for demo mode
             mood: "Curious",
             location: "Downtown LA",
             lastVoiceTranscript: "Just had a deep conversation about the future.",
@@ -130,6 +129,17 @@ export async function seedDemoData(userId: string) {
         };
         batch.set(bloomRef, bloom);
 
+        const recoveryBloomRef = doc(collection(db, `users/${userId}/memoryBlooms`));
+        const recoveryBloom: MemoryBloom = {
+            bloomId: recoveryBloomRef.id,
+            emotion: 'recovery',
+            bloomColor: 'hsl(140, 70%, 60%)', // A green color for recovery
+            triggeredAt: new Date("2025-07-05").getTime(),
+            description: "After weeks of fog, you found focus again.",
+            trigger: "Shadow Rebound",
+        };
+        batch.set(recoveryBloomRef, recoveryBloom);
+
         const dreamRef = doc(collection(db, "dreamEvents"));
         const dream: Dream = {
             id: dreamRef.id,
@@ -173,6 +183,28 @@ export async function seedDemoData(userId: string) {
             createdAt: new Date("2025-07-08").getTime(),
         };
         batch.set(scrollRef, weeklyScroll);
+        
+        const storyScrollRef = doc(collection(db, `weeklyScrolls/${userId}/scrolls`));
+        const storyScroll: WeeklyScroll = {
+            id: storyScrollRef.id,
+            uid: userId,
+            title: "Becoming the Reclaimer", 
+            segments: [ 
+                "Winter fog",
+                "Shadow spiral",
+                "First dream of clarity",
+                "Emotional bloom"
+            ],
+            highlights: [], 
+            narrationScript: "A story of transformation and reclaiming parts of oneself.",
+            exportLinks: {
+                audio: "/exports/audio/story_reclaimer.mp3",
+                image: "/exports/image/story_reclaimer.png"
+            },
+            createdAt: new Date("2025-07-08").getTime(),
+            linkedUserIds: ["parent_userId_001", "child_userId_002"] 
+        };
+        batch.set(storyScrollRef, storyScroll);
 
 
         await batch.commit();

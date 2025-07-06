@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState }from 'react';
@@ -178,8 +179,8 @@ export function HomeView() {
     const handleBloomClick = (bloom: MemoryBloom) => {
         setPanelContent({
             title: `A Memory of ${bloom.emotion}`,
-            description: `This memory bloomed on ${new Date(bloom.triggeredAt).toLocaleDateString()}.`,
-            content: <p style={{color: bloom.bloomColor}}>{bloom.description}</p>
+            description: `This memory bloomed on ${new Date(bloom.triggeredAt).toLocaleDateString()}. ${bloom.trigger ? `Triggered by: ${bloom.trigger}` : ''}`,
+            content: <p className="text-lg" style={{color: bloom.bloomColor}}>{bloom.description}</p>
         });
         setActivePanel('bloom');
     };

@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 // Base sentiment type
@@ -221,6 +222,7 @@ export const MemoryBloomSchema = z.object({
     bloomColor: z.string(),
     triggeredAt: z.number(),
     description: z.string(),
+    trigger: z.string().optional(),
 });
 export type MemoryBloom = z.infer<typeof MemoryBloomSchema>;
 
@@ -1520,19 +1522,22 @@ export type ProcessedOnboardingData = z.infer<typeof ProcessedOnboardingDataSche
 export const WeeklyScrollSchema = z.object({
     id: z.string(),
     uid: z.string(),
-    weekStart: z.number(),
-    weekEnd: z.number(),
-    summaryMood: z.string(),
+    title: z.string().optional(),
+    weekStart: z.number().optional(),
+    weekEnd: z.number().optional(),
+    summaryMood: z.string().optional(),
     highlights: z.array(z.object({
         type: z.string(),
         text: z.string(),
     })),
+    segments: z.array(z.string()).optional(),
     narrationScript: z.string(),
     exportLinks: z.object({
         audio: z.string(),
         image: z.string(),
     }),
     createdAt: z.number(),
+    linkedUserIds: z.array(z.string()).optional(),
 });
 export type WeeklyScroll = z.infer<typeof WeeklyScrollSchema>;
 
