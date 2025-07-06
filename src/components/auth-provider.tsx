@@ -21,7 +21,6 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 let emulatorsConnected = false;
-let devModeInitialized = false;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -30,12 +29,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initializeApp = async () => {
       // Connect to emulators on every startup in this environment.
-      // This logic is now outside the devMode check to ensure connection
-      // before any Firestore operations are attempted.
       if (!emulatorsConnected) {
         try {
           console.log("Connecting to Firebase emulators...");
-          // Using ports that avoid conflicts in the cloud environment
           connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
           connectFirestoreEmulator(db, 'localhost', 8280);
           connectFunctionsEmulator(functions, 'localhost', 5150);
@@ -48,11 +44,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (devMode) {
         // --- Development Mode ---
-        if (!devModeInitialized) {
-          console.log("🚀 Dev mode enabled. Loading mock user and data...");
-          await loadMockData();
-          devModeInitialized = true;
-        }
+        console.log("🚀 Dev mode enabled. Loading mock user and data...");
+        await loadMockData();
+        console.log("✅ Dev mode user loaded");
         setUser(mockUser as User);
         setLoading(false);
       } else {
