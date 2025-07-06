@@ -7,7 +7,7 @@ import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase
 const devMode = process.env.NODE_ENV === 'development';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
+  apiKey: "AIzaSyAMovq3zvqgmsBBPhsjDQudb8kltxUbYV4",
   authDomain: "lifelogger-clean.firebaseapp.com",
   projectId: "lifelogger-clean",
   storageBucket: "lifelogger-clean.appspot.com",
