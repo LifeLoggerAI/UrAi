@@ -6,12 +6,14 @@ import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase
 import { devMode } from "./dev-mode";
 
 const firebaseConfig = {
-  apiKey: "dummy-key",
+  // IMPORTANT: The projectId below MUST match the value in .firebaserc for emulators to work.
+  // Replace these with your actual Firebase project configuration for production deployment.
+  apiKey: "YOUR_API_KEY_HERE",
   authDomain: "lifelogger-demo.firebaseapp.com",
   projectId: "lifelogger-demo",
   storageBucket: "lifelogger-demo.appspot.com",
-  messagingSenderId: "dummy-sender-id",
-  appId: "dummy-app-id"
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
