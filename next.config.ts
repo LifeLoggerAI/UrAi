@@ -1,6 +1,11 @@
 
 import type { NextConfig } from 'next';
 
+const cspHeader = `
+    frame-ancestors 'self' https://*.cloudworkstations.dev;
+    connect-src 'self' http://localhost:* ws://localhost:* https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
+`;
+
 const nextConfig: NextConfig = {
   /* config options here */
   typescript: {
@@ -24,6 +29,19 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader.replace(/\s{2,}/g, ' ').trim(),
+          },
+        ],
+      },
+    ];
   },
 };
 

@@ -9,9 +9,6 @@ import { connectFunctionsEmulator } from 'firebase/functions';
 import { auth, db, functions } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
-// Use a flag to ensure emulators are only connected once.
-let emulatorsConnected = false;
-
 type AuthContextType = {
   user: User | null;
   loading: boolean;
@@ -27,23 +24,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This check prevents multiple connection attempts in dev environments with hot reloads.
-    if (!emulatorsConnected) {
-      const connectEmulators = async () => {
-        // Wait to ensure network is up
-        await new Promise((res) => setTimeout(res, 1000));
-        try {
-          console.log("Connecting to Firebase emulators on alternate ports...");
-          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
-          connectFirestoreEmulator(db, 'localhost', 8280);
-          connectFunctionsEmulator(functions, 'localhost', 5150);
-          emulatorsConnected = true;
-          console.log("✅ Firebase Emulators connected.");
-        } catch (error) {
-          console.error("!!! Critical error connecting to emulators:", error);
-        }
-      };
-      connectEmulators();
+    // The Firebase SDK is idempotent, so it's safe to call this on every render
+    // during development. It will only connect to the emulators once.
+    try {
+      connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
+      connectFirestoreEmulator(db, 'localhost', 8280);
+      connectFunctionsEmulator(functions, 'localhost', 5150);
+    } catch (error) {
+      // This will only catch synchronous errors during setup, which is rare.
+      // Connection errors are asynchronous and will appear as network errors in the console.
+      console.error("Error setting up emulator connection:", error);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
