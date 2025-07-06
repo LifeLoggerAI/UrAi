@@ -1,11 +1,10 @@
+
 'use client';
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import type { User } from 'firebase/auth';
-import { onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
-import { connectFirestoreEmulator } from 'firebase/firestore';
-import { connectFunctionsEmulator } from 'firebase/functions';
-import { auth, db, functions } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 import { devMode, mockUser, loadMockData } from '@/lib/dev-mode';
 
@@ -24,33 +23,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initializeApp = async () => {
-      if (devMode) {
-        // --- Development Mode ---
-        try {
-          // These functions throw an error if called more than once, which is fine
-          // in a development environment with hot-reloading.
-          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
-          connectFirestoreEmulator(db, 'localhost', 8280);
-          connectFunctionsEmulator(functions, 'localhost', 5150);
-          await loadMockData();
-          console.log("✅ Emulators connected and mock data loaded.");
-        } catch (error) {
-           console.log("Ignoring emulator connection error on hot-reload.");
-        }
-        setUser(mockUser as User);
+    // Emulator connection is now handled in `src/lib/firebase.ts`.
+    // This hook now only manages auth state and dev mode logic.
+    if (devMode) {
+      // --- Development Mode ---
+      // Use the mock user and load mock data.
+      loadMockData(); // This function is idempotent.
+      setUser(mockUser as User);
+      setLoading(false);
+    } else {
+      // --- Production Mode ---
+      // Listen for real auth state changes.
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        setUser(user);
         setLoading(false);
-      } else {
-        // --- Production Mode ---
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          setUser(user);
-          setLoading(false);
-        });
-        return () => unsubscribe();
-      }
-    };
-    
-    initializeApp();
+      });
+      // Cleanup subscription on unmount
+      return () => unsubscribe();
+    }
   }, []);
 
   if (loading) {
