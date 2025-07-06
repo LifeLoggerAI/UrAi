@@ -1,5 +1,5 @@
 import { db, auth } from '@/lib/firebase';
-import { writeBatch, doc, collection, getDoc, serverTimestamp } from 'firebase/firestore';
+import { writeBatch, doc, collection, getDoc } from 'firebase/firestore';
 import type { User as FirestoreUser, VoiceEvent, Dream, Person, MemoryBloom, AuraState } from '@/lib/types';
 
 export const devMode = process.env.NODE_ENV === 'development';
@@ -40,6 +40,11 @@ export const loadMockData = async () => {
         onboardingComplete: true,
         createdAt: Date.now(),
         avatarUrl: mockUser.photoURL,
+        mood: "Curious",
+        location: "Downtown LA",
+        lastVoiceTranscript: "Just had a deep conversation about the future.",
+        lastActivity: "Walking + Talking",
+        demoMode: true,
     };
     batch.set(userRef, userDocForDb, { merge: true });
 

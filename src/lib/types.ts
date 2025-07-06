@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 // Base sentiment type
@@ -19,12 +18,13 @@ export const UserSchema = z.object({
     lastLoginAt: z.number().optional(),
     lastLogoutAt: z.number().optional(),
     // Dev mode fields
-    avatarState: z.string().optional(),
     mood: z.string().optional(),
-    lastLogin: z.number().optional(),
+    location: z.string().optional(),
+    lastVoiceTranscript: z.string().optional(),
+    lastActivity: z.string().optional(),
+    demoMode: z.boolean().optional(),
     stats: z.record(z.any()).optional(),
     socialGraph: z.record(z.any()).optional(),
-    location: z.record(z.any()).optional(),
     constellation: z.record(z.any()).optional(),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
