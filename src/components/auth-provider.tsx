@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
@@ -20,8 +19,6 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
 });
 
-let emulatorsConnected = false;
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,19 +27,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeApp = async () => {
       if (devMode) {
         // --- Development Mode ---
-        if (!emulatorsConnected) {
-          try {
-            console.log("Connecting to Firebase emulators...");
-            connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
-            connectFirestoreEmulator(db, 'localhost', 8280);
-            connectFunctionsEmulator(functions, 'localhost', 5150);
-            console.log("✅ Emulators connected.");
-            await loadMockData();
-            console.log("✅ Dev mode mock data loaded.");
-          } catch (error) {
-            console.error("Error connecting to emulators or loading data:", error);
-          }
-          emulatorsConnected = true;
+        try {
+          // These functions throw an error if called more than once, which is fine
+          // in a development environment with hot-reloading.
+          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
+          connectFirestoreEmulator(db, 'localhost', 8280);
+          connectFunctionsEmulator(functions, 'localhost', 5150);
+          await loadMockData();
+          console.log("✅ Emulators connected and mock data loaded.");
+        } catch (error) {
+           console.log("Ignoring emulator connection error on hot-reload.");
         }
         setUser(mockUser as User);
         setLoading(false);
