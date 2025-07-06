@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -8,8 +9,9 @@ import { db } from '@/lib/firebase';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Skeleton } from './ui/skeleton';
-import { ScrollText, FileJson, FileImage, Mic, Film } from 'lucide-react';
+import { ScrollText, FileImage, Mic, Lightbulb, Droplets } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from './ui/badge';
 
 export function RecoveryGallery() {
     const { user } = useAuth();
@@ -19,7 +21,7 @@ export function RecoveryGallery() {
     useEffect(() => {
         if (user) {
             const scrollsRef = collection(db, `weeklyScrolls/${user.uid}/scrolls`);
-            const q = query(scrollsRef, orderBy('endDate', 'desc'));
+            const q = query(scrollsRef, orderBy('weekEnd', 'desc'));
 
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 setScrolls(snapshot.docs.map(doc => doc.data() as WeeklyScroll));
@@ -32,10 +34,10 @@ export function RecoveryGallery() {
         }
     }, [user]);
 
-    const handleExport = (format: string) => {
+    const handleExport = (path: string) => {
         toast({
-            title: `Export Initiated (${format})`,
-            description: "This feature is coming soon. In a real app, this would trigger a backend process."
+            title: `Export Initiated`,
+            description: `This feature is coming soon. In a real app, this would export from: ${path}`
         });
     };
 
@@ -58,17 +60,34 @@ export function RecoveryGallery() {
             {scrolls.map(scroll => (
                 <Card key={scroll.id} className="animate-fadeIn">
                     <CardHeader>
-                        <CardTitle>Weekly Scroll: {new Date(scroll.startDate).toLocaleDateString()}</CardTitle>
-                        <CardDescription>A summary of your journey for the week ending {new Date(scroll.endDate).toLocaleDateString()}.</CardDescription>
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <CardTitle>Weekly Scroll: {new Date(scroll.weekStart).toLocaleDateString()}</CardTitle>
+                                <CardDescription>A summary for the week ending {new Date(scroll.weekEnd).toLocaleDateString()}.</CardDescription>
+                            </div>
+                            <Badge variant="secondary" className="capitalize">{scroll.summaryMood}</Badge>
+                        </div>
                     </CardHeader>
-                    <CardContent>
-                        <p className="whitespace-pre-wrap text-sm text-foreground/80">{scroll.summary}</p>
+                    <CardContent className="space-y-4">
+                         <div>
+                            <h4 className="font-semibold text-sm mb-2">Narration</h4>
+                            <p className="whitespace-pre-wrap text-sm text-foreground/80 italic">"{scroll.narrationScript}"</p>
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-sm mb-2 flex items-center gap-2"><Lightbulb className="text-primary"/> Highlights</h4>
+                            <ul className="list-none space-y-2">
+                                {scroll.highlights.map((highlight, index) => (
+                                    <li key={index} className="flex items-center gap-3 text-sm text-foreground/80 p-2 bg-muted rounded-md">
+                                        {highlight.type === 'recovery' ? <Droplets className="h-4 w-4 text-green-500 flex-shrink-0"/> : <Lightbulb className="h-4 w-4 text-amber-500 flex-shrink-0"/>}
+                                        <span>{highlight.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </CardContent>
                     <CardFooter className="flex-wrap gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleExport('Audio')}><Mic className="mr-2 h-4 w-4" /> Audio</Button>
-                        <Button variant="outline" size="sm" onClick={() => handleExport('Image')}><FileImage className="mr-2 h-4 w-4" /> Image</Button>
-                        <Button variant="outline" size="sm" onClick={() => handleExport('JSON')}><FileJson className="mr-2 h-4 w-4" /> JSON</Button>
-                        <Button variant="outline" size="sm" onClick={() => handleExport('Video')}><Film className="mr-2 h-4 w-4" /> Video</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleExport(scroll.exportLinks.audio)}><Mic className="mr-2 h-4 w-4" /> Export Audio</Button>
+                        <Button variant="outline" size="sm" onClick={() => handleExport(scroll.exportLinks.image)}><FileImage className="mr-2 h-4 w-4" /> Export Image</Button>
                     </CardFooter>
                 </Card>
             ))}

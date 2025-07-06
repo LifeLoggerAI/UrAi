@@ -119,17 +119,27 @@ export const generateWeeklyStoryScroll = functions.pubsub
             continue;
         }
 
-        // Placeholder for AI summarization call. In a real app, this would
-        // securely call a Genkit flow or other AI service.
-        const summary = `AI Summary Placeholder: This week for user ${uid} was about... [themes from combinedText would go here]`;
+        // Placeholder for AI summarization call.
+        const summaryPayload = {
+            summaryMood: "reflective",
+            highlights: [
+                { type: "event", text: "A key event from the week would be summarized here." },
+                { type: "recovery", text: "A moment of positive shift would be noted here." }
+            ],
+            narrationScript: `AI Summary Placeholder: This week for user ${uid} was about... [themes from combinedText would go here]`,
+            exportLinks: {
+                audio: `/exports/audio/placeholder.mp3`,
+                image: `/exports/image/placeholder.png`
+            },
+        };
         
         const scrollRef = db.collection(`weeklyScrolls/${uid}/scrolls`).doc();
         await scrollRef.set({
             id: scrollRef.id,
             uid: uid,
-            startDate: oneWeekAgo,
-            endDate: Date.now(),
-            summary: summary,
+            weekStart: oneWeekAgo,
+            weekEnd: Date.now(),
+            ...summaryPayload,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 

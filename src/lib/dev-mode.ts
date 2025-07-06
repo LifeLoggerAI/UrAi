@@ -1,7 +1,7 @@
 
 import { db } from './firebase';
 import { doc, writeBatch, collection } from 'firebase/firestore';
-import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection } from './types';
+import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection, WeeklyScroll } from './types';
 
 export const devMode = process.env.NODE_ENV === 'development';
 
@@ -107,6 +107,28 @@ export async function seedDemoData(userId: string) {
             sentimentScore: -0.2,
         };
         batch.set(innerTextRef, innerText);
+
+        // 5. Weekly Scroll
+        const scrollRef = doc(collection(db, `weeklyScrolls/${userId}/scrolls`));
+        const weeklyScroll: WeeklyScroll = {
+            id: scrollRef.id,
+            uid: userId,
+            weekStart: new Date("2025-07-01").getTime(),
+            weekEnd: new Date("2025-07-07").getTime(),
+            summaryMood: "rebuilding",
+            highlights: [
+                { type: "event", text: "Emotional talk with Alex" },
+                { type: "recovery", text: "Hope restored" }
+            ],
+            narrationScript: "This week, you moved through tension toward healing...",
+            exportLinks: {
+                audio: "/exports/audio/2025-07-07.mp3",
+                image: "/exports/image/2025-07-07.png"
+            },
+            createdAt: new Date("2025-07-08").getTime(),
+        };
+        batch.set(scrollRef, weeklyScroll);
+
 
         await batch.commit();
         console.log("✅ Demo data seeded successfully.");

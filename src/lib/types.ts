@@ -1520,9 +1520,18 @@ export type ProcessedOnboardingData = z.infer<typeof ProcessedOnboardingDataSche
 export const WeeklyScrollSchema = z.object({
     id: z.string(),
     uid: z.string(),
-    startDate: z.number(),
-    endDate: z.number(),
-    summary: z.string(),
+    weekStart: z.number(),
+    weekEnd: z.number(),
+    summaryMood: z.string(),
+    highlights: z.array(z.object({
+        type: z.string(),
+        text: z.string(),
+    })),
+    narrationScript: z.string(),
+    exportLinks: z.object({
+        audio: z.string(),
+        image: z.string(),
+    }),
     createdAt: z.number(),
 });
 export type WeeklyScroll = z.infer<typeof WeeklyScrollSchema>;
