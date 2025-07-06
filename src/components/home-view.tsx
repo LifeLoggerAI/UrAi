@@ -22,6 +22,7 @@ import { TorsoView } from './torso-view';
 import { LegsView } from './legs-view';
 import { ArmsView } from './arms-view';
 import { GroundView } from './ground-view';
+import { PassiveCameraCapture } from './passive-camera-capture';
 
 type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | 'ground' | null;
 
@@ -222,6 +223,7 @@ export function HomeView() {
 
     return (
         <>
+            <PassiveCameraCapture />
             <div className="relative w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden text-center">
                 <div style={getSkyStyle()} className="absolute inset-0 z-0 transition-all duration-1000" />
                 

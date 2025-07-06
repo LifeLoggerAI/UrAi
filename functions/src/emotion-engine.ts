@@ -2,12 +2,16 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {v4 as uuidv4} from "uuid";
+import type { AuraState, MemoryBloom } from "../../lib/types";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 const db = admin.firestore();
+
+const POSITIVE_EMOTIONS = ["joy", "calm", "recovery", "hopeful", "curiosity"];
+const NEGATIVE_EMOTIONS = ["sadness", "anger", "anxiety", "frustration", "distressed"];
 
 /**
  * Maps an emotion and intensity to a visual overlay style.
@@ -166,4 +170,53 @@ export const triggerBloom = functions.firestore
         functions.logger.error(`Failed to create memoryBloom for user ${uid}:`, error);
       }
     }
+  });
+
+
+/**
+ * Detects a positive mood shift and triggers a recovery bloom.
+ */
+export const detectRecoveryBloomOnAuraUpdate = functions.firestore
+  .document("users/{uid}/auraStates/current")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data() as AuraState;
+    const after = change.after.data() as AuraState;
+    const { uid } = context.params;
+
+    if (!before?.currentEmotion || !after?.currentEmotion) {
+        return null;
+    }
+
+    const beforeIsNegative = NEGATIVE_EMOTIONS.includes(before.currentEmotion.toLowerCase());
+    const afterIsPositive = POSITIVE_EMOTIONS.includes(after.currentEmotion.toLowerCase());
+
+    if (beforeIsNegative && afterIsPositive) {
+      functions.logger.info(`Recovery bloom detected for user ${uid}. From ${before.currentEmotion} to ${after.currentEmotion}.`);
+      try {
+        const bloomId = uuidv4();
+        const memoryBloomPayload: Omit<MemoryBloom, 'triggeredAt'> & { triggeredAt: admin.firestore.FieldValue } = {
+            bloomId: bloomId,
+            emotion: after.currentEmotion,
+            bloomColor: after.overlayColor || mapEmotionToColor(after.currentEmotion),
+            triggeredAt: admin.firestore.FieldValue.serverTimestamp(),
+            description: "You’ve made it through something heavy. A moment of recovery.",
+        };
+        await db.collection(`users/${uid}/memoryBlooms`).doc(bloomId).set(memoryBloomPayload);
+        
+        const insightPayload = {
+            uid: uid,
+            insightId: `bloom-${bloomId}`,
+            insightType: "recovery_bloom",
+            payload: { bloomId: bloomId, emotion: after.currentEmotion },
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            consumed: false,
+            ttsUrl: null,
+        };
+        await db.collection("narratorInsights").doc(insightPayload.insightId).set(insightPayload);
+
+      } catch (error) {
+        functions.logger.error(`Failed to create recovery bloom for user ${uid}:`, error);
+      }
+    }
+    return null;
   });

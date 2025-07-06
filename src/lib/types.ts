@@ -65,6 +65,7 @@ export const PermissionsSchema = z.object({
     gpsPermission: z.boolean(),
     motionPermission: z.boolean(),
     notificationsPermission: z.boolean(),
+    cameraCapturePermissionsGranted: z.boolean().default(false),
     shareAnonymizedData: z.boolean(),
     acceptedTerms: z.boolean(),
     acceptedPrivacyPolicy: z.boolean(),
@@ -1514,3 +1515,14 @@ export const ProcessedOnboardingDataSchema = z.object({
     habitWatch: HabitWatchSchema.optional(),
 });
 export type ProcessedOnboardingData = z.infer<typeof ProcessedOnboardingDataSchema>;
+
+
+export const WeeklyScrollSchema = z.object({
+    id: z.string(),
+    uid: z.string(),
+    startDate: z.number(),
+    endDate: z.number(),
+    summary: z.string(),
+    createdAt: z.number(),
+});
+export type WeeklyScroll = z.infer<typeof WeeklyScrollSchema>;

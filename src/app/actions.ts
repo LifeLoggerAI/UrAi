@@ -1,7 +1,7 @@
 
 'use server';
 
-import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput, AnalyzeDreamOutput, AnalyzeTextSentimentOutput } from "@/lib/types";
+import type { VoiceEvent, AudioEvent, Person, Dream, UpdateUserSettings, DashboardData, CompanionChatInput, SymbolicImageInsight, InnerVoiceReflection, SuggestRitualOutput, OnboardIntake, Goal, Task, CalendarEvent, HabitWatch, AnalyzeCameraImageOutput, ProcessOnboardingTranscriptOutput, EnrichVoiceEventOutput, AnalyzeDreamOutput, AnalyzeTextSentimentOutput, MoodLog, AuraState } from "@/lib/types";
 import { z } from "zod";
 import { db } from "@/lib/firebase";
 import { doc, writeBatch, collection, query, where, getDocs, limit, increment, arrayUnion, Timestamp, orderBy, setDoc, updateDoc } from "firebase/firestore";
@@ -9,7 +9,7 @@ import { transcribeAudio } from "@/ai/flows/transcribe-audio";
 import { summarizeText } from "@/ai/flows/summarize-text";
 import { generateSpeech } from "@/ai/flows/generate-speech";
 import { analyzeDream } from "@/ai/flows/analyze-dream";
-import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema } from "@/lib/types";
+import { UpdateUserSettingsSchema, DashboardDataSchema, CompanionChatInputSchema, SuggestRitualInputSchema, MoodLogSchema, AuraStateSchema } from "@/lib/types";
 import { format } from "date-fns";
 import { companionChat } from "@/ai/flows/companion-chat";
 import { analyzeCameraImage } from "@/ai/flows/analyze-camera-image";
@@ -251,5 +251,60 @@ export async function processOnboardingVoiceAction(input: ProcessOnboardingVoice
         const firebaseError = e as {code?: string, message: string};
         const errorMessage = firebaseError.message || "An unknown error occurred during AI processing.";
         return { transcript: null, analysis: null, error: `Onboarding processing failed. Reason: ${errorMessage}` };
+    }
+}
+
+
+export async function analyzeAndLogCameraFrameAction(
+    input: { userId: string, imageDataUri: string }
+): Promise<{ success: boolean; error?: string }> {
+    if (!input.userId) {
+        return { success: false, error: "User not authenticated." };
+    }
+
+    try {
+        const analysis = await analyzeCameraImage({ imageDataUri: input.imageDataUri });
+        if (!analysis) {
+            throw new Error('Image analysis failed to return data.');
+        }
+
+        const insight = await generateSymbolicInsight({ analysis: JSON.stringify(analysis, null, 2) });
+        if (!insight) {
+            throw new Error('Symbolic insight generation failed.');
+        }
+        
+        const primaryEmotion = Object.keys(analysis.emotionInference).reduce((a, b) => 
+            analysis.emotionInference[a] > analysis.emotionInference[b] ? a : b, 'neutral'
+        );
+
+        const batch = writeBatch(db);
+
+        // 1. Log the mood
+        const moodLogRef = doc(collection(db, `users/${input.userId}/moodLogs`));
+        const moodLog: MoodLog = MoodLogSchema.parse({
+            timestamp: Date.now(),
+            emotion: primaryEmotion,
+            intensity: analysis.emotionInference[primaryEmotion] * 100,
+            source: 'camera_passive'
+        });
+        batch.set(moodLogRef, moodLog);
+
+        // 2. Update the aura state
+        const auraStateRef = doc(db, `users/${input.userId}/auraStates/current`);
+        const auraState: AuraState = AuraStateSchema.parse({
+            currentEmotion: primaryEmotion,
+            overlayColor: analysis.dominantColor,
+            overlayStyle: insight.symbolAnimationTrigger === 'aura_shift' ? 'glow' : (insight.symbolAnimationTrigger || 'none'),
+            lastUpdated: Date.now()
+        });
+        batch.set(auraStateRef, auraState, { merge: true });
+
+        await batch.commit();
+
+        return { success: true };
+
+    } catch (e) {
+        console.error("Failed to analyze and log camera frame:", e);
+        return { success: false, error: (e as Error).message };
     }
 }

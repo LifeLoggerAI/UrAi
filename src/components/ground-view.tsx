@@ -1,12 +1,18 @@
-
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { Sprout, BarChartHorizontal, HeartHandshake } from "lucide-react";
+import { Sprout, BarChartHorizontal, HeartHandshake, ScrollText } from "lucide-react";
+import { RecoveryGallery } from "./recovery-gallery";
 
 export function GroundView() {
     const panels = [
+        {
+            title: 'Weekly Scrolls',
+            icon: <ScrollText className="h-6 w-6 text-primary" />,
+            description: "Review your AI-generated weekly summaries and recovery stories.",
+            content: <RecoveryGallery />
+        },
         {
             title: 'Emotional Garden',
             icon: <Sprout className="h-6 w-6 text-primary" />,

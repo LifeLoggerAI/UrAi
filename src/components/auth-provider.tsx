@@ -3,10 +3,8 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
-import { devMode, mockUser, loadMockData } from '@/lib/dev-mode';
-import { enableNetwork, disableNetwork } from 'firebase/firestore';
 
 type AuthContextType = {
   user: User | null;
@@ -23,34 +21,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const forceFirestoreOnline = async () => {
-        try {
-          console.log('Forcing Firestore network connection...');
-          await disableNetwork(db);
-          await enableNetwork(db);
-          console.log('Firestore network re-enabled successfully.');
-        } catch (error) {
-          console.error('Failed to force Firestore online:', error);
-        }
-    }
-
-    if (devMode) {
-      // In dev mode, force the network online to prevent emulator connection issues,
-      // then load mock data and set the mock user.
-      forceFirestoreOnline().then(() => {
-          loadMockData(); 
-          setUser(mockUser as User);
-          setLoading(false);
-      });
-    } else {
-      // In production mode, listen for real auth state changes.
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        setUser(user);
-        setLoading(false);
-      });
-      // Cleanup subscription on unmount
-      return () => unsubscribe();
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
   if (loading) {

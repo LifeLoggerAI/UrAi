@@ -76,4 +76,68 @@ export const scheduleDailyTorsoSummary = functions.pubsub
     return null;
   });
 
+/**
+ * Generates a weekly story scroll from user data.
+ * Runs every Sunday.
+ */
+export const generateWeeklyStoryScroll = functions.pubsub
+  .schedule("every sunday 06:00")
+  .timeZone("UTC")
+  .onRun(async (context) => {
+    functions.logger.info("Running weekly story scroll generation job.");
+    const db = admin.firestore();
+    const usersSnap = await db.collection("users").get();
 
+    for (const userDoc of usersSnap.docs) {
+      const user = userDoc.data();
+      const uid = userDoc.id;
+
+      if (!user.settings?.receiveWeeklyEmail) {
+        continue;
+      }
+
+      const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+      
+      try {
+        const voiceEventsQuery = db.collection("voiceEvents").where("uid", "==", uid).where("createdAt", ">=", oneWeekAgo);
+        const dreamEventsQuery = db.collection("dreamEvents").where("uid", "==", uid).where("createdAt", ">=", oneWeekAgo);
+        const innerTextsQuery = db.collection("innerTexts").where("uid", "==", uid).where("createdAt", ">=", oneWeekAgo);
+
+        const [voiceEventsSnap, dreamEventsSnap, innerTextsSnap] = await Promise.all([
+          voiceEventsQuery.get(),
+          dreamEventsQuery.get(),
+          innerTextsQuery.get(),
+        ]);
+
+        let combinedText = "";
+        voiceEventsSnap.forEach(doc => combinedText += doc.data().text + "\\n\\n");
+        dreamEventsSnap.forEach(doc => combinedText += doc.data().text + "\\n\\n");
+        innerTextsSnap.forEach(doc => combinedText += doc.data().text + "\\n\\n");
+        
+        if (combinedText.trim().length === 0) {
+            functions.logger.info(`No new entries for user ${uid}, skipping scroll.`);
+            continue;
+        }
+
+        // Placeholder for AI summarization call. In a real app, this would
+        // securely call a Genkit flow or other AI service.
+        const summary = `AI Summary Placeholder: This week for user ${uid} was about... [themes from combinedText would go here]`;
+        
+        const scrollRef = db.collection(`weeklyScrolls/${uid}/scrolls`).doc();
+        await scrollRef.set({
+            id: scrollRef.id,
+            uid: uid,
+            startDate: oneWeekAgo,
+            endDate: Date.now(),
+            summary: summary,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        functions.logger.info(`Generated weekly scroll ${scrollRef.id} for user ${uid}.`);
+        
+      } catch (error) {
+        functions.logger.error(`Failed to generate scroll for user ${uid}:`, error);
+      }
+    }
+    return null;
+  });
