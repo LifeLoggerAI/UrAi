@@ -1,24 +1,23 @@
-
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import { writeBatch, doc, collection, getDoc } from 'firebase/firestore';
 import type { User as FirestoreUser, VoiceEvent, Dream, Person } from '@/lib/types';
-import type { User as AuthUser } from 'firebase/auth';
 
 export const devMode = true; // Set to false in production
 
-// This mock user object is for the AuthProvider context.
-// It has the essential fields used by the UI.
+// Fake mock user object for previewing the UI
 export const mockUser = {
   uid: "demo_user_001",
   displayName: "Demo User",
   email: "demo@lifelogger.app",
-  photoURL: "https://placehold.co/128x128.png?text=D",
+  photoURL: "https://i.imgur.com/abc123.png"
 };
 
-/**
- * Loads mock data into Firestore for the dev mode user.
- * This function is designed to run only once to prevent overwriting data on hot reloads.
- */
+// Use this helper to get the current user, with devMode override
+export const getCurrentUser = () => {
+  return devMode ? mockUser : auth.currentUser;
+};
+
+// Firestore mock data loader for fake user
 export const loadMockData = async () => {
   if (!devMode) return;
 
@@ -26,7 +25,6 @@ export const loadMockData = async () => {
     const userRef = doc(db, "users", mockUser.uid);
     const userDocSnap = await getDoc(userRef);
 
-    // Only load mock data if the user doesn't already exist
     if (userDocSnap.exists()) {
       console.log("✅ Dev mode user data already exists. Skipping mock data load.");
       return;
@@ -35,19 +33,40 @@ export const loadMockData = async () => {
     const batch = writeBatch(db);
     const now = Date.now();
     
-    // 1. Mock User Document
-    const userDocForDb: FirestoreUser = {
+    const userDocForDb: Partial<FirestoreUser> = {
         uid: mockUser.uid,
         displayName: mockUser.displayName,
         email: mockUser.email,
-        createdAt: now,
-        avatarUrl: mockUser.photoURL || undefined,
-        isProUser: true,
+        avatarUrl: mockUser.photoURL,
         onboardingComplete: true,
+        isProUser: true,
+        createdAt: now,
+        lastLogin: now,
+        avatarState: "evolving",
+        mood: "curious",
+        stats: {
+          focus: 72,
+          emotion: "balanced",
+          reflectionScore: 88,
+          rhythmState: "Stable"
+        },
+        socialGraph: {
+          connections: 4,
+          topEmotion: "supportive"
+        },
+        location: {
+          city: "San Francisco",
+          weather: "Partly Cloudy"
+        },
+        constellation: {
+          memories: 8,
+          currentTheme: "Growth",
+          archetype: "Seeker"
+        }
     };
-    batch.set(userRef, userDocForDb);
+    batch.set(userRef, userDocForDb, { merge: true });
 
-    // 2. Mock Voice Events
+    // Mock Voice Events
     const voiceEvent1Id = doc(collection(db, 'voiceEvents')).id;
     const voiceEvent1: VoiceEvent = {
         id: voiceEvent1Id,
@@ -82,7 +101,7 @@ export const loadMockData = async () => {
     };
     batch.set(doc(db, "voiceEvents", voiceEvent2Id), voiceEvent2);
 
-    // 3. Mock Dream Event
+    // Mock Dream Event
     const dreamEventId = doc(collection(db, 'dreamEvents')).id;
     const dreamEvent: Dream = {
         id: dreamEventId,
@@ -96,7 +115,7 @@ export const loadMockData = async () => {
     };
     batch.set(doc(db, "dreamEvents", dreamEventId), dreamEvent);
     
-    // 4. Mock Person
+    // Mock Person
     const personId = doc(collection(db, 'people')).id;
     const person: Person = {
         id: personId,

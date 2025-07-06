@@ -18,6 +18,14 @@ export const UserSchema = z.object({
     avatarStyle: z.string().optional(),
     lastLoginAt: z.number().optional(),
     lastLogoutAt: z.number().optional(),
+    // Dev mode fields
+    avatarState: z.string().optional(),
+    mood: z.string().optional(),
+    lastLogin: z.number().optional(),
+    stats: z.record(z.any()).optional(),
+    socialGraph: z.record(z.any()).optional(),
+    location: z.record(z.any()).optional(),
+    constellation: z.record(z.any()).optional(),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
         passiveAudioEnabled: z.boolean().default(true),
