@@ -1,6 +1,6 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, type Firestore } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator, type Firestore, enableIndexedDbPersistence } from "firebase/firestore";
 import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase/functions";
 
@@ -30,6 +30,13 @@ if (devMode) {
     connectFirestoreEmulator(db, "localhost", 8080);
     connectFunctionsEmulator(functions, "localhost", 5001);
     console.log("✅ Firebase emulators connected.");
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.warn("⚠️ Firestore offline persistence failed: multiple tabs open?");
+      } else if (err.code == 'unimplemented') {
+        console.warn("⚠️ Firestore offline persistence not available in this browser.");
+      }
+    });
   } catch (e) {
     console.warn("Could not connect to emulators, assuming they are not running. Error: ", e);
   }

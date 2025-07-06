@@ -1,6 +1,6 @@
 import { db, auth } from '@/lib/firebase';
-import { writeBatch, doc, collection, getDoc } from 'firebase/firestore';
-import type { User as FirestoreUser, VoiceEvent, Dream, Person } from '@/lib/types';
+import { writeBatch, doc, collection, getDoc, serverTimestamp } from 'firebase/firestore';
+import type { User as FirestoreUser, VoiceEvent, Dream, Person, MemoryBloom, AuraState } from '@/lib/types';
 
 export const devMode = process.env.NODE_ENV === 'development';
 
@@ -9,7 +9,7 @@ export const mockUser = {
   uid: "demo_user_001",
   displayName: "Demo User",
   email: "demo@lifelogger.app",
-  photoURL: "https://i.imgur.com/abc123.png"
+  photoURL: "https://placehold.co/128x128.png"
 };
 
 // Use this helper to get the current user, with devMode override
@@ -26,113 +26,71 @@ export const loadMockData = async () => {
     const userDocSnap = await getDoc(userRef);
 
     if (userDocSnap.exists()) {
-      console.log("✅ Dev mode user data already exists. Skipping mock data load.");
+      // Data already loaded, no need to re-inject.
       return;
     }
 
+    console.log("Injecting mock data for dev mode...");
     const batch = writeBatch(db);
-    const now = Date.now();
     
+    // User Document
     const userDocForDb: Partial<FirestoreUser> = {
-        uid: mockUser.uid,
-        displayName: mockUser.displayName,
-        email: mockUser.email,
-        avatarUrl: mockUser.photoURL,
+        displayName: "Demo User",
+        email: "test@lifelogger.app",
         onboardingComplete: true,
-        isProUser: true,
-        createdAt: now,
-        lastLogin: now,
-        avatarState: "evolving",
-        mood: "curious",
-        stats: {
-          focus: 72,
-          emotion: "balanced",
-          reflectionScore: 88,
-          rhythmState: "Stable"
-        },
-        socialGraph: {
-          connections: 4,
-          topEmotion: "supportive"
-        },
-        location: {
-          city: "San Francisco",
-          weather: "Partly Cloudy"
-        },
-        constellation: {
-          memories: 8,
-          currentTheme: "Growth",
-          archetype: "Seeker"
-        }
+        createdAt: Date.now(),
+        mood: "Curious",
+        avatarUrl: mockUser.photoURL,
     };
     batch.set(userRef, userDocForDb, { merge: true });
 
-    // Mock Voice Events
-    const voiceEvent1Id = doc(collection(db, 'voiceEvents')).id;
-    const voiceEvent1: VoiceEvent = {
-        id: voiceEvent1Id,
-        uid: mockUser.uid,
-        audioEventId: 'mock_audio_1',
-        speakerLabel: 'user',
-        text: "Had a breakthrough on the project today. Feeling really proud of the team. I should remember to thank Sarah for her help.",
-        createdAt: now - 86400000 * 2, // 2 days ago
-        emotion: 'joy',
-        sentimentScore: 0.8,
-        toneShift: 0.2,
-        voiceArchetype: 'Leader',
-        people: ['Sarah'],
-        tasks: ['Thank Sarah for her help'],
+    // Aura State
+    const auraRef = doc(db, `users/${mockUser.uid}/auraStates/current`);
+    const auraState: AuraState = {
+        currentEmotion: "curiosity",
+        overlayColor: "hsla(200, 80%, 70%, 0.7)",
+        overlayStyle: "glow",
+        lastUpdated: Date.now(),
     };
-    batch.set(doc(db, "voiceEvents", voiceEvent1Id), voiceEvent1);
-    
-    const voiceEvent2Id = doc(collection(db, 'voiceEvents')).id;
-    const voiceEvent2: VoiceEvent = {
-        id: voiceEvent2Id,
-        uid: mockUser.uid,
-        audioEventId: 'mock_audio_2',
-        speakerLabel: 'user',
-        text: "Feeling a bit stressed about the upcoming deadline. It's a lot of pressure, but I think I can handle it.",
-        createdAt: now - 86400000, // 1 day ago
-        emotion: 'anxiety',
-        sentimentScore: -0.4,
-        toneShift: 0.5,
-        voiceArchetype: 'Reporter',
-        people: [],
-        tasks: [],
-    };
-    batch.set(doc(db, "voiceEvents", voiceEvent2Id), voiceEvent2);
+    batch.set(auraRef, auraState);
 
-    // Mock Dream Event
-    const dreamEventId = doc(collection(db, 'dreamEvents')).id;
-    const dreamEvent: Dream = {
-        id: dreamEventId,
-        uid: mockUser.uid,
-        text: "I dreamt I was flying over a city made of glass. It was beautiful but I was afraid of falling.",
-        createdAt: now - 86400000 * 3, // 3 days ago
-        emotions: ['wonder', 'fear'],
-        themes: ['ambition', 'vulnerability'],
-        symbols: ['flying', 'glass city'],
-        sentimentScore: 0.3,
-    };
-    batch.set(doc(db, "dreamEvents", dreamEventId), dreamEvent);
+    // People (Social Silhouettes)
+    const peopleData: Omit<Person, 'id'>[] = [
+        { uid: mockUser.uid, name: 'Alex', lastSeen: Date.now() - 86400000, familiarityIndex: 5, socialRoleHistory: [{ date: Date.now(), role: 'Mentor' }], avatarUrl: 'https://placehold.co/128x128.png' },
+        { uid: mockUser.uid, name: 'Jordan', lastSeen: Date.now() - 172800000, familiarityIndex: 8, socialRoleHistory: [{ date: Date.now(), role: 'Friend' }], avatarUrl: 'https://placehold.co/128x128.png' },
+        { uid: mockUser.uid, name: 'Sam', lastSeen: Date.now() - 259200000, familiarityIndex: 2, socialRoleHistory: [{ date: Date.now(), role: 'Collaborator' }], avatarUrl: 'https://placehold.co/128x128.png' },
+    ];
+    peopleData.forEach(person => {
+        const personRef = doc(collection(db, 'people'));
+        batch.set(personRef, { ...person, id: personRef.id });
+    });
     
-    // Mock Person
-    const personId = doc(collection(db, 'people')).id;
-    const person: Person = {
-        id: personId,
-        uid: mockUser.uid,
-        name: 'Sarah',
-        lastSeen: now - 86400000 * 2,
-        familiarityIndex: 5,
-        socialRoleHistory: [{ date: now - 86400000 * 2, role: 'Collaborator' }],
-        avatarUrl: `https://placehold.co/128x128.png?text=S`,
+    // Memory Blooms (Garden)
+    const bloomData: Omit<MemoryBloom, 'bloomId'>[] = [
+        { emotion: 'joy', bloomColor: '#7CFC00', triggeredAt: Date.now() - 86400000, description: 'A moment of pure joy was detected.' },
+        { emotion: 'recovery', bloomColor: '#32CD32', triggeredAt: Date.now() - 259200000, description: 'A significant recovery took place.' },
+        { emotion: 'calm', bloomColor: '#1E90FF', triggeredAt: Date.now() - 604800000, description: 'A period of calm reflection.' },
+    ];
+    bloomData.forEach(bloom => {
+        const bloomRef = doc(collection(db, `users/${mockUser.uid}/memoryBlooms`));
+        batch.set(bloomRef, { ...bloom, bloomId: bloomRef.id });
+    });
+
+    // Voice Event for dashboard
+    const voiceEventRef = doc(collection(db, 'voiceEvents'));
+    const voiceEvent: VoiceEvent = {
+        id: voiceEventRef.id, uid: mockUser.uid, audioEventId: 'mock_audio_1', speakerLabel: 'user',
+        text: "Just had a deep conversation about the future, feeling hopeful.",
+        createdAt: Date.now() - 86400000 * 2,
+        emotion: 'hope', sentimentScore: 0.7, toneShift: 0.1, voiceArchetype: 'Storyteller', people: ['Alex'], tasks: []
     };
-    batch.set(doc(db, "people", personId), person);
-    
+    batch.set(voiceEventRef, voiceEvent);
+
     await batch.commit();
     console.log("✅ Mock Firestore data injected for dev mode.");
   } catch (error: any) {
-    if (error.code === 'permission-denied') {
-        console.warn("Firestore permission denied. Mock data not loaded. Ensure your Firestore rules are open for dev mode.");
+    if (error.code === 'permission-denied' || error.code === 'unavailable') {
+        console.warn("Firestore connection not available. Mock data not loaded. This is expected if emulators are not running.");
     } else {
       console.error("Error loading mock data:", error);
     }
