@@ -1,7 +1,7 @@
 
 import { db } from './firebase';
 import { doc, writeBatch, collection } from 'firebase/firestore';
-import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection, WeeklyScroll } from './types';
+import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection, WeeklyScroll, Companion } from './types';
 
 export const devMode = process.env.NODE_ENV === 'development';
 
@@ -21,6 +21,7 @@ export async function seedDemoData(userId: string) {
             email: "test@lifelogger.app",
             onboardingComplete: true,
             createdAt: Date.now(),
+            // Fields for demo mode
             mood: "Curious",
             location: "Downtown LA",
             lastVoiceTranscript: "Just had a deep conversation about the future.",
@@ -30,7 +31,21 @@ export async function seedDemoData(userId: string) {
         };
         batch.set(userRef, demoUser, { merge: true });
 
-        // 2. Sample Person "mom"
+        // 2. Default Companion
+        const companionRef = doc(collection(db, "companions")); 
+        const newCompanion: Companion = {
+            id: companionRef.id,
+            uid: userId,
+            archetype: "Healer",
+            tone: "supportive",
+            memoryThread: [],
+            evolutionStage: "Healer → Reclaimer",
+            voicePreset: "soft_neutral_female",
+            isActive: true,
+        };
+        batch.set(companionRef, newCompanion);
+
+        // 3. Sample Person "mom"
         const momRef = doc(collection(db, "people"));
         const momPerson: Person = {
             id: momRef.id,
@@ -43,7 +58,7 @@ export async function seedDemoData(userId: string) {
         };
         batch.set(momRef, momPerson);
 
-        // 3. Voice Event from user request
+        // 4. Voice Event from previous request
         const audioEventRef = doc(collection(db, "audioEvents"));
         const voiceEventRef = doc(collection(db, "voiceEvents"));
 
@@ -73,8 +88,38 @@ export async function seedDemoData(userId: string) {
             tasks: [],
         };
         batch.set(voiceEventRef, intenseVoiceEvent);
+        
+        // 5. Add the new voice log from the user's prompt
+        const newVoiceLogRef = doc(collection(db, "voiceEvents"));
+        const newAudioEventRef = doc(collection(db, "audioEvents"));
+        const newAudioEvent: AudioEvent = {
+            id: newAudioEventRef.id,
+            uid: userId,
+            storagePath: "dummy/path",
+            startTs: new Date("2025-07-05").getTime(),
+            endTs: new Date("2025-07-05").getTime() + 30000,
+            durationSec: 30,
+            transcriptionStatus: "complete",
+        };
+        batch.set(newAudioEventRef, newAudioEvent);
 
-        // 4. Add more diverse data to populate the UI
+        const newVoiceLog: VoiceEvent = {
+            id: newVoiceLogRef.id,
+            uid: userId,
+            audioEventId: newAudioEventRef.id,
+            speakerLabel: 'system_insight',
+            text: "You were overwhelmed but kept going.",
+            createdAt: new Date("2025-07-05").getTime(),
+            emotion: "resilience",
+            sentimentScore: 0.3,
+            toneShift: 0.2,
+            voiceArchetype: "Observer",
+            people: [],
+            tasks: [],
+        };
+        batch.set(newVoiceLogRef, newVoiceLog);
+
+        // 6. Add more diverse data to populate the UI
         const bloomRef = doc(collection(db, `users/${userId}/memoryBlooms`));
         const bloom: MemoryBloom = {
             bloomId: bloomRef.id,
@@ -108,7 +153,7 @@ export async function seedDemoData(userId: string) {
         };
         batch.set(innerTextRef, innerText);
 
-        // 5. Weekly Scroll
+        // 7. Weekly Scroll
         const scrollRef = doc(collection(db, `weeklyScrolls/${userId}/scrolls`));
         const weeklyScroll: WeeklyScroll = {
             id: scrollRef.id,
