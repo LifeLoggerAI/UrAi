@@ -28,7 +28,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initialize = async () => {
+    const initializeApp = async () => {
+      // Connect to emulators on every startup in this environment.
+      // This logic is now outside the devMode check to ensure connection
+      // before any Firestore operations are attempted.
+      if (!emulatorsConnected) {
+        try {
+          console.log("Connecting to Firebase emulators...");
+          // Using ports that avoid conflicts in the cloud environment
+          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
+          connectFirestoreEmulator(db, 'localhost', 8280);
+          connectFunctionsEmulator(functions, 'localhost', 5150);
+          console.log("✅ Emulators connected.");
+        } catch (error) {
+          console.error("Error connecting to emulators:", error);
+        }
+        emulatorsConnected = true;
+      }
+
       if (devMode) {
         // --- Development Mode ---
         if (!devModeInitialized) {
@@ -39,18 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(mockUser as User);
         setLoading(false);
       } else {
-        // --- Production/Emulator Mode ---
-        if (!emulatorsConnected) {
-          try {
-            connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
-            connectFirestoreEmulator(db, 'localhost', 8280);
-            connectFunctionsEmulator(functions, 'localhost', 5150);
-          } catch (error) {
-            console.error("Error connecting to emulators:", error);
-          }
-          emulatorsConnected = true;
-        }
-
+        // --- Production Mode ---
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           setUser(user);
           setLoading(false);
@@ -59,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     };
     
-    initialize();
+    initializeApp();
   }, []);
 
   if (loading) {
