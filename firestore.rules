@@ -1,7 +1,11 @@
+rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
+    // In development, allow reads and writes if the user is authenticated.
+    // In production, you should replace this with more restrictive rules.
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }

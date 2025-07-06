@@ -39,7 +39,6 @@ export const loadMockData = async () => {
         email: "test@lifelogger.app",
         onboardingComplete: true,
         createdAt: Date.now(),
-        mood: "Curious",
         avatarUrl: mockUser.photoURL,
     };
     batch.set(userRef, userDocForDb, { merge: true });
@@ -85,6 +84,17 @@ export const loadMockData = async () => {
         emotion: 'hope', sentimentScore: 0.7, toneShift: 0.1, voiceArchetype: 'Storyteller', people: ['Alex'], tasks: []
     };
     batch.set(voiceEventRef, voiceEvent);
+    
+    // Dream event for dashboard
+    const dreamEventRef = doc(collection(db, 'dreamEvents'));
+    const dreamEvent: Dream = {
+        id: dreamEventRef.id, uid: mockUser.uid,
+        text: "I dreamt I was flying over a city of lights.",
+        createdAt: Date.now() - 86400000 * 3,
+        emotions: ['joy', 'wonder'], themes: ['flying', 'city'], symbols: ['lights'], sentimentScore: 0.9
+    };
+    batch.set(dreamEventRef, dreamEvent);
+
 
     await batch.commit();
     console.log("✅ Mock Firestore data injected for dev mode.");
