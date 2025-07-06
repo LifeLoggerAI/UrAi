@@ -28,25 +28,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initializeApp = async () => {
-      // Connect to emulators on every startup in this environment.
-      if (!emulatorsConnected) {
-        try {
-          console.log("Connecting to Firebase emulators...");
-          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
-          connectFirestoreEmulator(db, 'localhost', 8280);
-          connectFunctionsEmulator(functions, 'localhost', 5150);
-          console.log("✅ Emulators connected.");
-        } catch (error) {
-          console.error("Error connecting to emulators:", error);
-        }
-        emulatorsConnected = true;
-      }
-
       if (devMode) {
         // --- Development Mode ---
-        console.log("🚀 Dev mode enabled. Loading mock user and data...");
-        await loadMockData();
-        console.log("✅ Dev mode user loaded");
+        if (!emulatorsConnected) {
+          try {
+            console.log("Connecting to Firebase emulators...");
+            connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
+            connectFirestoreEmulator(db, 'localhost', 8280);
+            connectFunctionsEmulator(functions, 'localhost', 5150);
+            console.log("✅ Emulators connected.");
+            await loadMockData();
+            console.log("✅ Dev mode mock data loaded.");
+          } catch (error) {
+            console.error("Error connecting to emulators or loading data:", error);
+          }
+          emulatorsConnected = true;
+        }
         setUser(mockUser as User);
         setLoading(false);
       } else {

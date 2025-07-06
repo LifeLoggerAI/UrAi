@@ -25,19 +25,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value: "frame-ancestors 'self' http://localhost:4401 http://127.0.0.1:4401"
-          }
-        ]
-      }
-    ];
-  }
 };
 
 export default nextConfig;
