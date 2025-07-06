@@ -26,9 +26,14 @@ const functions: Functions = getFunctions(app);
 if (devMode) {
   // Connect to emulators in development mode.
   // The SDK handles preventing multiple connections, so it's safe to call this on hot reloads.
-  connectAuthEmulator(auth, "http://localhost:9199", { disableWarnings: true });
-  connectFirestoreEmulator(db, "localhost", 8280);
-  connectFunctionsEmulator(functions, "localhost", 5150);
+  try {
+    connectAuthEmulator(auth, "http://localhost:9199", { disableWarnings: true });
+    connectFirestoreEmulator(db, "localhost", 8280);
+    connectFunctionsEmulator(functions, "localhost", 5150);
+    console.log("✅ Firebase emulators connected.");
+  } catch (e) {
+    console.warn("Could not connect to emulators, assuming they are not running. Error: ", e);
+  }
 }
 
 export { app, db, auth, functions };
