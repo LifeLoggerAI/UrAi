@@ -2,7 +2,7 @@ import { db, auth } from '@/lib/firebase';
 import { writeBatch, doc, collection, getDoc } from 'firebase/firestore';
 import type { User as FirestoreUser, VoiceEvent, Dream, Person } from '@/lib/types';
 
-export const devMode = true; // Set to false in production
+export const devMode = process.env.NODE_ENV === 'development';
 
 // Fake mock user object for previewing the UI
 export const mockUser = {

@@ -41,7 +41,7 @@
         "headers": [
           {
             "key": "Content-Security-Policy",
-            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev http://localhost:4401 http://127.0.0.1:4401; connect-src 'self' http://localhost:* http://127.0.0.1:* wss://*.firebaseio.com https://*.googleapis.com https://securetoken.googleapis.com ws://localhost:* ws://127.0.0.1:* https://lifelogger-demo.web.app https://lifelogger-demo.firebaseapp.com https://*.cloudworkstations.dev; script-src 'self' 'unsafe-inline' https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * data: blob:; object-src 'none';"
+            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev http://localhost:4401 http://127.0.0.1:4401; connect-src 'self' http://localhost:* http://127.0.0.1:* wss://*.firebaseio.com https://*.googleapis.com https://securetoken.googleapis.com ws://localhost:* ws://127.0.0.1:* https://lifelogger-clean.web.app https://lifelogger-clean.firebaseapp.com https://*.cloudworkstations.dev; script-src 'self' 'unsafe-inline' https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * data: blob:; object-src 'none';"
           }
         ]
       }
@@ -49,15 +49,15 @@
   },
   "emulators": {
     "auth": {
-      "port": 9199,
+      "port": 9099,
       "host": "0.0.0.0"
     },
     "firestore": {
-      "port": 8280,
+      "port": 8080,
       "host": "0.0.0.0"
     },
     "functions": {
-      "port": 5150,
+      "port": 5001,
       "host": "0.0.0.0"
     },
     "hosting": {
