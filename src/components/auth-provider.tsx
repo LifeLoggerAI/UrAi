@@ -8,6 +8,7 @@ import { connectFirestoreEmulator } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
+// Use a flag to ensure emulators are only connected once.
 let emulatorsConnected = false;
 
 type AuthContextType = {
@@ -25,17 +26,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In this development environment, we always want to connect to the emulators.
-    // The emulatorsConnected flag prevents re-connecting on component re-renders.
+    // This check prevents multiple connection attempts in dev environments with hot reloads.
     if (!emulatorsConnected) {
-      try {
-        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
-        emulatorsConnected = true;
-        console.log("✅ Firebase Emulators connected.");
-      } catch (error) {
-        console.error("!!! Critical error connecting to emulators:", error);
-      }
+      // Add a short delay to ensure the cloud IDE's network proxy is ready.
+      // This is a robust way to avoid race conditions during startup.
+      setTimeout(() => {
+        try {
+          console.log("Connecting to Firebase emulators...");
+          connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+          connectFirestoreEmulator(db, '127.0.0.1', 8080);
+          emulatorsConnected = true;
+          console.log("✅ Firebase Emulators connected.");
+        } catch (error) {
+          console.error("!!! Critical error connecting to emulators:", error);
+        }
+      }, 1000);
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
