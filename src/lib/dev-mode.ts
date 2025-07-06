@@ -1,2 +1,116 @@
 
+import { db } from './firebase';
+import { doc, writeBatch, collection } from 'firebase/firestore';
+import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection } from './types';
+
 export const devMode = process.env.NODE_ENV === 'development';
+
+export const DEMO_USER_ID = "demo_user_001";
+
+export async function seedDemoData(userId: string) {
+    if (!userId) return;
+    console.log(`🌱 Seeding demo data for user: ${userId}...`);
+    
+    try {
+        const batch = writeBatch(db);
+
+        // 1. User Profile
+        const userRef = doc(db, 'users', userId);
+        const demoUser: Partial<User> = {
+            displayName: "Demo User",
+            email: "test@lifelogger.app",
+            onboardingComplete: true,
+            createdAt: Date.now(),
+            mood: "Curious",
+            location: "Downtown LA",
+            lastVoiceTranscript: "Just had a deep conversation about the future.",
+            lastActivity: "Walking + Talking",
+            demoMode: true,
+            avatarUrl: `https://placehold.co/128x128.png?text=D`,
+        };
+        batch.set(userRef, demoUser, { merge: true });
+
+        // 2. Sample Person "mom"
+        const momRef = doc(collection(db, "people"));
+        const momPerson: Person = {
+            id: momRef.id,
+            uid: userId,
+            name: "mom",
+            lastSeen: Date.now() - 86400000, // 1 day ago
+            familiarityIndex: 5,
+            socialRoleHistory: [{ date: Date.now() - 86400000, role: "Family" }],
+            avatarUrl: `https://placehold.co/128x128.png?text=M`,
+        };
+        batch.set(momRef, momPerson);
+
+        // 3. Voice Event from user request
+        const audioEventRef = doc(collection(db, "audioEvents"));
+        const voiceEventRef = doc(collection(db, "voiceEvents"));
+
+        const intenseAudioEvent: AudioEvent = {
+            id: audioEventRef.id,
+            uid: userId,
+            storagePath: "dummy/path",
+            startTs: Date.now() - 172800000, // 2 days ago
+            endTs: Date.now() - 172800000 + 54000,
+            durationSec: 54,
+            transcriptionStatus: "complete",
+        };
+        batch.set(audioEventRef, intenseAudioEvent);
+
+        const intenseVoiceEvent: VoiceEvent = {
+            id: voiceEventRef.id,
+            uid: userId,
+            audioEventId: audioEventRef.id,
+            speakerLabel: 'user',
+            text: "Meeting with mom was intense today.",
+            createdAt: Date.now() - 172800000,
+            emotion: "tense",
+            sentimentScore: -0.6,
+            toneShift: 0.8,
+            voiceArchetype: "Confidant",
+            people: ["mom"],
+            tasks: [],
+        };
+        batch.set(voiceEventRef, intenseVoiceEvent);
+
+        // 4. Add more diverse data to populate the UI
+        const bloomRef = doc(collection(db, `users/${userId}/memoryBlooms`));
+        const bloom: MemoryBloom = {
+            bloomId: bloomRef.id,
+            emotion: 'joy',
+            bloomColor: '#7CFC00',
+            triggeredAt: Date.now() - 259200000, // 3 days ago
+            description: 'A moment of pure joy was detected.',
+        };
+        batch.set(bloomRef, bloom);
+
+        const dreamRef = doc(collection(db, "dreamEvents"));
+        const dream: Dream = {
+            id: dreamRef.id,
+            uid: userId,
+            text: "Dreamt of flying over a neon city.",
+            createdAt: Date.now() - 86400000,
+            emotions: ["wonder", "freedom"],
+            themes: ["flying", "cityscape"],
+            symbols: ["neon lights", "height"],
+            sentimentScore: 0.8,
+        };
+        batch.set(dreamRef, dream);
+
+        const innerTextRef = doc(collection(db, "innerTexts"));
+        const innerText: InnerVoiceReflection = {
+            id: innerTextRef.id,
+            uid: userId,
+            text: "Feeling a bit unfocused today, need to center myself.",
+            createdAt: Date.now() - 3600000, // 1 hour ago
+            sentimentScore: -0.2,
+        };
+        batch.set(innerTextRef, innerText);
+
+        await batch.commit();
+        console.log("✅ Demo data seeded successfully.");
+    } catch (error) {
+        console.error("🔥 Error seeding demo data:", error);
+    }
+}

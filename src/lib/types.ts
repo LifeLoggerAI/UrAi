@@ -20,6 +20,12 @@ export const UserSchema = z.object({
     stats: z.record(z.any()).optional(),
     socialGraph: z.record(z.any()).optional(),
     constellation: z.record(z.any()).optional(),
+    // Fields for demo mode
+    mood: z.string().optional(),
+    location: z.string().optional(),
+    lastVoiceTranscript: z.string().optional(),
+    lastActivity: z.string().optional(),
+    demoMode: z.boolean().optional(),
     settings: z.object({
         moodTrackingEnabled: z.boolean().default(true),
         passiveAudioEnabled: z.boolean().default(true),
@@ -603,7 +609,7 @@ export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSc
 export const GenerateSymbolicInsightInputSchema = z.object({
     analysis: z.string().describe("The stringified JSON of the structured analysis result from the AnalyzeCameraImage flow."),
 });
-export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightSchema>;
+export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
 
 export const GenerateSymbolicInsightOutputSchema = z.object({
     narratorReflection: z.string().describe("A short, insightful, and empathetic reflection for the user."),
@@ -1520,5 +1526,3 @@ export const WeeklyScrollSchema = z.object({
     createdAt: z.number(),
 });
 export type WeeklyScroll = z.infer<typeof WeeklyScrollSchema>;
-
-    
