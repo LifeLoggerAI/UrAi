@@ -5,7 +5,8 @@ import { useState, useEffect, createContext, useContext, type ReactNode } from '
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
 import { connectFirestoreEmulator } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import { connectFunctionsEmulator } from 'firebase/functions';
+import { auth, db, functions } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
 // Use a flag to ensure emulators are only connected once.
@@ -28,19 +29,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // This check prevents multiple connection attempts in dev environments with hot reloads.
     if (!emulatorsConnected) {
-      // Add a short delay to ensure the cloud IDE's network proxy is ready.
-      // This is a robust way to avoid race conditions during startup.
-      setTimeout(() => {
+      const connectEmulators = async () => {
+        // Wait to ensure network is up
+        await new Promise((res) => setTimeout(res, 1000));
         try {
           console.log("Connecting to Firebase emulators...");
-          connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-          connectFirestoreEmulator(db, '127.0.0.1', 8080);
+          connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+          connectFirestoreEmulator(db, 'localhost', 8080);
+          connectFunctionsEmulator(functions, 'localhost', 5001);
           emulatorsConnected = true;
           console.log("✅ Firebase Emulators connected.");
         } catch (error) {
           console.error("!!! Critical error connecting to emulators:", error);
         }
-      }, 1000);
+      };
+      connectEmulators();
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
