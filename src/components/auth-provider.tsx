@@ -33,10 +33,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Wait to ensure network is up
         await new Promise((res) => setTimeout(res, 1000));
         try {
-          console.log("Connecting to Firebase emulators...");
-          connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
-          connectFirestoreEmulator(db, 'localhost', 8080);
-          connectFunctionsEmulator(functions, 'localhost', 5001);
+          console.log("Connecting to Firebase emulators on alternate ports...");
+          connectAuthEmulator(auth, 'http://localhost:9199', { disableWarnings: true });
+          connectFirestoreEmulator(db, 'localhost', 8280);
+          connectFunctionsEmulator(functions, 'localhost', 5150);
           emulatorsConnected = true;
           console.log("✅ Firebase Emulators connected.");
         } catch (error) {

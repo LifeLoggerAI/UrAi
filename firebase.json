@@ -2,15 +2,15 @@
 {
   "emulators": {
     "auth": {
-      "port": 9099,
+      "port": 9199,
       "host": "0.0.0.0"
     },
     "firestore": {
-      "port": 8080,
+      "port": 8280,
       "host": "0.0.0.0"
     },
     "functions": {
-      "port": 5001,
+      "port": 5150,
       "host": "0.0.0.0"
     },
     "dataconnect": {
@@ -18,7 +18,8 @@
     },
     "ui": {
       "enabled": true,
-      "port": 4000
+      "port": 4405,
+      "host": "0.0.0.0"
     }
   },
   "dataconnect": {
@@ -78,7 +79,7 @@
         "headers": [
           {
             "key": "Content-Security-Policy",
-            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev; connect-src 'self' http://localhost:9099 http://localhost:8080 ws://localhost:*;"
+            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev; connect-src 'self' http://localhost:9199 http://localhost:8280 ws://localhost:*;"
           }
         ]
       }
