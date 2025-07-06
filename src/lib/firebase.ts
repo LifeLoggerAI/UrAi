@@ -6,14 +6,12 @@ import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase
 import { devMode } from "./dev-mode";
 
 const firebaseConfig = {
-  // IMPORTANT: The projectId below MUST match the value in .firebaserc for emulators to work.
-  // Replace these with your actual Firebase project configuration for production deployment.
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "lifelogger-demo.firebaseapp.com",
-  projectId: "lifelogger-demo",
-  storageBucket: "lifelogger-demo.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
