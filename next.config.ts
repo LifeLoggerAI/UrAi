@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              "frame-ancestors 'self' https://*.cloudworkstations.dev; connect-src 'self' http://localhost:* wss://localhost:* https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;",
+              "frame-ancestors 'self' https://*.cloudworkstations.dev; connect-src 'self' http://localhost:* ws://localhost:* https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;",
           },
         ],
       },
