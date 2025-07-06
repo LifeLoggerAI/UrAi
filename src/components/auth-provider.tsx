@@ -8,7 +8,6 @@ import { connectFirestoreEmulator } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
-// This global flag prevents re-connecting on every hot-reload in development.
 let emulatorsConnected = false;
 
 type AuthContextType = {
@@ -26,15 +25,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // A one-time flag to connect to the emulators and a timeout
+    // to ensure the cloud environment's network is ready.
     if (!emulatorsConnected) {
-      try {
-        connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
-        connectFirestoreEmulator(db, '127.0.0.1', 8080);
-        emulatorsConnected = true;
-        console.log("✅ Firebase Emulators connected.");
-      } catch (error) {
-        console.error("!!! Critical error connecting to emulators:", error);
-      }
+      setTimeout(() => {
+        try {
+          connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+          connectFirestoreEmulator(db, '127.0.0.1', 8080);
+          emulatorsConnected = true;
+          console.log("✅ Firebase Emulators connected.");
+        } catch (error) {
+          console.error("!!! Critical error connecting to emulators:", error);
+        }
+      }, 1000); // 1-second delay
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
