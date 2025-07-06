@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState }from 'react';
-import type { Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection, Goal, Task } from '@/lib/types';
+import type { Person, SuggestRitualOutput, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection, Goal, Task, User, PersonaProfile } from '@/lib/types';
 import { suggestRitualAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Skeleton } from './ui/skeleton';
@@ -41,6 +41,8 @@ export function HomeView() {
     const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[] | undefined>(undefined);
     const [goals, setGoals] = useState<Goal[] | undefined>(undefined);
     const [tasks, setTasks] = useState<Task[] | undefined>(undefined);
+    const [personaProfile, setPersonaProfile] = useState<PersonaProfile | undefined>(undefined);
+
 
     const [isRitualLoading, setIsRitualLoading] = useState(false);
     
@@ -77,6 +79,14 @@ export function HomeView() {
             
             const qTasks = query(collection(db, "tasks"), where("uid", "==", user.uid), orderBy("dueDate", "asc"));
             unsubscribes.push(onSnapshot(qTasks, (snapshot) => setTasks(snapshot.docs.map(doc => doc.data() as Task))));
+            
+            const userRef = doc(db, 'users', user.uid);
+            unsubscribes.push(onSnapshot(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.data() as User;
+                    setPersonaProfile(userData.personaProfile);
+                }
+            }));
 
             return () => unsubscribes.forEach(unsub => unsub());
         }
@@ -110,7 +120,7 @@ export function HomeView() {
                 setPanelContent({ 
                     title: 'Cognitive Zone', 
                     description: 'A symbolic control room for introspection and analysis.',
-                    content: <CognitiveZoneView dreams={dreams || []} innerTexts={innerTexts || []} />
+                    content: <CognitiveZoneView dreams={dreams || []} innerTexts={innerTexts || []} personaProfile={personaProfile} />
                 });
                 setActivePanel('head');
                 return;

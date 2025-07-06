@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Dream, InnerVoiceReflection } from "@/lib/types";
+import { Dream, InnerVoiceReflection, PersonaProfile } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { DashboardView } from "./dashboard-view";
@@ -10,14 +10,16 @@ import { DreamList } from "./dream-list";
 import { TextEntryForm } from "./text-entry-form";
 import { TextEntryList } from "./text-entry-list";
 import { ScrollArea } from "./ui/scroll-area";
-import { BrainCircuit, NotebookPen, PenLine } from "lucide-react";
+import { BrainCircuit, NotebookPen, PenLine, User } from "lucide-react";
+import { PersonaView } from "./persona-view";
 
 interface CognitiveZoneViewProps {
     dreams: Dream[];
     innerTexts: InnerVoiceReflection[];
+    personaProfile?: PersonaProfile;
 }
 
-export function CognitiveZoneView({ dreams, innerTexts }: CognitiveZoneViewProps) {
+export function CognitiveZoneView({ dreams, innerTexts, personaProfile }: CognitiveZoneViewProps) {
 
     const panels = [
         {
@@ -50,6 +52,16 @@ export function CognitiveZoneView({ dreams, innerTexts }: CognitiveZoneViewProps
                         <TextEntryList entries={innerTexts} />
                     </ScrollArea>
                 </div>
+            )
+        },
+        {
+            title: 'Persona & Traits',
+            icon: <User className="h-6 w-6 text-primary" />,
+            description: "Understand your core personality traits and archetypes.",
+            content: (
+                <ScrollArea className="h-[60vh] -mr-4 pr-4">
+                    <PersonaView profile={personaProfile} />
+                </ScrollArea>
             )
         }
     ];

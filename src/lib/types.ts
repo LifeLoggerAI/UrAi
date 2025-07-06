@@ -4,6 +4,25 @@ import { z } from "zod";
 // Base sentiment type
 export type Sentiment = "positive" | "negative" | "neutral";
 
+export const TraitChangeSchema = z.object({
+  trait: z.string(),
+  from: z.number(),
+  to: z.number(),
+  date: z.string(),
+});
+export type TraitChange = z.infer<typeof TraitChangeSchema>;
+
+export const PersonaProfileSchema = z.object({
+  traits: z.record(z.number()).optional(),
+  traitChanges: z.array(TraitChangeSchema).optional(),
+  dominantPersona: z.string().optional(),
+  moodAlignmentScore: z.number().optional(),
+  conflictEvents: z.array(z.string()).optional(),
+  highProductivityWhen: z.array(z.string()).optional(),
+  emotionalDrainWhen: z.array(z.string()).optional(),
+});
+export type PersonaProfile = z.infer<typeof PersonaProfileSchema>;
+
 // From Blueprint Data Model
 export const UserSchema = z.object({
     uid: z.string(),
@@ -55,7 +74,7 @@ export const UserSchema = z.object({
         metaphorLexicon: z.array(z.string()),
         ttsConfig: z.object({ pitch: z.number(), speed: z.number() }),
     }).optional(),
-    personaProfile: z.record(z.any()).optional(),
+    personaProfile: PersonaProfileSchema.optional(),
     symbolLexicon: z.record(z.any()).optional(),
     subscriptionTier: z.string().optional(),
 });

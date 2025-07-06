@@ -1,7 +1,7 @@
 
 import { db } from './firebase';
 import { doc, writeBatch, collection } from 'firebase/firestore';
-import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection, WeeklyScroll, Companion } from './types';
+import type { User, VoiceEvent, Person, AudioEvent, MemoryBloom, Dream, InnerVoiceReflection, WeeklyScroll, Companion, PersonaProfile } from './types';
 
 export const devMode = process.env.NODE_ENV === 'development';
 
@@ -16,6 +16,22 @@ export async function seedDemoData(userId: string) {
 
         // 1. User Profile
         const userRef = doc(db, 'users', userId);
+        const demoPersonaProfile: PersonaProfile = {
+            traits: {
+              openness: 0.72,
+              resilience: 0.41,
+              socialTrust: 0.58,
+              shadowDominance: 0.33
+            },
+            traitChanges: [
+              { trait: "resilience", from: 0.2, to: 0.41, date: "2025-07-02" }
+            ],
+            dominantPersona: "The Architect",
+            moodAlignmentScore: 0.74,
+            conflictEvents: ["voiceToneMismatch", "avoidanceCluster"],
+            highProductivityWhen: ["focused + isolated"],
+            emotionalDrainWhen: ["social + high noise"]
+        };
         const demoUser: Partial<User> = {
             displayName: "Demo User",
             email: "test@lifelogger.app",
@@ -27,6 +43,7 @@ export async function seedDemoData(userId: string) {
             lastActivity: "Walking + Talking",
             demoMode: true,
             avatarUrl: `https://placehold.co/128x128.png?text=D`,
+            personaProfile: demoPersonaProfile,
         };
         batch.set(userRef, demoUser, { merge: true });
 
