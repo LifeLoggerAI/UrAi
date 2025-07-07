@@ -1,6 +1,6 @@
 
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, type Firestore, enableIndexedDbPersistence } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator, type Firestore, initializeFirestore, persistentLocalCache } from "firebase/firestore";
 import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase/functions";
 
@@ -17,10 +17,20 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-
 const auth: Auth = getAuth(app);
-const db: Firestore = getFirestore(app);
 const functions: Functions = getFunctions(app);
+
+// Initialize Firestore with modern cache settings to avoid deprecated API hangs
+let db: Firestore;
+try {
+    db = initializeFirestore(app, {
+        localCache: persistentLocalCache({ tabManager: 'single-tab' })
+    });
+} catch (e) {
+    console.warn("Firestore initialization with persistence failed, falling back to in-memory cache. Error:", e);
+    db = getFirestore(app);
+}
+
 
 if (devMode) {
   // Connect to emulators in development mode.
@@ -30,13 +40,6 @@ if (devMode) {
     connectFirestoreEmulator(db, "localhost", 8080);
     connectFunctionsEmulator(functions, "localhost", 5001);
     console.log("✅ Firebase emulators connected.");
-    enableIndexedDbPersistence(db).catch((err) => {
-      if (err.code == 'failed-precondition') {
-        console.warn("⚠️ Firestore offline persistence failed: multiple tabs open?");
-      } else if (err.code == 'unimplemented') {
-        console.warn("⚠️ Firestore offline persistence not available in this browser.");
-      }
-    });
   } catch (e) {
     console.warn("Could not connect to emulators, assuming they are not running. Error: ", e);
   }
