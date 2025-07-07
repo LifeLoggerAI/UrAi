@@ -1,22 +1,11 @@
 
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can read and write their own user document.
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Users can manage documents in their own subcollections.
-    match /users/{userId}/{subcollection}/{docId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // For any other top-level collection, allow access if the document
-    // contains a 'uid' field that matches the authenticated user's ID.
-    match /{collection}/{docId} {
-      allow read, write: if request.auth != null && resource.data.uid == request.auth.uid;
+    // For development, allow reads and writes if the user is authenticated.
+    // In production, you should secure your data with more specific rules.
+    match /{document=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
@@ -37,12 +38,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (devMode) {
-      // In development, bypass Firebase Auth and use a mock user
-      console.log("DEV MODE: Bypassing auth with mock user.");
-      seedDemoData(DEMO_USER_ID).then(() => {
+      const setupDemoMode = async () => {
+        console.log("DEV MODE: Bypassing auth with mock user.");
+        await seedDemoData(DEMO_USER_ID); // Ensure data is seeded before setting user
         setUser(mockUser);
         setLoading(false);
-      });
+      };
+      setupDemoMode();
     } else {
       // In production, use real Firebase Auth
       const unsubscribe = onAuthStateChanged(auth, (user) => {
