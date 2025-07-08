@@ -3,10 +3,8 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // WARNING: These rules are permissive and are meant for local development ONLY.
-    // They allow any client to read and write to your database.
-    // Make sure to secure your database with proper rules before deploying to production.
-    // https://firebase.google.com/docs/firestore/security/get-started
+    // Allow read/write access to all documents for local development.
+    // This is not secure for production but is necessary for the emulator.
     match /{document=**} {
       allow read, write: if true;
     }
