@@ -14,7 +14,6 @@ export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [profileLoading, setProfileLoading] = useState(true);
-  const [onboardingComplete, setOnboardingComplete] = useState(false);
   
   useEffect(() => {
     if (authLoading) return;
@@ -32,13 +31,12 @@ export default function HomePage() {
 
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data() as AppUser;
-          if (userData.onboardingComplete) {
-            setOnboardingComplete(true);
-          } else {
+          if (!userData.onboardingComplete) {
             router.push('/onboarding/permissions');
           }
         } else {
-          // If the user doc doesn't exist, it means onboarding was never started/completed.
+          // If the user doc doesn't exist, something is wrong with user creation.
+          // Route to onboarding to be safe.
           router.push('/onboarding/permissions');
         }
       } catch (error) {
@@ -54,7 +52,7 @@ export default function HomePage() {
 
   }, [user, authLoading, router]);
 
-  if (authLoading || profileLoading || !onboardingComplete) {
+  if (authLoading || profileLoading) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8 md:p-12">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -62,6 +60,7 @@ export default function HomePage() {
     )
   }
 
+  // If we reach here, user is authenticated and onboarding is complete.
   return (
     <main className="min-h-screen bg-background">
       <HomeView />
