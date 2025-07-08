@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
+import { useState, useEffect, createContext, useContext, type ReactNode, useRef } from 'react';
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -35,8 +35,14 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const initialized = useRef(false);
 
   useEffect(() => {
+    if (initialized.current) {
+      return;
+    }
+    initialized.current = true;
+
     if (devMode) {
       const setupDemoMode = async () => {
         console.log("DEV MODE: Bypassing auth with mock user.");
