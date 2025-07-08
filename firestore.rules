@@ -1,14 +1,17 @@
+
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // This rule allows any authenticated user to read and write all data.
-    // This is suitable for development but should be locked down for production.
-    // Example for production:
-    // match /users/{userId}/{documents=**} {
-    //   allow read, write: if request.auth.uid == userId;
-    // }
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    // Users can read and write their own user document and any subcollections.
+    match /users/{userId}/{documents=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // For root-level collections (like voiceEvents, dreams, people, etc.),
+    // allow users to read/write documents that contain their UID.
+    match /{collection}/{docId} {
+      allow read, write: if request.auth != null && resource.data.uid == request.auth.uid;
     }
   }
 }
