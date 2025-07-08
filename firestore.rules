@@ -1,13 +1,11 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // WARNING: These rules are insecure and are only intended for local development.
-    // You must secure your database before deploying to production.
-    // See https://firebase.google.com/docs/firestore/security/get-started
+    // Allow read/write access for any authenticated user during development.
+    // This is insecure for a production environment but necessary for local testing.
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
     }
   }
 }
