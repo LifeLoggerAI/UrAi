@@ -1,11 +1,11 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Allow all reads and writes for local development.
+    // IMPORTANT: DO NOT use these rules in production.
     match /{document=**} {
-      // Allow all reads and writes for local development.
-      // In a production environment, these rules should be
-      // tightened to enforce proper user-based security.
       allow read, write: if true;
     }
   }
