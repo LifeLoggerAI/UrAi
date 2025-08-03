@@ -37,13 +37,10 @@ export default function HomePage() {
             router.push('/onboarding/permissions');
           }
         } else {
-          // If the user doc doesn't exist, something is wrong with user creation.
-          // Route to onboarding to be safe.
           router.push('/onboarding/permissions');
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
-        // Fallback to onboarding in case of error.
         router.push('/onboarding/permissions');
       } finally {
         setProfileLoading(false);
@@ -61,7 +58,6 @@ export default function HomePage() {
     );
   }
 
-  // If we reach here, user is authenticated and onboarding is complete.
   return (
     <main className="min-h-screen bg-background">
       {/* 🚀 Deploy test banner */}
@@ -78,3 +74,4 @@ export default function HomePage() {
     </main>
   );
 }
+
