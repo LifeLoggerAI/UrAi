@@ -17,6 +17,13 @@ jobs:
         with:
           node-version: 18
 
+      # 🔹 New step — inject a unique DEPLOY_ID before building
+      - name: Inject DEPLOY_ID into HomePage
+        run: |
+          ID=$(date +%s) # or use: git rev-parse --short HEAD
+          sed -i "s|__DEPLOY_ID__|$ID|g" src/app/page.tsx
+          echo "Updated DEPLOY_ID to $ID"
+
       - name: Install dependencies
         run: npm install
 
