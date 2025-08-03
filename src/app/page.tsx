@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -14,8 +13,11 @@ export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [profileLoading, setProfileLoading] = useState(true);
-  
+
   useEffect(() => {
+    // 🚀 Deploy test log
+    console.log("🔥 Firebase auto-deploy test successful");
+
     if (authLoading) return;
 
     if (!user) {
@@ -49,7 +51,6 @@ export default function HomePage() {
     };
 
     checkOnboardingStatus();
-
   }, [user, authLoading, router]);
 
   if (authLoading || profileLoading) {
@@ -57,12 +58,22 @@ export default function HomePage() {
       <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8 md:p-12">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </main>
-    )
+    );
   }
 
   // If we reach here, user is authenticated and onboarding is complete.
   return (
     <main className="min-h-screen bg-background">
+      {/* 🚀 Deploy test banner */}
+      <div style={{
+        background: '#ffeb3b',
+        padding: '8px',
+        textAlign: 'center',
+        fontWeight: 'bold'
+      }}>
+        🚀 Deploy Test: Firebase auto-deploy is live!
+      </div>
+
       <HomeView />
     </main>
   );
