@@ -1,0 +1,48 @@
+name: UrAi CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. Build app
+      - name: Build UrAi
+        run: npm run build
+
+      # 5. Install Playwright for E2E testing
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 6. Run Playwright tests
+      - name: Run E2E Tests
+        run: npm run test:e2e
+        continue-on-error: false  # fail build if any test fails
+
+      # 7. Deploy to Firebase (only if tests pass and on main branch)
+      - name: Deploy to Firebase
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          npm install -g firebase-tools
+          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
