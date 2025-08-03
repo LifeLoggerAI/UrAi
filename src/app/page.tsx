@@ -9,14 +9,23 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { User as AppUser } from "@/lib/types";
 
+// LocalStorage key for storing last seen deploy ID
+const DEPLOY_CHECK_KEY = "lastDeployCheck";
+// Placeholder — will be replaced by GitHub Action at deploy time
+const DEPLOY_ID = "__DEPLOY_ID__";
+
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
-    // 🚀 Deploy test log
-    console.log("🔥 Firebase auto-deploy test successful");
+    // One-time deploy confirmation log
+    const lastCheck = localStorage.getItem(DEPLOY_CHECK_KEY);
+    if (lastCheck !== DEPLOY_ID) {
+      console.log("🔥 Firebase auto-deploy confirmed:", new Date().toLocaleString());
+      localStorage.setItem(DEPLOY_CHECK_KEY, DEPLOY_ID);
+    }
 
     if (authLoading) return;
 
@@ -60,19 +69,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      {/* 🚀 Deploy test banner */}
-      <div style={{
-        background: '#ffeb3b',
-        padding: '8px',
-        textAlign: 'center',
-        fontWeight: 'bold'
-      }}>
-        🚀 Deploy Test: Firebase auto-deploy is live!
-      </div>
-
       <HomeView />
     </main>
   );
 }
-
-
