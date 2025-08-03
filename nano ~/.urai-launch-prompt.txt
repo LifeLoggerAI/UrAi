@@ -1,0 +1,76 @@
+You are working in my UrAi project repo.
+
+Goal:
+Guide me through the UrAi release process using `/RELEASE-PLAYBOOK.md`, allowing me to select one of four launch modes and updating the checklist in real time.
+
+---
+
+### Available Launch Modes
+
+1. **Full Launch Validation**
+   - Covers Pre‑Launch Build & Test, Commit & Deploy Rules, CI/CD Trigger, Production‑Ready Verification, Deploy to Production, Post‑Deploy Smoke Test, and Day‑1 Post‑Launch Monitoring.
+   - Runs all items in `/RELEASE-PLAYBOOK.md`.
+   - Updates file with ✅ / ❌ and failure notes.
+   - Appends a **Launch Verification Log**.
+
+2. **Quick Launch**
+   - Covers Pre‑Launch Build & Test, Commit & Deploy Rules, CI/CD Trigger, Production‑Ready Verification, Deploy to Production, and Post‑Deploy Smoke Test.
+   - Skips Day‑1 Post‑Launch Monitoring.
+   - Updates file with ✅ / ❌ and failure notes.
+   - Appends a **Quick Launch Verification Log**.
+
+3. **One‑Click Go‑Live**
+   - Covers only the most critical checks:
+     * Build & Test (lint, build, Jest, Playwright)
+     * Firestore Rules Deploy
+     * Passive audio capture, GPS, and Firebase function triggers
+     * Deploy to Production
+     * Post‑Deploy basics: load site, login/logout, core data displays, cannot access another user’s data
+   - Updates file with ✅ / ❌ and notes.
+   - Appends a **One‑Click Go‑Live Log**.
+
+4. **Day‑1 Monitoring Only**
+   - Covers only Day‑1 Post‑Launch Monitoring section of `/RELEASE-PLAYBOOK.md`.
+   - Checks Hosting analytics, Firebase logs, Firestore usage, Auth logs, User feedback, Error tracking, Engagement metrics, Backup readiness, and Next‑Day review.
+   - Updates file with ✅ / ❌ and notes.
+   - Appends a **Day‑1 Monitoring Log**.
+
+---
+
+### Instructions for Codex
+
+1. **Prompt Me for Launch Mode**
+   - Ask: “Which launch mode do you want to run? (1 = Full Launch, 2 = Quick Launch, 3 = One‑Click Go‑Live, 4 = Day‑1 Monitoring Only)”
+
+2. **Run Selected Mode**
+   - Load `/RELEASE-PLAYBOOK.md`.
+   - Process only the checklist items for the selected mode.
+   - For each checklist item:
+     * Ask me to run the command or check the condition.
+     * Wait for my input:
+       ✅ = Pass  
+       ❌ = Fail  
+     * If ❌, ask for a 1–2 sentence issue note.
+     * Update `/RELEASE-PLAYBOOK.md`:
+       - Change `[ ]` to `[✅]` for passes.
+       - Change `[ ]` to `[❌]` for fails and append `(Issue: <my note>)`.
+     * Save the updated file immediately.
+
+3. **Finish and Append Log**
+   - Count total passes and fails.
+   - Append a log to the end of `/RELEASE-PLAYBOOK.md`:
+     - Date & time of run
+     - Launch mode used
+     - Pass count
+     - Fail count
+     - List of failed items with notes
+     - Final Go/No‑Go decision
+
+4. **Keep File Markdown‑Friendly**
+   - The updated checklist should remain readable and compatible with GitHub’s Markdown viewer.
+
+---
+
+Deliverable:
+- An updated `/RELEASE-PLAYBOOK.md` with ✅ / ❌ and notes for all checked items.
+- A timestamped verification log at the end matching the chosen launch mode.
