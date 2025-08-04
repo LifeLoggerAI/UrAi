@@ -1,5 +1,8 @@
 
-import * as functions from "firebase-functions";
+import {onDocumentCreated} from "firebase-functions/v2/firestore";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
@@ -14,27 +17,25 @@ const db = admin.firestore();
  */
 export const enqueueDigestSummaries = functions.pubsub.schedule("every 24 hours")
   .onRun(async (context) => {
-    functions.logger.info("Running daily job to enqueue email digests.");
+    logger.info("Running daily job to enqueue email digests.");
     // In a real application, this function would:
     // 1. Query for all users who have opted into weekly emails.
     // 2. For each user, analyze logs from the past week (moods, rituals, dreams).
     // 3. Build a digest JSON object with the summary data.
     // 4. Write this JSON object to the /dailyDigestQueue/{uid} collection.
     // This write would then trigger the sendNarratedEmail function.
-    return null;
+    return;
   });
 
 /**
  * Sends a narrated email when a new digest is added to the queue.
  * This function is triggered by a new document write in /dailyDigestQueue.
  */
-export const sendNarratedEmail = functions.firestore
-  .document("/dailyDigestQueue/{uid}")
-  .onCreate(async (snap, context) => {
-    const {uid} = context.params;
-    const digest = snap.data();
+export const sendNarratedEmail = onDocumentCreated("/dailyDigestQueue/{uid}", async (event: FirestoreEvent<any>) => {
+    const {uid} = event.params;
+    const digest = event.data?.data();
 
-    functions.logger.info(`Processing email digest for user ${uid}.`);
+    logger.info(`Processing email digest for user ${uid}.`);
 
     // In a real application, this function would:
     // 1. Generate a narrated TTS voice clip of the digest's reflection text.
@@ -55,5 +56,5 @@ export const sendNarratedEmail = functions.firestore
     });
     */
 
-    return null;
+    return;
   });

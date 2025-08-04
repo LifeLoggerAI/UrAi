@@ -1,5 +1,10 @@
 
-import * as functions from "firebase-functions";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onDocumentWritten, onDocumentUpdated} from "firebase-functions/v2/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
@@ -13,12 +18,12 @@ const db = admin.firestore();
  * Anonymizes user data upon request or based on settings.
  * This is a placeholder for a complex data anonymization pipeline.
  */
-export const anonymizeUserData = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const anonymizeUserData = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
-  functions.logger.info(`Starting data anonymization for user ${uid}.`);
+  logger.info(`Starting data anonymization for user ${uid}.`);
   // In a real implementation:
   // 1. Hash user UID with a salt.
   // 2. Query user's data from various collections.
@@ -31,28 +36,25 @@ export const anonymizeUserData = functions.https.onCall(async (data, context) =>
  * Generates aggregated B2B insights from anonymized data.
  * Runs nightly. This is a placeholder.
  */
-export const generateAggregateInsights = functions.pubsub
-  .schedule("every day 01:00")
-  .timeZone("UTC")
-  .onRun(async (context) => {
-    functions.logger.info("Running nightly job to generate aggregate insights.");
+export const generateAggregateInsights = onSchedule("00 01 * * *", async () => {
+    logger.info("Running nightly job to generate aggregate insights.");
     // In a real implementation:
     // 1. Pool all new data from /anonymizedData.
     // 2. Perform aggregation (e.g., mood heatmaps, correlation analysis).
     // 3. Save reports to /b2bExports or stream to BigQuery.
-    return null;
+    return;
   });
 
 /**
  * Deletes all data associated with a user.
  * This is a placeholder for a user-initiated deletion.
  */
-export const deleteUserData = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const deleteUserData = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
-  functions.logger.info(`Initiating data deletion for user ${uid}.`);
+  logger.info(`Initiating data deletion for user ${uid}.`);
   // In a real implementation, you would need a robust, multi-step process
   // to delete all user data across all collections and Storage.
   // This is a complex and destructive operation.
@@ -65,12 +67,12 @@ export const deleteUserData = functions.https.onCall(async (data, context) => {
  * Exports all data associated with a user.
  * This is a placeholder for a user-initiated export.
  */
-export const exportUserData = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const exportUserData = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
-  functions.logger.info(`Initiating data export for user ${uid}.`);
+  logger.info(`Initiating data export for user ${uid}.`);
   // In a real implementation:
   // 1. Gather all user data from Firestore collections.
   // 2. Compile into a machine-readable format (e.g., JSON files).
@@ -83,55 +85,53 @@ export const exportUserData = functions.https.onCall(async (data, context) => {
 /**
  * Creates an audit log whenever a user's permissions document is written.
  */
-export const storeConsentAudit = functions.firestore
-  .document("permissions/{uid}")
-  .onWrite(async (change, context) => {
-    const {uid} = context.params;
-    const consentData = change.after.data();
+export const storeConsentAudit = onDocumentWritten("permissions/{uid}", async (event: FirestoreEvent<any>) => {
+    const {uid} = event.params;
+    const consentData = event.data?.after.data();
 
     if (!consentData) {
-      functions.logger.info(`Consent data for ${uid} deleted, skipping audit.`);
-      return null;
+      logger.info(`Consent data for ${uid} deleted, skipping audit.`);
+      return;
     }
 
     const auditLog = {
       uid: uid,
       ...consentData,
       auditTimestamp: admin.firestore.FieldValue.serverTimestamp(),
-      changeType: change.before.exists ? "update" : "create",
+      changeType: event.data?.before?.exists ? "update" : "create",
     };
 
     try {
       // Creates a new document in the consentAudit collection for each change
       await db.collection("consentAudit").add(auditLog);
-      functions.logger.info(`Successfully logged consent audit for user ${uid}.`);
+      logger.info(`Successfully logged consent audit for user ${uid}.`);
     } catch (error) {
-      functions.logger.error(`Failed to log consent audit for user ${uid}:`, error);
+      logger.error(`Failed to log consent audit for user ${uid}:`, error);
     }
-    return null;
+    return;
   });
 
 /**
  * Creates a Data Access Request from an external partner.
  * Requires partnerId, packageId, and apiKey in the data payload.
  */
-export const createDarRequest = functions.https.onCall(async (data, context) => {
-  const {partnerId, packageId, apiKey} = data;
+export const createDarRequest = onCall(async (request: CallableRequest) => {
+  const {partnerId, packageId, apiKey} = request.data;
   if (!partnerId || !packageId || !apiKey) {
-    throw new functions.https.HttpsError("invalid-argument", "Missing partnerId, packageId, or apiKey.");
+    throw new HttpsError("invalid-argument", "Missing partnerId, packageId, or apiKey.");
   }
 
   const partnerRef = db.collection("partnerAuth").doc(partnerId);
   const partnerDoc = await partnerRef.get();
 
   if (!partnerDoc.exists || partnerDoc.data()?.apiKey !== apiKey || !partnerDoc.data()?.isApproved) {
-    throw new functions.https.HttpsError("unauthenticated", "Invalid partner ID or API key.");
+    throw new HttpsError("unauthenticated", "Invalid partner ID or API key.");
   }
 
   const packageRef = db.doc(`dataMarketplace/packages/${packageId}`);
   const packageDoc = await packageRef.get();
   if (!packageDoc.exists) {
-    throw new functions.https.HttpsError("not-found", "The specified data package does not exist.");
+    throw new HttpsError("not-found", "The specified data package does not exist.");
   }
 
   const darRef = db.collection("darRequests").doc();
@@ -145,7 +145,7 @@ export const createDarRequest = functions.https.onCall(async (data, context) => 
     notes: null,
   });
 
-  functions.logger.info(`New DAR created: ${darRef.id} for partner ${partnerId}`);
+  logger.info(`New DAR created: ${darRef.id} for partner ${partnerId}`);
   return {success: true, requestId: darRef.id};
 });
 
@@ -153,24 +153,24 @@ export const createDarRequest = functions.https.onCall(async (data, context) => 
  * Approves a Data Access Request. Admin-only.
  * Requires requestId in the data payload.
  */
-export const approveDarRequest = functions.https.onCall(async (data, context) => {
-  if (!context.auth?.token.admin) {
-    throw new functions.https.HttpsError("permission-denied", "Must be an admin to approve requests.");
+export const approveDarRequest = onCall(async (request: CallableRequest) => {
+  if (!request.auth?.token.admin) {
+    throw new HttpsError("permission-denied", "Must be an admin to approve requests.");
   }
-  const {requestId} = data;
+  const {requestId} = request.data;
   if (!requestId) {
-    throw new functions.https.HttpsError("invalid-argument", "Request ID is required.");
+    throw new HttpsError("invalid-argument", "Request ID is required.");
   }
 
   const darRef = db.collection("darRequests").doc(requestId);
   await darRef.update({
     status: "approved",
     reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
-    reviewerUid: context.auth?.uid,
+    reviewerUid: request.auth?.uid,
   });
 
-  functions.logger.info(`DAR ${requestId} approved by admin ${context.auth?.uid}.`);
-  functions.logger.info(`Placeholder: Triggering BigQuery export for DAR ${requestId}.`);
+  logger.info(`DAR ${requestId} approved by admin ${request.auth?.uid}.`);
+  logger.info(`Placeholder: Triggering BigQuery export for DAR ${requestId}.`);
 
   return {success: true};
 });
@@ -179,13 +179,13 @@ export const approveDarRequest = functions.https.onCall(async (data, context) =>
  * Rejects a Data Access Request. Admin-only.
  * Requires requestId and notes in the data payload.
  */
-export const rejectDarRequest = functions.https.onCall(async (data, context) => {
-  if (!context.auth?.token.admin) {
-    throw new functions.https.HttpsError("permission-denied", "Must be an admin to reject requests.");
+export const rejectDarRequest = onCall(async (request: CallableRequest) => {
+  if (!request.auth?.token.admin) {
+    throw new HttpsError("permission-denied", "Must be an admin to reject requests.");
   }
-  const {requestId, notes} = data;
+  const {requestId, notes} = request.data;
   if (!requestId || !notes) {
-    throw new functions.https.HttpsError("invalid-argument", "Request ID and rejection notes are required.");
+    throw new HttpsError("invalid-argument", "Request ID and rejection notes are required.");
   }
 
   const darRef = db.collection("darRequests").doc(requestId);
@@ -193,10 +193,10 @@ export const rejectDarRequest = functions.https.onCall(async (data, context) => 
     status: "rejected",
     notes: notes,
     reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
-    reviewerUid: context.auth?.uid,
+    reviewerUid: request.auth?.uid,
   });
 
-  functions.logger.info(`DAR ${requestId} rejected by admin ${context.auth?.uid}.`);
+  logger.info(`DAR ${requestId} rejected by admin ${request.auth?.uid}.`);
   return {success: true};
 });
 
@@ -204,21 +204,19 @@ export const rejectDarRequest = functions.https.onCall(async (data, context) => 
  * Handles user opt-out for data sharing.
  * Triggered when a user's dataConsent settings change.
  */
-export const cleanupOptOut = functions.firestore
-  .document("users/{uid}")
-  .onUpdate(async (change, context) => {
-    const beforeSettings = change.before.data().settings || {};
-    const afterSettings = change.after.data().settings || {};
+export const cleanupOptOut = onDocumentUpdated("users/{uid}", async (event: FirestoreEvent<any>) => {
+    const beforeSettings = event.data?.before.data().settings || {};
+    const afterSettings = event.data?.after.data().settings || {};
 
     const beforeConsent = beforeSettings.dataConsent?.shareAnonymousData;
     const afterConsent = afterSettings.dataConsent?.shareAnonymousData;
 
     if (beforeConsent === true && afterConsent === false) {
-      const uid = context.params.uid;
-      functions.logger.info(`User ${uid} has opted out of data sharing.`);
+      const uid = event.params.uid;
+      logger.info(`User ${uid} has opted out of data sharing.`);
 
       if (!afterSettings.dataConsent?.optedOutAt) {
-        functions.logger.info(`Client did not set optedOutAt, setting it now for user ${uid}.`);
+        logger.info(`Client did not set optedOutAt, setting it now for user ${uid}.`);
         await change.after.ref.set({
           settings: {
             dataConsent: {
@@ -229,17 +227,14 @@ export const cleanupOptOut = functions.firestore
         }, {merge: true});
       }
     }
-    return null;
+    return;
   });
 
 /**
  * Nightly job to check watermarks on new exports.
  */
-export const dailyWatermarkChecker = functions.pubsub
-  .schedule("every day 01:30")
-  .timeZone("UTC")
-  .onRun(async () => {
-    functions.logger.info("Running daily watermark checker job.");
+export const dailyWatermarkChecker = onSchedule("30 01 * * *", async () => {
+    logger.info("Running daily watermark checker job.");
 
     const twentyFourHoursAgo = admin.firestore.Timestamp.fromMillis(Date.now() - 24 * 60 * 60 * 1000);
 
@@ -248,8 +243,8 @@ export const dailyWatermarkChecker = functions.pubsub
       const recentExportsSnap = await recentExportsQuery.get();
 
       if (recentExportsSnap.empty) {
-        functions.logger.info("No new exports to check in the last 24 hours.");
-        return null;
+        logger.info("No new exports to check in the last 24 hours.");
+        return;
       }
 
       for (const doc of recentExportsSnap.docs) {
@@ -257,7 +252,7 @@ export const dailyWatermarkChecker = functions.pubsub
         const {packageId, watermarkId} = exportSummary;
 
         if (!packageId || !watermarkId) {
-          functions.logger.warn(`Export ${doc.id} is missing packageId or watermarkId.`);
+          logger.warn(`Export ${doc.id} is missing packageId or watermarkId.`);
           continue;
         }
 
@@ -265,14 +260,14 @@ export const dailyWatermarkChecker = functions.pubsub
         const packageDoc = await packageRef.get();
 
         if (!packageDoc.exists) {
-          functions.logger.error(`Could not find package ${packageId} for export ${doc.id}. Flagging for review.`);
+          logger.error(`Could not find package ${packageId} for export ${doc.id}. Flagging for review.`);
           // In a real app, write to an alerts collection.
           continue;
         }
 
         const {watermarkSalt} = packageDoc.data() as any;
         if (!watermarkSalt) {
-          functions.logger.error(`Package ${packageId} is missing a watermarkSalt. Flagging for review.`);
+          logger.error(`Package ${packageId} is missing a watermarkSalt. Flagging for review.`);
           // In a real app, write to an alerts collection.
           continue;
         }
@@ -283,17 +278,17 @@ export const dailyWatermarkChecker = functions.pubsub
         const isWatermarkValid = watermarkId.startsWith("watermark_") && watermarkId.length > 10;
 
         if (isWatermarkValid) {
-          functions.logger.info(`Watermark for export ${doc.id} is valid.`);
+          logger.info(`Watermark for export ${doc.id} is valid.`);
         } else {
-          functions.logger.error(`Invalid watermark detected for export ${doc.id}. Flagging for review.`);
+          logger.error(`Invalid watermark detected for export ${doc.id}. Flagging for review.`);
           // In a real app, write to an alerts collection.
         }
       }
 
-      functions.logger.info("Daily watermark checker job finished.");
+      logger.info("Daily watermark checker job finished.");
     } catch (error) {
-      functions.logger.error("Error running daily watermark checker:", error);
+      logger.error("Error running daily watermark checker:", error);
     }
 
-    return null;
+    return;
   });

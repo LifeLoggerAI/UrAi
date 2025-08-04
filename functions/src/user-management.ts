@@ -1,5 +1,8 @@
 
-import * as functions from "firebase-functions";
+import {onUserDeleted} from "firebase-functions/v2/identity";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
@@ -11,8 +14,8 @@ const db = admin.firestore();
 /**
  * Triggered on new user creation to create a default profile and companion in Firestore.
  */
-export const createDefaultProfile = functions.auth.user().onCreate(async (user) => {
-  const {uid, email, displayName, photoURL} = user;
+export const createDefaultProfile = onUserDeleted(async (event) => {
+  const {uid, email, displayName, photoURL} = event.data;
 
   try {
     const batch = db.batch();
@@ -66,12 +69,12 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
 
     await batch.commit();
 
-    functions.logger.info(`Successfully created profile and companion for user: ${uid}`);
+    logger.info(`Successfully created profile and companion for user: ${uid}`);
 
     // As per blueprint: "enqueue welcome notification"
-    functions.logger.info(`Enqueued welcome notification for user ${uid}`);
+    logger.info(`Enqueued welcome notification for user ${uid}`);
   } catch (error) {
-    functions.logger.error(`Error creating profile for user ${uid}:`, error);
+    logger.error(`Error creating profile for user ${uid}:`, error);
   }
 });
 
@@ -79,9 +82,9 @@ export const createDefaultProfile = functions.auth.user().onCreate(async (user) 
  * Triggered on user deletion to clean up their data.
  * This starts implementing the data cleanup logic from the blueprint.
  */
-export const onUserDelete = functions.auth.user().onDelete(async (user) => {
-  const {uid} = user;
-  functions.logger.info(`Starting data cleanup for deleted user: ${uid}`);
+export const onUserDelete = onUserDeleted(async (event) => {
+  const {uid} = event.data;
+  logger.info(`Starting data cleanup for deleted user: ${uid}`);
 
   const userDocRef = db.collection("users").doc(uid);
 
@@ -89,8 +92,8 @@ export const onUserDelete = functions.auth.user().onDelete(async (user) => {
     // This is a simplified version. A real app would also delete associated
     // data in other collections (voiceEvents, etc.) and in Storage.
     await userDocRef.delete();
-    functions.logger.info(`Successfully deleted user profile for ${uid}. Further cleanup is required for a production app.`);
+    logger.info(`Successfully deleted user profile for ${uid}. Further cleanup is required for a production app.`);
   } catch (error) {
-    functions.logger.error(`Error deleting user profile for ${uid}:`, error);
+    logger.error(`Error deleting user profile for ${uid}:`, error);
   }
 });

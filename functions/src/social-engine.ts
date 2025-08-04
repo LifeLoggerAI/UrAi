@@ -1,5 +1,10 @@
 
-import * as functions from "firebase-functions";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onDocumentWritten, onDocumentUpdated} from "firebase-functions/v2/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
@@ -12,13 +17,13 @@ const db = admin.firestore();
  * Ingests a voice interaction and updates social contact data.
  * This is a placeholder for a complex data ingestion pipeline.
  */
-export const voiceInteractionIngest = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const voiceInteractionIngest = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
 
-  functions.logger.info(`Ingesting voice interaction for user ${uid}.`);
+  logger.info(`Ingesting voice interaction for user ${uid}.`);
   // Logic to:
   // 1. Match or create a /people record.
   // 2. Update interactionCount, voiceMemoryStrength, lastHeardAt, silenceDurationDays.
@@ -32,25 +37,20 @@ export const voiceInteractionIngest = functions.https.onCall(async (data, contex
  * Analyzes interaction history to determine a contact's social archetype.
  * Triggered when social contact data is updated. Placeholder.
  */
-export const socialArchetypeEngine = functions.firestore
-  .document("people/{personId}")
-  .onUpdate(async (change, context) => {
-    const personData = change.after.data();
-    if (!personData) return null;
+export const socialArchetypeEngine = onDocumentUpdated("people/{personId}", async (event: FirestoreEvent<any>) => {
+    const personData = event.data?.after.data();
+    if (!personData) return;
 
-    functions.logger.info(`Running social archetype engine for user ${personData.uid}, contact ${context.params.personId}.`);
+    logger.info(`Running social archetype engine for user ${personData.uid}, contact ${event.params.personId}.`);
     // Logic to call 'ArchetypeShiftEngine' AI model and update socialArchetype.
-    return null;
+    return;
   });
 
 /**
  * Daily check for contacts that have gone silent.
  */
-export const checkSilenceThresholds = functions.pubsub
-  .schedule("every day 04:30")
-  .timeZone("UTC")
-  .onRun(async () => {
-    functions.logger.info("Running daily social silence check.");
+export const checkSilenceThresholds = onSchedule("30 04 * * *", async () => {
+    logger.info("Running daily social silence check.");
 
     const sixtyDaysAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
     const staleContactsQuery = db.collection("people").where("lastSeen", "<", sixtyDaysAgo);
@@ -58,8 +58,8 @@ export const checkSilenceThresholds = functions.pubsub
     const staleContactsSnap = await staleContactsQuery.get();
 
     if (staleContactsSnap.empty) {
-      functions.logger.info("No stale contacts found.");
-      return null;
+      logger.info("No stale contacts found.");
+      return;
     }
 
     for (const contactDoc of staleContactsSnap.docs) {
@@ -75,7 +75,7 @@ export const checkSilenceThresholds = functions.pubsub
         continue;
       }
 
-      functions.logger.info(`Silence threshold met for user ${uid}, contact ${personName} (${daysSilent} days). Creating insight.`);
+      logger.info(`Silence threshold met for user ${uid}, contact ${personName} (${daysSilent} days). Creating insight.`);
 
       const insightPayload = {
         uid: uid,
@@ -101,7 +101,7 @@ export const checkSilenceThresholds = functions.pubsub
       await db.collection("messages/queue").add(notificationPayload);
     }
     
-    return null;
+    return;
   });
 
 
@@ -109,14 +109,12 @@ export const checkSilenceThresholds = functions.pubsub
  * Detects post-interaction emotional echoes.
  * Triggered on new social events. Placeholder.
  */
-export const echoLoopDetection = functions.firestore
-  .document("socialEvents/{eventId}")
-  .onWrite(async (change, context) => {
-    const eventData = change.after.data();
-    if (!eventData) return null;
+export const echoLoopDetection = onDocumentWritten("socialEvents/{eventId}", async (event: FirestoreEvent<any>) => {
+    const eventData = event.data?.after.data();
+    if (!eventData) return;
 
-    functions.logger.info(`Detecting echo loops for user ${eventData.uid}.`);
+    logger.info(`Detecting echo loops for user ${eventData.uid}.`);
     // Logic to compare post-interaction mood signals.
     // If lingering effects, increase echoLoopScore on the socialContact.
-    return null;
+    return;
   });
