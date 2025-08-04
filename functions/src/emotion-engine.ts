@@ -1,5 +1,8 @@
 
-import * as functions from "firebase-functions";
+import {onDocumentCreated, onDocumentUpdated} from "firebase-functions/v2/firestore";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import {v4 as uuidv4} from "uuid";
 import type { AuraState, MemoryBloom } from "../../lib/types";
@@ -57,19 +60,17 @@ function mapEmotionToColor(emotion: string): string {
 
 
 // 1. updateAuraState – triggered on new moodLog
-export const updateAuraState = functions.firestore
-  .document("users/{uid}/moodLogs/{logId}")
-  .onCreate(async (snap, ctx) => {
-    const data = snap.data();
+export const updateAuraState = onDocumentCreated("users/{uid}/moodLogs/{logId}", async (event: FirestoreEvent<any>) => {
+    const data = event.data?.data();
     const {uid} = ctx.params;
 
     if (!data.emotion || typeof data.intensity !== "number") {
-      functions.logger.warn(`Missing emotion or intensity for moodLog ${ctx.params.logId}`);
+      logger.warn(`Missing emotion or intensity for moodLog ${ctx.params.logId}`);
       return;
     }
 
     const overlay = mapEmotionToOverlay(data.emotion, data.intensity);
-    functions.logger.info(`Updating aura for user ${uid} to emotion: ${data.emotion}`);
+    logger.info(`Updating aura for user ${uid} to emotion: ${data.emotion}`);
 
     try {
       await db.doc(`users/${uid}/auraStates/current`).set({
@@ -79,7 +80,7 @@ export const updateAuraState = functions.firestore
         lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
       }, {merge: true});
     } catch (error) {
-      functions.logger.error(`Failed to update auraState for user ${uid}:`, error);
+      logger.error(`Failed to update auraState for user ${uid}:`, error);
     }
   });
 
@@ -88,7 +89,7 @@ export const updateAuraState = functions.firestore
 export const emotionOverTimeWatcher = functions.pubsub
   .schedule("every 60 minutes")
   .onRun(async () => {
-    functions.logger.info("Running hourly emotionOverTimeWatcher job.");
+    logger.info("Running hourly emotionOverTimeWatcher job.");
     const usersSnap = await db.collection("users").get();
 
     const promises = usersSnap.docs.map(async (userDoc) => {
@@ -101,7 +102,7 @@ export const emotionOverTimeWatcher = functions.pubsub
       const moodLogsSnap = await moodLogsQuery.get();
 
       if (moodLogsSnap.empty) {
-        functions.logger.info(`No mood logs in the last hour for user ${uid}. Skipping.`);
+        logger.info(`No mood logs in the last hour for user ${uid}. Skipping.`);
         return;
       }
 
@@ -138,26 +139,24 @@ export const emotionOverTimeWatcher = functions.pubsub
           cycleType,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
-        functions.logger.info(`Created new emotion cycle ${cycleId} for user ${uid}.`);
+        logger.info(`Created new emotion cycle ${cycleId} for user ${uid}.`);
       } catch (error) {
-        functions.logger.error(`Failed to create emotionCycle for user ${uid}:`, error);
+        logger.error(`Failed to create emotionCycle for user ${uid}:`, error);
       }
     });
 
     await Promise.all(promises);
-    return null;
+    return;
   });
 
 
 // 3. triggerBloom – milestone bloom when recovery detected
-export const triggerBloom = functions.firestore
-  .document("users/{uid}/emotionCycles/{cycleId}")
-  .onCreate(async (snap, ctx) => {
-    const cycleData = snap.data();
+export const triggerBloom = onDocumentCreated("users/{uid}/emotionCycles/{cycleId}", async (event: FirestoreEvent<any>) => {
+    const cycleData = event.data?.data();
     const {uid} = ctx.params;
 
     if (cycleData.cycleType === "recovery") {
-      functions.logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
+      logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
       try {
         await db.collection(`users/${uid}/memoryBlooms`).add({
           bloomId: uuidv4(),
@@ -167,7 +166,7 @@ export const triggerBloom = functions.firestore
           description: "A moment of positive recovery was detected.",
         });
       } catch (error) {
-        functions.logger.error(`Failed to create memoryBloom for user ${uid}:`, error);
+        logger.error(`Failed to create memoryBloom for user ${uid}:`, error);
       }
     }
   });
@@ -176,22 +175,20 @@ export const triggerBloom = functions.firestore
 /**
  * Detects a positive mood shift and triggers a recovery bloom.
  */
-export const detectRecoveryBloomOnAuraUpdate = functions.firestore
-  .document("users/{uid}/auraStates/current")
-  .onUpdate(async (change, context) => {
-    const before = change.before.data() as AuraState;
-    const after = change.after.data() as AuraState;
-    const { uid } = context.params;
+export const detectRecoveryBloomOnAuraUpdate = onDocumentUpdated("users/{uid}/auraStates/current", async (event: FirestoreEvent<any>) => {
+    const before = event.data?.before.data() as AuraState;
+    const after = event.data?.after.data() as AuraState;
+    const { uid } = event.params;
 
     if (!before?.currentEmotion || !after?.currentEmotion) {
-        return null;
+        return;
     }
 
     const beforeIsNegative = NEGATIVE_EMOTIONS.includes(before.currentEmotion.toLowerCase());
     const afterIsPositive = POSITIVE_EMOTIONS.includes(after.currentEmotion.toLowerCase());
 
     if (beforeIsNegative && afterIsPositive) {
-      functions.logger.info(`Recovery bloom detected for user ${uid}. From ${before.currentEmotion} to ${after.currentEmotion}.`);
+      logger.info(`Recovery bloom detected for user ${uid}. From ${before.currentEmotion} to ${after.currentEmotion}.`);
       try {
         const bloomId = uuidv4();
         const memoryBloomPayload: Omit<MemoryBloom, 'triggeredAt'> & { triggeredAt: admin.firestore.FieldValue } = {
@@ -215,8 +212,8 @@ export const detectRecoveryBloomOnAuraUpdate = functions.firestore
         await db.collection("narratorInsights").doc(insightPayload.insightId).set(insightPayload);
 
       } catch (error) {
-        functions.logger.error(`Failed to create recovery bloom for user ${uid}:`, error);
+        logger.error(`Failed to create recovery bloom for user ${uid}:`, error);
       }
     }
-    return null;
+    return;
   });

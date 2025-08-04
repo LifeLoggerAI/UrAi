@@ -1,5 +1,9 @@
 
-import * as functions from "firebase-functions";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onDocumentWritten, onDocumentCreated} from "firebase-functions/v2/firestore";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
@@ -12,15 +16,15 @@ const db = admin.firestore();
  * Ingests a batch of passive sensor data.
  * This is a placeholder for a complex data ingestion pipeline.
  */
-export const ingestPassiveSensors = functions.https.onCall(async (data, context) => {
+export const ingestPassiveSensors = onCall(async (request: CallableRequest) => {
   // In a real app, data would be a batch of sensor readings.
   // {motion[], micSentiment[], appUse[], ambientAudio[]}
-  const uid = context.auth?.uid;
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
 
-  functions.logger.info(`Ingesting passive sensor data for user ${uid}.`);
+  logger.info(`Ingesting passive sensor data for user ${uid}.`);
   // Logic to write to /torsoMetrics and /habitEvents
   // For now, this remains a placeholder for the data ingestion endpoint.
 
@@ -32,16 +36,14 @@ export const ingestPassiveSensors = functions.https.onCall(async (data, context)
  * Calculates value alignment score.
  * Triggered when torsoMetrics are updated. Placeholder.
  */
-export const calcValueAlignment = functions.firestore
-  .document("torsoMetrics/{uid}/{dateKey}")
-  .onWrite(async (change, context) => {
-    functions.logger.info(`Calculating value alignment for user ${context.params.uid}.`);
+export const calcValueAlignment = onDocumentWritten("torsoMetrics/{uid}/{dateKey}", async (event: FirestoreEvent<any>) => {
+    logger.info(`Calculating value alignment for user ${event.params.uid}.`);
     // This function would call an AI model (e.g., via a Genkit flow) to
     // compare habitEvents and torsoMetrics against user-defined values.
     // Placeholder for AI call.
-    // const alignmentScore = await callValueAlignmentAI(change.after.data());
+    // const alignmentScore = await callValueAlignmentAI(event.data?.after.data());
     // await change.after.ref.update({ valueAlignmentScore: alignmentScore });
-    return null;
+    return;
   });
 
 
@@ -49,23 +51,21 @@ export const calcValueAlignment = functions.firestore
  * Detects self-conflict or fragmentation.
  * Triggered when torsoMetrics are updated. Placeholder.
  */
-export const detectSelfConflict = functions.firestore
-  .document("torsoMetrics/{uid}/{dateKey}")
-  .onWrite(async (change, context) => {
-    const data = change.after.data();
-    const uid = context.params.uid;
+export const detectSelfConflict = onDocumentWritten("torsoMetrics/{uid}/{dateKey}", async (event: FirestoreEvent<any>) => {
+    const data = event.data?.after.data();
+    const uid = event.params.uid;
 
-    if (data?.selfConsistencyScore < 40 && (!change.before.exists || change.before.data()?.selfConsistencyScore >= 40)) {
-      functions.logger.info(`Self-conflict detected for user ${uid}.`);
+    if (data?.selfConsistencyScore < 40 && (!event.data?.before?.exists || event.data?.before.data()?.selfConsistencyScore >= 40)) {
+      logger.info(`Self-conflict detected for user ${uid}.`);
 
       // Create a narratorInsight document
       const insightPayload = {
         uid: uid,
-        insightId: `conflict-${context.params.dateKey}`,
+        insightId: `conflict-${event.params.dateKey}`,
         insightType: "self_conflict_detected",
         payload: {
           score: data.selfConsistencyScore,
-          date: context.params.dateKey,
+          date: event.params.dateKey,
         },
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
         consumed: false,
@@ -81,7 +81,7 @@ export const detectSelfConflict = functions.firestore
       };
       await db.collection("messages/queue").add(notificationPayload);
     }
-    return null;
+    return;
   });
 
 
@@ -89,16 +89,14 @@ export const detectSelfConflict = functions.firestore
  * Checks Pro tier limits.
  * Triggered on new torsoMetrics. Placeholder.
  */
-export const checkProLimits = functions.firestore
-  .document("torsoMetrics/{uid}/{dateKey}")
-  .onCreate(async (snap, context) => {
-    const uid = context.params.uid;
+export const checkProLimits = onDocumentCreated("torsoMetrics/{uid}/{dateKey}", async (event: FirestoreEvent<any>) => {
+    const uid = event.params.uid;
     const userRef = db.doc(`users/${uid}`);
     const userSnap = await userRef.get();
     const userData = userSnap.data();
 
     if (userData && !userData.isProUser) {
-      functions.logger.info(`Checking pro limits for free user ${uid}.`);
+      logger.info(`Checking pro limits for free user ${uid}.`);
 
       // Logic to check if metrics > 7 days old and delete oldest.
       const sevenDaysAgo = new Date();
@@ -112,7 +110,7 @@ export const checkProLimits = functions.firestore
       const oldMetricsSnap = await oldMetricsQuery.get();
       const batch = db.batch();
       oldMetricsSnap.docs.forEach((doc) => {
-        functions.logger.info(`Deleting old metric ${doc.id} for free user ${uid}.`);
+        logger.info(`Deleting old metric ${doc.id} for free user ${uid}.`);
         batch.delete(doc.ref);
       });
       await batch.commit();
@@ -125,5 +123,5 @@ export const checkProLimits = functions.firestore
       };
       await db.collection("messages/queue").add(notificationPayload);
     }
-    return null;
+    return;
   });

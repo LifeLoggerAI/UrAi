@@ -1,5 +1,7 @@
 // Import the functions you need from the SDKs you need
-import * as functions from "firebase-functions";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import cors from "cors";
 

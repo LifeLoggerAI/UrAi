@@ -1,41 +1,43 @@
 
-import * as functions from "firebase-functions";
+import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onDocumentWritten} from "firebase-functions/v2/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
+import {logger} from "firebase-functions/v2";
+import type {CallableRequest} from "firebase-functions/v2/https";
+import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
-const db = admin.firestore();
 
 /**
  * Triggers an Orb insight based on a significant change in the user's metrics.
  * Placeholder function.
  */
-export const triggerOrbInsight = functions.firestore
-  .document("presentMetrics/{uid}")
-  .onWrite(async (change, context) => {
-    functions.logger.info(`Checking for Orb trigger for user ${context.params.uid}.`);
+export const triggerOrbInsight = onDocumentWritten("presentMetrics/{uid}", async (event: FirestoreEvent<any>) => {
+    logger.info(`Checking for Orb trigger for user ${event.params.uid}.`);
     // In a real app:
     // 1. Compare before/after snapshots of presentMetrics.
     // 2. If a significant change is detected (e.g., in tone, shadow, forecast):
     //    a. Generate a narratorInsight document.
     //    b. Set the user's /orbState/{uid} document's mode to "chat".
     //    c. Create a new /orbEvents document to log the trigger.
-    return null;
+    return;
   });
 
 /**
  * Generates an AI response for the Orb Coach.
  * Placeholder for HTTPS callable function.
  */
-export const generateOrbResponse = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const generateOrbResponse = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
 
-  functions.logger.info(`Generating Orb response for user ${uid}.`);
+  logger.info(`Generating Orb response for user ${uid}.`);
   // In a real app:
   // 1. Receive userPrompt and context.
   // 2. Call an AI model (e.g., OpenAI) with a specialized prompt pack.
@@ -53,13 +55,13 @@ export const generateOrbResponse = functions.https.onCall(async (data, context) 
  * Starts a symbolic ritual from a user prompt via the Orb.
  * Placeholder for HTTPS callable function.
  */
-export const startRitualByPrompt = functions.https.onCall(async (data, context) => {
-  const uid = context.auth?.uid;
+export const startRitualByPrompt = onCall(async (request: CallableRequest) => {
+  const uid = request.auth?.uid;
   if (!uid) {
-    throw new functions.https.HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError("unauthenticated", "User must be authenticated.");
   }
 
-  functions.logger.info(`Starting a ritual for user ${uid}.`);
+  logger.info(`Starting a ritual for user ${uid}.`);
   // In a real app:
   // 1. Determine the ritual type from the input.
   // 2. Create a new /rituals document.
@@ -73,14 +75,11 @@ export const startRitualByPrompt = functions.https.onCall(async (data, context) 
  * Daily trigger for the Orb to offer a reflection. Pro-tier feature.
  * Placeholder for Pub/Sub scheduled function.
  */
-export const dailyOrbNarratorTrigger = functions.pubsub
-  .schedule("every day 02:10")
-  .timeZone("UTC")
-  .onRun(async () => {
-    functions.logger.info("Running daily Orb narrator trigger job.");
+export const dailyOrbNarratorTrigger = onSchedule("10 02 * * *", async () => {
+    logger.info("Running daily Orb narrator trigger job.");
     // For every "pro" user:
     // 1. Generate a daily reflection insight.
     // 2. Create a narratorInsight document.
     // 3. Optionally create an orbEvent to notify the user.
-    return null;
+    return;
   });
