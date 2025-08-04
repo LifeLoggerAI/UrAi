@@ -30,7 +30,7 @@ const generateAvatarFlow = ai.defineFlow(
   },
   async (input) => {
     const {media} = await ai.generate({
-      model: 'googleai/gemini-2.0-flash-preview-image-generation',
+      model: 'googleai/gemini-2.0-flash',
       prompt: `Generate an abstract, artistic, and visually pleasing avatar for a person named '${input.name}' who is perceived as a '${input.role}'. The avatar should be symbolic, not a photorealistic portrait. Use a consistent, soft color palette. The style should be minimalist and modern, suitable for a circular profile picture.`,
       config: {
         responseModalities: ['TEXT', 'IMAGE'],
