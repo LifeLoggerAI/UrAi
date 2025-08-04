@@ -65,7 +65,7 @@ export default function LoginPage() {
         description: `You have successfully ${action === 'signIn' ? 'signed in' : 'signed up'}.`,
       });
       router.push('/');
-    } catch (error: any) {
+    } catch (error: Error) {
       toast({
         variant: "destructive",
         title: "Authentication Failed",
@@ -86,7 +86,7 @@ export default function LoginPage() {
             description: `You have successfully signed in with Google.`,
         });
         router.push('/');
-    } catch (error: any) {
+    } catch (error: Error) {
         toast({
             variant: "destructive",
             title: "Google Sign-In Failed",
