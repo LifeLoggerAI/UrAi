@@ -8,7 +8,7 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "google",
+    "eslint-config-google",
   ],
   rules: {
     "no-restricted-globals": ["error", "name", "length"],
