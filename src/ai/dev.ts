@@ -14,3 +14,4 @@ import '@/ai/flows/generate-symbolic-insight.ts';
 import '@/ai/flows/analyze-text-sentiment.ts';
 import '@/ai/flows/suggest-ritual.ts';
 import '@/ai/flows/process-onboarding-transcript.ts';
+import '@/ai/flows/generate-storyboard.ts';
