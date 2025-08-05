@@ -28,7 +28,15 @@ const nextConfig: NextConfig = {
   devIndicators: {
     allowedDevOrigins: [
       'https://*.cloudworkstations.dev',
+      'http://localhost:9002',
     ],
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /handlebars\/lib\/index\.js$/,
+      use: 'null-loader',
+    });
+    return config;
   },
 };
 
