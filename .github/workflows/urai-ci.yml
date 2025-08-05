@@ -27,20 +27,43 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      # 4. Build app
+      # 4. Install Functions dependencies
+      - name: Install Functions Dependencies
+        run: cd functions && npm install
+
+      # 5. Lint code
+      - name: Lint Code
+        run: npm run lint
+        continue-on-error: true  # Continue even if lint fails
+
+      # 6. Type check
+      - name: Type Check
+        run: npm run typecheck
+        continue-on-error: true  # Continue even if typecheck fails (known issues)
+
+      # 7. Build app
       - name: Build UrAi
         run: npm run build
 
-      # 5. Install Playwright for E2E testing
+      # 8. Install Playwright for E2E testing
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # 6. Run Playwright tests
+      # 9. Run Playwright tests
       - name: Run E2E Tests
         run: npm run test:e2e
         continue-on-error: false  # fail build if any test fails
 
-      # 7. Deploy to Firebase (only if tests pass and on main branch)
+      # 10. Validate Environment Variables
+      - name: Validate Environment
+        run: |
+          echo "Checking for required environment variables..."
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "Warning: FIREBASE_TOKEN not set"
+          fi
+          echo "Environment validation complete"
+
+      # 11. Deploy to Firebase (only if tests pass and on main branch)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
