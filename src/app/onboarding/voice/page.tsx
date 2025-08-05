@@ -16,10 +16,10 @@ import type { OnboardIntake, Goal, Task, CalendarEvent, HabitWatch } from '@/lib
 
 const prompts = [
     "To begin, tell me a dream or a goal you care about right now.",
-    "That's a powerful goal. What's one small, concrete step you could take toward it this week?",
+    "That&apos;s a powerful goal. What&apos;s one small, concrete step you could take toward it this week?",
     "Perfect. When would be a good time for me to gently nudge you about that step?",
     "Got it. Lastly, is there anything specific I should watch out for on this journey? Any habits or obstacles?",
-    "Thank you for sharing. I'm ready to begin this journey with you."
+    "Thank you for sharing. I&apos;m ready to begin this journey with you."
 ];
 
 type RecordingState = 'idle' | 'recording' | 'processing' | 'done';
@@ -202,7 +202,7 @@ export default function VoiceOnboardingPage() {
                 <CardHeader>
                     <BotMessageSquare className="mx-auto h-12 w-12 text-primary animate-pulse"/>
                     <CardTitle className="font-headline text-3xl mt-4">First Reflection</CardTitle>
-                    <CardDescription>Let's begin by seeding your inner voice. I'll ask a few questions. Please respond in one continuous recording.</CardDescription>
+                    <CardDescription>Let&apos;s begin by seeding your inner voice. I&apos;ll ask a few questions. Please respond in one continuous recording.</CardDescription>
                 </CardHeader>
                 <CardContent className="min-h-[10rem] flex items-center justify-center p-6">
                     <AnimatePresence mode="wait">
