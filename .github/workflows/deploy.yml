@@ -1,0 +1,43 @@
+name: Build & Deploy
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+
+  staging-deploy:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+      - run: firebase deploy --only hosting:staging --token ${{ secrets.FIREBASE_TOKEN }}
+
+  prod-deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: '18'
+      - run: npm ci
+      - run: npm run build
+      - run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}

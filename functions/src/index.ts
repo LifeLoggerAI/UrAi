@@ -1,4 +1,18 @@
 
+// Next.js server integration
+const functions = require("firebase-functions");
+const next = require("next");
+
+const dev = process.env.NODE_ENV !== "production";
+const app = next({ dev, conf: { distDir: ".next" } });
+const handle = app.getRequestHandler();
+
+export const nextServer = functions.https.onRequest((req, res) =>
+  app.prepare().then(() => handle(req, res)).catch(err => {
+    console.error(err);
+    res.status(500).send(err.toString());
+  })
+);
 
 /**
  * Import function triggers from their respective submodules:

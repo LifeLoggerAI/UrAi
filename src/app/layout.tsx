@@ -1,14 +1,14 @@
 import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
+// import { Inter } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ 
-  subsets: ['latin'],
+// Fallback font configuration for network issues
+const inter = { 
   variable: '--font-sans',
-});
+};
 
 export const metadata: Metadata = {
   title: 'Life Logger',
