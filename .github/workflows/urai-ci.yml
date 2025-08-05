@@ -7,6 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
@@ -23,26 +26,44 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      # 3. Install dependencies
-      - name: Install Dependencies
-        run: npm install
+      # 3. Cache npm dependencies
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      # 4. Build app
+      # 4. Install dependencies
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+
+      # 5. Build app
       - name: Build UrAi
         run: npm run build
 
-      # 5. Install Playwright for E2E testing
+      # 6. Cache Playwright browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # 7. Install Playwright for E2E testing
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # 6. Run Playwright tests
+      # 8. Run Playwright tests
       - name: Run E2E Tests
         run: npm run test:e2e
         continue-on-error: false  # fail build if any test fails
 
-      # 7. Deploy to Firebase (only if tests pass and on main branch)
+      # 9. Deploy to Firebase (only if tests pass and on main branch)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
           npm install -g firebase-tools
-          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
+          firebase deploy --only hosting,functions --token "${{ secrets.FIREBASE_TOKEN }}"

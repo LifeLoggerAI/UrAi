@@ -30,6 +30,24 @@ const nextConfig: NextConfig = {
       'https://*.cloudworkstations.dev',
     ],
   },
+  webpack: (config, { isServer }) => {
+    // Handle require.extensions and missing modules
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+      crypto: false,
+    };
+
+    // Add null-loader for missing files/modules
+    config.module.rules.push({
+      test: /\.node$/,
+      use: 'null-loader',
+    });
+
+    return config;
+  },
 };
 
 export default nextConfig;

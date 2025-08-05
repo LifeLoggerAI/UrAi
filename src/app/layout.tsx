@@ -1,14 +1,8 @@
 import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
-
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
 
 export const metadata: Metadata = {
   title: 'Life Logger',
@@ -25,8 +19,7 @@ export default function RootLayout({
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          "min-h-screen bg-background font-sans antialiased"
         )}
       >
         <AuthProvider>
