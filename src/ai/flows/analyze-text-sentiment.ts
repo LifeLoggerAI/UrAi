@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -9,7 +8,7 @@
  * - AnalyzeTextSentimentOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   AnalyzeTextSentimentInputSchema,
   AnalyzeTextSentimentOutputSchema,
@@ -17,14 +16,16 @@ import {
   type AnalyzeTextSentimentOutput,
 } from '@/lib/types';
 
-export async function analyzeTextSentiment(input: AnalyzeTextSentimentInput): Promise<AnalyzeTextSentimentOutput | null> {
+export async function analyzeTextSentiment(
+  input: AnalyzeTextSentimentInput
+): Promise<AnalyzeTextSentimentOutput | null> {
   return analyzeTextSentimentFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'analyzeTextSentimentPrompt',
-  input: {schema: AnalyzeTextSentimentInputSchema},
-  output: {schema: AnalyzeTextSentimentOutputSchema},
+  input: { schema: AnalyzeTextSentimentInputSchema },
+  output: { schema: AnalyzeTextSentimentOutputSchema },
   prompt: `You are an expert in sentiment analysis. Analyze the following text entry and provide a sentiment score.
 
 Text Entry:
@@ -40,8 +41,8 @@ const analyzeTextSentimentFlow = ai.defineFlow(
     inputSchema: AnalyzeTextSentimentInputSchema,
     outputSchema: AnalyzeTextSentimentOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );

@@ -1,10 +1,9 @@
-
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 
 /**
@@ -14,7 +13,7 @@ if (admin.apps.length === 0) {
 export const generateWeeklyScroll = functions.pubsub
   .schedule('every monday 08:00')
   .timeZone('America/New_York') // Example timezone
-  .onRun(async (context) => {
+  .onRun(async context => {
     functions.logger.info('Starting weekly scroll export job for all users.');
     // In a real application, this function would:
     // 1. Query for all users.
@@ -32,7 +31,7 @@ export const generateWeeklyScroll = functions.pubsub
 export const evolveCompanion = functions.pubsub
   .schedule('1 of month 09:00')
   .timeZone('America/New_York') // Example timezone
-  .onRun(async (context) => {
+  .onRun(async context => {
     functions.logger.info('Starting monthly companion evolution job.');
     // In a real application, this function would:
     // 1. Query for all users.
@@ -42,7 +41,6 @@ export const evolveCompanion = functions.pubsub
     return null;
   });
 
-
 /**
  * Exports data to BigQuery nightly.
  * This is a placeholder.
@@ -50,7 +48,7 @@ export const evolveCompanion = functions.pubsub
 export const exportToBigQuery = functions.pubsub
   .schedule('every day 03:00')
   .timeZone('America/New_York') // Example timezone
-  .onRun(async (context) => {
+  .onRun(async context => {
     functions.logger.info('Starting nightly BigQuery export job.');
     // In a real application, this function would:
     // 1. Check user consent (`dataConsent` collection).
@@ -81,15 +79,14 @@ export const scheduleDailyTorsoSummary = functions.pubsub
  * This is a placeholder.
  */
 export const scheduleDailySnapshot = functions.pubsub
-    .schedule('every day 03:15')
-    .timeZone('UTC')
-    .onRun(async (context) => {
-        functions.logger.info("Running daily job to generate Sky and Ground snapshots for all users.");
-        // In a real implementation, this function would:
-        // 1. Loop through all active users.
-        // 2. For each user, invoke regenerateSkyOverlay() and regenerateGroundOverlay().
-        //    These helper functions would contain the core logic for fetching weather,
-        //    analyzing mood/emotion data, and generating the respective JSON payloads.
-        return null;
-    });
-    
+  .schedule('every day 03:15')
+  .timeZone('UTC')
+  .onRun(async context => {
+    functions.logger.info('Running daily job to generate Sky and Ground snapshots for all users.');
+    // In a real implementation, this function would:
+    // 1. Loop through all active users.
+    // 2. For each user, invoke regenerateSkyOverlay() and regenerateGroundOverlay().
+    //    These helper functions would contain the core logic for fetching weather,
+    //    analyzing mood/emotion data, and generating the respective JSON payloads.
+    return null;
+  });

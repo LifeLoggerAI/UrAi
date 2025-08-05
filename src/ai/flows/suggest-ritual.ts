@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Suggests a personalized ritual or journaling prompt.
@@ -8,7 +7,7 @@
  * - SuggestRitualOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   SuggestRitualInputSchema,
   SuggestRitualOutputSchema,
@@ -16,14 +15,16 @@ import {
   type SuggestRitualOutput,
 } from '@/lib/types';
 
-export async function suggestRitual(input: SuggestRitualInput): Promise<SuggestRitualOutput | null> {
+export async function suggestRitual(
+  input: SuggestRitualInput
+): Promise<SuggestRitualOutput | null> {
   return suggestRitualFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'suggestRitualPrompt',
-  input: {schema: SuggestRitualInputSchema},
-  output: {schema: SuggestRitualOutputSchema},
+  input: { schema: SuggestRitualInputSchema },
+  output: { schema: SuggestRitualOutputSchema },
   prompt: `You are a wise and empathetic AI companion in a journaling app. A user has interacted with a symbolic representation of themselves. Based on the area they touched and their current context, suggest a small, actionable ritual or a journaling prompt.
 
 Keep the tone gentle, inviting, and encouraging. The goal is to foster mindfulness and self-reflection, not to give commands.
@@ -45,8 +46,8 @@ const suggestRitualFlow = ai.defineFlow(
     inputSchema: SuggestRitualInputSchema,
     outputSchema: SuggestRitualOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );

@@ -1,14 +1,12 @@
-import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from "@/components/ui/toaster"
+import type { Metadata } from 'next';
+// import { Inter } from 'next/font/google';
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
+// Temporary fallback while font loading is fixed
+const fontClass = 'font-sans';
 
 export const metadata: Metadata = {
   title: 'Life Logger',
@@ -21,17 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <head />
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
-        )}
-      >
+      <body className={cn('min-h-screen bg-background font-sans antialiased', fontClass)}>
         <AuthProvider>
-            {children}
-            <Toaster />
+          {children}
+          <Toaster />
         </AuthProvider>
       </body>
     </html>

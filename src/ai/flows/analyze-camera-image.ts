@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI flow to analyze emotions from a facial snapshot.
@@ -8,7 +7,7 @@
  * - AnalyzeCameraImageOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   AnalyzeCameraImageInputSchema,
   AnalyzeCameraImageOutputSchema,
@@ -16,14 +15,16 @@ import {
   type AnalyzeCameraImageOutput,
 } from '@/lib/types';
 
-export async function analyzeCameraImage(input: AnalyzeCameraImageInput): Promise<AnalyzeCameraImageOutput | null> {
+export async function analyzeCameraImage(
+  input: AnalyzeCameraImageInput
+): Promise<AnalyzeCameraImageOutput | null> {
   return analyzeCameraImageFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'analyzeCameraImagePrompt',
-  input: {schema: AnalyzeCameraImageInputSchema},
-  output: {schema: AnalyzeCameraImageOutputSchema},
+  input: { schema: AnalyzeCameraImageInputSchema },
+  output: { schema: AnalyzeCameraImageOutputSchema },
   prompt: `You are an expert in symbolic visual analysis. Analyze the following image captured from a user's life. Extract deep, contextual, and symbolic meaning.
 
 Image: {{media url=imageDataUri}}
@@ -49,8 +50,8 @@ const analyzeCameraImageFlow = ai.defineFlow(
     inputSchema: AnalyzeCameraImageInputSchema,
     outputSchema: AnalyzeCameraImageOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );

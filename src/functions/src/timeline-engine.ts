@@ -1,10 +1,9 @@
-
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -13,15 +12,15 @@ const db = admin.firestore();
  * Placeholder for a data ingestion pipeline.
  */
 export const ingestTimelineEvent = functions.https.onCall(async (data, context) => {
-    const uid = context.auth?.uid;
-    if (!uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
-    }
-    
-    functions.logger.info(`Ingesting timeline event for user ${uid}.`);
-    // Logic to write to /timelineEvents and update /presentMetrics.
-    
-    return { success: true };
+  const uid = context.auth?.uid;
+  if (!uid) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
+  }
+
+  functions.logger.info(`Ingesting timeline event for user ${uid}.`);
+  // Logic to write to /timelineEvents and update /presentMetrics.
+
+  return { success: true };
 });
 
 /**
@@ -45,7 +44,7 @@ export const runForecastEngine = functions.pubsub
   .schedule('every day 02:05')
   .timeZone('UTC')
   .onRun(async () => {
-    functions.logger.info("Running daily emotional forecast for all users.");
+    functions.logger.info('Running daily emotional forecast for all users.');
     // For every user:
     // 1. Call 'MoodTrajectoryForecaster' AI model.
     // 2. Write results to /forecastProfiles.
@@ -61,7 +60,7 @@ export const updateArchetypeState = functions.pubsub
   .schedule('every sunday 04:00')
   .timeZone('UTC')
   .onRun(async () => {
-    functions.logger.info("Running weekly archetype evolution for all users.");
+    functions.logger.info('Running weekly archetype evolution for all users.');
     // For every user:
     // 1. Analyze last 4 weeks of data.
     // 2. Call 'ArchetypeMorphEngine' AI model.

@@ -1,12 +1,12 @@
-specVersion: "v1"
-serviceId: "src"
-location: "us-central1"
+specVersion: 'v1'
+serviceId: 'src'
+location: 'us-central1'
 schema:
-  source: "./schema"
+  source: './schema'
   datasource:
     postgresql:
-      database: "fdcdb"
+      database: 'fdcdb'
       cloudSql:
-        instanceId: "src-fdc"
+        instanceId: 'src-fdc'
       # schemaValidation: "COMPATIBLE"
-connectorDirs: ["./connector"]
+connectorDirs: ['./connector']

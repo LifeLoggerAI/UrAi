@@ -1,4 +1,3 @@
-
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -26,9 +25,25 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: {
-    allowedDevOrigins: [
-      'https://*.cloudworkstations.dev',
-    ],
+    allowedDevOrigins: ['https://*.cloudworkstations.dev'],
+  },
+  webpack: (config, { isServer }) => {
+    // Handle handlebars files
+    config.module.rules.push({
+      test: /\.hbs$/,
+      loader: 'handlebars-loader',
+    });
+
+    // Handle null loader for compatibility
+    config.module.rules.push({
+      test: /\.null$/,
+      use: 'null-loader',
+    });
+
+    // Ignore handlebars require.extensions warnings
+    config.ignoreWarnings = [{ message: /require\.extensions is not supported by webpack/ }];
+
+    return config;
   },
 };
 

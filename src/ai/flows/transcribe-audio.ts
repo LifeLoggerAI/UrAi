@@ -7,7 +7,7 @@
  * - TranscribeAudioOutput - The return type for the transcribeAudio function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   TranscribeAudioInputSchema,
   TranscribeAudioOutputSchema,
@@ -26,12 +26,12 @@ const transcribeAudioFlow = ai.defineFlow(
     inputSchema: TranscribeAudioInputSchema,
     outputSchema: TranscribeAudioOutputSchema,
   },
-  async (input) => {
+  async input => {
     const { text } = await ai.generate({
-        model: googleAI.model('gemini-1.5-flash'),
-        prompt: [{ media: { url: input.audioDataUri } }],
+      model: googleAI.model('gemini-1.5-flash'),
+      prompt: [{ media: { url: input.audioDataUri } }],
     });
-    
+
     return { transcript: text };
   }
 );

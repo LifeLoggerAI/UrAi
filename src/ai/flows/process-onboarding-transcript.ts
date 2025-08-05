@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI flow to process the user's voice onboarding transcript.
@@ -8,7 +7,7 @@
  * - ProcessOnboardingTranscriptOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   ProcessOnboardingTranscriptInputSchema,
   ProcessOnboardingTranscriptOutputSchema,
@@ -16,14 +15,16 @@ import {
   type ProcessOnboardingTranscriptOutput,
 } from '@/lib/types';
 
-export async function processOnboardingTranscript(input: ProcessOnboardingTranscriptInput): Promise<ProcessOnboardingTranscriptOutput | null> {
+export async function processOnboardingTranscript(
+  input: ProcessOnboardingTranscriptInput
+): Promise<ProcessOnboardingTranscriptOutput | null> {
   return processOnboardingTranscriptFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'processOnboardingTranscriptPrompt',
-  input: {schema: ProcessOnboardingTranscriptInputSchema},
-  output: {schema: ProcessOnboardingTranscriptOutputSchema},
+  input: { schema: ProcessOnboardingTranscriptInputSchema },
+  output: { schema: ProcessOnboardingTranscriptOutputSchema },
   prompt: `You are an expert at understanding user goals from a brief conversation. Analyze the following transcript from a new user onboarding.
 
 Your task is to extract four key pieces of information:
@@ -43,10 +44,10 @@ const processOnboardingTranscriptFlow = ai.defineFlow(
     inputSchema: ProcessOnboardingTranscriptInputSchema,
     outputSchema: ProcessOnboardingTranscriptOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt({
-        ...input,
-        currentDate: new Date().toLocaleDateString('en-CA'), // YYYY-MM-DD
+  async input => {
+    const { output } = await prompt({
+      ...input,
+      currentDate: new Date().toLocaleDateString('en-CA'), // YYYY-MM-DD
     });
     return output;
   }

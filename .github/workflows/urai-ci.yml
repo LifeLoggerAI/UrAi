@@ -2,10 +2,13 @@ name: UrAi CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
 
 jobs:
   build-test-deploy:
@@ -16,33 +19,96 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Set up Node.js
+      # 2. Set up Node.js with caching
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      # 3. Install dependencies
-      - name: Install Dependencies
-        run: npm install
+      # 3. Cache npm dependencies
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      # 4. Build app
+      # 4. Install dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # 5. Lint and format check
+      - name: Lint and Format Check
+        run: |
+          npm run lint
+          npm run format:check
+
+      # 6. Type check
+      - name: Type Check
+        run: npm run typecheck
+
+      # 7. AI Health Check
+      - name: AI Health Check
+        run: npm run test:ai-health
+        continue-on-error: false
+
+      # 8. Build app
       - name: Build UrAi
         run: npm run build
 
-      # 5. Install Playwright for E2E testing
+      # 9. Cache Playwright browsers
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # 10. Install Playwright browsers (only if not cached)
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
-      # 6. Run Playwright tests
+      # 11. Install Playwright dependencies if cached
+      - name: Install Playwright Dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+
+      # 12. Run unit tests (if any)
+      - name: Run Unit Tests
+        run: npm test
+        continue-on-error: true # Allow to continue if no tests configured
+
+      # 13. Run E2E tests
       - name: Run E2E Tests
         run: npm run test:e2e
-        continue-on-error: false  # fail build if any test fails
+        continue-on-error: false # fail build if any E2E test fails
 
-      # 7. Deploy to Firebase (only if tests pass and on main branch)
+      # 14. Upload test results
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      # 15. Deploy to Firebase (only on main branch and if tests pass)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
           npm install -g firebase-tools
           firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
+
+      # 16. Notify on success
+      - name: Deployment Success Notification
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          echo "🚀 Deployment successful! UrAi is now live."
+          echo "✅ Build passed"
+          echo "✅ Tests passed"
+          echo "✅ Deployed to Firebase"

@@ -1,11 +1,10 @@
-
-import {onCall, HttpsError} from "firebase-functions/v2/https";
-import {onDocumentWritten} from "firebase-functions/v2/firestore";
-import {onSchedule} from "firebase-functions/v2/scheduler";
-import {logger} from "firebase-functions/v2";
-import * as admin from "firebase-admin";
-import type {CallableRequest} from "firebase-functions/v2/https";
-import type {FirestoreEvent} from "firebase-functions/v2/firestore";
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onDocumentWritten } from 'firebase-functions/v2/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { logger } from 'firebase-functions/v2';
+import * as admin from 'firebase-admin';
+import type { CallableRequest } from 'firebase-functions/v2/https';
+import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -19,14 +18,14 @@ if (admin.apps.length === 0) {
 export const ingestArmSensors = onCall(async (request: CallableRequest) => {
   const uid = request.auth?.uid;
   if (!uid) {
-    throw new HttpsError("unauthenticated", "User must be authenticated.");
+    throw new HttpsError('unauthenticated', 'User must be authenticated.');
   }
 
   logger.info(`Ingesting arm/action sensor data for user ${uid}.`);
   // This function would process raw gesture, tone, and app usage data.
   // It would then write to /relationalGestures and aggregate into /armMetrics.
 
-  return {success: true};
+  return { success: true };
 });
 
 /**
@@ -34,7 +33,7 @@ export const ingestArmSensors = onCall(async (request: CallableRequest) => {
  * Triggered when armMetrics are updated. Placeholder.
  */
 export const calcFollowThroughScore = onDocumentWritten(
-  "armMetrics/{uid}/{dateKey}",
+  'armMetrics/{uid}/{dateKey}',
   async (event: FirestoreEvent<any>) => {
     logger.info(`Calculating follow-through score for user ${event.params.uid}.`);
     // Logic to call OpenAI 'ActionFollowthroughAI' and update score.
@@ -47,7 +46,7 @@ export const calcFollowThroughScore = onDocumentWritten(
  * Triggered when armMetrics are updated. Placeholder.
  */
 export const detectEmotionalOverload = onDocumentWritten(
-  "armMetrics/{uid}/{dateKey}",
+  'armMetrics/{uid}/{dateKey}',
   async (event: FirestoreEvent<any>) => {
     const data = event.data?.after.data();
     if (data?.emotionalEffortLoad > 70 && data?.connectionEchoScore < 40) {
@@ -63,12 +62,13 @@ export const detectEmotionalOverload = onDocumentWritten(
  * This is a placeholder.
  */
 export const scheduleDailyArmsSummary = onSchedule(
-  "30 2 * * *", // 02:30 UTC daily
+  '30 2 * * *', // 02:30 UTC daily
   async () => {
-    logger.info("Running daily arms summary job.");
+    logger.info('Running daily arms summary job.');
     // For every user:
     // 1. Aggregate yesterday’s armMetrics.
     // 2. Write a summary document.
     // 3. Create a notification: “Your interaction & action pulse for {{date}} is ready.”
     return;
-  });
+  }
+);

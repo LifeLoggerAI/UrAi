@@ -1,10 +1,9 @@
-
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -13,18 +12,17 @@ const db = admin.firestore();
  * This is a placeholder for a complex data ingestion pipeline.
  */
 export const ingestMovementSensors = functions.https.onCall(async (data, context) => {
-    const uid = context.auth?.uid;
-    if (!uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
-    }
-    
-    functions.logger.info(`Ingesting movement sensor data for user ${uid}.`);
-    // This function would process raw GPS, activity, and app usage data.
-    // It would then write to /movementPaths and aggregate into /legsMetrics.
-    
-    return { success: true };
-});
+  const uid = context.auth?.uid;
+  if (!uid) {
+    throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
+  }
 
+  functions.logger.info(`Ingesting movement sensor data for user ${uid}.`);
+  // This function would process raw GPS, activity, and app usage data.
+  // It would then write to /movementPaths and aggregate into /legsMetrics.
+
+  return { success: true };
+});
 
 /**
  * Calculates stability and momentum scores.
@@ -37,7 +35,6 @@ export const calcStabilityMomentum = functions.firestore
     // Logic to call AI prompts 'StabilityPulseMapper' & 'MomentumInferenceEngine'.
     return null;
   });
-
 
 /**
  * Detects avoidance patterns.
@@ -60,7 +57,7 @@ export const trajectoryForecastJob = functions.pubsub
   .schedule('every day 04:45')
   .timeZone('UTC')
   .onRun(async () => {
-    functions.logger.info("Running daily trajectory forecast job for all users.");
+    functions.logger.info('Running daily trajectory forecast job for all users.');
     // In a real application, this function would:
     // 1. Query for all users.
     // 2. For each user, get the last 14 days of legsMetrics & movementPaths.
