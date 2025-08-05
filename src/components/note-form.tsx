@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './auth-provider';
 import { transcribeAudio } from '@/ai/flows/transcribe-audio';
 import { enrichVoiceEvent } from '@/ai/flows/enrich-voice-event';
@@ -24,34 +24,7 @@ export function NoteForm() {
   const audioChunksRef = useRef<Blob[]>([]);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // We need to check for `window` to ensure this runs only on the client.
-    if (typeof window !== "undefined") {
-      setRecordingState('requesting');
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-          setHasPermission(true);
-          setRecordingState('idle');
-          mediaRecorderRef.current = new MediaRecorder(stream);
-          mediaRecorderRef.current.ondataavailable = (event) => {
-            audioChunksRef.current.push(event.data);
-          };
-          mediaRecorderRef.current.onstop = handleRecordingStop;
-        })
-        .catch(err => {
-          console.error("Error accessing microphone:", err);
-          setHasPermission(false);
-          setRecordingState('idle');
-          toast({
-              variant: "destructive",
-              title: "Microphone Access Denied",
-              description: "Please enable microphone permissions in your browser settings.",
-          });
-        });
-    }
-  }, [toast]);
-
-  const handleRecordingStop = async () => {
+  const handleRecordingStop = useCallback(async () => {
     if (!user) {
         toast({
             variant: "destructive",
@@ -171,7 +144,34 @@ export function NoteForm() {
         audioChunksRef.current = [];
       }
     };
-  };
+  }, [user, recordingStart, toast]);
+
+  useEffect(() => {
+    // We need to check for `window` to ensure this runs only on the client.
+    if (typeof window !== "undefined") {
+      setRecordingState('requesting');
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          setHasPermission(true);
+          setRecordingState('idle');
+          mediaRecorderRef.current = new MediaRecorder(stream);
+          mediaRecorderRef.current.ondataavailable = (event) => {
+            audioChunksRef.current.push(event.data);
+          };
+          mediaRecorderRef.current.onstop = handleRecordingStop;
+        })
+        .catch(err => {
+          console.error("Error accessing microphone:", err);
+          setHasPermission(false);
+          setRecordingState('idle');
+          toast({
+              variant: "destructive",
+              title: "Microphone Access Denied",
+              description: "Please enable microphone permissions in your browser settings.",
+          });
+        });
+    }
+  }, [toast, handleRecordingStop]);
 
   const toggleRecording = () => {
     if (recordingState === 'recording') {
