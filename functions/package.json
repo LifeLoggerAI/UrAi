@@ -12,7 +12,8 @@
     "logs": "firebase functions:log",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:integration": "firebase emulators:exec \"npm test\" --only functions"
   },
   "name": "functions",
   "engines": {

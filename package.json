@@ -10,7 +10,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:functions": "cd functions && npm test"
+    "test:functions": "cd functions && npm test",
+    "test:functions:integration": "cd functions && npm run test:integration",
+    "test:e2e": "echo 'E2E tests not yet implemented. Skipping...'"
   },
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",

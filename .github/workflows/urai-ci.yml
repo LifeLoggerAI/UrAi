@@ -47,7 +47,20 @@ jobs:
       - name: Run Function Tests
         run: npm run test:functions
 
-      # 8. Deploy to Firebase (only if tests pass and on main branch)
+      - name: Run Function Tests with Coverage
+        run: cd functions && npm run test:coverage
+
+      # 9. Validate Firebase secrets are available for deployment
+      - name: Validate Firebase Secrets
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "Error: FIREBASE_TOKEN secret is not set"
+            exit 1
+          fi
+          echo "Firebase secrets validation passed"
+
+      # 10. Deploy to Firebase (only if tests pass and on main branch)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
