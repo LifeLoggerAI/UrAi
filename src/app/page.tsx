@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import { Loader2 } from "lucide-react";
 import { HomeView } from "@/components/home-view";
+import { LandingPage } from "@/components/landing-page";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { User as AppUser } from "@/lib/types";
@@ -17,7 +18,7 @@ const DEPLOY_ID = "__DEPLOY_ID__";
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   useEffect(() => {
     // One-time deploy confirmation log
@@ -30,7 +31,7 @@ export default function HomePage() {
     if (authLoading) return;
 
     if (!user) {
-      router.push('/login');
+      // Show landing page for non-authenticated users
       return;
     }
 
@@ -59,7 +60,7 @@ export default function HomePage() {
     checkOnboardingStatus();
   }, [user, authLoading, router]);
 
-  if (authLoading || profileLoading) {
+  if (authLoading || (user && profileLoading)) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-background p-4 sm:p-8 md:p-12">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -67,6 +68,12 @@ export default function HomePage() {
     );
   }
 
+  // Show landing page for non-authenticated users
+  if (!user) {
+    return <LandingPage />;
+  }
+
+  // Show dashboard for authenticated users
   return (
     <main className="min-h-screen bg-background">
       <HomeView />
