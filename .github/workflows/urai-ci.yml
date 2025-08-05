@@ -40,7 +40,14 @@ jobs:
         run: npm run test:e2e
         continue-on-error: false  # fail build if any test fails
 
-      # 7. Deploy to Firebase (only if tests pass and on main branch)
+      # 7. Install function dependencies and run function tests
+      - name: Install Function Dependencies
+        run: cd functions && npm ci
+
+      - name: Run Function Tests
+        run: npm run test:functions
+
+      # 8. Deploy to Firebase (only if tests pass and on main branch)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
