@@ -1,0 +1,344 @@
+# UrAi B2B GraphQL Schema
+# Alternative GraphQL interface for the B2B API
+
+# Scalar types
+scalar DateTime
+scalar JSON
+
+# Enums
+enum MemoryType {
+  VOICE
+  DREAM
+  REFLECTION
+}
+
+enum TagCategory {
+  PEOPLE
+  EMOTIONS
+  THEMES
+  SYMBOLS
+  TASKS
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum LicenseTier {
+  TRIAL
+  STANDARD
+  PREMIUM
+}
+
+# Input types
+input MemoryFilter {
+  startDate: DateTime
+  endDate: DateTime
+  emotions: [String!]
+  tags: [String!]
+  type: MemoryType
+  sentimentMin: Float
+  sentimentMax: Float
+}
+
+input PaginationInput {
+  page: Int = 1
+  pageSize: Int = 50
+}
+
+input SortInput {
+  field: String = "createdAt"
+  order: SortOrder = DESC
+}
+
+input EmbeddingQueryInput {
+  query: String!
+  threshold: Float = 0.7
+  limit: Int = 10
+}
+
+# Core types
+type Memory {
+  id: ID!
+  type: MemoryType!
+  content: String!
+  createdAt: DateTime!
+  lastAccessed: DateTime
+  sourceFlow: String!
+  tags: [String!]!
+  emotions: [String!]
+  sentimentScore: Float
+  crossReferences: CrossReferences!
+  embeddings: EmbeddingData
+  metadata: JSON!
+}
+
+type CrossReferences {
+  people: [String!]
+  tasks: [String!]
+  themes: [String!]
+  symbols: [String!]
+}
+
+type EmbeddingData {
+  vectorId: String!
+  embedding: [Float!]
+  similarity: Float
+}
+
+type Tag {
+  tag: String!
+  category: TagCategory!
+  frequency: Int!
+  firstSeen: DateTime!
+  lastSeen: DateTime!
+  associatedEmotions: [String!]!
+  sentiment: SentimentStats!
+}
+
+type SentimentStats {
+  average: Float!
+  range: [Float!]!
+}
+
+type UsageMetadata {
+  totalVoiceEvents: Int!
+  totalDreamEvents: Int!
+  activeInLast30Days: Int!
+  dailyAverageEvents: Float!
+  dailyBreakdown: JSON!
+  lastActive: DateTime!
+}
+
+type AnalyticsMetadata {
+  sentimentAnalysis: SentimentAnalysis!
+  emotionBreakdown: JSON!
+  socialConnections: SocialConnectionsStats!
+  dataQuality: DataQualityStats!
+}
+
+type SummaryMetadata {
+  userProfile: UserProfile!
+  activitySummary: ActivitySummary!
+  dataExportInfo: DataExportInfo!
+}
+
+type SentimentAnalysis {
+  average: Float!
+  distribution: SentimentDistribution!
+}
+
+type SentimentDistribution {
+  positive: Int!
+  neutral: Int!
+  negative: Int!
+}
+
+type SocialConnectionsStats {
+  totalPeople: Int!
+  averageInteractionsPerPerson: Float!
+}
+
+type DataQualityStats {
+  totalRecords: Int!
+  recordsWithSentiment: Int!
+  recordsWithEmotions: Int!
+  completenessScore: Float!
+}
+
+type UserProfile {
+  displayName: String
+  createdAt: DateTime
+  isProUser: Boolean!
+  onboardingComplete: Boolean!
+}
+
+type ActivitySummary {
+  weeklyEvents: Int!
+  averageDailyEvents: Float!
+  primarySourceFlow: String!
+}
+
+type DataExportInfo {
+  totalExportableRecords: Int!
+  estimatedSizeKB: Int!
+  supportedFormats: [String!]!
+}
+
+type Pagination {
+  page: Int!
+  pageSize: Int!
+  total: Int!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+}
+
+# Response types
+type MemoriesResponse {
+  memories: [Memory!]!
+  pagination: Pagination!
+  filters: JSON!
+}
+
+type TagsResponse {
+  tags: [Tag!]!
+  totalUniqueTags: Int!
+  category: String
+}
+
+type EmbeddingsResponse {
+  embeddings: [Memory!]!
+  query: String!
+  similarityThreshold: Float!
+  resultCount: Int!
+}
+
+type UserMetadata {
+  usage: UsageMetadata
+  analytics: AnalyticsMetadata
+  summary: SummaryMetadata
+}
+
+# Root Query type
+type Query {
+  # Get user memories with filtering, pagination, and sorting
+  memories(
+    userId: ID!
+    filter: MemoryFilter
+    pagination: PaginationInput
+    sort: SortInput
+  ): MemoriesResponse!
+  
+  # Get specific memory by ID
+  memory(userId: ID!, memoryId: ID!): Memory
+  
+  # Get aggregated tag data
+  tags(
+    userId: ID!
+    category: TagCategory
+  ): TagsResponse!
+  
+  # Get user metadata and analytics
+  metadata(
+    userId: ID!
+    includeUsage: Boolean = true
+    includeAnalytics: Boolean = true
+    includeSummary: Boolean = true
+  ): UserMetadata!
+  
+  # Search for similar memories using embeddings (requires Standard+ tier)
+  similarMemories(
+    userId: ID!
+    input: EmbeddingQueryInput!
+  ): EmbeddingsResponse!
+  
+  # Get embeddings for specific memories (requires Standard+ tier)
+  embeddings(
+    userId: ID!
+    memoryIds: [ID!]
+  ): [Memory!]!
+}
+
+# Schema directives for authentication and rate limiting
+directive @auth(requires: LicenseTier = TRIAL) on FIELD_DEFINITION
+directive @rateLimit(max: Int!, window: String!) on FIELD_DEFINITION
+
+# Apply directives to fields
+extend type Query {
+  memories: MemoriesResponse! @auth(requires: TRIAL) @rateLimit(max: 100, window: "1h")
+  tags: TagsResponse! @auth(requires: TRIAL) @rateLimit(max: 50, window: "1h")
+  metadata: UserMetadata! @auth(requires: TRIAL) @rateLimit(max: 20, window: "1h")
+  similarMemories: EmbeddingsResponse! @auth(requires: STANDARD) @rateLimit(max: 10, window: "1h")
+  embeddings: [Memory!]! @auth(requires: STANDARD) @rateLimit(max: 10, window: "1h")
+}
+
+# Example queries:
+
+# Query 1: Get recent memories with emotion filter
+# query GetRecentHappyMemories($userId: ID!) {
+#   memories(
+#     userId: $userId
+#     filter: { emotions: ["happy"], startDate: "2024-01-01T00:00:00Z" }
+#     pagination: { page: 1, pageSize: 10 }
+#     sort: { field: "createdAt", order: DESC }
+#   ) {
+#     memories {
+#       id
+#       type
+#       content
+#       createdAt
+#       sentimentScore
+#       tags
+#       emotions
+#       crossReferences {
+#         people
+#         tasks
+#       }
+#     }
+#     pagination {
+#       page
+#       total
+#       hasNext
+#     }
+#   }
+# }
+
+# Query 2: Get user analytics
+# query GetUserAnalytics($userId: ID!) {
+#   metadata(userId: $userId, includeAnalytics: true) {
+#     analytics {
+#       sentimentAnalysis {
+#         average
+#         distribution {
+#           positive
+#           neutral
+#           negative
+#         }
+#       }
+#       emotionBreakdown
+#       socialConnections {
+#         totalPeople
+#         averageInteractionsPerPerson
+#       }
+#     }
+#   }
+# }
+
+# Query 3: Find similar memories (Premium feature)
+# query FindSimilarMemories($userId: ID!, $queryText: String!) {
+#   similarMemories(
+#     userId: $userId
+#     input: { query: $queryText, threshold: 0.8, limit: 5 }
+#   ) {
+#     embeddings {
+#       id
+#       content
+#       type
+#       sentimentScore
+#       embeddings {
+#         similarity
+#       }
+#     }
+#     query
+#     resultCount
+#   }
+# }
+
+# Query 4: Get all people tags
+# query GetPeopleTags($userId: ID!) {
+#   tags(userId: $userId, category: PEOPLE) {
+#     tags {
+#       tag
+#       frequency
+#       firstSeen
+#       lastSeen
+#       sentiment {
+#         average
+#         range
+#       }
+#       associatedEmotions
+#     }
+#     totalUniqueTags
+#   }
+# }
