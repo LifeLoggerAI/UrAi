@@ -706,6 +706,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 export const CompanionChatInputSchema = z.object({
   history: z.array(ChatMessageSchema),
   message: z.string().describe('The latest message from the user.'),
+  userId: z.string().optional().describe('User identifier for memory cross-referencing'),
 });
 export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
 
@@ -1571,3 +1572,32 @@ export const CompanionSchema = z.object({
     isActive: z.boolean(),
 });
 export type Companion = z.infer<typeof CompanionSchema>;
+
+// Schemas for Memory & Cross-Reference System
+export const MemorySchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  tag: z.string().describe("Simple string tag for categorizing and retrieving memories"),
+  payload: z.any().describe("Arbitrary JSON data to persist"),
+  createdAt: z.number(),
+  updatedAt: z.number(),
+  source: z.string().optional().describe("Source flow that created this memory (e.g., 'chat', 'transcription')"),
+});
+export type Memory = z.infer<typeof MemorySchema>;
+
+export const SaveMemoryInputSchema = z.object({
+  userId: z.string().describe("Unique user identifier"),
+  tag: z.string().describe("Simple string tag or category for the memory"),
+  payload: z.any().describe("Arbitrary JSON data to persist"),
+  source: z.string().optional().describe("Source flow that created this memory"),
+});
+export type SaveMemoryInput = z.infer<typeof SaveMemoryInputSchema>;
+
+export const GetMemoriesInputSchema = z.object({
+  userId: z.string().describe("Unique user identifier"),
+  tagPattern: z.string().optional().describe("Optional tag pattern for filtering (simple string match or wildcard)"),
+  limit: z.number().default(50).describe("Maximum number of memories to return"),
+  orderBy: z.enum(['createdAt', 'updatedAt']).default('createdAt').describe("Field to order results by"),
+  order: z.enum(['asc', 'desc']).default('desc').describe("Sort direction"),
+});
+export type GetMemoriesInput = z.infer<typeof GetMemoriesInputSchema>;

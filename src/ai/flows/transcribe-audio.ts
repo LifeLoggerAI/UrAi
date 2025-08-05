@@ -15,6 +15,7 @@ import {
   type TranscribeAudioOutput,
 } from '@/lib/types';
 import { googleAI } from '@genkit-ai/googleai';
+import { MemoryService } from '@/lib/memory-service';
 
 export async function transcribeAudio(input: TranscribeAudioInput): Promise<TranscribeAudioOutput> {
   return transcribeAudioFlow(input);
@@ -32,6 +33,25 @@ const transcribeAudioFlow = ai.defineFlow(
         prompt: [{ media: { url: input.audioDataUri } }],
     });
     
+    // Extract userId from input or use a default
+    const userId = (input as any).userId || 'default-user';
+    
+    // Save transcript to memory for future cross-referencing
+    const transcriptMemory = {
+      transcript: text,
+      timestamp: Date.now(),
+      audioLength: input.audioDataUri.length, // rough proxy for audio length
+      source: 'transcribe-audio'
+    };
+
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    await MemoryService.saveMemory(
+      userId,
+      `transcript-${today}`,
+      transcriptMemory,
+      'transcribe-audio'
+    );
+
     return { transcript: text };
   }
 );
