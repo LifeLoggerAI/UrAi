@@ -44,32 +44,39 @@ Extract and organize the event details into:
 - **References:** real-world photos, films, art styles to emulate
 
 **Step 2: Generate Scene Breakdown**
-For each scene, create:
-1. **Scene header:** "Scene X – [Event Name]: [Location], [Time of day]"
-2. **Shot list with:**
-   - Shot type (close-up, wide, tracking, etc.)
-   - Subject (who or what)
-   - Action described in one sentence
-   - Camera movement & lens choice
-   - Lighting notes
+Create 2-4 scenes that capture the key moments. For each scene:
+1. **Scene header:** "Scene [number] – [Event Name]: [Location], [Time of day]"
+2. **Shot list:** 2-5 shots per scene with:
+   - Shot type: Choose from close-up, medium, wide, extreme-wide, tracking, dolly, crane
+   - Subject: Specific person or object being featured
+   - Action: Single sentence describing what's happening
+   - Camera: Movement style and lens choice (e.g. "Handheld 50mm tracking shot" or "Static wide-angle 24mm")
+   - Lighting: Specific lighting setup and mood
 
 **Step 3: Create Photo-Realistic Image Prompts**
-For each shot, craft detailed prompts like:
-"A wide-angle dusk shot of [Person name, description] standing under a neon sign in a rainy Tokyo alley, glistening pavement, dramatic low-key lighting, cinematic 35mm film look, realistic skin textures, subtle motion blur."
+For each shot, craft detailed prompts using this structure:
+"[Shot type] of [detailed subject description] [action], [setting details], [lighting description], [camera/lens specs], [artistic style], [texture and material details], [atmospheric elements]"
+
+Example: "A cinematic wide-angle shot of Sarah, a 25-year-old woman with curly brown hair wearing an emerald green flowing dress, laughing joyfully while surrounded by friends on a modern rooftop terrace, string lights creating warm bokeh in the background, golden hour lighting with soft shadows, shot on 35mm film with shallow depth of field, realistic skin textures and fabric details, warm evening atmosphere with city lights beginning to twinkle"
 
 **Step 4: Cross-Reference & Validation**
-Ensure every person, place, and prop in your prompts matches the original input data. Flag missing details if needed.
+Ensure consistency:
+- Every person mentioned appears in image prompts with consistent descriptions
+- Location details match throughout all scenes  
+- Lighting and time of day progress logically
+- Props and objects are consistently described
 
-**Guidelines for Image Prompts:**
-- Include specific camera angles and lens choices
-- Describe lighting conditions in detail
-- Mention specific textures, materials, and surfaces
-- Add atmospheric elements (fog, rain, sunlight, etc.)
-- Specify the overall cinematic style
-- Include emotion and mood descriptors
-- Use photorealistic rendering terms
+**Guidelines for Professional Image Prompts:**
+- Start with shot type and camera specifics
+- Include detailed physical descriptions of people (age, hair, clothing, expressions)
+- Describe exact lighting setup (golden hour, studio lighting, natural window light, etc.)
+- Mention camera technical details (lens focal length, depth of field, film grain)
+- Add environmental atmosphere (steam, fog, rain, dust particles, etc.)
+- Include texture details (fabric, skin, metal, wood surfaces)
+- Specify artistic style (cinematic, documentary, portrait, etc.)
+- End with overall mood and color palette
 
-**Output the complete storyboard as a structured JSON with scenes array.**`,
+Return a valid JSON response with the scenes array containing the complete storyboard.`,
 });
 
 const generateStoryboardFlow = ai.defineFlow(
@@ -79,24 +86,59 @@ const generateStoryboardFlow = ai.defineFlow(
     outputSchema: GenerateStoryboardOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
-    
-    if (!output) {
+    try {
+      // Validate input
+      if (!input.eventDescription || input.eventDescription.trim().length < 10) {
+        throw new Error('Event description must be at least 10 characters long');
+      }
+
+      const {output} = await prompt(input);
+      
+      if (!output) {
+        throw new Error('AI model did not return a valid response');
+      }
+
+      // Validate the output structure
+      if (!output.scenes || output.scenes.length === 0) {
+        throw new Error('Generated storyboard must contain at least one scene');
+      }
+
+      // Validate each scene has required shots
+      for (let i = 0; i < output.scenes.length; i++) {
+        const scene = output.scenes[i];
+        if (!scene.shots || scene.shots.length === 0) {
+          throw new Error(`Scene ${i + 1} must contain at least one shot`);
+        }
+        
+        // Validate each shot has all required fields
+        for (let j = 0; j < scene.shots.length; j++) {
+          const shot = scene.shots[j];
+          if (!shot.imagePrompt || shot.imagePrompt.length < 50) {
+            throw new Error(`Shot ${j + 1} in Scene ${i + 1} must have a detailed image prompt (at least 50 characters)`);
+          }
+        }
+      }
+
+      return output;
+      
+    } catch (error) {
+      console.error('Error in generateStoryboardFlow:', error);
+      
+      // Return a fallback storyboard structure
       return { 
         scenes: [{
-          sceneHeader: "Scene 1 - Error: Unable to process event",
+          sceneHeader: `Scene 1 - Error Processing: ${error instanceof Error ? error.message : 'Unknown error'}`,
           shots: [{
             type: "medium",
-            subject: "System",
-            action: "Unable to generate storyboard from provided description",
-            camera: "Static medium shot",
-            lighting: "Neutral lighting",
-            imagePrompt: "A simple placeholder image indicating storyboard generation failed"
-          }]
+            subject: "Error state",
+            action: "Unable to generate storyboard from the provided description",
+            camera: "Static medium shot with standard lens",
+            lighting: "Neutral studio lighting",
+            imagePrompt: "A simple error placeholder showing that storyboard generation failed due to insufficient or invalid input data. The image should be clean and professional, indicating a technical issue that needs to be resolved."
+          }],
+          dialogue: "Error occurred during storyboard generation"
         }]
       };
     }
-
-    return output;
   }
 );
