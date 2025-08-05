@@ -1,5 +1,5 @@
 {
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "genkit:start": "genkit start -- tsx --watch src/genkit-sample.ts",
     "lint": "eslint --ext .js,.ts .",

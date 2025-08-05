@@ -1,18 +1,32 @@
 
 // Next.js server integration
-const functions = require("firebase-functions");
-const next = require("next");
+import * as functions from "firebase-functions";
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev, conf: { distDir: ".next" } });
-const handle = app.getRequestHandler();
 
-export const nextServer = functions.https.onRequest((req, res) =>
-  app.prepare().then(() => handle(req, res)).catch(err => {
-    console.error(err);
-    res.status(500).send(err.toString());
-  })
-);
+// Initialize Next.js only when needed
+let nextApp: any = null;
+let nextHandler: any = null;
+
+const getNextApp = async () => {
+  if (!nextApp) {
+    const next = require("next");
+    nextApp = next({ dev, conf: { distDir: ".next" } });
+    await nextApp.prepare();
+    nextHandler = nextApp.getRequestHandler();
+  }
+  return { app: nextApp, handle: nextHandler };
+};
+
+export const nextServer = functions.https.onRequest(async (req, res) => {
+  try {
+    const { handle } = await getNextApp();
+    return handle(req, res);
+  } catch (error) {
+    console.error("Next.js server error:", error);
+    res.status(500).send(error instanceof Error ? error.toString() : "Internal server error");
+  }
+});
 
 /**
  * Import function triggers from their respective submodules:

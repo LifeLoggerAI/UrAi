@@ -8,8 +8,8 @@
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
     "build": "npx next build",
     "start": "npx next start",
-    "serve": "firebase emulators:start --only functions,hosting",
-    "deploy": "npm run build && firebase deploy",
+    "serve": "./node_modules/.bin/firebase emulators:start --only functions,hosting",
+    "deploy": "npm run build && ./node_modules/.bin/firebase deploy",
     "test:smoke": "curl -X GET http://localhost:9002/api/health; curl -X POST http://localhost:9002/api/flow/analyze-text-sentiment -H 'Content-Type: application/json' -d '{\"text\":\"test\"}'",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
