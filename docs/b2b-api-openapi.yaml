@@ -1,0 +1,558 @@
+openapi: 3.0.3
+info:
+  title: UrAi B2B Data API
+  description: |
+    Secure B2B API for accessing LifeLogger AI user data including memories, tags, metadata, and embeddings.
+    
+    This API provides programmatic access to aggregated user data for business intelligence, 
+    research, and integration purposes. All data access is authenticated and scoped to 
+    authorized partners only.
+    
+    ## Authentication
+    
+    All requests must include a valid API key in the Authorization header:
+    ```
+    Authorization: Bearer <your_api_key>
+    ```
+    
+    ## Rate Limits
+    
+    - **Trial**: 100 requests/day
+    - **Standard**: 1,000 requests/day  
+    - **Premium**: 10,000 requests/day
+    
+    ## Data Privacy
+    
+    - All data is anonymized according to partner license agreements
+    - User consent is verified before any data access
+    - Audit logs are maintained for all API access
+    
+  version: 1.0.0
+  contact:
+    name: LifeLogger AI API Support
+    email: api-support@lifelogger.ai
+    url: https://lifelogger.ai/api-docs
+  license:
+    name: Proprietary
+    url: https://lifelogger.ai/license
+
+servers:
+  - url: https://api.lifelogger.ai/v1
+    description: Production server
+  - url: https://staging-api.lifelogger.ai/v1
+    description: Staging server
+
+paths:
+  /memories:
+    get:
+      summary: Retrieve user memories
+      description: |
+        Get all user memories including voice events, dream journals, and inner voice reflections.
+        Supports filtering, pagination, and sorting.
+      tags:
+        - Memories
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: The unique identifier for the user
+          schema:
+            type: string
+            example: "user_12345"
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            example: 1
+        - name: pageSize
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+            example: 20
+        - name: sortBy
+          in: query
+          description: Field to sort by
+          schema:
+            type: string
+            enum: [createdAt, sentimentScore]
+            default: createdAt
+        - name: sortOrder
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: startDate
+          in: query
+          description: Filter memories created after this timestamp (Unix milliseconds)
+          schema:
+            type: integer
+            example: 1609459200000
+        - name: endDate
+          in: query
+          description: Filter memories created before this timestamp (Unix milliseconds)
+          schema:
+            type: integer
+            example: 1640995200000
+        - name: tags
+          in: query
+          description: Comma-separated list of tags to filter by
+          schema:
+            type: string
+            example: "Alice,work,family"
+        - name: emotion
+          in: query
+          description: Filter by specific emotion
+          schema:
+            type: string
+            example: "happy"
+      responses:
+        '200':
+          description: Successfully retrieved memories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Memory'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  meta:
+                    type: object
+                    properties:
+                      includedCollections:
+                        type: array
+                        items:
+                          type: string
+                      filters:
+                        type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /tags:
+    get:
+      summary: Retrieve user tags
+      description: |
+        Get aggregated tag data including people, emotions, themes, symbols, and tasks
+        mentioned in user memories.
+      tags:
+        - Tags
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: The unique identifier for the user
+          schema:
+            type: string
+        - name: category
+          in: query
+          description: Filter tags by category
+          schema:
+            type: string
+            enum: [people, emotions, themes, symbols, tasks]
+      responses:
+        '200':
+          description: Successfully retrieved tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tag'
+                  meta:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      category:
+                        type: string
+                      totalUniqueFlags:
+                        type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /metadata:
+    get:
+      summary: Retrieve user metadata
+      description: |
+        Get comprehensive metadata about user's data including usage patterns,
+        analytics, and summary statistics.
+      tags:
+        - Metadata
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: The unique identifier for the user
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Type of metadata to retrieve
+          schema:
+            type: string
+            enum: [usage, analytics, summary]
+      responses:
+        '200':
+          description: Successfully retrieved metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Metadata'
+                  meta:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      metricType:
+                        type: string
+                      generatedAt:
+                        type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /embeddings:
+    get:
+      summary: Retrieve embeddings for similarity search
+      description: |
+        Get vector embeddings for user memories to enable similarity search and clustering.
+        Requires Standard or Premium tier access.
+      tags:
+        - Embeddings
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: The unique identifier for the user
+          schema:
+            type: string
+        - name: query
+          in: query
+          description: Text to find similar memories for
+          schema:
+            type: string
+            example: "feeling anxious about work"
+        - name: threshold
+          in: query
+          description: Minimum similarity threshold (0.0 to 1.0)
+          schema:
+            type: number
+            minimum: 0.0
+            maximum: 1.0
+            default: 0.7
+        - name: limit
+          in: query
+          description: Maximum number of results
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+      responses:
+        '200':
+          description: Successfully retrieved embeddings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Embedding'
+                  meta:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                      query:
+                        type: string
+                      similarityThreshold:
+                        type: number
+                      resultCount:
+                        type: integer
+                      note:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: API key provided by LifeLogger AI
+
+  schemas:
+    Memory:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the memory
+        type:
+          type: string
+          enum: [voice, dream, reflection]
+          description: Type of memory
+        content:
+          type: string
+          description: Text content of the memory
+        createdAt:
+          type: integer
+          description: Creation timestamp (Unix milliseconds)
+        lastAccessed:
+          type: integer
+          description: Last access timestamp (Unix milliseconds)
+        sourceFlow:
+          type: string
+          description: Source application flow that created this memory
+        tags:
+          type: array
+          items:
+            type: string
+          description: Associated tags
+        emotions:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: Associated emotions
+        sentimentScore:
+          type: number
+          minimum: -1.0
+          maximum: 1.0
+          description: Sentiment score (-1.0 negative to 1.0 positive)
+        crossReferences:
+          type: object
+          properties:
+            people:
+              type: array
+              items:
+                type: string
+            tasks:
+              type: array
+              items:
+                type: string
+            themes:
+              type: array
+              items:
+                type: string
+            symbols:
+              type: array
+              items:
+                type: string
+        embeddings:
+          type: object
+          properties:
+            vectorId:
+              type: string
+            embedding:
+              type: array
+              items:
+                type: number
+        metadata:
+          type: object
+          description: Additional memory-specific metadata
+
+    Tag:
+      type: object
+      properties:
+        tag:
+          type: string
+          description: The tag value
+        category:
+          type: string
+          enum: [people, emotions, themes, symbols, tasks]
+          description: Category of the tag
+        frequency:
+          type: integer
+          description: Number of times this tag appears
+        firstSeen:
+          type: integer
+          description: First occurrence timestamp
+        lastSeen:
+          type: integer
+          description: Most recent occurrence timestamp
+        associatedEmotions:
+          type: array
+          items:
+            type: string
+          description: Emotions associated with this tag
+        sentiment:
+          type: object
+          properties:
+            average:
+              type: number
+              description: Average sentiment score for this tag
+            range:
+              type: array
+              items:
+                type: number
+              minItems: 2
+              maxItems: 2
+              description: [min, max] sentiment range
+
+    Metadata:
+      type: object
+      properties:
+        usage:
+          type: object
+          description: Usage statistics and patterns
+        analytics:
+          type: object
+          description: Advanced analytics and insights
+        summary:
+          type: object
+          description: High-level summary information
+
+    Embedding:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the source memory
+        type:
+          type: string
+          enum: [voice, dream, reflection]
+        content:
+          type: string
+          description: Text content that was embedded
+        vectorId:
+          type: string
+          description: Unique identifier for the embedding vector
+        embedding:
+          type: array
+          items:
+            type: number
+          description: Dense vector representation
+        similarity:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          description: Similarity score to query (if applicable)
+        metadata:
+          type: object
+          description: Additional embedding metadata
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        pageSize:
+          type: integer
+          description: Number of items per page
+        total:
+          type: integer
+          description: Total number of items
+        hasNext:
+          type: boolean
+          description: Whether there are more pages
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code (optional)
+        details:
+          type: object
+          description: Additional error details (optional)
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "userId parameter is required"
+
+    Unauthorized:
+      description: Unauthorized - invalid or missing API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Invalid API key"
+
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Insufficient permissions. Upgrade to Standard or Premium tier for embedding access."
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Internal server error"
+
+tags:
+  - name: Memories
+    description: Access to user memories and experiences
+  - name: Tags
+    description: Aggregated tag and categorization data
+  - name: Metadata
+    description: Usage statistics and analytics
+  - name: Embeddings
+    description: Vector embeddings for similarity search

@@ -24,7 +24,7 @@ const functions: Functions = getFunctions(app);
 let db: Firestore;
 try {
     db = initializeFirestore(app, {
-        localCache: persistentLocalCache({ tabManager: 'single-tab' })
+        localCache: persistentLocalCache({ tabManager: undefined })
     });
 } catch (e) {
     console.warn("Firestore initialization with persistence failed, falling back to in-memory cache. Error:", e);
