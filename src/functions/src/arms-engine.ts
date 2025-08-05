@@ -1,10 +1,9 @@
-
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -12,18 +11,23 @@ const db = admin.firestore();
  * Ingests a batch of gesture and tone data related to arms/actions.
  * This is a placeholder for a complex data ingestion pipeline.
  */
-export const ingestArmSensors = functions.https.onCall(async (data, context) => {
+export const ingestArmSensors = functions.https.onCall(
+  async (data, context) => {
     const uid = context.auth?.uid;
     if (!uid) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'User must be authenticated.'
+      );
     }
-    
+
     functions.logger.info(`Ingesting arm/action sensor data for user ${uid}.`);
     // This function would process raw gesture, tone, and app usage data.
     // It would then write to /relationalGestures and aggregate into /armMetrics.
-    
+
     return { success: true };
-});
+  }
+);
 
 /**
  * Calculates action follow-through score.
@@ -32,7 +36,9 @@ export const ingestArmSensors = functions.https.onCall(async (data, context) => 
 export const calcFollowThroughScore = functions.firestore
   .document('armMetrics/{uid}/{dateKey}')
   .onWrite(async (change, context) => {
-    functions.logger.info(`Calculating follow-through score for user ${context.params.uid}.`);
+    functions.logger.info(
+      `Calculating follow-through score for user ${context.params.uid}.`
+    );
     // Logic to call OpenAI 'ActionFollowthroughAI' and update score.
     return null;
   });
@@ -46,8 +52,10 @@ export const detectEmotionalOverload = functions.firestore
   .onWrite(async (change, context) => {
     const data = change.after.data();
     if (data?.emotionalEffortLoad > 70 && data?.connectionEchoScore < 40) {
-        functions.logger.info(`Emotional overload detected for user ${context.params.uid}.`);
-        // Logic to create narratorInsights and push a notification.
+      functions.logger.info(
+        `Emotional overload detected for user ${context.params.uid}.`
+      );
+      // Logic to create narratorInsights and push a notification.
     }
     return null;
   });

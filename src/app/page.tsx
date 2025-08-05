@@ -1,18 +1,18 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/components/auth-provider";
-import { Loader2 } from "lucide-react";
-import { HomeView } from "@/components/home-view";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import type { User as AppUser } from "@/lib/types";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/auth-provider';
+import { Loader2 } from 'lucide-react';
+import { HomeView } from '@/components/home-view';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import type { User as AppUser } from '@/lib/types';
 
 // LocalStorage key for storing last seen deploy ID
-const DEPLOY_CHECK_KEY = "lastDeployCheck";
+const DEPLOY_CHECK_KEY = 'lastDeployCheck';
 // Placeholder — will be replaced by GitHub Action at deploy time
-const DEPLOY_ID = "__DEPLOY_ID__";
+const DEPLOY_ID = '__DEPLOY_ID__';
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
@@ -23,7 +23,10 @@ export default function HomePage() {
     // One-time deploy confirmation log
     const lastCheck = localStorage.getItem(DEPLOY_CHECK_KEY);
     if (lastCheck !== DEPLOY_ID) {
-      console.log("🔥 Firebase auto-deploy confirmed:", new Date().toLocaleString());
+      console.log(
+        '🔥 Firebase auto-deploy confirmed:',
+        new Date().toLocaleString()
+      );
       localStorage.setItem(DEPLOY_CHECK_KEY, DEPLOY_ID);
     }
 
@@ -49,7 +52,7 @@ export default function HomePage() {
           router.push('/onboarding/permissions');
         }
       } catch (error) {
-        console.error("Error checking onboarding status:", error);
+        console.error('Error checking onboarding status:', error);
         router.push('/onboarding/permissions');
       } finally {
         setProfileLoading(false);

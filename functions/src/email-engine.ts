@@ -1,9 +1,8 @@
-
-import {onDocumentCreated} from "firebase-functions/v2/firestore";
-import {logger} from "firebase-functions/v2";
-import type {CallableRequest} from "firebase-functions/v2/https";
-import type {FirestoreEvent} from "firebase-functions/v2/firestore";
-import * as admin from "firebase-admin";
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { logger } from 'firebase-functions/v2';
+import type { CallableRequest } from 'firebase-functions/v2/https';
+import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -15,9 +14,10 @@ const db = admin.firestore();
  * Gathers data for all users and queues it up for email generation.
  * This function is scheduled to run daily.
  */
-export const enqueueDigestSummaries = functions.pubsub.schedule("every 24 hours")
-  .onRun(async (context) => {
-    logger.info("Running daily job to enqueue email digests.");
+export const enqueueDigestSummaries = functions.pubsub
+  .schedule('every 24 hours')
+  .onRun(async context => {
+    logger.info('Running daily job to enqueue email digests.');
     // In a real application, this function would:
     // 1. Query for all users who have opted into weekly emails.
     // 2. For each user, analyze logs from the past week (moods, rituals, dreams).
@@ -31,8 +31,10 @@ export const enqueueDigestSummaries = functions.pubsub.schedule("every 24 hours"
  * Sends a narrated email when a new digest is added to the queue.
  * This function is triggered by a new document write in /dailyDigestQueue.
  */
-export const sendNarratedEmail = onDocumentCreated("/dailyDigestQueue/{uid}", async (event: FirestoreEvent<any>) => {
-    const {uid} = event.params;
+export const sendNarratedEmail = onDocumentCreated(
+  '/dailyDigestQueue/{uid}',
+  async (event: FirestoreEvent<any>) => {
+    const { uid } = event.params;
     const digest = event.data?.data();
 
     logger.info(`Processing email digest for user ${uid}.`);
@@ -57,4 +59,5 @@ export const sendNarratedEmail = onDocumentCreated("/dailyDigestQueue/{uid}", as
     */
 
     return;
-  });
+  }
+);

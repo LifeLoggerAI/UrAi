@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Generates a symbolic insight from a camera image analysis.
@@ -8,7 +7,7 @@
  * - GenerateSymbolicInsightOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   GenerateSymbolicInsightInputSchema,
   GenerateSymbolicInsightOutputSchema,
@@ -16,14 +15,16 @@ import {
   type GenerateSymbolicInsightOutput,
 } from '@/lib/types';
 
-export async function generateSymbolicInsight(input: GenerateSymbolicInsightInput): Promise<GenerateSymbolicInsightOutput | null> {
+export async function generateSymbolicInsight(
+  input: GenerateSymbolicInsightInput
+): Promise<GenerateSymbolicInsightOutput | null> {
   return generateSymbolicInsightFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'generateSymbolicInsightPrompt',
-  input: {schema: GenerateSymbolicInsightInputSchema},
-  output: {schema: GenerateSymbolicInsightOutputSchema},
+  input: { schema: GenerateSymbolicInsightInputSchema },
+  output: { schema: GenerateSymbolicInsightOutputSchema },
   prompt: `You are an AI companion that generates symbolic insights. Based on the analysis of an image from a user's life, generate a narrator reflection and determine if a visual effect should be triggered.
 
 Image Analysis:
@@ -39,10 +40,10 @@ const generateSymbolicInsightFlow = ai.defineFlow(
     inputSchema: GenerateSymbolicInsightInputSchema,
     outputSchema: GenerateSymbolicInsightOutputSchema,
   },
-  async (input) => {
+  async input => {
     // Stringify the analysis object to pass it into the prompt context
     const analysisStr = JSON.stringify(input.analysis, null, 2);
-    const {output} = await prompt({ analysis: analysisStr });
+    const { output } = await prompt({ analysis: analysisStr });
     return output;
   }
 );

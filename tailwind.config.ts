@@ -1,5 +1,5 @@
-import type {Config} from 'tailwindcss';
-import { fontFamily } from "tailwindcss/defaultTheme"
+import type { Config } from 'tailwindcss';
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
 export default {
   darkMode: ['class'],
@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        headline: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ['var(--font-sans)', ...fontFamily.sans],
+        headline: ['var(--font-sans)', ...fontFamily.sans],
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -87,23 +87,23 @@ export default {
             height: '0',
           },
         },
-        'fadeIn': {
-          'from': { opacity: '0', transform: 'translateY(-10px)' },
-          'to': { opacity: '1', transform: 'translateY(0)' },
+        fadeIn: {
+          from: { opacity: '0', transform: 'translateY(-10px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
         'fade-in-up': {
-          'from': { opacity: '0', transform: 'translateY(24px) scale(0.95)' },
-          'to': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          from: { opacity: '0', transform: 'translateY(24px) scale(0.95)' },
+          to: { opacity: '1', transform: 'translateY(0) scale(1)' },
         },
         'fade-out-down': {
-          'from': { opacity: '1', transform: 'translateY(0) scale(1)' },
-          'to': { opacity: '0', transform: 'translateY(24px) scale(0.95)' },
+          from: { opacity: '1', transform: 'translateY(0) scale(1)' },
+          to: { opacity: '0', transform: 'translateY(24px) scale(0.95)' },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'fadeIn': 'fadeIn 0.5s ease-out forwards',
+        fadeIn: 'fadeIn 0.5s ease-out forwards',
         'fade-in-up': 'fade-in-up 0.22s ease-out',
         'fade-out-down': 'fade-out-down 0.18s ease-in',
       },

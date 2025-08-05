@@ -1,7 +1,13 @@
-
 'use client';
 
-import { useState, useEffect, createContext, useContext, type ReactNode, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  type ReactNode,
+  useRef,
+} from 'react';
 import type { User } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -20,7 +26,6 @@ const mockUser = {
   providerData: [],
   // Add other necessary User properties as needed, with mock values
 } as User;
-
 
 type AuthContextType = {
   user: User | null;
@@ -45,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (devMode) {
       const setupDemoMode = async () => {
-        console.log("DEV MODE: Bypassing auth with mock user.");
+        console.log('DEV MODE: Bypassing auth with mock user.');
         await seedDemoData(DEMO_USER_ID); // Ensure data is seeded before setting user
         setUser(mockUser);
         setLoading(false);
@@ -53,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setupDemoMode();
     } else {
       // In production, use real Firebase Auth
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const unsubscribe = onAuthStateChanged(auth, user => {
         setUser(user);
         setLoading(false);
       });
@@ -64,15 +69,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   if (loading) {
     return (
-        <div className="flex h-screen w-full items-center justify-center bg-background">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      </div>
     );
   }
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
-        {children}
+      {children}
     </AuthContext.Provider>
   );
 };

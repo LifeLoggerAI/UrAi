@@ -1,21 +1,22 @@
 'use server';
 /**
- * @fileOverview A text-to-speech generation flow.
+ * @fileOverview A text-to-speech generation flow with SSML support.
  *
- * - generateSpeech - A function that converts text into speech audio.
+ * - generateSpeech - A function that converts text into speech audio with SSML enhancement.
  * - GenerateSpeechInput - The input type for the function.
  * - GenerateSpeechOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import wav from 'wav';
-import {googleAI} from '@genkit-ai/googleai';
-import { 
-    GenerateSpeechInputSchema, 
-    GenerateSpeechOutputSchema,
-    type GenerateSpeechInput,
-    type GenerateSpeechOutput
+import { googleAI } from '@genkit-ai/googleai';
+import {
+  GenerateSpeechInputSchema,
+  GenerateSpeechOutputSchema,
+  type GenerateSpeechInput,
+  type GenerateSpeechOutput,
 } from '@/lib/types';
+import { generateConversationalSSML, generateSSML } from '@/lib/audio/ssml';
 
 export async function generateSpeech(
   input: GenerateSpeechInput
@@ -56,18 +57,22 @@ const generateSpeechFlow = ai.defineFlow(
     inputSchema: GenerateSpeechInputSchema,
     outputSchema: GenerateSpeechOutputSchema,
   },
-  async (input) => {
-    const {media} = await ai.generate({
+  async input => {
+    // Generate SSML for enhanced voice quality
+    const ssmlText = generateConversationalSSML(input.text, 'friendly');
+
+    const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: 'Algenib'},
+            prebuiltVoiceConfig: { voiceName: 'Algenib' },
           },
         },
       },
-      prompt: input.text,
+      // Use SSML instead of plain text for better speech quality
+      prompt: ssmlText,
     });
 
     if (!media) {

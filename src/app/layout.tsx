@@ -1,14 +1,13 @@
-import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from "@/components/ui/toaster"
+import type { Metadata } from 'next';
+import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ 
-  subsets: ['latin'],
+// Temporarily use system fonts to avoid network issues
+const inter = {
   variable: '--font-sans',
-});
+};
 
 export const metadata: Metadata = {
   title: 'Life Logger',
@@ -25,13 +24,13 @@ export default function RootLayout({
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          'min-h-screen bg-background font-sans antialiased',
           inter.variable
         )}
       >
         <AuthProvider>
-            {children}
-            <Toaster />
+          {children}
+          <Toaster />
         </AuthProvider>
       </body>
     </html>
