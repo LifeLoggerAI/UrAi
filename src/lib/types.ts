@@ -1571,3 +1571,112 @@ export const CompanionSchema = z.object({
     isActive: z.boolean(),
 });
 export type Companion = z.infer<typeof CompanionSchema>;
+
+// Schemas for Storyboard Generation
+export const PersonAppearanceSchema = z.object({
+    name: z.string().describe("Full name of the person"),
+    age: z.number().optional().describe("Age of the person"),
+    role: z.string().optional().describe("Role or relationship to the event"),
+    height: z.string().optional().describe("Height description (e.g., 'tall', '5'6\"')"),
+    build: z.string().optional().describe("Body type (e.g., 'slim', 'athletic', 'stocky')"),
+    skinTone: z.string().optional().describe("Skin tone description"),
+    hairColor: z.string().optional().describe("Hair color"),
+    hairStyle: z.string().optional().describe("Hair style description"),
+    eyeColor: z.string().optional().describe("Eye color"),
+    facialHair: z.string().optional().describe("Facial hair description"),
+    distinguishingFeatures: z.array(z.string()).optional().describe("Scars, glasses, tattoos, etc."),
+    clothing: z.string().optional().describe("Clothing description including style, colors, textures"),
+    accessories: z.array(z.string()).optional().describe("Jewelry, bags, etc."),
+    expression: z.string().optional().describe("Facial expression and emotional state"),
+    posture: z.string().optional().describe("Body language and posture"),
+});
+export type PersonAppearance = z.infer<typeof PersonAppearanceSchema>;
+
+export const LocationDetailsSchema = z.object({
+    name: z.string().describe("Name of the location"),
+    address: z.string().optional().describe("Address or general location"),
+    environment: z.string().describe("Environment description (indoor/outdoor, architecture, vegetation)"),
+    weather: z.string().optional().describe("Weather conditions"),
+    lighting: z.string().describe("Lighting conditions (time of day, artificial lighting, mood)"),
+    atmosphere: z.string().optional().describe("Overall atmosphere and mood of the location"),
+});
+export type LocationDetails = z.infer<typeof LocationDetailsSchema>;
+
+export const EventDetailsSchema = z.object({
+    title: z.string().describe("Title or name of the event"),
+    date: z.string().optional().describe("Date of the event"),
+    time: z.string().optional().describe("Time of day"),
+    context: z.string().describe("Context and background of the event"),
+    duration: z.string().optional().describe("How long the event lasted"),
+});
+export type EventDetails = z.infer<typeof EventDetailsSchema>;
+
+export const ActionSequenceSchema = z.object({
+    description: z.string().describe("Description of the action"),
+    participants: z.array(z.string()).describe("Names of people involved in this action"),
+    duration: z.string().optional().describe("How long this action takes"),
+    sequence: z.number().describe("Order in the sequence of events"),
+});
+export type ActionSequence = z.infer<typeof ActionSequenceSchema>;
+
+export const PropObjectSchema = z.object({
+    name: z.string().describe("Name of the object or prop"),
+    description: z.string().describe("Detailed description of the object"),
+    significance: z.string().optional().describe("Why this object is important to the story"),
+});
+export type PropObject = z.infer<typeof PropObjectSchema>;
+
+export const MoodToneSchema = z.object({
+    musicStyle: z.string().optional().describe("Style of music or soundtrack"),
+    colorPalette: z.array(z.string()).describe("Dominant colors in the scene"),
+    cameraMovement: z.string().describe("Camera movement style (steady, handheld, drone, etc.)"),
+    emotionalTone: z.string().describe("Overall emotional feeling of the event"),
+});
+export type MoodTone = z.infer<typeof MoodToneSchema>;
+
+export const ShotSchema = z.object({
+    type: z.string().describe("Shot type (close-up, wide, medium, tracking, etc.)"),
+    subject: z.string().describe("Who or what is the focus of the shot"),
+    action: z.string().describe("What is happening in one sentence"),
+    camera: z.string().describe("Camera movement and lens choice"),
+    lighting: z.string().describe("Lighting notes for the shot"),
+    imagePrompt: z.string().describe("Ultra-detailed photo-realistic image prompt"),
+});
+export type Shot = z.infer<typeof ShotSchema>;
+
+export const SceneSchema = z.object({
+    sceneHeader: z.string().describe("Scene header in format: 'Scene X – [Event Name]: [Location], [Time of day]'"),
+    shots: z.array(ShotSchema).describe("Array of shots in this scene"),
+    dialogue: z.string().optional().describe("Any dialogue or voice-over for this scene"),
+});
+export type Scene = z.infer<typeof SceneSchema>;
+
+export const StructuredEventDataSchema = z.object({
+    event: EventDetailsSchema.describe("Event details"),
+    location: LocationDetailsSchema.describe("Location information"),
+    people: z.array(PersonAppearanceSchema).describe("People involved with detailed appearance"),
+    actions: z.array(ActionSequenceSchema).describe("Sequence of key actions"),
+    props: z.array(PropObjectSchema).describe("Important objects and props"),
+    moodTone: MoodToneSchema.describe("Mood and tone elements"),
+    references: z.array(z.string()).optional().describe("References to real-world photos, films, art styles"),
+});
+export type StructuredEventData = z.infer<typeof StructuredEventDataSchema>;
+
+export const ValidationIssueSchema = z.object({
+    type: z.string().describe("Type of validation issue"),
+    message: z.string().describe("Description of what's missing or ambiguous"),
+    personName: z.string().optional().describe("Name of person if issue relates to a specific person"),
+});
+export type ValidationIssue = z.infer<typeof ValidationIssueSchema>;
+
+export const GenerateStoryboardInputSchema = z.object({
+    eventData: z.string().describe("Raw event data as text description or JSON string"),
+});
+export type GenerateStoryboardInput = z.infer<typeof GenerateStoryboardInputSchema>;
+
+export const GenerateStoryboardOutputSchema = z.object({
+    structuredData: StructuredEventDataSchema.describe("Parsed and structured event data"),
+    scenes: z.array(SceneSchema).describe("Generated scenes with shots and image prompts"),
+    validationIssues: z.array(ValidationIssueSchema).describe("Any missing or ambiguous details flagged"),
+});
+export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
