@@ -1571,3 +1571,144 @@ export const CompanionSchema = z.object({
     isActive: z.boolean(),
 });
 export type Companion = z.infer<typeof CompanionSchema>;
+
+// Schemas for Event-to-Storyboard Generation
+
+export const EventPersonSchema = z.object({
+    name: z.string().describe("Person's full name"),
+    age: z.number().optional().describe("Person's age"),
+    role: z.string().optional().describe("Person's role in the event"),
+    height: z.string().optional().describe("Height description (e.g., 'tall', '5'6\"')"),
+    build: z.string().optional().describe("Body build (e.g., 'slim', 'athletic', 'stocky')"),
+    skinTone: z.string().optional().describe("Skin tone description"),
+    hairColor: z.string().optional().describe("Hair color"),
+    hairStyle: z.string().optional().describe("Hair style description"),
+    eyeColor: z.string().optional().describe("Eye color"),
+    distinguishingFeatures: z.array(z.string()).optional().describe("Scars, glasses, facial hair, etc."),
+    clothing: z.string().optional().describe("Clothing style, colors, textures"),
+    accessories: z.array(z.string()).optional().describe("Accessories worn"),
+    expression: z.string().optional().describe("Facial expression"),
+    posture: z.string().optional().describe("Body language and posture"),
+    emotionalState: z.string().optional().describe("Current emotional state"),
+});
+export type EventPerson = z.infer<typeof EventPersonSchema>;
+
+export const EventLocationSchema = z.object({
+    name: z.string().describe("Location name"),
+    address: z.string().optional().describe("Physical address"),
+    environment: z.string().describe("Environment description (architecture, vegetation, weather, lighting)"),
+    timeOfDay: z.string().optional().describe("Time of day (morning, afternoon, evening, night)"),
+    lighting: z.string().describe("Lighting conditions"),
+    weather: z.string().optional().describe("Weather conditions"),
+    architecture: z.string().optional().describe("Architectural details"),
+    vegetation: z.string().optional().describe("Natural elements present"),
+});
+export type EventLocation = z.infer<typeof EventLocationSchema>;
+
+export const EventActionSchema = z.object({
+    person: z.string().describe("Name of person performing the action"),
+    action: z.string().describe("Description of what the person is doing"),
+    sequence: z.number().describe("Order in the sequence of events"),
+    duration: z.string().optional().describe("How long the action takes"),
+});
+export type EventAction = z.infer<typeof EventActionSchema>;
+
+export const EventInputSchema = z.object({
+    title: z.string().describe("Event title"),
+    date: z.string().optional().describe("Event date"),
+    time: z.string().optional().describe("Event time"),
+    context: z.string().describe("Background context of the event"),
+    location: EventLocationSchema,
+    people: z.array(EventPersonSchema),
+    actions: z.array(EventActionSchema),
+    props: z.array(z.string()).optional().describe("Important objects, instruments, vehicles, décor, tech, symbolic items"),
+    mood: z.string().optional().describe("Overall mood and tone"),
+    colorPalette: z.array(z.string()).optional().describe("Suggested color palette"),
+    cameraMovement: z.string().optional().describe("Camera movement style (steady, handheld, drone)"),
+    musicStyle: z.string().optional().describe("Music style that fits the mood"),
+    references: z.array(z.string()).optional().describe("Real-world photos, films, art styles to emulate"),
+});
+export type EventInput = z.infer<typeof EventInputSchema>;
+
+export const ShotSchema = z.object({
+    type: z.string().describe("Shot type (close-up, wide, tracking, etc.)"),
+    subject: z.string().describe("Who or what is the subject"),
+    action: z.string().describe("Action described in one sentence"),
+    camera: z.string().describe("Camera movement & lens choice"),
+    lighting: z.string().describe("Lighting notes"),
+    imagePrompt: z.string().describe("Ultra-photo-realistic image prompt"),
+});
+export type Shot = z.infer<typeof ShotSchema>;
+
+export const SceneSchema = z.object({
+    sceneHeader: z.string().describe("Scene header with location and time"),
+    shots: z.array(ShotSchema),
+    dialogue: z.string().optional().describe("Dialogue or voice-over if any"),
+});
+export type Scene = z.infer<typeof SceneSchema>;
+
+export const StoryboardOutputSchema = z.object({
+    scenes: z.array(SceneSchema),
+    missingDetails: z.array(z.string()).optional().describe("List of missing details that need clarification"),
+});
+export type StoryboardOutput = z.infer<typeof StoryboardOutputSchema>;
+
+// Schemas for the individual AI flow steps
+
+export const ParseEventInputSchema = z.object({
+    rawEventData: z.string().describe("Raw text description or JSON of event details"),
+});
+export type ParseEventInput = z.infer<typeof ParseEventInputSchema>;
+
+export const ParseEventOutputSchema = EventInputSchema;
+export type ParseEventOutput = z.infer<typeof ParseEventOutputSchema>;
+
+export const GenerateSceneBreakdownInputSchema = z.object({
+    eventData: EventInputSchema,
+});
+export type GenerateSceneBreakdownInput = z.infer<typeof GenerateSceneBreakdownInputSchema>;
+
+export const GenerateSceneBreakdownOutputSchema = z.object({
+    scenes: z.array(z.object({
+        sceneHeader: z.string(),
+        shots: z.array(z.object({
+            type: z.string(),
+            subject: z.string(),
+            action: z.string(),
+            camera: z.string(),
+            lighting: z.string(),
+        })),
+        dialogue: z.string().optional(),
+    })),
+});
+export type GenerateSceneBreakdownOutput = z.infer<typeof GenerateSceneBreakdownOutputSchema>;
+
+export const GenerateImagePromptsInputSchema = z.object({
+    eventData: EventInputSchema,
+    sceneBreakdown: GenerateSceneBreakdownOutputSchema,
+});
+export type GenerateImagePromptsInput = z.infer<typeof GenerateImagePromptsInputSchema>;
+
+export const GenerateImagePromptsOutputSchema = z.object({
+    scenes: z.array(z.object({
+        sceneHeader: z.string(),
+        shots: z.array(z.object({
+            type: z.string(),
+            subject: z.string(),
+            action: z.string(),
+            camera: z.string(),
+            lighting: z.string(),
+            imagePrompt: z.string(),
+        })),
+        dialogue: z.string().optional(),
+    })),
+});
+export type GenerateImagePromptsOutput = z.infer<typeof GenerateImagePromptsOutputSchema>;
+
+export const EventToStoryboardInputSchema = z.object({
+    rawEventData: z.string().describe("Raw text description or JSON of event details"),
+});
+export type EventToStoryboardInput = z.infer<typeof EventToStoryboardInputSchema>;
+
+export const EventToStoryboardOutputSchema = StoryboardOutputSchema;
+export type EventToStoryboardOutput = z.infer<typeof EventToStoryboardOutputSchema>;
