@@ -558,6 +558,12 @@ export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
 
 export const GenerateSpeechInputSchema = z.object({
   text: z.string().describe('The text to be converted to speech.'),
+  useSSML: z.boolean().optional().default(false).describe('Whether to wrap the text in SSML for more natural speech.'),
+  voiceName: z.string().optional().describe('Neural voice name to use (e.g., "en-US-Wavenet-D", "en-US-Neural2-A").'),
+  rate: z.number().optional().default(0.95).describe('Speech rate multiplier (0.25-4.0, default 0.95 for natural pace).'),
+  pitch: z.string().optional().default("+1st").describe('Pitch adjustment (e.g., "+1st", "-2st", "+0.5st").'),
+  enableEmphasis: z.boolean().optional().default(true).describe('Whether to add emphasis to important words.'),
+  addNaturalPauses: z.boolean().optional().default(true).describe('Whether to add natural breathing pauses.'),
 });
 export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
 
