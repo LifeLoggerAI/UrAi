@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
       'https://*.cloudworkstations.dev',
     ],
   },
+  // Optimization for build cache
+  experimental: {
+    webpackBuildWorker: true,
+  },
   webpack: (config, { isServer }) => {
     // Handle require.extensions and missing modules
     config.resolve.fallback = {
@@ -38,13 +42,36 @@ const nextConfig: NextConfig = {
       net: false,
       tls: false,
       crypto: false,
+      '@opentelemetry/exporter-jaeger': false,
+      '@genkit-ai/firebase': false,
     };
 
-    // Add null-loader for missing files/modules
-    config.module.rules.push({
-      test: /\.node$/,
-      use: 'null-loader',
-    });
+    // Add null-loader for missing files/modules and handle handlebars
+    config.module.rules.push(
+      {
+        test: /\.node$/,
+        use: 'null-loader',
+      },
+      {
+        test: /handlebars/,
+        use: 'null-loader',
+      }
+    );
+
+    // Split large chunks for better caching
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        cacheGroups: {
+          ...config.optimization.splitChunks?.cacheGroups,
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      };
+    }
 
     return config;
   },

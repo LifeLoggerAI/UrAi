@@ -35,6 +35,9 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "predeploy": [
+      "npm run build"
+    ],
     "headers": [
       {
         "source": "**",
