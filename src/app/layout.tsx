@@ -1,14 +1,11 @@
 import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
+// Use a local fallback for fonts to avoid network issues
+const fontSans = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif";
 
 export const metadata: Metadata = {
   title: 'Life Logger',
@@ -25,9 +22,9 @@ export default function RootLayout({
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          "min-h-screen bg-background font-sans antialiased"
         )}
+        style={{ fontFamily: fontSans }}
       >
         <AuthProvider>
             {children}
