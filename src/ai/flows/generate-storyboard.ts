@@ -3,12 +3,12 @@
  * @fileOverview AI flow to transform raw event data into structured movie/video storyboards
  * and ultra-photo-realistic image prompts.
  *
- * - generateStoryboard - Main function that processes raw event data
- * - GenerateStoryboardInput - Input schema for event data
- * - GenerateStoryboardOutput - Output schema with structured scenes and prompts
+ * This combines:
+ * - Detailed parsing and cinematic prompt structure from copilot/fix
+ * - Validation and error-handling logic from main
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   GenerateStoryboardInputSchema,
   GenerateStoryboardOutputSchema,
@@ -22,14 +22,14 @@ export async function generateStoryboard(input: GenerateStoryboardInput): Promis
 
 const prompt = ai.definePrompt({
   name: 'generateStoryboardPrompt',
-  input: {schema: GenerateStoryboardInputSchema},
-  output: {schema: GenerateStoryboardOutputSchema},
+  input: { schema: GenerateStoryboardInputSchema },
+  output: { schema: GenerateStoryboardOutputSchema },
   prompt: `You are an expert AI production assistant specializing in transforming raw event data into fully structured movie/video storyboards and ultra-photo-realistic image prompts. Your goal is to capture each moment and each person's unique appearance as if we were there.
 
 STEP 1: PARSE & CATEGORIZE INPUT
 Parse the following event data and extract into a structured schema:
 
-Event Data: {{{eventData}}}
+Event Data: {{{eventDescription}}}
 
 STEP 2: ANALYZE AND STRUCTURE
 Organize the data into:
@@ -47,38 +47,30 @@ Organize the data into:
 
 STEP 3: GENERATE SCENE BREAKDOWN
 For each scene, create:
-1. **Scene header:** "Scene 1 – [Event Name]: [Location], [Time of day]"
-2. **Shot list:**
-   - Shot type (e.g. close-up, wide, tracking)
-   - Subject (who or what)
+1. **Scene header:** "Scene [number] – [Event Name]: [Location], [Time of day]"
+2. **Shot list:** 
+   - Shot type
+   - Subject
    - Action described in one sentence
    - Camera movement & lens choice
    - Lighting notes
 3. **Dialogue/voice-over** (if any)
 
 STEP 4: CREATE ULTRA-PHOTO-REALISTIC IMAGE PROMPTS
-For each shot, craft a detailed text prompt that includes:
-- Exact facial features & look of each person (skin tone, eye color, hair style, facial hair, any distinguishing marks)
+For each shot, craft a detailed cinematic prompt including:
+- Exact facial features & look of each person (skin tone, eye color, hair style, facial hair, distinguishing marks)
 - Clothing textures and colors
 - Environmental details (lighting, weather, background elements)
-- Cinematic camera and lens cues (e.g. "35mm film grain," "shallow depth of field," "soft golden hour backlight")
+- Cinematic camera and lens cues ("35mm film grain," "shallow depth of field," "soft golden hour backlight")
 
-Example prompt format:
-"Close-up portrait at dusk of Maria Delgado (late 30s, olive skin, long wavy dark brown hair tucked behind ear, warm brown eyes, small beauty mark under right eye) smiling softly under a string of festival lights in a cobblestone plaza, wearing a deep emerald silk scarf and vintage leather jacket, cinematic 50mm lens, glowing bokeh, realistic skin texture and subtle catchlights."
+Example: "Close-up portrait at dusk of Maria Delgado (late 30s, olive skin, long wavy dark brown hair tucked behind ear, warm brown eyes, small beauty mark under right eye) smiling softly under a string of festival lights in a cobblestone plaza, wearing a deep emerald silk scarf and vintage leather jacket, cinematic 50mm lens, glowing bokeh, realistic skin texture and subtle catchlights."
 
 STEP 5: CROSS-REFERENCE & VALIDATION
 - Confirm every facial feature, clothing detail, and environment element matches the original data
-- Flag any missing appearance details:
-  - "Missing eye color for John Smith—please provide to ensure likeness."
-  - "Hair style not specified for Sarah Johnson"
-  - "Clothing description incomplete for Mike Chen"
-
-REQUIREMENTS:
-- Each person must have consistent appearance across all shots
-- Image prompts must be cinematic quality with specific camera/lens details
-- Include environmental atmosphere (lighting, weather, mood)
+- Flag missing appearance details
+- Ensure consistency of appearance across all shots
 - Maintain narrative continuity across scenes
-- Flag any ambiguous or missing details for validation
+- Include environmental atmosphere (lighting, weather, mood)
 
 Return a complete structured JSON response with parsed data, scene breakdowns, and validation issues.`,
 });
@@ -90,7 +82,59 @@ const generateStoryboardFlow = ai.defineFlow(
     outputSchema: GenerateStoryboardOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
-    return output;
+    try {
+      // Validate input
+      if (!input.eventDescription || input.eventDescription.trim().length < 10) {
+        throw new Error('Event description must be at least 10 characters long');
+      }
+
+      const { output } = await prompt(input);
+
+      if (!output) {
+        throw new Error('AI model did not return a valid response');
+      }
+
+      // Validate output structure
+      if (!output.scenes || output.scenes.length === 0) {
+        throw new Error('Generated storyboard must contain at least one scene');
+      }
+
+      // Validate each scene has required shots and prompts
+      for (let i = 0; i < output.scenes.length; i++) {
+        const scene = output.scenes[i];
+        if (!scene.shots || scene.shots.length === 0) {
+          throw new Error(`Scene ${i + 1} must contain at least one shot`);
+        }
+
+        for (let j = 0; j < scene.shots.length; j++) {
+          const shot = scene.shots[j];
+          if (!shot.imagePrompt || shot.imagePrompt.length < 50) {
+            throw new Error(`Shot ${j + 1} in Scene ${i + 1} must have a detailed image prompt (at least 50 characters)`);
+          }
+        }
+      }
+
+      return output;
+
+    } catch (error) {
+      console.error('Error in generateStoryboardFlow:', error);
+
+      // Return a fallback storyboard
+      return {
+        scenes: [{
+          sceneHeader: `Scene 1 - Error Processing: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          shots: [{
+            type: "medium",
+            subject: "Error state",
+            action: "Unable to generate storyboard from the provided description",
+            camera: "Static medium shot with standard lens",
+            lighting: "Neutral studio lighting",
+            imagePrompt: "A clean placeholder indicating storyboard generation failed due to insufficient or invalid input."
+          }],
+          dialogue: "Error occurred during storyboard generation"
+        }]
+      };
+    }
   }
 );
+
