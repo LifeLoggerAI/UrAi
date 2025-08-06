@@ -25,7 +25,7 @@ jobs:
 
       # 3. Install dependencies
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       # 4. Install Functions dependencies
       - name: Install Functions Dependencies
@@ -41,20 +41,28 @@ jobs:
         run: npm run typecheck
         continue-on-error: true  # Continue even if typecheck fails (known issues)
 
-      # 7. Build app
+      # 7. Validate AI configuration
+      - name: Validate AI Configuration
+        run: npm run ai:validate
+
+      # 8. Run unit/model tests
+      - name: Run Unit Tests
+        run: npm run test:models
+
+      # 9. Build app
       - name: Build UrAi
         run: npm run build
 
-      # 8. Install Playwright for E2E testing
+      # 10. Install Playwright for E2E testing
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # 9. Run Playwright tests
+      # 11. Run Playwright tests
       - name: Run E2E Tests
         run: npm run test:e2e
-        continue-on-error: false  # fail build if any test fails
+        continue-on-error: false  # Fail build if any test fails
 
-      # 10. Validate Environment Variables
+      # 12. Validate Environment Variables
       - name: Validate Environment
         run: |
           echo "Checking for required environment variables..."
@@ -63,7 +71,7 @@ jobs:
           fi
           echo "Environment validation complete"
 
-      # 11. Deploy to Firebase (only if tests pass and on main branch)
+      # 13. Deploy to Firebase (only if tests pass and on main branch)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |

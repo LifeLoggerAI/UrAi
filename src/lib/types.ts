@@ -1571,3 +1571,87 @@ export const CompanionSchema = z.object({
     isActive: z.boolean(),
 });
 export type Companion = z.infer<typeof CompanionSchema>;
+
+// Schemas for Storyboard Generation System
+export const EventDataSchema = z.object({
+    title: z.string().describe("The title of the event"),
+    dateTime: z.string().describe("Date and time of the event"),
+    context: z.string().describe("Additional context about the event"),
+});
+export type EventData = z.infer<typeof EventDataSchema>;
+
+export const LocationDataSchema = z.object({
+    name: z.string().describe("Name of the location"),
+    address: z.string().optional().describe("Physical address if available"),
+    environment: z.string().describe("Description of architecture, vegetation, weather, lighting"),
+});
+export type LocationData = z.infer<typeof LocationDataSchema>;
+
+export const PersonDataSchema = z.object({
+    name: z.string().describe("Person's name"),
+    age: z.number().optional().describe("Approximate age"),
+    role: z.string().describe("Their role in the event"),
+    clothing: z.string().describe("What they're wearing"),
+    physicalFeatures: z.string().describe("Notable physical characteristics"),
+    emotionalState: z.string().describe("Their emotional state or mood"),
+});
+export type PersonData = z.infer<typeof PersonDataSchema>;
+
+export const ActionDataSchema = z.object({
+    personName: z.string().describe("Name of the person performing the action"),
+    action: z.string().describe("What the person is doing"),
+    sequence: z.number().describe("Order in the sequence of events"),
+});
+export type ActionData = z.infer<typeof ActionDataSchema>;
+
+export const PropObjectSchema = z.object({
+    name: z.string().describe("Name of the prop or object"),
+    description: z.string().describe("Detailed description"),
+    significance: z.string().describe("Why this object is important to the scene"),
+});
+export type PropObject = z.infer<typeof PropObjectSchema>;
+
+export const MoodToneSchema = z.object({
+    musicStyle: z.string().describe("Style of music that would fit"),
+    colorPalette: z.array(z.string()).describe("Array of color descriptions"),
+    cameraMovement: z.enum(["steady", "handheld", "drone", "tracking"]).describe("Camera movement style"),
+});
+export type MoodTone = z.infer<typeof MoodToneSchema>;
+
+export const ReferenceDataSchema = z.object({
+    type: z.enum(["photo", "film", "art"]).describe("Type of reference"),
+    description: z.string().describe("Description of what to emulate"),
+    style: z.string().describe("Specific style or aesthetic"),
+});
+export type ReferenceData = z.infer<typeof ReferenceDataSchema>;
+
+export const ShotDataSchema = z.object({
+    type: z.enum(["close-up", "medium", "wide", "extreme-wide", "tracking", "dolly", "crane"]).describe("Type of shot"),
+    subject: z.string().describe("Who or what is the subject"),
+    action: z.string().describe("Action described in one sentence"),
+    camera: z.string().describe("Camera movement and lens choice"),
+    lighting: z.string().describe("Lighting notes"),
+    imagePrompt: z.string().describe("Detailed image generation prompt"),
+});
+export type ShotData = z.infer<typeof ShotDataSchema>;
+
+export const SceneDataSchema = z.object({
+    sceneHeader: z.string().describe("Scene header with event name, location, and time"),
+    shots: z.array(ShotDataSchema).describe("Array of shots in this scene"),
+    dialogue: z.string().optional().describe("Dialogue or voice-over if any"),
+});
+export type SceneData = z.infer<typeof SceneDataSchema>;
+
+export const StoryboardOutputSchema = z.object({
+    scenes: z.array(SceneDataSchema).describe("Array of scenes making up the storyboard"),
+});
+export type StoryboardOutput = z.infer<typeof StoryboardOutputSchema>;
+
+// Input schema for the storyboard generation flow
+export const GenerateStoryboardInputSchema = z.object({
+    eventDescription: z.string().describe("Raw text description or JSON of event details"),
+});
+export type GenerateStoryboardInput = z.infer<typeof GenerateStoryboardInputSchema>;
+
+export const GenerateStoryboardOutputSchema = StoryboardOutputSchema;
+export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;

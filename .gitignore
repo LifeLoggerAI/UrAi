@@ -53,3 +53,6 @@ firebase-debug.*.log
 
 # IDX
 .idx
+
+# Genkit development files
+.genkit/

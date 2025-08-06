@@ -110,8 +110,8 @@ export default function LoginPage() {
             <div className="mx-auto bg-primary/20 p-3 rounded-full mb-4 border border-primary/30">
                 <Sparkles className="h-8 w-8 text-primary" />
             </div>
-          <CardTitle className="text-2xl font-headline">Welcome to Life Logger</CardTitle>
-          <CardDescription>Your personal AI for symbolic self-reflection.</CardDescription>
+          <CardTitle className="text-2xl font-headline">Welcome to UrAi</CardTitle>
+          <CardDescription>Your personal AI for life logging and self-reflection.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
             <Button
