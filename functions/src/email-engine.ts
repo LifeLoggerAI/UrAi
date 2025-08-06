@@ -1,9 +1,11 @@
 
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
+import {onSchedule} from "firebase-functions/v2/scheduler";
 import {logger} from "firebase-functions/v2";
-import type {CallableRequest} from "firebase-functions/v2/https";
 import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
+import * as sgMail from "@sendgrid/mail";
+import {defineSecret} from "firebase-functions/params";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -11,50 +13,305 @@ if (admin.apps.length === 0) {
 }
 const db = admin.firestore();
 
-/**
- * Gathers data for all users and queues it up for email generation.
- * This function is scheduled to run daily.
- */
-export const enqueueDigestSummaries = functions.pubsub.schedule("every 24 hours")
-  .onRun(async (context) => {
-    logger.info("Running daily job to enqueue email digests.");
-    // In a real application, this function would:
-    // 1. Query for all users who have opted into weekly emails.
-    // 2. For each user, analyze logs from the past week (moods, rituals, dreams).
-    // 3. Build a digest JSON object with the summary data.
-    // 4. Write this JSON object to the /dailyDigestQueue/{uid} collection.
-    // This write would then trigger the sendNarratedEmail function.
-    return;
-  });
+// Define SendGrid API key as a secret
+const sendgridKey = defineSecret("SENDGRID_API_KEY");
 
 /**
- * Sends a narrated email when a new digest is added to the queue.
- * This function is triggered by a new document write in /dailyDigestQueue.
+ * Sends transactional emails via SendGrid when documents are added to /emails collection
  */
-export const sendNarratedEmail = onDocumentCreated("/dailyDigestQueue/{uid}", async (event: FirestoreEvent<any>) => {
-    const {uid} = event.params;
-    const digest = event.data?.data();
+export const sendTransactionalEmail = onDocumentCreated(
+  {
+    document: "emails/{emailId}",
+    secrets: [sendgridKey],
+  },
+  async (event: FirestoreEvent<any>) => {
+    const emailData = event.data?.data();
+    
+    if (!emailData || !emailData.to) {
+      logger.error("Missing email data or recipient.");
+      return null;
+    }
 
-    logger.info(`Processing email digest for user ${uid}.`);
+    // Initialize SendGrid with API key
+    sgMail.setApiKey(sendgridKey.value());
 
-    // In a real application, this function would:
-    // 1. Generate a narrated TTS voice clip of the digest's reflection text.
-    // 2. Generate a symbolic constellation image based on the digest data.
-    // 3. Get the user's email from their profile.
-    // 4. Use the "Trigger Email" extension to send a formatted HTML email
-    //    by writing a document to the /mail collection.
+    try {
+      await sgMail.send({
+        to: emailData.to,
+        from: "noreply@urai.app", // Change to your verified SendGrid sender
+        subject: emailData.subject,
+        html: emailData.body,
+      });
 
-    // Example of what would be written to the /mail collection:
-    /*
-    await db.collection('mail').add({
-      to: userEmail,
-      subject: "Your Weekly Reflection Bloom",
-      html: generatedHtml,
-      template: "weekly_digest",
-      attachments: [generatedImageUrl],
-      ttsVoiceUrl: generatedTtsUrl
-    });
-    */
+      await event.data?.ref.update({ 
+        sent: true, 
+        sentAt: admin.firestore.FieldValue.serverTimestamp() 
+      });
+      
+      logger.info(`✅ Email sent to ${emailData.to}`);
+    } catch (error) {
+      logger.error("❌ Error sending email:", error);
+      
+      await event.data?.ref.update({ 
+        sent: false, 
+        error: String(error),
+        errorAt: admin.firestore.FieldValue.serverTimestamp() 
+      });
+    }
 
-    return;
+    return null;
+  }
+);
+
+/**
+ * Generates weekly summary emails for all active users
+ * Runs every Monday at 9 AM
+ */
+export const sendWeeklySummaryEmails = onSchedule(
+  {
+    schedule: "0 9 * * 1", // Every Monday at 9 AM
+    timeZone: "America/New_York",
+  },
+  async () => {
+    logger.info("📅 Weekly Summary Email Job Started");
+
+    const oneWeekAgo = admin.firestore.Timestamp.fromDate(
+      new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    );
+
+    try {
+      const usersSnapshot = await db.collection("users").get();
+      const batch = db.batch();
+
+      for (const userDoc of usersSnapshot.docs) {
+        const user = userDoc.data();
+        if (!user.email || user.transactionalEmailOptOut) continue;
+
+        // Get mood data for last 7 days
+        const moodSnap = await db.collection("moods")
+          .where("userId", "==", userDoc.id)
+          .where("timestamp", ">", oneWeekAgo)
+          .get();
+
+        let moodSummary = "No mood data this week";
+        let avgMoodScore = null;
+        let moodTrend = "";
+        
+        if (!moodSnap.empty) {
+          const scores = moodSnap.docs.map(doc => doc.data().score || 0);
+          avgMoodScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+          
+          if (avgMoodScore > 2) moodSummary = "Mostly positive & uplifting 🌞";
+          else if (avgMoodScore >= 0) moodSummary = "Balanced & steady 🌤";
+          else moodSummary = "A bit low-energy — take care 💙";
+          
+          moodTrend = buildMoodTrendSVG(moodSnap.docs);
+        }
+
+        // Get activity data for last 7 days
+        const activitySnap = await db.collection("activity")
+          .where("userId", "==", userDoc.id)
+          .where("timestamp", ">", oneWeekAgo)
+          .get();
+
+        let activitySummary = "No activity recorded this week";
+        let activityChart = "";
+        
+        if (!activitySnap.empty) {
+          const totalMinutes = activitySnap.docs
+            .map(doc => doc.data().duration || 0)
+            .reduce((a, b) => a + b, 0);
+          activitySummary = `You logged ${totalMinutes} minutes of activity`;
+          activityChart = buildActivityBarSVG(activitySnap.docs);
+        }
+
+        // Build highlights
+        const highlightsList = `
+          <li>Average mood score: ${avgMoodScore !== null ? avgMoodScore.toFixed(1) : "N/A"}</li>
+          <li>Mood entries: ${moodSnap.size}</li>
+          <li>Activity sessions: ${activitySnap.size}</li>
+        `;
+
+        // Get week range
+        const weekRange = getWeekRange();
+
+        // Generate HTML email
+        const summaryHtml = generateWeeklySummaryHtml({
+          displayName: user.displayName,
+          weekRange,
+          moodSummary: moodSummary + (moodTrend ? `<br>${moodTrend}` : ""),
+          activitySummary: activitySummary + (activityChart ? `<br>${activityChart}` : ""),
+          highlightsList,
+          unsubscribeLink: "https://urai.app/settings"
+        });
+
+        // Queue for sending
+        const emailRef = db.collection("emails").doc();
+        batch.set(emailRef, {
+          to: user.email,
+          subject: "Your Weekly UrAi Update 🌱",
+          body: summaryHtml,
+          sent: false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      }
+
+      await batch.commit();
+      logger.info("✅ Weekly Summary Emails Queued");
+
+    } catch (error) {
+      logger.error("❌ Error generating weekly summaries:", error);
+    }
+  }
+);
+
+/**
+ * Get current week range string
+ */
+function getWeekRange(): string {
+  const now = new Date();
+  const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 1);
+  const endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 6);
+  
+  const formatDate = (date: Date) => 
+    date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  
+  return `${formatDate(startOfWeek)} – ${formatDate(endOfWeek)}, ${now.getFullYear()}`;
+}
+
+
+
+/**
+ * Build mood trend SVG chart
+ */
+function buildMoodTrendSVG(moodDocs: any[]): string {
+  const days = ["M","T","W","T","F","S","S"];
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="40" style="font-family: Arial, sans-serif;">`;
+
+  moodDocs.slice(0, 7).forEach((doc, i) => {
+    const score = doc.data().score || 0;
+    let color = "#9ca3af"; // default gray
+
+    if (score > 2) color = "#22c55e";
+    else if (score > 0) color = "#3b82f6";
+    else if (score > -2) color = "#f97316";
+    else color = "#ef4444";
+
+    svg += `<circle cx="${20 + i * 30}" cy="20" r="10" fill="${color}" />`;
+    svg += `<text x="${20 + i * 30}" y="35" text-anchor="middle" font-size="10" fill="#666">${days[i]}</text>`;
   });
+
+  svg += `</svg>`;
+  return svg;
+}
+
+/**
+ * Build activity bar chart SVG
+ */
+function buildActivityBarSVG(activityDocs: any[]): string {
+  const dayMinutes = Array(7).fill(0);
+  const days = ["M","T","W","T","F","S","S"];
+
+  activityDocs.forEach(doc => {
+    const data = doc.data();
+    const dayIndex = data.timestamp.toDate().getDay();
+    dayMinutes[(dayIndex + 6) % 7] += data.duration || 0;
+  });
+
+  const max = Math.max(...dayMinutes, 1);
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="40" style="font-family: Arial, sans-serif;">`;
+
+  dayMinutes.slice(0, 7).forEach((minutes, i) => {
+    const height = Math.max(2, (minutes / max) * 25);
+    const y = 25 - height;
+    
+    svg += `<rect x="${15 + i * 30}" y="${y}" width="10" height="${height}" fill="#4f46e5" />`;
+    svg += `<text x="${20 + i * 30}" y="35" text-anchor="middle" font-size="10" fill="#666">${days[i]}</text>`;
+  });
+
+  svg += `</svg>`;
+  return svg;
+}
+
+/**
+ * Generate beautiful HTML email template
+ */
+function generateWeeklySummaryHtml({ displayName, weekRange, moodSummary, activitySummary, highlightsList, unsubscribeLink }: {
+  displayName: string;
+  weekRange: string;
+  moodSummary: string;
+  activitySummary: string;
+  highlightsList: string;
+  unsubscribeLink: string;
+}): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your Weekly UrAi Update</title>
+<style>
+  @media only screen and (max-width: 600px) {
+    .container { width: 100% !important; padding: 10px !important; }
+    .content { font-size: 16px !important; }
+  }
+</style>
+</head>
+<body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color: #f3f4f6; color: #111;">
+  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" style="padding: 20px 0;">
+        <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 12px; overflow: hidden;">
+          <!-- Header -->
+          <tr>
+            <td align="center" style="background-color: #4f46e5; padding: 20px;">
+              <h1 style="margin: 0; font-size: 24px; color: #ffffff;">🌱 Your Weekly UrAi Update</h1>
+              <p style="margin: 0; font-size: 14px; color: #e0e7ff;">Insight & reflection for ${weekRange}</p>
+            </td>
+          </tr>
+
+          <!-- Summary Section -->
+          <tr>
+            <td class="content" style="padding: 20px;">
+              <h2 style="margin-top: 0; font-size: 20px; color: #111827;">Hi ${displayName || "there"},</h2>
+              <p style="font-size: 16px; color: #374151;">Here's your personal snapshot for the week.</p>
+
+              <!-- Mood Forecast -->
+              <div style="background-color: #eef2ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 18px; color: #4338ca;">🌤 Mood Forecast</h3>
+                <p style="margin: 0; font-size: 15px; color: #1e3a8a;">${moodSummary}</p>
+              </div>
+
+              <!-- Activity Overview -->
+              <div style="background-color: #ecfdf5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 18px; color: #065f46;">🏃 Activity Overview</h3>
+                <p style="margin: 0; font-size: 15px; color: #064e3b;">${activitySummary}</p>
+              </div>
+
+              <!-- Highlights -->
+              <div style="background-color: #fff7ed; padding: 15px; border-radius: 8px;">
+                <h3 style="margin: 0 0 5px 0; font-size: 18px; color: #9a3412;">✨ Weekly Highlights</h3>
+                <ul style="margin: 0; padding-left: 20px; font-size: 15px; color: #7c2d12;">
+                  ${highlightsList}
+                </ul>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="background-color: #f9fafb; padding: 15px; font-size: 12px; color: #6b7280;">
+              <p style="margin: 0;">You are receiving this email because you have an active UrAi account.</p>
+              <p style="margin: 0;"><a href="${unsubscribeLink}" style="color: #4f46e5; text-decoration: none;">Unsubscribe</a></p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}

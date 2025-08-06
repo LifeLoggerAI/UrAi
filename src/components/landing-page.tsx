@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { Sparkles, ChevronRight } from 'lucide-react';
 
-const uriPhrases = [
+// Combined phrases from both versions
+const URAI_PHRASES = [
   "Your AI companion for life reflection",
   "Capture moments, understand patterns",
   "Transform experiences into insights",
@@ -29,62 +30,66 @@ const uriPhrases = [
 ];
 
 export function LandingPage() {
+  const router = useRouter();
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentPhraseIndex((prev) => (prev + 1) % uriPhrases.length);
-        setIsVisible(true);
-      }, 150);
+      setCurrentPhraseIndex((prev) => (prev + 1) % URAI_PHRASES.length);
     }, 3000);
-
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <main className="min-h-screen bg-background flex flex-col">
-      <div className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-        <header className="w-full max-w-4xl space-y-8 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold text-foreground">
-            UrAi
-          </h1>
-          
-          <div 
-            className="h-16 flex items-center justify-center"
-            aria-live="polite"
-            aria-label="Rotating phrases about UrAi"
-          >
-            <p 
-              className={`text-xl md:text-2xl text-muted-foreground transition-opacity duration-150 ${
-                isVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              {uriPhrases[currentPhraseIndex]}
-            </p>
-          </div>
+  const handleGetStarted = () => {
+    router.push('/onboarding/permissions');
+  };
 
-          <div className="space-y-4">
-            <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-              Welcome to UrAi, your AI companion for life reflection and personal growth. 
-              Discover patterns, gain insights, and understand yourself better.
-            </p>
-            
-            <Link href="/onboarding/permissions">
-              <Button size="lg" className="text-lg px-8 py-6 gap-2">
-                Get Started
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </header>
-      </div>
-      
-      <footer className="p-4 text-center text-sm text-muted-foreground">
-        <p>Start your journey of self-discovery today</p>
-      </footer>
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+      <header className="w-full max-w-4xl mx-auto">
+        {/* Icon */}
+        <div className="mb-8 mx-auto bg-primary/20 p-4 rounded-full w-20 h-20 flex items-center justify-center border border-primary/30">
+          <Sparkles className="h-10 w-10 text-primary" />
+        </div>
+        
+        {/* Title */}
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-foreground mb-6 animate-fadeIn">
+          UrAi
+        </h1>
+        
+        {/* Rotating Phrases */}
+        <div className="min-h-[3rem] mb-8">
+          <p 
+            className="text-lg md:text-xl text-muted-foreground animate-fadeIn"
+            aria-live="polite"
+            key={currentPhraseIndex}
+          >
+            {URAI_PHRASES[currentPhraseIndex]}
+          </p>
+        </div>
+
+        {/* Description */}
+        <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+          Your personal AI companion for life logging, self-reflection, and meaningful insights. 
+          Capture your thoughts, track your growth, and discover the patterns that shape your journey.
+        </p>
+
+        {/* CTA Button */}
+        <Button 
+          onClick={handleGetStarted}
+          size="lg"
+          className="text-lg px-8 py-6 group animate-fadeIn"
+          style={{ animationDelay: '500ms' }}
+        >
+          Get Started
+          <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+        </Button>
+
+        {/* Footer */}
+        <p className="text-sm text-muted-foreground mt-6 opacity-70">
+          Begin your journey of self-discovery today
+        </p>
+      </header>
     </main>
   );
 }

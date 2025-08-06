@@ -31,7 +31,7 @@ export default function HomePage() {
     if (authLoading) return;
 
     if (!user) {
-      // Show landing page for non-authenticated users
+      // No user — will show landing page
       return;
     }
 
@@ -68,12 +68,12 @@ export default function HomePage() {
     );
   }
 
-  // Show landing page for non-authenticated users
+  // Show landing page for users who are not logged in
   if (!user) {
     return <LandingPage />;
   }
 
-  // Show dashboard for authenticated users
+  // Show main dashboard for authenticated users
   return (
     <main className="min-h-screen bg-background">
       <HomeView />

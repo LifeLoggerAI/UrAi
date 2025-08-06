@@ -1,34 +1,41 @@
-import type {Metadata} from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from "@/components/ui/toaster"
+import type { Metadata } from 'next';
+import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-sans',
-});
+// Use a local fallback for fonts to avoid network issues
+const fontSans =
+  "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif";
 
 export const metadata: Metadata = {
-  title: 'UrAi - Your AI Companion for Life Reflection',
-  description: 'Transform your daily experiences into meaningful insights with UrAi, your personal AI companion for growth and self-discovery.',
-  keywords: ['AI companion', 'life reflection', 'personal growth', 'self-discovery', 'digital journal', 'AI insights'],
+  title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
+  description:
+    'Transform your thoughts into insights with UrAi. Your personal AI companion for life logging, self-reflection, and meaningful growth. Discover patterns, track progress, and unlock your inner wisdom.',
+  keywords: [
+    'life logging',
+    'AI companion',
+    'self-reflection',
+    'personal growth',
+    'mindfulness',
+    'journaling'
+  ],
   authors: [{ name: 'UrAi Team' }],
   creator: 'UrAi',
   publisher: 'UrAi',
   formatDetection: {
     email: false,
     address: false,
-    telephone: false,
+    telephone: false
   },
-  metadataBase: new URL('https://urai.app'), // Update with actual domain
+  metadataBase: new URL('https://urai.app'),
   alternates: {
-    canonical: '/',
+    canonical: '/'
   },
   openGraph: {
-    title: 'UrAi - Your AI Companion for Life Reflection',
-    description: 'Transform your daily experiences into meaningful insights with UrAi, your personal AI companion for growth and self-discovery.',
+    title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
+    description:
+      'Transform your thoughts into insights with UrAi. Your personal AI companion for life logging, self-reflection, and meaningful growth.',
     url: 'https://urai.app',
     siteName: 'UrAi',
     images: [
@@ -36,18 +43,19 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'UrAi - AI Companion for Life Reflection',
-      },
+        alt: 'UrAi - Personal AI for Life Logging'
+      }
     ],
     locale: 'en_US',
-    type: 'website',
+    type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'UrAi - Your AI Companion for Life Reflection',
-    description: 'Transform your daily experiences into meaningful insights with UrAi, your personal AI companion for growth and self-discovery.',
+    title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
+    description:
+      'Transform your thoughts into insights with UrAi. Your personal AI companion for life logging, self-reflection, and meaningful growth.',
     images: ['/og-image.png'],
-    creator: '@UrAi',
+    creator: '@UrAi'
   },
   robots: {
     index: true,
@@ -57,16 +65,16 @@ export const metadata: Metadata = {
       follow: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+      'max-snippet': -1
+    }
   },
   verification: {
-    google: 'google-site-verification-code', // Add actual verification code
-  },
+    google: 'google-site-verification-code' // Replace with actual verification code
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -74,14 +82,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
-        )}
+        className={cn('min-h-screen bg-background font-sans antialiased')}
+        style={{ fontFamily: fontSans }}
       >
         <AuthProvider>
-            {children}
-            <Toaster />
+          {children}
+          <Toaster />
         </AuthProvider>
       </body>
     </html>
