@@ -29,11 +29,7 @@ export default function HomePage() {
     }
 
     if (authLoading) return;
-
-    if (!user) {
-      // If unauthenticated, just return to render LandingPage
-      return;
-    }
+    if (!user) return; // Not logged in — show landing page
 
     const checkOnboardingStatus = async () => {
       setProfileLoading(true);
@@ -43,7 +39,9 @@ export default function HomePage() {
 
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data() as AppUser;
-          if (!userData.onboardingComplete) {
+          const onboardingComplete = userData.onboardingComplete ?? false;
+
+          if (!onboardingComplete) {
             router.push("/onboarding/permissions");
           }
         } else {
@@ -68,12 +66,10 @@ export default function HomePage() {
     );
   }
 
-  // Show landing page for unauthenticated users
   if (!user) {
     return <LandingPage />;
   }
 
-  // Show home view for authenticated users
   return (
     <main className="min-h-screen bg-background">
       <HomeView />

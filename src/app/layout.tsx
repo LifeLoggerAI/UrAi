@@ -21,6 +21,17 @@ export const metadata: Metadata = {
     'journaling'
   ],
   authors: [{ name: 'UrAi Team' }],
+  creator: 'UrAi',
+  publisher: 'UrAi',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false
+  },
+  metadataBase: new URL('https://urai.app'),
+  alternates: {
+    canonical: '/'
+  },
   openGraph: {
     title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
     description:
@@ -43,7 +54,8 @@ export const metadata: Metadata = {
     title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
     description:
       'Transform your thoughts into insights with UrAi. Your personal AI companion for life logging, self-reflection, and meaningful growth.',
-    images: ['/og-image.png']
+    images: ['/og-image.png'],
+    creator: '@UrAi'
   },
   robots: {
     index: true,
@@ -57,7 +69,7 @@ export const metadata: Metadata = {
     }
   },
   verification: {
-    google: 'google-site-verification-code'
+    google: 'google-site-verification-code' // ✅ Replace with your actual verification code
   }
 };
 
