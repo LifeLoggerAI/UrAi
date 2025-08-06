@@ -48,7 +48,6 @@ export default function LoginPage() {
   const isSubmitting = isEmailSubmitting || isGoogleSubmitting;
 
   useEffect(() => {
-    // If auth is done loading and we have a user, redirect them away from login.
     if (!loading && user) {
       router.push('/');
     }
@@ -75,7 +74,7 @@ export default function LoginPage() {
         description: `You have successfully ${action === 'signIn' ? 'signed in' : 'signed up'}.`,
       });
       router.push('/');
-    } catch (error: Error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Authentication Failed',
@@ -96,7 +95,7 @@ export default function LoginPage() {
         description: `You have successfully signed in with Google.`,
       });
       router.push('/');
-    } catch (error: Error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Google Sign-In Failed',
@@ -107,8 +106,6 @@ export default function LoginPage() {
     }
   };
 
-  // The AuthProvider shows a global loader. We will just return null here if
-  // a user is logged in to prevent a flash of the login form during redirect.
   if (loading || user) {
     return null;
   }
@@ -120,13 +117,10 @@ export default function LoginPage() {
           <div className="mx-auto bg-primary/20 p-3 rounded-full mb-4 border border-primary/30">
             <Sparkles className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-headline">
-            Welcome to Life Logger
-          </CardTitle>
-          <CardDescription>
-            Your personal AI for symbolic self-reflection.
-          </CardDescription>
+          <CardTitle className="text-2xl font-headline">Welcome to UrAi</CardTitle>
+          <CardDescription>Your personal AI for life logging and self-reflection.</CardDescription>
         </CardHeader>
+
         <CardContent className="grid gap-4">
           <Button
             variant="outline"
@@ -177,6 +171,7 @@ export default function LoginPage() {
             />
           </div>
         </CardContent>
+
         <CardFooter className="flex flex-col gap-4">
           <div className="flex w-full gap-2">
             <Button
@@ -184,9 +179,7 @@ export default function LoginPage() {
               className="w-full"
               disabled={isSubmitting}
             >
-              {isEmailSubmitting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
+              {isEmailSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>
             <Button
@@ -195,9 +188,7 @@ export default function LoginPage() {
               variant="secondary"
               disabled={isSubmitting}
             >
-              {isEmailSubmitting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
+              {isEmailSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign Up
             </Button>
           </div>

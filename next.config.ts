@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    telemetry: false,
+  },
   images: {
     remotePatterns: [
       {

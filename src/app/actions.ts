@@ -408,3 +408,125 @@ export async function analyzeAndLogCameraFrameAction(input: {
     return { success: false, error: (e as Error).message };
   }
 }
+
+export async function exportUserDataAction(userId: string): Promise<{ success: boolean; downloadUrl?: string; error?: string }> {
+    if (!userId) {
+        return { success: false, error: "User not authenticated." };
+    }
+
+    try {
+        // Collect all user data from various collections
+        const userData = {
+            user: null as any,
+            voiceEvents: [] as VoiceEvent[],
+            dreams: [] as Dream[],
+            innerTexts: [] as any[],
+            people: [] as any[],
+            goals: [] as any[],
+            tasks: [] as any[],
+            memoryBlooms: [] as any[],
+            exportedAt: new Date().toISOString(),
+        };
+
+        // Fetch user profile
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDocs(query(collection(db, 'users'), where('__name__', '==', userId)));
+        if (!userDoc.empty) {
+            userData.user = userDoc.docs[0].data();
+        }
+
+        // Fetch voice events
+        const voiceEventsQuery = query(
+            collection(db, "voiceEvents"), 
+            where("uid", "==", userId), 
+            orderBy("createdAt", "desc")
+        );
+        const voiceEventsSnapshot = await getDocs(voiceEventsQuery);
+        userData.voiceEvents = voiceEventsSnapshot.docs.map(doc => doc.data() as VoiceEvent);
+
+        // Fetch dreams
+        const dreamsQuery = query(
+            collection(db, "dreamEvents"), 
+            where("uid", "==", userId), 
+            orderBy("createdAt", "desc")
+        );
+        const dreamsSnapshot = await getDocs(dreamsQuery);
+        userData.dreams = dreamsSnapshot.docs.map(doc => doc.data() as Dream);
+
+        // Fetch inner voice reflections
+        const innerTextsQuery = query(
+            collection(db, "innerTexts"), 
+            where("uid", "==", userId), 
+            orderBy("createdAt", "desc")
+        );
+        const innerTextsSnapshot = await getDocs(innerTextsQuery);
+        userData.innerTexts = innerTextsSnapshot.docs.map(doc => doc.data());
+
+        // Fetch people
+        const peopleQuery = query(
+            collection(db, "people"), 
+            where("uid", "==", userId)
+        );
+        const peopleSnapshot = await getDocs(peopleQuery);
+        userData.people = peopleSnapshot.docs.map(doc => doc.data());
+
+        // Fetch goals
+        const goalsQuery = query(
+            collection(db, "goals"), 
+            where("uid", "==", userId)
+        );
+        const goalsSnapshot = await getDocs(goalsQuery);
+        userData.goals = goalsSnapshot.docs.map(doc => doc.data());
+
+        // Fetch tasks
+        const tasksQuery = query(
+            collection(db, "tasks"), 
+            where("uid", "==", userId)
+        );
+        const tasksSnapshot = await getDocs(tasksQuery);
+        userData.tasks = tasksSnapshot.docs.map(doc => doc.data());
+
+        // Fetch memory blooms
+        const bloomsQuery = query(collection(db, 'users', userId, 'memoryBlooms'));
+        const bloomsSnapshot = await getDocs(bloomsQuery);
+        userData.memoryBlooms = bloomsSnapshot.docs.map(doc => doc.data());
+
+        // Generate a comprehensive export
+        const exportData = {
+            metadata: {
+                exportedAt: userData.exportedAt,
+                userId,
+                version: "1.0",
+                totalRecords: {
+                    voiceEvents: userData.voiceEvents.length,
+                    dreams: userData.dreams.length,
+                    innerTexts: userData.innerTexts.length,
+                    people: userData.people.length,
+                    goals: userData.goals.length,
+                    tasks: userData.tasks.length,
+                    memoryBlooms: userData.memoryBlooms.length,
+                }
+            },
+            data: userData
+        };
+
+        // In a production environment, you would:
+        // 1. Save this data to a file (JSON/CSV)
+        // 2. Upload to secure cloud storage
+        // 3. Generate a signed download URL
+        // 4. Send email notification with the URL
+        
+        // For now, we'll return the data as a JSON blob that can be downloaded
+        const jsonData = JSON.stringify(exportData, null, 2);
+        const dataUrl = `data:application/json;charset=utf-8,${encodeURIComponent(jsonData)}`;
+
+        return { 
+            success: true, 
+            downloadUrl: dataUrl
+        };
+
+    } catch (e) {
+        console.error("Failed to export user data:", e);
+        return { success: false, error: (e as Error).message };
+    }
+}
