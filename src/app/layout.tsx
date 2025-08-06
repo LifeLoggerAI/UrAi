@@ -4,7 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-// Local/system font fallback to avoid network dependency issues
+// Use a local/system font fallback to avoid network dependency issues
 const fontSans =
   "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif";
 
@@ -18,9 +18,20 @@ export const metadata: Metadata = {
     'self-reflection',
     'personal growth',
     'mindfulness',
-    'journaling',
+    'journaling'
   ],
   authors: [{ name: 'UrAi Team' }],
+  creator: 'UrAi',
+  publisher: 'UrAi',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false
+  },
+  metadataBase: new URL('https://urai.app'),
+  alternates: {
+    canonical: '/'
+  },
   openGraph: {
     title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
     description:
@@ -32,11 +43,11 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'UrAi - Personal AI for Life Logging',
-      },
+        alt: 'UrAi - Personal AI for Life Logging'
+      }
     ],
     locale: 'en_US',
-    type: 'website',
+    type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
@@ -44,6 +55,7 @@ export const metadata: Metadata = {
     description:
       'Transform your thoughts into insights with UrAi. Your personal AI companion for life logging, self-reflection, and meaningful growth.',
     images: ['/og-image.png'],
+    creator: '@UrAi'
   },
   robots: {
     index: true,
@@ -53,22 +65,22 @@ export const metadata: Metadata = {
       follow: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+      'max-snippet': -1
+    }
   },
   verification: {
-    google: 'google-site-verification-code',
-  },
+    google: 'google-site-verification-code' // Replace with actual verification code
+  }
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={cn("min-h-screen bg-background font-sans antialiased")}
+        className={cn('min-h-screen bg-background font-sans antialiased')}
         style={{ fontFamily: fontSans }}
       >
         <AuthProvider>

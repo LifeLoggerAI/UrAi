@@ -5,27 +5,28 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ChevronRight } from 'lucide-react';
 
+// Combined phrases from both versions
 const URAI_PHRASES = [
-  "Transform your thoughts into insights",
-  "Discover patterns in your daily life", 
-  "Build deeper self-awareness",
-  "Track your personal growth journey",
-  "Understand your emotional landscape",
-  "Create meaningful life reflections",
-  "Unlock hidden connections in your experiences",
-  "Develop mindful living practices",
-  "Capture moments that matter most",
-  "Explore your inner wisdom",
-  "Connect with your authentic self",
-  "Turn everyday moments into memories",
-  "Build habits that align with your values",
-  "Discover what truly drives you",
-  "Create space for personal reflection",
-  "Track progress toward your dreams",
-  "Find clarity in life's complexity",
-  "Nurture your mental well-being",
-  "Document your unique story",
-  "Embrace continuous self-discovery"
+  "Your AI companion for life reflection",
+  "Capture moments, understand patterns",
+  "Transform experiences into insights",
+  "Your personal growth journey starts here",
+  "AI-powered self-discovery and awareness",
+  "Every moment has meaning - let's find it",
+  "Your digital mirror for inner wisdom",
+  "Unlock the stories hidden in your daily life",
+  "Turn life's chaos into clear understanding",
+  "Your thoughts, your growth, your UrAi",
+  "Discover yourself through AI-guided reflection",
+  "Where memories become meaningful insights",
+  "Your life, analyzed and understood",
+  "Personal AI that grows with you",
+  "Connect the dots of your existence",
+  "Your journey to self-awareness starts now",
+  "Transform daily experiences into wisdom",
+  "AI that understands your unique story",
+  "Your personal philosopher and guide",
+  "Life's complexity, simplified through AI"
 ];
 
 export function LandingPage() {
@@ -36,7 +37,6 @@ export function LandingPage() {
     const interval = setInterval(() => {
       setCurrentPhraseIndex((prev) => (prev + 1) % URAI_PHRASES.length);
     }, 3000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -47,14 +47,17 @@ export function LandingPage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex flex-col items-center justify-center p-4 text-center overflow-hidden">
       <header className="w-full max-w-4xl mx-auto">
+        {/* Icon */}
         <div className="mb-8 mx-auto bg-primary/20 p-4 rounded-full w-20 h-20 flex items-center justify-center border border-primary/30">
           <Sparkles className="h-10 w-10 text-primary" />
         </div>
         
+        {/* Title */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-headline text-foreground mb-6 animate-fadeIn">
           UrAi
         </h1>
         
+        {/* Rotating Phrases */}
         <div className="min-h-[3rem] mb-8">
           <p 
             className="text-lg md:text-xl text-muted-foreground animate-fadeIn"
@@ -65,11 +68,13 @@ export function LandingPage() {
           </p>
         </div>
 
+        {/* Description */}
         <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
           Your personal AI companion for life logging, self-reflection, and meaningful insights. 
           Capture your thoughts, track your growth, and discover the patterns that shape your journey.
         </p>
 
+        {/* CTA Button */}
         <Button 
           onClick={handleGetStarted}
           size="lg"
@@ -80,6 +85,7 @@ export function LandingPage() {
           <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
         </Button>
 
+        {/* Footer */}
         <p className="text-sm text-muted-foreground mt-6 opacity-70">
           Begin your journey of self-discovery today
         </p>
