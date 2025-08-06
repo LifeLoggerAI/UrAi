@@ -144,7 +144,7 @@ export function HomeView() {
                 setPanelContent({
                     title: 'Action & Connection',
                     description: 'Explore your patterns of action, effort, and social connection.',
-                    content: <ArmsView />
+                    content: <ArmsView tasks={tasks || []} voiceEvents={voiceEvents || []} />
                 });
                 setActivePanel('arms');
                 return;

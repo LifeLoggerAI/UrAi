@@ -22,12 +22,14 @@ import { Slider } from './ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { Separator } from './ui/separator';
+import { exportUserDataAction } from '@/app/actions';
 
 export function SettingsForm() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   const form = useForm<UpdateUserSettings>({
     resolver: zodResolver(UpdateUserSettingsSchema),
@@ -136,11 +138,53 @@ export function SettingsForm() {
     }
   }
   
-  const handleDataAction = (action: 'export' | 'delete') => {
+  const handleDataAction = async (action: 'export' | 'delete') => {
+    if (!user) {
       toast({
-        title: `${action === 'export' ? 'Export' : 'Deletion'} Initiated`,
-        description: `This is a placeholder. A real implementation would trigger a cloud function.`,
+        variant: "destructive",
+        title: "Authentication Required",
+        description: "You must be logged in to perform this action.",
       });
+      return;
+    }
+
+    if (action === 'export') {
+      setIsExporting(true);
+      try {
+        const result = await exportUserDataAction(user.uid);
+        
+        if (result.success && result.downloadUrl) {
+          // Create a temporary download link
+          const link = document.createElement('a');
+          link.href = result.downloadUrl;
+          link.download = `uraai-data-export-${new Date().toISOString().split('T')[0]}.json`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          toast({
+            title: "Export Complete",
+            description: "Your data has been exported and downloaded successfully.",
+          });
+        } else {
+          throw new Error(result.error || 'Export failed');
+        }
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Export Failed",
+          description: (error as Error).message,
+        });
+      } finally {
+        setIsExporting(false);
+      }
+    } else {
+      // Delete action remains placeholder for now as it's more complex
+      toast({
+        title: "Deletion Initiated",
+        description: "This feature is coming soon. Contact support for data deletion requests.",
+      });
+    }
   }
 
   if (isLoadingData) {
@@ -438,7 +482,14 @@ export function SettingsForm() {
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
              <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="outline"><FileDown className="mr-2"/> Export My Data</Button>
+                    <Button variant="outline" disabled={isExporting}>
+                        {isExporting ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <FileDown className="mr-2" />
+                        )}
+                        Export My Data
+                    </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>

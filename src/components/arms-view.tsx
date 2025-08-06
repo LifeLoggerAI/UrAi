@@ -3,16 +3,28 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
+import { ScrollArea } from "./ui/scroll-area";
 import { ListTodo, Handshake, Scale, GitPullRequestArrow, Waypoints } from "lucide-react";
+import { ActionExecutionView } from "./action-execution-view";
+import type { Task, VoiceEvent } from "@/lib/types";
 
-export function ArmsView() {
+interface ArmsViewProps {
+    tasks: Task[];
+    voiceEvents: VoiceEvent[];
+}
+
+export function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
 
     const panels = [
         {
             title: 'Action Execution',
             icon: <ListTodo className="h-6 w-6 text-primary" />,
             description: "Follow-through on tasks and intentions.",
-            content: <p className="text-center text-muted-foreground mt-8">Action Execution insights coming soon.</p>
+            content: (
+                <ScrollArea className="h-[55vh] -mr-4 pr-4">
+                    <ActionExecutionView tasks={tasks} voiceEvents={voiceEvents} />
+                </ScrollArea>
+            )
         },
         {
             title: 'Relational Gesture Map',
