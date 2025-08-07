@@ -7,22 +7,24 @@
  * - SummarizeTextOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
-import { 
-    SummarizeTextInputSchema,
-    SummarizeTextOutputSchema,
-    type SummarizeTextInput,
-    type SummarizeTextOutput
+import { ai } from '@/ai/genkit';
+import {
+  SummarizeTextInputSchema,
+  SummarizeTextOutputSchema,
+  type SummarizeTextInput,
+  type SummarizeTextOutput,
 } from '@/lib/types';
 
-export async function summarizeText(input: SummarizeTextInput): Promise<SummarizeTextOutput | null> {
+export async function summarizeText(
+  input: SummarizeTextInput
+): Promise<SummarizeTextOutput | null> {
   return summarizeTextFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'summarizeTextPrompt',
-  input: {schema: SummarizeTextInputSchema},
-  output: {schema: SummarizeTextOutputSchema},
+  input: { schema: SummarizeTextInputSchema },
+  output: { schema: SummarizeTextOutputSchema },
   prompt: `You are an expert at synthesizing information and finding patterns in journal entries.
 Analyze the following collection of thoughts and experiences.
 
@@ -44,8 +46,8 @@ const summarizeTextFlow = ai.defineFlow(
     inputSchema: SummarizeTextInputSchema,
     outputSchema: SummarizeTextOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );

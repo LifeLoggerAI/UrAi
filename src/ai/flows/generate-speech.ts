@@ -7,14 +7,14 @@
  * - GenerateSpeechOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import wav from 'wav';
-import {googleAI} from '@genkit-ai/googleai';
-import { 
-    GenerateSpeechInputSchema, 
-    GenerateSpeechOutputSchema,
-    type GenerateSpeechInput,
-    type GenerateSpeechOutput
+import { googleAI } from '@genkit-ai/googleai';
+import {
+  GenerateSpeechInputSchema,
+  GenerateSpeechOutputSchema,
+  type GenerateSpeechInput,
+  type GenerateSpeechOutput,
 } from '@/lib/types';
 import { wrapTextWithSSML, isNeuralVoice, NEURAL_VOICES } from '@/lib/ssml-utils';
 
@@ -39,12 +39,8 @@ async function toWav(
 
     const bufs: Buffer[] = [];
     writer.on('error', reject);
-    writer.on('data', function (d) {
-      bufs.push(d);
-    });
-    writer.on('end', function () {
-      resolve(Buffer.concat(bufs).toString('base64'));
-    });
+    writer.on('data', (d) => bufs.push(d));
+    writer.on('end', () => resolve(Buffer.concat(bufs).toString('base64')));
 
     writer.write(pcmData);
     writer.end();
@@ -58,36 +54,31 @@ const generateSpeechFlow = ai.defineFlow(
     outputSchema: GenerateSpeechOutputSchema,
   },
   async (input) => {
-    // Prepare the text input for TTS
     let textInput = input.text;
     let voiceName = input.voiceName || 'Algenib';
 
-    // If SSML is enabled, wrap the text with SSML markup
     if (input.useSSML) {
-      // Use a neural voice if one isn't specified
       if (!input.voiceName) {
-        voiceName = NEURAL_VOICES.google[3]; // Default to en-US-Wavenet-D
+        voiceName = NEURAL_VOICES.google[3];
       }
-
       textInput = wrapTextWithSSML(input.text, {
         voiceName,
         rate: input.rate,
         pitch: input.pitch,
         enableEmphasis: input.enableEmphasis,
-        addNaturalPauses: input.addNaturalPauses
+        addNaturalPauses: input.addNaturalPauses,
       });
     }
 
-    // Determine if we should use SSML-compatible configuration
     const useSSMLConfig = input.useSSML || isNeuralVoice(voiceName);
 
-    const {media} = await ai.generate({
+    const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: voiceName},
+            prebuiltVoiceConfig: { voiceName },
           },
         },
       },

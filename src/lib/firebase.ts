@@ -1,48 +1,34 @@
+// lib/firebase.ts
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator, type Firestore, initializeFirestore, persistentLocalCache, persistentSingleTabManager } from "firebase/firestore";
-import { getAuth, connectAuthEmulator, type Auth } from "firebase/auth";
-import { getFunctions, connectFunctionsEmulator, type Functions } from "firebase/functions";
-
-const devMode = process.env.NODE_ENV === 'development';
+// --- Your Firebase config ---
+// These values should be set in your .env.local file
+// Example:
+// NEXT_PUBLIC_FIREBASE_API_KEY=...
+// NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+// NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
+// NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+// NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+// NEXT_PUBLIC_FIREBASE_APP_ID=...
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMovq3zvqgmsBBPhsjDQudb8kltxUbYV4",
-  authDomain: "lifelogger-clean.firebaseapp.com",
-  projectId: "lifelogger-clean",
-  storageBucket: "lifelogger-clean.appspot.com",
-  messagingSenderId: "360527756764",
-  appId: "1:360527756764:web:a8b052be78d57340c8a319"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase
-const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth: Auth = getAuth(app);
-const functions: Functions = getFunctions(app);
+// Prevent re-initialization during hot reload in dev
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize Firestore with modern cache settings to avoid deprecated API hangs
-let db: Firestore;
-try {
-    db = initializeFirestore(app, {
-        localCache: persistentLocalCache({ tabManager: persistentSingleTabManager({}) })
-    });
-} catch (e) {
-    console.warn("Firestore initialization with persistence failed, falling back to in-memory cache. Error:", e);
-    db = getFirestore(app);
-}
+// Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
 
-
-if (devMode) {
-  // Connect to emulators in development mode.
-  // The SDK handles preventing multiple connections, so it's safe to call this on hot reloads.
-  try {
-    connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
-    connectFirestoreEmulator(db, "localhost", 8080);
-    connectFunctionsEmulator(functions, "localhost", 5001);
-    console.log("✅ Firebase emulators connected.");
-  } catch (e) {
-    console.warn("Could not connect to emulators, assuming they are not running. Error: ", e);
-  }
-}
-
-export { app, db, auth, functions };
+export default app;

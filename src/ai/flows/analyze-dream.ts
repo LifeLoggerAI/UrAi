@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -9,7 +8,7 @@
  * - AnalyzeDreamOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   AnalyzeDreamInputSchema,
   AnalyzeDreamOutputSchema,
@@ -17,14 +16,16 @@ import {
   type AnalyzeDreamOutput,
 } from '@/lib/types';
 
-export async function analyzeDream(input: AnalyzeDreamInput): Promise<AnalyzeDreamOutput | null> {
+export async function analyzeDream(
+  input: AnalyzeDreamInput
+): Promise<AnalyzeDreamOutput | null> {
   return analyzeDreamFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'analyzeDreamPrompt',
-  input: {schema: AnalyzeDreamInputSchema},
-  output: {schema: AnalyzeDreamOutputSchema},
+  input: { schema: AnalyzeDreamInputSchema },
+  output: { schema: AnalyzeDreamOutputSchema },
   prompt: `You are an expert dream analyst with knowledge of Jungian archetypes, symbolism, and emotional interpretation. Analyze the following dream entry.
 
 Dream Entry:
@@ -43,8 +44,8 @@ const analyzeDreamFlow = ai.defineFlow(
     inputSchema: AnalyzeDreamInputSchema,
     outputSchema: AnalyzeDreamOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );

@@ -1,109 +1,126 @@
-
 'use client';
 
-import { Dream, InnerVoiceReflection, PersonaProfile } from "@/lib/types";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
-import { DashboardView } from "./dashboard-view";
-import { DreamForm } from "./dream-form";
-import { DreamList } from "./dream-list";
-import { TextEntryForm } from "./text-entry-form";
-import { TextEntryList } from "./text-entry-list";
-import { ScrollArea } from "./ui/scroll-area";
-import { BrainCircuit, NotebookPen, PenLine, User, Film } from "lucide-react";
-import { PersonaView } from "./persona-view";
-import { StoryboardGenerator } from "./storyboard-generator";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import type { Dream, InnerVoiceReflection, PersonaProfile } from '@/lib/types';
+import { Brain, MessageSquare, UserCircle2 } from 'lucide-react';
 
 interface CognitiveZoneViewProps {
-    dreams: Dream[];
-    innerTexts: InnerVoiceReflection[];
-    personaProfile?: PersonaProfile;
+  dreams: Dream[];
+  innerTexts: InnerVoiceReflection[];
+  personaProfile?: PersonaProfile;
 }
 
-export function CognitiveZoneView({ dreams, innerTexts, personaProfile }: CognitiveZoneViewProps) {
-
-    const panels = [
-        {
-            title: 'Cognitive Mirror',
-            icon: <BrainCircuit className="h-6 w-6 text-primary" />,
-            description: "An AI-generated overview of your recent mental and emotional state.",
-            content: <DashboardView />
-        },
-        {
-            title: 'Dream Fusion',
-            icon: <NotebookPen className="h-6 w-6 text-primary" />,
-            description: "Log and analyze your dreams to uncover symbolic patterns.",
-            content: (
-                 <div className="flex flex-col gap-4 h-full">
-                    <DreamForm />
-                    <ScrollArea className="h-[40vh]">
-                        <DreamList dreams={dreams} />
-                    </ScrollArea>
+export function CognitiveZoneView({
+  dreams,
+  innerTexts,
+  personaProfile,
+}: CognitiveZoneViewProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      {/* Dreams */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="h-5 w-5 text-primary" /> Dreams
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[200px] pr-2">
+            {dreams.length > 0 ? (
+              dreams.map((dream) => (
+                <div
+                  key={dream.id}
+                  className="mb-3 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors"
+                >
+                  <p className="text-sm font-medium">{dream.title || 'Untitled Dream'}</p>
+                  {dream.description && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {dream.description}
+                    </p>
+                  )}
+                  {dream.sentimentScore !== undefined && (
+                    <p className="text-xs mt-1">
+                      Sentiment: {Math.round(dream.sentimentScore * 100)}%
+                    </p>
+                  )}
                 </div>
-            )
-        },
-        {
-            title: 'Inner Voice',
-            icon: <PenLine className="h-6 w-6 text-primary" />,
-            description: "Capture and reflect on your fleeting thoughts and feelings.",
-            content: (
-                 <div className="flex flex-col gap-4 h-full">
-                    <TextEntryForm />
-                    <ScrollArea className="h-[40vh]">
-                        <TextEntryList entries={innerTexts} />
-                    </ScrollArea>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground italic">No dreams logged yet.</p>
+            )}
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      {/* Inner Voice Reflections */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5 text-primary" /> Inner Voice
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[200px] pr-2">
+            {innerTexts.length > 0 ? (
+              innerTexts.map((reflection) => (
+                <div
+                  key={reflection.id}
+                  className="mb-3 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors"
+                >
+                  <p className="text-sm">{reflection.content}</p>
+                  {reflection.createdAt && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {new Date(reflection.createdAt).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
-            )
-        },
-        {
-            title: 'Persona & Traits',
-            icon: <User className="h-6 w-6 text-primary" />,
-            description: "Understand your core personality traits and archetypes.",
-            content: (
-                <ScrollArea className="h-[60vh] -mr-4 pr-4">
-                    <PersonaView profile={personaProfile} />
-                </ScrollArea>
-            )
-        },
-        {
-            title: 'AI Storyboard',
-            icon: <Film className="h-6 w-6 text-primary" />,
-            description: "Transform your memories into cinematic storyboards with AI.",
-            content: (
-                <ScrollArea className="h-[60vh] -mr-4 pr-4">
-                    <StoryboardGenerator />
-                </ScrollArea>
-            )
-        }
-    ];
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground italic">
+                No inner reflections recorded yet.
+              </p>
+            )}
+          </ScrollArea>
+        </CardContent>
+      </Card>
 
-
-    return (
-        <Carousel className="w-full">
-            <CarouselContent>
-                {panels.map((panel, index) => (
-                     <CarouselItem key={index}>
-                        <div className="p-1">
-                            <Card className="border-none shadow-none bg-transparent">
-                                <CardHeader>
-                                    <div className="flex items-center gap-4">
-                                        {panel.icon}
-                                        <div>
-                                            <CardTitle>{panel.title}</CardTitle>
-                                            <CardDescription>{panel.description}</CardDescription>
-                                        </div>
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="h-[65vh] overflow-y-auto p-4">
-                                    {panel.content}
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-        </Carousel>
-    );
+      {/* Persona Profile */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <UserCircle2 className="h-5 w-5 text-primary" /> Persona
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {personaProfile ? (
+            <div className="space-y-3">
+              {personaProfile.archetype && (
+                <p className="text-sm">
+                  <strong>Archetype:</strong> {personaProfile.archetype}
+                </p>
+              )}
+              {personaProfile.traits && personaProfile.traits.length > 0 && (
+                <div>
+                  <strong className="text-sm">Traits:</strong>
+                  <ul className="text-sm list-disc list-inside mt-1">
+                    {personaProfile.traits.map((trait, idx) => (
+                      <li key={idx}>{trait}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {personaProfile.description && (
+                <p className="text-sm text-muted-foreground">{personaProfile.description}</p>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground italic">
+              Persona profile not available yet.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }

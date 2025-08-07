@@ -1,65 +1,36 @@
-
-
 /**
- * Import function triggers from their respective submodules:
- *
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ * Firebase Function Entry Point
+ * See: https://firebase.google.com/docs/functions/typescript
  */
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+// Genkit flows
+export * from './genkit-sample';
 
-// Export Genkit flows
-export * from "./genkit-sample";
+// Core feature modules
+export * from './user-management';
+export * from './emotion-engine';
+export * from './torso-engine';
+export * from './legs-engine';
+export * from './arms-engine';
+export * from './orb-engine';
+export * from './social-engine';
+export * from './timeline-engine';
+export * from './data-privacy';
 
-// Export user management triggers
-export * from "./user-management";
+// Scheduled + messaging systems
+export * from './scheduled';
+export * from './notifications';
+export * from './email-engine';
 
-// Export emotion engine triggers
-export * from "./emotion-engine";
+// Speech + visual pipelines
+export * from './speech-engine';
+export * from './visuals-engine';
 
-// Export torso engine triggers
-export * from "./torso-engine";
+// Extended symbolic/telemetry engines
+export * from './telemetry-engine';
+export * from './avatar-engine';
+export * from './dream-engine';
+export * from './symbolic-engine';
 
-// Export legs engine triggers
-export * from "./legs-engine";
-
-// Export arms engine triggers
-export * from "./arms-engine";
-
-// Export orb engine triggers
-export * from "./orb-engine";
-
-// Export social engine triggers
-export * from "./social-engine";
-
-// Export timeline engine triggers
-export * from "./timeline-engine";
-
-// Export data privacy triggers
-export * from "./data-privacy";
-
-// Export scheduled functions
-export * from "./scheduled";
-
-// Export notification queue
-export * from "./notifications";
-
-// Export email engine
-export * from "./email-engine";
-
-// Export speech and AI pipeline engine
-export * from "./speech-engine";
-
-// Export visuals engine
-export * from "./visuals-engine";
-
-// Export new engines
-export * from "./telemetry-engine";
-export * from "./avatar-engine";
-export * from "./dream-engine";
-export * from "./symbolic-engine";
-
-// Export hello world sample function
-export * from "./helloWorld";
+// Optional: Sample or debug/test functions
+export * from './helloWorld';

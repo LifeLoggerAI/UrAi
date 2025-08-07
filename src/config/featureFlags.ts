@@ -19,5 +19,5 @@ export const featureFlags = {
   insightMarketplace: false,
 
   // Debug
-  debugLogging: true
+  debugLogging: true,
 };

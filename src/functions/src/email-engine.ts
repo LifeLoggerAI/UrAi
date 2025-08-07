@@ -1,10 +1,9 @@
-
-import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
-    admin.initializeApp();
+  admin.initializeApp();
 }
 const db = admin.firestore();
 
@@ -12,9 +11,10 @@ const db = admin.firestore();
  * Gathers data for all users and queues it up for email generation.
  * This function is scheduled to run daily.
  */
-export const enqueueDigestSummaries = functions.pubsub.schedule('every 24 hours')
-  .onRun(async (context) => {
-    functions.logger.info("Running daily job to enqueue email digests.");
+export const enqueueDigestSummaries = functions.pubsub
+  .schedule('every 24 hours')
+  .onRun(async context => {
+    functions.logger.info('Running daily job to enqueue email digests.');
     // In a real application, this function would:
     // 1. Query for all users who have opted into weekly emails.
     // 2. For each user, analyze logs from the past week (moods, rituals, dreams).
@@ -33,16 +33,16 @@ export const sendNarratedEmail = functions.firestore
   .onCreate(async (snap, context) => {
     const { uid } = context.params;
     const digest = snap.data();
-    
+
     functions.logger.info(`Processing email digest for user ${uid}.`);
-    
+
     // In a real application, this function would:
     // 1. Generate a narrated TTS voice clip of the digest's reflection text.
     // 2. Generate a symbolic constellation image based on the digest data.
     // 3. Get the user's email from their profile.
     // 4. Use the "Trigger Email" extension to send a formatted HTML email
     //    by writing a document to the /mail collection.
-    
+
     // Example of what would be written to the /mail collection:
     /*
     await db.collection('mail').add({
@@ -54,6 +54,6 @@ export const sendNarratedEmail = functions.firestore
       ttsVoiceUrl: generatedTtsUrl
     });
     */
-   
-   return null;
+
+    return null;
   });

@@ -1,231 +1,412 @@
-import { z } from "zod";
+// src/components/home-view.tsx
+'use client';
 
-// Sentiment type (if used elsewhere)
-export type Sentiment = "positive" | "negative" | "neutral";
+import { useEffect, useState } from 'react';
+import {
+  Person, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection,
+  Goal, Task, User, PersonaProfile
+} from '@/lib/types';
 
-/* ============ Trait & Persona ============ */
-export const TraitChangeSchema = z.object({
-  trait: z.string(),
-  from: z.number(),
-  to: z.number(),
-  date: z.string(),
-});
-export type TraitChange = z.infer<typeof TraitChangeSchema>;
+import { suggestRitualAction } from '@/app/actions';
+import { useAuth } from './auth-provider';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
-export const PersonaProfileSchema = z.object({
-  traits: z.record(z.number()).optional(),
-  traitChanges: z.array(TraitChangeSchema).optional(),
-  dominantPersona: z.string().optional(),
-  moodAlignmentScore: z.number().optional(),
-  conflictEvents: z.array(z.string()).optional(),
-  highProductivityWhen: z.array(z.string()).optional(),
-  emotionalDrainWhen: z.array(z.string()).optional(),
-});
-export type PersonaProfile = z.infer<typeof PersonaProfileSchema>;
+import { collection, query, where, onSnapshot, doc, orderBy, limit } from 'firebase/firestore';
+import { db, auth } from '@/lib/firebase';
 
-/* ============ User ============ */
-export const UserSchema = z.object({
-  uid: z.string(),
-  displayName: z.string().optional(),
-  email: z.string().email().optional(),
-  createdAt: z.number(),
-  avatarUrl: z.string().url().optional(),
-  isProUser: z.boolean().default(false),
-  onboardingComplete: z.boolean().default(false),
-  pronouns: z.string().optional(),
-  moodColor: z.string().optional(),
-  avatarStyle: z.string().optional(),
-  lastLoginAt: z.number().optional(),
-  lastLogoutAt: z.number().optional(),
-  stats: z.record(z.any()).optional(),
-  socialGraph: z.record(z.any()).optional(),
-  constellation: z.record(z.any()).optional(),
-  mood: z.string().optional(),
-  location: z.string().optional(),
-  lastVoiceTranscript: z.string().optional(),
-  lastActivity: z.string().optional(),
-  demoMode: z.boolean().optional(),
-  settings: z.object({
-    moodTrackingEnabled: z.boolean().default(true),
-    passiveAudioEnabled: z.boolean().default(true),
-    faceEmotionEnabled: z.boolean().default(false),
-    dataExportEnabled: z.boolean().default(true),
-    narratorVolume: z.number().min(0).max(1).default(0.8),
-    ttsVoice: z.string().default("warmCalm"),
-    pushNotifications: z.boolean().default(true),
-    gpsAllowed: z.boolean().default(false),
-    allowVoiceRetention: z.boolean().default(true),
-    receiveWeeklyEmail: z.boolean().default(true),
-    receiveMilestones: z.boolean().default(true),
-    emailTone: z.string().default("poetic"),
-    dataConsent: z.object({
-      shareAnonymousData: z.boolean(),
-      optedOutAt: z.number().nullable(),
-    }).optional(),
-    telemetryPermissionsGranted: z.boolean().default(false),
-    cameraCapturePermissionsGranted: z.boolean().default(false),
-    identityModelOptIn: z.boolean().default(false),
-  }).optional(),
-  narratorPrefs: z.object({
-    toneStyle: z.string(),
-    metaphorLexicon: z.array(z.string()),
-    ttsConfig: z.object({ pitch: z.number(), speed: z.number() }),
-  }).optional(),
-  personaProfile: PersonaProfileSchema.optional(),
-  symbolLexicon: z.record(z.any()).optional(),
-  subscriptionTier: z.string().optional(),
-});
-export type User = z.infer<typeof UserSchema>;
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
+} from './ui/alert-dialog';
 
-/* ============ Permissions ============ */
-export const PermissionsSchema = z.object({
-  micPermission: z.boolean(),
-  gpsPermission: z.boolean(),
-  motionPermission: z.boolean(),
-  notificationsPermission: z.boolean(),
-  cameraCapturePermissionsGranted: z.boolean().default(false),
-  shareAnonymizedData: z.boolean(),
-  acceptedTerms: z.boolean(),
-  acceptedPrivacyPolicy: z.boolean(),
-  consentTimestamp: z.number(),
-  acceptedTermsVersion: z.string().optional(),
-});
-export type Permissions = z.infer<typeof PermissionsSchema>;
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
+} from './ui/tooltip';
 
-/* ============ Storyboard Generation ============ */
-export const PersonAppearanceSchema = z.object({
-  name: z.string(),
-  age: z.number().optional(),
-  role: z.string().optional(),
-  height: z.string().optional(),
-  build: z.string().optional(),
-  skinTone: z.string().optional(),
-  hairColor: z.string().optional(),
-  hairStyle: z.string().optional(),
-  eyeColor: z.string().optional(),
-  facialHair: z.string().optional(),
-  distinguishingFeatures: z.array(z.string()).optional(),
-  clothing: z.string().optional(),
-  accessories: z.array(z.string()).optional(),
-  expression: z.string().optional(),
-  posture: z.string().optional(),
-});
-export type PersonAppearance = z.infer<typeof PersonAppearanceSchema>;
+import {
+  BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut,
+  BrainCircuit, Mic, Footprints, Hand, Cloud, Spade
+} from 'lucide-react';
 
-export const LocationDetailsSchema = z.object({
-  name: z.string(),
-  address: z.string().optional(),
-  environment: z.string(),
-  weather: z.string().optional(),
-  lighting: z.string(),
-  atmosphere: z.string().optional(),
-});
-export type LocationDetails = z.infer<typeof LocationDetailsSchema>;
+import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
+import { InteractiveAvatar } from './interactive-avatar';
+import { SettingsForm } from './settings-form';
+import { CompanionChatView } from './companion-chat-view';
+import { PersonCard } from './person-card';
+import { CognitiveZoneView } from './cognitive-zone-view';
+import { TorsoView } from './torso-view';
+import { LegsView } from './legs-view';
+import { ArmsView } from './arms-view';
+import { GroundView } from './ground-view';
+import { PassiveCameraCapture } from './passive-camera-capture';
+import { SymbolicInsightsView } from './symbolic-insights-view';
 
-export const EventDetailsSchema = z.object({
-  title: z.string(),
-  date: z.string().optional(),
-  time: z.string().optional(),
-  context: z.string(),
-  duration: z.string().optional(),
-});
-export type EventDetails = z.infer<typeof EventDetailsSchema>;
+type ActivePanel =
+  | 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs'
+  | 'arms' | 'companion' | 'person' | 'sky' | 'ground' | 'symbolic' | null;
 
-export const ActionSequenceSchema = z.object({
-  description: z.string(),
-  participants: z.array(z.string()),
-  duration: z.string().optional(),
-  sequence: z.number(),
-});
-export type ActionSequence = z.infer<typeof ActionSequenceSchema>;
+export function HomeView() {
+  const { user } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
 
-export const PropObjectSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  significance: z.string().optional(),
-});
-export type PropObject = z.infer<typeof PropObjectSchema>;
+  const [people, setPeople] = useState<Person[]>();
+  const [auraState, setAuraState] = useState<AuraState | null>();
+  const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[]>();
+  const [dreams, setDreams] = useState<Dream[]>();
+  const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>();
+  const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[]>();
+  const [goals, setGoals] = useState<Goal[]>();
+  const [tasks, setTasks] = useState<Task[]>();
+  const [personaProfile, setPersonaProfile] = useState<PersonaProfile>();
 
-export const MoodToneSchema = z.object({
-  musicStyle: z.string().optional(),
-  colorPalette: z.array(z.string()),
-  cameraMovement: z.string(),
-  emotionalTone: z.string(),
-});
-export type MoodTone = z.infer<typeof MoodToneSchema>;
+  const [activePanel, setActivePanel] = useState<ActivePanel>(null);
+  const [isRitualLoading, setIsRitualLoading] = useState(false);
+  const [panelContent, setPanelContent] = useState<{
+    title: string; description: string; content?: React.ReactNode
+  } | null>(null);
 
-export const ShotSchema = z.object({
-  type: z.string(),
-  subject: z.string(),
-  action: z.string(),
-  camera: z.string(),
-  lighting: z.string(),
-  imagePrompt: z.string(),
-});
-export type Shot = z.infer<typeof ShotSchema>;
+  const overallMood = voiceEvents?.[0]?.sentimentScore ?? dreams?.[0]?.sentimentScore ?? 0;
 
-export const SceneSchema = z.object({
-  sceneHeader: z.string(),
-  shots: z.array(ShotSchema),
-  dialogue: z.string().optional(),
-});
-export type Scene = z.infer<typeof SceneSchema>;
+  const moodDescription = () => {
+    if (auraState?.currentEmotion) return `Currently feeling ${auraState.currentEmotion}.`;
+    if (overallMood > 0.5) return 'Feeling bright and optimistic.';
+    if (overallMood > 0.1) return 'A sense of calm and positivity.';
+    if (overallMood < -0.5) return 'Reflecting on some challenges.';
+    if (overallMood < -0.1) return 'A quiet, contemplative mood.';
+    return 'A balanced and neutral state.';
+  };
 
-export const StructuredEventDataSchema = z.object({
-  event: EventDetailsSchema,
-  location: LocationDetailsSchema,
-  people: z.array(PersonAppearanceSchema),
-  actions: z.array(ActionSequenceSchema),
-  props: z.array(PropObjectSchema),
-  moodTone: MoodToneSchema,
-  references: z.array(z.string()).optional(),
-});
-export type StructuredEventData = z.infer<typeof StructuredEventDataSchema>;
+  const handleSignOut = async () => {
+    try {
+      await auth.signOut();
+      toast({ title: 'Signed Out', description: 'You have been signed out.' });
+      router.push('/login');
+    } catch {
+      toast({ variant: 'destructive', title: 'Sign Out Failed', description: 'Try again later.' });
+    }
+  };
 
-export const ValidationIssueSchema = z.object({
-  type: z.string(),
-  message: z.string(),
-  personName: z.string().optional(),
-});
-export type ValidationIssue = z.infer<typeof ValidationIssueSchema>;
+  const handleZoneClick = async (zone: ActivePanel | 'aura') => {
+    if (isRitualLoading || !user) return;
 
-export const GenerateStoryboardInputSchema = z.object({
-  eventData: z.string(),
-});
-export type GenerateStoryboardInput = z.infer<typeof GenerateStoryboardInputSchema>;
+    if (zone === 'aura') {
+      setIsRitualLoading(true);
+      try {
+        const result = await suggestRitualAction({ zone: 'aura', context: `Mood: ${moodDescription()}` });
+        if (result?.suggestion) {
+          setPanelContent({
+            title: result.suggestion.title,
+            description: result.suggestion.description,
+            content: <p className="text-foreground">{result.suggestion.suggestion}</p>
+          });
+          setActivePanel('ritual');
+        }
+      } catch (err) {
+        toast({ variant: 'destructive', title: 'Ritual Failed', description: (err as Error).message });
+      } finally {
+        setIsRitualLoading(false);
+      }
+      return;
+    }
 
-export const GenerateStoryboardOutputSchema = z.object({
-  structuredData: StructuredEventDataSchema,
-  scenes: z.array(SceneSchema),
-  validationIssues: z.array(ValidationIssueSchema),
-});
-export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
+    const panelMap: Record<string, () => void> = {
+      head: () => setPanelContent({
+        title: 'Cognitive Zone',
+        description: 'Control room for introspection and dream reflection.',
+        content: <CognitiveZoneView dreams={dreams || []} innerTexts={innerTexts || []} personaProfile={personaProfile} />
+      }),
+      torso: () => setPanelContent({
+        title: 'Core-Self View',
+        description: 'Drives, rhythms, and emotional memory.',
+        content: <TorsoView goals={goals || []} tasks={tasks || []} voiceEvents={voiceEvents || []} />
+      }),
+      legs: () => setPanelContent({
+        title: 'Movement & Direction',
+        description: 'Physical and symbolic forward motion.',
+        content: <LegsView />
+      }),
+      arms: () => setPanelContent({
+        title: 'Action & Connection',
+        description: 'Patterns of action, effort, and social reach.',
+        content: <ArmsView tasks={tasks || []} voiceEvents={voiceEvents || []} />
+      }),
+      sky: () => setPanelContent({
+        title: 'Sky View',
+        description: 'Emotional weather, forecasts, and celestial influence.',
+        content: <p className="text-center text-muted-foreground mt-8">Sky animation coming soon...</p>
+      }),
+      ground: () => setPanelContent({
+        title: 'Ground View',
+        description: 'Your emotional soil, roots, and recovery moments.',
+        content: <GroundView />
+      })
+    };
 
-/* ============ Symbolic Pattern Types ============ */
-export const NarrativeLoopSchema = z.object({
-  uid: z.string(),
-  loopId: z.string(),
-  patternLabel: z.string(),
-  loopEvents: z.array(z.string()),
-  emotionalCore: z.string(),
-  narratorOverlay: z.string(),
-  active: z.boolean().default(true),
-  firstDetectedAt: z.number(),
-  loopIntensity: z.number().min(0).max(1),
-  suggestedAction: z.string().optional(),
-});
-export type NarrativeLoop = z.infer<typeof NarrativeLoopSchema>;
+    if (panelMap[zone]) {
+      panelMap[zone]();
+      setActivePanel(zone);
+    }
+  };
 
-export const MythicPatternSchema = z.object({
-  uid: z.string(),
-  patternId: z.string(),
-  summary: z.string(),
-  detectedFrom: z.array(z.string()),
-  traitsInvolved: z.array(z.string()),
-  loopFrequency: z.number(),
-  firstDetectedAt: z.number(),
-  narratorPhrase: z.string(),
-  isArchetypal: z.boolean().default(false),
-  insightLevel: z.string().optional(),
-});
-export type MythicPattern = z.infer<typeof MythicPatternSchema>;
+  const handleBloomClick = (bloom: MemoryBloom) => {
+    setPanelContent({
+      title: `A Memory of ${bloom.emotion}`,
+      description: `Bloomed on ${new Date(bloom.triggeredAt).toLocaleDateString()}`,
+      content: <p style={{ color: bloom.bloomColor }}>{bloom.description}</p>
+    });
+    setActivePanel('bloom');
+  };
+
+  const handlePersonClick = (person: Person) => {
+    setPanelContent({
+      title: person.name,
+      description: `Your connection with ${person.name}`,
+      content: <PersonCard person={person} />
+    });
+    setActivePanel('person');
+  };
+
+  const handleCompanionOrbClick = () => setActivePanel('companion');
+
+  const getPanelSize = () => {
+    switch (activePanel) {
+      case 'settings': return 'max-w-3xl';
+      case 'head':
+      case 'torso':
+      case 'arms': return 'max-w-6xl';
+      case 'legs': return 'max-w-3xl';
+      case 'sky':
+      case 'ground': return 'max-w-4xl';
+      case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
+      case 'symbolic': return 'max-w-7xl';
+      default: return 'max-w-lg';
+    }
+  };
+
+  const getSkyStyle = () => {
+    const hue = (overallMood + 1) * 60;
+    const lightness = 70 + Math.abs(overallMood) * 25;
+    return {
+      background: `radial-gradient(ellipse at top, hsl(${hue}, 80%, ${lightness}%), hsl(var(--background)))`,
+      opacity: 0.15,
+    };
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    const unsub: (() => void)[] = [];
+
+    unsub.push(onSnapshot(query(collection(db, 'people'), where('uid', '==', user.uid), orderBy('lastSeen', 'desc'), limit(5)), snap => setPeople(snap.docs.map(d => d.data() as Person))));
+    unsub.push(onSnapshot(doc(db, `users/${user.uid}/auraStates/current`), snap => setAuraState(snap.exists() ? snap.data() as AuraState : null)));
+    unsub.push(onSnapshot(query(collection(db, 'users', user.uid, 'memoryBlooms'), orderBy('triggeredAt', 'desc'), limit(10)), snap => setMemoryBlooms(snap.docs.map(d => d.data() as MemoryBloom))));
+    unsub.push(onSnapshot(query(collection(db, 'dreamEvents'), where('uid', '==', user.uid), orderBy('createdAt', 'desc'), limit(10)), snap => setDreams(snap.docs.map(d => d.data() as Dream))));
+    unsub.push(onSnapshot(query(collection(db, 'voiceEvents'), where('uid', '==', user.uid), orderBy('createdAt', 'desc'), limit(10)), snap => setVoiceEvents(snap.docs.map(d => d.data() as VoiceEvent))));
+    unsub.push(onSnapshot(query(collection(db, 'innerTexts'), where('uid', '==', user.uid), orderBy('createdAt', 'desc'), limit(10)), snap => setInnerTexts(snap.docs.map(d => d.data() as InnerVoiceReflection))));
+    unsub.push(onSnapshot(query(collection(db, 'goals'), where('uid', '==', user.uid), orderBy('createdAt', 'desc')), snap => setGoals(snap.docs.map(d => d.data() as Goal))));
+    unsub.push(onSnapshot(query(collection(db, 'tasks'), where('uid', '==', user.uid), orderBy('dueDate', 'asc')), snap => setTasks(snap.docs.map(d => d.data() as Task))));
+    unsub.push(onSnapshot(doc(db, 'users', user.uid), snap => snap.exists() && setPersonaProfile((snap.data() as User).personaProfile)));
+
+    return () => unsub.forEach(u => u());
+  }, [user]);
+
+  return (
+    <>{/* DOM in part 2 or existing UI file split */}</>
+  );
+}
+<>
+  <PassiveCameraCapture />
+
+  <div className="relative w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden text-center">
+    {/* Animated sky background */}
+    <div style={getSkyStyle()} className="absolute inset-0 z-0 transition-all duration-1000" />
+
+    {/* Clickable Sky & Ground zones */}
+    <div className="absolute top-0 left-0 right-0 h-1/3 cursor-pointer z-10" onClick={() => handleZoneClick('sky')} />
+    <div className="absolute bottom-0 left-0 right-0 h-1/4 cursor-pointer z-10" onClick={() => handleZoneClick('ground')} />
+
+    {/* Top-right menu: Settings, Symbolic, SignOut */}
+    <div className="absolute top-4 right-4 z-20 flex gap-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" onClick={() => setActivePanel('symbolic')}>
+              <Wand2 className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Symbolic Insights</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" onClick={() => setActivePanel('settings')}>
+              <Cog className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Settings</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" onClick={handleSignOut}>
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Sign Out</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+
+    {/* Mood Display */}
+    <div className="relative z-10 w-full max-w-4xl animate-fadeIn">
+      {voiceEvents === undefined || dreams === undefined ? (
+        <div className="space-y-3">
+          <Skeleton className="h-8 w-3/4 mx-auto" />
+          <Skeleton className="h-4 w-1/2 mx-auto" />
+        </div>
+      ) : (
+        <>
+          <h1 className="text-3xl font-bold">Today’s Emotional Outlook</h1>
+          <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
+        </>
+      )}
+    </div>
+
+    {/* People Silhouettes */}
+    <TooltipProvider>
+      <div className="absolute inset-x-0 top-10 flex justify-center gap-8 opacity-50 z-10">
+        {people?.map((person, i) => (
+          <Tooltip key={person.id}>
+            <TooltipTrigger asChild>
+              <button onClick={() => handlePersonClick(person)} className="flex flex-col items-center cursor-pointer animate-fadeIn" style={{ animationDelay: `${i * 100}ms` }}>
+                <Users className="h-6 w-6" />
+                <span className="text-xs mt-1">{person.name}</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Social Silhouette: {person.name}</p>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </div>
+    </TooltipProvider>
+
+    {/* Avatar */}
+    <div className="relative z-10 w-full max-w-lg mt-4">
+      {auraState === undefined ? (
+        <Skeleton className="w-full h-full rounded-lg" />
+      ) : (
+        <InteractiveAvatar
+          mood={overallMood}
+          onZoneClick={handleZoneClick}
+          isLoading={isRitualLoading}
+          overlayColor={auraState?.overlayColor}
+          overlayStyle={auraState?.overlayStyle}
+        />
+      )}
+    </div>
+
+    {/* Companion Orb */}
+    <div
+      onClick={handleCompanionOrbClick}
+      className="relative z-20 mt-8 h-20 w-20 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer hover:scale-110"
+      style={{
+        boxShadow: auraState?.overlayColor
+          ? `0 0 20px 5px ${auraState.overlayColor}`
+          : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
+      }}
+    >
+      <BotMessageSquare className="h-9 w-9 text-primary animate-pulse" />
+    </div>
+
+    {/* Memory Blooms */}
+    <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
+      <TooltipProvider>
+        {memoryBlooms?.map((bloom, i) => (
+          <Tooltip key={bloom.bloomId}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => handleBloomClick(bloom)}
+                className="animate-fadeIn"
+                style={{ animationDelay: `${500 + i * 150}ms` }}
+              >
+                <Sprout className="h-5 w-5 hover:scale-125 transition-transform" style={{ color: bloom.bloomColor }} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{bloom.description}</p>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </TooltipProvider>
+    </div>
+
+    {/* Hint */}
+    <div className="absolute bottom-8 text-center z-10 text-xs text-muted-foreground w-full max-w-md">
+      <p>Tap your avatar to explore. The sky reflects your mood. Blooms are memory moments.</p>
+    </div>
+  </div>
+
+  {/* Active Panel Dialog */}
+  <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
+    <AlertDialogContent className={getPanelSize()}>
+      {activePanel === 'companion' ? (
+        <CompanionChatView />
+      ) : (
+        <>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5" />}
+              {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5" />}
+              {activePanel === 'torso' && <Mic className="text-primary h-5 w-5" />}
+              {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5" />}
+              {activePanel === 'arms' && <Hand className="text-primary h-5 w-5" />}
+              {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5" />}
+              {activePanel === 'ground' && <Spade className="text-primary h-5 w-5" />}
+              {panelContent?.title}
+            </AlertDialogTitle>
+            {panelContent?.description && (
+              <AlertDialogDescription className="pt-2">
+                {panelContent.description}
+              </AlertDialogDescription>
+            )}
+          </AlertDialogHeader>
+
+          {activePanel === 'settings' ? (
+            <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
+              <SettingsForm />
+            </div>
+          ) : (
+            panelContent?.content && <div className="py-4 my-2 text-sm rounded-md">{panelContent.content}</div>
+          )}
+
+          <AlertDialogFooter>
+            {activePanel === 'settings' ? (
+              <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>
+            ) : (
+              <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </>
+      )}
+    </AlertDialogContent>
+  </AlertDialog>
+
+  {/* Full-screen Symbolic Insights View */}
+  {activePanel === 'symbolic' && (
+    <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
+      <div className="container mx-auto p-4">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">Symbolic Life Tracking</h1>
+            <p className="text-muted-foreground">Advanced pattern recognition and mythic storytelling</p>
+          </div>
+          <Button variant="outline" onClick={() => setActivePanel(null)}>
+            Close
+          </Button>
+        </div>
+        <SymbolicInsightsView />
+      </div>
+    </div>
+  )}
+</>

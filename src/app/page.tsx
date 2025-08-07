@@ -29,29 +29,27 @@ export default function HomePage() {
     }
 
     if (authLoading) return;
-
-    if (!user) {
-      // No user — will show landing page
-      return;
-    }
+    if (!user) return; // Not logged in — show landing page
 
     const checkOnboardingStatus = async () => {
       setProfileLoading(true);
       try {
-        const userDocRef = doc(db, 'users', user.uid);
+        const userDocRef = doc(db, "users", user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data() as AppUser;
-          if (!userData.onboardingComplete) {
-            router.push('/onboarding/permissions');
+          const onboardingComplete = userData.onboardingComplete ?? false;
+
+          if (!onboardingComplete) {
+            router.push("/onboarding/permissions");
           }
         } else {
-          router.push('/onboarding/permissions');
+          router.push("/onboarding/permissions");
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
-        router.push('/onboarding/permissions');
+        router.push("/onboarding/permissions");
       } finally {
         setProfileLoading(false);
       }
@@ -68,12 +66,10 @@ export default function HomePage() {
     );
   }
 
-  // Show landing page for users who are not logged in
   if (!user) {
     return <LandingPage />;
   }
 
-  // Show main dashboard for authenticated users
   return (
     <main className="min-h-screen bg-background">
       <HomeView />

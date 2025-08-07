@@ -1,4 +1,3 @@
-
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -39,9 +38,33 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: {
-    allowedDevOrigins: [
-      'https://*.cloudworkstations.dev',
-    ],
+    allowedDevOrigins: ['https://*.cloudworkstations.dev'],
+  },
+  webpack: (config, { isServer }) => {
+    // Ignore specific warnings
+    config.ignoreWarnings = [
+      { module: /node_modules\/@opentelemetry/ },
+      /require\.extensions/,
+    ];
+
+    // Handle handlebars loader
+    config.module.rules.push({
+      test: /\.hbs$/,
+      loader: 'handlebars-loader',
+    });
+
+    return config;
+  },
+  // Enable build caching
+  experimental: {
+    turbo: {
+      rules: {
+        '*.hbs': {
+          loaders: ['handlebars-loader'],
+          as: '*.js',
+        },
+      },
+    },
   },
 };
 

@@ -8,7 +8,7 @@
  * - EnrichVoiceEventOutput - The return type for the function.
  */
 
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {
   EnrichVoiceEventInputSchema,
   EnrichVoiceEventOutputSchema,
@@ -16,14 +16,16 @@ import {
   type EnrichVoiceEventOutput,
 } from '@/lib/types';
 
-export async function enrichVoiceEvent(input: EnrichVoiceEventInput): Promise<EnrichVoiceEventOutput | null> {
+export async function enrichVoiceEvent(
+  input: EnrichVoiceEventInput
+): Promise<EnrichVoiceEventOutput | null> {
   return enrichVoiceEventFlow(input);
 }
 
 const prompt = ai.definePrompt({
   name: 'enrichVoiceEventPrompt',
-  input: {schema: EnrichVoiceEventInputSchema},
-  output: {schema: EnrichVoiceEventOutputSchema},
+  input: { schema: EnrichVoiceEventInputSchema },
+  output: { schema: EnrichVoiceEventOutputSchema },
   prompt: `You are an expert in analyzing human conversation. Analyze the following transcript to extract key information.
 
 Transcript:
@@ -44,8 +46,8 @@ const enrichVoiceEventFlow = ai.defineFlow(
     inputSchema: EnrichVoiceEventInputSchema,
     outputSchema: EnrichVoiceEventOutputSchema,
   },
-  async (input) => {
-    const {output} = await prompt(input);
+  async input => {
+    const { output } = await prompt(input);
     return output;
   }
 );
