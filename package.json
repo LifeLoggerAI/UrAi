@@ -83,6 +83,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cross-fetch": "^4.1.0",
     "eslint": "9.30.1",
     "eslint-config-next": "15.3.5",
     "genkit-cli": "^1.14.0",
