@@ -2,7 +2,7 @@
 /**
  * @fileOverview A text-to-speech generation flow with SSML support.
  *
- * - generateSpeech - A function that converts text into speech audio with SSML enhancement.
+ * - generateSpeech - A function that converts text into speech audio with optional SSML markup.
  * - GenerateSpeechInput - The input type for the function.
  * - GenerateSpeechOutput - The return type for the function.
  */
@@ -16,7 +16,7 @@ import {
   type GenerateSpeechInput,
   type GenerateSpeechOutput,
 } from '@/lib/types';
-import { generateConversationalSSML, generateSSML } from '@/lib/audio/ssml';
+import { wrapTextWithSSML, isNeuralVoice, NEURAL_VOICES } from '@/lib/ssml-utils';
 
 export async function generateSpeech(
   input: GenerateSpeechInput
@@ -39,12 +39,8 @@ async function toWav(
 
     const bufs: Buffer[] = [];
     writer.on('error', reject);
-    writer.on('data', function (d) {
-      bufs.push(d);
-    });
-    writer.on('end', function () {
-      resolve(Buffer.concat(bufs).toString('base64'));
-    });
+    writer.on('data', (d) => bufs.push(d));
+    writer.on('end', () => resolve(Buffer.concat(bufs).toString('base64')));
 
     writer.write(pcmData);
     writer.end();
@@ -57,9 +53,24 @@ const generateSpeechFlow = ai.defineFlow(
     inputSchema: GenerateSpeechInputSchema,
     outputSchema: GenerateSpeechOutputSchema,
   },
-  async input => {
-    // Generate SSML for enhanced voice quality
-    const ssmlText = generateConversationalSSML(input.text, 'friendly');
+  async (input) => {
+    let textInput = input.text;
+    let voiceName = input.voiceName || 'Algenib';
+
+    if (input.useSSML) {
+      if (!input.voiceName) {
+        voiceName = NEURAL_VOICES.google[3];
+      }
+      textInput = wrapTextWithSSML(input.text, {
+        voiceName,
+        rate: input.rate,
+        pitch: input.pitch,
+        enableEmphasis: input.enableEmphasis,
+        addNaturalPauses: input.addNaturalPauses,
+      });
+    }
+
+    const useSSMLConfig = input.useSSML || isNeuralVoice(voiceName);
 
     const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
@@ -67,12 +78,11 @@ const generateSpeechFlow = ai.defineFlow(
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Algenib' },
+            prebuiltVoiceConfig: { voiceName },
           },
         },
       },
-      // Use SSML instead of plain text for better speech quality
-      prompt: ssmlText,
+      prompt: textInput,
     });
 
     if (!media) {

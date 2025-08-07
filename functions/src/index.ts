@@ -1,60 +1,36 @@
 /**
- * Import function triggers from their respective submodules:
- *
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ * Firebase Function Entry Point
+ * See: https://firebase.google.com/docs/functions/typescript
  */
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
-
-// Export Genkit flows
+// Genkit flows
 export * from './genkit-sample';
 
-// Export user management triggers
+// Core feature modules
 export * from './user-management';
-
-// Export emotion engine triggers
 export * from './emotion-engine';
-
-// Export torso engine triggers
 export * from './torso-engine';
-
-// Export legs engine triggers
 export * from './legs-engine';
-
-// Export arms engine triggers
 export * from './arms-engine';
-
-// Export orb engine triggers
 export * from './orb-engine';
-
-// Export social engine triggers
 export * from './social-engine';
-
-// Export timeline engine triggers
 export * from './timeline-engine';
-
-// Export data privacy triggers
 export * from './data-privacy';
 
-// Export scheduled functions
+// Scheduled + messaging systems
 export * from './scheduled';
-
-// Export notification queue
 export * from './notifications';
-
-// Export email engine
 export * from './email-engine';
 
-// Export speech and AI pipeline engine
+// Speech + visual pipelines
 export * from './speech-engine';
-
-// Export visuals engine
 export * from './visuals-engine';
 
-// Export new engines
+// Extended symbolic/telemetry engines
 export * from './telemetry-engine';
 export * from './avatar-engine';
 export * from './dream-engine';
 export * from './symbolic-engine';
+
+// Optional: Sample or debug/test functions
+export * from './helloWorld';

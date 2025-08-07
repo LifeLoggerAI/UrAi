@@ -4,7 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
-// Use a local fallback for fonts to avoid network issues
+// Use a local/system font fallback to avoid network dependency issues
 const fontSans =
   "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif";
 
@@ -75,9 +75,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />

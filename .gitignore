@@ -8,6 +8,10 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # next.js
 /.next/
@@ -50,5 +54,5 @@ firebase-debug.*.log
 # IDX
 .idx
 
-# Genkit development files
+# Genkit / Genkit development files
 .genkit/

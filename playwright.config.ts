@@ -4,34 +4,33 @@ import { defineConfig, devices } from '@playwright/test';
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  // Keep the correct test directory
+  // Use the consistent test directory
   testDir: './test/e2e',
 
-  /* Run tests in files in parallel */
+  // Run tests in files in parallel
   fullyParallel: true,
 
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  // Fail the build on CI if test.only is left in source code
   forbidOnly: !!process.env.CI,
 
-  /* Retry on CI only */
+  // Retry on CI only
   retries: process.env.CI ? 2 : 0,
 
-  /* Opt out of parallel tests on CI. */
+  // Opt out of parallel tests on CI
   workers: process.env.CI ? 1 : undefined,
 
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  // Reporter to use
   reporter: 'html',
 
-  /* Shared settings for all the projects below. */
+  // Shared settings for all projects
   use: {
-    /* Base URL for navigation like `await page.goto('/')` */
     baseURL: 'http://localhost:3000',
 
-    /* Collect trace when retrying failed tests */
+    // Collect trace when retrying the failed test
     trace: 'on-first-retry',
   },
 
-  /* Configure projects for major browsers */
+  // Configure projects for major browsers
   projects: [
     {
       name: 'chromium',
@@ -45,19 +44,30 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-    // Uncomment to run mobile or branded browsers
-    // { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
-    // { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
-    // { name: 'Microsoft Edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
-    // { name: 'Google Chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
+    // Uncomment to enable mobile or branded browser testing
+    // {
+    //   name: 'Mobile Chrome',
+    //   use: { ...devices['Pixel 5'] },
+    // },
+    // {
+    //   name: 'Mobile Safari',
+    //   use: { ...devices['iPhone 12'] },
+    // },
+    // {
+    //   name: 'Microsoft Edge',
+    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    // },
+    // {
+    //   name: 'Google Chrome',
+    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    // },
   ],
 
-  /* Run local dev server before starting the tests */
+  // Start dev server before running tests
   webServer: {
-    // Use build + start so it matches deployed environment
     command: 'npm run build && npm run start',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000, // Keep the timeout from copilot version
+    timeout: 120 * 1000,
   },
 });
