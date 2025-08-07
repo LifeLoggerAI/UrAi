@@ -361,6 +361,130 @@ export const SocialEventSchema = z.object({
 });
 export type SocialEvent = z.infer<typeof SocialEventSchema>;
 
+// Schemas for Social Pattern Engine
+export const SocialConnectionSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    voiceImprint: z.object({
+        firstHeard: z.number(),
+        lastHeard: z.number(),
+        totalDuration: z.number(),
+        dominantEmotion: z.string(),
+        patternLabel: z.string(),
+    }),
+    archetype: z.string(),
+    conflictEvents: z.array(z.object({
+        timestamp: z.number(),
+        label: z.string(),
+    })),
+    lastPatternShift: z.number(),
+    tags: z.array(z.string()),
+    constellationStrength: z.number().min(0).max(1),
+});
+export type SocialConnection = z.infer<typeof SocialConnectionSchema>;
+
+export const EmotionalEchoSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    timestamp: z.number(),
+    interactionType: z.enum(["voice", "text", "in-person"]),
+    duration: z.number(),
+    preState: z.string(),
+    postState: z.string(),
+    emotionalDelta: z.string(),
+    loopDetected: z.boolean(),
+    loopLabel: z.string().optional(),
+    tags: z.array(z.string()),
+    intensityScore: z.number().min(0).max(1),
+});
+export type EmotionalEcho = z.infer<typeof EmotionalEchoSchema>;
+
+export const ConversationThreadSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    threadId: z.string(),
+    startedAt: z.number(),
+    endedAt: z.number(),
+    entries: z.array(z.object({
+        timestamp: z.number(),
+        type: z.string(),
+        summary: z.string(),
+        emotion: z.string(),
+    })),
+    dominantEmotion: z.string(),
+    symbolicLabel: z.string(),
+    tags: z.array(z.string()),
+    strengthShift: z.number().min(-1).max(1),
+});
+export type ConversationThread = z.infer<typeof ConversationThreadSchema>;
+
+export const ShadowLoopSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    loopId: z.string(),
+    detectedAt: z.number(),
+    patternType: z.string(),
+    matchedThreads: z.array(z.string()),
+    emotionalDrainScore: z.number().min(0).max(1),
+    loopStrength: z.number().min(0).max(1),
+    symbolicWarning: z.string(),
+    resolved: z.boolean(),
+    resolutionEvent: z.string().optional(),
+});
+export type ShadowLoop = z.infer<typeof ShadowLoopSchema>;
+
+export const RecoveryBloomSocialSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    bloomId: z.string(),
+    triggeredAt: z.number(),
+    cause: z.string(),
+    symbolicType: z.string(),
+    bloomQuote: z.string(),
+    visualStyle: z.string(),
+    resolvedLoopId: z.string().optional(),
+    auraChange: z.object({
+        before: z.string(),
+        after: z.string(),
+    }),
+});
+export type RecoveryBloomSocial = z.infer<typeof RecoveryBloomSocialSchema>;
+
+export const RelationshipForecastSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    forecastId: z.string(),
+    generatedAt: z.number(),
+    forecastWindow: z.string(),
+    toneShift: z.string(),
+    distanceTrend: z.string(),
+    warning: z.string().optional(),
+    symbolicReading: z.string(),
+    auraProjection: z.object({
+        color: z.string(),
+        animation: z.string(),
+    }),
+    predictiveConfidence: z.number().min(0).max(1),
+});
+export type RelationshipForecast = z.infer<typeof RelationshipForecastSchema>;
+
+export const RelationalRitualSchema = z.object({
+    uid: z.string(),
+    contactId: z.string(),
+    ritualId: z.string(),
+    suggestedAt: z.number(),
+    type: z.string(),
+    prompt: z.string(),
+    reason: z.string(),
+    symbolicAsset: z.string(),
+    auraShiftIfCompleted: z.object({
+        before: z.string(),
+        after: z.string(),
+    }),
+    status: z.enum(["suggested", "completed"]),
+});
+export type RelationalRitual = z.infer<typeof RelationalRitualSchema>;
+
 // Schemas for Rotational Swipe Views
 export const TimelineEventSchema = z.object({
     id: z.string(),
