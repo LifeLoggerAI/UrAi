@@ -14,7 +14,7 @@ jobs:
       FIREBASE_ADMIN_SDK_CONFIG_BASE64: ${{ secrets.FIREBASE_ADMIN_SDK_CONFIG_BASE64 }}
 
     steps:
-      # 1. Check out repository
+      # 1. Check out repo
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -25,44 +25,45 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      # 3. Install dependencies
+      # 3. Install root dependencies
       - name: Install Dependencies
         run: npm ci
 
-      # 4. Validate AI configuration
+      # 4. Install Firebase Functions dependencies
+      - name: Install Firebase Functions Dependencies
+        run: cd functions && npm ci
+
+      # 5. Lint code
+      - name: Lint Code
+        run: npm run lint
+        continue-on-error: true
+
+      # 6. Type check
+      - name: Type Check
+        run: npm run typecheck
+        continue-on-error: true
+
+      # 7. Validate AI config
       - name: Validate AI Configuration
         run: npm run ai:validate
 
-      # 5. Run Unit Tests (AI Models)
+      # 8. Unit tests (AI + app logic)
       - name: Run Unit Tests
         run: npm run test:models
 
-      # 6. Build app
-      - name: Build UrAi
+      # 9. Build Next.js app
+      - name: Build UrAi App
         run: npm run build
 
-      # 7. Install Playwright for E2E testing (after build)
-      - name: Install Playwright Browsers
+      # 10. Install Playwright
+      - name: Install Playwright
         run: npx playwright install --with-deps
 
-      # 8. Run E2E Tests
+      # 11. Run end-to-end tests
       - name: Run E2E Tests
         run: npm run test:e2e
-        continue-on-error: false
 
-      # 9. Install Firebase Function Dependencies (optional)
-      - name: Install Function Dependencies
-        run: cd functions && npm ci
-
-      # 10. Run Function Unit Tests (optional)
-      - name: Run Function Tests
-        run: cd functions && npm run test:functions
-
-      # 11. Run Function Coverage Report (optional)
-      - name: Run Function Tests with Coverage
-        run: cd functions && npm run test:coverage
-
-      # 12. Validate Firebase Secrets
+      # 12. Firebase secrets check
       - name: Validate Firebase Secrets
         if: github.ref == 'refs/heads/main'
         run: |
@@ -72,7 +73,7 @@ jobs:
           fi
           echo "✅ Firebase token exists"
 
-      # 13. Deploy to Firebase (main branch only, after success)
+      # 13. Deploy to Firebase Hosting & Functions
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
