@@ -10,9 +10,11 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    env:
+      FIREBASE_ADMIN_SDK_CONFIG_BASE64: ${{ secrets.FIREBASE_ADMIN_SDK_CONFIG_BASE64 }}
 
     steps:
-      # 1. Check out repository
+      # 1. Check out repo
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -23,55 +25,55 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      # 3. Install dependencies
+      # 3. Install root dependencies
       - name: Install Dependencies
         run: npm ci
 
-      # 4. Install Functions dependencies
-      - name: Install Functions Dependencies
-        run: cd functions && npm install
+      # 4. Install Firebase Functions dependencies
+      - name: Install Firebase Functions Dependencies
+        run: cd functions && npm ci
 
       # 5. Lint code
       - name: Lint Code
         run: npm run lint
-        continue-on-error: true  # Continue even if lint fails
+        continue-on-error: true
 
       # 6. Type check
       - name: Type Check
         run: npm run typecheck
-        continue-on-error: true  # Continue even if typecheck fails (known issues)
+        continue-on-error: true
 
-      # 7. Validate AI configuration
+      # 7. Validate AI config
       - name: Validate AI Configuration
         run: npm run ai:validate
 
-      # 8. Run unit/model tests
+      # 8. Unit tests (AI + app logic)
       - name: Run Unit Tests
         run: npm run test:models
 
-      # 9. Build app
-      - name: Build UrAi
+      # 9. Build Next.js app
+      - name: Build UrAi App
         run: npm run build
 
-      # 10. Install Playwright for E2E testing
-      - name: Install Playwright Browsers
+      # 10. Install Playwright
+      - name: Install Playwright
         run: npx playwright install --with-deps
 
-      # 11. Run Playwright tests
+      # 11. Run end-to-end tests
       - name: Run E2E Tests
         run: npm run test:e2e
-        continue-on-error: false  # Fail build if any test fails
 
-      # 12. Validate Environment Variables
-      - name: Validate Environment
+      # 12. Firebase secrets check
+      - name: Validate Firebase Secrets
+        if: github.ref == 'refs/heads/main'
         run: |
-          echo "Checking for required environment variables..."
           if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
-            echo "Warning: FIREBASE_TOKEN not set"
+            echo "❌ FIREBASE_TOKEN secret is missing"
+            exit 1
           fi
-          echo "Environment validation complete"
+          echo "✅ Firebase token exists"
 
-      # 13. Deploy to Firebase (only if tests pass and on main branch)
+      # 13. Deploy to Firebase Hosting & Functions
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
