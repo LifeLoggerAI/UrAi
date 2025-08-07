@@ -6,7 +6,7 @@ import {logger} from "firebase-functions/v2";
 import type {CallableRequest} from "firebase-functions/v2/https";
 import type {FirestoreEvent} from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
-import {generateText} from "genkit/ai";
+import {genkit} from "genkit";
 import {googleAI} from "@genkit-ai/googleai";
 
 // Initialize admin SDK if not already initialized
@@ -14,6 +14,11 @@ if (admin.apps.length === 0) {
   admin.initializeApp();
 }
 const db = admin.firestore();
+
+// Initialize genkit for AI operations
+const ai = genkit({
+  plugins: [googleAI()],
+});
 
 /**
  * Analyzes voice interaction and updates social contact data with pattern detection.
@@ -50,14 +55,14 @@ Transcript: ${transcript}
 Emotion Metadata: ${JSON.stringify(emotionMeta)}
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt: summaryPrompt,
     });
 
     let analysis;
     try {
-      analysis = JSON.parse(result.text());
+      analysis = JSON.parse(result.text);
     } catch (parseError) {
       logger.warn("Failed to parse AI response, using defaults", parseError);
       analysis = {
@@ -169,14 +174,14 @@ Return JSON:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt: summaryPrompt,
     });
 
     let summary;
     try {
-      summary = JSON.parse(result.text());
+      summary = JSON.parse(result.text);
     } catch {
       summary = {
         dominantEmotion: newEntry.emotion,
@@ -246,14 +251,14 @@ Return JSON:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt,
     });
 
     let echo;
     try {
-      echo = JSON.parse(result.text());
+      echo = JSON.parse(result.text);
     } catch {
       echo = {
         emotionalDelta: "neutral shift",
@@ -335,14 +340,14 @@ Return JSON:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt,
     });
 
     let loopAnalysis;
     try {
-      loopAnalysis = JSON.parse(result.text());
+      loopAnalysis = JSON.parse(result.text);
     } catch {
       return; // Skip if parsing fails
     }
@@ -394,14 +399,14 @@ Output:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt,
     });
 
     let ritual;
     try {
-      ritual = JSON.parse(result.text());
+      ritual = JSON.parse(result.text);
     } catch {
       ritual = {
         type: "Echo Message",
@@ -494,14 +499,14 @@ Return JSON:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt,
     });
 
     let forecast;
     try {
-      forecast = JSON.parse(result.text());
+      forecast = JSON.parse(result.text);
     } catch {
       forecast = {
         toneShift: "gentle stability",
@@ -517,7 +522,7 @@ Return JSON:
     }
 
     // Store forecast
-    const forecastDoc = await db.collection("relationshipForecasts").doc().set({
+    await db.collection("relationshipForecasts").doc().set({
       uid,
       contactId,
       forecastId: `forecast_${Date.now()}`,
@@ -573,14 +578,14 @@ Return JSON:
 }
 `;
 
-    const result = await generateText({
-      model: googleAI("gemini-1.5-flash"),
+    const result = await ai.generate({
+      model: "googleai/gemini-1.5-flash",
       prompt,
     });
 
     let bloom;
     try {
-      bloom = JSON.parse(result.text());
+      bloom = JSON.parse(result.text);
     } catch {
       bloom = {
         symbolicType: "Emotional Regrowth",
@@ -843,14 +848,14 @@ Predict this week's relational weather:
 }
 `;
 
-  const result = await generateText({
-    model: googleAI("gemini-1.5-flash"),
+  const result = await ai.generate({
+    model: "googleai/gemini-1.5-flash",
     prompt,
   });
 
   let forecast;
   try {
-    forecast = JSON.parse(result.text());
+    forecast = JSON.parse(result.text);
   } catch {
     return null;
   }
