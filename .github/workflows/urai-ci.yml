@@ -10,6 +10,8 @@ on:
 jobs:
   build-test-deploy:
     runs-on: ubuntu-latest
+    env:
+      FIREBASE_ADMIN_SDK_CONFIG_BASE64: ${{ secrets.FIREBASE_ADMIN_SDK_CONFIG_BASE64 }}
 
     steps:
       # 1. Check out repository
