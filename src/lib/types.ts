@@ -1,10 +1,9 @@
 import { z } from "zod";
 
-/* ---------------------------------- */
-/*   Sentiment & Persona              */
-/* ---------------------------------- */
+// Sentiment type (if used elsewhere)
 export type Sentiment = "positive" | "negative" | "neutral";
 
+/* ============ Trait & Persona ============ */
 export const TraitChangeSchema = z.object({
   trait: z.string(),
   from: z.number(),
@@ -24,9 +23,7 @@ export const PersonaProfileSchema = z.object({
 });
 export type PersonaProfile = z.infer<typeof PersonaProfileSchema>;
 
-/* ---------------------------------- */
-/*   User & Permissions               */
-/* ---------------------------------- */
+/* ============ User ============ */
 export const UserSchema = z.object({
   uid: z.string(),
   displayName: z.string().optional(),
@@ -80,6 +77,7 @@ export const UserSchema = z.object({
 });
 export type User = z.infer<typeof UserSchema>;
 
+/* ============ Permissions ============ */
 export const PermissionsSchema = z.object({
   micPermission: z.boolean(),
   gpsPermission: z.boolean(),
@@ -94,11 +92,9 @@ export const PermissionsSchema = z.object({
 });
 export type Permissions = z.infer<typeof PermissionsSchema>;
 
-/* ---------------------------------- */
-/*   Storyboard Generation Types      */
-/* ---------------------------------- */
+/* ============ Storyboard Generation ============ */
 export const PersonAppearanceSchema = z.object({
-  name: z.string().describe("Full name of the person"),
+  name: z.string(),
   age: z.number().optional(),
   role: z.string().optional(),
   height: z.string().optional(),
@@ -204,3 +200,32 @@ export const GenerateStoryboardOutputSchema = z.object({
   validationIssues: z.array(ValidationIssueSchema),
 });
 export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
+
+/* ============ Symbolic Pattern Types ============ */
+export const NarrativeLoopSchema = z.object({
+  uid: z.string(),
+  loopId: z.string(),
+  patternLabel: z.string(),
+  loopEvents: z.array(z.string()),
+  emotionalCore: z.string(),
+  narratorOverlay: z.string(),
+  active: z.boolean().default(true),
+  firstDetectedAt: z.number(),
+  loopIntensity: z.number().min(0).max(1),
+  suggestedAction: z.string().optional(),
+});
+export type NarrativeLoop = z.infer<typeof NarrativeLoopSchema>;
+
+export const MythicPatternSchema = z.object({
+  uid: z.string(),
+  patternId: z.string(),
+  summary: z.string(),
+  detectedFrom: z.array(z.string()),
+  traitsInvolved: z.array(z.string()),
+  loopFrequency: z.number(),
+  firstDetectedAt: z.number(),
+  narratorPhrase: z.string(),
+  isArchetypal: z.boolean().default(false),
+  insightLevel: z.string().optional(),
+});
+export type MythicPattern = z.infer<typeof MythicPatternSchema>;

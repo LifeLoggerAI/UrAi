@@ -1,8 +1,8 @@
 'use server';
 /**
- * @fileOverview A text-to-speech generation flow.
+ * @fileOverview A text-to-speech generation flow with SSML support.
  *
- * - generateSpeech - A function that converts text into speech audio.
+ * - generateSpeech - A function that converts text into speech audio with optional SSML markup.
  * - GenerateSpeechInput - The input type for the function.
  * - GenerateSpeechOutput - The return type for the function.
  */
@@ -16,6 +16,7 @@ import {
     type GenerateSpeechInput,
     type GenerateSpeechOutput
 } from '@/lib/types';
+import { wrapTextWithSSML, isNeuralVoice, NEURAL_VOICES } from '@/lib/ssml-utils';
 
 export async function generateSpeech(
   input: GenerateSpeechInput
@@ -57,17 +58,40 @@ const generateSpeechFlow = ai.defineFlow(
     outputSchema: GenerateSpeechOutputSchema,
   },
   async (input) => {
+    // Prepare the text input for TTS
+    let textInput = input.text;
+    let voiceName = input.voiceName || 'Algenib';
+
+    // If SSML is enabled, wrap the text with SSML markup
+    if (input.useSSML) {
+      // Use a neural voice if one isn't specified
+      if (!input.voiceName) {
+        voiceName = NEURAL_VOICES.google[3]; // Default to en-US-Wavenet-D
+      }
+
+      textInput = wrapTextWithSSML(input.text, {
+        voiceName,
+        rate: input.rate,
+        pitch: input.pitch,
+        enableEmphasis: input.enableEmphasis,
+        addNaturalPauses: input.addNaturalPauses
+      });
+    }
+
+    // Determine if we should use SSML-compatible configuration
+    const useSSMLConfig = input.useSSML || isNeuralVoice(voiceName);
+
     const {media} = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
         responseModalities: ['AUDIO'],
         speechConfig: {
           voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: 'Algenib'},
+            prebuiltVoiceConfig: {voiceName: voiceName},
           },
         },
       },
-      prompt: input.text,
+      prompt: textInput,
     });
 
     if (!media) {
