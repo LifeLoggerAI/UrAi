@@ -10,8 +10,9 @@ import { DreamList } from "./dream-list";
 import { TextEntryForm } from "./text-entry-form";
 import { TextEntryList } from "./text-entry-list";
 import { ScrollArea } from "./ui/scroll-area";
-import { BrainCircuit, NotebookPen, PenLine, User } from "lucide-react";
+import { BrainCircuit, NotebookPen, PenLine, User, Film } from "lucide-react";
 import { PersonaView } from "./persona-view";
+import { StoryboardGenerator } from "./storyboard-generator";
 
 interface CognitiveZoneViewProps {
     dreams: Dream[];
@@ -61,6 +62,16 @@ export function CognitiveZoneView({ dreams, innerTexts, personaProfile }: Cognit
             content: (
                 <ScrollArea className="h-[60vh] -mr-4 pr-4">
                     <PersonaView profile={personaProfile} />
+                </ScrollArea>
+            )
+        },
+        {
+            title: 'AI Storyboard',
+            icon: <Film className="h-6 w-6 text-primary" />,
+            description: "Transform your memories into cinematic storyboards with AI.",
+            content: (
+                <ScrollArea className="h-[60vh] -mr-4 pr-4">
+                    <StoryboardGenerator />
                 </ScrollArea>
             )
         }

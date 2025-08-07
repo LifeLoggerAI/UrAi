@@ -24,8 +24,9 @@ import { LegsView } from './legs-view';
 import { ArmsView } from './arms-view';
 import { GroundView } from './ground-view';
 import { PassiveCameraCapture } from './passive-camera-capture';
+import { SymbolicInsightsView } from './symbolic-insights-view';
 
-type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | 'ground' | null;
+type ActivePanel = 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs' | 'arms' | 'companion' | 'person' | 'sky' | 'ground' | 'symbolic' | null;
 
 export function HomeView() {
     const { user } = useAuth();
@@ -144,7 +145,7 @@ export function HomeView() {
                 setPanelContent({
                     title: 'Action & Connection',
                     description: 'Explore your patterns of action, effort, and social connection.',
-                    content: <ArmsView />
+                    content: <ArmsView tasks={tasks || []} voiceEvents={voiceEvents || []} />
                 });
                 setActivePanel('arms');
                 return;
@@ -218,6 +219,7 @@ export function HomeView() {
             case 'sky': return 'max-w-4xl';
             case 'ground': return 'max-w-4xl';
             case 'companion': return 'max-w-2xl h-[80vh] flex flex-col';
+            case 'symbolic': return 'max-w-7xl';
             default: return 'max-w-lg';
         }
     }
@@ -251,6 +253,14 @@ export function HomeView() {
 
                 <div className="absolute top-4 right-4 z-20 flex gap-2">
                     <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                 <Button variant="ghost" size="icon" onClick={() => setActivePanel('symbolic')}>
+                                    <Wand2 className="h-5 w-5" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Symbolic Insights</TooltipContent>
+                        </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                  <Button variant="ghost" size="icon" onClick={() => setActivePanel('settings')}>
@@ -390,6 +400,24 @@ export function HomeView() {
                     )}
                 </AlertDialogContent>
             </AlertDialog>
+
+            {/* Symbolic Insights Full-Screen Overlay */}
+            {activePanel === 'symbolic' && (
+                <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
+                    <div className="container mx-auto p-4">
+                        <div className="flex items-center justify-between mb-6">
+                            <div>
+                                <h1 className="text-3xl font-bold">Symbolic Life Tracking</h1>
+                                <p className="text-muted-foreground">Advanced pattern recognition and mythic storytelling</p>
+                            </div>
+                            <Button variant="outline" onClick={() => setActivePanel(null)}>
+                                Close
+                            </Button>
+                        </div>
+                        <SymbolicInsightsView />
+                    </div>
+                </div>
+            )}
         </>
     );
 }

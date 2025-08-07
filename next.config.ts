@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      net: false,
+      tls: false,
+      fs: false,
+      child_process: false,
+      http: false,
+      https: false,
+      os: false,
+      path: false,
+    };
+    return config;
+  },
   images: {
     remotePatterns: [
       {
