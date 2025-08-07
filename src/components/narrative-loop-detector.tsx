@@ -10,15 +10,15 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { Repeat, AlertCircle, Zap, Users, Heart, Escape, Mirror, Candle, Trap } from 'lucide-react';
+import { Repeat, AlertCircle, Zap, Users, Heart, ArrowRight, Monitor, Flame, Lock } from 'lucide-react';
 
 const loopTypeIcons = {
   'Abandonment Loop': Users,
   'Over-Fixer Loop': Heart,
-  'Escape Loop': Escape,
-  'Mirror Loop': Mirror,
-  'Grief Reopen Loop': Candle,
-  'Stuck Ritual Loop': Trap,
+  'Escape Loop': ArrowRight,
+  'Mirror Loop': Monitor,
+  'Grief Reopen Loop': Flame,
+  'Stuck Ritual Loop': Lock,
 };
 
 const loopTypeEmojis = {

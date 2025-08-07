@@ -1,6 +1,3 @@
-'use server';
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
 // Input schema for aura scroll generation
@@ -36,75 +33,44 @@ export const GenerateAuraScrollOutputSchema = z.object({
 
 export type GenerateAuraScrollOutput = z.infer<typeof GenerateAuraScrollOutputSchema>;
 
-export async function generateAuraScroll(input: GenerateAuraScrollInput): Promise<GenerateAuraScrollOutput | null> {
-  return generateAuraScrollFlow(input);
+// Mock implementation for demo
+export async function generateAuraScroll(input: GenerateAuraScrollInput): Promise<GenerateAuraScrollOutput> {
+  // Simulate AI processing delay
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  return {
+    weeklyAuraData: [
+      {
+        week: "2024-W01",
+        mood: "anxious",
+        color: "#FF4444",
+        overlays: ["fog", "crack"],
+      },
+      {
+        week: "2024-W02", 
+        mood: "reflective",
+        color: "#3377AA",
+        overlays: ["mirror", "drift"],
+      },
+      {
+        week: "2024-W03",
+        mood: "hopeful",
+        color: "#33CC88", 
+        overlays: ["bloom", "light"],
+      },
+      {
+        week: "2024-W04",
+        mood: "calm",
+        color: "#87CEEB",
+        overlays: ["wave"],
+      }
+    ],
+    narratorQuotes: [
+      "This was your fog season. You moved slowly, but you moved.",
+      "The reflection showed not who you were, but who you could become.",
+      "Hope arrived quietly, like dawn after the longest night.",
+      "Calm was not your destination. It was your new beginning."
+    ],
+    overallArc: "A journey from anxiety's fog through the mirror of self-reflection into the blooming light of hope, finally settling into the calm waters of acceptance."
+  };
 }
-
-const generateAuraScrollPrompt = ai.definePrompt({
-  name: 'generateAuraScrollPrompt',
-  input: { schema: GenerateAuraScrollInputSchema },
-  config: { temperature: 0.8 },
-  template: `
-You are an AI artist and narrator specializing in transforming emotional data into beautiful, meaningful aura scrolls.
-
-Transform the following mood and emotion data into a visual aura scroll:
-
-Mood Data: {{moodData}}
-Significant Events: {{significantEvents}}
-Time Period: {{startDate}} to {{endDate}}
-
-Create weekly aura data that captures the emotional essence of each week:
-
-**Color Mapping Guide:**
-- Anxious: #FF4444 (Red)
-- Grief/Sadness: #552288 (Deep Purple)
-- Reflective/Calm: #3377AA (Blue)
-- Renewal/Hope: #33CC88 (Green)
-- Joyful/Happy: #FFD700 (Gold)
-- Peaceful: #87CEEB (Sky Blue)
-- Energetic: #FF6347 (Orange-Red)
-- Melancholy: #9370DB (Medium Purple)
-- Frustrated: #CD5C5C (Muted Red)
-- Neutral: #808080 (Gray)
-
-**Overlay Effects:**
-- "crack" (⚡) - Breaking points, sudden changes
-- "fog" (🌫️) - Confusion, uncertainty
-- "rain" (🌧️) - Sadness, cleansing
-- "eclipse" (🌑) - Dark periods, shadow work
-- "mirror" (🪞) - Self-reflection, insight
-- "drift" (💨) - Feeling lost or floating
-- "bloom" (🌸) - Growth, renewal, hope
-- "light" (✨) - Breakthrough, clarity
-- "storm" (⛈️) - Intense emotional turbulence
-- "wave" (🌊) - Emotional floods or flows
-
-For each week:
-1. Analyze the dominant mood and emotional tone
-2. Select appropriate color based on the mood mapping
-3. Choose 1-3 overlays that represent the emotional weather
-4. Group consecutive days with similar emotional patterns
-
-Generate narrator quotes that capture emotional transitions with poetic language like:
-- "This was your fog season. You moved slowly, but you moved."
-- "The grief didn't break you. It soaked in — then bloomed."
-- "Spring was not your rescue. It was your rebirth."
-
-Create an overall emotional arc narrative that tells the story of this time period as a journey.
-
-Be specific about weeks, use actual week numbers (e.g., "2024-W15"), and ensure colors and overlays meaningfully represent the emotional data.
-`,
-});
-
-const generateAuraScrollFlow = ai.defineFlow({
-  name: 'generateAuraScrollFlow',
-  inputSchema: GenerateAuraScrollInputSchema,
-  outputSchema: GenerateAuraScrollOutputSchema,
-}, async (input) => {
-  const llmResponse = await ai.generate({
-    prompt: generateAuraScrollPrompt,
-    input,
-  });
-
-  return llmResponse.output();
-});

@@ -9,10 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
-import { Sparkles, Phoenix, Sprout, Waves, Hammer, Users2, Play, Star } from 'lucide-react';
+import { Sparkles, Bird, Sprout, Waves, Hammer, Users2, Play, Star } from 'lucide-react';
 
 const rebirthTypeIcons = {
-  'Phoenix Burn': Phoenix,
+  'Phoenix Burn': Bird,
   'Quiet Bloom': Sprout,
   'Emotional Wave': Waves,
   'Reconstruction Era': Hammer,
