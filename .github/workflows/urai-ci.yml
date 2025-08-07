@@ -31,7 +31,7 @@ jobs:
       - name: Validate AI Configuration
         run: npm run ai:validate
 
-      # 5. Run unit tests (including AI model tests)
+      # 5. Run Unit Tests (AI Models)
       - name: Run Unit Tests
         run: npm run test:models
 
@@ -39,16 +39,38 @@ jobs:
       - name: Build UrAi
         run: npm run build
 
-      # 7. Install Playwright for E2E testing (only after successful build)
+      # 7. Install Playwright for E2E testing (after build)
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # 8. Run Playwright tests
+      # 8. Run E2E Tests
       - name: Run E2E Tests
         run: npm run test:e2e
-        continue-on-error: false  # fail build if any test fails
+        continue-on-error: false
 
-      # 9. Deploy to Firebase (only if tests pass and on main branch)
+      # 9. Install Firebase Function Dependencies (optional)
+      - name: Install Function Dependencies
+        run: cd functions && npm ci
+
+      # 10. Run Function Unit Tests (optional)
+      - name: Run Function Tests
+        run: cd functions && npm run test:functions
+
+      # 11. Run Function Coverage Report (optional)
+      - name: Run Function Tests with Coverage
+        run: cd functions && npm run test:coverage
+
+      # 12. Validate Firebase Secrets
+      - name: Validate Firebase Secrets
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "❌ FIREBASE_TOKEN secret is missing"
+            exit 1
+          fi
+          echo "✅ Firebase token exists"
+
+      # 13. Deploy to Firebase (main branch only, after success)
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main' && success()
         run: |
