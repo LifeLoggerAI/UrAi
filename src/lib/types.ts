@@ -20,17 +20,21 @@ export interface Person {
   updatedAt: string;
 }
 
+// Updated Dream type for constellation mapping
 export interface Dream {
-  id: string;
+  id?: string;
   userId: string;
-  title: string;
-  content: string;
-  emotions?: string[];
+  title?: string;
+  content?: string;
+  symbols: string[];
+  emotions: string[];
+  location?: string;
+  linkedPersona?: string;
+  dreamQualityScore?: number;
   themes?: string[];
-  symbols?: Array<{ symbol: string; interpretation: string }>;
   sentimentScore?: number;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface VoiceEvent {
@@ -198,3 +202,90 @@ export type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
 export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
 export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
 export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+
+// New types for symbolic systems
+
+export interface ShadowMetrics {
+  userId: string;
+  frictionTaps: number;
+  cancelBehaviorCount: number;
+  lastSeenGhostedEvent: string;
+  bedtimeScrollMinutes: number;
+  entropyLevel: number; // 0 to 1 (calm → chaotic)
+  lastUpdated: string;
+}
+
+export interface CrisisState {
+  userId: string;
+  isInCrisis: boolean;
+  triggeredAt: string;
+  triggerReason: string;
+  score: number; // 0 to 1
+  suggestedRitual?: string;
+}
+
+export interface RecoveryBloom {
+  userId: string;
+  triggerEventId: string;
+  bloomColor: string; // e.g., "lavender-glow"
+  auraVisual: string; // e.g., "rising-petals"
+  recoveryDuration: number; // in days
+  moodBefore: string;
+  moodAfter: string;
+  createdAt: string;
+}
+
+export interface SoulThread {
+  userId: string;
+  threadLabel: string;
+  events: string[]; // Scroll IDs, dream IDs, crisis IDs
+  coreSymbol?: string;
+  dominantArchetype?: string;
+  status: 'open' | 'looping' | 'resolving' | 'complete';
+  rebirthCount: number;
+  createdAt: string;
+}
+
+export interface MetaLearningEntry {
+  userId: string;
+  eventId: string; // ritual or scroll
+  eventType: 'ritual' | 'scroll' | 'dream';
+  result: 'positive' | 'neutral' | 'negative';
+  impactScore: number; // 0–1
+  moodBefore: string;
+  moodAfter: string;
+  insightsUsed: string[];
+  addedToMemory: boolean;
+  createdAt: string;
+}
+
+export interface Insight {
+  userId: string;
+  type: 'causal' | 'projection' | 'symbolic' | 'distortion';
+  generatedFrom: string[]; // Scroll/ritual IDs
+  content: string; // The actual insight
+  confidenceScore: number; // 0–1
+  createdAt: string;
+}
+
+export interface MoodForecast {
+  userId: string;
+  forecastDate: string;
+  dailyMood: string;
+  trend: 'improving' | 'stable' | 'declining';
+  timestamp: string;
+}
+
+export interface Ritual {
+  userId: string;
+  notes?: string;
+  scrollType?: string;
+  createdAt: string;
+}
+
+export interface Scroll {
+  userId: string;
+  scrollType: string;
+  insights: string[];
+  createdAt: string;
+}

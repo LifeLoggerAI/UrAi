@@ -1,6 +1,5 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -8,7 +7,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       net: false,
       tls: false,
@@ -19,6 +18,19 @@ const nextConfig: NextConfig = {
       os: false,
       path: false,
     };
+
+    // Ignore specific warnings
+    config.ignoreWarnings = [
+      { module: /node_modules\/@opentelemetry/ },
+      /require\.extensions/,
+    ];
+
+    // Handle handlebars loader
+    config.module.rules.push({
+      test: /\.hbs$/,
+      loader: 'handlebars-loader',
+    });
+
     return config;
   },
   images: {
@@ -40,21 +52,6 @@ const nextConfig: NextConfig = {
   devIndicators: {
     allowedDevOrigins: ['https://*.cloudworkstations.dev'],
   },
-  webpack: (config, { isServer }) => {
-    // Ignore specific warnings
-    config.ignoreWarnings = [
-      { module: /node_modules\/@opentelemetry/ },
-      /require\.extensions/,
-    ];
-
-    // Handle handlebars loader
-    config.module.rules.push({
-      test: /\.hbs$/,
-      loader: 'handlebars-loader',
-    });
-
-    return config;
-  },
   // Enable build caching
   experimental: {
     turbo: {
@@ -68,4 +65,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
