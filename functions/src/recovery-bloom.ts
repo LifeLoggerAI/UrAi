@@ -2,6 +2,11 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { getFirestore } from 'firebase-admin/firestore';
 import { initializeApp } from 'firebase-admin/app';
 
+// Declare global type for admin app flag
+declare global {
+  var ADMIN_APP_INITIALIZED: boolean | undefined;
+}
+
 // Initialize admin SDK if not already initialized
 if (!global.ADMIN_APP_INITIALIZED) {
   initializeApp();

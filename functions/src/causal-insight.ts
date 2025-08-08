@@ -3,6 +3,11 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { initializeApp } from 'firebase-admin/app';
 import { callInsightModel } from './utils/insight-ai';
 
+// Declare global type for admin app flag
+declare global {
+  var ADMIN_APP_INITIALIZED: boolean | undefined;
+}
+
 // Initialize admin SDK if not already initialized
 if (!global.ADMIN_APP_INITIALIZED) {
   initializeApp();

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrAi Symbolic Systems - Complete Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 50%, #2a2a5a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(147, 197, 253, 0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .status-bar {
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid #475569;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid #475569;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+        }
+        
+        .tab-label {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .tab-desc {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .content-area {
+            min-height: 500px;
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 1rem;
+            border: 2px solid #475569;
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .constellation-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            background: radial-gradient(circle at center, #1e3a8a 0%, #0f0f23 70%);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        
+        .constellation-title {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .dream-node {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid #60a5fa;
+            padding: 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dream-node:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(96, 165, 250, 0.6);
+        }
+        
+        .bloom-container {
+            text-align: center;
+        }
+        
+        .bloom-visual {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #7c3aed, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .thread-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .thread-card {
+            background: linear-gradient(45deg, #581c87, #1e3a8a);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid #60a5fa;
+        }
+        
+        .thread-label {
+            font-weight: bold;
+            color: #fbbf24;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .thread-details {
+            color: #cbd5e1;
+            font-size: 0.875rem;
+        }
+        
+        .metric-display {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+        }
+        
+        .insights-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .insight-card {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #60a5fa;
+        }
+        
+        .insight-type {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="title">🌌 UrAi Symbolic Systems</h1>
+        <p class="subtitle">Advanced emotional intelligence and symbolic pattern recognition</p>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div>
+                <span class="status-indicator"></span>
+                <span>Shadow Level: <span id="entropy-level">34%</span></span>
+            </div>
+            <div>Systems active • Monitoring patterns • Learning preferences</div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('constellation')">
+                <div class="tab-label">🌌 Dream Constellation</div>
+                <div class="tab-desc">Visual dream mapping</div>
+            </div>
+            <div class="nav-tab" onclick="showTab('bloom')">
+                <div class="tab-label">🌸 Recovery Bloom</div>
+                <div class="tab-desc">Growth visualization</div>
+            </div>
+            <div class="nav-tab" onclick="showTab('threads')">
+                <div class="tab-label">🧬 Soul Threads</div>
+                <div class="tab-desc">Life patterns</div>
+            </div>
+            <div class="nav-tab" onclick="showTab('insights')">
+                <div class="tab-label">🧩 AI Insights</div>
+                <div class="tab-desc">Pattern analysis</div>
+            </div>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Dream Constellation Tab -->
+            <div id="constellation" class="tab-content active">
+                <div class="constellation-container">
+                    <div class="constellation-title">Your Dream Constellation</div>
+                    <div class="dream-node" style="top: 20%; left: 30%; background-color: #14532d;" title="Dream: mirror, ocean | Peaceful">🪞</div>
+                    <div class="dream-node" style="top: 40%; left: 70%; background-color: #7f1d1d;" title="Dream: fire, falling | Fear">🔥</div>
+                    <div class="dream-node" style="top: 70%; left: 50%; background-color: #1e3a8a;" title="Dream: moon, voice | Wonder">🌙</div>
+                    <div class="dream-node" style="top: 50%; left: 15%; background-color: #581c87;" title="Dream: shadow, key | Mystery">🗝️</div>
+                    <div class="dream-node" style="top: 25%; left: 80%; background-color: #7c2d12;" title="Dream: bird, flight | Freedom">🕊️</div>
+                    <div class="dream-node" style="top: 80%; left: 25%; background-color: #14532d;" title="Dream: water, reflection | Calm">🌊</div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem; color: #94a3b8;">
+                    <p>Hover over dream symbols to see details. Each position represents emotional resonance and symbolic depth.</p>
+                </div>
+            </div>
+            
+            <!-- Recovery Bloom Tab -->
+            <div id="bloom" class="tab-content">
+                <div class="bloom-container">
+                    <h3 style="color: #60a5fa; margin-bottom: 2rem;">Recovery Bloom Visualization</h3>
+                    <div class="bloom-visual">🌸</div>
+                    <div class="metric-display">
+                        <span>Recovery Duration:</span>
+                        <span style="color: #10b981;">7 days</span>
+                    </div>
+                    <div class="metric-display">
+                        <span>Transformation:</span>
+                        <span>Grief → Acceptance</span>
+                    </div>
+                    <div class="metric-display">
+                        <span>Bloom Quality:</span>
+                        <span style="color: #ec4899;">Lavender Glow</span>
+                    </div>
+                    <div style="margin-top: 2rem; color: #94a3b8;">
+                        <p>Recovery blooms appear when the system detects emotional healing and growth.</p>
+                        <p>Each bloom represents a transformation from challenge to wisdom.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Soul Threads Tab -->
+            <div id="threads" class="tab-content">
+                <h3 style="color: #60a5fa; margin-bottom: 2rem; text-align: center;">Soul Thread Patterns</h3>
+                <div class="thread-grid">
+                    <div class="thread-card">
+                        <div class="thread-label">The Healer's Wound</div>
+                        <div class="thread-details">Symbol: mirror • Status: resolving • Rebirths: 3</div>
+                        <div class="thread-details" style="margin-top: 0.5rem;">Archetype: Healer</div>
+                    </div>
+                    <div class="thread-card">
+                        <div class="thread-label">The Depth of Self</div>
+                        <div class="thread-details">Symbol: ocean • Status: open • Rebirths: 1</div>
+                        <div class="thread-details" style="margin-top: 0.5rem;">Archetype: Explorer</div>
+                    </div>
+                    <div class="thread-card">
+                        <div class="thread-label">The Silenced Song</div>
+                        <div class="thread-details">Symbol: voice • Status: looping • Rebirths: 5</div>
+                        <div class="thread-details" style="margin-top: 0.5rem;">Archetype: Artist</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem; color: #94a3b8;">
+                    <p>Soul threads track recurring symbolic patterns across your life journey.</p>
+                    <p>Each thread represents a core theme that evolves through multiple cycles of growth.</p>
+                </div>
+            </div>
+            
+            <!-- AI Insights Tab -->
+            <div id="insights" class="tab-content">
+                <h3 style="color: #60a5fa; margin-bottom: 2rem; text-align: center;">AI-Generated Insights</h3>
+                <div class="insights-container">
+                    <div class="insight-card">
+                        <div class="insight-type">Causal</div>
+                        <div>When you resist emotion, it becomes louder later.</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-type">Projection</div>
+                        <div>You may be projecting old abandonment onto this relationship.</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-type">Symbolic</div>
+                        <div>Rituals connected to silence seem to calm your inner voice.</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-type">Pattern</div>
+                        <div>Fire symbols appear more frequently during life transitions.</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-type">Meta Learning</div>
+                        <div>Your recovery rate improves by 23% when using ocean meditations.</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-type">Threshold</div>
+                        <div>Crisis events preceded by 72% increase in cancel behaviors.</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 2rem; color: #94a3b8;">
+                    <p>AI continuously analyzes patterns to provide personalized insights into your emotional landscape.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; color: #64748b; font-size: 0.875rem;">
+            <p>All systems work together to provide deep insights into your emotional and symbolic patterns. The AI continuously learns from your interactions to provide more personalized guidance.</p>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav tab
+            event.target.closest('.nav-tab').classList.add('active');
+        }
+        
+        // Simulate changing entropy level
+        setInterval(() => {
+            const entropy = Math.max(0, Math.min(100, parseInt(document.getElementById('entropy-level').textContent) + (Math.random() - 0.5) * 20));
+            document.getElementById('entropy-level').textContent = Math.round(entropy) + '%';
+        }, 3000);
+    </script>
+</body>
+</html>
