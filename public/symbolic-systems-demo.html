@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrAi Symbolic Systems Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3a 50%, #2a2a5a 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .main-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(147, 197, 253, 0.5);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .system-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid #475569;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .system-card:hover {
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+        }
+        
+        .system-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+        
+        .system-description {
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .metric-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        .metric-value {
+            font-weight: bold;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-stable { background-color: #10b981; }
+        .status-warning { background-color: #f59e0b; }
+        .status-crisis { background-color: #ef4444; }
+        
+        .soul-thread {
+            background: linear-gradient(45deg, #581c87, #1e3a8a);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .thread-label {
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        
+        .bloom-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #7c3aed, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .insights-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .insight-item {
+            background: rgba(15, 23, 42, 0.4);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #60a5fa;
+        }
+        
+        .insight-type {
+            font-size: 0.75rem;
+            color: #60a5fa;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 41, 59, 0.4);
+            border: 2px solid #475569;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #cbd5e1;
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="title">🌌 UrAi Symbolic Systems</h1>
+        <p class="subtitle">Advanced emotional intelligence and symbolic pattern recognition</p>
+        
+        <div class="nav-tabs">
+            <a href="/dream-constellation-demo.html" class="nav-tab">🌌 Dream Constellation</a>
+            <a href="#" class="nav-tab active">📊 System Dashboard</a>
+            <a href="#" class="nav-tab">🔮 Insights Engine</a>
+        </div>
+        
+        <div class="systems-grid">
+            <!-- Shadow Metrics -->
+            <div class="system-card">
+                <h3 class="system-title">🕳️ Shadow Metrics Engine</h3>
+                <p class="system-description">Tracks hidden emotional friction and behavioral patterns</p>
+                
+                <div class="metric-display">
+                    <span class="metric-label">Entropy Level</span>
+                    <span class="metric-value" style="color: #f59e0b;">34%</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Cancel Behaviors</span>
+                    <span class="metric-value">7 this week</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Friction Taps</span>
+                    <span class="metric-value">12 today</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Bedtime Scrolling</span>
+                    <span class="metric-value">23 min avg</span>
+                </div>
+            </div>
+            
+            <!-- Crisis Threshold -->
+            <div class="system-card">
+                <h3 class="system-title">⚠️ Crisis Threshold Monitor</h3>
+                <p class="system-description">Detects emotional breaking points and suggests interventions</p>
+                
+                <div class="metric-display">
+                    <span class="metric-label">
+                        <span class="status-indicator status-stable"></span>
+                        Current Status
+                    </span>
+                    <span class="metric-value" style="color: #10b981;">Stable</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Threshold Score</span>
+                    <span class="metric-value">0.34 / 1.0</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Last Crisis</span>
+                    <span class="metric-value">3 weeks ago</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Suggested Ritual</span>
+                    <span class="metric-value" style="color: #60a5fa;">Reflection</span>
+                </div>
+            </div>
+            
+            <!-- Recovery Bloom -->
+            <div class="system-card">
+                <h3 class="system-title">🌸 Recovery Bloom Engine</h3>
+                <p class="system-description">Visualizes emotional recovery and growth patterns</p>
+                
+                <div class="bloom-preview">🌸</div>
+                
+                <div class="metric-display">
+                    <span class="metric-label">Recent Blooms</span>
+                    <span class="metric-value">2 this month</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Recovery Duration</span>
+                    <span class="metric-value">7 days avg</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Bloom Quality</span>
+                    <span class="metric-value" style="color: #10b981;">Lavender Glow</span>
+                </div>
+            </div>
+            
+            <!-- Soul Threads -->
+            <div class="system-card">
+                <h3 class="system-title">🧬 Soul Thread Map</h3>
+                <p class="system-description">Tracks lifelong themes and transformation cycles</p>
+                
+                <div class="soul-thread">
+                    <div class="thread-label">The Healer's Wound</div>
+                    <div style="font-size: 0.875rem; color: #cbd5e1;">Symbol: mirror • Status: resolving • Rebirths: 3</div>
+                </div>
+                
+                <div class="soul-thread">
+                    <div class="thread-label">The Depth of Self</div>
+                    <div style="font-size: 0.875rem; color: #cbd5e1;">Symbol: ocean • Status: open • Rebirths: 1</div>
+                </div>
+                
+                <div class="soul-thread">
+                    <div class="thread-label">The Silenced Song</div>
+                    <div style="font-size: 0.875rem; color: #cbd5e1;">Symbol: voice • Status: looping • Rebirths: 5</div>
+                </div>
+            </div>
+            
+            <!-- Meta Learning -->
+            <div class="system-card">
+                <h3 class="system-title">🧠 Meta Learning Loop</h3>
+                <p class="system-description">AI learns what helps based on emotional outcomes</p>
+                
+                <div class="metric-display">
+                    <span class="metric-label">Learning Entries</span>
+                    <span class="metric-value">47 tracked</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Success Rate</span>
+                    <span class="metric-value" style="color: #10b981;">73%</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Best Practice</span>
+                    <span class="metric-value" style="color: #60a5fa;">Silence rituals</span>
+                </div>
+                <div class="metric-display">
+                    <span class="metric-label">Last Update</span>
+                    <span class="metric-value">2 hours ago</span>
+                </div>
+            </div>
+            
+            <!-- Causal Insights -->
+            <div class="system-card">
+                <h3 class="system-title">🧩 Insight Generator</h3>
+                <p class="system-description">Generates personalized insights from patterns</p>
+                
+                <div class="insights-list">
+                    <div class="insight-item">
+                        <div class="insight-type">Causal</div>
+                        <div>When you resist emotion, it becomes louder later.</div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-type">Projection</div>
+                        <div>You may be projecting old abandonment onto this relationship.</div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-type">Symbolic</div>
+                        <div>Rituals connected to silence seem to calm your inner voice.</div>
+                    </div>
+                    
+                    <div class="insight-item">
+                        <div class="insight-type">Pattern</div>
+                        <div>Fire symbols appear more during transitions.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; color: #64748b; font-size: 0.875rem;">
+            <p>All systems are monitoring patterns in real-time. Data is processed through advanced symbolic AI to provide meaningful insights into your emotional landscape.</p>
+        </div>
+    </div>
+</body>
+</html>

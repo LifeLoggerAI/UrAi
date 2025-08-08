@@ -32,5 +32,14 @@ export * from './avatar-engine';
 export * from './dream-engine';
 export * from './symbolic-engine';
 
+// New symbolic systems
+export * from './shadow-metrics';
+export * from './crisis-threshold';
+export * from './recovery-bloom';
+export * from './soul-thread-map';
+export * from './meta-learning';
+export * from './causal-insight';
+export * from './projection-detector';
+
 // Optional: Sample or debug/test functions
 export * from './helloWorld';
