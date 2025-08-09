@@ -7,6 +7,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {},
   webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       net: false,
