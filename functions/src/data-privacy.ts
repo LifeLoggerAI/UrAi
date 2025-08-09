@@ -248,7 +248,7 @@ export const cleanupOptOut = onDocumentUpdated(
         logger.info(
           `Client did not set optedOutAt, setting it now for user ${uid}.`
         );
-        await change.after.ref.set(
+        await event.data.after.ref.set(
           {
             settings: {
               dataConsent: {

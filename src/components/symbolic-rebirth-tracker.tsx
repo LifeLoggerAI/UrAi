@@ -158,7 +158,7 @@ export function SymbolicRebirthTracker() {
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Narrator Insight:</p>
                     <p className="text-sm italic text-purple-600 dark:text-purple-400">
-                      "{moment.narratorInsight}"
+                      &quot;{moment.narratorInsight}&quot;
                     </p>
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import * as admin from 'firebase-admin';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -35,7 +35,7 @@ export const ingestArmSensors = onCall(async (request: CallableRequest) => {
  */
 export const calcFollowThroughScore = onDocumentWritten(
   'armMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, dateKey: string}>) => {
     logger.info(
       `Calculating follow-through score for user ${event.params.uid}.`
     );
@@ -50,8 +50,8 @@ export const calcFollowThroughScore = onDocumentWritten(
  */
 export const detectEmotionalOverload = onDocumentWritten(
   'armMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
-    const data = event.data?.data();
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, dateKey: string}>) => {
+    const data = event.data?.after.data();
     if (data?.emotionalEffortLoad > 70 && data?.connectionEchoScore < 40) {
       logger.info(`Emotional overload detected for user ${event.params.uid}.`);
       // Logic to create narratorInsights and push a notification.

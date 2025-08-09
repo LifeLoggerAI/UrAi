@@ -1,4 +1,3 @@
-
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
@@ -52,7 +51,7 @@ export const triggerNarratorIdentityInsight = onDocumentUpdated(
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {userId: string}>) => {
     const before = event.data?.before.data();
     const after = event.data?.after.data();
-    if (before?.featureStage !== after?.featureStage) {
+    if (after && before?.featureStage !== after.featureStage) {
       logger.info(
         `Avatar feature stage changed for user ${event.params.userId} to ${after.featureStage}.`
       );

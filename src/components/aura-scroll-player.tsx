@@ -72,7 +72,7 @@ export function AuraScrollPlayer() {
     });
 
     return () => unsubscribe();
-  }, [user]);
+  }, [user, selectedScroll]);
 
   useEffect(() => {
     if (isPlaying && selectedScroll) {
@@ -341,7 +341,7 @@ export function AuraScrollPlayer() {
                 </p>
                 {isPlaying && (
                   <p className="text-xs mt-1 text-blue-600 dark:text-blue-400">
-                    "Your emotions are painting the story of your becoming..."
+                    &quot;Your emotions are painting the story of your becoming...&quot;
                   </p>
                 )}
               </div>

@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useAuth } from './auth-provider';
 import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
@@ -244,7 +242,7 @@ export function ThresholdModePlayback() {
 
                         <div className="text-center">
                           <p className="text-lg italic text-muted-foreground mb-4">
-                            "{moment.coreInsight}"
+                            &quot;{moment.coreInsight}&quot;
                           </p>
                         </div>
 

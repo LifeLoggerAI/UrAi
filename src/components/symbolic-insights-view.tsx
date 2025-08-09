@@ -84,7 +84,7 @@ export function SymbolicInsightsView() {
               <div>
                 <h2 className="text-2xl font-semibold">Narrative Loop Detector</h2>
                 <p className="text-muted-foreground">
-                  "You've lived this story before — let's name it."
+                  &quot;You&apos;ve lived this story before &mdash; let&apos;s name it.&quot;
                 </p>
               </div>
               <Badge variant="secondary">AI Pattern Recognition</Badge>
@@ -99,7 +99,7 @@ export function SymbolicInsightsView() {
               <div>
                 <h2 className="text-2xl font-semibold">Symbolic Rebirth Tracker</h2>
                 <p className="text-muted-foreground">
-                  "This is where everything changed — quietly, or all at once."
+                  &quot;This is where everything changed &mdash; quietly, or all at once.&quot;
                 </p>
               </div>
               <Badge variant="secondary">Transformation Detection</Badge>
@@ -114,7 +114,7 @@ export function SymbolicInsightsView() {
               <div>
                 <h2 className="text-2xl font-semibold">Threshold Mode Playback</h2>
                 <p className="text-muted-foreground">
-                  "You stood at the edge of everything — and chose to walk through."
+                  &quot;You stood at the edge of everything &mdash; and chose to walk through.&quot;
                 </p>
               </div>
               <Badge variant="secondary">Immersive Replay</Badge>
@@ -129,7 +129,7 @@ export function SymbolicInsightsView() {
               <div>
                 <h2 className="text-2xl font-semibold">Legacy Thread Builder</h2>
                 <p className="text-muted-foreground">
-                  "Your life isn't just a story — it's a teaching."
+                  &quot;Your life isn&apos;t just a story &mdash; it&apos;s a teaching.&quot;
                 </p>
               </div>
               <Badge variant="secondary">Mythic Storytelling</Badge>
@@ -144,7 +144,7 @@ export function SymbolicInsightsView() {
               <div>
                 <h2 className="text-2xl font-semibold">Aura Scroll Player</h2>
                 <p className="text-muted-foreground">
-                  "Watch your life in color, in motion, in feeling."
+                  &quot;Watch your life in color, in motion, in feeling.&quot;
                 </p>
               </div>
               <Badge variant="secondary">Emotional Visualization</Badge>

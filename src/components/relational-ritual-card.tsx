@@ -169,7 +169,7 @@ export function RelationalRitualCard({ rituals, onRitualComplete, onRitualDismis
                         {ritual.reason}
                       </p>
                       <p className="text-sm leading-relaxed italic">
-                        "{ritual.prompt}"
+                        &quot;{ritual.prompt}&quot;
                       </p>
                     </div>
                   </div>
@@ -179,11 +179,11 @@ export function RelationalRitualCard({ rituals, onRitualComplete, onRitualDismis
                     <span className="text-muted-foreground">Aura shift:</span>
                     <div className="flex items-center gap-1">
                       <div className={cn("w-3 h-3 rounded-full", getAuraColor(ritual.auraShiftIfCompleted.before))} />
-                      <span>→</span>
+                      <span>&rarr;</span>
                       <div className={cn("w-3 h-3 rounded-full", getAuraColor(ritual.auraShiftIfCompleted.after))} />
                     </div>
                     <span className="text-muted-foreground">
-                      {ritual.auraShiftIfCompleted.before} → {ritual.auraShiftIfCompleted.after}
+                      {ritual.auraShiftIfCompleted.before} &rarr; {ritual.auraShiftIfCompleted.after}
                     </span>
                   </div>
 
@@ -210,7 +210,7 @@ export function RelationalRitualCard({ rituals, onRitualComplete, onRitualDismis
                         {completingRituals.has(ritual.ritualId) ? (
                           <>
                             <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin mr-1" />
-                            Completing...
+                            Completing&hellip;
                           </>
                         ) : (
                           <>

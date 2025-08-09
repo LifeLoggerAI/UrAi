@@ -147,7 +147,7 @@ export function NarrativeLoopDetector() {
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Narrator Insight:</p>
                     <p className="text-sm italic text-blue-600 dark:text-blue-400">
-                      "{loop.narratorOverlay}"
+                      &quot;{loop.narratorOverlay}&quot;
                     </p>
                   </div>
                 </div>

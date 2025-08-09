@@ -53,7 +53,7 @@ export function TorsoView({ goals, tasks, voiceEvents }: TorsoViewProps) {
           ))
         ) : (
           <p className="text-muted-foreground text-sm p-4 bg-muted rounded-lg border">
-            You haven't set a primary goal during onboarding yet.
+            You haven&apos;t set a primary goal during onboarding yet.
           </p>
         )}
       </div>
@@ -83,7 +83,7 @@ export function TorsoView({ goals, tasks, voiceEvents }: TorsoViewProps) {
           </ul>
         ) : (
           <p className="text-muted-foreground text-sm p-4 bg-muted rounded-lg border">
-            You haven't set any next steps during onboarding yet.
+            You haven&apos;t set any next steps during onboarding yet.
           </p>
         )}
       </div>

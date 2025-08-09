@@ -1,4 +1,3 @@
-
 import {
   onDocumentCreated,
   onDocumentUpdated,
@@ -55,7 +54,7 @@ export const generateDreamNarration = onDocumentUpdated(
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {dreamId: string}>) => {
     const after = event.data?.after.data();
     // Generate narration only if tags are present and narration is missing.
-    if (after?.dreamSymbolTags?.length > 0 && !after.dreamNarrationText) {
+    if (after && after.dreamSymbolTags?.length > 0 && !after.dreamNarrationText) {
       logger.info(
         `Generating dream narration for dream: ${event.params.dreamId}`
       );
