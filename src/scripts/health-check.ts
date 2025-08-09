@@ -1,6 +1,5 @@
-#!/usr/bin/env tsx
 /**
- * AI Flow Health Check Script
+ * @fileOverview AI Flow Health Check Script
  *
  * This script validates that all AI flows are working correctly by running
  * test cases against each flow and checking for proper responses.
