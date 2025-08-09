@@ -122,7 +122,7 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
 
     const promises = usersSnap.docs.map(async userDoc => {
       const uid = userDoc.id;
-      const oneHourAgo = Date.now() - 60 * 60 * 1000;
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
       const moodLogsQuery = db
         .collection(`users/${uid}/moodLogs`)
@@ -166,7 +166,7 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
       }
 
       const cycleId = uuidv4();
-      const windowStart = oneHourAgo;
+      const windowStart = oneHourAgo.getTime();
 
       try {
         const emotionCycle: EmotionCycle = {

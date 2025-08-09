@@ -1,4 +1,3 @@
-
 import { onUserCreated, onUserDeleted } from 'firebase-functions/v2/auth';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions/v2';

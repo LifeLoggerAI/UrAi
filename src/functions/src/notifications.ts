@@ -1,4 +1,6 @@
-import * as functions from 'firebase-functions';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { logger } from 'firebase-functions/v2';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -10,20 +12,24 @@ if (admin.apps.length === 0) {
  * Processes messages added to the notification queue.
  * This is a placeholder; a real implementation would connect to a push notification service.
  */
-export const processNotificationQueue = functions.firestore
-  .document('messages/queue/{messageId}')
-  .onCreate(async (snap, context) => {
-    const message = snap.data();
+export const processNotificationQueue = onDocumentCreated(
+  'messages/queue/{messageId}',
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {messageId: string}>) => {
+    const message = event.data?.data();
+    if (!message) {
+        logger.error(`Notification queue message ${event.params.messageId} has no data.`);
+        return;
+    }
     const { uid, type, body } = message;
 
     if (!uid || !body) {
-      functions.logger.error(
-        `Notification queue message ${context.params.messageId} is missing uid or body.`
+      logger.error(
+        `Notification queue message ${event.params.messageId} is missing uid or body.`
       );
       return;
     }
 
-    functions.logger.info(
+    logger.info(
       `Processing notification for user ${uid} of type ${type}: "${body}"`
     );
 
@@ -34,10 +40,11 @@ export const processNotificationQueue = functions.firestore
     // 3. Potentially trigger a TTS narration via the Companion Orb in-app.
 
     // For now, we just log that it would be sent.
-    functions.logger.info(
+    logger.info(
       `Notification for ${uid} processed. In a real app, this would be sent to their device.`
     );
 
     // Clean up the processed message from the queue.
-    return snap.ref.delete();
-  });
+    return event.data?.ref.delete();
+  }
+);
