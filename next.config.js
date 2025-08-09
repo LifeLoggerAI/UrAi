@@ -1,11 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { isServer }) => {
-    // This is required to make firebase-admin work in server-side code.
-    config.externals.push({
-      'node-fetch': 'commonjs node-fetch',
-    });
-    
     // This is required for some Node.js modules that are not available in the browser.
     config.resolve.fallback = {
       ...config.resolve.fallback,
