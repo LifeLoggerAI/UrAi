@@ -19,13 +19,13 @@
     "test:integration": "firebase emulators:exec \"npm test\" --only functions"
   },
   "dependencies": {
-    "@genkit-ai/firebase": "^1.14.0",
-    "@genkit-ai/googleai": "^1.14.0",
+    "@genkit-ai/firebase": "^1.16.0",
+    "@genkit-ai/googleai": "^1.16.0",
     "@sendgrid/mail": "^8.1.5",
     "express": "^5.1.0",
     "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.4.0",
-    "genkit": "^1.14.0",
+    "genkit": "^1.16.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
@@ -39,7 +39,6 @@
     "firebase-functions-test": "^3.1.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
-    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
 }

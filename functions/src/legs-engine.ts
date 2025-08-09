@@ -52,7 +52,7 @@ export const calcStabilityMomentum = onDocumentWritten(
  */
 export const detectAvoidancePatterns = onDocumentWritten(
   'avoidanceEvents/{uid}/{eventId}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, eventId: string}>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, eventId: string}>) => {
     logger.info(`Detecting avoidance patterns for user ${event.params.uid}.`);
     // Logic to aggregate recent events, call 'AvoidancePatternDetector' AI.
     // If score > 60, create narrator insight and push notification.

@@ -6,7 +6,7 @@ import {
 } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot, Change, QueryDocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -104,7 +104,7 @@ export const detectSelfConflict = onDocumentWritten(
  */
 export const checkProLimits = onDocumentCreated(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
+  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
     const uid = event.params.uid;
     const userRef = db.doc(`users/${uid}`);
     const userSnap = await userRef.get();

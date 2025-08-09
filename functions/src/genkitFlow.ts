@@ -1,3 +1,4 @@
+
 // Import the functions you need from the SDKs you need
 import { onCall } from "firebase-functions/v2/https";
 import * as functions from "firebase-functions";
@@ -10,7 +11,7 @@ import { z } from 'zod';
 
 // import the Genkit and Google AI plugin libraries
 import { gemini15Flash, googleAI } from '@genkit-ai/googleai';
-import { genkit, configureGenkit } from 'genkit';
+import { genkit } from 'genkit';
 
 // Initialize Firebase Admin SDK
 if (admin.apps.length === 0) {
@@ -18,7 +19,7 @@ if (admin.apps.length === 0) {
 }
 
 // Initialize Genkit
-configureGenkit({
+genkit({
   plugins: [googleAI()],
 });
 
