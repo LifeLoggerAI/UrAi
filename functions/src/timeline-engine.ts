@@ -53,7 +53,7 @@ export const detectShadowEpisode = onDocumentWritten(
  * Generates the user's emotional forecast for the next 7 days.
  * This is a placeholder.
  */
-export const runForecastEngine = onSchedule('05 02 * * *',
+export const runForecastEngine = onSchedule('05 2 * * *',
     async () => {
     logger.info('Running daily emotional forecast for all users.');
     // For every user:
@@ -67,7 +67,7 @@ export const runForecastEngine = onSchedule('05 02 * * *',
  * Updates the user's current archetype based on recent activity.
  * This is a placeholder.
  */
-export const updateArchetypeState = onSchedule('00 04 * * 0',
+export const updateArchetypeState = onSchedule('0 4 * * 0',
     async () => {
     logger.info('Running weekly archetype evolution for all users.');
     // For every user:
