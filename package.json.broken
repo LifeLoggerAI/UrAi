@@ -1,0 +1,50 @@
+{
+  "name": "urai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:models": "jest --testPathPattern=test/ai",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "genkit:dev": "genkit start -- tsx src/ai/dev.ts",
+    "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
+    "train:model": "echo 'ML model training placeholder'",
+    "deploy:model": "echo 'Model deployment placeholder'"
+  },
+  "dependencies": {
+    "@genkit-ai/ai": "1.16.0",
+    "@genkit-ai/core": "1.16.0",
+    "@genkit-ai/googleai": "1.16.0",
+    "@google-cloud/storage": "^7.11.0",
+    "@google-cloud/vision": "^4.3.0",
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "date-fns": "^3.6.0",
+    "firebase": "^10.12.2",
+    "firebase-admin": "^12.4.0",
+    "firebase-functions": "^5.2.0",
+    "lucide-react": "^0.424.0",
+    "next": "14.2.5",
+    "openai": "^4.55.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.46.1",
+    "@types/jest": "^29.5.12",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsx": "^4.7.0"
+  }
+}
