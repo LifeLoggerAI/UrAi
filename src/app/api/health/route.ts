@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSpeech } from '@/ai/flows/generate-speech';
 import { analyzeDream } from '@/ai/flows/analyze-dream';
@@ -35,7 +36,7 @@ export async function GET(request: NextRequest) {
     // Test analyze dream flow
     try {
       const dreamResult = await Promise.race([
-        analyzeDream({ dreamText: 'Health check dream test' }),
+        analyzeDream({ text: 'Health check dream test' }),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Timeout')), 10000)
         ),

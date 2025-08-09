@@ -223,8 +223,10 @@ export const triggerBloom = onDocumentWritten(
 export const detectRecoveryBloomOnAuraUpdate = onDocumentUpdated(
   'users/{uid}/auraStates/current',
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { uid: string }>) => {
-    const before = event.data?.before.data() as AuraState;
-    const after = event.data?.after.data() as AuraState;
+    const data = event.data;
+    if (!data) return;
+    const before = data.before.data() as AuraState;
+    const after = data.after.data() as AuraState;
     const { uid } = event.params;
 
     if (!before?.currentEmotion || !after?.currentEmotion) {

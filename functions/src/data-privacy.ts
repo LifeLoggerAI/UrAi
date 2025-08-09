@@ -235,11 +235,11 @@ export const rejectDarRequest = onCall(async (request: CallableRequest) => {
 export const cleanupOptOut = onDocumentUpdated(
   'users/{uid}',
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string}>) => {
-    const change = event.data;
-    if (!change) return;
+    const data = event.data;
+    if (!data) return;
 
-    const beforeSettings = change.before.data()?.settings || {};
-    const afterSettings = change.after.data()?.settings || {};
+    const beforeSettings = data.before.data()?.settings || {};
+    const afterSettings = data.after.data()?.settings || {};
 
     const beforeConsent = beforeSettings.dataConsent?.shareAnonymousData;
     const afterConsent = afterSettings.dataConsent?.shareAnonymousData;
@@ -252,7 +252,7 @@ export const cleanupOptOut = onDocumentUpdated(
         logger.info(
           `Client did not set optedOutAt, setting it now for user ${uid}.`
         );
-        await change.after.ref.set(
+        await data.after.ref.set(
           {
             settings: {
               dataConsent: {
