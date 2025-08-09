@@ -21,6 +21,7 @@
   "dependencies": {
     "@genkit-ai/ai": "1.16.0",
     "@genkit-ai/core": "1.16.0",
+    "@genkit-ai/firebase": "^1.16.0",
     "@genkit-ai/googleai": "1.16.0",
     "@google/generative-ai": "^0.6.0",
     "@heroicons/react": "^2.0.18",

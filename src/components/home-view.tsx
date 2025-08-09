@@ -1,47 +1,45 @@
-// src/components/home-view.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
+import { useAuth } from './auth-provider';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { useToast } from '@/hooks/use-toast';
+import { InteractiveAvatar } from './interactive-avatar';
+import { Skeleton } from './ui/skeleton';
+import { Wand2 } from 'lucide-react';
+import { Cog } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { BrainCircuit } from 'lucide-react';
+import { Mic } from 'lucide-react';
+import { Footprints } from 'lucide-react';
+import { Hand } from 'lucide-react';
+import { Cloud } from 'lucide-react';
+import { Spade } from 'lucide-react';
+import { BotMessageSquare } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Sprout } from 'lucide-react';
+
+import HomeSidebar from './sidebar-home';
+import NoteForm from './note-form';
+import TorsoView from './torso-view';
+import LegsView from './legs-view';
+import ArmsView from './arms-view';
+import GroundView from './ground-view';
+import PassiveCameraCapture from './passive-camera-capture';
+import SymbolicInsightsView from './symbolic-insights-view';
+
+import { Button } from './ui/button';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { PersonCard } from './person-card';
+import { CognitiveZoneView } from './cognitive-zone-view';
+import { suggestRitualAction } from '@/app/actions';
+
+import type {
   Person, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection,
   Goal, Task, User, PersonaProfile
 } from '@/lib/types';
-
-import { suggestRitualAction } from '@/app/actions';
-import { useAuth } from './auth-provider';
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
-
-import { collection, query, where, onSnapshot, doc, orderBy, limit } from 'firebase/firestore';
-import { db, auth } from '@/lib/firebase';
-
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
-  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle
-} from './ui/alert-dialog';
-
-import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger
-} from './ui/tooltip';
-
-import {
-  BotMessageSquare, Users, Sprout, Wand2, Cog, LogOut,
-  BrainCircuit, Mic, Footprints, Hand, Cloud, Spade
-} from 'lucide-react';
-
-import { Button } from './ui/button';
-import { Skeleton } from './ui/skeleton';
-import { InteractiveAvatar } from './interactive-avatar';
-import { SettingsForm } from './settings-form';
-import { CompanionChatView } from './companion-chat-view';
-import { PersonCard } from './person-card';
-import { CognitiveZoneView } from './cognitive-zone-view';
-import { TorsoView } from './torso-view';
-import { LegsView } from './legs-view';
-import { ArmsView } from './arms-view';
-import { GroundView } from './ground-view';
-import { PassiveCameraCapture } from './passive-camera-capture';
-import { SymbolicInsightsView } from './symbolic-insights-view';
 
 type ActivePanel =
   | 'ritual' | 'bloom' | 'settings' | 'head' | 'torso' | 'legs'
@@ -213,200 +211,199 @@ export function HomeView() {
   }, [user]);
 
   return (
-    <>{/* DOM in part 2 or existing UI file split */}</>
-  );
-}
-<>
-  <PassiveCameraCapture />
+    <>
+      <PassiveCameraCapture />
 
-  <div className="relative w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden text-center">
-    {/* Animated sky background */}
-    <div style={getSkyStyle()} className="absolute inset-0 z-0 transition-all duration-1000" />
+      <div className="relative w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden text-center">
+        {/* Animated sky background */}
+        <div style={getSkyStyle()} className="absolute inset-0 z-0 transition-all duration-1000" />
 
-    {/* Clickable Sky & Ground zones */}
-    <div className="absolute top-0 left-0 right-0 h-1/3 cursor-pointer z-10" onClick={() => handleZoneClick('sky')} />
-    <div className="absolute bottom-0 left-0 right-0 h-1/4 cursor-pointer z-10" onClick={() => handleZoneClick('ground')} />
+        {/* Clickable Sky & Ground zones */}
+        <div className="absolute top-0 left-0 right-0 h-1/3 cursor-pointer z-10" onClick={() => handleZoneClick('sky')} />
+        <div className="absolute bottom-0 left-0 right-0 h-1/4 cursor-pointer z-10" onClick={() => handleZoneClick('ground')} />
 
-    {/* Top-right menu: Settings, Symbolic, SignOut */}
-    <div className="absolute top-4 right-4 z-20 flex gap-2">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" onClick={() => setActivePanel('symbolic')}>
-              <Wand2 className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Symbolic Insights</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" onClick={() => setActivePanel('settings')}>
-              <Cog className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Settings</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" onClick={handleSignOut}>
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Sign Out</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-
-    {/* Mood Display */}
-    <div className="relative z-10 w-full max-w-4xl animate-fadeIn">
-      {voiceEvents === undefined || dreams === undefined ? (
-        <div className="space-y-3">
-          <Skeleton className="h-8 w-3/4 mx-auto" />
-          <Skeleton className="h-4 w-1/2 mx-auto" />
+        {/* Top-right menu: Settings, Symbolic, SignOut */}
+        <div className="absolute top-4 right-4 z-20 flex gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => setActivePanel('symbolic')}>
+                  <Wand2 className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Symbolic Insights</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => setActivePanel('settings')}>
+                  <Cog className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Settings</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={handleSignOut}>
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Sign Out</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
-      ) : (
-        <>
-          <h1 className="text-3xl font-bold">Today’s Emotional Outlook</h1>
-          <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
-        </>
-      )}
-    </div>
 
-    {/* People Silhouettes */}
-    <TooltipProvider>
-      <div className="absolute inset-x-0 top-10 flex justify-center gap-8 opacity-50 z-10">
-        {people?.map((person, i) => (
-          <Tooltip key={person.id}>
-            <TooltipTrigger asChild>
-              <button onClick={() => handlePersonClick(person)} className="flex flex-col items-center cursor-pointer animate-fadeIn" style={{ animationDelay: `${i * 100}ms` }}>
-                <Users className="h-6 w-6" />
-                <span className="text-xs mt-1">{person.name}</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Social Silhouette: {person.name}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
-      </div>
-    </TooltipProvider>
-
-    {/* Avatar */}
-    <div className="relative z-10 w-full max-w-lg mt-4">
-      {auraState === undefined ? (
-        <Skeleton className="w-full h-full rounded-lg" />
-      ) : (
-        <InteractiveAvatar
-          mood={overallMood}
-          onZoneClick={handleZoneClick}
-          isLoading={isRitualLoading}
-          overlayColor={auraState?.overlayColor}
-          overlayStyle={auraState?.overlayStyle}
-        />
-      )}
-    </div>
-
-    {/* Companion Orb */}
-    <div
-      onClick={handleCompanionOrbClick}
-      className="relative z-20 mt-8 h-20 w-20 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer hover:scale-110"
-      style={{
-        boxShadow: auraState?.overlayColor
-          ? `0 0 20px 5px ${auraState.overlayColor}`
-          : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
-      }}
-    >
-      <BotMessageSquare className="h-9 w-9 text-primary animate-pulse" />
-    </div>
-
-    {/* Memory Blooms */}
-    <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
-      <TooltipProvider>
-        {memoryBlooms?.map((bloom, i) => (
-          <Tooltip key={bloom.bloomId}>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => handleBloomClick(bloom)}
-                className="animate-fadeIn"
-                style={{ animationDelay: `${500 + i * 150}ms` }}
-              >
-                <Sprout className="h-5 w-5 hover:scale-125 transition-transform" style={{ color: bloom.bloomColor }} />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{bloom.description}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
-      </TooltipProvider>
-    </div>
-
-    {/* Hint */}
-    <div className="absolute bottom-8 text-center z-10 text-xs text-muted-foreground w-full max-w-md">
-      <p>Tap your avatar to explore. The sky reflects your mood. Blooms are memory moments.</p>
-    </div>
-  </div>
-
-  {/* Active Panel Dialog */}
-  <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
-    <AlertDialogContent className={getPanelSize()}>
-      {activePanel === 'companion' ? (
-        <CompanionChatView />
-      ) : (
-        <>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5" />}
-              {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5" />}
-              {activePanel === 'torso' && <Mic className="text-primary h-5 w-5" />}
-              {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5" />}
-              {activePanel === 'arms' && <Hand className="text-primary h-5 w-5" />}
-              {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5" />}
-              {activePanel === 'ground' && <Spade className="text-primary h-5 w-5" />}
-              {panelContent?.title}
-            </AlertDialogTitle>
-            {panelContent?.description && (
-              <AlertDialogDescription className="pt-2">
-                {panelContent.description}
-              </AlertDialogDescription>
-            )}
-          </AlertDialogHeader>
-
-          {activePanel === 'settings' ? (
-            <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
-              <SettingsForm />
+        {/* Mood Display */}
+        <div className="relative z-10 w-full max-w-4xl animate-fadeIn">
+          {voiceEvents === undefined || dreams === undefined ? (
+            <div className="space-y-3">
+              <Skeleton className="h-8 w-3/4 mx-auto" />
+              <Skeleton className="h-4 w-1/2 mx-auto" />
             </div>
           ) : (
-            panelContent?.content && <div className="py-4 my-2 text-sm rounded-md">{panelContent.content}</div>
+            <>
+              <h1 className="text-3xl font-bold">Today’s Emotional Outlook</h1>
+              <p className="text-muted-foreground mt-2 mb-8">{moodDescription()}</p>
+            </>
           )}
-
-          <AlertDialogFooter>
-            {activePanel === 'settings' ? (
-              <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>
-            ) : (
-              <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>
-            )}
-          </AlertDialogFooter>
-        </>
-      )}
-    </AlertDialogContent>
-  </AlertDialog>
-
-  {/* Full-screen Symbolic Insights View */}
-  {activePanel === 'symbolic' && (
-    <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
-      <div className="container mx-auto p-4">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">Symbolic Life Tracking</h1>
-            <p className="text-muted-foreground">Advanced pattern recognition and mythic storytelling</p>
-          </div>
-          <Button variant="outline" onClick={() => setActivePanel(null)}>
-            Close
-          </Button>
         </div>
-        <SymbolicInsightsView />
+
+        {/* People Silhouettes */}
+        <TooltipProvider>
+          <div className="absolute inset-x-0 top-10 flex justify-center gap-8 opacity-50 z-10">
+            {people?.map((person, i) => (
+              <Tooltip key={person.id}>
+                <TooltipTrigger asChild>
+                  <button onClick={() => handlePersonClick(person)} className="flex flex-col items-center cursor-pointer animate-fadeIn" style={{ animationDelay: `${i * 100}ms` }}>
+                    <Users className="h-6 w-6" />
+                    <span className="text-xs mt-1">{person.name}</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Social Silhouette: {person.name}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        </TooltipProvider>
+
+        {/* Avatar */}
+        <div className="relative z-10 w-full max-w-lg mt-4">
+          {auraState === undefined ? (
+            <Skeleton className="w-full h-full rounded-lg" />
+          ) : (
+            <InteractiveAvatar
+              mood={overallMood}
+              onZoneClick={handleZoneClick}
+              isLoading={isRitualLoading}
+              overlayColor={auraState?.overlayColor}
+              overlayStyle={auraState?.overlayStyle}
+            />
+          )}
+        </div>
+
+        {/* Companion Orb */}
+        <div
+          onClick={handleCompanionOrbClick}
+          className="relative z-20 mt-8 h-20 w-20 mx-auto rounded-full bg-primary/20 flex items-center justify-center cursor-pointer hover:scale-110"
+          style={{
+            boxShadow: auraState?.overlayColor
+              ? `0 0 20px 5px ${auraState.overlayColor}`
+              : `0 0 20px 5px hsla(${overallMood * 60 + 60}, 100%, 70%, 0.5)`
+          }}
+        >
+          <BotMessageSquare className="h-9 w-9 text-primary animate-pulse" />
+        </div>
+
+        {/* Memory Blooms */}
+        <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
+          <TooltipProvider>
+            {memoryBlooms?.map((bloom, i) => (
+              <Tooltip key={bloom.bloomId}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => handleBloomClick(bloom)}
+                    className="animate-fadeIn"
+                    style={{ animationDelay: `${500 + i * 150}ms` }}
+                  >
+                    <Sprout className="h-5 w-5 hover:scale-125 transition-transform" style={{ color: bloom.bloomColor }} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{bloom.description}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </TooltipProvider>
+        </div>
+
+        {/* Hint */}
+        <div className="absolute bottom-8 text-center z-10 text-xs text-muted-foreground w-full max-w-md">
+          <p>Tap your avatar to explore. The sky reflects your mood. Blooms are memory moments.</p>
+        </div>
       </div>
-    </div>
-  )}
-</>
+
+      {/* Active Panel Dialog */}
+      <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
+        <AlertDialogContent className={getPanelSize()}>
+          {activePanel === 'companion' ? (
+            <CompanionChatView />
+          ) : (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  {activePanel === 'ritual' && <Wand2 className="text-primary h-5 w-5" />}
+                  {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5" />}
+                  {activePanel === 'torso' && <Mic className="text-primary h-5 w-5" />}
+                  {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5" />}
+                  {activePanel === 'arms' && <Hand className="text-primary h-5 w-5" />}
+                  {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5" />}
+                  {activePanel === 'ground' && <Spade className="text-primary h-5 w-5" />}
+                  {panelContent?.title}
+                </AlertDialogTitle>
+                {panelContent?.description && (
+                  <AlertDialogDescription className="pt-2">
+                    {panelContent.description}
+                  </AlertDialogDescription>
+                )}
+              </AlertDialogHeader>
+
+              {activePanel === 'settings' ? (
+                <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
+                  <SettingsForm />
+                </div>
+              ) : (
+                panelContent?.content && <div className="py-4 my-2 text-sm rounded-md">{panelContent.content}</div>
+              )}
+
+              <AlertDialogFooter>
+                {activePanel === 'settings' ? (
+                  <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>
+                ) : (
+                  <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>
+                )}
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Full-screen Symbolic Insights View */}
+      {activePanel === 'symbolic' && (
+        <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
+          <div className="container mx-auto p-4">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-3xl font-bold">Symbolic Life Tracking</h1>
+                <p className="text-muted-foreground">Advanced pattern recognition and mythic storytelling</p>
+              </div>
+              <Button variant="outline" onClick={() => setActivePanel(null)}>
+                Close
+              </Button>
+            </div>
+            <SymbolicInsightsView />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

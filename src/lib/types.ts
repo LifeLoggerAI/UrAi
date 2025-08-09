@@ -193,18 +193,104 @@ export const CompanionChatOutputSchema = z.object({
   emotion: z.string().optional().describe('Emotional tone of response'),
 });
 
-// Type exports for AI flows
-export type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
-export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
-export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
-export type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
-export type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
-export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
-export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
-export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+export const UpdateUserSettingsSchema = z.object({
+  displayName: z.string().optional(),
+  email: z.string().email().optional(),
+  // Add other user settings as needed
+});
+
+export const AnalyzeCameraImageInputSchema = z.object({
+  imageUrl: z.string().url().describe('URL of the image to analyze'),
+});
+
+export const AnalyzeCameraImageOutputSchema = z.object({
+  labels: z.array(z.string()).describe('Labels detected in the image'),
+  // Add other image analysis outputs as needed
+});
+
+export const EnrichVoiceEventInputSchema = z.object({
+  transcript: z.string().describe('The transcribed text of the voice event'),
+  // Add other relevant input fields for enrichment
+});
+
+export const EnrichVoiceEventOutputSchema = z.object({
+  sentiment: z.number().describe('Sentiment score of the voice event'),
+  keywords: z.array(z.string()).describe('Keywords extracted from the voice event'),
+  // Add other enriched data
+});
+
+export const GenerateAvatarInputSchema = z.object({
+  description: z.string().describe('Description of the avatar to generate'),
+  // Add other relevant input fields for avatar generation
+});
+
+export const GenerateAvatarOutputSchema = z.object({
+  avatarUrl: z.string().url().describe('URL of the generated avatar image'),
+});
+
+export const GenerateSymbolicInsightInputSchema = z.object({
+  context: z.string().describe('Context for generating symbolic insight (e.g., dream, reflection)'),
+});
+
+export const GenerateSymbolicInsightOutputSchema = z.object({
+  insight: z.string().describe('Generated symbolic insight'),
+  symbols: z.array(z.string()).describe('Symbols identified in the insight'),
+});
+
+export const ProcessOnboardingTranscriptInputSchema = z.object({
+  transcript: z.string().describe('The transcribed text from the onboarding process'),
+});
+
+export const ProcessOnboardingTranscriptOutputSchema = z.object({
+  summary: z.string().describe('Summary of the onboarding transcript'),
+  // Add other relevant processed data
+});
+
+export const SuggestRitualInputSchema = z.object({
+  mood: z.string().describe('Current mood or emotional state'),
+  goal: z.string().optional().describe('Optional goal for the ritual'),
+});
+
+export const SuggestRitualOutputSchema = z.object({
+  ritualName: z.string().describe('Name of the suggested ritual'),
+  description: z.string().describe('Description of the ritual steps'),
+});
+
+export const SummarizeTextInputSchema = z.object({
+  text: z.string().describe('Text content to summarize'),
+  maxLength: z.number().optional().describe('Maximum length of the summary'),
+});
+
+export const SummarizeTextOutputSchema = z.object({
+  summary: z.string().describe('Summarized text content'),
+});
+
+export const DashboardDataSchema = z.object({
+  totalNotes: z.number(),
+  recentDreams: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    date: z.string(),
+  })),
+  // Add other dashboard data as needed
+});
+
+export const MoodLogSchema = z.object({
+  mood: z.string(),
+  intensity: z.number().min(1).max(10),
+  notes: z.string().optional(),
+  timestamp: z.string(),
+});
+
+export const AuraStateSchema = z.object({
+  energy: z.number(),
+  mood: z.string(),
+  focus: z.number(),
+  vitality: z.number(),
+  timestamp: z.string(),
+});
 
 // New types for symbolic systems
-
 export interface ShadowMetrics {
   userId: string;
   frictionTaps: number;
@@ -289,3 +375,43 @@ export interface Scroll {
   insights: string[];
   createdAt: string;
 }
+
+// Type exports for AI flows
+export type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
+export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
+export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
+export type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
+export type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
+export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
+export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
+export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+
+export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
+export type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
+export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
+export type EnrichVoiceEventInput = z.infer<typeof EnrichVoiceEventInputSchema>;
+export type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
+export type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
+export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
+export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
+export type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
+export type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
+export type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
+export type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
+export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
+export type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
+export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
+export type DashboardData = z.infer<typeof DashboardDataSchema>;
+export type MoodLog = z.infer<typeof MoodLogSchema>;
+export type AuraState = z.infer<typeof AuraStateSchema>;
+
+// Export new symbolic types
+export type ShadowMetrics = ShadowMetrics;
+export type CrisisState = CrisisState;
+export type RecoveryBloom = RecoveryBloom;
+export type SoulThread = SoulThread;
+export type MetaLearningEntry = MetaLearningEntry;
+export type Insight = Insight;
+export type MoodForecast = MoodForecast;
+export type Ritual = Ritual;
+export type Scroll = Scroll;

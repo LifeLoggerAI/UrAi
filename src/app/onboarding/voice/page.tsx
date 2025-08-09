@@ -14,14 +14,13 @@ import {
 } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { processOnboardingVoiceAction } from '@/app/actions';
-import {
-  Loader2,
-  Mic,
-  BotMessageSquare,
-  CheckCircle2,
-  Square,
-  ShieldCheck,
-} from 'lucide-react';
+import { Loader2 } from 'lucide-react/icons/loader-2';
+import { Mic } from 'lucide-react/icons/mic';
+import { BotMessageSquare } from 'lucide-react/icons/bot-message-square';
+import { CheckCircle2 } from 'lucide-react/icons/check-circle-2';
+import { Square } from 'lucide-react/icons/square';
+import { ShieldCheck } from 'lucide-react/icons/shield-check';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { db } from '@/lib/firebase';
 import { doc, writeBatch, updateDoc, collection } from 'firebase/firestore';

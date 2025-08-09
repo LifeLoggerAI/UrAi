@@ -1,81 +1,87 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "./ui/carousel";
-import { ScrollArea } from "./ui/scroll-area";
-import { ListTodo, Handshake, Scale, GitPullRequestArrow, Waypoints } from "lucide-react";
-import { ActionExecutionView } from "./action-execution-view";
-import type { Task, VoiceEvent } from "@/lib/types";
+import { useEffect, useState } from 'react';
+import { useAuth } from './auth-provider';
+import { db } from '@/lib/firebase';
+import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
+import {
+  TrendingUp,
+  Zap,
+  Users,
+  ListTodo,
+  Handshake,
+  GitPullRequestArrow,
+  Waypoints,
+} from 'lucide-react';
 
 interface ArmsViewProps {
-  tasks: Task[];
-  voiceEvents: VoiceEvent[];
+  tasks: any[]; // Replace with actual Task type
+  voiceEvents: any[]; // Replace with actual VoiceEvent type
 }
 
-export function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
-  const panels = [
-    {
-      title: 'Action Execution',
-      icon: <ListTodo className="h-6 w-6 text-primary" />,
-      description: "Follow-through on tasks and intentions.",
-      content: (
-        <ScrollArea className="h-[55vh] -mr-4 pr-4">
-          <ActionExecutionView tasks={tasks} voiceEvents={voiceEvents} />
-        </ScrollArea>
-      )
-    },
-    {
-      title: 'Relational Gesture Map',
-      icon: <Handshake className="h-6 w-6 text-primary" />,
-      description: "Patterns of reaching out, supporting, and withdrawing.",
-      content: <p className="text-center text-muted-foreground mt-8">Gesture Map coming soon.</p>
-    },
-    {
-      title: 'Effort Allocation',
-      icon: <Scale className="h-6 w-6 text-primary" />,
-      description: "Balance of emotional and practical effort.",
-      content: <p className="text-center text-muted-foreground mt-8">Effort Allocation analysis coming soon.</p>
-    },
-    {
-      title: 'Help vs. Handoff',
-      icon: <GitPullRequestArrow className="h-6 w-6 text-primary" />,
-      description: "Analysis of delegation and support requests.",
-      content: <p className="text-center text-muted-foreground mt-8">Delegation Index coming soon.</p>
-    },
-    {
-      title: 'Connection Echoes',
-      icon: <Waypoints className="h-6 w-6 text-primary" />,
-      description: "The emotional impact of your interactions.",
-      content: <p className="text-center text-muted-foreground mt-8">Connection Echo scores coming soon.</p>
-    }
-  ];
+export default function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
+  const { user } = useAuth();
+  const [socialEngagement, setSocialEngagement] = useState<number>(0);
+  const [collabMetric, setCollabMetric] = useState<number>(0);
+  const [actionCompletionRate, setActionCompletionRate] = useState<number>(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Simulate data fetching and processing
+    const calculateMetrics = () => {
+      // Example calculations (replace with real logic)
+      const totalTasks = tasks.length;
+      const completedTasks = tasks.filter((task: any) => task.completed).length;
+      setActionCompletionRate(totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0);
+
+      const totalVoiceEvents = voiceEvents.length;
+      const socialVoiceEvents = voiceEvents.filter((event: any) => event.people && event.people.length > 0).length;
+      setSocialEngagement(totalVoiceEvents > 0 ? (socialVoiceEvents / totalVoiceEvents) * 100 : 0);
+
+      const collaborationVoiceEvents = voiceEvents.filter((event: any) => event.context && event.context.includes('collaboration')).length;
+      setCollabMetric(totalVoiceEvents > 0 ? (collaborationVoiceEvents / totalVoiceEvents) * 100 : 0);
+    };
+
+    calculateMetrics();
+
+    // You might also subscribe to real-time updates for tasks and voiceEvents here if needed
+  }, [user, tasks, voiceEvents]);
 
   return (
-    <Carousel className="w-full">
-      <CarouselContent>
-        {panels.map((panel, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card className="border-none shadow-none bg-transparent">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    {panel.icon}
-                    <div>
-                      <CardTitle>{panel.title}</CardTitle>
-                      <CardDescription>{panel.description}</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="h-[55vh] flex items-center justify-center p-4">
-                  {panel.content}
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Handshake className="h-8 w-8 text-primary" />
+          <div>
+            <h3 className="text-lg font-semibold">Social Engagement</h3>
+            <p className="text-muted-foreground">Interactions & Connections</p>
+          </div>
+        </div>
+        <span className="text-3xl font-bold text-primary">{socialEngagement.toFixed(0)}%</span>
+      </div>
+
+      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <GitPullRequestArrow className="h-8 w-8 text-primary" />
+          <div>
+            <h3 className="text-lg font-semibold">Collaboration Metric</h3>
+            <p className="text-muted-foreground">Teamwork & Contributions</p>
+          </div>
+        </div>
+        <span className="text-3xl font-bold text-primary">{collabMetric.toFixed(0)}%</span>
+      </div>
+
+      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between col-span-1 md:col-span-2">
+        <div className="flex items-center gap-3">
+          <Waypoints className="h-8 w-8 text-primary" />
+          <div>
+            <h3 className="text-lg font-semibold">Action Completion Rate</h3>
+            <p className="text-muted-foreground">Tasks Followed Through</p>
+          </div>
+        </div>
+        <span className="text-3xl font-bold text-primary">{actionCompletionRate.toFixed(0)}%</span>
+      </div>
+    </div>
   );
 }

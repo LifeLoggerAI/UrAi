@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {}, // Added turbopack configuration
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
