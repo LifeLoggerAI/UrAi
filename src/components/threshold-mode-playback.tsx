@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useAuth } from './auth-provider';
 import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';

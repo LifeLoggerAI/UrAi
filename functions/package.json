@@ -16,8 +16,7 @@
     "logs": "firebase functions:log",
     "lint": "eslint --ext .js,.ts .",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@genkit-ai/firebase": "^1.16.0",

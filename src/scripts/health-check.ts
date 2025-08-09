@@ -1,3 +1,4 @@
+
 #!/usr/bin/env tsx
 /**
  * AI Flow Health Check Script
@@ -98,7 +99,7 @@ async function testAnalyzeDream(): Promise<HealthCheckResult> {
 
   try {
     const result = await analyzeDream({
-      dreamText:
+      text:
         'I dreamed I was flying over a beautiful landscape with mountains and rivers.',
     });
 
@@ -130,7 +131,7 @@ async function testCompanionChat(): Promise<HealthCheckResult> {
   try {
     const result = await companionChat({
       message: 'Hello, how are you today?',
-      conversationHistory: [],
+      history: [],
     });
 
     const responseTime = Date.now() - startTime;

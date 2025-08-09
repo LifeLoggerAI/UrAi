@@ -124,7 +124,7 @@ export function SymbolicRebirthTracker() {
             const growthScore = calculateGrowthScore(moment.traitsBefore, moment.traitsAfter);
             
             return (
-              <div key={moment.rebirthId} className="border rounded-lg p-4 space-y-3 relative overflow-hidden">
+              <div key={moment.rebirthId || 'moment'} className="border rounded-lg p-4 space-y-3 relative overflow-hidden">
                 {moment.bloomUnlocked && (
                   <div className="absolute top-2 right-2">
                     <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
@@ -203,7 +203,7 @@ export function SymbolicRebirthTracker() {
 
                 <div className="flex items-center justify-between pt-2 border-t">
                   <div className="text-xs text-muted-foreground">
-                    Rebirth #{moment.rebirthId.split('_').pop()}
+                    Rebirth #{(moment.rebirthId || '').split('_').pop()}
                   </div>
                   <Tooltip>
                     <TooltipTrigger asChild>
