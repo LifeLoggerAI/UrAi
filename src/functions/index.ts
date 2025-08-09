@@ -30,3 +30,5 @@ export * from './soul-thread-map';
 export * from './meta-learning';
 export * from './causal-insight';
 export * from './projection-detector';
+
+export * from './generateWeeklyScroll';
