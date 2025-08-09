@@ -58,7 +58,7 @@ type Dream = {
   createdAt: string;
 };
 
-function DreamConstellationMap() {
+export function DreamConstellationMap() {
   const [dreams, setDreams] = useState<Dream[]>([]);
 
   useEffect(() => {
