@@ -8,8 +8,12 @@
     "start": "npx next start -p 3000",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "npx playwright test",
+    "test:models": "jest --testPathPattern=test/ai",
+    "test:e2e": "npx playwright test",
+    "test:e2e:install": "npx playwright install --with-deps",
+    "health-check": "tsx src/scripts/health-check.ts",
+    "ai:validate": "tsx src/scripts/validate-ai-config.ts"
   },
   "dependencies": {
     "@genkit-ai/firebase": "^1.16.0",
