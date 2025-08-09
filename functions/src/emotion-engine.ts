@@ -2,6 +2,7 @@
 import {
   onDocumentCreated,
   onDocumentUpdated,
+  onDocumentWritten,
 } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
@@ -81,20 +82,15 @@ function mapEmotionToColor(emotion: string): string {
 }
 
 // 1. updateAuraState – triggered on new moodLog
-export const updateAuraState = onDocumentCreated(
+export const updateAuraState = onDocumentWritten(
   'users/{uid}/moodLogs/{logId}',
-  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { uid: string, logId: string }>) => {
-    const { uid } = event.params;
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { uid: string, logId: string }>) => {
+    const { uid, logId } = event.params;
+    const data = event.data?.after.data() as MoodLog;
 
-    if (!event.data) {
-      logger.warn(`No data for moodLog ${event.params.logId}`);
-      return;
-    }
-    const data = event.data.data() as MoodLog;
-
-    if (!data.emotion || typeof data.intensity !== 'number') {
+    if (!data || !data.emotion || typeof data.intensity !== 'number') {
       logger.warn(
-        `Missing emotion or intensity for moodLog ${event.params.logId}`
+        `Missing emotion or intensity for moodLog ${logId}`
       );
       return;
     }
@@ -192,15 +188,15 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
   });
 
 // 3. triggerBloom – milestone bloom when recovery detected
-export const triggerBloom = onDocumentCreated(
+export const triggerBloom = onDocumentWritten(
   'users/{uid}/emotionCycles/{cycleId}',
-  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { uid: string, cycleId: string }>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { uid: string, cycleId: string }>) => {
     const { uid } = event.params;
-    if (!event.data) { // Added check for event.data
+    if (!event.data?.after) {
       logger.warn(`No data for emotionCycle ${event.params.cycleId}`);
       return;
     }
-    const cycleData = event.data.data() as EmotionCycle;
+    const cycleData = event.data.after.data() as EmotionCycle;
 
     if (cycleData.cycleType === 'recovery') {
       logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);

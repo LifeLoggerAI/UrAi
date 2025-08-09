@@ -1,12 +1,22 @@
-import { onDocumentWritten, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 
-export const detectShadowEpisode = onDocumentWritten('timelineEvents/{uid}/{eventId}', async (event) => {
-  const change: Change<DocumentSnapshot> | undefined = event.data;
-  const before = change?.before;
-  const after = change?.after;
-  if (!after?.exists) return;
-  const afterData = after.data();
-  const beforeData = before?.exists ? before.data() : undefined;
-  if (!afterData) return;
-  // ...
-});
+import { onDocumentWritten } from 'firebase-functions/v2/firestore';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { logger } from 'firebase-functions/v2';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
+
+/**
+ * Detects prolonged periods of negative emotion to create a shadow episode.
+ * Triggered on new timeline events. Placeholder.
+ */
+export const detectShadowEpisode = onDocumentWritten(
+  'timelineEvents/{uid}/{eventId}',
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { uid: string; eventId: string }>) => {
+    logger.info(
+      `Checking for shadow episode for user ${event.params.uid}.`
+    );
+    // Logic to check recent timelineEvents for negative tone.
+    // If criteria met, create/update a /shadowEpisodes document.
+    return null;
+  }
+);
