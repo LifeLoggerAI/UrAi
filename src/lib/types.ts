@@ -535,7 +535,7 @@ export const NarrativeLoopSchema = z.object({
 export type NarrativeLoop = z.infer<typeof NarrativeLoopSchema>;
 
 export const RebirthMomentSchema = z.object({
-  rebirthId: z.string(),
+  rebirthId: z.string().optional(),
   uid: z.string(),
   eventTrigger: z.string(),
   symbolicForm: z.string(),
