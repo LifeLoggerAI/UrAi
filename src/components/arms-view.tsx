@@ -5,10 +5,6 @@ import { useAuth } from './auth-provider';
 import { db } from '@/lib/firebase';
 import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
 import {
-  TrendingUp,
-  Zap,
-  Users,
-  ListTodo,
   Handshake,
   GitPullRequestArrow,
   Waypoints,
@@ -48,40 +44,44 @@ export default function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
     // You might also subscribe to real-time updates for tasks and voiceEvents here if needed
   }, [user, tasks, voiceEvents]);
 
+  const metrics = [
+    {
+      key: 'socialEngagement',
+      icon: <Handshake className="h-8 w-8 text-primary" />,
+      title: 'Social Engagement',
+      description: 'Interactions & Connections',
+      value: `${socialEngagement.toFixed(0)}%`,
+    },
+    {
+      key: 'collabMetric',
+      icon: <GitPullRequestArrow className="h-8 w-8 text-primary" />,
+      title: 'Collaboration Metric',
+      description: 'Teamwork & Contributions',
+      value: `${collabMetric.toFixed(0)}%`,
+    },
+    {
+      key: 'actionCompletionRate',
+      icon: <Waypoints className="h-8 w-8 text-primary" />,
+      title: 'Action Completion Rate',
+      description: 'Tasks Followed Through',
+      value: `${actionCompletionRate.toFixed(0)}%`,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Handshake className="h-8 w-8 text-primary" />
-          <div>
-            <h3 className="text-lg font-semibold">Social Engagement</h3>
-            <p className="text-muted-foreground">Interactions & Connections</p>
+      {metrics.map((metric) => (
+        <div key={metric.key} className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between col-span-1 md:col-span-2">
+          <div className="flex items-center gap-3">
+            {metric.icon}
+            <div>
+              <h3 className="text-lg font-semibold">{metric.title}</h3>
+              <p className="text-muted-foreground">{metric.description}</p>
+            </div>
           </div>
+          <span className="text-3xl font-bold text-primary">{metric.value}</span>
         </div>
-        <span className="text-3xl font-bold text-primary">{socialEngagement.toFixed(0)}%</span>
-      </div>
-
-      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <GitPullRequestArrow className="h-8 w-8 text-primary" />
-          <div>
-            <h3 className="text-lg font-semibold">Collaboration Metric</h3>
-            <p className="text-muted-foreground">Teamwork & Contributions</p>
-          </div>
-        </div>
-        <span className="text-3xl font-bold text-primary">{collabMetric.toFixed(0)}%</span>
-      </div>
-
-      <div className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between col-span-1 md:col-span-2">
-        <div className="flex items-center gap-3">
-          <Waypoints className="h-8 w-8 text-primary" />
-          <div>
-            <h3 className="text-lg font-semibold">Action Completion Rate</h3>
-            <p className="text-muted-foreground">Tasks Followed Through</p>
-          </div>
-        </div>
-        <span className="text-3xl font-bold text-primary">{actionCompletionRate.toFixed(0)}%</span>
-      </div>
+      ))}
     </div>
   );
 }
