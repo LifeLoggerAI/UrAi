@@ -1,12 +1,11 @@
 
 import {
-  onDocumentCreated,
-  onDocumentUpdated,
   onDocumentWritten,
+  onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import type { FirestoreEvent, Change, QueryDocumentSnapshot, DocumentSnapshot } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import type { AuraState, MemoryBloom, MoodLog, EmotionCycle } from '../../src/lib/types';
