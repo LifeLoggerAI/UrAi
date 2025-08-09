@@ -1,18 +1,11 @@
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
-import { getFirestore } from 'firebase-admin/firestore';
-import { initializeApp } from 'firebase-admin/app';
-
-// Declare global type for admin app flag
-declare global {
-  var ADMIN_APP_INITIALIZED: boolean | undefined;
-}
+import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
-if (!global.ADMIN_APP_INITIALIZED) {
-  initializeApp();
-  global.ADMIN_APP_INITIALIZED = true;
+if (admin.apps.length === 0) {
+  admin.initializeApp();
 }
-const db = getFirestore();
+const db = admin.firestore();
 
 export const updateShadowMetrics = onDocumentWritten('voiceEvents/{id}', async (event) => {
   const data = event.data?.after?.data();
