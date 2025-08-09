@@ -1,0 +1,174 @@
+[debug] [2025-08-09T22:55:34.045Z] ----------------------------------------------------------------------
+[debug] [2025-08-09T22:55:34.048Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /home/user/.global_modules/bin/firebase init
+[debug] [2025-08-09T22:55:34.049Z] CLI Version:   14.11.2
+[debug] [2025-08-09T22:55:34.049Z] Platform:      linux
+[debug] [2025-08-09T22:55:34.049Z] Node Version:  v20.19.1
+[debug] [2025-08-09T22:55:34.049Z] Time:          Sat Aug 09 2025 22:55:34 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-08-09T22:55:34.050Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-08-09T22:55:34.686Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-09T22:55:34.687Z] > authorizing via signed-in user (lifeloggerai@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/user/studio
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-08-09T22:55:36.198Z] Using project from CLI flag: lifelogger-clean
+[debug] [2025-08-09T22:55:36.206Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.212Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.223Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/lifelogger-clean [none]
+[debug] [2025-08-09T22:55:36.634Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/lifelogger-clean 200
+[debug] [2025-08-09T22:55:36.634Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/lifelogger-clean {"projectId":"lifelogger-clean","projectNumber":"360527756764","displayName":"UrAi","name":"projects/lifelogger-clean","resources":{"hostingSite":"lifelogger-clean","realtimeDatabaseInstance":"lifelogger-clean-default-rtdb"},"state":"ACTIVE","etag":"1_f1b0c7ef-f626-473b-abb4-5fd281761a74"}
+[info] i  Using project lifelogger-clean (UrAi) 
+[info] 
+=== Dataconnect Setup
+[debug] [2025-08-09T22:55:36.647Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.647Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.647Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/lifelogger-clean/billingInfo [none]
+[debug] [2025-08-09T22:55:36.764Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/lifelogger-clean/billingInfo 200
+[debug] [2025-08-09T22:55:36.764Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/lifelogger-clean/billingInfo {"name":"projects/lifelogger-clean/billingInfo","projectId":"lifelogger-clean","billingAccountName":"","billingEnabled":false}
+[info] i  dataconnect: ensuring required API sqladmin.googleapis.com is enabled... 
+[debug] [2025-08-09T22:55:36.767Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.768Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:36.768Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/sqladmin.googleapis.com [none]
+[debug] [2025-08-09T22:55:36.768Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/sqladmin.googleapis.com x-goog-quota-user=projects/lifelogger-clean
+[debug] [2025-08-09T22:55:37.061Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/sqladmin.googleapis.com 200
+[debug] [2025-08-09T22:55:37.062Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/sqladmin.googleapis.com [omitted]
+[info] ✔  dataconnect: required API sqladmin.googleapis.com is enabled 
+[debug] [2025-08-09T22:55:37.074Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:37.075Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:55:37.075Z] >>> [apiv2][query] GET https://firebasedataconnect.googleapis.com/v1/projects/lifelogger-clean/locations/-/services [none]
+[debug] [2025-08-09T22:55:37.619Z] <<< [apiv2][status] GET https://firebasedataconnect.googleapis.com/v1/projects/lifelogger-clean/locations/-/services 200
+[debug] [2025-08-09T22:55:37.620Z] <<< [apiv2][body] GET https://firebasedataconnect.googleapis.com/v1/projects/lifelogger-clean/locations/-/services {}
+[info] ✔  Wrote dataconnect/dataconnect.yaml 
+[info] i  dataconnect/schema/schema.gql is unchanged 
+[info] ✔  Wrote dataconnect/connector/connector.yaml 
+[info] ✔  Wrote dataconnect/connector/queries.gql 
+[info] ✔  Wrote dataconnect/connector/mutations.gql 
+[info] ✔  Detected WEB app in directory /home/user/studio 
+[info] i  Detected react app. Enabling react generated SDKs. 
+[info] i  Writing your new SDK configuration to /home/user/studio/dataconnect/connector/connector.yaml 
+[info] ✔  Wrote dataconnect/connector/connector.yaml 
+[info] i  dataconnect: downloading dataconnect-emulator-2.10.1... {"metadata":{"emulator":{"name":"dataconnect"},"message":"downloading dataconnect-emulator-2.10.1..."}}
+[debug] [2025-08-09T22:56:24.921Z] >>> [apiv2][query] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-linux-v2.10.1 
+[debug] [2025-08-09T22:56:25.036Z] <<< [apiv2][status] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-linux-v2.10.1 200
+[debug] [2025-08-09T22:56:25.037Z] <<< [apiv2][body] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-linux-v2.10.1 [stream]
+[debug] [2025-08-09T22:56:26.352Z] defaultcredentials: writing to file /home/user/.config/firebase/lifeloggerai_gmail_com_application_default_credentials.json
+[info] I0809 22:56:26.438461    3307 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "/home/user/studio/dataconnect-generated/js/default-connector"
+I0809 22:56:26.454138    3307 generate.go:40] Generated all sources. Writing them to disk...
+I0809 22:56:26.455852    3307 collector.go:107] connector "default" javascriptSdk wrote into "/home/user/studio/dataconnect-generated/js/default-connector"
+Generated sources: react/index.d.ts [228B] react/package.json [468B] react/index.cjs.js [0B] react/README.md [5474B] index.d.ts [248B] esm/index.esm.js [109B] esm/package.json [17B] index.cjs.js [144B] README.md [2896B] react/esm/package.json [17B] react/esm/index.esm.js [0B] package.json [860B] 
+I0809 22:56:26.461277    3307 installsdk.go:86] Running command: /usr/bin/npm install file:dataconnect-generated/js/default-connector
+
+[info] i  Generated SDK code for default 
+[info] i  Visit https://firebase.google.com/docs/data-connect/web-sdk#react for more information on how to set up React Generated SDKs for Firebase Data Connect 
+[info] ✔  If you'd like to add more generated SDKs to your app your later, run firebase init dataconnect:sdk again 
+[info] i  If you'd like to provision a CloudSQL Postgres instance on the Firebase Data Connect no-cost trial:
+1. Please upgrade to the pay-as-you-go (Blaze) billing plan. Visit the following page:
+     https://console.firebase.google.com/project/lifelogger-clean/usage/details
+2. Run firebase init dataconnect again to configure the Cloud SQL instance.
+3. Run firebase deploy --only dataconnect to deploy your Data Connect service. 
+[info] 
+=== Firestore Setup
+[info] i  firestore: ensuring required API firestore.googleapis.com is enabled... 
+[debug] [2025-08-09T22:56:37.693Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:37.693Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:37.696Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/firestore.googleapis.com [none]
+[debug] [2025-08-09T22:56:37.696Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/firestore.googleapis.com x-goog-quota-user=projects/lifelogger-clean
+[debug] [2025-08-09T22:56:38.053Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/firestore.googleapis.com 200
+[debug] [2025-08-09T22:56:38.067Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/firestore.googleapis.com [omitted]
+[info] ✔  firestore: required API firestore.googleapis.com is enabled 
+[debug] [2025-08-09T22:56:38.098Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.098Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.109Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases [none]
+[debug] [2025-08-09T22:56:38.604Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases 200
+[debug] [2025-08-09T22:56:38.604Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases {"databases":[{"name":"projects/lifelogger-clean/databases/(default)","uid":"c878dffa-e445-4c57-a904-d44886356f30","createTime":"2025-07-04T04:24:58.290231Z","updateTime":"2025-07-04T04:24:58.290231Z","locationId":"nam5","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2025-08-09T21:56:38.584424Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"s","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"etag":"IL+rhtPp/o4DMP7M6Yf6o44D"}]}
+[info] 
+[info] Firestore Security Rules allow you to define how and when to allow
+[info] requests. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[debug] [2025-08-09T22:56:38.635Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.635Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.636Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/releases pageSize=10&pageToken=
+[debug] [2025-08-09T22:56:38.851Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/releases 200
+[debug] [2025-08-09T22:56:38.856Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/releases {"releases":[{"name":"projects/lifelogger-clean/releases/cloud.firestore","rulesetName":"projects/lifelogger-clean/rulesets/b9c6fd9d-d2e5-4a35-8387-9c3ab7f3bc4f","createTime":"2025-07-04T04:25:05.592093Z","updateTime":"2025-08-03T20:49:28.268734Z"},{"name":"projects/lifelogger-clean/releases/firebase.storage/lifelogger-clean.firebasestorage.app","rulesetName":"projects/lifelogger-clean/rulesets/44744bb2-c7cf-4d38-83b7-f167ed367c95","createTime":"2025-07-04T04:28:07.885821Z","updateTime":"2025-08-03T20:49:27.972912Z"}]}
+[debug] [2025-08-09T22:56:38.932Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.932Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:56:38.933Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/rulesets/b9c6fd9d-d2e5-4a35-8387-9c3ab7f3bc4f [none]
+[debug] [2025-08-09T22:56:39.056Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/rulesets/b9c6fd9d-d2e5-4a35-8387-9c3ab7f3bc4f 200
+[debug] [2025-08-09T22:56:39.057Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/lifelogger-clean/rulesets/b9c6fd9d-d2e5-4a35-8387-9c3ab7f3bc4f [omitted]
+[info] i  Downloaded the existing Firestore Security Rules from the Firebase console 
+[info] i  Skipping write of firestore.rules 
+[info] 
+[info] Firestore indexes allow you to perform complex queries while
+[info] maintaining performance that scales with the size of the result
+[info] set. You can keep index definitions in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[debug] [2025-08-09T22:57:23.395Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:57:23.399Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:57:23.400Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:57:23.400Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:57:23.400Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/indexes [none]
+[debug] [2025-08-09T22:57:23.408Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* [none]
+[debug] [2025-08-09T22:57:23.712Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* 200
+[debug] [2025-08-09T22:57:23.712Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* {"fields":[{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/__default__/fields/*","indexConfig":{"indexes":[{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"ASCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"DESCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","arrayConfig":"CONTAINS"}],"state":"READY"}]}}]}
+[debug] [2025-08-09T22:57:23.726Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/indexes 200
+[debug] [2025-08-09T22:57:23.726Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/lifelogger-clean/databases/(default)/collectionGroups/-/indexes {"indexes":[{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/dreamEvents/indexes/CICAgJim14AK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/voiceEvents/indexes/CICAgOjXh4EK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/innerTexts/indexes/CICAgJj7z4EK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/dreamEvents/indexes/CICAgJjF9oIK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"createdAt","order":"ASCENDING"},{"fieldPath":"__name__","order":"ASCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/voiceEvents/indexes/CICAgJiUpoMK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"createdAt","order":"ASCENDING"},{"fieldPath":"__name__","order":"ASCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/people/indexes/CICAgNi47oMK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"lastSeen","order":"ASCENDING"},{"fieldPath":"__name__","order":"ASCENDING"}],"state":"READY","density":"SPARSE_ALL"},{"name":"projects/lifelogger-clean/databases/(default)/collectionGroups/people/indexes/CICAgJjmiJEK","queryScope":"COLLECTION","fields":[{"fieldPath":"uid","order":"ASCENDING"},{"fieldPath":"lastSeen","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"}]}
+[info] i  Downloaded the existing Firestore indexes from the Firebase console 
+[info] i  Skipping write of firestore.indexes.json 
+[info] ✔  Wrote firestore.indexes.json 
+[info] 
+=== Genkit Setup
+[debug] [2025-08-09T22:58:02.119Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-09T22:58:02.120Z] > authorizing via signed-in user (lifeloggerai@gmail.com)
+[debug] [2025-08-09T22:58:02.121Z] [iam] checking project lifelogger-clean for permissions ["firebase.projects.get"]
+[debug] [2025-08-09T22:58:02.122Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.122Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.125Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/lifelogger-clean:testIamPermissions [none]
+[debug] [2025-08-09T22:58:02.126Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/lifelogger-clean:testIamPermissions x-goog-quota-user=projects/lifelogger-clean
+[debug] [2025-08-09T22:58:02.126Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/lifelogger-clean:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-08-09T22:58:02.282Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/lifelogger-clean:testIamPermissions 200
+[debug] [2025-08-09T22:58:02.282Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/lifelogger-clean:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-08-09T22:58:02.285Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.286Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.286Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.286Z] Checked if tokens are valid: true, expires at: 1754783725556
+[debug] [2025-08-09T22:58:02.286Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-08-09T22:58:02.286Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/lifelogger-clean
+[debug] [2025-08-09T22:58:02.294Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-08-09T22:58:02.294Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/lifelogger-clean
+[debug] [2025-08-09T22:58:02.572Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/cloudfunctions.googleapis.com 200
+[debug] [2025-08-09T22:58:02.572Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2025-08-09T22:58:02.593Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/runtimeconfig.googleapis.com 200
+[debug] [2025-08-09T22:58:02.593Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/lifelogger-clean/services/runtimeconfig.googleapis.com [omitted]
+[info] 
+Detected existing codebase(s): default
+
+[info] Let's create a new codebase for your functions.
+[info] A directory corresponding to the codebase will be created in your project
+[info] with sample code pre-configured.
+
+[info] See https://firebase.google.com/docs/functions/organize-functions for
+[info] more information on organizing your functions using codebases.
+
+[info] Functions can be deployed with firebase deploy.
+

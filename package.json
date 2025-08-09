@@ -1,4 +1,3 @@
-
 {
   "name": "urai",
   "version": "1.0.0",
@@ -16,6 +15,7 @@
     "ai:validate": "tsx src/scripts/validate-ai-config.ts"
   },
   "dependencies": {
+    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@genkit-ai/firebase": "^1.16.0",
     "@genkit-ai/googleai": "^1.16.0",
     "@hookform/resolvers": "^5.2.1",
