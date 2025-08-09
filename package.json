@@ -21,7 +21,6 @@
   "dependencies": {
     "@genkit-ai/ai": "1.16.0",
     "@genkit-ai/core": "1.16.0",
-    "@genkit-ai/firebase": "^1.16.0",
     "@genkit-ai/googleai": "1.16.0",
     "@google/generative-ai": "^0.6.0",
     "@heroicons/react": "^2.0.18",
@@ -39,7 +38,6 @@
     "@radix-ui/react-switch": "^1.2.5",
     "@radix-ui/react-tabs": "^1.1.12",
     "@radix-ui/react-toast": "^1.2.14",
-    "@radix-ui/react-tooltip": "^1.2.7",
     "@tanstack/react-query": "^5.29.3",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
