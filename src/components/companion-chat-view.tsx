@@ -9,10 +9,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
-import { BotMessageSquare } from 'lucide-react/icons/bot-message-square';
-import { CornerDownLeft } from 'lucide-react/icons/corner-down-left';
-import { Loader2 } from 'lucide-react/icons/loader-2';
-import { User } from 'lucide-react/icons/user';
+import { BotMessageSquare, CornerDownLeft, Loader2, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from './ui/skeleton';
 

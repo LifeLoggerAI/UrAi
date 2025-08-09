@@ -2,32 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from './auth-provider';
-import { db } from '@/lib/firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
+import { doc, onSnapshot, query, collection, where, orderBy, limit } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { InteractiveAvatar } from './interactive-avatar';
 import { Skeleton } from './ui/skeleton';
-import { Wand2 } from 'lucide-react';
-import { Cog } from 'lucide-react';
-import { LogOut } from 'lucide-react';
-import { BrainCircuit } from 'lucide-react';
-import { Mic } from 'lucide-react';
-import { Footprints } from 'lucide-react';
-import { Hand } from 'lucide-react';
-import { Cloud } from 'lucide-react';
-import { Spade } from 'lucide-react';
-import { BotMessageSquare } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { Sprout } from 'lucide-react';
+import { Wand2, Cog, LogOut, BrainCircuit, Mic, Footprints, Hand, Cloud, Spade, BotMessageSquare, Users, Sprout } from 'lucide-react';
 
 import HomeSidebar from './sidebar-home';
-import NoteForm from './note-form';
 import TorsoView from './torso-view';
-import LegsView from './legs-view';
-import ArmsView from './arms-view';
-import GroundView from './ground-view';
-import PassiveCameraCapture from './passive-camera-capture';
-import SymbolicInsightsView from './symbolic-insights-view';
+import { LegsView } from './legs-view';
+import { GroundView } from './ground-view';
+import { PassiveCameraCapture } from './passive-camera-capture';
+import { SymbolicInsightsView } from './symbolic-insights-view';
 
 import { Button } from './ui/button';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from './ui/alert-dialog';
@@ -35,6 +23,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/t
 import { PersonCard } from './person-card';
 import { CognitiveZoneView } from './cognitive-zone-view';
 import { suggestRitualAction } from '@/app/actions';
+import { CompanionChatView } from './companion-chat-view';
+import { SettingsForm } from './settings-form';
+import ArmsView from './arms-view';
 
 import type {
   Person, AuraState, MemoryBloom, Dream, VoiceEvent, InnerVoiceReflection,
@@ -143,7 +134,7 @@ export function HomeView() {
       })
     };
 
-    if (panelMap[zone]) {
+    if (zone && panelMap[zone]) {
       panelMap[zone]();
       setActivePanel(zone);
     }

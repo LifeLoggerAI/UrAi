@@ -20,6 +20,7 @@ import {
   where,
   getDocs,
   orderBy,
+  getDoc,
 } from 'firebase/firestore';
 import { transcribeAudio } from '@/ai/flows/transcribe-audio';
 import { summarizeText } from '@/ai/flows/summarize-text';
@@ -430,9 +431,9 @@ export async function exportUserDataAction(userId: string): Promise<{ success: b
 
         // Fetch user profile
         const userRef = doc(db, 'users', userId);
-        const userDoc = await getDocs(query(collection(db, 'users'), where('__name__', '==', userId)));
-        if (!userDoc.empty) {
-            userData.user = userDoc.docs[0].data();
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+            userData.user = userDoc.data();
         }
 
         // Fetch voice events

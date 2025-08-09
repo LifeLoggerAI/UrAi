@@ -16,7 +16,7 @@ import {
   Users,
   ListTodo,
 } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from './ui/progress';
 
 export function NoteCard({ item }: { item: VoiceEvent }) {
   const date = new Date(item.createdAt).toLocaleString(undefined, {
