@@ -1,3 +1,5 @@
+'use server';
+
 // Import the Genkit core libraries and plugins.
 import { genkit, z } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
@@ -10,7 +12,7 @@ import { gemini20Flash } from '@genkit-ai/googleai';
 // function from a Genkit action. It automatically implements streaming if your flow does.
 // The https library also has other utility methods such as hasClaim, which verifies that
 // a caller's token has a specific claim (optionally matching a specific value)
-import { onCallGenkit, hasClaim } from 'firebase-functions/https';
+import { onCallGenkit } from 'firebase-functions/v2/https';
 
 // Genkit models generally depend on an API key. APIs should be stored in Cloud Secret Manager so that
 // access to these sensitive values can be controlled. defineSecret does this for you automatically.
