@@ -40,6 +40,3 @@ export * from './soul-thread-map';
 export * from './meta-learning';
 export * from './causal-insight';
 export * from './projection-detector';
-
-// Optional: Sample or debug/test functions
-export * from './helloWorld';

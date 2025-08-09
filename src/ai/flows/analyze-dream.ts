@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -18,7 +19,7 @@ import {
 
 export async function analyzeDream(
   input: AnalyzeDreamInput
-): Promise<AnalyzeDreamOutput | null> {
+): Promise<AnalyzeDreamOutput> {
   return analyzeDreamFlow(input);
 }
 
@@ -46,6 +47,14 @@ const analyzeDreamFlow = ai.defineFlow(
   },
   async input => {
     const { output } = await prompt(input);
+    if (!output) {
+        return {
+            emotions: [],
+            themes: ['analysis_failed'],
+            symbols: [],
+            sentimentScore: 0,
+        };
+    }
     return output;
   }
 );
