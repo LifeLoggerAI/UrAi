@@ -1,3 +1,4 @@
+
 /**
  * Firebase Function Entry Point
  * See: https://firebase.google.com/docs/functions/typescript
@@ -17,8 +18,7 @@ export * from './social-engine';
 export * from './timeline-engine';
 export * from './data-privacy';
 
-// Scheduled + messaging systems
-export * from './scheduled';
+// Messaging systems
 export * from './notifications';
 export * from './email-engine';
 
