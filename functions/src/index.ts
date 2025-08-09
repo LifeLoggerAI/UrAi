@@ -4,9 +4,6 @@
  * See: https://firebase.google.com/docs/functions/typescript
  */
 
-// Genkit flows
-export * from './genkit-sample';
-
 // Core feature modules
 export * from './user-management';
 export * from './emotion-engine';

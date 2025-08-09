@@ -12,7 +12,6 @@ import { googleAI } from '@genkit-ai/googleai';
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
-const db = admin.firestore();
 
 const ai = genkit({
   plugins: [googleAI()],
