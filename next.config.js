@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {}, // Added turbopack configuration
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -52,17 +53,7 @@ const nextConfig = {
   devIndicators: {
     allowedDevOrigins: ['https://*.cloudworkstations.dev'],
   },
-  // Enable build caching
-  experimental: {
-    turbo: {
-      rules: {
-        '*.hbs': {
-          loaders: ['handlebars-loader'],
-          as: '*.js',
-        },
-      },
-    },
-  },
+  // Removed experimental.turbo block
 };
 
 module.exports = nextConfig;
