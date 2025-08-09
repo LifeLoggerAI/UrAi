@@ -1,7 +1,7 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import { logger } from "firebase-functions/v2";
-import type { FirestoreEvent } from "firebase-functions/v2/firestore";
+import type { FirestoreEvent, DocumentSnapshot } from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import * as sgMail from "@sendgrid/mail";
 import { defineSecret } from "firebase-functions/params";
@@ -23,7 +23,7 @@ export const sendTransactionalEmail = onDocumentCreated(
     document: "emails/{emailId}",
     secrets: [sendgridKey],
   },
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, { emailId: string }>) => {
     const emailData = event.data?.data();
 
     if (!emailData || !emailData.to) {
