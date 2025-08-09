@@ -1,5 +1,17 @@
 {
-  "extends": "./tsconfig.json",
-  "include": ["src/index.ts"], 
-  "exclude": ["**/__tests__/**", "**/*.test.ts", "test", "lib", "node_modules"]
+  "compileOnSave": true,
+  "include": ["src"],
+  "exclude": ["**/__tests__/**", "**/*.test.ts", "test", "lib", "node_modules"],
+  "compilerOptions": {
+    "module": "NodeNext",
+    "noImplicitReturns": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext",
+    "noUnusedLocals": true
+  }
 }

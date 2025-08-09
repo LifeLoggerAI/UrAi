@@ -7,7 +7,7 @@ import { logger } from 'firebase-functions/v2';
 import type { FirestoreEvent, Change, QueryDocumentSnapshot, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
-import type { AuraState, MemoryBloom } from '../../src/lib/types';
+import type { AuraState, MemoryBloom, MoodLog, EmotionCycle } from '../../src/lib/types';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -89,7 +89,7 @@ export const updateAuraState = onDocumentCreated(
       logger.warn(`No data for moodLog ${event.params.logId}`);
       return;
     }
-    const data = event.data.data();
+    const data = event.data.data() as MoodLog;
 
     if (!data.emotion || typeof data.intensity !== 'number') {
       logger.warn(
@@ -138,7 +138,7 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
         return;
       }
 
-      const logs = moodLogsSnap.docs.map(doc => doc.data());
+      const logs = moodLogsSnap.docs.map(doc => doc.data() as MoodLog);
 
       const emotionCounts: { [key: string]: number } = {};
       let totalIntensity = 0;
@@ -152,7 +152,7 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
       );
       const avgIntensity = totalIntensity / logs.length;
 
-      let cycleType = 'neutral';
+      let cycleType: 'neutral' | 'recovery' | 'strain' = 'neutral';
       const positiveEmotions = ['joy', 'calm', 'recovery'];
       const negativeEmotions = ['sadness', 'anger', 'anxiety'];
 
@@ -172,13 +172,14 @@ export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
       const windowStart = oneHourAgo;
 
       try {
-        await db.collection(`users/${uid}/emotionCycles`).doc(cycleId).set({
+        const emotionCycle: EmotionCycle = {
           windowStart,
           dominantEmotion,
           avgIntensity,
           cycleType,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
+          createdAt: Date.now(),
+        };
+        await db.collection(`users/${uid}/emotionCycles`).doc(cycleId).set(emotionCycle);
         logger.info(`Created new emotion cycle ${cycleId} for user ${uid}.`);
       } catch (error) {
         logger.error(`Failed to create emotionCycle for user ${uid}:`, error);
@@ -198,7 +199,7 @@ export const triggerBloom = onDocumentCreated(
       logger.warn(`No data for emotionCycle ${event.params.cycleId}`);
       return;
     }
-    const cycleData = event.data.data();
+    const cycleData = event.data.data() as EmotionCycle;
 
     if (cycleData.cycleType === 'recovery') {
       logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
@@ -246,7 +247,7 @@ export const detectRecoveryBloomOnAuraUpdate = onDocumentUpdated(
       );
       try {
         const bloomId = uuidv4();
-        const memoryBloomPayload: Omit<MemoryBloom, 'triggeredAt'> & {
+        const memoryBloomPayload: Omit<MemoryBloom, 'triggeredAt' | 'id'> & {
           triggeredAt: admin.firestore.FieldValue;
         } = {
           bloomId: bloomId,

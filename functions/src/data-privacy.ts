@@ -2,11 +2,12 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import {
   onDocumentWritten,
   onDocumentUpdated,
+  Change,
 } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -92,7 +93,7 @@ export const exportUserData = onCall(async (request: CallableRequest) => {
  */
 export const storeConsentAudit = onDocumentWritten(
   'permissions/{uid}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string}>) => {
     const { uid } = event.params;
     const consentData = event.data?.after.data();
 
@@ -233,9 +234,12 @@ export const rejectDarRequest = onCall(async (request: CallableRequest) => {
  */
 export const cleanupOptOut = onDocumentUpdated(
   'users/{uid}',
-  async (event: FirestoreEvent<any>) => {
-    const beforeSettings = event.data?.before.data().settings || {};
-    const afterSettings = event.data?.after.data().settings || {};
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string}>) => {
+    const change = event.data;
+    if (!change) return;
+
+    const beforeSettings = change.before.data()?.settings || {};
+    const afterSettings = change.after.data()?.settings || {};
 
     const beforeConsent = beforeSettings.dataConsent?.shareAnonymousData;
     const afterConsent = afterSettings.dataConsent?.shareAnonymousData;
@@ -248,7 +252,7 @@ export const cleanupOptOut = onDocumentUpdated(
         logger.info(
           `Client did not set optedOutAt, setting it now for user ${uid}.`
         );
-        await event.data.after.ref.set(
+        await change.after.ref.set(
           {
             settings: {
               dataConsent: {
