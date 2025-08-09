@@ -6,6 +6,7 @@ import type { CallableRequest } from 'firebase-functions/v2/https';
 import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 import cors from 'cors';
+import { z } from 'zod';
 
 // import the Genkit and Google AI plugin libraries
 import { gemini15Flash, googleAI } from '@genkit-ai/googleai';

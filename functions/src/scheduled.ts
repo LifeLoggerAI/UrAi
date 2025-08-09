@@ -1,8 +1,7 @@
+
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
+import { logger } from 'firebase-functions/v2';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -14,10 +13,7 @@ const db = admin.firestore();
  * Generates a weekly scroll export for all users.
  * This is a placeholder; a real implementation would generate a PDF or interactive export.
  */
-export const generateWeeklyScroll = functions.pubsub
-  .schedule('every monday 08:00')
-  .timeZone('America/New_York') // Example timezone
-  .onRun(async context => {
+export const generateWeeklyScroll = onSchedule('every monday 08:00', async context => {
     logger.info('Starting weekly scroll export job for all users.');
     // In a real application, this function would:
     // 1. Query for all users.
@@ -32,10 +28,7 @@ export const generateWeeklyScroll = functions.pubsub
  * Evolves the AI companion's personality monthly based on user interaction.
  * This is a placeholder.
  */
-export const evolveCompanion = functions.pubsub
-  .schedule('1 of month 09:00')
-  .timeZone('America/New_York') // Example timezone
-  .onRun(async context => {
+export const evolveCompanion = onSchedule('1 of month 09:00', async context => {
     logger.info('Starting monthly companion evolution job.');
     // In a real application, this function would:
     // 1. Query for all users.
@@ -49,10 +42,7 @@ export const evolveCompanion = functions.pubsub
  * Exports data to BigQuery nightly.
  * This is a placeholder.
  */
-export const exportToBigQuery = functions.pubsub
-  .schedule('every day 03:00')
-  .timeZone('America/New_York') // Example timezone
-  .onRun(async context => {
+export const exportToBigQuery = onSchedule('every day 03:00', async context => {
     logger.info('Starting nightly BigQuery export job.');
     // In a real application, this function would:
     // 1. Check user consent (`dataConsent` collection).
