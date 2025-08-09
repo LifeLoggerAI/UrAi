@@ -1,3 +1,4 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentWritten, onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
@@ -5,17 +6,10 @@ import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
 import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
-import { genkit } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
-const db = admin.firestore();
-
-const ai = genkit({
-  plugins: [googleAI()],
-});
 
 /**
  * Ingests a voice interaction and updates social contact data.
@@ -75,7 +69,7 @@ export const checkSilenceThresholds = onSchedule('every day 04:30',
  */
 export const echoLoopDetection = onDocumentWritten(
   'socialEvents/{uid}/{eventId}',
-  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, eventId: string}>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, eventId: string}>) => {
     logger.info(
       `Detecting echo loops for user ${event.params.uid}.`
     );
