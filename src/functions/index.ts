@@ -42,4 +42,4 @@ export * from './causal-insight';
 export * from './projection-detector';
 
 // Optional: Sample or debug/test functions
-export * from './generateWeeklyScroll';
+export * from './helloWorld';
