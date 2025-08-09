@@ -28,7 +28,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI companion that generates symbolic insights. Based on the analysis of an image from a user's life, generate a narrator reflection and determine if a visual effect should be triggered.
 
 Image Analysis:
-{{{analysis}}}
+{{{json analysis}}}
 
 1.  **narratorReflection**: Write a short, insightful, and empathetic reflection for the user based on the analysis.
 2.  **symbolAnimationTrigger**: Based on the analysis, suggest a symbolic animation trigger. Possible values are "aura_shift", "fog", "memory_bloom", or "none".`,
@@ -41,9 +41,7 @@ const generateSymbolicInsightFlow = ai.defineFlow(
     outputSchema: GenerateSymbolicInsightOutputSchema,
   },
   async input => {
-    // Stringify the analysis object to pass it into the prompt context
-    const analysisStr = JSON.stringify(input.analysis, null, 2);
-    const { output } = await prompt({ analysis: analysisStr });
+    const { output } = await prompt(input);
     return output;
   }
 );

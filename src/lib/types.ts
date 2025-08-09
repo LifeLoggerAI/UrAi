@@ -1,4 +1,3 @@
-
 // Core type definitions for UrAi application
 import { z } from 'zod';
 
@@ -353,7 +352,7 @@ export const GenerateAvatarOutputSchema = z.object({
 });
 
 export const GenerateSymbolicInsightInputSchema = z.object({
-  analysis: z.string().describe('JSON string of camera image analysis'),
+  analysis: AnalyzeCameraImageOutputSchema.describe('JSON object of camera image analysis'),
 });
 
 export const GenerateSymbolicInsightOutputSchema = z.object({

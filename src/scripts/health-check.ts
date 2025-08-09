@@ -1,4 +1,3 @@
-
 #!/usr/bin/env tsx
 /**
  * AI Flow Health Check Script

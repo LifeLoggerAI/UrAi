@@ -364,7 +364,7 @@ export async function analyzeAndLogCameraFrameAction(input: {
     }
 
     const insight = await generateSymbolicInsight({
-      analysis: JSON.stringify(analysis, null, 2),
+      analysis: analysis,
     });
     if (!insight) {
       throw new Error('Symbolic insight generation failed.');
