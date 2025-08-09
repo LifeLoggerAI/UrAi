@@ -1,8 +1,8 @@
+
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -17,7 +17,7 @@ if (admin.apps.length === 0) {
  */
 export const triggerConstellationGlow = onDocumentCreated(
   'recoveryBlooms/{uid}/{bloomId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, bloomId: string}>) => {
     const bloom = event.data?.data();
     logger.info(
       `Constellation glow triggered for user ${event.params.uid}`,

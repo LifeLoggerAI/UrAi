@@ -316,7 +316,7 @@ export function SettingsForm() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDataAction('export')}>
+                <AlertDialogAction onSelect={() => handleDataAction('export')}>
                   Confirm
                 </AlertDialogAction>
               </AlertDialogFooter>

@@ -1,10 +1,10 @@
+
 import {
   onDocumentCreated,
   onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -18,7 +18,7 @@ if (admin.apps.length === 0) {
  */
 export const processTelemetryEvent = onDocumentCreated(
   'telemetryEvents/{eventId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {eventId: string}>) => {
     const eventData = event.data?.data();
     logger.info(
       `Processing telemetry event: ${event.params.eventId}`,
@@ -39,7 +39,7 @@ export const processTelemetryEvent = onDocumentCreated(
  */
 export const calculateOverstimulationScore = onDocumentUpdated(
   'dailyTelemetrySummary/{summaryId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {summaryId: string}>) => {
     const summaryData = event.data?.after.data();
     logger.info(
       `Calculating overstimulation for summary: ${event.params.summaryId}`,
@@ -60,7 +60,7 @@ export const calculateOverstimulationScore = onDocumentUpdated(
  */
 export const linkTelemetryToMood = onDocumentUpdated(
   'dailyTelemetrySummary/{summaryId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {summaryId: string}>) => {
     const summaryData = event.data?.after.data();
     logger.info(
       `Linking telemetry to mood for summary: ${event.params.summaryId}`

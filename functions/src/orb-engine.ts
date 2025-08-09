@@ -1,9 +1,10 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -17,7 +18,7 @@ if (admin.apps.length === 0) {
  */
 export const triggerOrbInsight = onDocumentWritten(
   'presentMetrics/{uid}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string}>) => {
     logger.info(`Checking for Orb trigger for user ${event.params.uid}.`);
     // In a real app:
     // 1. Compare before/after snapshots of presentMetrics.

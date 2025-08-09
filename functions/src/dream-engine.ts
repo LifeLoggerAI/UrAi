@@ -1,11 +1,11 @@
+
 import {
   onDocumentCreated,
   onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -32,7 +32,7 @@ export const detectDreamSignal = onSchedule('00 04 * * *', async () => {
  */
 export const generateDreamSymbols = onDocumentCreated(
   'dreamEvents/{dreamId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {dreamId: string}>) => {
     const dreamData = event.data?.data();
     logger.info(
       `Generating dream symbols for dream: ${event.params.dreamId}`,
@@ -52,7 +52,7 @@ export const generateDreamSymbols = onDocumentCreated(
  */
 export const generateDreamNarration = onDocumentUpdated(
   'dreamEvents/{dreamId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {dreamId: string}>) => {
     const after = event.data?.after.data();
     // Generate narration only if tags are present and narration is missing.
     if (after?.dreamSymbolTags?.length > 0 && !after.dreamNarrationText) {

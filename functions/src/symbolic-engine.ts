@@ -1,8 +1,9 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -14,9 +15,9 @@ if (admin.apps.length === 0) {
  * Creates a symbolic memory node from a new event (scroll, ritual, etc.).
  * This is a placeholder for the core symbolic fabric logic.
  */
-export const createSymbolicMemoryNode = functions.firestore
-  .document('{collection}/{docId}') // This would be more specific in production
-  .onCreate(async (snap, context) => {
+export const createSymbolicMemoryNode = onDocumentCreated(
+  '{collection}/{docId}',
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {collection: string, docId: string}>) => {
     // This function would be triggered by multiple collections.
     // In a real app, you'd have dedicated functions per source type.
     const { collection } = event.params;
@@ -31,7 +32,8 @@ export const createSymbolicMemoryNode = functions.firestore
     // 1. Extract symbols, emotion, archetype from event.data?.data().
     // 2. Write a new document to /symbolicMemoryNodes.
     return;
-  });
+  }
+);
 
 /**
  * Links symbolic memory nodes together based on shared themes or transformations.
@@ -39,7 +41,7 @@ export const createSymbolicMemoryNode = functions.firestore
  */
 export const linkSymbolicMemoryNodes = onDocumentCreated(
   'symbolicMemoryNodes/{nodeId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {nodeId: string}>) => {
     logger.info(
       `Checking for links for new symbolic node ${event.params.nodeId}.`
     );
@@ -56,7 +58,7 @@ export const linkSymbolicMemoryNodes = onDocumentCreated(
  */
 export const updateMetaPatternSummary = onDocumentCreated(
   'symbolicMemoryLinks/{linkId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {linkId: string}>) => {
     const linkData = event.data?.data();
     if (!linkData || !linkData.userId) {
       logger.warn(`Link document ${event.params.linkId} is missing data.`);

@@ -1,3 +1,4 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import {
   onDocumentWritten,
@@ -5,7 +6,7 @@ import {
 } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -39,7 +40,7 @@ export const ingestPassiveSensors = onCall(async (request: CallableRequest) => {
  */
 export const calcValueAlignment = onDocumentWritten(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
     logger.info(`Calculating value alignment for user ${event.params.uid}.`);
     // This function would call an AI model (e.g., via a Genkit flow) to
     // compare habitEvents and torsoMetrics against user-defined values.
@@ -56,13 +57,13 @@ export const calcValueAlignment = onDocumentWritten(
  */
 export const detectSelfConflict = onDocumentWritten(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<any>) => {
-    const data = event.data?.after.data();
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
+    const data = event.data?.data();
     const uid = event.params.uid;
 
     if (
       data?.selfConsistencyScore < 40 &&
-      (!event.data?.before?.exists ||
+      (!event.data?.before.exists ||
         event.data?.before.data()?.selfConsistencyScore >= 40)
     ) {
       logger.info(`Self-conflict detected for user ${uid}.`);
@@ -103,7 +104,7 @@ export const detectSelfConflict = onDocumentWritten(
  */
 export const checkProLimits = onDocumentCreated(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
     const uid = event.params.uid;
     const userRef = db.doc(`users/${uid}`);
     const userSnap = await userRef.get();

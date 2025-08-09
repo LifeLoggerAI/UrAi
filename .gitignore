@@ -8,10 +8,6 @@
 
 # testing
 /coverage
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
 
 # next.js
 /.next/
@@ -28,7 +24,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
 # local env files
 .env.local
@@ -43,16 +38,15 @@ pnpm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# project specific
-/functions/lib
-/functions/node_modules
-/functions/.DS_Store
-firebase-debug.log
-firebase-debug.*.log
-*.local
+# functions directory node_modules
+functions/node_modules
+functions/lib
 
-# IDX
-.idx
+# Storybook
+.storybook
+storybook-static
 
-# Genkit / Genkit development files
-.genkit/
+# dev artifacts
+/lifelogger-clean/
+/lifelogger-clean-codebase/
+/dataconnect-generated/

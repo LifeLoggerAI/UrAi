@@ -1,10 +1,11 @@
+
 import {
   onDocumentCreated,
   onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import type { AuraState, MemoryBloom } from '../../lib/types';
@@ -82,13 +83,13 @@ function mapEmotionToColor(emotion: string): string {
 // 1. updateAuraState – triggered on new moodLog
 export const updateAuraState = onDocumentCreated(
   'users/{uid}/moodLogs/{logId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<any> | undefined, { uid: string, logId: string }>) => {
     const data = event.data?.data();
-    const { uid } = ctx.params;
+    const { uid } = event.params;
 
     if (!data.emotion || typeof data.intensity !== 'number') {
       logger.warn(
-        `Missing emotion or intensity for moodLog ${ctx.params.logId}`
+        `Missing emotion or intensity for moodLog ${event.params.logId}`
       );
       return;
     }
@@ -113,9 +114,8 @@ export const updateAuraState = onDocumentCreated(
 );
 
 // 2. emotionOverTimeWatcher – trend detector (hourly)
-export const emotionOverTimeWatcher = functions.pubsub
-  .schedule('every 60 minutes')
-  .onRun(async () => {
+export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
+  async () => {
     logger.info('Running hourly emotionOverTimeWatcher job.');
     const usersSnap = await db.collection('users').get();
 
@@ -188,9 +188,9 @@ export const emotionOverTimeWatcher = functions.pubsub
 // 3. triggerBloom – milestone bloom when recovery detected
 export const triggerBloom = onDocumentCreated(
   'users/{uid}/emotionCycles/{cycleId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<any> | undefined, { uid: string, cycleId: string }>) => {
     const cycleData = event.data?.data();
-    const { uid } = ctx.params;
+    const { uid } = event.params;
 
     if (cycleData.cycleType === 'recovery') {
       logger.info(`Recovery detected for user ${uid}. Triggering bloom.`);
@@ -216,7 +216,7 @@ export const triggerBloom = onDocumentCreated(
  */
 export const detectRecoveryBloomOnAuraUpdate = onDocumentUpdated(
   'users/{uid}/auraStates/current',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<any> | undefined, { uid: string }>) => {
     const before = event.data?.before.data() as AuraState;
     const after = event.data?.after.data() as AuraState;
     const { uid } = event.params;

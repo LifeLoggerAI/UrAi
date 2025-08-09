@@ -1,9 +1,10 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -36,7 +37,7 @@ export const ingestMovementSensors = onCall(
  */
 export const calcStabilityMomentum = onDocumentWritten(
   'legsMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
     logger.info(
       `Calculating stability and momentum for user ${event.params.uid}.`
     );
@@ -51,7 +52,7 @@ export const calcStabilityMomentum = onDocumentWritten(
  */
 export const detectAvoidancePatterns = onDocumentWritten(
   'avoidanceEvents/{uid}/{eventId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, eventId: string}>) => {
     logger.info(`Detecting avoidance patterns for user ${event.params.uid}.`);
     // Logic to aggregate recent events, call 'AvoidancePatternDetector' AI.
     // If score > 60, create narrator insight and push notification.

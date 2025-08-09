@@ -1,3 +1,4 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import {
   onDocumentWritten,
@@ -6,7 +7,7 @@ import {
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -36,7 +37,7 @@ export const ingestTimelineEvent = onCall(async (request: CallableRequest) => {
  */
 export const detectShadowEpisode = onDocumentWritten(
   'timelineEvents/{uid}/{eventId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, eventId: string}>) => {
     logger.info(`Checking for shadow episode for user ${event.params.uid}.`);
     // Logic to check recent timelineEvents for negative tone.
     // If criteria met, create/update a /shadowEpisodes document.
@@ -79,7 +80,7 @@ export const updateArchetypeState = onSchedule(
  */
 export const evaluateLegacyProgress = onDocumentUpdated(
   'legacyThreads/{uid}/{threadId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, threadId: string}>) => {
     logger.info(`Evaluating legacy progress for user ${event.params.uid}.`);
     // Logic to check progressScore and trigger notifications if milestones are met.
     return;

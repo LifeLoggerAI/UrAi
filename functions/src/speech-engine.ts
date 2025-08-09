@@ -1,7 +1,11 @@
+
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onObjectFinalized } from 'firebase-functions/v2/storage';
+import { onMessagePublished } from 'firebase-functions/v2/pubsub';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change } from 'firebase-functions/v2/firestore';
+import type { StorageEvent } from 'firebase-functions/v2/storage';
+import type { MessagePublishedData } from 'firebase-functions/v2/pubsub';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -14,35 +18,33 @@ if (admin.apps.length === 0) {
  * This is a placeholder for a function that would be triggered by a Cloud Storage event.
  * Trigger: onFinalize(Storage) on `lifelogger-voice/{uid}/{...}/{clipId}.opus`
  */
-export const transcribeVoiceClip = functions.storage
-  .object()
-  .onFinalize(async object => {
-    logger.info(`Placeholder for transcribing file: ${object.name}`);
-    // In a real implementation:
-    // 1. Download .opus clip from Cloud Storage.
-    // 2. Call a transcription service like Whisper AI.
-    // 3. Save the resulting transcript to Firestore in `/voiceTranscripts`.
-    // 4. Update the original `/voiceClips` document to mark it as processed.
-    // 5. Publish a message to a Pub/Sub topic like `transcriptReady` to trigger further analysis.
-    return;
-  });
+export const transcribeVoiceClip = onObjectFinalized(async (event: StorageEvent) => {
+  const fileBucket = event.data.bucket;
+  const filePath = event.data.name;
+  logger.info(`Placeholder for transcribing file: ${filePath} in bucket ${fileBucket}`);
+  // In a real implementation:
+  // 1. Download .opus clip from Cloud Storage.
+  // 2. Call a transcription service like Whisper AI.
+  // 3. Save the resulting transcript to Firestore in `/voiceTranscripts`.
+  // 4. Update the original `/voiceClips` document to mark it as processed.
+  // 5. Publish a message to a Pub/Sub topic like `transcriptReady` to trigger further analysis.
+  return;
+});
 
 /**
  * Analyzes a transcript for NLP tags and intents.
  * This is a placeholder for a function that would be triggered by a Pub/Sub message.
  * Trigger: Pub/Sub message on topic `transcriptReady`
  */
-export const analyzeTranscript = functions.pubsub
-  .topic('transcriptReady')
-  .onPublish(async message => {
-    logger.info('Placeholder for analyzing transcript. Message:', message.json);
-    // In a real implementation:
-    // 1. Parse the message to get the transcript details (e.g., clipId, uid).
-    // 2. Call an NLP service (like OpenAI with function calling) to extract entities.
-    // 3. Write the extracted tags to `/transcriptTags`.
-    // 4. Create related documents (e.g., in /goals, /tasks) based on the extracted intents.
-    return;
-  });
+export const analyzeTranscript = onMessagePublished('transcriptReady', async (event: MessagePublishedData) => {
+  logger.info('Placeholder for analyzing transcript. Message:', event.message.json);
+  // In a real implementation:
+  // 1. Parse the message to get the transcript details (e.g., clipId, uid).
+  // 2. Call an NLP service (like OpenAI with function calling) to extract entities.
+  // 3. Write the extracted tags to `/transcriptTags`.
+  // 4. Create related documents (e.g., in /goals, /tasks) based on the extracted intents.
+  return;
+});
 
 /**
  * Synthesizes narrator voice for a new insight and updates the insight document.
@@ -51,7 +53,7 @@ export const analyzeTranscript = functions.pubsub
  */
 export const synthesizeNarratorVoice = onDocumentCreated(
   'narratorInsights/{uid}/{insightId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<any> | undefined, { uid: string, insightId: string }>) => {
     const insight = event.data?.data();
     logger.info(
       `Synthesizing narrator voice for insight ${event.params.insightId}`,

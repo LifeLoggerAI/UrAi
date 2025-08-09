@@ -1,7 +1,6 @@
-import { onUserDeleted } from 'firebase-functions/v2/identity';
+
+import { onUserCreated, onUserDeleted, UserRecord } from 'firebase-functions/v2/identity';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -13,7 +12,7 @@ const db = admin.firestore();
 /**
  * Triggered on new user creation to create a default profile and companion in Firestore.
  */
-export const createDefaultProfile = onUserDeleted(async event => {
+export const createDefaultProfile = onUserCreated(async (event: {data: UserRecord}) => {
   const { uid, email, displayName, photoURL } = event.data;
 
   try {
@@ -82,7 +81,7 @@ export const createDefaultProfile = onUserDeleted(async event => {
  * Triggered on user deletion to clean up their data.
  * This starts implementing the data cleanup logic from the blueprint.
  */
-export const onUserDelete = onUserDeleted(async event => {
+export const onUserDelete = onUserDeleted(async (event: {data: UserRecord}) => {
   const { uid } = event.data;
   logger.info(`Starting data cleanup for deleted user: ${uid}`);
 

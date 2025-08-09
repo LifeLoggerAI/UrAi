@@ -1,7 +1,7 @@
+
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
-import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -15,8 +15,12 @@ if (admin.apps.length === 0) {
  */
 export const processNotificationQueue = onDocumentCreated(
   'messages/queue/{messageId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<DocumentSnapshot | undefined, {messageId: string}>) => {
     const message = event.data?.data();
+    if (!message) {
+        logger.error(`Notification queue message ${event.params.messageId} has no data.`);
+        return;
+    }
     const { uid, type, body } = message;
 
     if (!uid || !body) {
@@ -42,6 +46,6 @@ export const processNotificationQueue = onDocumentCreated(
     );
 
     // Clean up the processed message from the queue.
-    return snap.ref.delete();
+    return event.data?.ref.delete();
   }
 );

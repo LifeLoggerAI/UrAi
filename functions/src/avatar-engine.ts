@@ -1,9 +1,10 @@
+
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -48,7 +49,7 @@ export const inferAvatarFeatures = onCall(async (request: CallableRequest) => {
  */
 export const triggerNarratorIdentityInsight = onDocumentUpdated(
   'avatarIdentityProgress/{userId}',
-  async (event: FirestoreEvent<any>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {userId: string}>) => {
     const before = event.data?.before.data();
     const after = event.data?.after.data();
     if (before?.featureStage !== after?.featureStage) {
