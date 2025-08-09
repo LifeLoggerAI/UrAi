@@ -1,27 +1,31 @@
-import * as functions from 'firebase-functions';
+
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onDocumentWritten, onDocumentUpdated } from 'firebase-functions/v2/firestore';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { logger } from 'firebase-functions/v2';
+import type { CallableRequest } from 'firebase-functions/v2/https';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
-// Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
   admin.initializeApp();
 }
-const db = admin.firestore();
 
 /**
  * Ingests a voice interaction and updates social contact data.
  * This is a placeholder for a complex data ingestion pipeline.
  */
-export const voiceInteractionIngest = functions.https.onCall(
-  async (data, context) => {
-    const uid = context.auth?.uid;
+export const voiceInteractionIngest = onCall(
+  async (request: CallableRequest) => {
+    const uid = request.auth?.uid;
     if (!uid) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'unauthenticated',
         'User must be authenticated.'
       );
     }
 
-    functions.logger.info(`Ingesting voice interaction for user ${uid}.`);
+    logger.info(`Ingesting voice interaction for user ${uid}.`);
     // Logic to:
     // 1. Match or create a /socialContacts record.
     // 2. Update interactionCount, voiceMemoryStrength, lastHeardAt, silenceDurationDays.
@@ -36,11 +40,11 @@ export const voiceInteractionIngest = functions.https.onCall(
  * Analyzes interaction history to determine a contact's social archetype.
  * Triggered when social contact data is updated. Placeholder.
  */
-export const socialArchetypeEngine = functions.firestore
-  .document('socialContacts/{uid}/{personId}')
-  .onUpdate(async (change, context) => {
-    functions.logger.info(
-      `Running social archetype engine for user ${context.params.uid}, contact ${context.params.personId}.`
+export const socialArchetypeEngine = onDocumentUpdated(
+  'socialContacts/{uid}/{personId}',
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, personId: string}>) => {
+    logger.info(
+      `Running social archetype engine for user ${event.params.uid}, contact ${event.params.personId}.`
     );
     // Logic to call 'ArchetypeShiftEngine' AI model and update socialArchetype.
     return null;
@@ -50,11 +54,9 @@ export const socialArchetypeEngine = functions.firestore
  * Daily check for contacts that have gone silent.
  * This is a placeholder.
  */
-export const checkSilenceThresholds = functions.pubsub
-  .schedule('every day 04:30')
-  .timeZone('UTC')
-  .onRun(async () => {
-    functions.logger.info('Running daily social silence check for all users.');
+export const checkSilenceThresholds = onSchedule('every day 04:30',
+  async () => {
+    logger.info('Running daily social silence check for all users.');
     // For every user & contact:
     // 1. Check if silenceDurationDays > threshold (e.g., 60 days).
     // 2. If so, create a narratorInsight.
@@ -65,11 +67,11 @@ export const checkSilenceThresholds = functions.pubsub
  * Detects post-interaction emotional echoes.
  * Triggered on new social events. Placeholder.
  */
-export const echoLoopDetection = functions.firestore
-  .document('socialEvents/{uid}/{eventId}')
-  .onWrite(async (change, context) => {
-    functions.logger.info(
-      `Detecting echo loops for user ${context.params.uid}.`
+export const echoLoopDetection = onDocumentWritten(
+  'socialEvents/{uid}/{eventId}',
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, eventId: string}>) => {
+    logger.info(
+      `Detecting echo loops for user ${event.params.uid}.`
     );
     // Logic to compare post-interaction mood signals.
     // If lingering effects, increase echoLoopScore on the socialContact.

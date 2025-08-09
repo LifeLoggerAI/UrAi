@@ -1,12 +1,11 @@
 
 import {
-  onDocumentCreated,
-  onDocumentUpdated,
   onDocumentWritten,
+  onDocumentUpdated,
 } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
-import type { FirestoreEvent, Change, QueryDocumentSnapshot, DocumentSnapshot } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, Change, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import type { AuraState, MemoryBloom, MoodLog, EmotionCycle } from '../../lib/types';
@@ -223,8 +222,10 @@ export const triggerBloom = onDocumentWritten(
 export const detectRecoveryBloomOnAuraUpdate = onDocumentUpdated(
   'users/{uid}/auraStates/current',
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { uid: string }>) => {
-    const before = event.data?.before.data() as AuraState;
-    const after = event.data?.after.data() as AuraState;
+    const data = event.data;
+    if (!data) return;
+    const before = data.before.data() as AuraState;
+    const after = data.after.data() as AuraState;
     const { uid } = event.params;
 
     if (!before?.currentEmotion || !after?.currentEmotion) {
