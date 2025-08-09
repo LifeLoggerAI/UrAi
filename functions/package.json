@@ -1,23 +1,22 @@
 {
+  "name": "functions",
+  "private": true,
   "main": "lib/index.js",
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
-    "genkit:start": "genkit start -- tsx --watch src/genkit-sample.ts",
-    "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "npm run build && firebase deploy --only functions",
     "logs": "firebase functions:log",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "firebase emulators:exec \"npm test\" --only functions"
-  },
-  "name": "functions",
-  "engines": {
-    "node": "22"
   },
   "dependencies": {
     "@genkit-ai/firebase": "^1.14.0",
@@ -25,12 +24,12 @@
     "@sendgrid/mail": "^8.1.5",
     "express": "^5.1.0",
     "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1",
+    "firebase-functions": "^4.9.0",
     "genkit": "^1.14.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
+    "@types/jest": "^29.5.12",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
@@ -38,10 +37,9 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "firebase-functions-test": "^3.1.0",
-    "jest": "^30.0.5",
-    "ts-jest": "^29.4.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
-  },
-  "private": true
+  }
 }
