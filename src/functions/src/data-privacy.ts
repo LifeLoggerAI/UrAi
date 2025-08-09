@@ -3,12 +3,11 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import {
   onDocumentWritten,
   onDocumentUpdated,
-  Change,
 } from 'firebase-functions/v2/firestore';
+import type { Change, DocumentSnapshot, FirestoreEvent } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
