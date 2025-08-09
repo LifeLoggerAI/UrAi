@@ -4,7 +4,7 @@ import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -37,7 +37,7 @@ export const ingestMovementSensors = onCall(
  */
 export const calcStabilityMomentum = onDocumentWritten(
   'legsMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, dateKey: string}>) => {
     logger.info(
       `Calculating stability and momentum for user ${event.params.uid}.`
     );

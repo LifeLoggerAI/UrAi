@@ -6,7 +6,7 @@ import {
 } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
-import type { FirestoreEvent, DocumentSnapshot } from 'firebase-functions/v2/firestore';
+import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
 import * as admin from 'firebase-admin';
 
 // Initialize admin SDK if not already initialized
@@ -40,7 +40,7 @@ export const ingestPassiveSensors = onCall(async (request: CallableRequest) => {
  */
 export const calcValueAlignment = onDocumentWritten(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, dateKey: string}>) => {
     logger.info(`Calculating value alignment for user ${event.params.uid}.`);
     // This function would call an AI model (e.g., via a Genkit flow) to
     // compare habitEvents and torsoMetrics against user-defined values.
@@ -57,8 +57,8 @@ export const calcValueAlignment = onDocumentWritten(
  */
 export const detectSelfConflict = onDocumentWritten(
   'torsoMetrics/{uid}/{dateKey}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, dateKey: string}>) => {
-    const data = event.data?.data();
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, dateKey: string}>) => {
+    const data = event.data?.after.data();
     const uid = event.params.uid;
 
     if (
