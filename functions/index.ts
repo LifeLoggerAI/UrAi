@@ -30,3 +30,4 @@ export * from './src/causal-insight';
 export * from './src/projection-detector';
 
 export * from './src/generateWeeklyScroll';
+
