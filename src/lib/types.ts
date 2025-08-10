@@ -1,10 +1,9 @@
-
 // Core type definitions for UrAi application
 import { z } from 'zod';
 
 // Base types
 export const UserSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   email: z.string().email(),
   displayName: z.string().optional(),
   createdAt: z.number(),
@@ -127,6 +126,7 @@ export type HabitWatch = z.infer<typeof HabitWatchSchema>;
 
 export const MemoryBloomSchema = z.object({
   bloomId: z.string(),
+  uid: z.string(),
   emotion: z.string(),
   bloomColor: z.string(),
   triggeredAt: z.any(),
@@ -449,7 +449,15 @@ export const PersonDataSchema = z.object({
   name: z.string().describe("Person's name"),
   age: z.number().optional().describe("Person's age"),
   role: z.string().describe("Role in the event (e.g., 'birthday celebrant')"),
-  appearance: PersonAppearanceSchema.optional(),
+  height: z.string().optional(),
+  build: z.string().optional(),
+  skinTone: z.string().optional(),
+  hairColor: z.string().optional(),
+  hairStyle: z.string().optional(),
+  eyeColor: z.string().optional(),
+  distinguishingFeatures: z.array(z.string()).optional(),
+  clothing: z.string().optional(),
+  accessories: z.array(z.string()).optional(),
   expression: z.string().optional().describe("Dominant emotional expression"),
   posture: z.string().optional().describe("Body language or posture"),
 });

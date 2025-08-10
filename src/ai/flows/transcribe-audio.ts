@@ -1,4 +1,7 @@
+// src/ai/flows/transcribe-audio.ts
 'use server';
+import 'server-only';
+
 /**
  * @fileOverview An audio transcription AI agent.
  *
@@ -7,14 +10,16 @@
  * - TranscribeAudioOutput - The return type for the transcribeAudio function.
  */
 
-import { ai } from '@/ai/genkit';
+import { getAI } from '@/ai/genkit.server';
 import {
   TranscribeAudioInputSchema,
   TranscribeAudioOutputSchema,
   type TranscribeAudioInput,
   type TranscribeAudioOutput,
 } from '@/lib/types';
-import { googleAI } from '@genkit-ai/googleai';
+
+// Initialize Genkit instance lazily on the server
+const ai = getAI();
 
 export async function transcribeAudio(
   input: TranscribeAudioInput
@@ -28,9 +33,12 @@ const transcribeAudioFlow = ai.defineFlow(
     inputSchema: TranscribeAudioInputSchema,
     outputSchema: TranscribeAudioOutputSchema,
   },
-  async input => {
+  async (input) => {
+    // If gemini-2.0-flash is not in your quota, switch to 1.5-flash
     const { text } = await ai.generate({
-      model: googleAI.model('gemini-1.5-flash'),
+      model: 'googleai/gemini-1.5-flash',
+      // Keeping your original shape; if your Genkit version expects `input:` instead of `prompt:`,
+      // change `prompt` → `input`.
       prompt: [{ media: { url: input.audioDataUri } }],
     });
 

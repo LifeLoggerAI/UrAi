@@ -1,15 +1,17 @@
-
 {
   "compileOnSave": true,
-  "include": ["src"],
-  "exclude": ["**/__tests__/**", "**/*.test.ts", "test", "lib", "node_modules"],
+  "include": [
+    "src"
+  ],
   "compilerOptions": {
     "module": "commonjs",
+    "noImplicitReturns": true,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "ES2022",
+    "target": "es2022",
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "noUnusedLocals": true
   }

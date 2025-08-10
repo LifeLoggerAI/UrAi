@@ -1,30 +1,32 @@
-
 /**
- * Firebase Function Entry Point
- * See: https://firebase.google.com/docs/functions/typescript
+ * Import function triggers from their respective submodules:
+ *
+ * import {onCall} from "firebase-functions/v2/https";
+ * import {onDocumentWritten} from "firebase-functions/v2/firestore";
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-// Core feature modules
-export * from './user-management';
-export * from './torso-engine';
-export * from './legs-engine';
-export * from './arms-engine';
-export * from './social-engine';
-export * from './data-privacy';
+import {setGlobalOptions} from "firebase-functions";
+import {onRequest} from "firebase-functions/https";
+import * as logger from "firebase-functions/logger";
 
-// Messaging systems
-export * from './notifications';
-export * from './email-engine';
+// Start writing functions
+// https://firebase.google.com/docs/functions/typescript
 
-// New symbolic systems
-export * from './shadow-metrics';
-export * from './crisis-threshold';
-export * from './recovery-bloom';
-export * from './soul-thread-map';
-export * from './meta-learning';
-export * from './causal-insight';
-export * from './projection-detector';
-export * from './stripe-webhook';
+// For cost control, you can set the maximum number of containers that can be
+// running at the same time. This helps mitigate the impact of unexpected
+// traffic spikes by instead downgrading performance. This limit is a
+// per-function limit. You can override the limit for each function using the
+// `maxInstances` option in the function's options, e.g.
+// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
+// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
+// functions should each use functions.runWith({ maxInstances: 10 }) instead.
+// In the v1 API, each function can only serve one request per container, so
+// this will be the maximum concurrent request count.
+setGlobalOptions({ maxInstances: 10 });
 
-// Scheduled jobs
-export * from './scheduled';
+// export const helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });

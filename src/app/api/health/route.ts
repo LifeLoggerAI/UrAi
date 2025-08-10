@@ -1,10 +1,13 @@
-
+// src/app/api/health/route.ts
+import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
 import { runHealthCheckAction } from '@/app/actions';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs'; // ensure Node runtime, not Edge
+export const revalidate = 0;
 
-export async function GET(request: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const results = await runHealthCheckAction();
 
@@ -13,6 +16,8 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
       },
     });
   } catch (error) {

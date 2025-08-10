@@ -2,117 +2,124 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
+  
+    // Helper function for auth check
     function isAuthed() {
       return request.auth != null;
     }
-
+    
+    // Helper function to check ownership
     function isOwner(uid) {
       return request.auth.uid == uid;
     }
-    
+
+    // Users can only read/write their own data
     match /users/{uid} {
       allow read, write: if isOwner(uid);
     }
     
+    // Subcollections under users
+    match /users/{uid}/{subcollection}/{docId} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Common collections with user ownership
     match /voiceEvents/{eventId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
     
     match /dreamEvents/{dreamId} {
-        allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
 
     match /innerTexts/{textId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
 
     match /people/{personId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
-
+    
     match /goals/{goalId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
-
+    
     match /tasks/{taskId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
 
     match /calendarEvents/{eventId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
-    
+
     match /habitWatch/{habitId} {
-      allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
 
-    match /onboardIntake/{intakeId} {
-      allow write: if isAuthed();
+    match /memoryBlooms/{bloomId} {
+      allow read, write: if isOwner(resource.data.uid);
     }
 
-    match /permissions/{uid} {
-      allow read, write: if isOwner(uid);
+    match /weeklyScrolls/{scrollId} {
+      allow read, write: if isOwner(resource.data.uid);
     }
     
     match /companions/{companionId} {
-        allow read, write: if isOwner(request.resource.data.uid);
-    }
-    
-    match /memoryBlooms/{bloomId} {
-        allow read, write: if isAuthed();
-    }
-    
-    match /weeklyScrolls/{scrollId} {
-        allow read, write: if isOwner(request.resource.data.uid);
-    }
-    
-    match /audioEvents/{audioId} {
-        allow read, write: if isOwner(request.resource.data.uid);
+      allow read, write: if isOwner(resource.data.uid);
     }
 
-    match /narrativeLoops/{loopId} {
-      allow read, write: if isOwner(request.resource.data.uid);
-    }
-
-    match /rebirthMoments/{rebirthId} {
-      allow read, write: if isOwner(request.resource.data.uid);
-    }
-
-    match /thresholdMoments/{thresholdId} {
-      allow read, write: if isOwner(request.resource.data.uid);
-    }
-
-    match /auraScrolls/{scrollId} {
-      allow read, write: if isOwner(request.resource.data.uid);
-    }
-    
-    match /proTiers/{uid} {
-      allow read: if isOwner(uid);
-      allow write: if isOwner(uid);
-    }
-
-    match /billing/{uid} {
-      allow read: if isOwner(uid);
-    }
-    
+    // Symbolic systems collections
     match /rituals/{id} {
       allow read, write: if isAuthed();
     }
+    
     match /insights/{id} {
       allow read, write: if isAuthed();
     }
+    
     match /socialGraph/{id} {
       allow read, write: if isAuthed();
     }
+    
+    match /forecasts/{id} {
+      allow read, write: if isAuthed();
+    }
+    
     match /assets/{id} {
       allow read, write: if isAuthed();
     }
+    
+    match /shadowCognition/{id} {
+      allow read, write: if isAuthed();
+    }
+    
+    match /obscuraPatterns/{id} {
+      allow read, write: if isAuthed();
+    }
+    
+    match /mentalLoad/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    // Billing and Pro Tier
+    match /billing/{id} {
+      allow read, write: if isAuthed();
+    }
+
+    match /proTiers/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false; // Only functions can write
+    }
+
+    // Public collections
     match /partnerAuth/{id} {
       allow read: if true;
+      allow write: if false; // Admin only
     }
+
     match /dataMarketplace/{id} {
       allow read: if true;
+      allow write: if false; // Admin only
     }
   }
 }

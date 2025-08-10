@@ -1,5 +1,6 @@
-
+// src/app/actions.ts
 'use server';
+import 'server-only';
 
 import type {
   VoiceEvent,
@@ -23,10 +24,17 @@ import {
   orderBy,
   getDoc,
 } from 'firebase/firestore';
+
+// ✅ All flows must be server-only modules (each should have `import 'server-only'` inside)
 import { transcribeAudio } from '@/ai/flows/transcribe-audio';
 import { summarizeText } from '@/ai/flows/summarize-text';
 import { generateSpeech } from '@/ai/flows/generate-speech';
 import { analyzeDream } from '@/ai/flows/analyze-dream';
+import { companionChat } from '@/ai/flows/companion-chat';
+import { analyzeCameraImage } from '@/ai/flows/analyze-camera-image';
+import { generateSymbolicInsight } from '@/ai/flows/generate-symbolic-insight';
+import { suggestRitual } from '@/ai/flows/suggest-ritual';
+import { processOnboardingTranscript } from '@/ai/flows/process-onboarding-transcript';
 
 import {
   DashboardDataSchema,
@@ -36,12 +44,6 @@ import {
   AuraStateSchema,
 } from '@/lib/types';
 import { format } from 'date-fns';
-import { companionChat } from '@/ai/flows/companion-chat';
-import { analyzeCameraImage } from '@/ai/flows/analyze-camera-image';
-import { generateSymbolicInsight } from '@/ai/flows/generate-symbolic-insight';
-
-import { suggestRitual } from '@/ai/flows/suggest-ritual';
-import { processOnboardingTranscript } from '@/ai/flows/process-onboarding-transcript';
 
 export async function summarizeWeekAction(
   userId: string
@@ -81,8 +83,18 @@ export async function summarizeWeekAction(
     }
 
     const allTranscripts = querySnapshot.docs
-      .map(doc => doc.data().text)
+      .map(d => (d.data() as any)?.text || '')
+      .filter(Boolean)
       .join('\n\n---\n\n');
+
+    if (!allTranscripts) {
+      return {
+        summary:
+          'No transcriptions found for your recent voice notes. Try recording a new one.',
+        audioDataUri: null,
+        error: null,
+      };
+    }
 
     const summaryResult = await summarizeText({ text: allTranscripts });
 
@@ -158,15 +170,16 @@ export async function getDashboardDataAction(
       ]);
 
     const voiceEvents = voiceEventsSnapshot.docs.map(
-      doc => doc.data() as VoiceEvent
+      d => d.data() as VoiceEvent
     );
-    const dreams = dreamsSnapshot.docs.map(doc => doc.data() as Dream);
+    const dreams = dreamsSnapshot.docs.map(d => d.data() as Dream);
 
-    // Process sentiment data
+    // Process sentiment data (skip missing)
     const sentimentData = [...voiceEvents, ...dreams]
+      .filter(e => typeof e.createdAt === 'number' && typeof (e as any).sentimentScore === 'number')
       .map(event => ({
         createdAt: event.createdAt,
-        sentiment: event.sentimentScore,
+        sentiment: (event as any).sentimentScore as number,
       }))
       .sort((a, b) => a.createdAt - b.createdAt);
 
@@ -194,12 +207,16 @@ export async function getDashboardDataAction(
     // Process emotion data
     const emotionCounts: Record<string, number> = {};
     voiceEvents.forEach(event => {
-      const emotion =
-        event.emotion.charAt(0).toUpperCase() + event.emotion.slice(1);
+      const raw = (event as any)?.emotion;
+      if (!raw || typeof raw !== 'string') return;
+      const emotion = raw.charAt(0).toUpperCase() + raw.slice(1);
       emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
     });
     dreams.forEach(dream => {
-      dream.emotions.forEach(emotionRaw => {
+      const list = (dream as any)?.emotions;
+      if (!Array.isArray(list)) return;
+      list.forEach((emotionRaw: string) => {
+        if (!emotionRaw || typeof emotionRaw !== 'string') return;
         const emotion =
           emotionRaw.charAt(0).toUpperCase() + emotionRaw.slice(1);
         emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1;
@@ -302,7 +319,6 @@ export async function suggestRitualAction(
 const processOnboardingVoiceSchema = z.object({
   audioDataUri: z.string().min(1, 'Audio data cannot be empty.'),
 });
-
 type ProcessOnboardingVoiceInput = z.infer<typeof processOnboardingVoiceSchema>;
 
 type ProcessOnboardingReturn = {
@@ -333,13 +349,12 @@ export async function processOnboardingVoiceAction(
 
     const analysis = await processOnboardingTranscript({ transcript });
 
-    // Return the transcript and analysis to the client for DB operations
     return { transcript, analysis, error: null };
   } catch (e) {
     console.error('Error during onboarding AI processing:', e);
     const firebaseError = e as { code?: string; message: string };
     const errorMessage =
-      firebaseError.message ||
+      firebaseError?.message ||
       'An unknown error occurred during AI processing.';
     return {
       transcript: null,
@@ -385,7 +400,9 @@ export async function analyzeAndLogCameraFrameAction(input: {
     const moodLog: MoodLog = MoodLogSchema.parse({
       timestamp: Date.now(),
       emotion: primaryEmotion,
-      intensity: analysis.emotionInference[primaryEmotion] * 100,
+      intensity: Math.round(
+        (analysis.emotionInference[primaryEmotion] || 0) * 100
+      ),
       source: 'camera_passive',
     });
     batch.set(moodLogRef, moodLog);
@@ -415,63 +432,72 @@ export async function analyzeAndLogCameraFrameAction(input: {
 async function fetchCollectionData(userId: string, collectionName: string) {
   const q = query(collection(db, collectionName), where('uid', '==', userId));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => doc.data());
+  return snapshot.docs.map(d => d.data());
 }
 
-export async function exportUserDataAction(userId: string): Promise<{ success: boolean; downloadUrl?: string; error?: string }> {
-    if (!userId) {
-        return { success: false, error: "User not authenticated." };
-    }
+export async function exportUserDataAction(
+  userId: string
+): Promise<{ success: boolean; downloadUrl?: string; error?: string }> {
+  if (!userId) {
+    return { success: false, error: 'User not authenticated.' };
+  }
 
-    try {
-        const userDoc = await getDoc(doc(db, 'users', userId));
-        const collectionsToFetch = [
-            { name: 'voiceEvents', data: [] as VoiceEvent[] },
-            { name: 'dreamEvents', data: [] as Dream[] },
-            { name: 'innerTexts', data: [] as any[] },
-            { name: 'people', data: [] as any[] },
-            { name: 'goals', data: [] as any[] },
-            { name: 'tasks', data: [] as any[] },
-            { name: `users/${userId}/memoryBlooms`, data: [] as any[] },
-        ];
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId));
+    const collectionsToFetch = [
+      { name: 'voiceEvents', data: [] as VoiceEvent[] },
+      { name: 'dreamEvents', data: [] as Dream[] },
+      { name: 'innerTexts', data: [] as any[] },
+      { name: 'people', data: [] as any[] },
+      { name: 'goals', data: [] as any[] },
+      { name: 'tasks', data: [] as any[] },
+      { name: `users/${userId}/memoryBlooms`, data: [] as any[] },
+    ];
 
-        await Promise.all(collectionsToFetch.map(async (coll) => {
-            const q = query(collection(db, coll.name), where("uid", "==", userId));
-            const snapshot = await getDocs(q);
-            (coll.data as any[]).push(...snapshot.docs.map(d => d.data()));
-        }));
-        
-        const dataMap = collectionsToFetch.reduce((acc, curr) => {
-            acc[curr.name.split('/').pop()!] = curr.data;
-            return acc;
-        }, {} as Record<string, any[]>);
+    await Promise.all(
+      collectionsToFetch.map(async coll => {
+        const q = query(
+          collection(db, coll.name),
+          where('uid', '==', userId)
+        );
+        const snapshot = await getDocs(q);
+        (coll.data as any[]).push(...snapshot.docs.map(d => d.data()));
+      })
+    );
 
+    const dataMap = collectionsToFetch.reduce((acc, curr) => {
+      acc[curr.name.split('/').pop()!] = curr.data;
+      return acc;
+    }, {} as Record<string, any[]>);
 
-        const exportData = {
-            metadata: {
-                exportedAt: new Date().toISOString(),
-                userId,
-                version: "1.0",
-                totalRecords: Object.fromEntries(Object.entries(dataMap).map(([key, value]) => [key, value.length]))
-            },
-            data: {
-                user: userDoc.exists() ? userDoc.data() : null,
-                ...dataMap
-            }
-        };
+    const exportData = {
+      metadata: {
+        exportedAt: new Date().toISOString(),
+        userId,
+        version: '1.0',
+        totalRecords: Object.fromEntries(
+          Object.entries(dataMap).map(([key, value]) => [key, value.length])
+        ),
+      },
+      data: {
+        user: userDoc.exists() ? userDoc.data() : null,
+        ...dataMap,
+      },
+    };
 
-        const jsonData = JSON.stringify(exportData, null, 2);
-        const dataUrl = `data:application/json;charset=utf-8,${encodeURIComponent(jsonData)}`;
+    const jsonData = JSON.stringify(exportData, null, 2);
+    const dataUrl = `data:application/json;charset=utf-8,${encodeURIComponent(
+      jsonData
+    )}`;
 
-        return { 
-            success: true, 
-            downloadUrl: dataUrl
-        };
-
-    } catch (e) {
-        console.error("Failed to export user data:", e);
-        return { success: false, error: (e as Error).message };
-    }
+    return {
+      success: true,
+      downloadUrl: dataUrl,
+    };
+  } catch (e) {
+    console.error('Failed to export user data:', e);
+    return { success: false, error: (e as Error).message };
+  }
 }
 
 export async function runHealthCheckAction(): Promise<{
@@ -513,20 +539,15 @@ export async function runHealthCheckAction(): Promise<{
     }
   };
 
-  // Test generate speech flow
   await runFlowTest('generate-speech', generateSpeech({ text: 'Health check test' }));
-
-  // Test analyze dream flow
   await runFlowTest('analyze-dream', analyzeDream({ text: 'Health check dream test' }));
 
-  // Test transcribe audio flow
-  const testAudioUri = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP';
+  const testAudioUri =
+    'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP';
   await runFlowTest('transcribe-audio', transcribeAudio({ audioDataUri: testAudioUri }));
-  
-  // Test companion chat flow
+
   await runFlowTest('companion-chat', companionChat({ message: 'Health check', history: [] }));
 
-  // Determine overall health
   const allPassed = results.services.every(s => s.status === 'PASS');
   results.overall = allPassed ? 'PASS' : 'FAIL';
 
