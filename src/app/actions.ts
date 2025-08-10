@@ -484,49 +484,47 @@ export async function runHealthCheckAction(): Promise<{
     overall: 'UNKNOWN' as 'PASS' | 'FAIL' | 'UNKNOWN',
   };
 
-  // Test generate speech flow
-  try {
-    const speechResult = await Promise.race([
-      generateSpeech({ text: 'Health check test' }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), 10000)
-      ),
-    ]);
+  const healthCheckTimeout = 15000; // 15 seconds
 
-    results.services.push({
-      name: 'generate-speech',
-      status: speechResult ? 'PASS' : 'FAIL',
-      responseTime: Date.now(),
-    });
-  } catch (error) {
-    results.services.push({
-      name: 'generate-speech',
-      status: 'FAIL',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
+  const runFlowTest = async (flowName: string, flowPromise: Promise<any>) => {
+    const startTime = Date.now();
+    try {
+      const result = await Promise.race([
+        flowPromise,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), healthCheckTimeout)
+        ),
+      ]);
+
+      const isValid = !!result;
+      results.services.push({
+        name: flowName,
+        status: isValid ? 'PASS' : 'FAIL',
+        responseTime: Date.now() - startTime,
+        error: isValid ? undefined : 'Invalid response shape',
+      });
+    } catch (error) {
+      results.services.push({
+        name: flowName,
+        status: 'FAIL',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        responseTime: Date.now() - startTime,
+      });
+    }
+  };
+
+  // Test generate speech flow
+  await runFlowTest('generate-speech', generateSpeech({ text: 'Health check test' }));
 
   // Test analyze dream flow
-  try {
-    const dreamResult = await Promise.race([
-      analyzeDream({ text: 'Health check dream test' }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), 10000)
-      ),
-    ]);
+  await runFlowTest('analyze-dream', analyzeDream({ text: 'Health check dream test' }));
 
-    results.services.push({
-      name: 'analyze-dream',
-      status: dreamResult ? 'PASS' : 'FAIL',
-      responseTime: Date.now(),
-    });
-  } catch (error) {
-    results.services.push({
-      name: 'analyze-dream',
-      status: 'FAIL',
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
+  // Test transcribe audio flow
+  const testAudioUri = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP';
+  await runFlowTest('transcribe-audio', transcribeAudio({ audioDataUri: testAudioUri }));
+  
+  // Test companion chat flow
+  await runFlowTest('companion-chat', companionChat({ message: 'Health check', history: [] }));
 
   // Determine overall health
   const allPassed = results.services.every(s => s.status === 'PASS');

@@ -2,6 +2,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runHealthCheckAction } from '@/app/actions';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const results = await runHealthCheckAction();
@@ -14,11 +16,12 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    console.error('Health check API error:', error);
     return NextResponse.json(
       {
         timestamp: new Date().toISOString(),
         overall: 'FAIL',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : 'Unknown error during health check.',
       },
       { status: 500 }
     );
