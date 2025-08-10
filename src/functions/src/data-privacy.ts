@@ -235,11 +235,11 @@ export const rejectDarRequest = onCall(async (request: CallableRequest) => {
 export const cleanupOptOut = onDocumentUpdated(
   'users/{uid}',
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string}>) => {
-    const change = event.data;
-    if (!change) return;
+    const data = event.data;
+    if (!data) return;
 
-    const beforeSettings = change.before.data()?.settings || {};
-    const afterSettings = change.after.data()?.settings || {};
+    const beforeSettings = data.before.data()?.settings || {};
+    const afterSettings = data.after.data()?.settings || {};
 
     const beforeConsent = beforeSettings.dataConsent?.shareAnonymousData;
     const afterConsent = afterSettings.dataConsent?.shareAnonymousData;
@@ -252,7 +252,7 @@ export const cleanupOptOut = onDocumentUpdated(
         logger.info(
           `Client did not set optedOutAt, setting it now for user ${uid}.`
         );
-        await change.after.ref.set(
+        await data.after.ref.set(
           {
             settings: {
               dataConsent: {
@@ -268,77 +268,3 @@ export const cleanupOptOut = onDocumentUpdated(
     return;
   }
 );
-
-/**
- * Nightly job to check watermarks on new exports.
- */
-export const dailyWatermarkChecker = onSchedule('30 01 * * *', async () => {
-  logger.info('Running daily watermark checker job.');
-
-  const twentyFourHoursAgo = admin.firestore.Timestamp.fromMillis(
-    Date.now() - 24 * 60 * 60 * 1000
-  );
-
-  try {
-    const recentExportsQuery = db
-      .collection('exportSummaries')
-      .where('generatedAt', '>=', twentyFourHoursAgo);
-    const recentExportsSnap = await recentExportsQuery.get();
-
-    if (recentExportsSnap.empty) {
-      logger.info('No new exports to check in the last 24 hours.');
-      return;
-    }
-
-    for (const doc of recentExportsSnap.docs) {
-      const exportSummary = doc.data();
-      const { packageId, watermarkId } = exportSummary;
-
-      if (!packageId || !watermarkId) {
-        logger.warn(`Export ${doc.id} is missing packageId or watermarkId.`);
-        continue;
-      }
-
-      const packageRef = db.doc(`dataMarketplace/packages/${packageId}`);
-      const packageDoc = await packageRef.get();
-
-      if (!packageDoc.exists) {
-        logger.error(
-          `Could not find package ${packageId} for export ${doc.id}. Flagging for review.`
-        );
-        // In a real app, write to an alerts collection.
-        continue;
-      }
-
-      const { watermarkSalt } = packageDoc.data() as any;
-      if (!watermarkSalt) {
-        logger.error(
-          `Package ${packageId} is missing a watermarkSalt. Flagging for review.`
-        );
-        // In a real app, write to an alerts collection.
-        continue;
-      }
-
-      // This is a placeholder for a real verification logic.
-      // A real implementation might involve hashing the salt with some export data
-      // and comparing it to the watermarkId.
-      const isWatermarkValid =
-        watermarkId.startsWith('watermark_') && watermarkId.length > 10;
-
-      if (isWatermarkValid) {
-        logger.info(`Watermark for export ${doc.id} is valid.`);
-      } else {
-        logger.error(
-          `Invalid watermark detected for export ${doc.id}. Flagging for review.`
-        );
-        // In a real app, write to an alerts collection.
-      }
-    }
-
-    logger.info('Daily watermark checker job finished.');
-  } catch (error) {
-    logger.error('Error running daily watermark checker:', error);
-  }
-
-  return;
-});
