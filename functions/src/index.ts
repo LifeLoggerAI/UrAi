@@ -28,4 +28,3 @@ export * from './stripe-webhook';
 
 // Scheduled jobs
 export * from './scheduled';
-
