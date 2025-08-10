@@ -103,40 +103,53 @@ export function HomeView() {
   useEffect(() => {
     if (!user) return;
 
-    const collectionsToFetch = [
-      { name: 'users', setter: setAppUser, single: true },
-      { name: 'goals', setter: setGoals, limit: 1 },
-      { name: 'tasks', setter: setTasks, limit: 5 },
-      { name: 'voiceEvents', setter: setVoiceEvents, limit: 10 },
-      { name: 'auraStates', setter: setAuraState, single: true, docId: 'current' },
-      { name: `users/${user.uid}/memoryBlooms`, setter: setMemoryBlooms, limit: 5 },
-      { name: 'dreamEvents', setter: setDreams, limit: 5 },
-      { name: 'innerTexts', setter: setInnerTexts, limit: 5 },
-      { name: 'people', setter: setPeople, limit: 10 },
-    ];
+    const unsubscribes: (() => void)[] = [];
 
-    const unsubscribes = collectionsToFetch.map(
-      ({ name, setter, single, docId, limit: queryLimit }) => {
-        if (single) {
-          const docRef = doc(db, name, docId || user.uid);
-          return onSnapshot(docRef, docSnap => {
-            (setter as Function)(docSnap.exists() ? docSnap.data() : null);
-          });
-        } else {
-          const collRef = collection(db, name);
-          const q = query(
-            collRef,
-            where('uid', '==', user.uid),
-            orderBy('createdAt', 'desc'),
-            limit(queryLimit || 10)
-          );
-          return onSnapshot(q, snapshot => {
-            const items = snapshot.docs.map(doc => doc.data());
-            (setter as Function)(items);
-          });
-        }
+    const setupSubscription = (
+      collectionName: string,
+      setter: Function,
+      options: {
+        isSingleDoc?: boolean;
+        docId?: string;
+        limit?: number;
+      } = {}
+    ) => {
+      if (options.isSingleDoc) {
+        const docRef = doc(db, collectionName, options.docId || user.uid);
+        const unsubscribe = onSnapshot(docRef, docSnap => {
+          setter(docSnap.exists() ? docSnap.data() : null);
+        });
+        unsubscribes.push(unsubscribe);
+      } else {
+        const collRef = collection(db, collectionName);
+        const q = query(
+          collRef,
+          where('uid', '==', user.uid),
+          orderBy('createdAt', 'desc'),
+          limit(options.limit || 10)
+        );
+        const unsubscribe = onSnapshot(q, snapshot => {
+          const items = snapshot.docs.map(doc => doc.data());
+          setter(items);
+        });
+        unsubscribes.push(unsubscribe);
       }
-    );
+    };
+    
+    // User Profile
+    setupSubscription('users', setAppUser, { isSingleDoc: true });
+    // Aura State
+    setupSubscription(`users/${user.uid}/auraStates`, setAuraState, { isSingleDoc: true, docId: 'current' });
+    // Memory Blooms
+    setupSubscription(`users/${user.uid}/memoryBlooms`, setMemoryBlooms, { limit: 5 });
+
+    // Other collections
+    setupSubscription('goals', setGoals, { limit: 1 });
+    setupSubscription('tasks', setTasks, { limit: 5 });
+    setupSubscription('voiceEvents', setVoiceEvents);
+    setupSubscription('dreamEvents', setDreams, { limit: 5 });
+    setupSubscription('innerTexts', setInnerTexts, { limit: 5 });
+    setupSubscription('people', setPeople);
 
     setDataLoading(false);
 
@@ -150,7 +163,7 @@ export function HomeView() {
     try {
       const result = await suggestRitualAction({
         zone: zone,
-        context: `User is feeling ${auraState?.mood || 'neutral'}`,
+        context: `User is feeling ${auraState?.currentEmotion || 'neutral'}`,
       });
       if (result.error || !result.suggestion) {
         throw new Error(result.error || 'Failed to get suggestion');

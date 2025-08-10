@@ -56,7 +56,7 @@ export const socialArchetypeEngine = onDocumentUpdated(
  */
 export const checkSilenceThresholds = onSchedule(
   {
-    schedule: 'every day 04:30',
+    schedule: '30 4 * * *',
     timeZone: 'UTC'
   },
   async () => {
