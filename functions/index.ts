@@ -6,7 +6,6 @@
 
 // Core feature modules
 export * from './src/user-management';
-export * from './src/emotion-engine';
 export * from './src/torso-engine';
 export * from './src/legs-engine';
 export * from './src/arms-engine';
@@ -17,9 +16,6 @@ export * from './src/data-privacy';
 export * from './src/notifications';
 export * from './src/email-engine';
 
-// Extended symbolic/telemetry engines
-export * from './src/symbolic-engine';
-
 // New symbolic systems
 export * from './src/shadow-metrics';
 export * from './src/crisis-threshold';
@@ -28,6 +24,8 @@ export * from './src/soul-thread-map';
 export * from './src/meta-learning';
 export * from './src/causal-insight';
 export * from './src/projection-detector';
+export * from './src/stripe-webhook';
 
+// Scheduled jobs
 export * from './src/generateWeeklyScroll';
-
+export * from './src/scheduled';
