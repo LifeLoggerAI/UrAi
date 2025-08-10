@@ -24,7 +24,10 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "ssrUrAi"
+        "function": {
+          "functionId": "ssrUrAi",
+          "region": "us-central1"
+        }
       }
     ],
     "headers": [
