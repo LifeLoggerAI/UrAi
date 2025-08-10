@@ -56,7 +56,7 @@ export default function HomePage() {
     };
 
     checkOnboardingStatus();
-  }, [user, authLoading, router]);
+  }, [user, authLoading]);
 
   if (authLoading || (user && profileLoading)) {
     return (

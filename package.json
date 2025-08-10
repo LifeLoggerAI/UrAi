@@ -33,7 +33,6 @@
     "@radix-ui/react-tabs": "^1.1.12",
     "@radix-ui/react-toast": "^1.2.14",
     "@radix-ui/react-tooltip": "^1.2.7",
-    "@types/stripe": "^8.0.416",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "date-fns": "3.6.0",
