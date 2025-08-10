@@ -104,25 +104,25 @@ export function HomeView() {
   useEffect(() => {
     if (!user) return;
 
+    setDataLoading(true);
     const unsubscribes: (() => void)[] = [];
 
     const setupSubscription = (
-      collectionName: string,
+      path: string,
       setter: Function,
       options: {
         isSingleDoc?: boolean;
-        docId?: string;
         limit?: number;
       } = {}
     ) => {
       if (options.isSingleDoc) {
-        const docRef = doc(db, collectionName, options.docId || user.uid);
+        const docRef = doc(db, path);
         const unsubscribe = onSnapshot(docRef, docSnap => {
           setter(docSnap.exists() ? docSnap.data() : null);
         });
         unsubscribes.push(unsubscribe);
       } else {
-        const collRef = collection(db, collectionName);
+        const collRef = collection(db, path);
         const q = query(
           collRef,
           where('uid', '==', user.uid),
@@ -130,7 +130,7 @@ export function HomeView() {
           limit(options.limit || 10)
         );
         const unsubscribe = onSnapshot(q, snapshot => {
-          const items = snapshot.docs.map(doc => doc.data());
+          const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setter(items);
         });
         unsubscribes.push(unsubscribe);
@@ -138,9 +138,9 @@ export function HomeView() {
     };
     
     // User Profile
-    setupSubscription('users', setAppUser, { isSingleDoc: true });
+    setupSubscription(`users/${user.uid}`, setAppUser, { isSingleDoc: true });
     // Aura State
-    setupSubscription(`users/${user.uid}/auraStates`, setAuraState, { isSingleDoc: true, docId: 'current' });
+    setupSubscription(`users/${user.uid}/auraStates/current`, setAuraState, { isSingleDoc: true });
     // Memory Blooms
     setupSubscription(`users/${user.uid}/memoryBlooms`, setMemoryBlooms, { limit: 5 });
 
@@ -196,6 +196,7 @@ export function HomeView() {
       case 'head':
       case 'settings':
       case 'sky':
+      case 'symbolic':
         return 'max-w-4xl';
       case 'torso':
       case 'legs':
@@ -333,7 +334,7 @@ export function HomeView() {
       </div>
 
       {/* Active Panel Dialog */}
-      <AlertDialog open={!!activePanel && activePanel !== 'symbolic'} onOpenChange={(open) => !open && setActivePanel(null)}>
+      <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
         <AlertDialogContent className={getPanelSize()}>
           {activePanel === 'companion' ? (
             <CompanionChatView />
@@ -356,6 +357,7 @@ export function HomeView() {
                   {activePanel === 'arms' && <Hand className="text-primary h-5 w-5" />}
                   {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5" />}
                   {activePanel === 'ground' && <Spade className="text-primary h-5 w-5" />}
+                  {activePanel === 'symbolic' && <Sprout className="text-primary h-5 w-5" />}
                   {panelContent?.title}
                 </AlertDialogTitle>
                 {panelContent?.description && (
@@ -384,24 +386,6 @@ export function HomeView() {
           )}
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Full-screen Symbolic Insights View */}
-      {activePanel === 'symbolic' && (
-        <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
-          <div className="container mx-auto p-4">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-3xl font-bold">Symbolic Life Tracking</h1>
-                <p className="text-muted-foreground">Advanced pattern recognition and mythic storytelling</p>
-              </div>
-              <Button variant="outline" onClick={() => setActivePanel(null)}>
-                Close
-              </Button>
-            </div>
-            <SymbolicInsightsView />
-          </div>
-        </div>
-      )}
     </>
   );
 }

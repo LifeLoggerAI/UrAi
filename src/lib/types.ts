@@ -1,3 +1,4 @@
+
 // Core type definitions for UrAi application
 import { z } from 'zod';
 
@@ -431,10 +432,7 @@ export const LocationDataSchema = z.object({
 });
 export type LocationData = z.infer<typeof LocationDataSchema>;
 
-export const PersonDataSchema = z.object({
-  name: z.string().describe("Person's name"),
-  age: z.number().optional().describe("Person's age"),
-  role: z.string().describe("Role in the event (e.g., 'birthday celebrant')"),
+export const PersonAppearanceSchema = z.object({
   height: z.string().optional(),
   build: z.string().optional(),
   skinTone: z.string().optional(),
@@ -444,10 +442,19 @@ export const PersonDataSchema = z.object({
   distinguishingFeatures: z.array(z.string()).optional(),
   clothing: z.string().optional(),
   accessories: z.array(z.string()).optional(),
+});
+export type PersonAppearance = z.infer<typeof PersonAppearanceSchema>;
+
+export const PersonDataSchema = z.object({
+  name: z.string().describe("Person's name"),
+  age: z.number().optional().describe("Person's age"),
+  role: z.string().describe("Role in the event (e.g., 'birthday celebrant')"),
+  appearance: PersonAppearanceSchema.optional(),
   expression: z.string().optional().describe("Dominant emotional expression"),
   posture: z.string().optional().describe("Body language or posture"),
 });
 export type PersonData = z.infer<typeof PersonDataSchema>;
+
 
 export const ActionDataSchema = z.object({
   description: z.string().describe("Description of the action or moment"),
@@ -478,6 +485,13 @@ export const ReferenceDataSchema = z.object({
   art: z.string().optional(),
 });
 export type ReferenceData = z.infer<typeof ReferenceDataSchema>;
+
+export const ValidationIssueSchema = z.object({
+  type: z.string(),
+  message: z.string(),
+  personName: z.string().optional(),
+});
+export type ValidationIssue = z.infer<typeof ValidationIssueSchema>;
 
 export const StoryboardDataSchema = z.object({
   event: EventDataSchema,
@@ -517,6 +531,7 @@ export const GenerateStoryboardOutputSchema = z.object({
 });
 export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
 export type StoryboardOutput = GenerateStoryboardOutput;
+
 
 export const NarrativeLoopSchema = z.object({
   loopId: z.string(),
