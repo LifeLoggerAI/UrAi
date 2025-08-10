@@ -66,7 +66,9 @@ export const detectEmotionalOverload = onDocumentWritten(
     >
   ) => {
     const data = event.data?.after.data();
-    if (data?.emotionalEffortLoad > 70 && data?.connectionEchoScore < 40) {
+    if (!data) return;
+    
+    if (data.emotionalEffortLoad > 70 && data.connectionEchoScore < 40) {
       logger.info(`Emotional overload detected for user ${event.params.uid}.`);
       // Logic to create narratorInsights and push a notification.
     }

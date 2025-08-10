@@ -47,7 +47,6 @@ export const socialArchetypeEngine = onDocumentUpdated(
       `Running social archetype engine for user ${event.params.uid}, contact ${event.params.personId}.`
     );
     // Logic to call 'ArchetypeShiftEngine' AI model and update socialArchetype.
-    return;
   });
 
 /**
@@ -64,7 +63,6 @@ export const checkSilenceThresholds = onSchedule(
     // For every user & contact:
     // 1. Check if silenceDurationDays > threshold (e.g., 60 days).
     // 2. If so, create a narratorInsight.
-    return;
   });
 
 /**
@@ -79,5 +77,4 @@ export const echoLoopDetection = onDocumentWritten(
     );
     // Logic to compare post-interaction mood signals.
     // If lingering effects, increase echoLoopScore on the socialContact.
-    return;
   });
