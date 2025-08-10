@@ -55,7 +55,7 @@ export const detectShadowEpisode = onDocumentWritten(
  */
 export const runForecastEngine = onSchedule(
   {
-    schedule: '5 2 * * *',
+    schedule: '0 6 * * *',
     timeZone: 'UTC'
   },
     async () => {
@@ -98,3 +98,31 @@ export const evaluateLegacyProgress = onDocumentWritten(
     // Logic to check progressScore and trigger notifications if milestones are met.
     return null;
   });
+
+export const refreshForecasts = onSchedule({
+  schedule: '0 6 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("refreshForecasts triggered");
+});
+
+export const shadowStressAlerts = onSchedule({
+  schedule: '0 20 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("shadowStressAlerts triggered");
+});
+
+export const obscuraFatigueAlerts = onSchedule({
+  schedule: '15 20 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("obscuraFatigueAlerts triggered");
+});
+
+export const monthlyNarratorSummary = onSchedule({
+  schedule: '0 10 1 * *',
+  timeZone: 'America/New_York'
+}, async () => {
+  logger.info("monthlyNarratorSummary triggered");
+});

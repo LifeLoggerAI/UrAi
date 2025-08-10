@@ -122,14 +122,13 @@ export function SettingsForm() {
     if (!user) return;
     setIsSubmitting(true);
     try {
-      // Handle consent change timestamps
-      const currentConsent = form.getValues('dataConsent.shareAnonymousData');
-      if (currentConsent && !data.dataConsent?.shareAnonymousData) {
-        if (data.dataConsent) {
+      const initialValues = form.getValues();
+      const initialConsent = initialValues.dataConsent?.shareAnonymousData;
+      
+      if (data.dataConsent) {
+        if (initialConsent === true && data.dataConsent.shareAnonymousData === false) {
           data.dataConsent.optedOutAt = Date.now();
-        }
-      } else if (!currentConsent && data.dataConsent?.shareAnonymousData) {
-        if (data.dataConsent) {
+        } else if (initialConsent === false && data.dataConsent.shareAnonymousData === true) {
           data.dataConsent.optedOutAt = null;
         }
       }
@@ -152,9 +151,13 @@ export function SettingsForm() {
       };
 
       const dbUpdatePromise = updateDoc(userRef, updatePayload);
-      const authUpdatePromise = updateProfile(auth.currentUser!, {
-        displayName: data.displayName,
-      });
+      
+      let authUpdatePromise = Promise.resolve();
+      if (auth.currentUser && auth.currentUser.displayName !== data.displayName) {
+        authUpdatePromise = updateProfile(auth.currentUser, {
+          displayName: data.displayName,
+        });
+      }
 
       await Promise.all([dbUpdatePromise, authUpdatePromise]);
 

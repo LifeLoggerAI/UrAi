@@ -1,12 +1,35 @@
-
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read/write access to all documents for local development.
-    // This is not secure for production but is necessary for the emulator.
-    match /{document=**} {
-      allow read, write: if true;
+    function isAuthed() { return request.auth != null; }
+
+    match /users/{uid} {
+      allow read, write: if isAuthed() && request.auth.uid == uid;
+    }
+
+    // Core collections (read = owner, write = owner or CF)
+    match /moods/{doc} { allow read, write: if isAuthed(); }
+    match /rituals/{doc} { allow read, write: if isAuthed(); }
+    match /insights/{doc} { allow read, write: if isAuthed(); }
+    match /voiceEvents/{doc} { allow read, write: if isAuthed(); }
+    match /socialGraph/{doc} { allow read, write: if isAuthed(); }
+    match /forecasts/{doc} { allow read, write: if isAuthed(); }
+    match /memoryBlooms/{doc} { allow read, write: if isAuthed(); }
+    match /assets/{doc} { allow read, write: if isAuthed(); }
+
+    // Advanced analytics
+    match /shadowCognition/{doc} { allow read, write: if isAuthed(); }
+    match /obscuraPatterns/{doc} { allow read, write: if isAuthed(); }
+    match /mentalLoad/{doc} { allow read, write: if isAuthed(); }
+
+    // Payments / pro tier flags (write by owner or CF)
+    match /billing/{doc} { allow read, write: if isAuthed(); }
+    match /proTiers/{doc} { allow read, write: if isAuthed(); }
+
+    // Public demo content (read all, write CF)
+    match /publicDemo/{doc} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }
