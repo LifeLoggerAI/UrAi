@@ -19,7 +19,6 @@ export * from './notifications';
 export * from './email-engine';
 
 // Extended symbolic/telemetry engines
-export * from './dream-engine';
 export * from './symbolic-engine';
 
 // New symbolic systems
