@@ -66,7 +66,7 @@ export const detectAvoidancePatterns = onDocumentWritten(
  */
 export const trajectoryForecastJob = onSchedule(
   {
-    schedule: "45 04 * * *",
+    schedule: "45 4 * * *",
     timeZone: "UTC",
   },
   async () => {
@@ -86,7 +86,7 @@ export const trajectoryForecastJob = onSchedule(
  */
 export const scheduleDailyLegsSummary = onSchedule(
   {
-    schedule: "20 02 * * *",
+    schedule: "20 2 * * *",
     timeZone: "UTC",
   },
   async () => {

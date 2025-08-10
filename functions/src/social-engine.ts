@@ -54,7 +54,11 @@ export const socialArchetypeEngine = onDocumentUpdated(
  * Daily check for contacts that have gone silent.
  * This is a placeholder.
  */
-export const checkSilenceThresholds = onSchedule('every day 04:30',
+export const checkSilenceThresholds = onSchedule(
+  {
+    schedule: 'every day 04:30',
+    timeZone: 'UTC'
+  },
   async () => {
     logger.info('Running daily social silence check for all users.');
     // For every user & contact:
