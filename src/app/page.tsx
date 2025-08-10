@@ -45,17 +45,19 @@ export default function HomePage() {
             router.push("/onboarding/permissions");
           }
         } else {
+          // If the user document doesn't exist, they need to onboard.
           router.push("/onboarding/permissions");
         }
       } catch (error) {
         console.error("Error checking onboarding status:", error);
-        router.push("/onboarding/permissions");
+        router.push("/onboarding/permissions"); // Fail safe to onboarding
       } finally {
         setProfileLoading(false);
       }
     };
 
     checkOnboardingStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading]);
 
   if (authLoading || (user && profileLoading)) {
