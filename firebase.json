@@ -36,7 +36,7 @@
         "headers": [
           {
             "key": "Content-Security-Policy",
-            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev http://localhost:4401 http://127.0.0.1:4401 https://6000-firebase-studio-1751520120513.cluster-pgviq6mvsncnqxx6kr7pbz65v6.cloudworkstations.dev; connect-src 'self' http://localhost:* http://127.0.0.1:* wss://*.firebaseio.com https://*.googleapis.com https://securetoken.googleapis.com ws://localhost:* ws://127.0.0.1:* https://lifelogger-clean.web.app https://lifelogger-clean.firebaseapp.com https://*.cloudworkstations.dev https://6000-firebase-studio-1751520120513.cluster-pgviq6mvsncnqxx6kr7pbz65v6.cloudworkstations.dev; script-src 'self' 'unsafe-inline' https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * data: blob:; object-src 'none';"
+            "value": "frame-ancestors 'self' https://*.cloudworkstations.dev http://localhost:* http://127.0.0.1:* https://lifelogger-clean.web.app https://lifelogger-clean.firebaseapp.com; connect-src 'self' http://localhost:* http://127.0.0.1:* wss://*.firebaseio.com https://*.googleapis.com https://securetoken.googleapis.com ws://localhost:* ws://127.0.0.1:* https://*.cloudworkstations.dev; script-src 'self' 'unsafe-inline' https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src * data: blob:; object-src 'none';"
           },
           {
             "key": "X-Frame-Options",
