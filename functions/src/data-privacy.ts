@@ -272,7 +272,11 @@ export const cleanupOptOut = onDocumentUpdated(
 /**
  * Nightly job to check watermarks on new exports.
  */
-export const dailyWatermarkChecker = onSchedule('30 01 * * *', async () => {
+export const dailyWatermarkChecker = onSchedule({
+    schedule: '30 01 * * *',
+    timeZone: 'UTC',
+  },
+  async () => {
   logger.info('Running daily watermark checker job.');
 
   const twentyFourHoursAgo = admin.firestore.Timestamp.fromMillis(

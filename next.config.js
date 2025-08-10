@@ -1,3 +1,4 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { isServer }) => {
@@ -7,7 +8,6 @@ const nextConfig = {
       net: false,
       tls: false,
       fs: false,
-      child_process: false,
       http: false,
       https: false,
       os: false,
