@@ -1,3 +1,4 @@
+
 import { db } from './firebase';
 import { doc, writeBatch, collection } from 'firebase/firestore';
 import type {
@@ -146,9 +147,10 @@ export async function seedDemoData(userId: string) {
     batch.set(newVoiceLogRef, newVoiceLog);
 
     // 6. Add more diverse data to populate the UI
-    const bloomRef = doc(collection(db, `users/${userId}/memoryBlooms`));
+    const bloomRef = doc(collection(db, 'memoryBlooms'));
     const bloom: MemoryBloom = {
       bloomId: bloomRef.id,
+      uid: userId,
       emotion: 'joy',
       bloomColor: '#7CFC00',
       triggeredAt: Date.now() - 259200000, // 3 days ago
@@ -156,11 +158,10 @@ export async function seedDemoData(userId: string) {
     };
     batch.set(bloomRef, bloom);
 
-    const recoveryBloomRef = doc(
-      collection(db, `users/${userId}/memoryBlooms`)
-    );
+    const recoveryBloomRef = doc(collection(db, 'memoryBlooms'));
     const recoveryBloom: MemoryBloom = {
       bloomId: recoveryBloomRef.id,
+      uid: userId,
       emotion: 'recovery',
       bloomColor: 'hsl(140, 70%, 60%)', // A green color for recovery
       triggeredAt: new Date('2025-07-05').getTime(),
@@ -193,7 +194,7 @@ export async function seedDemoData(userId: string) {
     batch.set(innerTextRef, innerText);
 
     // 7. Weekly Scroll
-    const scrollRef = doc(collection(db, `weeklyScrolls/${userId}/scrolls`));
+    const scrollRef = doc(collection(db, 'weeklyScrolls'));
     const weeklyScroll: WeeklyScroll = {
       id: scrollRef.id,
       uid: userId,
@@ -213,9 +214,7 @@ export async function seedDemoData(userId: string) {
     };
     batch.set(scrollRef, weeklyScroll);
 
-    const storyScrollRef = doc(
-      collection(db, `weeklyScrolls/${userId}/scrolls`)
-    );
+    const storyScrollRef = doc(collection(db, 'weeklyScrolls'));
     const storyScroll: WeeklyScroll = {
       id: storyScrollRef.id,
       uid: userId,

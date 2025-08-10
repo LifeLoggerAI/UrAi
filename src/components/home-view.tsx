@@ -113,6 +113,7 @@ export function HomeView() {
       options: {
         isSingleDoc?: boolean;
         limit?: number;
+        collectionGroup?: boolean;
       } = {}
     ) => {
       if (options.isSingleDoc) {
@@ -141,8 +142,20 @@ export function HomeView() {
     setupSubscription(`users/${user.uid}`, setAppUser, { isSingleDoc: true });
     // Aura State
     setupSubscription(`users/${user.uid}/auraStates/current`, setAuraState, { isSingleDoc: true });
-    // Memory Blooms
-    setupSubscription(`users/${user.uid}/memoryBlooms`, setMemoryBlooms, { limit: 5 });
+    
+    // Memory Blooms (Root collection query)
+    const bloomsQuery = query(
+      collection(db, 'memoryBlooms'),
+      where('uid', '==', user.uid),
+      orderBy('triggeredAt', 'desc'),
+      limit(5)
+    );
+    const bloomsUnsubscribe = onSnapshot(bloomsQuery, (snapshot) => {
+      const blooms = snapshot.docs.map(doc => ({ ...doc.data() as MemoryBloom, bloomId: doc.id }));
+      setMemoryBlooms(blooms);
+    });
+    unsubscribes.push(bloomsUnsubscribe);
+
 
     // Other collections
     setupSubscription('goals', setGoals, { limit: 1 });

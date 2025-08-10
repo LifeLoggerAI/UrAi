@@ -13,7 +13,8 @@
     "test:e2e": "npx playwright test",
     "test:e2e:install": "npx playwright install --with-deps",
     "health-check": "tsx src/scripts/health-check.ts",
-    "ai:validate": "tsx src/scripts/validate-ai-config.ts"
+    "ai:validate": "tsx src/scripts/validate-ai-config.ts",
+    "test:models": "echo \"Model tests not yet implemented\" && exit 0"
   },
   "dependencies": {
     "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
