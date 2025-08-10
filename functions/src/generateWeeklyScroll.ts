@@ -1,8 +1,8 @@
 
-import { onCall, type HttpsRequest } from "firebase-functions/v2/https";
+import { onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions/v2";
 
-export const generateWeeklyScroll = onCall(async (request: HttpsRequest) => {
+export const generateWeeklyScroll = onCall(async (request: any) => {
   // Placeholder implementation
   logger.info("generateWeeklyScroll called with:", request.data);
   logger.info("Context:", { uid: request.auth?.uid });

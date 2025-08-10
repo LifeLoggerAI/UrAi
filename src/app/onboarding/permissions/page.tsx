@@ -142,7 +142,7 @@ export default function PermissionsPage() {
       toast({
         variant: 'destructive',
         title: 'Error Saving Permissions',
-        description: err.message,
+        description: 'Missing or insufficient permissions.',
       });
       console.error('Error saving permissions:', err);
     } finally {
@@ -212,45 +212,47 @@ export default function PermissionsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <ScrollArea className="h-64 w-full rounded-md border p-4 text-sm">
-                <h3 className="font-bold text-foreground">
-                  Your Story, Your Rights
-                </h3>
-                <p className="mt-2 text-muted-foreground">
-                  Welcome to Life Logger. Before we begin, we honor your right
-                  to:
-                </p>
-                <ul className="my-2 ml-6 list-disc [&>li]:mt-2 text-muted-foreground">
-                  <li>Own your data</li>
-                  <li>Decide what’s shared</li>
-                  <li>Delete anything, anytime</li>
-                </ul>
-                <p className="text-muted-foreground">
-                  By continuing, you agree to our{' '}
-                  <a href="#" className="underline hover:text-primary">
-                    Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="underline hover:text-primary">
-                    Privacy Policy
-                  </a>
-                  . These documents explain:
-                </p>
-                <ul className="my-2 ml-6 list-disc [&>li]:mt-2 text-muted-foreground">
-                  <li>What data we collect (only with your consent)</li>
-                  <li>How it’s protected (end-to-end encryption)</li>
-                  <li>How we anonymize insights (never identifiable)</li>
-                  <li>
-                    What control you retain (full ownership and export rights)
-                  </li>
-                </ul>
-                <p className="mt-4 font-semibold text-foreground">
-                  We never sell your identity or raw data. Only anonymized,
-                  aggregated patterns may be used to help others — if you
-                  explicitly opt-in.
-                </p>
-                <p className="mt-2 text-muted-foreground">
-                  You can revisit this agreement anytime from Settings.
-                </p>
+                <div className="prose prose-sm dark:prose-invert text-muted-foreground">
+                  <h3 className="font-bold text-foreground">
+                    Your Story, Your Rights
+                  </h3>
+                  <p>
+                    Welcome to Life Logger. Before we begin, we honor your right
+                    to:
+                  </p>
+                  <ul>
+                    <li>Own your data</li>
+                    <li>Decide what&apos;s shared</li>
+                    <li>Delete anything, anytime</li>
+                  </ul>
+                  <p>
+                    By continuing, you agree to our{' '}
+                    <a href="#" className="underline hover:text-primary">
+                      Terms of Service
+                    </a>{' '}
+                    and{' '}
+                    <a href="#" className="underline hover:text-primary">
+                      Privacy Policy
+                    </a>
+                    . These documents explain:
+                  </p>
+                  <ul>
+                    <li>What data we collect (only with your consent)</li>
+                    <li>How it&apos;s protected (end to end encryption)</li>
+                    <li>How we anonymize insights (never identifiable)</li>
+                    <li>
+                      What control you retain (full ownership and export rights)
+                    </li>
+                  </ul>
+                  <p>
+                    We never sell your identity or raw data. Only anonymized,
+                    aggregated patterns may be used to help others — if you
+                    explicitly opt-in.
+                  </p>
+                  <p>
+                    You can revisit this agreement anytime from Settings.
+                  </p>
+                </div>
               </ScrollArea>
               <div className="flex items-center space-x-2 pt-2">
                 <Checkbox

@@ -7,6 +7,14 @@ if (admin.apps.length === 0) {
 }
 const db = admin.firestore();
 
+interface ShadowMetrics {
+  frictionTaps: number;
+  cancelBehaviorCount: number;
+  bedtimeScrollMinutes: number;
+  entropyLevel: number;
+  lastSeenGhostedEvent: string;
+}
+
 export const updateShadowMetrics = onDocumentWritten('voiceEvents/{id}', async (event) => {
   const data = event.data?.after?.data();
   if (!data) return;
@@ -15,7 +23,7 @@ export const updateShadowMetrics = onDocumentWritten('voiceEvents/{id}', async (
   const userRef = db.collection('shadowMetrics').doc(userId);
   const metricsDoc = await userRef.get();
 
-  let current = metricsDoc.exists ? metricsDoc.data() : {
+  let current: ShadowMetrics = metricsDoc.exists ? (metricsDoc.data() as ShadowMetrics) : {
     frictionTaps: 0,
     cancelBehaviorCount: 0,
     bedtimeScrollMinutes: 0,
