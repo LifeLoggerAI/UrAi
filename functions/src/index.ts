@@ -12,6 +12,7 @@ export * from './legs-engine';
 export * from './arms-engine';
 export * from './social-engine';
 export * from './data-privacy';
+export * from './generateWeeklyScroll';
 
 // Messaging systems
 export * from './notifications';
@@ -28,5 +29,3 @@ export * from './soul-thread-map';
 export * from './meta-learning';
 export * from './causal-insight';
 export * from './projection-detector';
-
-export * from './generateWeeklyScroll';
