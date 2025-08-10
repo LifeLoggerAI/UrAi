@@ -65,8 +65,8 @@ export const detectEmotionalOverload = onDocumentWritten(
       { uid: string; dateKey: string }
     >
   ) => {
+    if (!event.data?.after.exists) return;
     const data = event.data?.after.data();
-    if (!data) return;
     
     if (data.emotionalEffortLoad > 70 && data.connectionEchoScore < 40) {
       logger.info(`Emotional overload detected for user ${event.params.uid}.`);

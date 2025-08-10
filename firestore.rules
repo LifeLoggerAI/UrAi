@@ -1,36 +1,118 @@
-// Firestore rules v1
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAuthed() { return request.auth != null; }
 
-    match /users/{uid} {
-      allow read, write: if isAuthed() && request.auth.uid == uid;
+    function isAuthed() {
+      return request.auth != null;
     }
 
-    // Core collections (read = owner, write = owner or CF)
-    match /moods/{doc} { allow read, write: if isAuthed(); }
-    match /rituals/{doc} { allow read, write: if isAuthed(); }
-    match /insights/{doc} { allow read, write: if isAuthed(); }
-    match /voiceEvents/{doc} { allow read, write: if isAuthed(); }
-    match /socialGraph/{doc} { allow read, write: if isAuthed(); }
-    match /forecasts/{doc} { allow read, write: if isAuthed(); }
-    match /memoryBlooms/{doc} { allow read, write: if isAuthed(); }
-    match /assets/{doc} { allow read, write: if isAuthed(); }
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+    
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+    
+    match /voiceEvents/{eventId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+    
+    match /dreamEvents/{dreamId} {
+        allow read, write: if isOwner(request.resource.data.uid);
+    }
 
-    // Advanced analytics
-    match /shadowCognition/{doc} { allow read, write: if isAuthed(); }
-    match /obscuraPatterns/{doc} { allow read, write: if isAuthed(); }
-    match /mentalLoad/{doc} { allow read, write: if isAuthed(); }
+    match /innerTexts/{textId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
 
-    // Payments / pro tier flags (write by owner or CF)
-    match /billing/{doc} { allow read, write: if isAuthed(); }
-    match /proTiers/{doc} { allow read, write: if isAuthed(); }
+    match /people/{personId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
 
-    // Public demo content (read all, write CF)
-    match /publicDemo/{doc} {
+    match /goals/{goalId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /tasks/{taskId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /calendarEvents/{eventId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+    
+    match /habitWatch/{habitId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /onboardIntake/{intakeId} {
+      allow write: if isAuthed();
+    }
+
+    match /permissions/{uid} {
+      allow read, write: if isOwner(uid);
+    }
+    
+    match /companions/{companionId} {
+        allow read, write: if isOwner(request.resource.data.uid);
+    }
+    
+    match /memoryBlooms/{bloomId} {
+        allow read, write: if isAuthed();
+    }
+    
+    match /weeklyScrolls/{scrollId} {
+        allow read, write: if isOwner(request.resource.data.uid);
+    }
+    
+    match /audioEvents/{audioId} {
+        allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /narrativeLoops/{loopId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /rebirthMoments/{rebirthId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /thresholdMoments/{thresholdId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+
+    match /auraScrolls/{scrollId} {
+      allow read, write: if isOwner(request.resource.data.uid);
+    }
+    
+    match /proTiers/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if isOwner(uid);
+    }
+
+    match /billing/{uid} {
+      allow read: if isOwner(uid);
+    }
+    
+    match /rituals/{id} {
+      allow read, write: if isAuthed();
+    }
+    match /insights/{id} {
+      allow read, write: if isAuthed();
+    }
+    match /socialGraph/{id} {
+      allow read, write: if isAuthed();
+    }
+    match /assets/{id} {
+      allow read, write: if isAuthed();
+    }
+    match /partnerAuth/{id} {
       allow read: if true;
-      allow write: if false;
+    }
+    match /dataMarketplace/{id} {
+      allow read: if true;
     }
   }
 }
