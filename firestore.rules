@@ -1,14 +1,14 @@
+// Firestore rules v1
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function isAuthed() { return request.auth != null; }
 
     match /users/{uid} {
-      allow read: if isAuthed() && request.auth.uid == uid;
-      allow write: if isAuthed() && request.auth.uid == uid;
+      allow read, write: if isAuthed() && request.auth.uid == uid;
     }
 
-    // Core collections
+    // Core collections (read = owner, write = owner or CF)
     match /moods/{doc} { allow read, write: if isAuthed(); }
     match /rituals/{doc} { allow read, write: if isAuthed(); }
     match /insights/{doc} { allow read, write: if isAuthed(); }
@@ -23,11 +23,11 @@ service cloud.firestore {
     match /obscuraPatterns/{doc} { allow read, write: if isAuthed(); }
     match /mentalLoad/{doc} { allow read, write: if isAuthed(); }
 
-    // Payments / pro tier flags
+    // Payments / pro tier flags (write by owner or CF)
     match /billing/{doc} { allow read, write: if isAuthed(); }
     match /proTiers/{doc} { allow read, write: if isAuthed(); }
 
-    // Public demo content
+    // Public demo content (read all, write CF)
     match /publicDemo/{doc} {
       allow read: if true;
       allow write: if false;

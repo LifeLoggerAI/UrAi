@@ -4,13 +4,13 @@
   "include": ["src"],
   "exclude": ["**/__tests__/**", "**/*.test.ts", "test", "lib", "node_modules"],
   "compilerOptions": {
-    "module": "NodeNext",
+    "module": "commonjs",
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
     "target": "ES2022",
     "skipLibCheck": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "node",
     "noUnusedLocals": true
   }
 }
