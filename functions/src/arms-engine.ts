@@ -79,7 +79,10 @@ export const detectEmotionalOverload = onDocumentWritten(
  * This is a placeholder.
  */
 export const scheduleDailyArmsSummary = onSchedule(
-  "30 2 * * *",
+  {
+    schedule: "30 2 * * *",
+    timeZone: "UTC",
+  },
   async () => {
     logger.info("Running daily arms summary job.");
     // For every user:
