@@ -69,7 +69,7 @@ export const checkSilenceThresholds = onSchedule('every day 04:30',
  */
 export const echoLoopDetection = onDocumentWritten(
   'socialEvents/{uid}/{eventId}',
-  async (event: FirestoreEvent<DocumentSnapshot | undefined, {uid: string, eventId: string}>) => {
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, {uid: string, eventId: string}>) => {
     logger.info(
       `Detecting echo loops for user ${event.params.uid}.`
     );
