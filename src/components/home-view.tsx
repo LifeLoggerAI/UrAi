@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -194,6 +195,7 @@ export function HomeView() {
         return 'h-full md:h-[80vh] max-w-2xl';
       case 'head':
       case 'settings':
+      case 'sky':
         return 'max-w-4xl';
       case 'torso':
       case 'legs':
