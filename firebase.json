@@ -10,7 +10,8 @@
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
-      ]
+      ],
+      "runtime": "nodejs22"
     }
   ],
   "hosting": {
@@ -23,7 +24,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "nextServer"
+        "function": "ssrUrAi"
       }
     ],
     "headers": [
