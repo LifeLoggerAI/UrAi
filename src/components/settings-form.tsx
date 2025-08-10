@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -310,7 +311,7 @@ export function SettingsForm() {
                 <AlertDialogTitle>Confirm Data Export</AlertDialogTitle>
                 <AlertDialogDescription>
                   This will start the process of exporting all your data. You will
-                  receive a secure download link when it's ready.
+                  receive a secure download link when it&apos;s ready.
                   This may take some time.
                 </AlertDialogDescription>
               </AlertDialogHeader>
