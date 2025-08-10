@@ -27,5 +27,4 @@ export * from './src/projection-detector';
 export * from './src/stripe-webhook';
 
 // Scheduled jobs
-export * from './src/generateWeeklyScroll';
 export * from './src/scheduled';

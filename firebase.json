@@ -24,8 +24,8 @@
     "rewrites": [
       {
         "source": "**",
-        "function": {
-          "functionId": "ssrUrAi",
+        "run": {
+          "serviceId": "ssrUrAi",
           "region": "us-central1"
         }
       }
