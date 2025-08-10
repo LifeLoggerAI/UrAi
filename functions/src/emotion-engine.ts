@@ -114,7 +114,11 @@ export const updateAuraState = onDocumentWritten(
 );
 
 // 2. emotionOverTimeWatcher – trend detector (hourly)
-export const emotionOverTimeWatcher = onSchedule('every 60 minutes',
+export const emotionOverTimeWatcher = onSchedule(
+  {
+    schedule: 'every 60 minutes',
+    timeZone: 'UTC',
+  },
   async () => {
     logger.info('Running hourly emotionOverTimeWatcher job.');
     const usersSnap = await db.collection('users').get();

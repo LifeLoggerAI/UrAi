@@ -11,14 +11,15 @@ export * from './torso-engine';
 export * from './legs-engine';
 export * from './arms-engine';
 export * from './social-engine';
-export * from './data-privacy';
 export * from './timeline-engine';
+export * from './data-privacy';
 
 // Messaging systems
 export * from './notifications';
 export * from './email-engine';
 
 // Extended symbolic/telemetry engines
+export * from './dream-engine';
 export * from './symbolic-engine';
 
 // New symbolic systems

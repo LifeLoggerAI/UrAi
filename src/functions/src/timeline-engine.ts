@@ -53,7 +53,11 @@ export const detectShadowEpisode = onDocumentWritten(
  * Generates the user's emotional forecast for the next 7 days.
  * This is a placeholder.
  */
-export const runForecastEngine = onSchedule('05 02 * * *',
+export const runForecastEngine = onSchedule(
+  {
+    schedule: '0 6 * * *',
+    timeZone: 'UTC'
+  },
     async () => {
     logger.info('Running daily emotional forecast for all users.');
     // For every user:
@@ -67,7 +71,11 @@ export const runForecastEngine = onSchedule('05 02 * * *',
  * Updates the user's current archetype based on recent activity.
  * This is a placeholder.
  */
-export const updateArchetypeState = onSchedule('00 04 * * 0',
+export const updateArchetypeState = onSchedule(
+  {
+    schedule: '0 4 * * 0',
+    timeZone: 'UTC'
+  },
     async () => {
     logger.info('Running weekly archetype evolution for all users.');
     // For every user:
@@ -90,3 +98,31 @@ export const evaluateLegacyProgress = onDocumentWritten(
     // Logic to check progressScore and trigger notifications if milestones are met.
     return null;
   });
+
+export const refreshForecasts = onSchedule({
+  schedule: '0 6 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("refreshForecasts triggered");
+});
+
+export const shadowStressAlerts = onSchedule({
+  schedule: '0 20 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("shadowStressAlerts triggered");
+});
+
+export const obscuraFatigueAlerts = onSchedule({
+  schedule: '15 20 * * *',
+  timeZone: 'UTC'
+}, async () => {
+  logger.info("obscuraFatigueAlerts triggered");
+});
+
+export const monthlyNarratorSummary = onSchedule({
+  schedule: '0 10 1 * *',
+  timeZone: 'America/New_York'
+}, async () => {
+  logger.info("monthlyNarratorSummary triggered");
+});

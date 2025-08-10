@@ -1,3 +1,4 @@
+
 import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as admin from "firebase-admin";
 import { logger } from "firebase-functions/v2";
@@ -12,7 +13,10 @@ if (admin.apps.length === 0) {
  * This is a placeholder; a real implementation would generate a PDF or interactive export.
  */
 export const generateWeeklyScroll = onSchedule(
-  "every monday 08:00",
+  {
+    schedule: "0 9 * * 1",
+    timeZone: "America/New_York",
+  },
   async (context) => {
     logger.info("Starting weekly scroll export job for all users.");
     // In a real application, this function would:
@@ -29,7 +33,12 @@ export const generateWeeklyScroll = onSchedule(
  * Evolves the AI companion's personality monthly based on user interaction.
  * This is a placeholder.
  */
-export const evolveCompanion = onSchedule("1 of month 09:00", async (context) => {
+export const evolveCompanion = onSchedule(
+  {
+    schedule: "0 10 1 * *",
+    timeZone: "America/New_York",
+  },
+  async (context) => {
   logger.info("Starting monthly companion evolution job.");
   // In a real application, this function would:
   // 1. Query for all users.
@@ -43,7 +52,12 @@ export const evolveCompanion = onSchedule("1 of month 09:00", async (context) =>
  * Exports data to BigQuery nightly.
  * This is a placeholder.
  */
-export const exportToBigQuery = onSchedule("every day 03:00", async (context) => {
+export const exportToBigQuery = onSchedule(
+  {
+    schedule: "0 3 * * *",
+    timeZone: "UTC",
+  },
+  async (context) => {
   logger.info("Starting nightly BigQuery export job.");
   // In a real application, this function would:
   // 1. Check user consent (`dataConsent` collection).
@@ -58,7 +72,10 @@ export const exportToBigQuery = onSchedule("every day 03:00", async (context) =>
  * This is a placeholder.
  */
 export const scheduleDailyTorsoSummary = onSchedule(
-  "15 02 * * *",
+  {
+    schedule: "15 2 * * *",
+    timeZone: "UTC",
+  },
   async () => {
     logger.info("Running daily torso summary job.");
     // For every user:
