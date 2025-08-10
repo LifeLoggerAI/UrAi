@@ -1,14 +1,15 @@
-import * as functions from "firebase-functions";
+import { onCall, type HttpsRequest } from "firebase-functions/v2/https";
+import { logger } from "firebase-functions/v2";
 
-export const generateWeeklyScroll = functions.https.onCall(async (data, context) => {
+export const generateWeeklyScroll = onCall(async (request: HttpsRequest) => {
   // Placeholder implementation
-  console.log("generateWeeklyScroll called with:", data);
-  console.log("Context:", { uid: context?.auth?.uid });
+  logger.info("generateWeeklyScroll called with:", request.data);
+  logger.info("Context:", { uid: request.auth?.uid });
   
   return {
     success: true,
     message: "Weekly scroll generated successfully (placeholder)",
-    data: data,
+    data: request.data,
     timestamp: new Date().toISOString()
   };
 });
