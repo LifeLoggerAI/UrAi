@@ -11,7 +11,6 @@ export * from './src/torso-engine';
 export * from './src/legs-engine';
 export * from './src/arms-engine';
 export * from './src/social-engine';
-export * from './src/timeline-engine';
 export * from './src/data-privacy';
 
 // Messaging systems
