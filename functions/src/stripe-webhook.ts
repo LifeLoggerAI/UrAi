@@ -20,7 +20,7 @@ const webhookSecret = defineString("STRIPE_WEBHOOK_SECRET");
  */
 export const stripeWebhook = onRequest(async (request, response) => {
   const stripe = new Stripe(stripeSecretKey.value(), {
-    apiVersion: "2024-06-20",
+    apiVersion: "2025-07-30.basil",
   });
 
   const sig = request.headers["stripe-signature"];
@@ -49,7 +49,7 @@ export const stripeWebhook = onRequest(async (request, response) => {
         break;
       }
       
-      const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+      const subscription = (await stripe.subscriptions.retrieve(session.subscription as string)) as Stripe.Subscription;
       
       // Update user's pro tier status in Firestore
       await db.collection("proTiers").doc(uid).set({
