@@ -119,7 +119,7 @@ export const checkProLimits = onDocumentCreated(
       const dateKeySevenDaysAgo = sevenDaysAgo.toISOString().split('T')[0];
 
       const oldMetricsQuery = db
-        .collection(`torsoMetrics/${uid}`)
+        .collection(`torsoMetrics/${uid}/metrics`)
         .where(admin.firestore.FieldPath.documentId(), '<', dateKeySevenDaysAgo)
         .orderBy(admin.firestore.FieldPath.documentId());
 
