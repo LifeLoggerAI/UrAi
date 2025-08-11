@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -14,6 +15,11 @@ service cloud.firestore {
 
     // Users can only access their own namespace under /users/{uid}/...
     match /users/{uid}/{collectionId}/{docId} {
+      allow read, write: if isOwner(uid);
+    }
+    
+    // allow user to read their own root user doc
+    match /users/{uid} {
       allow read, write: if isOwner(uid);
     }
 
@@ -100,6 +106,19 @@ service cloud.firestore {
         isString(request.resource.data.archetype) && isTS(request.resource.data.lastUpdated);
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
       allow delete: if false;
+    }
+    
+    match /relationships/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","peerId","voiceMemoryStrength"]) &&
+        isOwner(request.resource.data.uid);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false;
+    }
+    match /ritualSuggestions/{id} {
+      allow create, update: if isSignedIn() && isOwner(request.resource.data.uid);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
     }
   }
 }

@@ -1,6 +1,8 @@
+
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import { deriveStarKindFromInsight, baseAudit } from "./enrich";
+import { deriveStarKindFromInsight, baseAudit, clamp, ema } from "./enrich";
+import fetch from "node-fetch";
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -23,7 +25,7 @@ export const onInsightWrite = functions.firestore
     }, { merge: true });
   });
 
-// 2) Nightly forecast (placeholder — extend w/ model call)
+// 2) Original Nightly forecast (placeholder)
 export const nightlyForecast = functions.pubsub
   .schedule("0 3 * * *") // 03:00 UTC
   .timeZone("UTC")
@@ -71,3 +73,130 @@ export const computeShadowWeekly = functions.pubsub
     });
     return null;
   });
+
+// 5) Forecast API hook (replace with your endpoint)
+export const nightlyForecastPro = functions.pubsub
+  .schedule("0 2 * * *") // 02:00 UTC
+  .timeZone(process.env.TZ || (functions.config().urai?.timezone ?? "UTC"))
+  .onRun(async () => {
+    const url = functions.config().urai?.forecast_api_url as string | undefined;
+    const key = functions.config().urai?.forecast_api_key as string | undefined;
+    if(!url || !key) { console.warn("Forecast API not configured"); return null; }
+
+    // Pull a recent sample of moods to send (small payload)
+    const snap = await db.collection("moods").orderBy("ts","desc").limit(50).get();
+    const series = snap.docs.map(d=>d.data());
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type":"application/json", "Authorization":`Bearer ${key}` },
+      body: JSON.stringify({ series })
+    });
+    const data: any = await res.json().catch(()=>({ forecastText:"Unavailable", confidence:0.3 }));
+
+    await db.collection("insights").add({
+      uid: series[0]?.uid ?? "system",
+      ts: admin.firestore.FieldValue.serverTimestamp(),
+      type: "forecast",
+      text: data.forecastText ?? "Forecast unavailable",
+      confidence: typeof data.confidence === "number" ? data.confidence : 0.5
+    });
+
+    return null;
+  });
+
+// 6) Voice tone → relationship score
+export const onVoiceEventWrite = functions.firestore
+  .document("voiceEvents/{id}")
+  .onCreate(async (snap) => {
+    const v = snap.data();
+    const uid = v.uid as string;
+    // Heuristics: tone score from tags (replace with real model later)
+    const tone = (v.tags || []).includes("conflict") ? -0.5 : (v.tags || []).includes("support") ? 0.5 : 0.0;
+
+    const peerId = (v.tags || []).find((t:string)=>t.startsWith("peer:"))?.slice(5) || "unknown";
+    const relRef = db.collection("relationships").doc(`${uid}__${peerId}`);
+    const rel = await relRef.get();
+
+    const prev = rel.exists ? rel.data() : undefined;
+    const avgTone = ema(prev?.avgTone, tone, 0.3);
+    const strength = clamp((prev?.voiceMemoryStrength ?? 20) + (tone>=0?2:1), 0, 100);
+
+    await relRef.set({
+      uid, peerId,
+      voiceMemoryStrength: strength,
+      avgTone,
+      lastHeardAt: v.startedAt ?? admin.firestore.FieldValue.serverTimestamp(),
+      stats: {
+        calls: (prev?.stats?.calls ?? 0) + 1,
+        durationMs: (prev?.stats?.durationMs ?? 0) + (v.durationMs || 0)
+      },
+      ...baseAudit(uid)
+    }, { merge: true });
+
+    // Optional: create a star map event on notable changes
+    if(Math.abs(tone) >= 0.5) {
+      await db.collection("starMapEvents").add({
+        uid,
+        ts: v.startedAt ?? admin.firestore.FieldValue.serverTimestamp(),
+        kind: "social",
+        summary: tone < 0 ? `Tension with ${peerId}` : `Support from ${peerId}`,
+        ...baseAudit(uid)
+      });
+    }
+  });
+
+// 7) Auto-update companionState from mood deltas
+export const onMoodWriteUpdateCompanion = functions.firestore
+  .document("moods/{id}")
+  .onCreate(async (snap) => {
+    const m = snap.data();
+    const uid = m.uid as string;
+
+    const latestSnap = await db.collection("moods").where("uid","==",uid).orderBy("ts","desc").limit(2).get();
+    const [cur, prev] = latestSnap.docs.map(d=>d.data());
+    const delta = prev ? (cur.val - prev.val) : 0;
+
+    // Simple mapping to archetype/mood (replace with richer logic later)
+    let archetype = "Guide"; let mood = "neutral";
+    if(delta >= 10) { archetype = "Champion"; mood = "uplifted"; }
+    else if(delta <= -10) { archetype = "Guardian"; mood = "protective"; }
+
+    await db.collection("companionState").doc(uid).set({
+      uid,
+      mood,
+      archetype,
+      lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+      ...baseAudit(uid)
+    }, { merge: true });
+  });
+
+// 8) Callable suggestRituals
+export const suggestRituals = functions.https.onCall(async (data, context) => {
+    if(!context.auth?.uid) throw new functions.https.HttpsError("unauthenticated", "Sign in required");
+    const uid = context.auth.uid;
+
+    // Read latest state
+    const moods = await db.collection("moods").where("uid","==",uid).orderBy("ts","desc").limit(7).get();
+    const rels = await db.collection("relationships").where("uid","==",uid).orderBy("lastHeardAt","desc").limit(5).get();
+
+    const avg7 = moods.docs.length ? Math.round(moods.docs.reduce((a,m)=>a+(m.data().val||0),0)/moods.docs.length) : 0;
+    const hasSupport = rels.docs.some(r => (r.data().avgTone ?? 0) > 0.2);
+
+    // Heuristic suggestion (swap to model call later)
+    const suggestion = hasSupport
+      ? { title: "Gratitude Call", steps:["Message a supportive friend","Name one thing you appreciated today"], confidence: 0.72 }
+      : { title: "Evening Reset Walk", steps:["10‑minute walk","3 deep breaths at halfway","Log how you feel"], confidence: 0.64 };
+
+    const reason = avg7 < 0 ? "Recent dip in average mood" : "Maintain positive momentum";
+
+    const ref = await db.collection("ritualSuggestions").add({
+      uid,
+      ts: admin.firestore.FieldValue.serverTimestamp(),
+      reason,
+      suggestion,
+      _updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    return { id: ref.id, ...suggestion };
+});

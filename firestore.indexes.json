@@ -1,3 +1,4 @@
+
 {
   "indexes": [
     {
@@ -41,6 +42,54 @@
         { "fieldPath": "uid", "order": "ASCENDING" },
         { "fieldPath": "window", "order": "ASCENDING" },
         { "fieldPath": "score", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "relationships",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "lastHeardAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rituals",
+      "queryScope": "COLLECTION",
+      "fields": [
+          { "fieldPath": "uid", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "chats",
+      "queryScope": "COLLECTION",
+      "fields": [
+          { "fieldPath": "uid", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "events",
+      "queryScope": "COLLECTION",
+      "fields": [
+          { "fieldPath": "uid", "order": "ASCENDING" },
+          { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "scrolls",
+      "queryScope": "COLLECTION",
+      "fields": [
+          { "fieldPath": "uid", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "assets",
+      "queryScope": "COLLECTION",
+      "fields": [
+          { "fieldPath": "uid", "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     }
   ],
