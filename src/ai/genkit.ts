@@ -4,14 +4,23 @@ import 'server-only';
 import { configureGenkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
 
+export function ensureServer() {
+  if (typeof window !== 'undefined') {
+    throw new Error('Genkit can only be used on the server');
+  }
+}
+
 // Minimal server-only setup (avoids OpenTelemetry bundling issues)
 export const ai = configureGenkit({
   plugins: [googleAI()],
   enableTracingAndMetrics: false,
 });
 
-// Optional helper used by some flows
-export async function runGemini(options: { model?: string; prompt?: string; input?: unknown }) {
-  const { model = 'models/gemini-1.5-flash', prompt = '', input } = options;
-  return ai.generate(input ? { model, input } : { model, prompt });
+
+// Example server function wrapper (dynamic import keeps client bundle clean)
+export async function callGeminiServer(prompt: string) {
+  ensureServer();
+  const { googleAI } = await import('@genkit-ai/googleai');
+  // ... implement your actual call here using GEMINI_API_KEY
+  return { text: `TODO: model response for: ${prompt}` };
 }

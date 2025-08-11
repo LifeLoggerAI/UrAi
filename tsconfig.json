@@ -21,7 +21,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/ai/*": ["src/ai/*"]
     },
     "types": ["node"]
   },
