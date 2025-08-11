@@ -4,6 +4,9 @@ const nextConfig = {
   experimental: {
     // Keep node-only deps out of the RSC/client bundler
     serverComponentsExternalPackages: [
+      '@genkit-ai/core',
+      '@genkit-ai/googleai',
+      '@genkit-ai/firebase',
       '@opentelemetry/api',
       '@opentelemetry/instrumentation',
       '@opentelemetry/sdk-node',
