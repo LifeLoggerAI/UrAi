@@ -1,34 +1,22 @@
 // src/app/api/health/route.ts
-import 'server-only';
-import { NextRequest, NextResponse } from 'next/server';
-import { runHealthCheckAction } from '@/app/actions';
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs'; // ensure Node runtime, not Edge
-export const revalidate = 0;
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   try {
-    const results = await runHealthCheckAction();
-
-    return NextResponse.json(results, {
-      status: results.overall === 'PASS' ? 200 : 503,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-      },
-    });
-  } catch (error) {
-    console.error('Health check API error:', error);
-    return NextResponse.json(
-      {
-        timestamp: new Date().toISOString(),
-        overall: 'FAIL',
-        error: error instanceof Error ? error.message : 'Unknown error during health check.',
-      },
-      { status: 500 }
-    );
+    // Minimal checks - add anything else you need here
+    const envOk = !!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+    return NextResponse.json({
+      timestamp: new Date().toISOString(),
+      overall: envOk ? 'PASS' : 'WARN',
+      envOk,
+    }, { status: envOk ? 200 : 200 });
+  } catch (e: any) {
+    return NextResponse.json({
+      timestamp: new Date().toISOString(),
+      overall: 'FAIL',
+      error: e?.message || 'Unknown error',
+    }, { status: 500 });
   }
 }

@@ -1,9 +1,18 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
+  reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Prevent server‑only libs from being bundled client‑side
+      config.resolve.alias['@opentelemetry/api'] = false;
+      config.resolve.alias['@opentelemetry/instrumentation'] = false;
+      config.resolve.alias['@opentelemetry/sdk-node'] = false;
+      config.resolve.alias['genkit'] = false; // safeguard if anything imports it directly
+    }
+    
     // Keep node-only deps out of the RSC/client bundler
-    serverComponentsExternalPackages: [
+    config.experiments = { ...config.experiments, serverComponentsExternalPackages: [
+      ...(config.experiments?.serverComponentsExternalPackages || []),
       '@genkit-ai/core',
       '@genkit-ai/googleai',
       '@genkit-ai/firebase',
@@ -15,10 +24,9 @@ const nextConfig = {
       'require-in-the-middle',
       'handlebars',
       'dotprompt',
-    ],
-  },
-  webpack: (config, { isServer }) => {
-    // Never try to polyfill these in the browser
+    ] };
+    
+    // Fallbacks for Node.js modules that might be pulled in by server dependencies
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
@@ -31,20 +39,6 @@ const nextConfig = {
       child_process: false,
       worker_threads: false,
     };
-
-    if (!isServer) {
-      // Make sure client bundles don’t even try to resolve these
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@opentelemetry/instrumentation': false,
-        '@opentelemetry/sdk-node': false,
-        '@opentelemetry/winston-transport': false,
-        '@opentelemetry/exporter-jaeger': false,
-        'require-in-the-middle': false,
-        'handlebars': false,
-        'dotprompt': false,
-      };
-    }
 
     return config;
   },
