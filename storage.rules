@@ -1,15 +1,15 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    function isAuthed() { return request.auth != null; }
-    match /users/{uid}/{allPaths=**} {
-      allow read, write: if isAuthed() && request.auth.uid == uid;
+    function isSignedIn() { return request.auth != null; }
+
+    // User media namespaced by uid
+    match /user/{uid}/{allPaths=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
     }
+
+    // Public, non-sensitive assets
     match /public/{allPaths=**} {
-      allow read: if true;
-      allow write: if false;
-    }
-    match /assets/{allPaths=**} {
       allow read: if true;
       allow write: if false;
     }

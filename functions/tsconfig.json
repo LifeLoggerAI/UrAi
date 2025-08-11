@@ -1,18 +1,16 @@
 {
-  "compileOnSave": true,
-  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    "target": "ES2020",
     "module": "commonjs",
-    "moduleResolution": "node16",
     "outDir": "lib",
-    "sourceMap": true,
+    "rootDir": "src",
     "strict": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "compileOnSave": true
 }

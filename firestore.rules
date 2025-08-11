@@ -1,16 +1,105 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAuthed() { return request.auth != null; }
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
-    // Users collection is common; keep owner‑only here
-    match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+    // Generic validators
+    function isString(x) { return x is string && x.size() <= 65536; }
+    function isNumber(x) { return x is int || x is float; }
+    function isBool(x) { return x is bool; }
+    function isTS(x) { return x is timestamp; }
+    function isMap(x) { return x is map; }
+    function optional(fOk) { return !('present' in request.resource.data.diff().affectedKeys()) || fOk; }
+
+    // Users can only access their own namespace under /users/{uid}/...
+    match /users/{uid}/{collectionId}/{docId} {
+      allow read, write: if isOwner(uid);
     }
 
-    // Everything else: allow for dev to unblock seeding/testing
-    match /{document=**} {
-      allow read, write: if isAuthed();
+    // Top‑level, app‑owned
+    match /appConfig/{doc} {
+      allow read: if true;  // public readable config (safe keys only)
+      allow write: if false; // lock by default; update via admin only
+    }
+
+    // Core collections with field validation
+    match /voiceEvents/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","startedAt","durationMs","tags"]) &&
+        isOwner(request.resource.data.uid) &&
+        isTS(request.resource.data.startedAt) &&
+        isNumber(request.resource.data.durationMs) &&
+        request.resource.data.tags is list;
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false; // keep history
+    }
+
+    match /moods/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","ts","val","sources"]) &&
+        isOwner(request.resource.data.uid) &&
+        isTS(request.resource.data.ts) &&
+        isNumber(request.resource.data.val) &&
+        request.resource.data.val >= -100 && request.resource.data.val <= 100 &&
+        request.resource.data.sources is list;
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /insights/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","ts","type","text","confidence"]) &&
+        isOwner(request.resource.data.uid) && isTS(request.resource.data.ts) &&
+        isString(request.resource.data.type) && isString(request.resource.data.text) &&
+        isNumber(request.resource.data.confidence);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid; // user can clear
+    }
+
+    match /rituals/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","title","scheduledAt","status"]) &&
+        isOwner(request.resource.data.uid) && isString(request.resource.data.title) &&
+        isTS(request.resource.data.scheduledAt) && isString(request.resource.data.status);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /starMapEvents/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","ts","kind","summary"]) &&
+        isOwner(request.resource.data.uid) && isTS(request.resource.data.ts) &&
+        isString(request.resource.data.kind) && isString(request.resource.data.summary);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /dreams/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","ts","content"]) &&
+        isOwner(request.resource.data.uid) && isTS(request.resource.data.ts) &&
+        isString(request.resource.data.content);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /shadowPatterns/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","window","score","signals"]) &&
+        isOwner(request.resource.data.uid) && isString(request.resource.data.window) &&
+        isNumber(request.resource.data.score) && request.resource.data.signals is map;
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /companionState/{id} {
+      allow create, update: if isSignedIn() &&
+        request.resource.data.keys().hasAll(["uid","mood","archetype","lastUpdated"]) &&
+        isOwner(request.resource.data.uid) && isString(request.resource.data.mood) &&
+        isString(request.resource.data.archetype) && isTS(request.resource.data.lastUpdated);
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if false;
     }
   }
 }
