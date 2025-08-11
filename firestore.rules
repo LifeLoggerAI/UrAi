@@ -17,11 +17,6 @@ service cloud.firestore {
     match /users/{uid}/{collectionId}/{docId} {
       allow read, write: if isOwner(uid);
     }
-    
-    // allow user to read their own root user doc
-    match /users/{uid} {
-      allow read, write: if isOwner(uid);
-    }
 
     // Top‑level, app‑owned
     match /appConfig/{doc} {
@@ -107,7 +102,7 @@ service cloud.firestore {
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
       allow delete: if false;
     }
-    
+
     match /relationships/{id} {
       allow create, update: if isSignedIn() &&
         request.resource.data.keys().hasAll(["uid","peerId","voiceMemoryStrength"]) &&

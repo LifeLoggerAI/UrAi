@@ -26,22 +26,22 @@ export const onInsightWrite = functions.firestore
   });
 
 // 2) Original Nightly forecast (placeholder)
-export const nightlyForecast = functions.pubsub
-  .schedule("0 3 * * *") // 03:00 UTC
-  .timeZone("UTC")
-  .onRun(async () => {
-    const snap = await db.collection("moods").orderBy("ts", "desc").limit(1).get();
-    const last = snap.docs[0]?.data();
-    const forecastText = last ? `Continuation around ${last.val}` : "Insufficient data";
-    await db.collection("insights").add({
-      uid: last?.uid ?? "system",
-      ts: admin.firestore.FieldValue.serverTimestamp(),
-      type: "forecast",
-      text: forecastText,
-      confidence: 0.5
-    });
-    return null;
-  });
+// export const nightlyForecast = functions.pubsub
+//   .schedule("0 3 * * *") // 03:00 UTC
+//   .timeZone("UTC")
+//   .onRun(async () => {
+//     const snap = await db.collection("moods").orderBy("ts", "desc").limit(1).get();
+//     const last = snap.docs[0]?.data();
+//     const forecastText = last ? `Continuation around ${last.val}` : "Insufficient data";
+//     await db.collection("insights").add({
+//       uid: last?.uid ?? "system",
+//       ts: admin.firestore.FieldValue.serverTimestamp(),
+//       type: "forecast",
+//       text: forecastText,
+//       confidence: 0.5
+//     });
+//     return null;
+//   });
 
 // 3) HTTP health endpoint
 export const health = functions.https.onRequest(async (_req, res) => {
@@ -74,7 +74,7 @@ export const computeShadowWeekly = functions.pubsub
     return null;
   });
 
-// 5) Forecast API hook (replace with your endpoint)
+/** 11.4.1 Scheduled Forecast — calls external API and writes an `insights:forecast` */
 export const nightlyForecastPro = functions.pubsub
   .schedule("0 2 * * *") // 02:00 UTC
   .timeZone(process.env.TZ || (functions.config().urai?.timezone ?? "UTC"))
@@ -92,7 +92,7 @@ export const nightlyForecastPro = functions.pubsub
       headers: { "Content-Type":"application/json", "Authorization":`Bearer ${key}` },
       body: JSON.stringify({ series })
     });
-    const data: any = await res.json().catch(()=>({ forecastText:"Unavailable", confidence:0.3 }));
+    const data = await res.json().catch(()=>({ forecastText:"Unavailable", confidence:0.3 }));
 
     await db.collection("insights").add({
       uid: series[0]?.uid ?? "system",
@@ -105,7 +105,7 @@ export const nightlyForecastPro = functions.pubsub
     return null;
   });
 
-// 6) Voice tone → relationship score
+/** 11.4.2 onVoiceEventWrite — derive relationship tone + memory strength */
 export const onVoiceEventWrite = functions.firestore
   .document("voiceEvents/{id}")
   .onCreate(async (snap) => {
@@ -146,7 +146,7 @@ export const onVoiceEventWrite = functions.firestore
     }
   });
 
-// 7) Auto-update companionState from mood deltas
+/** 11.4.3 Companion Auto‑Update — reacts to daily mood delta */
 export const onMoodWriteUpdateCompanion = functions.firestore
   .document("moods/{id}")
   .onCreate(async (snap) => {
@@ -171,7 +171,7 @@ export const onMoodWriteUpdateCompanion = functions.firestore
     }, { merge: true });
   });
 
-// 8) Callable suggestRituals
+/** 11.4.4 suggestRituals — callable that writes to ritualSuggestions */
 export const suggestRituals = functions.https.onCall(async (data, context) => {
     if(!context.auth?.uid) throw new functions.https.HttpsError("unauthenticated", "Sign in required");
     const uid = context.auth.uid;
