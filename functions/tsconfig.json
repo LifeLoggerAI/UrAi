@@ -1,18 +1,18 @@
 {
   "compileOnSave": true,
-  "include": [
-    "src"
-  ],
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "module": "commonjs",
-    "noImplicitReturns": true,
+    "moduleResolution": "node16",
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2022",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "noUnusedLocals": true
+    "resolveJsonModule": true
   }
 }
