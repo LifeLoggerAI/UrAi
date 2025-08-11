@@ -18,7 +18,7 @@ async function seed() {
     safePublicFlags: { allowDemo: true }
   }, { merge: true });
 
-  const now = admin.firestore.Timestamp.now();
+  const now = new Date();
   
   const moodsRef = db.collection("moods").doc();
   batch.set(moodsRef, { uid, ts: now, val: 12, sources: ["seed"] });
