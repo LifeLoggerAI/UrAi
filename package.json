@@ -2,6 +2,7 @@
   "name": "urai",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "npx next dev -p 3000",
     "build": "npx next build",
