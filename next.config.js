@@ -3,22 +3,16 @@ const nextConfig = {
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // For client-side builds, explicitly mark server-only modules as false
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        path: false,
-        os: false,
-        http: false,
-        https: false,
-        child_process: false,
-        worker_threads: false,
-        'firebase-admin': false,
-      };
+      // Prevent server-only libs from being bundled client-side
+      config.resolve.alias['@opentelemetry/api'] = false;
+      config.resolve.alias['@opentelemetry/instrumentation'] = false;
+      config.resolve.alias['@opentelemetry/sdk-node'] = false;
+      config.resolve.alias['genkit'] = false;
+      config.resolve.alias['firebase-admin'] = false;
+      config.resolve.alias['handlebars'] = false;
+      config.resolve.alias['require-in-the-middle'] = false;
+      config.resolve.alias['@opentelemetry/exporter-jaeger'] = false;
     }
-
     return config;
   },
 };

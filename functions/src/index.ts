@@ -1,50 +1,61 @@
-
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { deriveStarKindFromInsight, baseAudit, clamp, ema } from "./enrich";
 import fetch from "node-fetch";
+import { onDocumentWritten, Change, DocumentSnapshot, FirestoreEvent } from "firebase-functions/v2/firestore";
+import { onSchedule, ScheduledEvent } from "firebase-functions/v2/scheduler";
+import { onRequest } from "firebase-functions/v2/https";
+import { onCall, CallableRequest, HttpsError } from "firebase-functions/v2/https";
+import { logger } from "firebase-functions";
+
 
 admin.initializeApp();
 const db = admin.firestore();
 
-// 1) Enrich insights into starMapEvents
-export const onInsightWrite = functions.firestore
-  .document("insights/{id}")
-  .onWrite(async (change, context) => {
-    const after = change.after.exists ? change.after.data() : null;
-    if (!after) return;
+interface InsightDocument {
+  type: string;
+  uid: string;
+  ts?: admin.firestore.FieldValue;
+  text?: string;
+}
 
-    const kind = deriveStarKindFromInsight(after.type);
-    const starRef = db.collection("starMapEvents").doc(context.params.id);
+// 1) Enrich insights into starMapEvents
+export const onInsightWrite = onDocumentWritten(
+  "insights/{id}",
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { id: string }>) => {
+    if (!event.data || !event.data.after || !event.data.after.exists) return;
+    const afterData = event.data.after.data() as InsightDocument; // Cast to InsightDocument
+    if (!afterData) return; 
+
+    const kind = deriveStarKindFromInsight(afterData.type);
+    const starRef = db.collection("starMapEvents").doc(event.params.id);
     await starRef.set({
-      uid: after.uid,
-      ts: after.ts ?? admin.firestore.FieldValue.serverTimestamp(),
+      uid: afterData.uid,
+      ts: afterData.ts ?? admin.firestore.FieldValue.serverTimestamp(),
       kind,
-      summary: (after.text || "Insight" ).slice(0, 200),
-      ...baseAudit(after.uid)
+      summary: (afterData.text || "Insight" ).slice(0, 200),
+      ...baseAudit(afterData.uid)
     }, { merge: true });
-  });
+  }
+);
 
 // 2) Original Nightly forecast (placeholder)
-// export const nightlyForecast = functions.pubsub
-//   .schedule("0 3 * * *") // 03:00 UTC
-//   .timeZone("UTC")
-//   .onRun(async () => {
-//     const snap = await db.collection("moods").orderBy("ts", "desc").limit(1).get();
-//     const last = snap.docs[0]?.data();
-//     const forecastText = last ? `Continuation around ${last.val}` : "Insufficient data";
-//     await db.collection("insights").add({
-//       uid: last?.uid ?? "system",
-//       ts: admin.firestore.FieldValue.serverTimestamp(),
-//       type: "forecast",
-//       text: forecastText,
-//       confidence: 0.5
-//     });
-//     return null;
-//   });
+export const nightlyForecast = onSchedule("0 3 * * *", async (event: ScheduledEvent) => {
+    const snap = await db.collection("moods").orderBy("ts", "desc").limit(1).get();
+    const last = snap.docs[0]?.data();
+    const forecastText = last ? `Continuation around ${last.val}` : "Insufficient data";
+    await db.collection("insights").add({
+      uid: last?.uid ?? "system",
+      ts: admin.firestore.FieldValue.serverTimestamp(),
+      type: "forecast",
+      text: forecastText,
+      confidence: 0.5
+    });
+    return; // Changed to return void
+  });
 
 // 3) HTTP health endpoint
-export const health = functions.https.onRequest(async (_req, res) => {
+export const health = onRequest(async (_req, res) => {
   try {
     const now = new Date().toISOString();
     const cfg = await db.collection("appConfig").doc("public").get();
@@ -55,10 +66,7 @@ export const health = functions.https.onRequest(async (_req, res) => {
 });
 
 // 4) Derive shadow tensions from recent events (placeholder)
-export const computeShadowWeekly = functions.pubsub
-  .schedule("0 4 * * 1") // Mondays 04:00 UTC
-  .timeZone("UTC")
-  .onRun(async () => {
+export const computeShadowWeekly = onSchedule("0 4 * * 1", async (event: ScheduledEvent) => {
     const sevenDaysAgo = admin.firestore.Timestamp.fromDate(new Date(Date.now() - 7*24*60*60*1000));
     const q = await db.collection("voiceEvents")
       .where("startedAt", ">=", sevenDaysAgo)
@@ -71,17 +79,14 @@ export const computeShadowWeekly = functions.pubsub
       signals: { voiceEvents: q.size },
       _updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
-    return null;
+    return; // Changed to return void
   });
 
 /** 11.4.1 Scheduled Forecast — calls external API and writes an `insights:forecast` */
-export const nightlyForecastPro = functions.pubsub
-  .schedule("0 2 * * *") // 02:00 UTC
-  .timeZone(process.env.TZ || (functions.config().urai?.timezone ?? "UTC"))
-  .onRun(async () => {
+export const nightlyForecastPro = onSchedule("0 2 * * *", async (event: ScheduledEvent) => {
     const url = functions.config().urai?.forecast_api_url as string | undefined;
     const key = functions.config().urai?.forecast_api_key as string | undefined;
-    if(!url || !key) { console.warn("Forecast API not configured"); return null; }
+    if(!url || !key) { console.warn("Forecast API not configured"); return; } // Changed to return void
 
     // Pull a recent sample of moods to send (small payload)
     const snap = await db.collection("moods").orderBy("ts","desc").limit(50).get();
@@ -102,14 +107,17 @@ export const nightlyForecastPro = functions.pubsub
       confidence: typeof data.confidence === "number" ? data.confidence : 0.5
     });
 
-    return null;
+    return; // Changed to return void
   });
 
 /** 11.4.2 onVoiceEventWrite — derive relationship tone + memory strength */
-export const onVoiceEventWrite = functions.firestore
-  .document("voiceEvents/{id}")
-  .onCreate(async (snap) => {
-    const v = snap.data();
+export const onVoiceEventWrite = onDocumentWritten(
+  "voiceEvents/{id}",
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { id: string }>) => {
+    if (!event.data || !event.data.after || !event.data.after.exists) return;
+    const v = event.data.after.data();
+    if (!v) return; // Add this check
+
     const uid = v.uid as string;
     // Heuristics: tone score from tags (replace with real model later)
     const tone = (v.tags || []).includes("conflict") ? -0.5 : (v.tags || []).includes("support") ? 0.5 : 0.0;
@@ -147,10 +155,13 @@ export const onVoiceEventWrite = functions.firestore
   });
 
 /** 11.4.3 Companion Auto‑Update — reacts to daily mood delta */
-export const onMoodWriteUpdateCompanion = functions.firestore
-  .document("moods/{id}")
-  .onCreate(async (snap) => {
-    const m = snap.data();
+export const onMoodWriteUpdateCompanion = onDocumentWritten(
+  "moods/{id}",
+  async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { id: string }>) => {
+    if (!event.data || !event.data.after || !event.data.after.exists) return;
+    const m = event.data.after.data();
+    if (!m) return; // Add this check
+
     const uid = m.uid as string;
 
     const latestSnap = await db.collection("moods").where("uid","==",uid).orderBy("ts","desc").limit(2).get();
@@ -172,9 +183,10 @@ export const onMoodWriteUpdateCompanion = functions.firestore
   });
 
 /** 11.4.4 suggestRituals — callable that writes to ritualSuggestions */
-export const suggestRituals = functions.https.onCall(async (data, context) => {
-    if(!context.auth?.uid) throw new functions.https.HttpsError("unauthenticated", "Sign in required");
-    const uid = context.auth.uid;
+export const suggestRituals = onCall(async (event: CallableRequest) => {
+    if(!event.auth?.uid) throw new HttpsError("unauthenticated", "Sign in required");
+    const uid = event.auth.uid;
+    const data = event.data; // Access data from event.data
 
     // Read latest state
     const moods = await db.collection("moods").where("uid","==",uid).orderBy("ts","desc").limit(7).get();

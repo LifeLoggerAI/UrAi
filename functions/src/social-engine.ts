@@ -5,6 +5,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 import type { CallableRequest } from 'firebase-functions/v2/https';
 import type { FirestoreEvent, DocumentSnapshot, Change } from 'firebase-functions/v2/firestore';
+import type { ScheduledEvent } from 'firebase-functions/v2/scheduler'; // Import ScheduledEvent
 import * as admin from 'firebase-admin';
 
 if (admin.apps.length === 0) {
@@ -47,7 +48,7 @@ export const socialArchetypeEngine = onDocumentUpdated(
       `Running social archetype engine for user ${event.params.uid}, contact ${event.params.personId}.`
     );
     // Logic to call 'ArchetypeShiftEngine' AI model and update socialArchetype.
-    return null;
+    return;
   });
 
 /**
@@ -59,12 +60,12 @@ export const checkSilenceThresholds = onSchedule(
     schedule: '30 4 * * *',
     timeZone: 'UTC'
   },
-  async () => {
+  async (event: ScheduledEvent) => {
     logger.info('Running daily social silence check for all users.');
     // For every user & contact:
     // 1. Check if silenceDurationDays > threshold (e.g., 60 days).
     // 2. If so, create a narratorInsight.
-    return null;
+    return;
   });
 
 /**
@@ -79,5 +80,5 @@ export const echoLoopDetection = onDocumentWritten(
     );
     // Logic to compare post-interaction mood signals.
     // If lingering effects, increase echoLoopScore on the socialContact.
-    return null;
+    return;
   });

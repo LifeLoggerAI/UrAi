@@ -20,7 +20,7 @@ const webhookSecret = defineString("STRIPE_WEBHOOK_SECRET");
  */
 export const stripeWebhook = onRequest(async (request, response) => {
   const stripe = new Stripe(stripeSecretKey.value(), {
-    apiVersion: "2024-06-20",
+    apiVersion: "2025-07-30.basil",
   });
 
   const sig = request.headers["stripe-signature"];

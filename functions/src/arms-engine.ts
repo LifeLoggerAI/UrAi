@@ -1,3 +1,8 @@
+import { onDocumentWritten } from "firebase-functions/v2/firestore";
+import { Change, DocumentSnapshot } from "firebase-functions/v2/firestore";
+import { FirestoreEvent } from "firebase-functions/v2/firestore";
+import { logger } from "firebase-functions";
+
 // Replace detectEmotionalOverload with this safer version
 export const detectEmotionalOverload = onDocumentWritten(
   "armMetrics/{uid}/{dateKey}",
