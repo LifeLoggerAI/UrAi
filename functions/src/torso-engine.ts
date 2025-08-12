@@ -74,7 +74,7 @@ export const detectSelfConflict = onDocumentWritten(
         insightId: `conflict-${event.params.dateKey}`,
         insightType: 'self_conflict_detected',
         payload: {
-          score: data.selfConsistencyScore,
+          score: data!.selfConsistencyScore,
           date: event.params.dateKey,
         },
         createdAt: admin.firestore.FieldValue.serverTimestamp(),

@@ -2,6 +2,7 @@
 import { onUserCreated, onUserDeleted } from 'firebase-functions/v2/auth';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions/v2';
+import type { UserRecord } from 'firebase-admin/auth';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -13,7 +14,7 @@ const db = admin.firestore();
  * Triggered on new user creation to create a default profile in Firestore.
  */
 export const handleUserCreate = onUserCreated(async event => {
-  const { uid, email, displayName, photoURL } = event.data;
+  const { uid, email, displayName, photoURL } = event.data as UserRecord;
 
   try {
     const newUserDoc = {
