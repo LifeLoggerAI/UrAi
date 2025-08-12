@@ -7,9 +7,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types"],
-    "types": ["firebase-functions/v2"]
+    "resolveJsonModule": true
   },
   "include": [
     "src"

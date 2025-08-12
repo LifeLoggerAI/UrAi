@@ -1,8 +1,7 @@
 
-import { onUserCreated, onUserDeleted } from 'firebase-functions/v2/auth';
+import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions/v2';
-import type { UserRecord } from 'firebase-admin/auth';
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -13,8 +12,8 @@ const db = admin.firestore();
 /**
  * Triggered on new user creation to create a default profile in Firestore.
  */
-export const handleUserCreate = onUserCreated(async event => {
-  const { uid, email, displayName, photoURL } = event.data as UserRecord;
+export const handleUserCreate = functions.auth.user().onCreate(async (user) => {
+  const { uid, email, displayName, photoURL } = user;
 
   try {
     const newUserDoc = {
@@ -58,8 +57,8 @@ export const handleUserCreate = onUserCreated(async event => {
 /**
  * Triggered on user deletion to clean up their data.
  */
-export const handleUserDelete = onUserDeleted(async event => {
-  const { uid } = event.data;
+export const handleUserDelete = functions.auth.user().onDelete(async (user) => {
+  const { uid } = user;
   logger.info(`Starting data cleanup for deleted user: ${uid}`);
 
   const userDocRef = db.collection('users').doc(uid);

@@ -1,4 +1,3 @@
-
 {
   "functions": [
     {
@@ -28,11 +27,11 @@
   "emulators": {
     "singleProjectMode": true,
     "auth": {
-      "port": 9099,
+      "port": 9100,
       "host": "0.0.0.0"
     },
     "firestore": {
-      "port": 8080,
+      "port": 8081,
       "host": "0.0.0.0"
     },
     "functions": {
@@ -45,7 +44,7 @@
     },
     "ui": {
       "enabled": true,
-      "port": 4401,
+      "port": 4402,
       "host": "0.0.0.0"
     }
   }
