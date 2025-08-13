@@ -8,12 +8,15 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod'; // Import z for type inference
 import {
   GenerateAvatarInputSchema,
   GenerateAvatarOutputSchema,
-  type GenerateAvatarInput,
-  type GenerateAvatarOutput,
 } from '@/lib/types';
+
+// Infer types locally from schemas
+type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
+type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
 
 export async function generateAvatar(
   input: GenerateAvatarInput
@@ -27,7 +30,7 @@ const generateAvatarFlow = ai.defineFlow(
     inputSchema: GenerateAvatarInputSchema,
     outputSchema: GenerateAvatarOutputSchema,
   },
-  async input => {
+  async (input: GenerateAvatarInput) => {
     const { media } = await ai.generate({
       model: 'googleai/gemini-2.0-flash-preview-image-generation',
       prompt: `Generate an abstract, artistic, and visually pleasing avatar for a person named '${input.name}' who is perceived as a '${input.role}'. The avatar should be symbolic, not a photorealistic portrait. Use a consistent, soft color palette. The style should be minimalist and modern, suitable for a circular profile picture.`,

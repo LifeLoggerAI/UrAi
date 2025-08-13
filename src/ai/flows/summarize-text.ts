@@ -11,9 +11,11 @@ import { ai } from '@/ai/genkit';
 import {
   SummarizeTextInputSchema,
   SummarizeTextOutputSchema,
-  type SummarizeTextInput,
-  type SummarizeTextOutput,
 } from '@/lib/types';
+import type { z } from 'zod';
+
+type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
+type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
 
 export async function summarizeText(
   input: SummarizeTextInput
@@ -26,7 +28,6 @@ const prompt = ai.definePrompt({
   input: { schema: SummarizeTextInputSchema },
   output: { schema: SummarizeTextOutputSchema },
   prompt: `You are an expert at synthesizing information and finding patterns in journal entries.
-Analyze the following collection of thoughts and experiences.
 
 Based on the text provided, generate a concise summary that includes:
 1.  The primary themes or recurring topics.
@@ -46,7 +47,7 @@ const summarizeTextFlow = ai.defineFlow(
     inputSchema: SummarizeTextInputSchema,
     outputSchema: SummarizeTextOutputSchema,
   },
-  async input => {
+  async (input: SummarizeTextInput) => {
     const { output } = await prompt(input);
     return output;
   }

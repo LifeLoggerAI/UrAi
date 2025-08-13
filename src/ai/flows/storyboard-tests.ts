@@ -4,16 +4,22 @@
  * without requiring actual AI API calls.
  */
 
+import { z } from 'zod';
 import type {
   GenerateStoryboardInput,
   GenerateStoryboardOutput,
   PersonAppearance,
-  LocationDetails,
-  EventDetails,
-  Scene,
-  Shot,
+  LocationDataSchema, // Import schema
+  EventDataSchema,    // Import schema
+  SceneDataSchema,    // Import schema
+  ShotDataSchema,     // Import schema
   ValidationIssue
 } from '@/lib/types';
+
+type LocationData = z.infer<typeof LocationDataSchema>;
+type EventData = z.infer<typeof EventDataSchema>;
+type SceneData = z.infer<typeof SceneDataSchema>;
+type ShotData = z.infer<typeof ShotDataSchema>;
 
 // Mock expected output for testing schema validation
 const mockStoryboardOutput: GenerateStoryboardOutput = {
@@ -111,7 +117,7 @@ const mockStoryboardOutput: GenerateStoryboardOutput = {
       }
     ],
     moodTone: {
-      musicStyle: "Acoustic folk and birthday songs",
+      musicStyle: "Classical string quartet",
       colorPalette: ["Sky blue", "Forest green", "Warm gold", "Soft white"],
       cameraMovement: "Handheld with gentle movements, some static shots",
       emotionalTone: "Joyful, intimate, celebratory"
@@ -206,10 +212,10 @@ const mockStoryboardOutput: GenerateStoryboardOutput = {
 // Test input examples
 const testInputs: GenerateStoryboardInput[] = [
   {
-    eventData: "Simple text description: Sarah's birthday party at Central Park with friends, cake, and guitar music."
+    eventDescription: "Simple text description: Sarah's birthday party at Central Park with friends, cake, and guitar music."
   },
   {
-    eventData: JSON.stringify({
+    eventDescription: JSON.stringify({
       event: { title: "Wedding", date: "2024-06-15" },
       people: [{ name: "Emma", age: 28, hairColor: "brown" }],
       location: { name: "Garden", environment: "Outdoor" }
@@ -273,7 +279,7 @@ export function runValidationTests(): void {
   console.log('Example scenes generated:', mockStoryboardOutput.scenes.length);
   console.log('Example shots per scene:', mockStoryboardOutput.scenes[0].shots.length);
   console.log('Example people detailed:', mockStoryboardOutput.structuredData.people.length);
-  console.log('Example validation issues:', mockStoryboardOutput.validationIssues.length);
+  console.log('Example validation issues:', mockStoryboardOutput.validationIssues ? mockStoryboardOutput.validationIssues.length : 0);
 }
 
 export { testInputs, mockStoryboardOutput };

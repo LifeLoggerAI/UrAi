@@ -9,32 +9,60 @@
  */
 
 import { ai } from './genkit';
-import type { 
-  CompanionChatInput, 
-  CompanionChatOutput,
-  TranscribeAudioInput,
-  TranscribeAudioOutput,
-  AnalyzeDreamInput,
-  AnalyzeDreamOutput,
-  EnrichVoiceEventInput,
-  EnrichVoiceEventOutput,
-  GenerateSpeechInput,
-  GenerateSpeechOutput,
-  SummarizeTextInput,
-  SummarizeTextOutput,
-  AnalyzeCameraImageInput,
-  AnalyzeCameraImageOutput,
-  GenerateSymbolicInsightInput,
-  GenerateSymbolicInsightOutput,
-  AnalyzeTextSentimentInput,
-  AnalyzeTextSentimentOutput,
-  SuggestRitualInput,
-  SuggestRitualOutput,
-  ProcessOnboardingTranscriptInput,
-  ProcessOnboardingTranscriptOutput,
-  GenerateAvatarInput,
-  GenerateAvatarOutput
+import { z } from 'zod'; // Explicitly import z for z.infer
+import {
+  CompanionChatInputSchema,
+  CompanionChatOutputSchema,
+  TranscribeAudioInputSchema,
+  TranscribeAudioOutputSchema,
+  AnalyzeDreamInputSchema,
+  AnalyzeDreamOutputSchema,
+  EnrichVoiceEventInputSchema,
+  EnrichVoiceEventOutputSchema,
+  GenerateSpeechInputSchema,
+  GenerateSpeechOutputSchema,
+  SummarizeTextInputSchema,
+  SummarizeTextOutputSchema,
+  AnalyzeCameraImageInputSchema,
+  AnalyzeCameraImageOutputSchema,
+  GenerateSymbolicInsightInputSchema,
+  GenerateSymbolicInsightOutputSchema,
+  AnalyzeTextSentimentInputSchema,
+  AnalyzeTextSentimentOutputSchema,
+  SuggestRitualInputSchema,
+  SuggestRitualOutputSchema,
+  ProcessOnboardingTranscriptInputSchema,
+  ProcessOnboardingTranscriptOutputSchema,
+  GenerateAvatarInputSchema,
+  GenerateAvatarOutputSchema,
+  ChatMessageSchema // Needed for CompanionChatInputSchema
 } from '@/lib/types';
+
+// Infer types locally from schemas
+type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
+type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
+type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
+type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
+type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
+type EnrichVoiceEventInput = z.infer<typeof EnrichVoiceEventInputSchema>;
+type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
+type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
+type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
+type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
+type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
+type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
+type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
+type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
+type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
+type AnalyzeTextSentimentInput = z.infer<typeof AnalyzeTextSentimentInputSchema>;
+type AnalyzeTextSentimentOutput = z.infer<typeof AnalyzeTextSentimentOutputSchema>;
+type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
+type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
+type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
+type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
+type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
+type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
 
 // Error types for better error handling
 export class AIClientError extends Error {

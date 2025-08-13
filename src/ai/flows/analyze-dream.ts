@@ -10,12 +10,15 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod'; // Import z for type inference
 import {
   AnalyzeDreamInputSchema,
   AnalyzeDreamOutputSchema,
-  type AnalyzeDreamInput,
-  type AnalyzeDreamOutput,
 } from '@/lib/types';
+
+// Infer types locally from schemas
+type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
+type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
 
 export async function analyzeDream(
   input: AnalyzeDreamInput
@@ -45,7 +48,7 @@ const analyzeDreamFlow = ai.defineFlow(
     inputSchema: AnalyzeDreamInputSchema,
     outputSchema: AnalyzeDreamOutputSchema,
   },
-  async input => {
+  async (input: AnalyzeDreamInput) => {
     const { output } = await prompt(input);
     if (!output) {
         return {

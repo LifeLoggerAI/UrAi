@@ -1,26 +1,19 @@
-// src/ai/genkit.ts
-import 'server-only';
+// Temporary stub to satisfy imports during client build
+export const ai = {
+  definePrompt: (..._args: any[]) => {
+    throw new Error("Genkit AI functions are server-only. Do not import in client components.");
+  },
+  defineFlow: (..._args: any[]) => {
+    throw new Error("Genkit AI functions are server-only. Do not import in client components.");
+  },
+};
 
-import { configureGenkit } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
+export const runGemini = async (..._args: any[]) => {
+  throw new Error("Genkit server stub called from client. Wire this on server only.");
+};
 
 export function ensureServer() {
   if (typeof window !== 'undefined') {
     throw new Error('Genkit can only be used on the server');
   }
-}
-
-// Minimal server-only setup (avoids OpenTelemetry bundling issues)
-export const ai = configureGenkit({
-  plugins: [googleAI()],
-  enableTracingAndMetrics: false,
-});
-
-
-// Example server function wrapper (dynamic import keeps client bundle clean)
-export async function callGeminiServer(prompt: string) {
-  ensureServer();
-  const { googleAI } = await import('@genkit-ai/googleai');
-  // ... implement your actual call here using GEMINI_API_KEY
-  return { text: `TODO: model response for: ${prompt}` };
 }

@@ -455,6 +455,7 @@ export const PersonDataSchema = z.object({
   hairColor: z.string().optional(),
   hairStyle: z.string().optional(),
   eyeColor: z.string().optional(),
+  facialHair: z.string().optional(), // Added this line
   distinguishingFeatures: z.array(z.string()).optional(),
   clothing: z.string().optional(),
   accessories: z.array(z.string()).optional(),
@@ -535,7 +536,9 @@ export const GenerateStoryboardInputSchema = z.object({
 export type GenerateStoryboardInput = z.infer<typeof GenerateStoryboardInputSchema>;
 
 export const GenerateStoryboardOutputSchema = z.object({
+  structuredData: StoryboardDataSchema, // Removed .optional()
   scenes: z.array(SceneDataSchema),
+  validationIssues: z.array(ValidationIssueSchema).optional(),
 });
 export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
 export type StoryboardOutput = GenerateStoryboardOutput;

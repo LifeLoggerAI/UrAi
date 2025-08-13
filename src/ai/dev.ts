@@ -1,16 +1,19 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/enrich-voice-event.ts';
-import '@/ai/flows/transcribe-audio.ts';
-import '@/ai/flows/summarize-text.ts';
-import '@/ai/flows/generate-speech.ts';
-import '@/ai/flows/analyze-dream.ts';
-import '@/ai/flows/generate-avatar.ts';
-import '@/ai/flows/companion-chat.ts';
-import '@/ai/flows/analyze-camera-image.ts';
-import '@/ai/flows/generate-symbolic-insight.ts';
-import '@/ai/flows/analyze-text-sentiment.ts';
-import '@/ai/flows/suggest-ritual.ts';
-import '@/ai/flows/process-onboarding-transcript.ts';
-import '@/ai/flows/generate-storyboard.ts';
+import '@/ai/flows/enrich-voice-event';
+import '@/ai/flows/transcribe-audio';
+import '@/ai/flows/summarize-text';
+import '@/ai/flows/generate-speech';
+import '@/ai/flows/analyze-dream';
+import '@/ai/flows/companion-chat';
+import '@/ai/flows/analyze-camera-image';
+import '@/ai/flows/generate-symbolic-insight';
+import '@/ai/flows/analyze-text-sentiment';
+import '@/ai/flows/suggest-ritual';
+import '@/ai/flows/process-onboarding-transcript';
+import '@/ai/flows/generate-avatar';
+
+// Initialize the Genkit AI configuration.
+// Simply importing './genkit' is enough to trigger its configuration.
+import './genkit';

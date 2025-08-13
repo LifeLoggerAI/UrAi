@@ -28,8 +28,8 @@ export const DetectRebirthMomentsOutputSchema = z.object({
   rebirthMoments: z.array(z.object({
     eventTrigger: z.string().describe('The crisis or trigger that initiated this transformation'),
     symbolicForm: z.string().describe('The type of rebirth (Phoenix Burn, Quiet Bloom, Emotional Wave, etc.)'),
-    traitsBefore: z.record(z.number()).describe('Emotional/mental traits before the transformation (0-1 scale)'),
-    traitsAfter: z.record(z.number()).describe('Emotional/mental traits after the transformation (0-1 scale)'),
+    traitsBefore: z.record(z.string(), z.number()).describe('Emotional/mental traits before the transformation (0-1 scale)'), // Fixed here
+    traitsAfter: z.record(z.string(), z.number()).describe('Emotional/mental traits after the transformation (0-1 scale)'),  // Fixed here
     narratorInsight: z.string().describe('A compassionate reflection on this transformation'),
     linkedLoopsBroken: z.array(z.string()).optional().describe('Names of narrative loops that were broken by this rebirth'),
     bloomUnlocked: z.boolean().describe('Whether this transformation unlocked new potential'),

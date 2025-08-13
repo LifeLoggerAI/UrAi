@@ -9,12 +9,15 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod'; // Import z for type inference
 import {
   AnalyzeTextSentimentInputSchema,
   AnalyzeTextSentimentOutputSchema,
-  type AnalyzeTextSentimentInput,
-  type AnalyzeTextSentimentOutput,
 } from '@/lib/types';
+
+// Infer types locally from schemas
+type AnalyzeTextSentimentInput = z.infer<typeof AnalyzeTextSentimentInputSchema>;
+type AnalyzeTextSentimentOutput = z.infer<typeof AnalyzeTextSentimentOutputSchema>;
 
 export async function analyzeTextSentiment(
   input: AnalyzeTextSentimentInput
@@ -26,13 +29,7 @@ const prompt = ai.definePrompt({
   name: 'analyzeTextSentimentPrompt',
   input: { schema: AnalyzeTextSentimentInputSchema },
   output: { schema: AnalyzeTextSentimentOutputSchema },
-  prompt: `You are an expert in sentiment analysis. Analyze the following text entry and provide a sentiment score.
-
-Text Entry:
-{{{text}}}
-
-Based on the text, provide the following analysis:
-1.  **Sentiment Score**: Provide an overall sentiment score from -1 (very negative) to 1 (very positive).`,
+  prompt: `You are an expert in sentiment analysis. Analyze the following text entry and provide a sentiment score.\n\nText Entry:\n{{{text}}}\n\nBased on the text, provide the following analysis:\n1.  **Sentiment Score**: Provide an overall sentiment score from -1 (very negative) to 1 (very positive).`,
 });
 
 const analyzeTextSentimentFlow = ai.defineFlow(
@@ -41,7 +38,7 @@ const analyzeTextSentimentFlow = ai.defineFlow(
     inputSchema: AnalyzeTextSentimentInputSchema,
     outputSchema: AnalyzeTextSentimentOutputSchema,
   },
-  async input => {
+  async (input: AnalyzeTextSentimentInput) => {
     const { output } = await prompt(input);
     return output;
   }

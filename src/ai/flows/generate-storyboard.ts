@@ -24,55 +24,7 @@ const prompt = ai.definePrompt({
   name: 'generateStoryboardPrompt',
   input: { schema: GenerateStoryboardInputSchema },
   output: { schema: GenerateStoryboardOutputSchema },
-  prompt: `You are an expert AI production assistant specializing in transforming raw event data into fully structured movie/video storyboards and ultra-photo-realistic image prompts. Your goal is to capture each moment and each person's unique appearance as if we were there.
-
-STEP 1: PARSE & CATEGORIZE INPUT
-Parse the following event data and extract into a structured schema:
-
-Event Data: {{{eventDescription}}}
-
-STEP 2: ANALYZE AND STRUCTURE
-Organize the data into:
-- **Event:** title, date/time, context
-- **Location:** name, address, environment description (architecture, vegetation, weather, lighting)
-- **People:** For each person:
-  - Identity: name, age, role
-  - Appearance: height, build, skin tone, hair color/style, eye color, distinguishing features (scars, glasses, facial hair)
-  - Clothing & accessories: style, colors, textures
-  - Expression & posture: emotional state, body language
-- **Actions:** what each person is doing, sequence of key moments
-- **Props & Objects:** instruments, vehicles, décor, tech, symbolic items
-- **Mood & Tone:** music style, color palette, camera movement (steady, handheld, drone)
-- **References:** real-world photos, films, art styles to emulate
-
-STEP 3: GENERATE SCENE BREAKDOWN
-For each scene, create:
-1. **Scene header:** "Scene [number] – [Event Name]: [Location], [Time of day]"
-2. **Shot list:** 
-   - Shot type
-   - Subject
-   - Action described in one sentence
-   - Camera movement & lens choice
-   - Lighting notes
-3. **Dialogue/voice-over** (if any)
-
-STEP 4: CREATE ULTRA-PHOTO-REALISTIC IMAGE PROMPTS
-For each shot, craft a detailed cinematic prompt including:
-- Exact facial features & look of each person (skin tone, eye color, hair style, facial hair, distinguishing marks)
-- Clothing textures and colors
-- Environmental details (lighting, weather, background elements)
-- Cinematic camera and lens cues ("35mm film grain," "shallow depth of field," "soft golden hour backlight")
-
-Example: "Close-up portrait at dusk of Maria Delgado (late 30s, olive skin, long wavy dark brown hair tucked behind ear, warm brown eyes, small beauty mark under right eye) smiling softly under a string of festival lights in a cobblestone plaza, wearing a deep emerald silk scarf and vintage leather jacket, cinematic 50mm lens, glowing bokeh, realistic skin texture and subtle catchlights."
-
-STEP 5: CROSS-REFERENCE & VALIDATION
-- Confirm every facial feature, clothing detail, and environment element matches the original data
-- Flag missing appearance details
-- Ensure consistency of appearance across all shots
-- Maintain narrative continuity across scenes
-- Include environmental atmosphere (lighting, weather, mood)
-
-Return a complete structured JSON response with parsed data, scene breakdowns, and validation issues.`,
+  prompt: `You are an expert AI production assistant specializing in transforming raw event data into fully structured movie/video storyboards and ultra-photo-realistic image prompts. Your goal is to capture each moment and each person's unique appearance as if we were there.\n\nSTEP 1: PARSE & CATEGORIZE INPUT\nParse the following event data and extract into a structured schema:\n\nEvent Data: {{{eventDescription}}}\n\nSTEP 2: ANALYZE AND STRUCTURE\nOrganize the data into:\n- **Event:** title, date/time, context\n- **Location:** name, address, environment description (architecture, vegetation, weather, lighting)\n- **People:** For each person:\n  - Identity: name, age, role\n  - Appearance: height, build, skin tone, hair color/style, eye color, distinguishing features (scars, glasses, facial hair)\n  - Clothing & accessories: style, colors, textures\n  - Expression & posture: emotional state, body language\n- **Actions:** what each person is doing, sequence of key moments\n- **Props & Objects:** instruments, vehicles, décor, tech, symbolic items\n- **Mood & Tone:** music style, color palette, camera movement (steady, handheld, drone)\n- **References:** real-world photos, films, art styles to emulate\n\nSTEP 3: GENERATE SCENE BREAKDOWN\nFor each scene, create:\n1. **Scene header:** "Scene [number] – [Event Name]: [Location], [Time of day]"\n2. **Shot list:** \n   - Shot type\n   - Subject\n   - Action described in one sentence\n   - Camera movement & lens choice\n   - Lighting notes\n3. **Dialogue/voice-over** (if any)\n\nSTEP 4: CREATE ULTRA-PHOTO-REALISTIC IMAGE PROMPTS\nFor each shot, craft a detailed cinematic prompt including:\n- Exact facial features & look of each person (skin tone, eye color, hair style, facial hair, distinguishing marks)\n- Clothing textures and colors\n- Environmental details (lighting, weather, background elements)\n- Cinematic camera and lens cues ("35mm film grain," "shallow depth of field," "soft golden hour backlight")\n\nExample: "Close-up portrait at dusk of Maria Delgado (late 30s, olive skin, long wavy dark brown hair tucked behind ear, warm brown eyes, small beauty mark under right eye) smiling softly under a string of festival lights in a cobblestone plaza, wearing a deep emerald silk scarf and vintage leather jacket, cinematic 50mm lens, glowing bokeh, realistic skin texture and subtle catchlights."\n\nSTEP 5: CROSS-REFERENCE & VALIDATION\n- Confirm every facial feature, clothing detail, and environment element matches the original data\n- Flag missing appearance details\n- Ensure consistency of appearance across all shots\n- Maintain narrative continuity across scenes\n- Include environmental atmosphere (lighting, weather, mood)\n\nReturn a complete structured JSON response with parsed data, scene breakdowns, and validation issues.`,
 });
 
 const generateStoryboardFlow = ai.defineFlow(
@@ -81,7 +33,7 @@ const generateStoryboardFlow = ai.defineFlow(
     inputSchema: GenerateStoryboardInputSchema,
     outputSchema: GenerateStoryboardOutputSchema,
   },
-  async (input) => {
+  async (input: GenerateStoryboardInput) => {
     try {
       // Validate input
       if (!input.eventDescription || input.eventDescription.trim().length < 10) {
@@ -137,4 +89,3 @@ const generateStoryboardFlow = ai.defineFlow(
     }
   }
 );
-

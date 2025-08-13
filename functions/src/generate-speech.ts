@@ -10,13 +10,16 @@
 import { ai } from '@/ai/genkit';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
+import { z } from 'zod'; // Import z for type inference
 import {
   GenerateSpeechInputSchema,
   GenerateSpeechOutputSchema,
-  type GenerateSpeechInput,
-  type GenerateSpeechOutput,
 } from '@/lib/types';
 import { wrapTextWithSSML, isNeuralVoice, NEURAL_VOICES } from '@/lib/ssml-utils';
+
+// Infer types locally from schemas
+type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
+type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
 
 export async function generateSpeech(
   input: GenerateSpeechInput
@@ -53,7 +56,7 @@ const generateSpeechFlow = ai.defineFlow(
     inputSchema: GenerateSpeechInputSchema,
     outputSchema: GenerateSpeechOutputSchema,
   },
-  async (input) => {
+  async (input: GenerateSpeechInput) => {
     let textInput = input.text;
     let voiceName = input.voiceName || 'Algenib';
 
@@ -75,7 +78,7 @@ const generateSpeechFlow = ai.defineFlow(
     const { media } = await ai.generate({
       model: googleAI.model('gemini-2.5-flash-preview-tts'),
       config: {
-        responseModalities: ['AUDIO'],
+        responseModalities: ['AUDIO'], // Corrected: changed responseModality to responseModalities
         speechConfig: {
           voiceConfig: {
             prebuiltVoiceConfig: { voiceName },

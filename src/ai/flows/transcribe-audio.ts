@@ -12,9 +12,11 @@ import { ai } from '@/ai/genkit';
 import {
   TranscribeAudioInputSchema,
   TranscribeAudioOutputSchema,
-  type TranscribeAudioInput,
-  type TranscribeAudioOutput,
 } from '@/lib/types';
+import type { z } from 'zod';
+
+type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
+type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
 
 export async function transcribeAudio(
   input: TranscribeAudioInput
@@ -28,7 +30,7 @@ const transcribeAudioFlow = ai.defineFlow(
     inputSchema: TranscribeAudioInputSchema,
     outputSchema: TranscribeAudioOutputSchema,
   },
-  async (input) => {
+  async (input: TranscribeAudioInput) => {
     // If gemini-2.0-flash is not in your quota, switch to 1.5-flash
     const { text } = await ai.generate({
       model: 'googleai/gemini-1.5-flash',

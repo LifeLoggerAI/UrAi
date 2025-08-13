@@ -8,12 +8,15 @@
  */
 
 import { ai } from '@/ai/genkit';
+import { z } from 'zod'; // Import z for type inference
 import {
   AnalyzeCameraImageInputSchema,
   AnalyzeCameraImageOutputSchema,
-  type AnalyzeCameraImageInput,
-  type AnalyzeCameraImageOutput,
 } from '@/lib/types';
+
+// Infer types locally from schemas
+type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
+type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
 
 export async function analyzeCameraImage(
   input: AnalyzeCameraImageInput
@@ -23,8 +26,8 @@ export async function analyzeCameraImage(
 
 const prompt = ai.definePrompt({
   name: 'analyzeCameraImagePrompt',
-  input: { schema: AnalyzeCameraImageInputSchema },
-  output: { schema: AnalyzeCameraImageOutputSchema },
+  input: AnalyzeCameraImageInputSchema,
+  output: AnalyzeCameraImageOutputSchema,
   prompt: `You are an expert in symbolic visual analysis. Analyze the following image captured from a user's life. Extract deep, contextual, and symbolic meaning.
 
 Image: {{media url=imageDataUri}}
@@ -50,7 +53,7 @@ const analyzeCameraImageFlow = ai.defineFlow(
     inputSchema: AnalyzeCameraImageInputSchema,
     outputSchema: AnalyzeCameraImageOutputSchema,
   },
-  async input => {
+  async (input: AnalyzeCameraImageInput) => {
     const { output } = await prompt(input);
     return output;
   }
