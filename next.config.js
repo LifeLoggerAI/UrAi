@@ -12,7 +12,6 @@ const nextConfig = {
         '@genkit-ai/googleai': false,
         '@genkit-ai/google-cloud': false,
         '@genkit-ai/firebase': false,
-        // OpenTelemetry related packages that are Node.js specific
         '@opentelemetry/api': false,
         '@opentelemetry/sdk-node': false,
         '@opentelemetry/instrumentation': false,
