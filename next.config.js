@@ -2,11 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Prevent server-only libs from being bundled client-side
+    if (isServer) {
+      // For server-side, tell Webpack to not bundle firebase-admin
+      // as it's a Node.js module that should be resolved at runtime.
+      config.externals.push('firebase-admin');
+    } else {
+      // Prevent client-only libs from being bundled client-side
       config.resolve.alias = {
         ...config.resolve.alias,
-        'firebase-admin': false,
         'genkit': false,
         '@genkit-ai/core': false,
         '@genkit-ai/googleai': false,

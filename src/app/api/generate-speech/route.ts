@@ -1,7 +1,6 @@
 // src/app/api/generate-speech/route.ts
 'use server';
 
-import { generateSpeech } from 'functions/src/generate-speech';
 import { GenerateSpeechInputSchema } from '@/lib/types';
 import { NextResponse } from 'next/server';
 
@@ -14,10 +13,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid input', details: validatedInput.error.format() }, { status: 400 });
     }
 
-    const speechResult = await generateSpeech(validatedInput.data);
+    // Call the deployed Firebase Cloud Function for generateSpeech
+    const firebaseFunctionUrl = process.env.FIREBASE_FUNCTION_URL_GENERATE_SPEECH;
 
-    if (!speechResult?.audioDataUri) {
-      return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 });
+    if (!firebaseFunctionUrl) {
+      throw new Error("Firebase Function URL for generateSpeech is not configured.");
+    }
+
+    const functionResponse = await fetch(firebaseFunctionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedInput.data),
+    });
+
+    const speechResult = await functionResponse.json();
+
+    if (!functionResponse.ok || !speechResult?.audioDataUri) {
+      console.error('Firebase Function call failed:', speechResult.error || functionResponse.statusText);
+      return NextResponse.json({ error: speechResult.error || 'Firebase Function error' }, { status: functionResponse.status });
     }
 
     return NextResponse.json({ audioDataUri: speechResult.audioDataUri });
