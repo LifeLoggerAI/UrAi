@@ -35,7 +35,11 @@
     "@radix-ui/react-toast": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.2.7",
     "tailwind-merge": "^2.3.0",
-    "wav": "^1.0.2"
+    "wav": "^1.0.2",
+    "firebase-admin": "^12.6.0",
+    "@genkit-ai/core": "^1.16.0",
+    "@genkit-ai/googleai": "^1.16.0",
+    "@genkit-ai/firebase": "^1.16.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",
