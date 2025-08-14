@@ -7,6 +7,11 @@ import { onSchedule, ScheduledEvent } from "firebase-functions/v2/scheduler";
 import { onRequest } from "firebase-functions/v2/https";
 import { onCall, CallableRequest, HttpsError } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions";
+import { runSeed } from "./seed";
+
+// Export the seed function
+export { runSeed };
+
 
 // Import AI flow functions
 import { summarizeText } from "./summarize-text";
@@ -49,20 +54,6 @@ export const onInsightWrite = onDocumentWritten(
   }
 );
 
-// 2) Original Nightly forecast (placeholder)
-export const nightlyForecast = onSchedule("0 3 * * *", async (event: ScheduledEvent) => {
-    const snap = await db.collection("moods").orderBy("ts", "desc").limit(1).get();
-    const last = snap.docs[0]?.data();
-    const forecastText = last ? `Continuation around ${last.val}` : "Insufficient data";
-    await db.collection("insights").add({
-      uid: last?.uid ?? "system",
-      ts: admin.firestore.FieldValue.serverTimestamp(),
-      type: "forecast",
-      text: forecastText,
-      confidence: 0.5
-    });
-    return; // Changed to return void
-  });
 
 // 3) HTTP health endpoint
 export const health = onRequest(async (_req, res) => {
@@ -75,28 +66,12 @@ export const health = onRequest(async (_req, res) => {
   }
 });
 
-// 4) Derive shadow tensions from recent events (placeholder)
-export const computeShadowWeekly = onSchedule("0 4 * * 1", async (event: ScheduledEvent) => {
-    const sevenDaysAgo = admin.firestore.Timestamp.fromDate(new Date(Date.now() - 7*24*60*60*1000));
-    const q = await db.collection("voiceEvents")
-      .where("startedAt", ">=", sevenDaysAgo)
-      .get();
-    const score = Math.min(100, q.size * 3);
-    await db.collection("shadowPatterns").add({
-      uid: "system",
-      window: "last7d",
-      score,
-      signals: { voiceEvents: q.size },
-      _updatedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
-    return; // Changed to return void
-  });
 
 /** 11.4.1 Scheduled Forecast — calls external API and writes an `insights:forecast` */
 export const nightlyForecastPro = onSchedule("0 2 * * *", async (event: ScheduledEvent) => {
     const url = functions.config().urai?.forecast_api_url as string | undefined;
     const key = functions.config().urai?.forecast_api_key as string | undefined;
-    if(!url || !key) { console.warn("Forecast API not configured"); return; } // Changed to return void
+    if(!url || !key) { console.warn("Forecast API not configured"); return; } 
 
     // Pull a recent sample of moods to send (small payload)
     const snap = await db.collection("moods").orderBy("ts","desc").limit(50).get();
@@ -117,7 +92,7 @@ export const nightlyForecastPro = onSchedule("0 2 * * *", async (event: Schedule
       confidence: typeof data.confidence === "number" ? data.confidence : 0.5
     });
 
-    return; // Changed to return void
+    return;
   });
 
 /** 11.4.2 onVoiceEventWrite — derive relationship tone + memory strength */
@@ -126,7 +101,7 @@ export const onVoiceEventWrite = onDocumentWritten(
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { id: string }>) => {
     if (!event.data || !event.data.after || !event.data.after.exists) return;
     const v = event.data.after.data();
-    if (!v) return; // Add this check
+    if (!v) return; 
 
     const uid = v.uid as string;
     // Heuristics: tone score from tags (replace with real model later)
@@ -170,7 +145,7 @@ export const onMoodWriteUpdateCompanion = onDocumentWritten(
   async (event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { id: string }>) => {
     if (!event.data || !event.data.after || !event.data.after.exists) return;
     const m = event.data.after.data();
-    if (!m) return; // Add this check
+    if (!m) return; 
 
     const uid = m.uid as string;
 
@@ -193,10 +168,9 @@ export const onMoodWriteUpdateCompanion = onDocumentWritten(
   });
 
 /** 11.4.4 suggestRituals — callable that writes to ritualSuggestions */
-export const suggestRituals = onCall(async (event: CallableRequest) => {
-    if(!event.auth?.uid) throw new HttpsError("unauthenticated", "Sign in required");
-    const uid = event.auth.uid;
-    const data = event.data; // Access data from event.data
+export const suggestRitualsCallable = onCall(async (data: any, context: any) => {
+    if(!context.auth?.uid) throw new HttpsError("unauthenticated", "Sign in required");
+    const uid = context.auth.uid;
 
     // Read latest state
     const moods = await db.collection("moods").where("uid","==",uid).orderBy("ts","desc").limit(7).get();

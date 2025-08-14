@@ -1,7 +1,7 @@
 // src/lib/firebase.ts
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, experimental_enablePersistence as enablePersistence } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 
@@ -19,6 +19,19 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
+
+// Enable offline persistence for Firestore
+if (typeof window !== 'undefined') {
+  enablePersistence(db, { experimentalForceLongPolling: true })
+    .catch((err) => {
+      if (err.code == 'failed-precondition') {
+        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
+      } else if (err.code == 'unimplemented') {
+        console.warn('The current browser does not support all of the features required to enable persistence.');
+      }
+    });
+}
+
 
 let analytics: ReturnType<typeof getAnalytics> | null = null;
 if (typeof window !== 'undefined') {

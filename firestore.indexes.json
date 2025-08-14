@@ -6,50 +6,15 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "ts", "order": "DESCENDING" }
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
-      "collectionGroup": "insights",
+      "collectionGroup": "stars",
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "ts", "order": "DESCENDING" },
-        { "fieldPath": "type", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "voiceEvents",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "startedAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "starMapEvents",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "ts", "order": "DESCENDING" },
-        { "fieldPath": "kind", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "shadowPatterns",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "window", "order": "ASCENDING" },
-        { "fieldPath": "score", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "relationships",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "lastHeardAt", "order": "DESCENDING" }
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -58,6 +23,14 @@
       "fields": [
           { "fieldPath": "uid", "order": "ASCENDING" },
           { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "insights",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
     {
@@ -76,6 +49,14 @@
           { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
+     {
+      "collectionGroup": "voiceEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
     {
       "collectionGroup": "scrolls",
       "queryScope": "COLLECTION",
@@ -90,6 +71,14 @@
       "fields": [
           { "fieldPath": "uid", "order": "ASCENDING" },
           { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "relationships",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "lastHeardAt", "order": "DESCENDING" }
       ]
     }
   ],
