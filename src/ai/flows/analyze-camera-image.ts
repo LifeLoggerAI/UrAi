@@ -1,18 +1,13 @@
-import { z } from 'zod';
+/**
+ * Temporary no-op image analyzer to satisfy imports.
+ * Replace with your real analyzer when ready.
+ */
+export type AnalyzeCameraImageInput = { dataUrl?: string; bytes?: Uint8Array };
+export type AnalyzeCameraImageOutput = { labels: string[]; mood?: string };
 
-export const AnalyzeCameraImageInput = z.object({
-  imageBase64: z.string().min(1),
-});
-
-export type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInput>;
-
-export async function analyzeCameraImage(input: AnalyzeCameraImageInput) {
-  // TODO: replace with real model logic; this is a stub to unblock build
-  return {
-    ok: true,
-    labels: [],
-    note: 'stubbed analyzeCameraImage; replace with model inference',
-  };
+export async function analyzeCameraImage(_input: AnalyzeCameraImageInput): Promise<AnalyzeCameraImageOutput> {
+  console.warn('analyzeCameraImage stub called');
+  return { labels: [], mood: undefined };
 }
 
-export type AnalyzeCameraImageOutput = Awaited<ReturnType<typeof analyzeCameraImage>>;
+export default analyzeCameraImage;

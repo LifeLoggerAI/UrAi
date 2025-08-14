@@ -8,7 +8,7 @@
  * - AnalyzeDreamOutput - The return type for the function.
  */
 
-import { genkit as ai } from 'genkit'; // Import genkit as ai
+import { ai } from './genkit'; // Import ai from the local genkit setup
 import { z } from 'zod'; // Import z for type inference
 import {
   AnalyzeDreamInputSchema,
