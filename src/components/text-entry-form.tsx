@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { analyzeTextSentiment } from '@/ai/flows/analyze-text-sentiment';
+import { analyzeTextSentiment as analyzeTextSentimentAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -30,9 +30,9 @@ export function TextEntryForm() {
 
     setIsSubmitting(true);
     try {
-      const result = await analyzeTextSentiment({ text });
-      if (!result) {
-        throw new Error('AI analysis of the text failed.');
+      const result = await analyzeTextSentimentAction({ text });
+      if (result.error || !result.data) {
+        throw new Error(result.error || 'AI analysis of the text failed.');
       }
 
       const reflectionId = doc(collection(db, 'innerTexts')).id;
@@ -43,7 +43,7 @@ export function TextEntryForm() {
         uid: user.uid,
         text,
         createdAt: timestamp,
-        sentimentScore: result.sentimentScore,
+        sentimentScore: result.data.sentimentScore,
       };
 
       await setDoc(doc(db, 'innerTexts', newReflection.id), newReflection);

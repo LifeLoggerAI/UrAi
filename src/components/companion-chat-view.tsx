@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import type { ChatMessage } from '@/lib/types';
-import { companionChatAction } from '@/app/actions';
+import { companionChat as companionChatAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
@@ -52,14 +52,14 @@ export function CompanionChatView() {
         message: userMessage.content,
       });
 
-      if (result.error) {
-        throw new Error(result.error);
+      if (result.error || !result.data) {
+        throw new Error(result.error || 'No response from companion.');
       }
 
-      if (result.response) {
+      if (result.data.response) {
         const modelMessage: ChatMessage = {
           role: 'model',
-          content: result.response,
+          content: result.data.response,
         };
         setMessages(prev => [...prev, modelMessage]);
       }

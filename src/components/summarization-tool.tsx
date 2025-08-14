@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { summarizeWeekAction } from '@/app/actions';
+import { summarizeWeekAction as summarizeWeekActionServer } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Loader2, Sparkles } from 'lucide-react';
 import {
@@ -39,7 +39,7 @@ export function SummarizationTool() {
     setAudioDataUri(null);
 
     try {
-      const result = await summarizeWeekAction(user.uid);
+      const result = await summarizeWeekActionServer(user.uid);
       if (result.error) {
         toast({
           variant: 'destructive',

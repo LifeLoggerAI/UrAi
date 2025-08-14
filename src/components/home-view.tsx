@@ -14,6 +14,10 @@ import {
   getDoc,
   doc,
 } from 'firebase/firestore';
+import {
+  getDashboardDataAction,
+  suggestRitualAction,
+} from '@/app/actions';
 import type {
   Goal,
   Task,
@@ -24,6 +28,8 @@ import type {
   InnerVoiceReflection,
   Person,
   User as AppUser,
+  DashboardData,
+  SuggestRitualOutput,
 } from '@/lib/types';
 
 import { InteractiveAvatar } from './interactive-avatar';
@@ -62,7 +68,6 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { suggestRitualAction } from '@/app/actions';
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { SymbolicInsightsView } from './symbolic-insights-view';
 
@@ -93,10 +98,11 @@ export function HomeView() {
   const [dreams, setDreams] = useState<Dream[]>([]);
   const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
 
   // UI States
   const [activePanel, setActivePanel] = useState<PanelType>(null);
-  const [ritual, setRitual] = useState(null);
+  const [ritual, setRitual] = useState<SuggestRitualOutput | null>(null);
   const [isRitualLoading, setIsRitualLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
@@ -170,6 +176,19 @@ export function HomeView() {
     return () => unsubscribes.forEach(unsub => unsub());
   }, [user]);
 
+  // Fetch dashboard data via server action
+  useEffect(() => {
+    if (user && activePanel === 'sky') {
+      getDashboardDataAction(user.uid).then(result => {
+        if (result.data) {
+          setDashboardData(result.data);
+        } else if (result.error) {
+          toast({ title: 'Error loading dashboard', description: result.error });
+        }
+      });
+    }
+  }, [user, activePanel, toast]);
+
   const handleZoneClick = async (zone: string) => {
     if (isRitualLoading) return;
     setIsRitualLoading(true);
@@ -179,10 +198,10 @@ export function HomeView() {
         zone: zone,
         context: `User is feeling ${auraState?.currentEmotion || 'neutral'}`,
       });
-      if (result.error || !result.suggestion) {
+      if (result.error || !result.data) {
         throw new Error(result.error || 'Failed to get suggestion');
       }
-      setRitual(result.suggestion);
+      setRitual(result.data as any);
       setActivePanel('ritual');
     } catch (e) {
       toast({

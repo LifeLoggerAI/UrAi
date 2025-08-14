@@ -2,8 +2,10 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './auth-provider';
-import { transcribeAudio } from '@/ai/flows/transcribe-audio';
-import { enrichVoiceEvent } from '@/ai/flows/enrich-voice-event';
+import {
+  transcribeAudio as transcribeAudioAction,
+  enrichVoiceEvent as enrichVoiceEventAction,
+} from '@/app/actions';
 import { generateAvatar } from '@/ai/flows/generate-avatar';
 import {
   Card,
@@ -65,17 +67,19 @@ export function NoteForm() {
 
       try {
         // Step 1: Transcribe audio
-        const transcriptionResult = await transcribeAudio({ audioDataUri });
-        if (!transcriptionResult?.transcript) {
-          throw new Error('AI transcription failed.');
+        const transcriptionResult = await transcribeAudioAction({ audioDataUri });
+        if (transcriptionResult.error || !transcriptionResult.data?.transcript) {
+          throw new Error(transcriptionResult.error || 'AI transcription failed.');
         }
-        const { transcript } = transcriptionResult;
+        const { transcript } = transcriptionResult.data;
 
         // Step 2: Enrich transcript
-        const analysis = await enrichVoiceEvent({ text: transcript });
-        if (!analysis) {
-          throw new Error('AI analysis of the transcript failed.');
+        const analysisResult = await enrichVoiceEventAction({ text: transcript });
+        if (analysisResult.error || !analysisResult.data) {
+          throw new Error(analysisResult.error || 'AI analysis of the transcript failed.');
         }
+        const analysis = analysisResult.data;
+
 
         // Step 3: Write all data to Firestore in a batch
         const audioEventId = doc(collection(db, 'audioEvents')).id;

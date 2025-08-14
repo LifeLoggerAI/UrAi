@@ -18,7 +18,7 @@ const DEPLOY_ID = "__DEPLOY_ID__";
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
     // One-time deploy confirmation log
@@ -29,7 +29,10 @@ export default function HomePage() {
     }
 
     if (authLoading) return;
-    if (!user) return; // Not logged in — show landing page
+    if (!user) {
+      setProfileLoading(false);
+      return; // Not logged in — show landing page
+    }
 
     const checkOnboardingStatus = async () => {
       setProfileLoading(true);

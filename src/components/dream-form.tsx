@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { analyzeDream } from '@/ai/flows/analyze-dream';
+import { analyzeDream as analyzeDreamAction } from '@/app/actions';
 import { useAuth } from '@/components/auth-provider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -30,9 +30,9 @@ export function DreamForm() {
 
     setIsSubmitting(true);
     try {
-      const result = await analyzeDream({ text });
-      if (!result) {
-        throw new Error('AI analysis of the dream failed.');
+      const result = await analyzeDreamAction({ text });
+      if (result.error || !result.data) {
+        throw new Error(result.error || 'AI analysis of the dream failed.');
       }
 
       const dreamId = doc(collection(db, 'dreamEvents')).id;
@@ -42,10 +42,10 @@ export function DreamForm() {
         uid: user.uid,
         text,
         createdAt: timestamp,
-        emotions: result.emotions || [],
-        themes: result.themes || [],
-        symbols: result.symbols || [],
-        sentimentScore: result.sentimentScore,
+        emotions: result.data.emotions || [],
+        themes: result.data.themes || [],
+        symbols: result.data.symbols || [],
+        sentimentScore: result.data.sentimentScore,
       };
 
       await setDoc(doc(db, 'dreamEvents', newDream.id), newDream);
