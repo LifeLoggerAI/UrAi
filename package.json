@@ -10,7 +10,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@genkit-ai/firebase": "^1.16.1",
     "@genkit-ai/googleai": "^1.16.1",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.6.0",
