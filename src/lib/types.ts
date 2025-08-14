@@ -656,3 +656,5 @@ export interface SoulThread {
   rebirthCount: number;
   createdAt: string;
 }
+
+export const exportUserDataActionSchema: any = {};

@@ -1,39 +1,14 @@
-/**
- * Temporary stub for enrich-voice-event to satisfy imports during build.
- * Replace with your real AI enrichment later.
- */
-export type EnrichVoiceEventInput = {
-  transcript?: string;
-  emotionHint?: string;
-};
+export type EnrichVoiceEventInput = { transcript?: string; emotionHint?: string; tags?: string[]; text?: string };
+export type EnrichVoiceEventOutput = { tags: string[]; sentiment: string; entities: string[]; input: EnrichVoiceEventInput };
 
-export type EnrichVoiceEventOutput = {
-  tags: string[];
-  sentiment: 'positive' | 'neutral' | 'negative';
-  entities: Array<{ type: string; text: string }>;
-};
-
-export async function enrichVoiceEvent(
-  input: EnrichVoiceEventInput
-): Promise<EnrichVoiceEventOutput | null> {
-  const t: string = (input?.transcript ?? '').toLowerCase();
-
-  let sentiment: 'positive' | 'neutral' | 'negative' = 'neutral';
-  if (/\b(love|great|amazing|grateful|happy|good)\b/.test(t)) sentiment = 'positive';
-  if (/(hate|bad|awful|angry|sad|anxious)\b/.test(t)) sentiment = 'negative';
-
+export async function enrichVoiceEvent(input: EnrichVoiceEventInput): Promise<EnrichVoiceEventOutput | null> {
+  const t = (input?.transcript || input?.text || "").toLowerCase();
   const tags: string[] = [];
-  if (/(work|deadline|meeting|boss)\b/.test(t)) tags.push('work');
-  if (/(relationship|friend|family|mom|dad|partner)\b/.test(t)) tags.push('relationship');
-  if (/(health|sleep|exercise|gym|doctor)\b/.test(t)) tags.push('health');
-
-  const entities: Array<{ type: string; text: string }> = [];
-
-  return {
-    tags,
-    sentiment,
-    entities,
-  };
+  if (/\b(work|deadline|meeting|boss)\b/.test(t)) tags.push("work");
+  if (/\b(relationship|friend|family|mom|dad|partner)\b/.test(t)) tags.push("relationship");
+  if (/\b(health|sleep|exercise|gym|doctor)\b/.test(t)) tags.push("health");
+  const sentiment = /(\b(great|good|happy|excited)\b)/.test(t) ? "positive"
+                    : /(\b(bad|sad|angry|tired)\b)/.test(t) ? "negative" : "neutral";
+  return { tags, sentiment, entities: [], input };
 }
-
 export default enrichVoiceEvent;

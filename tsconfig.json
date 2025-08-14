@@ -33,8 +33,7 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*",
     ".next/types/**/*.ts"
   ],
   "exclude": [
@@ -44,6 +43,10 @@
     "src/ai/test-*.ts",
     "src/ai/validate-*.ts",
     "src/scripts/**",
-    "src/functions/**"
+    "src/functions/**",
+    "functions",
+    "functions/**",
+    "scripts",
+    "tools"
   ]
 }

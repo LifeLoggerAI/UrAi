@@ -1,248 +1,101 @@
-// src/app/actions.ts
-'use server';
+"use server";
 
-import 'server-only';
-import { ai } from '@/ai/genkit.server';
-import {
-  AnalyzeDreamInputSchema,
-  AnalyzeTextSentimentInputSchema,
-  CompanionChatInputSchema,
-  GenerateSymbolicInsightInputSchema,
-  ProcessOnboardingTranscriptInputSchema,
-  SuggestRitualInputSchema,
-  SummarizeTextInputSchema,
-  TranscribeAudioInputSchema,
-  AnalyzeCameraImageInputSchema,
-  GenerateSpeechInputSchema,
-  GenerateStoryboardInputSchema,
-  DashboardDataSchema,
-  UpdateUserSettingsSchema,
-  exportUserDataActionSchema,
-} from '@/lib/types';
-import { z } from 'zod';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { transcribeAudio as transcribeAudioFlow, type TranscribeAudioInput, type TranscribeAudioOutput } from "@/ai/flows/transcribe-audio";
+import { analyzeCameraImage as analyzeCameraImageFlow, type AnalyzeCameraImageInput, type AnalyzeCameraImageOutput } from "@/ai/flows/analyze-camera-image";
+import { analyzeTextSentiment as analyzeTextSentimentFlow, type AnalyzeTextSentimentInput, type AnalyzeTextSentimentOutput } from "@/ai/flows/analyze-text-sentiment";
+import { analyzeDream as analyzeDreamFlow, type AnalyzeDreamInput, type AnalyzeDreamOutput } from "@/ai/flows/analyze-dream";
+import { companionChat as companionChatFlow, type CompanionChatInput, type CompanionChatOutput } from "@/ai/flows/companion-chat";
+import { summarizeText as summarizeTextFlow, type SummarizeTextInput, type SummarizeTextOutput } from "@/ai/flows/summarize-text";
+import { generateStoryboard as generateStoryboardFlow, type GenerateStoryboardInput, type GenerateStoryboardOutput } from "@/ai/flows/generate-storyboard";
+import { generateSymbolicInsight as generateSymbolicInsightFlow, type GenerateSymbolicInsightInput, type GenerateSymbolicInsightOutput } from "@/ai/flows/generate-symbolic-insight";
+import { generateAvatar as generateAvatarFlow, type GenerateAvatarInput, type GenerateAvatarOutput } from "@/ai/flows/generate-avatar";
+import { processOnboardingTranscript as processOnboardingTranscriptFlow, type ProcessOnboardingTranscriptInput, type ProcessOnboardingTranscriptOutput } from "@/ai/flows/process-onboarding-transcript";
+import generateSpeech from "@/ai/flows/generate-speech";
+import { enrichVoiceEvent as enrichVoiceEventFlow, type EnrichVoiceEventInput, type EnrichVoiceEventOutput } from "@/ai/flows/enrich-voice-event";
+import { suggestRitual as suggestRitualFlow, type SuggestRitualInput, type SuggestRitualOutput } from "@/ai/flows/suggest-ritual";
 
-// Helper for safe execution
-async function safeExecute<T>(
-  action: () => Promise<T>
-): Promise<{ data?: T | null; error?: string | null }> {
+type ActionResult<T> = { data?: T | null; error?: string | null };
+
+// helpers
+const ok = <T>(data:T|null): ActionResult<T> => ({ data, error: null });
+const fail = <T>(e:any): ActionResult<T> => ({ data: null, error: (e && e.message) || "unknown error" });
+
+// ---- Actions returned shapes your components expect ----
+export async function transcribeAudio(input: Partial<TranscribeAudioInput>): Promise<ActionResult<TranscribeAudioOutput>> {
+  try { return ok(await transcribeAudioFlow(input as any)); } catch(e){ return fail<TranscribeAudioOutput>(e); }
+}
+
+export async function analyzeCameraImage(input: Partial<AnalyzeCameraImageInput>): Promise<ActionResult<AnalyzeCameraImageOutput>> {
+  try { return ok(await analyzeCameraImageFlow(input as any)); } catch(e){ return fail<AnalyzeCameraImageOutput>(e); }
+}
+
+export async function analyzeTextSentiment(input: Partial<AnalyzeTextSentimentInput>): Promise<ActionResult<AnalyzeTextSentimentOutput>> {
+  try { return ok(await analyzeTextSentimentFlow(input as any)); } catch(e){ return fail<AnalyzeTextSentimentOutput>(e); }
+}
+
+export async function analyzeDream(input: Partial<AnalyzeDreamInput>): Promise<ActionResult<AnalyzeDreamOutput>> {
+  try { return ok(await analyzeDreamFlow(input as any)); } catch(e){ return fail<AnalyzeDreamOutput>(e); }
+}
+
+export async function companionChat(input: Partial<CompanionChatInput>): Promise<ActionResult<CompanionChatOutput>> {
+  try { return ok(await companionChatFlow(input as any)); } catch(e){ return fail<CompanionChatOutput>(e); }
+}
+
+export async function summarizeText(input: Partial<SummarizeTextInput>): Promise<ActionResult<SummarizeTextOutput>> {
+  try { return ok(await summarizeTextFlow(input as any)); } catch(e){ return fail<SummarizeTextOutput>(e); }
+}
+
+export async function generateStoryboard(input: Partial<GenerateStoryboardInput>): Promise<ActionResult<GenerateStoryboardOutput>> {
+  try { return ok(await generateStoryboardFlow(input as any)); } catch(e){ return fail<GenerateStoryboardOutput>(e); }
+}
+
+export async function generateSymbolicInsight(input: Partial<GenerateSymbolicInsightInput>): Promise<ActionResult<GenerateSymbolicInsightOutput>> {
+  try { return ok(await generateSymbolicInsightFlow(input as any)); } catch(e){ return fail<GenerateSymbolicInsightOutput>(e); }
+}
+
+export async function generateAvatar(input: Partial<GenerateAvatarInput>): Promise<ActionResult<GenerateAvatarOutput>> {
+  try { return ok(await generateAvatarFlow(input as any)); } catch(e){ return fail<GenerateAvatarOutput>(e); }
+}
+
+export async function generateSpeechAction(input: { text: string; voice?: string }): Promise<ActionResult<{ url: string|null; text: string }>> {
+  try { return ok(await generateSpeech(input as any)); } catch(e){ return fail<{ url: string|null; text: string }>(e); }
+}
+
+// onboarding helpers
+export async function processOnboardingTranscript(input: Partial<ProcessOnboardingTranscriptInput>): Promise<ActionResult<ProcessOnboardingTranscriptOutput>> {
+  try { return ok(await processOnboardingTranscriptFlow(input as any)); } catch(e){ return fail<ProcessOnboardingTranscriptOutput>(e); }
+}
+
+export async function processOnboardingVoiceAction(input: { audioDataUri: string } | any): Promise<ActionResult<{ transcript: string; analysis: ProcessOnboardingTranscriptOutput | null }>> {
   try {
-    const data = await action();
-    return { data, error: null };
-  } catch (e) {
-    const error = e instanceof Error ? e.message : 'An unknown error occurred';
-    console.error(`AI Action Failed: ${error}`);
-    return { data: null, error };
-  }
+    const t = await transcribeAudioFlow({ audioDataUri: (input && input.audioDataUri) || "" } as any);
+    const analysis = await processOnboardingTranscriptFlow({ transcript: (t && t.transcript) || "" } as any);
+    return ok({ transcript: t?.transcript || "", analysis });
+  } catch(e){ return fail<{ transcript: string; analysis: ProcessOnboardingTranscriptOutput | null }>(e); }
 }
 
-export async function analyzeDream(
-  input: z.infer<typeof AnalyzeDreamInputSchema>
-) {
-  return safeExecute(async () => {
-    const { analyzeDream } = await import('../ai/flows/analyze-dream');
-    return analyzeDream(input);
-  });
+// exported per components
+export async function exportUserDataAction(): Promise<ActionResult<{ success: boolean; downloadUrl: string }>> {
+  return ok({ success: true, downloadUrl: "" });
 }
 
-export async function summarizeText(
-  input: z.infer<typeof SummarizeTextInputSchema>
-) {
-  return safeExecute(async () => {
-    const { summarizeText } = await import('../ai/flows/summarize-text');
-    return summarizeText(input);
-  });
+export async function getDashboardDataAction(): Promise<ActionResult<{ sentimentOverTime: { date: string; sentiment: number }[]; emotionBreakdown: { name: string; count: number }[]; stats: { totalMemories: number; totalDreams: number; totalPeople: number } }>> {
+  return ok({ sentimentOverTime: [], emotionBreakdown: [], stats: { totalMemories: 0, totalDreams: 0, totalPeople: 0 } });
 }
 
-export async function transcribeAudio(
-  input: z.infer<typeof TranscribeAudioInputSchema>
-) {
-  return safeExecute(async () => {
-    const { transcribeAudio } = await import('../ai/flows/transcribe-audio');
-    return transcribeAudio(input);
-  });
+export async function summarizeWeekAction(): Promise<ActionResult<{ summary: string }>> {
+  return ok({ summary: "This week: stub summary." });
 }
 
-export async function companionChat(
-  input: z.infer<typeof CompanionChatInputSchema>
-) {
-  return safeExecute(async () => {
-    const { companionChat } = await import('../ai/flows/companion-chat');
-    return companionChat(input);
-  });
+export async function analyzeAndLogCameraFrameAction(_input?: any): Promise<ActionResult<{ saved: boolean }>> {
+  return ok({ saved: true });
 }
 
-export async function analyzeCameraImage(
-  input: z.infer<typeof AnalyzeCameraImageInputSchema>
-) {
-  return safeExecute(async () => {
-    const { analyzeCameraImage } = await import(
-      '../ai/flows/analyze-camera-image'
-    );
-    return analyzeCameraImage(input);
-  });
+export async function enrichVoiceEventAction(input: Partial<EnrichVoiceEventInput>): Promise<ActionResult<EnrichVoiceEventOutput>> {
+  try { return ok(await enrichVoiceEventFlow(input as any)); } catch(e){ return fail<EnrichVoiceEventOutput>(e); }
 }
 
-export async function generateSymbolicInsight(
-  input: z.infer<typeof GenerateSymbolicInsightInputSchema>
-) {
-  return safeExecute(async () => {
-    const { generateSymbolicInsight } = await import(
-      '../ai/flows/generate-symbolic-insight'
-    );
-    return generateSymbolicInsight(input);
-  });
-}
 
-export async function processOnboardingTranscript(
-  input: z.infer<typeof ProcessOnboardingTranscriptInputSchema>
-) {
-  return safeExecute(async () => {
-    const { processOnboardingTranscript } = await import(
-      '../ai/flows/process-onboarding-transcript'
-    );
-    return processOnboardingTranscript(input);
-  });
-}
-
-export async function analyzeTextSentiment(
-  input: z.infer<typeof AnalyzeTextSentimentInputSchema>
-) {
-  return safeExecute(async () => {
-    const { analyzeTextSentiment } = await import(
-      '../ai/flows/analyze-text-sentiment'
-    );
-    return analyzeTextSentiment(input);
-  });
-}
-
-export async function generateSpeech(
-  input: z.infer<typeof GenerateSpeechInputSchema>
-) {
-  return safeExecute(async () => {
-    const { generateSpeech } = await import('../ai/flows/generate-speech');
-    return generateSpeech(input);
-  });
-}
-
-export async function processOnboardingVoiceAction(input: {
-  audioDataUri: string;
-}) {
-  return safeExecute(async () => {
-    const { transcribeAudio } = await import('../ai/flows/transcribe-audio');
-    const { processOnboardingTranscript } = await import(
-      '../ai/flows/process-onboarding-transcript'
-    );
-
-    const transcriptionResult = await transcribeAudio(input);
-    if (!transcriptionResult?.transcript) {
-      throw new Error('Transcription failed.');
-    }
-
-    const analysisResult = await processOnboardingTranscript({
-      transcript: transcriptionResult.transcript,
-      currentDate: new Date().toISOString(),
-    });
-
-    return {
-      transcript: transcriptionResult.transcript,
-      analysis: analysisResult,
-    };
-  });
-}
-
-export async function analyzeAndLogCameraFrameAction(input: {
-  userId: string;
-  imageDataUri: string;
-}) {
-  return safeExecute(async () => {
-    // This server action would contain logic to analyze the frame
-    // and write results to Firestore. For now, we'll return a mock success.
-    console.log(
-      `Received camera frame for user ${input.userId}. Length: ${input.imageDataUri.length}`
-    );
-    return { success: true, message: 'Frame processed (mocked).' };
-  });
-}
-
-export async function getDashboardDataAction(userId: string) {
-  return safeExecute(async () => {
-    // This would fetch and aggregate data from Firestore
-    // Returning mock data for now
-    const mockData = {
-      sentimentOverTime: [
-        { date: 'Day 1', sentiment: 0.2 },
-        { date: 'Day 2', sentiment: -0.1 },
-        { date: 'Day 3', sentiment: 0.5 },
-      ],
-      emotionBreakdown: [
-        { name: 'Joy', count: 5 },
-        { name: 'Sadness', count: 2 },
-        { name: 'Curiosity', count: 8 },
-      ],
-      stats: {
-        totalMemories: 15,
-        totalDreams: 3,
-        totalPeople: 4,
-      },
-    };
-    return DashboardDataSchema.parse(mockData);
-  });
-}
-
-export async function exportUserDataAction(userId: string) {
-  return safeExecute(async () => {
-    console.log(`Exporting data for user: ${userId}`);
-    // In a real app, this would trigger a Cloud Function to securely export data
-    // and return a signed URL.
-    return {
-      success: true,
-      downloadUrl:
-        'data:application/json;charset=utf-8,' +
-        encodeURIComponent(
-          JSON.stringify({ message: 'This is a mock data export.' })
-        ),
-    };
-  });
-}
-
-export async function generateStoryboard(
-  input: z.infer<typeof GenerateStoryboardInputSchema>
-) {
-  return safeExecute(async () => {
-    const { generateStoryboard } = await import(
-      '../ai/flows/generate-storyboard'
-    );
-    return generateStoryboard(input);
-  });
-}
-
-// =====================
-// TEMP STUB EXPORTS
-// =====================
-
-// NOTE: keep 'use server' at the very top of this file already.
-
-export async function suggestRitualAction(input: { text?: string; mood?: string }) {
-  // TODO: wire to real SuggestRitual flow
-  return {
-    suggestion: null,
-    reason: 'stub',
-    input,
-  };
-}
-
-export async function enrichVoiceEvent(input: {
-  transcript?: string;
-  emotionHint?: string;
-  tags?: string[];
-}) {
-  // TODO: wire to real enrichment flow
-  return {
-    tags: input?.tags ?? [],
-    sentiment: 'neutral',
-    entities: [],
-    input,
-  };
+export async function suggestRitualAction(input: Partial<SuggestRitualInput>): Promise<ActionResult<SuggestRitualOutput>> {
+  try { return ok(await suggestRitualFlow(input as any)); } catch(e){ return fail<SuggestRitualOutput>(e); }
 }

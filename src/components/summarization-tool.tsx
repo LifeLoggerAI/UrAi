@@ -39,16 +39,18 @@ export function SummarizationTool() {
     setAudioDataUri(null);
 
     try {
-      const result = await summarizeWeekActionServer(user.uid);
+      const result = await summarizeWeekActionServer();
       if (result.error) {
         toast({
           variant: 'destructive',
           title: 'Summarization Failed',
           description: result.error,
         });
-      } else if (result.summary) {
-        setSummary(result.summary);
-        setAudioDataUri(result.audioDataUri);
+      } else if (result.data?.summary) {
+        setSummary(result.data.summary);
+        // Assuming audioDataUri would also be part of result.data if available
+        // For now, setting it to null as it's not in the current summarizedWeekAction return type
+        setAudioDataUri(null);
         setIsDialogOpen(true);
       }
     } catch (error) {

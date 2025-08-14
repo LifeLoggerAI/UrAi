@@ -234,6 +234,7 @@ export async function seedDemoData(userId: string) {
       },
       createdAt: new Date('2025-07-08').getTime(),
       linkedUserIds: ['parent_userId_001', 'child_userId_002'],
+      summaryMood: 'transformative',
     };
     batch.set(storyScrollRef, storyScroll);
 
