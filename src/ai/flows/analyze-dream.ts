@@ -1,63 +1,27 @@
-
-'use server';
-
 /**
- * @fileOverview Analyzes dream journal entries for symbolic and emotional content.
- *
- * - analyzeDream - A function that handles the analysis of a dream transcript.
- * - AnalyzeDreamInput - The input type for the function.
- * - AnalyzeDreamOutput - The return type for the function.
+ * Temporary stub for analyze-dream to satisfy imports during build.
+ * Replace with your real Genkit/Gemini prompt flow later.
  */
+export type AnalyzeDreamInput = {
+  text: string;
+};
 
-import { ai } from '@/ai/genkit';
-import { z } from 'zod'; // Import z for type inference
-import {
-  AnalyzeDreamInputSchema,
-  AnalyzeDreamOutputSchema,
-} from '@/lib/types';
+export type AnalyzeDreamOutput = {
+  emotions: string[];
+  symbols: string[];
+  themes: string[];
+  summary: string;
+};
 
-// Infer types locally from schemas
-type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
-type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
-
-const prompt = ai.definePrompt({
-  name: 'analyzeDreamPrompt',
-  input: { schema: AnalyzeDreamInputSchema },
-  output: { schema: AnalyzeDreamOutputSchema },
-  prompt: `You are an expert dream analyst with knowledge of Jungian archetypes, symbolism, and emotional interpretation. Analyze the following dream entry.
-
-Dream Entry:
-{{{text}}}
-
-Based on the dream, provide the following analysis:
-1.  **Emotions**: Identify the primary emotions felt or described in the dream.
-2.  **Themes**: Extract the major recurring themes or subjects.
-3.  **Symbols**: List the key symbols and provide a brief, potential interpretation for each in the context of the dream.
-4.  **Sentiment Score**: Provide an overall sentiment score from -1 (very negative/nightmarish) to 1 (very positive/pleasant).`,
-});
-
-const analyzeDreamFlow = ai.defineFlow(
-  {
-    name: 'analyzeDreamFlow',
-    inputSchema: AnalyzeDreamInputSchema,
-    outputSchema: AnalyzeDreamOutputSchema,
-  },
-  async (input: AnalyzeDreamInput) => {
-    const { output } = await prompt(input);
-    if (!output) {
-        return {
-            emotions: [],
-            themes: ['analysis_failed'],
-            symbols: [],
-            sentimentScore: 0,
-        };
-    }
-    return output;
-  }
-);
-
-export async function analyzeDream(
-  input: AnalyzeDreamInput
-): Promise<AnalyzeDreamOutput> {
-  return analyzeDreamFlow.run(input);
+export async function analyzeDream(input: AnalyzeDreamInput): Promise<AnalyzeDreamOutput> {
+  const text = input?.text ?? '';
+  // naive placeholders
+  return {
+    emotions: [],
+    symbols: [],
+    themes: [],
+    summary: text.slice(0, 180),
+  };
 }
+
+export default analyzeDream;

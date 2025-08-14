@@ -95,15 +95,6 @@ export async function generateSymbolicInsight(
   });
 }
 
-export async function suggestRitual(
-  input: z.infer<typeof SuggestRitualInputSchema>
-) {
-  return safeExecute(async () => {
-    const { suggestRitual } = await import('../ai/flows/suggest-ritual');
-    return suggestRitual(input);
-  });
-}
-
 export async function processOnboardingTranscript(
   input: z.infer<typeof ProcessOnboardingTranscriptInputSchema>
 ) {
@@ -225,4 +216,33 @@ export async function generateStoryboard(
     );
     return generateStoryboard(input);
   });
+}
+
+// =====================
+// TEMP STUB EXPORTS
+// =====================
+
+// NOTE: keep 'use server' at the very top of this file already.
+
+export async function suggestRitualAction(input: { text?: string; mood?: string }) {
+  // TODO: wire to real SuggestRitual flow
+  return {
+    suggestion: null,
+    reason: 'stub',
+    input,
+  };
+}
+
+export async function enrichVoiceEvent(input: {
+  transcript?: string;
+  emotionHint?: string;
+  tags?: string[];
+}) {
+  // TODO: wire to real enrichment flow
+  return {
+    tags: input?.tags ?? [],
+    sentiment: 'neutral',
+    entities: [],
+    input,
+  };
 }
