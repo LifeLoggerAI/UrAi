@@ -20,12 +20,6 @@ import {
 type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
 type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
 
-export async function analyzeDream(
-  input: AnalyzeDreamInput
-): Promise<AnalyzeDreamOutput> {
-  return analyzeDreamFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'analyzeDreamPrompt',
   input: { schema: AnalyzeDreamInputSchema },
@@ -61,3 +55,9 @@ const analyzeDreamFlow = ai.defineFlow(
     return output;
   }
 );
+
+export async function analyzeDream(
+  input: AnalyzeDreamInput
+): Promise<AnalyzeDreamOutput> {
+  return analyzeDreamFlow.run(input);
+}
