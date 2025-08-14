@@ -248,6 +248,7 @@ export type MoodLog = z.infer<typeof MoodLogSchema>;
 export const AnalyzeDreamInputSchema = z.object({
   text: z.string().describe('The dream content to analyze'),
 });
+export type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
 
 export const AnalyzeDreamOutputSchema = z.object({
   emotions: z.array(z.string()).describe('Primary emotions in the dream'),
@@ -255,6 +256,7 @@ export const AnalyzeDreamOutputSchema = z.object({
   symbols: z.array(z.string()).describe('Key symbols and their interpretations'),
   sentimentScore: z.number().min(-1).max(1).describe('Overall sentiment score'),
 });
+export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
 
 export const GenerateSpeechInputSchema = z.object({
   text: z.string().describe('Text to convert to speech'),
@@ -265,10 +267,12 @@ export const GenerateSpeechInputSchema = z.object({
   enableEmphasis: z.boolean().optional().describe('Enable automatic emphasis'),
   addNaturalPauses: z.boolean().optional().describe('Add natural breathing pauses'),
 });
+export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
 
 export const GenerateSpeechOutputSchema = z.object({
   audioDataUri: z.string().describe('Data URI of the generated WAV audio file'),
 });
+export type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
 
 export const TranscribeAudioInputSchema = z.object({
   audioDataUri: z
@@ -277,19 +281,23 @@ export const TranscribeAudioInputSchema = z.object({
       "A recording, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
 });
+export type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
 
 export const TranscribeAudioOutputSchema = z.object({
   transcript: z.string().describe('Transcribed text'),
 });
+export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
 
 export const CompanionChatInputSchema = z.object({
   history: z.array(ChatMessageSchema),
   message: z.string().describe('User message to the companion'),
 });
+export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
 
 export const CompanionChatOutputSchema = z.object({
   response: z.string().describe('Companion response'),
 });
+export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
 
 export const UpdateUserSettingsSchema = z.object({
   displayName: z.string().optional(),
@@ -314,6 +322,7 @@ export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
 export const AnalyzeCameraImageInputSchema = z.object({
   imageDataUri: z.string().describe("A photo of the user's face, as a data URI."),
 });
+export type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
 
 export const AnalyzeCameraImageOutputSchema = z.object({
   emotionInference: z.record(z.number()),
@@ -329,10 +338,12 @@ export const AnalyzeCameraImageOutputSchema = z.object({
   contextualSymbolMatches: z.array(z.string()),
   linkedArchetype: z.string(),
 });
+export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
 
 export const EnrichVoiceEventInputSchema = z.object({
   text: z.string().describe('The transcribed text of the voice event'),
 });
+export type EnrichVoiceEventInput = z.infer<typeof EnrichVoiceEventInputSchema>;
 
 export const EnrichVoiceEventOutputSchema = z.object({
   emotion: z.string(),
@@ -342,29 +353,35 @@ export const EnrichVoiceEventOutputSchema = z.object({
   people: z.array(z.string()).optional(),
   tasks: z.array(z.string()).optional(),
 });
+export type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
 
 export const GenerateAvatarInputSchema = z.object({
   name: z.string(),
   role: z.string(),
 });
+export type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
 
 export const GenerateAvatarOutputSchema = z.object({
   avatarDataUri: z.string(),
 });
+export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
 
 export const GenerateSymbolicInsightInputSchema = z.object({
   analysis: AnalyzeCameraImageOutputSchema.describe('JSON object of camera image analysis'),
 });
+export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
 
 export const GenerateSymbolicInsightOutputSchema = z.object({
   narratorReflection: z.string(),
   symbolAnimationTrigger: z.string(),
 });
+export type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
 
 export const ProcessOnboardingTranscriptInputSchema = z.object({
   transcript: z.string(),
   currentDate: z.string(),
 });
+export type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
 
 export const ProcessOnboardingTranscriptOutputSchema = z.object({
   goal: z.string(),
@@ -372,25 +389,30 @@ export const ProcessOnboardingTranscriptOutputSchema = z.object({
   reminderDate: z.string(),
   habitToTrack: z.string(),
 });
+export type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
 
 export const SuggestRitualInputSchema = z.object({
   zone: z.string(),
   context: z.string(),
 });
+export type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
 
 export const SuggestRitualOutputSchema = z.object({
   title: z.string(),
   description: z.string(),
   suggestion: z.string(),
 });
+export type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
 
 export const SummarizeTextInputSchema = z.object({
   text: z.string().describe('Text content to summarize'),
 });
+export type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
 
 export const SummarizeTextOutputSchema = z.object({
   summary: z.string().describe('Summarized text content'),
 });
+export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
 
 export const AnalyzeTextSentimentInputSchema = z.object({
   text: z.string(),

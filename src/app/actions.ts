@@ -11,6 +11,9 @@ import type {
   ProcessOnboardingTranscriptOutput,
   MoodLog,
   AuraState,
+  AnalyzeCameraImageOutput,
+  AnalyzeDreamInput,
+  TranscribeAudioInput,
 } from '@/lib/types';
 import { z } from 'zod';
 import { db } from '@/lib/firebase';
@@ -25,23 +28,15 @@ import {
   getDoc,
 } from 'firebase/firestore';
 
-// ✅ All flows must be server-only modules (each should have `import 'server-only'` inside)
-import { transcribeAudio } from '@/ai/flows/transcribe-audio';
-import { summarizeText } from '@/ai/flows/summarize-text';
-// import { generateSpeech } from '@/ai/flows/generate-speech'; // Moved to API route
-import { analyzeDream } from '@/ai/flows/analyze-dream';
-import { companionChat } from '@/ai/flows/companion-chat';
-import { analyzeCameraImage } from '@/ai/flows/analyze-camera-image';
-import { generateSymbolicInsight } from '@/ai/flows/generate-symbolic-insight';
-import { suggestRitual } from '@/ai/flows/suggest-ritual';
-import { processOnboardingTranscript } from '@/ai/flows/process-onboarding-transcript';
-
 import {
   DashboardDataSchema,
   CompanionChatInputSchema,
   SuggestRitualInputSchema,
   MoodLogSchema,
   AuraStateSchema,
+  AnalyzeCameraImageInputSchema,
+  AnalyzeDreamOutputSchema,
+  TranscribeAudioOutputSchema,
 } from '@/lib/types';
 import { format } from 'date-fns';
 
@@ -96,17 +91,24 @@ export async function summarizeWeekAction(
       };
     }
 
-    const summaryResult = await summarizeText({ text: allTranscripts });
+    // Call Firebase Function for summarizeText
+    const summarizeResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_SUMMARIZE_TEXT! || '/api/summarize-text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: allTranscripts }),
+    });
+    const summaryResult = await summarizeResponse.json();
 
-    if (!summaryResult?.summary) {
+    if (!summarizeResponse.ok || !summaryResult?.summary) {
+      console.warn('Summary generation failed via API, returning null.', summaryResult.error || summarizeResponse.statusText);
       return {
         summary: null,
         audioDataUri: null,
-        error: 'Failed to generate summary.',
+        error: summaryResult.error || 'API call failed',
       };
     }
 
-    // Call the new API route for speech generation
+    // Call the new API route for speech generation (already set up)
     const speechResponse = await fetch('/api/generate-speech', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -278,9 +280,17 @@ export async function companionChatAction(
   }
 
   try {
-    const result = await companionChat(validatedFields.data);
-    if (!result?.response) {
-      return { response: null, error: 'The AI companion failed to respond.' };
+    // Call Firebase Function for companionChat
+    const chatResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_COMPANION_CHAT! || '/api/companion-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+    const result = await chatResponse.json();
+
+    if (!chatResponse.ok || !result?.response) {
+      console.error('Companion chat failed via API:', result?.error || chatResponse.statusText);
+      return { response: null, error: result?.error || 'API call failed' };
     }
     return { response: result.response, error: null };
   } catch (e) {
@@ -306,11 +316,19 @@ export async function suggestRitualAction(
   }
 
   try {
-    const result = await suggestRitual(validatedFields.data);
-    if (!result) {
+    // Call Firebase Function for suggestRitual
+    const ritualResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_SUGGEST_RITUAL! || '/api/suggest-ritual', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(validatedFields.data),
+    });
+    const result = await ritualResponse.json();
+
+    if (!ritualResponse.ok || !result) {
+      console.error('Suggest ritual failed via API:', result?.error || ritualResponse.statusText);
       return {
         suggestion: null,
-        error: 'Could not generate a suggestion at this time.',
+        error: result?.error || 'API call failed',
       };
     }
     return { suggestion: result, error: null };
@@ -345,16 +363,39 @@ export async function processOnboardingVoiceAction(
   const { audioDataUri } = validatedFields.data;
 
   try {
-    const { transcript } = await transcribeAudio({ audioDataUri });
-    if (!transcript) {
+    // Call Firebase Function for transcribeAudio
+    const transcribeResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_TRANSCRIBE_AUDIO! || '/api/transcribe-audio', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ audioDataUri }),
+    });
+    const { transcript } = await transcribeResponse.json();
+
+    if (!transcribeResponse.ok || !transcript) {
+      console.error('Transcribe audio failed via API:', transcript?.error || transcribeResponse.statusText);
       return {
         transcript: null,
         analysis: null,
-        error: 'Failed to transcribe audio.',
+        error: transcript?.error || 'API call failed',
       };
     }
 
-    const analysis = await processOnboardingTranscript({ transcript });
+    // Call Firebase Function for processOnboardingTranscript
+    const processResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_PROCESS_ONBOARDING_TRANSCRIPT! || '/api/process-onboarding-transcript', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transcript }),
+    });
+    const analysis = await processResponse.json();
+
+    if (!processResponse.ok || !analysis) {
+      console.error('Process onboarding transcript failed via API:', analysis?.error || processResponse.statusText);
+      return {
+        transcript: null,
+        analysis: null,
+        error: analysis?.error || 'API call failed',
+      };
+    }
 
     return { transcript, analysis, error: null };
   } catch (e) {
@@ -380,18 +421,31 @@ export async function analyzeAndLogCameraFrameAction(input: {
   }
 
   try {
-    const analysis = await analyzeCameraImage({
-      imageDataUri: input.imageDataUri,
+    // Call the new API route for camera image analysis (already set up)
+    const analyzeResponse = await fetch('/api/analyze-camera-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageDataUri: input.imageDataUri }),
     });
-    if (!analysis) {
-      throw new Error('Image analysis failed to return data.');
+
+    const analysis: AnalyzeCameraImageOutput = await analyzeResponse.json();
+
+    if (!analyzeResponse.ok || !analysis) {
+      console.error('Camera image analysis failed via API:', analysis?.error || analyzeResponse.statusText);
+      return { success: false, error: analysis?.error || 'API call failed' };
     }
 
-    const insight = await generateSymbolicInsight({
-      analysis: analysis,
+    // Call Firebase Function for generateSymbolicInsight
+    const insightResponse = await fetch(process.env.FIREBASE_FUNCTION_URL_GENERATE_SYMBOLIC_INSIGHT! || '/api/generate-symbolic-insight', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ analysis }),
     });
-    if (!insight) {
-      throw new Error('Symbolic insight generation failed.');
+    const insight = await insightResponse.json();
+
+    if (!insightResponse.ok || !insight) {
+      console.error('Symbolic insight generation failed via API:', insight?.error || insightResponse.statusText);
+      throw new Error(insight?.error || 'API call failed');
     }
 
     const primaryEmotion = Object.keys(analysis.emotionInference).reduce(
@@ -519,42 +573,69 @@ export async function runHealthCheckAction(): Promise<{
 
   const healthCheckTimeout = 15000; // 15 seconds
 
-  const runFlowTest = async (flowName: string, flowPromise: Promise<any>) => {
+  const runFlowTest = async <I, O>(
+    flowName: string,
+    input: I,
+    expectedSchema: z.ZodSchema<O>
+  ) => {
     const startTime = Date.now();
+    let status: 'PASS' | 'FAIL' = 'FAIL';
+    let error: string | undefined;
+    let responseTime: number;
+    let isValid = false;
+
     try {
-      const result = await Promise.race([
-        flowPromise,
-        new Promise((_, reject) =>
+      const apiPath = `/${flowName.replace(/-/g, '/')}`; // e.g., 'summarize-text' -> '/summarize/text'
+      const apiResponse = await Promise.race([
+        fetch(apiPath, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(input),
+        }),
+        new Promise<Response>((_, reject) =>
           setTimeout(() => reject(new Error('Timeout')), healthCheckTimeout)
         ),
       ]);
 
-      const isValid = !!result;
+      if (!apiResponse.ok) {
+        throw new Error(`API returned ${apiResponse.status}: ${apiResponse.statusText}`);
+      }
+      const result = await apiResponse.json();
+      const validated = expectedSchema.safeParse(result);
+
+      isValid = validated.success;
+      if (!isValid) {
+        error = 'Invalid response shape: ' + validated.error.message;
+      }
+      status = isValid ? 'PASS' : 'FAIL';
+    } catch (e) {
+      error = e instanceof Error ? e.message : 'Unknown error';
+      status = 'FAIL';
+    } finally {
+      responseTime = Date.now() - startTime;
       results.services.push({
         name: flowName,
-        status: isValid ? 'PASS' : 'FAIL',
-        responseTime: Date.now() - startTime,
-        error: isValid ? undefined : 'Invalid response shape',
-      });
-    } catch (error) {
-      results.services.push({
-        name: flowName,
-        status: 'FAIL',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        responseTime: Date.now() - startTime,
+        status,
+        responseTime,
+        error,
       });
     }
   };
 
-  // Temporarily remove generateSpeech from health check until API route is fully implemented.
-  // await runFlowTest('generate-speech', generateSpeech({ text: 'Health check test' }));
-  await runFlowTest('analyze-dream', analyzeDream({ text: 'Health check dream test' }));
+  // Test Firebase Functions via API routes
+  await runFlowTest('generate-speech', { text: 'Health check test' }, z.object({ audioDataUri: z.string() }));
+  await runFlowTest('summarize-text', { text: 'Health check test.' }, z.object({ summary: z.string() }));
+  await runFlowTest('analyze-dream', { text: 'Health check dream test' } as AnalyzeDreamInput, AnalyzeDreamOutputSchema);
 
   const testAudioUri =
     'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP1/LNeSsFJHfH8N2QQAoUXrTp66hVFApGn+DyvGEeBDqP';
-  await runFlowTest('transcribe-audio', transcribeAudio({ audioDataUri: testAudioUri }));
+  await runFlowTest('transcribe-audio', { audioDataUri: testAudioUri } as TranscribeAudioInput, TranscribeAudioOutputSchema);
 
-  await runFlowTest('companion-chat', companionChat({ message: 'Health check', history: [] }));
+  await runFlowTest('companion-chat', { message: 'Health check', history: [] }, z.object({ response: z.string() }));
+  await runFlowTest('analyze-camera-image', { imageDataUri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=' }, AnalyzeCameraImageOutputSchema);
+  await runFlowTest('generate-symbolic-insight', { analysis: { emotionInference: { joy: 0.5 }, environmentInference: [], objectTags: [], lightLevel: 0.5, faceCount: 0, dominantColor: '#FFFFFF', symbolicTagSummary: '', cameraAngle: '', faceLayoutSummary: '', backgroundMoodTags: [], contextualSymbolMatches: [], linkedArchetype: '' } }, z.object({ narratorReflection: z.string(), symbolAnimationTrigger: z.string() }));
+  await runFlowTest('suggest-ritual', { zone: 'emotional', context: 'stress' }, SuggestRitualOutputSchema);
+  await runFlowTest('process-onboarding-transcript', { transcript: 'Hello, I am a new user.' }, z.object({ goal: z.string(), task: z.string(), reminderDate: z.string(), habitToTrack: z.string() }));
 
   const allPassed = results.services.every(s => s.status === 'PASS');
   results.overall = allPassed ? 'PASS' : 'FAIL';

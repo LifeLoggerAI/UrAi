@@ -8,6 +8,16 @@ import { onRequest } from "firebase-functions/v2/https";
 import { onCall, CallableRequest, HttpsError } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions";
 
+// Import AI flow functions
+import { summarizeText } from "./summarize-text";
+import { analyzeDream } from "./analyze-dream";
+import { companionChat } from "./companion-chat";
+import { generateSpeech } from "./generate-speech";
+import { generateSymbolicInsight } from "./generate-symbolic-insight";
+import { suggestRitual } from "./suggest-ritual";
+import { transcribeAudio } from "./transcribe-audio";
+import { processOnboardingTranscript } from "./process-onboarding-transcript";
+import { analyzeCameraImage } from "./analyze-camera-image";
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -211,4 +221,86 @@ export const suggestRituals = onCall(async (event: CallableRequest) => {
     });
 
     return { id: ref.id, ...suggestion };
+});
+
+// Callable functions for AI flows
+export const generateSpeechFunction = onCall(async (request) => {
+  try {
+    const result = await generateSpeech(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const summarizeTextFunction = onCall(async (request) => {
+  try {
+    const result = await summarizeText(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const analyzeDreamFunction = onCall(async (request) => {
+  try {
+    const result = await analyzeDream(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const companionChatFunction = onCall(async (request) => {
+  try {
+    const result = await companionChat(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const generateSymbolicInsightFunction = onCall(async (request) => {
+  try {
+    const result = await generateSymbolicInsight(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const suggestRitualFunction = onCall(async (request) => {
+  try {
+    const result = await suggestRitual(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const transcribeAudioFunction = onCall(async (request) => {
+  try {
+    const result = await transcribeAudio(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const processOnboardingTranscriptFunction = onCall(async (request) => {
+  try {
+    const result = await processOnboardingTranscript(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
+});
+
+export const analyzeCameraImageFunction = onCall(async (request) => {
+  try {
+    const result = await analyzeCameraImage(request.data);
+    return result;
+  } catch (error: any) {
+    throw new HttpsError("internal", error.message);
+  }
 });

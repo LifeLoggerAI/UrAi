@@ -1,281 +1,259 @@
-/**
- * @fileOverview Centralized AI client wrapper with retry logic and error handling
- *
- * This module provides a unified interface for all AI operations with:
- * - Automatic retry with exponential backoff
- * - Comprehensive error handling and logging
- * - Request/response validation
- * - Performance monitoring
- */
-
 import { ai } from './genkit';
-import { z } from 'zod'; // Explicitly import z for z.infer
 import {
-  CompanionChatInputSchema,
-  CompanionChatOutputSchema,
-  TranscribeAudioInputSchema,
-  TranscribeAudioOutputSchema,
-  AnalyzeDreamInputSchema,
-  AnalyzeDreamOutputSchema,
-  EnrichVoiceEventInputSchema,
-  EnrichVoiceEventOutputSchema,
-  GenerateSpeechInputSchema,
-  GenerateSpeechOutputSchema,
-  SummarizeTextInputSchema,
-  SummarizeTextOutputSchema,
-  AnalyzeCameraImageInputSchema,
-  AnalyzeCameraImageOutputSchema,
-  GenerateSymbolicInsightInputSchema,
-  GenerateSymbolicInsightOutputSchema,
-  AnalyzeTextSentimentInputSchema,
-  AnalyzeTextSentimentOutputSchema,
-  SuggestRitualInputSchema,
-  SuggestRitualOutputSchema,
-  ProcessOnboardingTranscriptInputSchema,
-  ProcessOnboardingTranscriptOutputSchema,
-  GenerateAvatarInputSchema,
-  GenerateAvatarOutputSchema,
-  ChatMessageSchema // Needed for CompanionChatInputSchema
+  AnalyzeDreamInput,
+  AnalyzeDreamOutput,
+  AnalyzeTextSentimentInput,
+  AnalyzeTextSentimentOutput,
+  CompanionChatInput,
+  CompanionChatOutput,
+  GenerateSpeechInput,
+  GenerateSpeechOutput,
+  GenerateSymbolicInsightInput,
+  GenerateSymbolicInsightOutput,
+  ProcessOnboardingTranscriptInput,
+  ProcessOnboardingTranscriptOutput,
+  SuggestRitualInput,
+  SuggestRitualOutput,
+  SummarizeTextInput,
+  SummarizeTextOutput,
+  TranscribeAudioInput,
+  TranscribeAudioOutput,
+  User,
 } from '@/lib/types';
 
-// Infer types locally from schemas
-type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
-type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
-type TranscribeAudioInput = z.infer<typeof TranscribeAudioInputSchema>;
-type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
-type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
-type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
-type EnrichVoiceEventInput = z.infer<typeof EnrichVoiceEventInputSchema>;
-type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
-type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
-type GenerateSpeechOutput = z.infer<typeof GenerateSpeechOutputSchema>;
-type SummarizeTextInput = z.infer<typeof SummarizeTextInputSchema>;
-type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
-type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
-type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
-type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
-type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
-type AnalyzeTextSentimentInput = z.infer<typeof AnalyzeTextSentimentInputSchema>;
-type AnalyzeTextSentimentOutput = z.infer<typeof AnalyzeTextSentimentOutputSchema>;
-type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
-type SuggestRitualOutput = z.infer<typeof SuggestRitualOutputSchema>;
-type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
-type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
-type GenerateAvatarInput = z.infer<typeof GenerateAvatarInputSchema>;
-type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
+import { auth, db } from '@/lib/firebase'; // Corrected import
+import { UserCredential } from 'firebase/auth';
+// import { functions } from 'firebase/app'; // Removed unnecessary import
+import { Analytics, getAnalytics, logEvent } from 'firebase/analytics';
 
-// Error types for better error handling
-export class AIClientError extends Error {
-  constructor(
-    message: string,
-    public readonly cause?: unknown,
-    public readonly retryable: boolean = false
-  ) {
-    super(message);
-    this.name = 'AIClientError';
-  }
+// TODO: move error handling for API calls here.
+
+export enum AIClientEvents {
+  SpeechGenerated = 'ai_speech_generated',
+  DreamAnalyzed = 'ai_dream_analyzed',
+  TextSummarized = 'ai_text_summarized',
+  AudioTranscribed = 'ai_audio_transcribed',
+  CompanionChat = 'ai_companion_chat',
+  // ImageAnalyzed = 'ai_image_analyzed', // Removed, as file is missing
+  SymbolicInsightGenerated = 'ai_symbolic_insight_generated',
+  RitualSuggested = 'ai_ritual_suggested',
+  OnboardingProcessed = 'ai_onboarding_processed',
+  SentimentAnalyzed = 'ai_sentiment_analyzed',
 }
 
-export class AIRetryableError extends AIClientError {
-  constructor(message: string, cause?: unknown) {
-    super(message, cause, true);
-    this.name = 'AIRetryableError';
-  }
+interface AIClientConfig {
+  analytics?: Analytics;
+  retryConfig?: { retries: number; delayMs: number };
 }
 
-// Retry configuration
-interface RetryConfig {
-  maxAttempts: number;
-  baseDelayMs: number;
-  maxDelayMs: number;
-  backoffFactor: number;
-}
+async function executeAIFlow<I, O>(
+  flowName: string,
+  flowFn: (input: I) => Promise<O | null>,
+  input: I,
+  retryConfig?: { retries: number; delayMs: number }
+): Promise<O | null> {
+  let attempts = 0;
+  const maxAttempts = retryConfig?.retries || 1;
+  const delayMs = retryConfig?.delayMs || 1000;
 
-const DEFAULT_RETRY_CONFIG: RetryConfig = {
-  maxAttempts: 3,
-  baseDelayMs: 1000,
-  maxDelayMs: 10000,
-  backoffFactor: 2,
-};
-
-// Sleep utility
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Retry wrapper with exponential backoff
-async function withRetry<T>(
-  operation: () => Promise<T>,
-  config: RetryConfig = DEFAULT_RETRY_CONFIG
-): Promise<T> {
-  let lastError: unknown;
-  
-  for (let attempt = 1; attempt <= config.maxAttempts; attempt++) {
+  while (attempts < maxAttempts) {
     try {
-      return await operation();
-    } catch (error) {
-      lastError = error;
-      
-      // Don't retry on non-retryable errors
-      if (error instanceof AIClientError && !error.retryable) {
-        throw error;
+      const result = await flowFn(input);
+      return result;
+    } catch (e) {
+      console.error(`Attempt ${attempts + 1} for ${flowName} failed:`, e);
+      attempts++;
+      if (attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
       }
-      
-      // Don't retry on last attempt
-      if (attempt === config.maxAttempts) {
-        break;
-      }
-      
-      // Calculate delay with exponential backoff
-      const delay = Math.min(
-        config.baseDelayMs * Math.pow(config.backoffFactor, attempt - 1),
-        config.maxDelayMs
-      );
-      
-      console.warn(`AI operation failed (attempt ${attempt}/${config.maxAttempts}), retrying in ${delay}ms:`, error);
-      await sleep(delay);
     }
   }
-  
-  throw new AIClientError(
-    `AI operation failed after ${config.maxAttempts} attempts`,
-    lastError,
-    false
-  );
+  console.error(`All ${maxAttempts} attempts for ${flowName} failed.`);
+  return null;
 }
 
-// Request/response logging utility
-function logAIRequest(flowName: string, input: unknown, startTime: number, result?: unknown, error?: unknown) {
-  const duration = Date.now() - startTime;
-  const logData = {
-    flow: flowName,
-    duration: `${duration}ms`,
-    success: !error,
-    inputSize: JSON.stringify(input).length,
-    outputSize: result ? JSON.stringify(result).length : 0,
-  };
-  
-  if (error) {
-    console.error('AI Flow Error:', logData, error);
-  } else {
-    console.log('AI Flow Success:', logData);
-  }
-}
-
-// Generic AI flow execution wrapper
-async function executeAIFlow<TInput, TOutput>(
-  flowName: string,
-  flowFunction: (input: TInput) => Promise<TOutput | null>,
-  input: TInput,
-  retryConfig?: Partial<RetryConfig>
-): Promise<TOutput> {
-  const startTime = Date.now();
-  const config = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
-  
-  try {
-    const result = await withRetry(async () => {
-      try {
-        const output = await flowFunction(input);
-        if (!output) {
-          throw new AIRetryableError(`${flowName} returned null result`);
-        }
-        return output;
-      } catch (error) {
-        if (error instanceof Error) {
-          // Check for common retryable error patterns
-          const errorMessage = error.message.toLowerCase();
-          if (
-            errorMessage.includes('timeout') ||
-            errorMessage.includes('rate limit') ||
-            errorMessage.includes('service unavailable') ||
-            errorMessage.includes('internal error')
-          ) {
-            throw new AIRetryableError(`${flowName} encountered retryable error: ${error.message}`, error);
-          }
-        }
-        throw new AIClientError(`${flowName} failed: ${error}`, error, false);
-      }
-    }, config);
-    
-    logAIRequest(flowName, input, startTime, result);
-    return result;
-  } catch (error) {
-    logAIRequest(flowName, input, startTime, undefined, error);
-    throw error;
-  }
-}
-
-// Centralized AI Client class
 export class AIClient {
-  constructor(private retryConfig?: Partial<RetryConfig>) {}
+  private analytics?: Analytics;
+  private retryConfig?: { retries: number; delayMs: number };
 
-  async companionChat(input: CompanionChatInput): Promise<CompanionChatOutput> {
-    const { companionChat } = await import('./flows/companion-chat');
-    return executeAIFlow('companionChat', companionChat, input, this.retryConfig);
+  constructor(config?: AIClientConfig) {
+    this.analytics = config?.analytics;
+    this.retryConfig = config?.retryConfig;
   }
 
-  async transcribeAudio(input: TranscribeAudioInput): Promise<TranscribeAudioOutput> {
-    const { transcribeAudio } = await import('./flows/transcribe-audio');
-    return executeAIFlow('transcribeAudio', transcribeAudio, input, this.retryConfig);
+  private logEvent(eventName: AIClientEvents, params?: { [key: string]: any }) {
+    if (this.analytics) {
+      logEvent(this.analytics, eventName, params);
+    }
   }
 
-  async analyzeDream(input: AnalyzeDreamInput): Promise<AnalyzeDreamOutput> {
+  public async analyzeDream(
+    input: AnalyzeDreamInput
+  ): Promise<AnalyzeDreamOutput | null> {
     const { analyzeDream } = await import('./flows/analyze-dream');
-    return executeAIFlow('analyzeDream', analyzeDream, input, this.retryConfig);
+    const result = await executeAIFlow(
+      AIClientEvents.DreamAnalyzed,
+      analyzeDream,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.DreamAnalyzed);
+    return result;
   }
 
-  async enrichVoiceEvent(input: EnrichVoiceEventInput): Promise<EnrichVoiceEventOutput> {
-    const { enrichVoiceEvent } = await import('./flows/enrich-voice-event');
-    return executeAIFlow('enrichVoiceEvent', enrichVoiceEvent, input, this.retryConfig);
-  }
-
-  async generateSpeech(input: GenerateSpeechInput): Promise<GenerateSpeechOutput> {
-    const { generateSpeech } = await import('./flows/generate-speech');
-    return executeAIFlow('generateSpeech', generateSpeech, input, this.retryConfig);
-  }
-
-  async summarizeText(input: SummarizeTextInput): Promise<SummarizeTextOutput> {
+  public async summarizeText(
+    input: SummarizeTextInput
+  ): Promise<SummarizeTextOutput | null> {
     const { summarizeText } = await import('./flows/summarize-text');
-    return executeAIFlow('summarizeText', summarizeText, input, this.retryConfig);
+    const result = await executeAIFlow(
+      AIClientEvents.TextSummarized,
+      summarizeText,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.TextSummarized);
+    return result;
   }
 
-  async analyzeCameraImage(input: AnalyzeCameraImageInput): Promise<AnalyzeCameraImageOutput> {
-    const { analyzeCameraImage } = await import('./flows/analyze-camera-image');
-    return executeAIFlow('analyzeCameraImage', analyzeCameraImage, input, this.retryConfig);
+  public async transcribeAudio(
+    input: TranscribeAudioInput
+  ): Promise<TranscribeAudioOutput | null> {
+    const { transcribeAudio } = await import('./flows/transcribe-audio');
+    const result = await executeAIFlow(
+      AIClientEvents.AudioTranscribed,
+      transcribeAudio,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.AudioTranscribed);
+    return result;
   }
 
-  async generateSymbolicInsight(input: GenerateSymbolicInsightInput): Promise<GenerateSymbolicInsightOutput> {
-    const { generateSymbolicInsight } = await import('./flows/generate-symbolic-insight');
-    return executeAIFlow('generateSymbolicInsight', generateSymbolicInsight, input, this.retryConfig);
+  public async companionChat(
+    input: CompanionChatInput
+  ): Promise<CompanionChatOutput | null> {
+    const { companionChat } = await import('./flows/companion-chat');
+    const result = await executeAIFlow(
+      AIClientEvents.CompanionChat,
+      companionChat,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.CompanionChat);
+    return result;
   }
 
-  async analyzeTextSentiment(input: AnalyzeTextSentimentInput): Promise<AnalyzeTextSentimentOutput> {
-    const { analyzeTextSentiment } = await import('./flows/analyze-text-sentiment');
-    return executeAIFlow('analyzeTextSentiment', analyzeTextSentiment, input, this.retryConfig);
+  // Removed analyzeCameraImage method as the file is missing
+  // public async analyzeCameraImage(
+  //   input: { userId: string; imageDataUri: string }
+  // ): Promise<any | null> {
+  //   const { analyzeCameraImage } = await import(
+  //     './flows/analyze-camera-image'
+  //   );
+  //   const result = await executeAIFlow(
+  //     AIClientEvents.ImageAnalyzed,
+  //     analyzeCameraImage,
+  //     input,
+  //     this.retryConfig
+  //   );
+  //   if (result) this.logEvent(AIClientEvents.ImageAnalyzed);
+  //   return result;
+  // }
+
+  public async generateSymbolicInsight(
+    input: GenerateSymbolicInsightInput
+  ): Promise<GenerateSymbolicInsightOutput | null> {
+    const { generateSymbolicInsight } = await import(
+      './flows/generate-symbolic-insight'
+    );
+    const result = await executeAIFlow(
+      AIClientEvents.SymbolicInsightGenerated,
+      generateSymbolicInsight,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.SymbolicInsightGenerated);
+    return result;
   }
 
-  async suggestRitual(input: SuggestRitualInput): Promise<SuggestRitualOutput> {
+  public async suggestRitual(
+    input: SuggestRitualInput
+  ): Promise<SuggestRitualOutput | null> {
     const { suggestRitual } = await import('./flows/suggest-ritual');
-    return executeAIFlow('suggestRitual', suggestRitual, input, this.retryConfig);
+    const result = await executeAIFlow(
+      AIClientEvents.RitualSuggested,
+      suggestRitual,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.RitualSuggested);
+    return result;
   }
 
-  async processOnboardingTranscript(input: ProcessOnboardingTranscriptInput): Promise<ProcessOnboardingTranscriptOutput> {
-    const { processOnboardingTranscript } = await import('./flows/process-onboarding-transcript');
-    return executeAIFlow('processOnboardingTranscript', processOnboardingTranscript, input, this.retryConfig);
+  public async processOnboardingTranscript(
+    input: ProcessOnboardingTranscriptInput
+  ): Promise<ProcessOnboardingTranscriptOutput | null> {
+    const { processOnboardingTranscript } = await import(
+      './flows/process-onboarding-transcript'
+    );
+    const result = await executeAIFlow(
+      AIClientEvents.OnboardingProcessed,
+      processOnboardingTranscript,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.OnboardingProcessed);
+    return result;
   }
 
-  async generateAvatar(input: GenerateAvatarInput): Promise<GenerateAvatarOutput> {
-    const { generateAvatar } = await import('./flows/generate-avatar');
-    return executeAIFlow('generateAvatar', generateAvatar, input, this.retryConfig);
+  public async analyzeTextSentiment(
+    input: AnalyzeTextSentimentInput
+  ): Promise<AnalyzeTextSentimentOutput | null> {
+    const { analyzeTextSentiment } = await import(
+      './flows/analyze-text-sentiment'
+    );
+    const result = await executeAIFlow(
+      AIClientEvents.SentimentAnalyzed,
+      analyzeTextSentiment,
+      input,
+      this.retryConfig
+    );
+    if (result) this.logEvent(AIClientEvents.SentimentAnalyzed);
+    return result;
   }
-}
 
-// Default client instance
-export const aiClient = new AIClient();
+  public async generateSpeech(
+    input: GenerateSpeechInput
+  ): Promise<GenerateSpeechOutput> {
+    // This should call the /api/generate-speech route
+    const speechResponse = await fetch('/api/generate-speech', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    });
 
-// Utility function for one-off calls
-export async function callAI<TInput, TOutput>(
-  flowName: keyof AIClient,
-  input: TInput
-): Promise<TOutput> {
-  const client = new AIClient();
-  return (client[flowName] as any)(input);
+    if (!speechResponse.ok) {
+      const errorData = await speechResponse.json();
+      throw new Error(
+        `Speech generation failed: ${speechResponse.statusText} - ${errorData.error}`
+      );
+    }
+
+    const speechResult = await speechResponse.json();
+    this.logEvent(AIClientEvents.SpeechGenerated);
+    return speechResult;
+  }
+
+  // Firebase Auth related methods (keep as is)
+  public async signInAnonymously(): Promise<User | null> {
+    const { signInAnonymously } = await import('firebase/auth');
+    const userCredential: UserCredential = await signInAnonymously(auth);
+    return this.getUser(userCredential.user.uid);
+  }
+
+  public async getUser(uid: string): Promise<User | null> {
+    const { doc, getDoc } = await import('firebase/firestore');
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    return userDoc.exists() ? (userDoc.data() as User) : null;
+  }
 }

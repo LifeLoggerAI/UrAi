@@ -7,7 +7,7 @@
  * - AnalyzeCameraImageOutput - The return type for the function.
  */
 
-import { ai } from '@/ai/genkit';
+import { ai } from './genkit'; // Corrected import to use the configured 'ai' instance
 import { z } from 'zod'; // Import z for type inference
 import {
   AnalyzeCameraImageInputSchema,
@@ -26,8 +26,8 @@ export async function analyzeCameraImage(
 
 const prompt = ai.definePrompt({
   name: 'analyzeCameraImagePrompt',
-  input: AnalyzeCameraImageInputSchema,
-  output: AnalyzeCameraImageOutputSchema,
+  input: { schema: AnalyzeCameraImageInputSchema }, // Ensure schema is passed as an object
+  output: { schema: AnalyzeCameraImageOutputSchema }, // Ensure schema is passed as an object
   prompt: `You are an expert in symbolic visual analysis. Analyze the following image captured from a user's life. Extract deep, contextual, and symbolic meaning.
 
 Image: {{media url=imageDataUri}}
@@ -55,6 +55,9 @@ const analyzeCameraImageFlow = ai.defineFlow(
   },
   async (input: AnalyzeCameraImageInput) => {
     const { output } = await prompt(input);
+    if (!output) {
+      throw new Error('Image analysis output is null or undefined.');
+    }
     return output;
   }
 );
