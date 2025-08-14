@@ -1,0 +1,115 @@
+[debug] [2025-08-14T02:50:12.752Z] ----------------------------------------------------------------------
+[debug] [2025-08-14T02:50:12.756Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /home/user/.global_modules/bin/firebase deploy --only functions:runSeed
+[debug] [2025-08-14T02:50:12.757Z] CLI Version:   14.12.0
+[debug] [2025-08-14T02:50:12.757Z] Platform:      linux
+[debug] [2025-08-14T02:50:12.757Z] Node Version:  v20.19.1
+[debug] [2025-08-14T02:50:12.757Z] Time:          Thu Aug 14 2025 02:50:12 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-08-14T02:50:12.758Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-08-14T02:50:13.324Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:13.324Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:13.328Z] >>> [apiv2][query] GET https://monospace-pa.googleapis.com/v1/workspaces/studio-1902475800 [none]
+[debug] [2025-08-14T02:50:13.987Z] <<< [apiv2][status] GET https://monospace-pa.googleapis.com/v1/workspaces/studio-1902475800 200
+[debug] [2025-08-14T02:50:13.988Z] <<< [apiv2][body] GET https://monospace-pa.googleapis.com/v1/workspaces/studio-1902475800 {"workspaceId":"studio-1902475800","name":"urai","workspaceRedirectUrl":"firebase-studio-1751520120513.cluster-pgviq6mvsncnqxx6kr7pbz65v6.cloudworkstations.dev","status":"WORKSPACE_STATUS_RUNNING","lastAccessDatetime":"2025-08-14T00:26:55.041636Z","failureReason":"Starting your workstation timed out since your container took over 896 seconds to start.","workspaceTemplate":"WORKSPACE_TEMPLATE_CAPRA_BUILDER","owner":"SELF","serviceAccountEmail":"msp-1331859442395767148@monospace-per-ws-sa-5.iam.gserviceaccount.com","ownerEmail":"lifeloggerai@gmail.com","workspaceImageUrl":"https://www.gstatic.com/monospace/250314/workspace-prototype-192.png","templateArgs":"{}","templateRepoUrl":"file:///usr/local/monospace/templates/private/_capra_next","workstationAccessToken":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2Nsb3VkLmdvb2dsZS5jb20vd29ya3N0YXRpb25zIiwiYXVkIjoiZmlyZWJhc2Utc3R1ZGlvLTE3NTE1MjAxMjA1MTMuY2x1c3Rlci1wZ3ZpcTZtdnNuY25xeHg2a3I3cGJ6NjV2Ni5jbG91ZHdvcmtzdGF0aW9ucy5kZXYiLCJpYXQiOjE3NTUxMzk4MTMsImV4cCI6MTc1NTIyNjIxM30.EUMFZwRkBt1FG45pdJncaKG9m13kAHmXv7GuhsJl-3UUM_I7IkwaNSXKo2bXMPpvsbdlBxWFNjFx1GoMLPtNZu1XARVv_pYfVBEig7U3FWXxehmun6FGukh2KelsT5kd9mpfh_mrNsiYIld73UxlWkCRtk2MLXR0Bu93nc83ZBlQjMQDLT0AYTMSZ6I_Vhh8hMmhcc0pinMQMQOSCPCucZSsoNhm4F0O2wkOYMuwoOdv1p-DGAZqdhH2ps8L1EnxJE-A6r6IqTP14RuGvYtsXGykARQSYzUjojBIzpURwz9xKzlqYu60KkDIO56qozIrBOsGcpZq-2P6FmcSvFqh1g","firebaseProjectId":"urai-4dc1d"}
+[debug] [2025-08-14T02:50:13.992Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-08-14T02:50:13.993Z] > authorizing via signed-in user (lifeloggerai@gmail.com)
+[debug] [2025-08-14T02:50:13.994Z] [iam] checking project urai-4dc1d for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-08-14T02:50:13.996Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:13.997Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:13.997Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d:testIamPermissions [none]
+[debug] [2025-08-14T02:50:13.998Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d:testIamPermissions x-goog-quota-user=projects/urai-4dc1d
+[debug] [2025-08-14T02:50:13.998Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-08-14T02:50:14.141Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d:testIamPermissions 200
+[debug] [2025-08-14T02:50:14.142Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-08-14T02:50:14.143Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.143Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.144Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/urai-4dc1d/serviceAccounts/urai-4dc1d@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-08-14T02:50:14.144Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/urai-4dc1d/serviceAccounts/urai-4dc1d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-08-14T02:50:14.283Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/urai-4dc1d/serviceAccounts/urai-4dc1d@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-08-14T02:50:14.283Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/urai-4dc1d/serviceAccounts/urai-4dc1d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'urai-4dc1d'...
+[info] 
+[info] i  deploying functions 
+[debug] [2025-08-14T02:50:14.298Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.298Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.298Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d [none]
+[debug] [2025-08-14T02:50:14.401Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d 200
+[debug] [2025-08-14T02:50:14.401Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/urai-4dc1d {"projectNumber":"952723774155","projectId":"urai-4dc1d","lifecycleState":"ACTIVE","name":"urai","labels":{"firebase":"enabled","firebase-core":"disabled","generative-language":"enabled"},"createTime":"2025-08-09T04:04:38.137516Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-08-14T02:50:14.411Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.411Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.412Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/urai-4dc1d/adminSdkConfig [none]
+[debug] [2025-08-14T02:50:14.706Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/urai-4dc1d/adminSdkConfig 200
+[debug] [2025-08-14T02:50:14.706Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/urai-4dc1d/adminSdkConfig {"projectId":"urai-4dc1d","storageBucket":"urai-4dc1d.firebasestorage.app"}
+[debug] [2025-08-14T02:50:14.709Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.709Z] Checked if tokens are valid: true, expires at: 1755142692313
+[debug] [2025-08-14T02:50:14.709Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/urai-4dc1d/configs [none]
+[debug] [2025-08-14T02:50:14.841Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/urai-4dc1d/configs 200
+[debug] [2025-08-14T02:50:14.841Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/urai-4dc1d/configs {}
+[debug] [2025-08-14T02:50:14.849Z] Validating nodejs source
+[debug] [2025-08-14T02:50:15.584Z] > [functions] package.json contents: {
+  "name": "functions",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "dependencies": {
+    "@genkit-ai/core": "^1.16.0",
+    "@genkit-ai/firebase": "^1.16.0",
+    "@genkit-ai/googleai": "^1.16.1",
+    "@genkit-ai/vertexai": "^1.16.0",
+    "@google/generative-ai": "^0.24.1",
+    "@sendgrid/mail": "^8.1.5",
+    "dotenv": "^17.2.1",
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^6.4.0",
+    "genkit": "^1.16.1",
+    "node-fetch": "^2.7.0",
+    "stripe": "^18.4.0",
+    "wav": "^1.0.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.11",
+    "@types/wav": "^1.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.9.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
+[debug] [2025-08-14T02:50:15.584Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-08-14T02:50:15.591Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-08-14T02:50:15.609Z] Found firebase-functions binary at '/home/user/studio/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8636
+
+[error] Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/studio/functions/lib/enrich' imported from /home/user/studio/functions/lib/index.js
+    at finalizeResolution (node:internal/modules/esm/resolve:283:11)
+    at moduleResolve (node:internal/modules/esm/resolve:952:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1188:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+    at ModuleLoader.getModuleJobForRequire (node:internal/modules/esm/loader:347:53)
+    at new ModuleJobSync (node:internal/modules/esm/module_job:333:34)
+    at ModuleLoader.importSyncForRequire (node:internal/modules/esm/loader:320:11)
+    at loadESMFromCJS (node:internal/modules/cjs/loader:1371:24)
+    at Module._compile (node:internal/modules/cjs/loader:1511:5) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///home/user/studio/functions/lib/enrich'
+}
+
+[debug] [2025-08-14T02:50:16.137Z] Got response code 400; body Failed to generate manifest from function source: Cannot find module '/home/user/studio/functions/lib/enrich' imported from /home/user/studio/functions/lib/index.js
