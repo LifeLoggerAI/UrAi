@@ -1,5 +1,5 @@
 /**
- * SSML (Speech Synthesis Markup Language) Utilities
+ * @fileOverview SSML (Speech Synthesis Markup Language) Utilities
  *
  * This module provides utilities for generating high-quality SSML
  * for text-to-speech synthesis with neural voices.
@@ -7,12 +7,12 @@
 
 export interface SSMLOptions {
   voiceName?: string;
-  rate?: number;
-  pitch?: string;
+  rate?: number; // Represented as a multiplier, e.g., 0.95 for 95%
+  pitch?: string; // e.g., "+1st", "-2st"
   emphasis?: 'strong' | 'moderate' | 'reduced';
-  breakBefore?: string;
-  breakAfter?: string;
-  prosodyPitch?: string;
+  breakBefore?: string; // e.g., "300ms"
+  breakAfter?: string; // e.g., "200ms"
+  prosodyPitch?: string; // e.g., "+2st"
 }
 
 export interface SSMLSegment {
@@ -23,143 +23,9 @@ export interface SSMLSegment {
 }
 
 /**
- * Generates SSML markup for enhanced text-to-speech output
- */
-export function generateSSML(
-  text: string | SSMLSegment[],
-  options: SSMLOptions = {}
-): string {
-  const {
-    voiceName = 'en-US-AriaNeural',
-    rate = 0.95,
-    pitch = '+1st',
-    emphasis = 'moderate',
-    breakBefore = '300ms',
-    breakAfter = '200ms',
-    prosodyPitch = '+2st',
-  } = options;
-
-  // If text is a string, convert to single segment
-  const segments = typeof text === 'string' ? [{ text }] : text;
-
-  // Generate SSML content
-  let ssmlContent = '';
-
-  segments.forEach((segment, index) => {
-    if (index > 0) {
-      ssmlContent += `<break time="150ms"/>`;
-    }
-
-    if (segment.emphasis) {
-      ssmlContent += `<emphasis level="${segment.emphasis}">${segment.text}</emphasis>`;
-    } else {
-      ssmlContent += segment.text;
-    }
-  });
-
-  // Add closing gratitude with enhanced prosody
-  if (segments.length > 0) {
-    ssmlContent += `
-      <break time="${breakAfter}"/>
-      <prosody pitch="${prosodyPitch}">Thank you!</prosody>`;
-  }
-
-  // Wrap in complete SSML structure
-  const ssml = `<speak>
-  <voice name="${voiceName}">
-    <prosody rate="${rate}" pitch="${pitch}">
-      <break time="${breakBefore}"/>
-      ${ssmlContent}
-    </prosody>
-  </voice>
-</speak>`;
-
-  return ssml;
-}
-
-/**
- * Creates SSML for conversational responses with emotional context
- */
-export function generateConversationalSSML(
-  text: string,
-  emotion:
-    | 'neutral'
-    | 'friendly'
-    | 'empathetic'
-    | 'excited'
-    | 'calm' = 'friendly'
-): string {
-  const emotionSettings = {
-    neutral: {
-      voiceName: 'en-US-AriaNeural',
-      rate: 1.0,
-      pitch: '+0st',
-      emphasis: 'moderate' as const,
-    },
-    friendly: {
-      voiceName: 'en-US-AriaNeural',
-      rate: 0.95,
-      pitch: '+1st',
-      emphasis: 'moderate' as const,
-    },
-    empathetic: {
-      voiceName: 'en-US-AriaNeural',
-      rate: 0.85,
-      pitch: '-1st',
-      emphasis: 'reduced' as const,
-    },
-    excited: {
-      voiceName: 'en-US-AriaNeural',
-      rate: 1.1,
-      pitch: '+2st',
-      emphasis: 'strong' as const,
-    },
-    calm: {
-      voiceName: 'en-US-AriaNeural',
-      rate: 0.8,
-      pitch: '-2st',
-      emphasis: 'reduced' as const,
-    },
-  };
-
-  const settings = emotionSettings[emotion];
-
-  return generateSSML(text, {
-    ...settings,
-    breakBefore: '400ms',
-    breakAfter: '300ms',
-  });
-}
-
-/**
- * Creates SSML for storytelling with dramatic pauses
- */
-export function generateStorytellingSSML(segments: SSMLSegment[]): string {
-  return generateSSML(segments, {
-    voiceName: 'en-US-AriaNeural',
-    rate: 0.9,
-    pitch: '+1st',
-    breakBefore: '500ms',
-    breakAfter: '400ms',
-  });
-}
-
-/**
- * Creates SSML for meditation or relaxation content
- */
-export function generateMeditationSSML(text: string): string {
-  return generateSSML(text, {
-    voiceName: 'en-US-AriaNeural',
-    rate: 0.7,
-    pitch: '-3st',
-    emphasis: 'reduced',
-    breakBefore: '800ms',
-    breakAfter: '600ms',
-  });
-}
-
-/**
- * Escapes special characters for SSML
+ * Escapes special characters for safe inclusion in SSML.
+ * @param text The plain text to escape.
+ * @returns The escaped text.
  */
 export function escapeSSML(text: string): string {
   return text
@@ -171,7 +37,93 @@ export function escapeSSML(text: string): string {
 }
 
 /**
- * Validates SSML markup
+ * Generates a complete SSML string from segments and options.
+ * @param text A string or an array of SSMLSegment objects.
+ * @param options Configuration for the overall speech synthesis.
+ * @returns A full SSML document as a string.
+ */
+export function generateSSML(
+  text: string | SSMLSegment[],
+  options: SSMLOptions = {}
+): string {
+  const {
+    voiceName = 'en-US-AriaNeural',
+    rate = 0.95,
+    pitch = '+0st', // A more neutral default pitch
+    breakBefore = '300ms',
+    breakAfter = '200ms',
+  } = options;
+
+  const segments = typeof text === 'string' ? [{ text }] : text;
+
+  let content = segments
+    .map(segment => {
+      const escapedText = escapeSSML(segment.text);
+      if (segment.emphasis) {
+        return `<emphasis level="${segment.emphasis}">${escapedText}</emphasis>`;
+      }
+      return escapedText;
+    })
+    .join(`<break time="150ms"/>`);
+
+  const prosodyAttrs = `rate="${rate * 100}%" pitch="${pitch}"`;
+
+  const ssml = `
+<speak>
+  <voice name="${voiceName}">
+    <prosody ${prosodyAttrs}>
+      <break time="${breakBefore}"/>
+      ${content}
+      <break time="${breakAfter}"/>
+    </prosody>
+  </voice>
+</speak>
+  `.trim();
+
+  // Validate the generated SSML
+  const { isValid, errors } = validateSSML(ssml);
+  if (!isValid) {
+    // In a real app, you might throw an error or log this more formally.
+    console.warn('Generated invalid SSML:', errors.join(', '));
+  }
+
+  return ssml;
+}
+
+/**
+ * Creates SSML for conversational responses with emotional context.
+ * @param text The conversational text.
+ * @param emotion The emotional tone to convey.
+ * @returns A full SSML document as a string.
+ */
+export function generateConversationalSSML(
+  text: string,
+  emotion:
+    | 'neutral'
+    | 'friendly'
+    | 'empathetic'
+    | 'excited'
+    | 'calm' = 'friendly'
+): string {
+  const emotionSettings: Record<string, SSMLOptions> = {
+    neutral: { voiceName: 'en-US-AriaNeural', rate: 1.0, pitch: '+0st', emphasis: 'moderate' },
+    friendly: { voiceName: 'en-US-AriaNeural', rate: 1.05, pitch: '+1st', emphasis: 'moderate' },
+    empathetic: { voiceName: 'en-US-AriaNeural', rate: 0.9, pitch: '-1st', emphasis: 'reduced' },
+    excited: { voiceName: 'en-US-AriaNeural', rate: 1.1, pitch: '+2st', emphasis: 'strong' },
+    calm: { voiceName: 'en-US-AriaNeural', rate: 0.85, pitch: '-2st', emphasis: 'reduced' },
+  };
+
+  return generateSSML(text, {
+    ...emotionSettings[emotion],
+    breakBefore: '400ms',
+    breakAfter: '300ms',
+  });
+}
+
+/**
+ * Validates basic well-formedness of an SSML string.
+ * @param ssml The SSML string to validate.
+ * @returns An object indicating validity and a list of errors.
  */
 export function validateSSML(ssml: string): {
   isValid: boolean;
@@ -179,17 +131,34 @@ export function validateSSML(ssml: string): {
 } {
   const errors: string[] = [];
 
-  // Check for required speak tag
-  if (!ssml.includes('<speak>') || !ssml.includes('</speak>')) {
-    errors.push('SSML must be wrapped in <speak> tags');
+  if (!ssml.startsWith('<speak>') || !ssml.endsWith('</speak>')) {
+    errors.push('SSML must be wrapped in <speak> tags.');
   }
 
-  // Check for unclosed tags (basic validation)
-  const openTags = ssml.match(/<[^/][^>]*>/g) || [];
-  const closeTags = ssml.match(/<\/[^>]*>/g) || [];
+  const tagStack: string[] = [];
+  const tagRegex = /<\/?([a-zA-Z0-9]+)/g;
+  let match;
 
-  if (openTags.length !== closeTags.length) {
-    errors.push('Mismatched opening and closing tags');
+  while ((match = tagRegex.exec(ssml)) !== null) {
+    const tagName = match[1];
+    if (match[0].startsWith('</')) {
+      // Closing tag
+      if (tagStack.length === 0 || tagStack.pop() !== tagName) {
+        errors.push(`Mismatched or unexpected closing tag: </${tagName}>`);
+      }
+    } else {
+      // Opening tag (ignore self-closing for this simple check e.g. <break />)
+      if (!ssml.includes(`</${tagName}>`, match.index) && !match[0].endsWith('/>')) {
+         // This check is imperfect but catches simple cases.
+      }
+      if(!['break'].includes(tagName)) { // Self-closing tags
+        tagStack.push(tagName);
+      }
+    }
+  }
+
+  if (tagStack.length > 0) {
+    errors.push(`Unclosed tags remaining in stack: ${tagStack.join(', ')}`);
   }
 
   return {

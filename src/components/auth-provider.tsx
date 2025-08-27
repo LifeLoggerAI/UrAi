@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 'use client';
 
 import {
@@ -10,10 +10,17 @@ import {
   useRef,
 } from 'react';
 import type { User } from 'firebase/auth';
+<<<<<<< HEAD
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+=======
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { app } from '@/lib/firebase';
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 import { Loader2 } from 'lucide-react';
 import { devMode, seedDemoData, DEMO_USER_ID } from '@/lib/dev-mode';
+
+const auth = getAuth(app);
 
 // Create a mock user object for demo mode
 const mockUser = {
@@ -25,7 +32,6 @@ const mockUser = {
   isAnonymous: false,
   metadata: {},
   providerData: [],
-  // Add other necessary User properties as needed, with mock values
 } as User;
 
 type AuthContextType = {
@@ -58,12 +64,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setupDemoMode();
     } else {
+<<<<<<< HEAD
       // In production, use real Firebase Auth
+=======
+>>>>>>> 5be23281 (Commit before pulling remote changes)
       const unsubscribe = onAuthStateChanged(auth, user => {
         setUser(user);
         setLoading(false);
       });
+<<<<<<< HEAD
       // Cleanup subscription on unmount
+=======
+>>>>>>> 5be23281 (Commit before pulling remote changes)
       return () => unsubscribe();
     }
   }, []);

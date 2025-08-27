@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,7 +18,7 @@ export function CognitiveZoneView({
   personaProfile,
 }: CognitiveZoneViewProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full p-4 max-h-[80vh] overflow-y-auto">
       {/* Dreams */}
       <Card>
         <CardHeader>
@@ -35,9 +35,9 @@ export function CognitiveZoneView({
                   className="mb-3 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors"
                 >
                   <p className="text-sm font-medium">{dream.title || 'Untitled Dream'}</p>
-                  {dream.description && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {dream.description}
+                  {dream.text && (
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                      {dream.text}
                     </p>
                   )}
                   {dream.sentimentScore !== undefined && (
@@ -69,7 +69,7 @@ export function CognitiveZoneView({
                   key={reflection.id}
                   className="mb-3 p-3 rounded-md border border-border hover:bg-muted/50 transition-colors"
                 >
-                  <p className="text-sm">{reflection.content}</p>
+                  <p className="text-sm line-clamp-3">{reflection.text}</p>
                   {reflection.createdAt && (
                     <p className="text-xs text-muted-foreground mt-1">
                       {new Date(reflection.createdAt).toLocaleDateString()}
@@ -96,23 +96,20 @@ export function CognitiveZoneView({
         <CardContent>
           {personaProfile ? (
             <div className="space-y-3">
-              {personaProfile.archetype && (
+              {personaProfile.dominantPersona && (
                 <p className="text-sm">
-                  <strong>Archetype:</strong> {personaProfile.archetype}
+                  <strong>Dominant:</strong> {personaProfile.dominantPersona}
                 </p>
               )}
-              {personaProfile.traits && personaProfile.traits.length > 0 && (
+              {personaProfile.traits && Object.keys(personaProfile.traits).length > 0 && (
                 <div>
                   <strong className="text-sm">Traits:</strong>
                   <ul className="text-sm list-disc list-inside mt-1">
-                    {personaProfile.traits.map((trait, idx) => (
-                      <li key={idx}>{trait}</li>
+                    {Object.entries(personaProfile.traits).map(([trait, value]) => (
+                      <li key={trait}>{trait}: {Math.round(value * 100)}%</li>
                     ))}
                   </ul>
                 </div>
-              )}
-              {personaProfile.description && (
-                <p className="text-sm text-muted-foreground">{personaProfile.description}</p>
               )}
             </div>
           ) : (

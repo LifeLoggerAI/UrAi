@@ -3,17 +3,17 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from './auth-provider';
-import { db } from '@/lib/firebase';
-import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
 import {
   Handshake,
   GitPullRequestArrow,
   Waypoints,
 } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import type { Task, VoiceEvent } from '@/lib/types';
 
 interface ArmsViewProps {
-  tasks: any[]; // Replace with actual Task type
-  voiceEvents: any[]; // Replace with actual VoiceEvent type
+  tasks: Task[];
+  voiceEvents: VoiceEvent[];
 }
 
 export default function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
@@ -25,24 +25,20 @@ export default function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
   useEffect(() => {
     if (!user) return;
 
-    // Simulate data fetching and processing
     const calculateMetrics = () => {
-      // Example calculations (replace with real logic)
       const totalTasks = tasks.length;
-      const completedTasks = tasks.filter((task: any) => task.completed).length;
+      const completedTasks = tasks.filter((task: Task) => task.isCompleted).length;
       setActionCompletionRate(totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0);
 
       const totalVoiceEvents = voiceEvents.length;
-      const socialVoiceEvents = voiceEvents.filter((event: any) => event.people && event.people.length > 0).length;
+      const socialVoiceEvents = voiceEvents.filter((event: VoiceEvent) => event.people && event.people.length > 0).length;
       setSocialEngagement(totalVoiceEvents > 0 ? (socialVoiceEvents / totalVoiceEvents) * 100 : 0);
 
-      const collaborationVoiceEvents = voiceEvents.filter((event: any) => event.context && event.context.includes('collaboration')).length;
+      const collaborationVoiceEvents = voiceEvents.filter((event: VoiceEvent) => event.tasks && event.tasks.length > 0).length;
       setCollabMetric(totalVoiceEvents > 0 ? (collaborationVoiceEvents / totalVoiceEvents) * 100 : 0);
     };
 
     calculateMetrics();
-
-    // You might also subscribe to real-time updates for tasks and voiceEvents here if needed
   }, [user, tasks, voiceEvents]);
 
   const metrics = [
@@ -70,18 +66,22 @@ export default function ArmsView({ tasks, voiceEvents }: ArmsViewProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+    <div className="grid grid-cols-1 gap-6 p-4">
       {metrics.map((metric) => (
-        <div key={metric.key} className="bg-card p-6 rounded-lg shadow-md flex items-center justify-between col-span-1 md:col-span-2">
-          <div className="flex items-center gap-3">
-            {metric.icon}
-            <div>
-              <h3 className="text-lg font-semibold">{metric.title}</h3>
-              <p className="text-muted-foreground">{metric.description}</p>
-            </div>
-          </div>
-          <span className="text-3xl font-bold text-primary">{metric.value}</span>
-        </div>
+        <Card key={metric.key}>
+            <CardHeader>
+                <div className="flex items-center gap-3">
+                    {metric.icon}
+                    <div>
+                        <h3 className="text-lg font-semibold">{metric.title}</h3>
+                        <p className="text-muted-foreground text-sm">{metric.description}</p>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <span className="text-3xl font-bold text-primary">{metric.value}</span>
+            </CardContent>
+        </Card>
       ))}
     </div>
   );

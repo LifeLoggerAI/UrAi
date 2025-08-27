@@ -1,30 +1,10 @@
-// This file is safe to import on the client, as it exports a stub.
-// The actual Genkit AI configuration is in `genkit.server.ts`.
+import { genkit } from '@genkit-ai/core';
+import { googleAI } from '@genkit-ai/googleai';
 
-export const ai = {
-  definePrompt: (..._args: any[]) => {
-    throw new Error(
-      'Genkit AI functions are server-only. Do not import `genkit.server.ts` in client components.'
-    );
-  },
-  defineFlow: (..._args: any[]) => {
-    throw new Error(
-      'Genkit AI functions are server-only. Do not import `genkit.server.ts` in client components.'
-    );
-  },
-  run: async (..._args: any[]) => {
-    throw new Error(
-      'Genkit server stub called from client. Wire this on server only.'
-    );
-  },
-  generate: async (..._args: any[]) => {
-    throw new Error(
-      'Genkit server stub called from client. Wire this on server only.'
-    );
-  },
-  embed: async (..._args: any[]) => {
-    throw new Error(
-      'Genkit server stub called from client. Wire this on server only.'
-    );
-  },
-};
+export const ai = genkit({
+  plugins: [
+    googleAI({
+      apiKey: process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY,
+    }),
+  ],
+});

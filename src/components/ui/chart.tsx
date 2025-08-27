@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client';
 
 import * as React from 'react';
@@ -53,20 +54,65 @@ const ChartContainer = React.forwardRef<
         ref={ref}
         className={cn(
           "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+=======
+// @ts-nocheck
+'use client';
+
+import * as React from 'react';
+import {
+  Tooltip as TooltipPrimitive,
+  TooltipContent as TooltipContentPrimitive,
+  TooltipTrigger,
+} from 'recharts';
+import { cn } from '@/lib/utils';
+import { cva } from 'class-variance-authority';
+
+const ChartContext = React.createContext(null);
+
+function ChartContainer({
+  className,
+  children,
+  config,
+  ...props
+}: React.ComponentProps<'div'> & {
+  config: any;
+  children: React.ReactNode;
+}) {
+  const id = React.useId();
+  const [activeChart, setActiveChart] = React.useState(null);
+
+  const chartConfig = React.useMemo(() => {
+    return {
+      ...config,
+    };
+  }, [config]);
+
+  return (
+    <ChartContext.Provider value={{ chartConfig, activeChart, setActiveChart }}>
+      <div
+        data-chart={id}
+        className={cn(
+          "chart-container flex flex-col gap-2 [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line]:stroke-border/50 [&_.recharts-polar-grid_[cx=50%][cy=50%]_line]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-radial-grid_line]:stroke-border",
+>>>>>>> 5be23281 (Commit before pulling remote changes)
           className
         )}
         {...props}
       >
+<<<<<<< HEAD
         <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
         </RechartsPrimitive.ResponsiveContainer>
+=======
+        {children}
+>>>>>>> 5be23281 (Commit before pulling remote changes)
       </div>
     </ChartContext.Provider>
   );
-});
+}
 ChartContainer.displayName = 'Chart';
 
+<<<<<<< HEAD
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
@@ -174,11 +220,56 @@ const ChartTooltipContent = React.forwardRef<
     }
 
     const nestLabel = payload.length === 1 && indicator !== 'dot';
+=======
+function useChart() {
+  const context = React.useContext(ChartContext);
+  if (!context) {
+    throw new Error('useChart must be used within a <ChartContainer />');
+  }
+  return context;
+}
+
+const ChartTooltip = TooltipPrimitive;
+
+const ChartTooltipContent = React.forwardRef<
+  any,
+  React.ComponentProps<typeof TooltipContentPrimitive> & {
+    hideLabel?: boolean;
+    hideIndicator?: boolean;
+    indicator?: 'line' | 'dot' | 'dashed';
+    nameKey?: string;
+    labelKey?: string;
+  }
+>(
+  (
+    {
+      className,
+      payload,
+      label,
+      hideLabel = false,
+      hideIndicator = false,
+      indicator = 'dot',
+      nameKey = 'name',
+      labelKey = 'label',
+      ...props
+    },
+    ref
+  ) => {
+    const { chartConfig } = useChart();
+
+    if (!payload || !payload.length) {
+      return null;
+    }
+
+    const [item] = payload;
+    const { color, name } = item;
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
     return (
       <div
         ref={ref}
         className={cn(
+<<<<<<< HEAD
           'grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl',
           className
         )}
@@ -246,6 +337,48 @@ const ChartTooltipContent = React.forwardRef<
                     </div>
                   </>
                 )}
+=======
+          'min-w-[8rem] grid items-stretch gap-1.5 rounded-lg border bg-background p-2.5 text-sm shadow-xl',
+          className
+        )}
+        {...props}
+      >
+        {!hideLabel && (
+          <div className="font-medium text-muted-foreground">
+            {label || item.payload[labelKey] || 'Value'}
+          </div>
+        )}
+        <div className="grid gap-1.5">
+          {payload.map((item, i) => {
+            const { name, value, color } = item;
+            const config = chartConfig[name];
+
+            return (
+              <div
+                key={i}
+                className="flex flex-wrap items-center justify-between gap-1.5"
+              >
+                <div className="flex items-center gap-1.5">
+                  {!hideIndicator && (
+                    <span
+                      className={cn('h-2.5 w-2.5 shrink-0 rounded-[2px]', {
+                        'bg-dot': indicator === 'dot',
+                        'bg-line': indicator === 'line',
+                        'bg-dashed': indicator === 'dashed',
+                      })}
+                      style={{
+                        backgroundColor: color,
+                      }}
+                    />
+                  )}
+                  <span className="flex-1 text-muted-foreground">
+                    {config?.label || name}
+                  </span>
+                </div>
+                <span className="font-mono font-medium text-foreground">
+                  {value}
+                </span>
+>>>>>>> 5be23281 (Commit before pulling remote changes)
               </div>
             );
           })}
@@ -254,6 +387,7 @@ const ChartTooltipContent = React.forwardRef<
     );
   }
 );
+<<<<<<< HEAD
 ChartTooltipContent.displayName = 'ChartTooltip';
 
 const ChartLegend = RechartsPrimitive.Legend;
@@ -354,12 +488,87 @@ function getPayloadConfigFromPayload(
     ? config[configLabelKey]
     : config[key as keyof typeof config];
 }
+=======
+ChartTooltipContent.displayName = 'ChartTooltipContent';
+
+const ChartLegendContext = React.createContext(null);
+
+function ChartLegend({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  const { chartConfig } = useChart();
+
+  if (!chartConfig) {
+    return null;
+  }
+
+  return (
+    <ChartLegendContext.Provider value={{ chartConfig }}>
+      <div
+        className={cn(
+          'flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground',
+          className
+        )}
+        {...props}
+      />
+    </ChartLegendContext.Provider>
+  );
+}
+ChartLegend.displayName = 'ChartLegend';
+
+const legendItemVariants = cva(
+  'flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors hover:bg-muted/80 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
+  {
+    variants: {
+      inactive: {
+        true: 'text-muted-foreground/70 opacity-70',
+      },
+    },
+  }
+);
+
+function ChartLegendItem({
+  className,
+  name,
+  ...props
+}: React.ComponentProps<'div'> & { name: string }) {
+  const { chartConfig, activeChart, setActiveChart } = React.useContext(ChartLegendContext);
+  const isInactive = activeChart && activeChart !== name;
+  const { color, label } = chartConfig[name];
+
+  return (
+    <div
+      className={cn(legendItemVariants({ inactive: isInactive }), className)}
+      onClick={() => {
+        setActiveChart(isInactive ? null : name);
+      }}
+      onMouseEnter={() => {
+        if (!isInactive) {
+          setActiveChart(name);
+        }
+      }}
+      onMouseLeave={() => {
+        setActiveChart(null);
+      }}
+      {...props}
+    >
+      <div
+        className="h-2 w-2 shrink-0 rounded-[2px]"
+        style={{ backgroundColor: color }}
+      />
+      {label}
+    </div>
+  );
+}
+ChartLegendItem.displayName = 'ChartLegendItem';
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
 export {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
-  ChartLegendContent,
-  ChartStyle,
+  ChartLegendItem as ChartLegendContent,
+  useChart,
 };

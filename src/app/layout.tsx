@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster";
 import './globals.css';
@@ -71,6 +72,18 @@ export const metadata: Metadata = {
   verification: {
     google: 'google-site-verification-code' // ✅ Replace with your actual verification code
   }
+=======
+
+import './globals.css';
+import type { Metadata } from 'next';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/components/auth-provider';
+import DevSeedClient from './dev-seed-client';
+
+export const metadata: Metadata = {
+  title: 'UrAi - Your Personal AI for Life Logging & Self-Reflection',
+  description: 'Your personal AI companion for life logging, self-reflection, and meaningful insights.',
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 };
 
 export default function RootLayout({
@@ -78,6 +91,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+<<<<<<< HEAD
       <head />
       <body
         className={cn('min-h-screen bg-background font-sans antialiased')}
@@ -86,6 +100,13 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <Toaster />
+=======
+      <body className="dark">
+        <AuthProvider>
+          {children}
+          <Toaster />
+          <DevSeedClient />
+>>>>>>> 5be23281 (Commit before pulling remote changes)
         </AuthProvider>
       </body>
     </html>

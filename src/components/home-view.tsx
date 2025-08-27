@@ -1,424 +1,595 @@
-// @ts-nocheck
 
-'use client';
+"use client";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
+import { pickAsset } from "@/lib/assets";
+import { requestNarrationQueue, preloadNarrations, playSequence } from "@/lib/narrator";
+import { generateCombinedScript, Persona } from "@/lib/narrator-scripts";
+import { runDummyUser } from "@/lib/dummyUser";
+import OrbLottie from "@/components/OrbLottie";
+import { useToasts } from "@/lib/useToasts";
+import { useVideoPreloader } from "@/lib/useVideoPreloader";
+import { trackEvent } from "@/lib/analytics";
+import { getAuth } from "firebase/auth";
 
-import { useEffect, useState } from 'react';
-import { useAuth } from './auth-provider';
-import { db } from '@/lib/firebase';
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-  orderBy,
-  limit,
-  getDoc,
-  doc,
-} from 'firebase/firestore';
-import {
-  getDashboardDataAction,
-  suggestRitualAction,
-} from '@/app/actions';
-import type {
-  Goal,
-  Task,
-  VoiceEvent,
-  AuraState,
-  MemoryBloom,
-  Dream,
-  InnerVoiceReflection,
-  Person,
-  User as AppUser,
-  DashboardData,
-  SuggestRitualOutput,
-} from '@/lib/types';
+type Category =
+  | "neutral" | "growth" | "fracture" | "healing" | "cosmic"
+  | "bloom" | "shadow" | "energy" | "seasonal";
+type Variant = "a" | "b" | "c" | undefined;
 
-import { InteractiveAvatar } from './interactive-avatar';
-import { RitualSuggestion } from './ritual-suggestion';
-import { CompanionChatView } from './companion-chat-view';
-import { DashboardView } from './dashboard-view';
-import { SettingsForm } from './settings-form';
-import { TorsoView } from './torso-view';
-import { LegsView } from './legs-view';
-import ArmsView from './arms-view';
-import { GroundView } from './ground-view';
-import { CognitiveZoneView } from './cognitive-zone-view';
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-
-import {
-  BrainCircuit,
-  Cloud,
-  Footprints,
-  Hand,
-  Mic,
-  Settings,
-  Spade,
-  Sprout,
-  User as UserIcon,
-  Wand2,
-} from 'lucide-react';
-import { Button } from './ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { SymbolicInsightsView } from './symbolic-insights-view';
-
-type PanelType =
-  | 'head'
-  | 'torso'
-  | 'legs'
-  | 'arms'
-  | 'ritual'
-  | 'companion'
-  | 'sky'
-  | 'ground'
-  | 'settings'
-  | 'symbolic'
-  | null;
+const CATEGORIES: Category[] = [
+  "neutral","growth","fracture","healing","cosmic","bloom","shadow","energy","seasonal"
+];
 
 export function HomeView() {
-  const { user, loading: authLoading } = useAuth();
-  const { toast } = useToast();
+  const { push: pushToast } = useToasts();
+  const { enqueue: preloadVideo } = useVideoPreloader(2);
 
-  // Data states
-  const [appUser, setAppUser] = useState<AppUser | null>(null);
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [voiceEvents, setVoiceEvents] = useState<VoiceEvent[]>([]);
-  const [auraState, setAuraState] = useState<AuraState | null>(null);
-  const [memoryBlooms, setMemoryBlooms] = useState<MemoryBloom[] | null>(null);
-  const [dreams, setDreams] = useState<Dream[]>([]);
-  const [innerTexts, setInnerTexts] = useState<InnerVoiceReflection[]>([]);
-  const [people, setPeople] = useState<Person[]>([]);
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [syncMode, setSyncMode] = useState(true);
 
-  // UI States
-  const [activePanel, setActivePanel] = useState<PanelType>(null);
-  const [ritual, setRitual] = useState<SuggestRitualOutput | null>(null);
-  const [isRitualLoading, setIsRitualLoading] = useState(false);
-  const [dataLoading, setDataLoading] = useState(true);
+  const [skyCategory, setSkyCategory] = useState<Category>("seasonal");
+  const [skyIndex, setSkyIndex] = useState<number>(20);
+  const [skyVariant, setSkyVariant] = useState<Variant>("a");
+  const [skySrc, setSkySrc] = useState<string>("");
 
-  // Data fetching effects
+  const [groundCategory, setGroundCategory] = useState<Category>("seasonal");
+  const [groundIndex, setGroundIndex] = useState<number>(20);
+  const [groundVariant, setGroundVariant] = useState<Variant>("a");
+  const [groundSrc, setGroundSrc] = useState<string>("");
+
+  const [persona, setPersona] = useState<Persona>("gentle");
+  const [hasNarrated, setHasNarrated] = useState(false);
+  const [seqCtl, setSeqCtl] = useState<{ cancel: ()=>void }|null>(null);
+  const [fitMode, setFitMode] = useState<"cover" | "contain">("cover");
+
+  const [skyInfo, setSkyInfo] = useState<{nw:number, nh:number, bw:number, bh:number}|null>(null);
+  const [groundInfo, setGroundInfo] = useState<{nw:number, nh:number, bw:number, bh:number}|null>(null);
+
+  const [showGuides, setShowGuides] = useState(true);
+  const [groundPlanePx, setGroundPlanePx] = useState(700);
+  const [horizonPct, setHorizonPct] = useState(0.60);
+  const [safeMarginPx, setSafeMarginPx] = useState(24);
+  const [showAvatar, setShowAvatar] = useState(false);
+
+  const [showOrb, setShowOrb] = useState(true);
+  const [orbSpeed, setOrbSpeed] = useState(1);
+  const [orbOpacity, setOrbOpacity] = useState(0.9);
+  const [orbOffset, setOrbOffset] = useState(60);
+  const [isOrbPlaying, setIsOrbPlaying] = useState(true);
+
+
+  const mainSceneRef = useRef<HTMLDivElement>(null);
+
+  const skyRef = useCallback((el: HTMLVideoElement|null) => {
+    if (!el) return;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      setSkyInfo({ nw: el.videoWidth, nh: el.videoHeight, bw: Math.round(r.width), bh: Math.round(r.height) });
+    };
+    el.addEventListener("loadedmetadata", update);
+    window.addEventListener("resize", update);
+    update();
+  }, []);
+
+  const groundRef = useCallback((el: HTMLVideoElement|null) => {
+    if (!el) return;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      setGroundInfo({ nw: el.videoWidth, nh: el.videoHeight, bw: Math.round(r.width), bh: Math.round(r.height) });
+    };
+    el.addEventListener("loadedmetadata", update);
+    window.addEventListener("resize", update);
+    update();
+  }, []);
+
+  const cycleVariant = (layer: "sky"|"ground") => {
+    const cycle = (v: Variant): Variant =>
+      v === undefined ? "a" : v === "a" ? "b" : v === "b" ? "c" : undefined;
+    if (layer === "sky") {
+        const newVar = cycle(skyVariant);
+        setSkyVariant(newVar);
+        if (syncMode) setGroundVariant(newVar);
+    } else {
+        setGroundVariant(cycle(groundVariant));
+    }
+  };
+
+  const handleIndexChange = (layer: "sky" | "ground", value: number) => {
+    const newIndex = Math.max(1, Math.min(20, value));
+    if (layer === 'sky') {
+      setSkyIndex(newIndex);
+      if (syncMode) setGroundIndex(newIndex);
+    } else {
+      setGroundIndex(newIndex);
+    }
+  };
+
+  const handleCategoryChange = (layer: "sky" | "ground", value: Category) => {
+    if (layer === 'sky') {
+      setSkyCategory(value);
+      if (syncMode) setGroundCategory(value);
+    } else {
+      setGroundCategory(value);
+    }
+  };
+
+  const randomizeScene = useCallback(() => {
+    const randomCategory = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+    const randomIndex = Math.floor(Math.random() * 20) + 1;
+    const randomVariant = ([undefined, "a", "b", "c"] as Variant[])[Math.floor(Math.random() * 4)];
+
+    setSkyCategory(randomCategory);
+    setSkyIndex(randomIndex);
+    setSkyVariant(randomVariant);
+
+    if (syncMode) {
+      setGroundCategory(randomCategory);
+      setGroundIndex(randomIndex);
+      setGroundVariant(randomVariant);
+    }
+  }, [syncMode]);
+
+  const randomizeWrapped = useCallback(() => {
+    try {
+      randomizeScene();
+      trackEvent("randomize", {}).catch(()=>{});
+    } catch {}
+  },[randomizeScene]);
+
   useEffect(() => {
-    if (!user) return;
-
-    setDataLoading(true);
-    const unsubscribes: (() => void)[] = [];
-
-    const setupSubscription = (
-      path: string,
-      setter: Function,
-      options: {
-        isSingleDoc?: boolean;
-        limit?: number;
-        collectionGroup?: boolean;
-      } = {}
-    ) => {
-      if (options.isSingleDoc) {
-        const docRef = doc(db, path);
-        const unsubscribe = onSnapshot(docRef, docSnap => {
-          setter(docSnap.exists() ? docSnap.data() : null);
-        });
-        unsubscribes.push(unsubscribe);
-      } else {
-        const collRef = collection(db, path);
-        const q = query(
-          collRef,
-          where('uid', '==', user.uid),
-          orderBy('createdAt', 'desc'),
-          limit(options.limit || 10)
-        );
-        const unsubscribe = onSnapshot(q, snapshot => {
-          const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setter(items);
-        });
-        unsubscribes.push(unsubscribe);
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest('input, select, button')) return;
+      if (e.key === "v") cycleVariant("sky");
+      if (e.key === "[") handleIndexChange("sky", skyIndex - 1);
+      if (e.key === "]") handleIndexChange("sky", skyIndex + 1);
+      if (e.key === "r") randomizeWrapped();
+       if (e.key.toLowerCase() === "f") {
+        setFitMode(m => (m === "cover" ? "contain" : "cover"));
       }
     };
-    
-    // User Profile
-    setupSubscription(`users/${user.uid}`, setAppUser, { isSingleDoc: true });
-    // Aura State
-    setupSubscription(`users/${user.uid}/auraStates/current`, setAuraState, { isSingleDoc: true });
-    
-    // Memory Blooms (Root collection query)
-    const bloomsQuery = query(
-      collection(db, 'memoryBlooms'),
-      where('uid', '==', user.uid),
-      orderBy('triggeredAt', 'desc'),
-      limit(5)
-    );
-    const bloomsUnsubscribe = onSnapshot(bloomsQuery, (snapshot) => {
-      const blooms = snapshot.docs.map(doc => ({ ...doc.data() as MemoryBloom, bloomId: doc.id }));
-      setMemoryBlooms(blooms);
-    });
-    unsubscribes.push(bloomsUnsubscribe);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [syncMode, skyIndex, cycleVariant, randomizeWrapped, handleIndexChange]);
 
-
-    // Other collections
-    setupSubscription('goals', setGoals, { limit: 1 });
-    setupSubscription('tasks', setTasks, { limit: 5 });
-    setupSubscription('voiceEvents', setVoiceEvents);
-    setupSubscription('dreamEvents', setDreams, { limit: 5 });
-    setupSubscription('innerTexts', setInnerTexts, { limit: 5 });
-    setupSubscription('people', setPeople);
-
-    setDataLoading(false);
-
-    return () => unsubscribes.forEach(unsub => unsub());
-  }, [user]);
-
-  // Fetch dashboard data via server action
   useEffect(() => {
-    if (user && activePanel === 'sky') {
-      getDashboardDataAction(user.uid).then(result => {
-        if (result.data) {
-          setDashboardData(result.data);
-        } else if (result.error) {
-          toast({ title: 'Error loading dashboard', description: result.error });
-        }
-      });
+    let cancelled = false;
+    (async () => {
+      try {
+        const s = await pickAsset("sky", skyCategory, skyIndex, skyVariant);
+        if (!cancelled) setSkySrc(s);
+      } catch (e) { console.error(e); if (!cancelled) setSkySrc(""); }
+    })();
+    return () => { cancelled = true; };
+  }, [skyCategory, skyIndex, skyVariant]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const g = await pickAsset("ground", groundCategory, groundIndex, groundVariant);
+        if (!cancelled) setGroundSrc(g);
+      } catch (e) { console.error(e); if (!cancelled) setGroundSrc(""); }
+    })();
+    return () => { cancelled = true; };
+  }, [groundCategory, groundIndex, groundVariant]);
+
+  useEffect(() => {
+    const ni = skyIndex === 20 ? 1 : skyIndex + 1;
+    pickAsset("sky", skyCategory, ni, skyVariant).then(url => preloadVideo(url)).catch(()=>{});
+    const gi = groundIndex === 20 ? 1 : groundIndex + 1;
+    pickAsset("ground", groundCategory, gi, groundVariant).then(url => preloadVideo(url)).catch(()=>{});
+  }, [skyCategory, skyIndex, skyVariant, groundCategory, groundIndex, groundVariant, preloadVideo]);
+  
+  useEffect(() => {
+    if (skySrc && groundSrc) {
+      trackEvent("scene_load", { skyCategory, skyIndex, skyVariant, groundCategory, groundIndex, groundVariant })
+        .catch(()=>pushToast({ kind:"error", text:"Analytics: scene_load failed" }));
     }
-  }, [user, activePanel, toast]);
+  }, [skySrc, groundSrc, skyCategory, skyIndex, skyVariant, groundCategory, groundIndex, groundVariant, pushToast]);
 
-  const handleZoneClick = async (zone: string) => {
-    if (isRitualLoading) return;
-    setIsRitualLoading(true);
 
+  const startSceneNarration = useCallback(async () => {
     try {
-      const result = await suggestRitualAction({
-        zone: zone,
-        context: `User is feeling ${auraState?.currentEmotion || 'neutral'}`,
-      });
-      if (result.error || !result.data) {
-        throw new Error(result.error || 'Failed to get suggestion');
-      }
-      setRitual(result.data as any);
-      setActivePanel('ritual');
-    } catch (e) {
-      toast({
-        variant: 'destructive',
-        title: 'Could not generate a ritual',
-        description: (e as Error).message,
-      });
-    } finally {
-      setIsRitualLoading(false);
+      trackEvent("speak_start", {}).catch(()=>{});
+      const { lines, preset } = generateCombinedScript(
+        { category: skyCategory, index: skyIndex, variant: skyVariant },
+        { category: groundCategory, index: groundIndex, variant: groundVariant },
+        persona
+      );
+      const results = await requestNarrationQueue(lines, preset);
+      const audioMap = await preloadNarrations(results);
+      const ctl = playSequence(lines.map(i => i.clipId), audioMap);
+      setSeqCtl(ctl);
+      trackEvent("speak_success", {}).catch(()=>{});
+    } catch (e: any) {
+      console.error("Narration failed:", e);
+      pushToast({ kind:"error", text: `Narration failed: ${e.message}` });
+      trackEvent("speak_fail", { error: e.message }).catch(()=>{});
+    }
+  }, [skyCategory, skyIndex, skyVariant, groundCategory, groundIndex, groundVariant, persona, pushToast]);
+
+  const speakSceneNow = useCallback(async () => {
+    seqCtl?.cancel?.();
+    setHasNarrated(true);
+    await startSceneNarration();
+  }, [seqCtl, startSceneNarration]);
+
+  const stopSpeaking = useCallback(() => {
+    seqCtl?.cancel?.();
+  }, [seqCtl]);
+
+  const onTap = useCallback(() => {
+    if (syncMode) {
+      const newVar = skyVariant === undefined ? "a" : skyVariant === "a" ? "b" : skyVariant === "b" ? "c" : undefined;
+      setSkyVariant(newVar);
+      setGroundVariant(newVar);
+    } else {
+      cycleVariant("sky");
+    }
+    if (!hasNarrated) {
+      setHasNarrated(true);
+      startSceneNarration();
+    }
+  }, [hasNarrated, startSceneNarration, syncMode, skyVariant, cycleVariant]);
+
+  useEffect(()=>()=>{ seqCtl?.cancel?.(); }, [seqCtl]);
+
+  const handleExport = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+        pushToast({ kind: 'error', text: 'You must be signed in to export.' });
+        return;
+    }
+    const idToken = await user.getIdToken();
+    pushToast({ kind: 'info', text: 'Queueing export job...' });
+    try {
+        const res = await fetch('/api/export', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+            },
+            body: JSON.stringify({
+                skyUrl: new URL(skySrc, window.location.origin).href,
+                groundUrl: new URL(groundSrc, window.location.origin).href,
+                durationSec: 12,
+            })
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error || 'Failed to queue export.');
+        }
+        const data = await res.json();
+        pushToast({ kind: 'success', text: `Export job ${data.jobId} created!` });
+    } catch(e: any) {
+        pushToast({ kind: 'error', text: `Export failed: ${e.message}` });
     }
   };
 
-  const handleBloomClick = (bloom: MemoryBloom) => {
-    toast({
-      title: bloom.emotion,
-      description: bloom.description,
-    });
-  };
-
-  const getPanelSize = () => {
-    switch (activePanel) {
-      case 'companion':
-        return 'h-full md:h-[80vh] max-w-2xl';
-      case 'head':
-      case 'settings':
-      case 'sky':
-      case 'symbolic':
-        return 'max-w-4xl';
-      case 'torso':
-      case 'legs':
-      case 'arms':
-      case 'ground':
-        return 'max-w-xl h-full md:h-auto';
-      default:
-        return 'max-w-lg';
-    }
-  };
-
-  const panelContent = {
-    head: {
-      title: 'Cognitive Zone',
-      description: 'Dreams, thoughts, and your inner voice.',
-      content: (
-        <CognitiveZoneView
-          dreams={dreams}
-          innerTexts={innerTexts}
-          personaProfile={appUser?.personaProfile}
-        />
-      ),
-    },
-    torso: {
-      title: 'Core Self',
-      description: 'Your goals, recent voice notes, and habits.',
-      content: <TorsoView goals={goals} tasks={tasks} voiceEvents={voiceEvents} />,
-    },
-    legs: {
-      title: 'Foundation & Movement',
-      description: 'Your stability, direction, and interaction with the world.',
-      content: <LegsView />,
-    },
-    arms: {
-      title: 'Action & Connection',
-      description: 'How you interact, connect, and follow through.',
-      content: <ArmsView tasks={tasks} voiceEvents={voiceEvents} />,
-    },
-    sky: {
-      title: 'Cognitive Mirror',
-      description: "An overview of your mind's landscape.",
-      content: <DashboardView />,
-    },
-    ground: {
-      title: 'Inner Ground',
-      description: 'Your recovery stories and emotional foundation.',
-      content: <GroundView />,
-    },
-    symbolic: {
-      title: 'Symbolic Insights',
-      description: 'Advanced life pattern recognition',
-      content: <SymbolicInsightsView />,
-    },
-  }[activePanel as string];
+  const ready = useMemo(() => !!skySrc && !!groundSrc, [skySrc, groundSrc]);
 
   return (
-    <>
-      <div className="relative h-screen w-screen overflow-hidden flex flex-col items-center justify-center bg-background text-foreground transition-colors duration-1000">
-        {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center w-full">
-          <InteractiveAvatar
-            mood={auraState?.energy || 0}
-            onZoneClick={handleZoneClick}
-            isLoading={isRitualLoading}
-            overlayColor={auraState?.overlayColor}
-            overlayStyle={auraState?.overlayStyle}
+    <div
+      ref={mainSceneRef}
+      className="relative w-full h-dvh overflow-hidden bg-black select-none"
+      onClick={onTap}
+    >
+      {!ready && (
+        <div className="absolute inset-0 flex items-center justify-center text-white/70">
+          Loading scene…
+        </div>
+      )}
+
+      {skySrc && (
+        <video
+          ref={skyRef}
+          key={skySrc}
+          className={`absolute inset-0 w-full h-full object-${fitMode} z-10`}
+          src={skySrc}
+          playsInline
+          muted
+          loop
+          autoPlay
+          onError={() => pushToast({ kind:"error", text:"Sky failed to load" })}
+        />
+      )}
+
+      {groundSrc && (
+        <video
+          ref={groundRef}
+          key={groundSrc}
+          className={`absolute inset-0 w-full h-full object-${fitMode} z-20`}
+          src={groundSrc}
+          playsInline
+          muted
+          loop
+          autoPlay
+          onError={() => pushToast({ kind:"error", text:"Ground failed to load" })}
+        />
+      )}
+
+      {showAvatar && (
+        <img
+          src="/assets/avatar/poses/avatar-neutral.png"
+          alt="avatar"
+          className="absolute left-1/2 -translate-x-1/2 w-[600px] z-30 pointer-events-none"
+          style={{ bottom: groundPlanePx }}
+        />
+      )}
+      
+      {showOrb && (
+        <OrbLottie
+          jsonPath="/assets/orb/orb.json"
+          width={192}
+          height={192}
+          opacity={orbOpacity}
+          speed={orbSpeed}
+          isPlaying={isOrbPlaying}
+          bottom={groundPlanePx + orbOffset}
+        />
+      )}
+
+
+      {showGuides && (
+        <div className="pointer-events-none absolute inset-0 z-[55]">
+          <div className="absolute inset-0" />
+          <div
+            className="absolute border border-white/30 rounded-xl"
+            style={{
+              top: safeMarginPx,
+              left: safeMarginPx,
+              right: safeMarginPx,
+              bottom: safeMarginPx
+            }}
+          />
+          <div className="absolute top-0 bottom-0 left-1/2 w-px bg-white/30" />
+          <div
+            className="absolute left-0 right-0 h-px bg-emerald-300/70"
+            style={{ top: `calc(${horizonPct * 100}% )` }}
+          />
+          <div
+            className="absolute px-2 py-1 text-[10px] font-medium text-emerald-900 bg-emerald-300/80 rounded"
+            style={{ top: `calc(${horizonPct * 100}% - 18px)`, left: 8 }}
+          >
+            horizon ~{Math.round(horizonPct * 100)}%
+          </div>
+          <div
+            className="absolute left-0 right-0 bg-fuchsia-400/15 border-t border-fuchsia-400/70"
+            style={{ bottom: 0, height: groundPlanePx }}
+          />
+          <div
+            className="absolute px-2 py-1 text-[10px] font-medium text-fuchsia-900 bg-fuchsia-300/80 rounded"
+            style={{ bottom: groundPlanePx + 6, left: 8 }}
+          >
+            ground plane {groundPlanePx}px
+          </div>
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={`h-${i}`}
+              className="absolute left-0 right-0 h-px bg-white/20"
+              style={{ top: `${((i + 1) * 100) / 3}%` }}
+            />
+          ))}
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={`v-${i}`}
+              className="absolute top-0 bottom-0 w-px bg-white/20"
+              style={{ left: `${((i + 1) * 100) / 3}%` }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="absolute top-3 left-3 z-[60] bg-black/60 text-white rounded-2xl px-4 py-3 space-y-3 shadow-lg backdrop-blur" onClick={e => e.stopPropagation()}>
+        <div className="flex justify-between items-center">
+          <div className="text-sm font-semibold">URAI Scene QA</div>
+          <label className="flex items-center gap-1 text-xs cursor-pointer">
+            <input
+              type="checkbox"
+              checked={syncMode}
+              onChange={(e)=>{
+                setSyncMode(e.target.checked);
+                if (e.target.checked) {
+                  setGroundCategory(skyCategory);
+                  setGroundIndex(skyIndex);
+                  setGroundVariant(skyVariant);
+                }
+              }}
+            />
+            Sync
+          </label>
+        </div>
+
+        <div className="space-y-1">
+          <div className="text-xs font-semibold">Sky</div>
+          <select
+            className="bg-white/10 rounded px-2 py-1 text-sm w-full"
+            value={skyCategory}
+            onChange={(e) => handleCategoryChange('sky', e.target.value as Category)}
+          >
+            {CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+          </select>
+          <input
+            type="number"
+            min={1} max={20}
+            className="w-full bg-white/10 rounded px-2 py-1 text-sm"
+            value={skyIndex}
+            onChange={e=>handleIndexChange('sky', Number(e.target.value))}
           />
         </div>
 
-        {/* Top-right controls */}
-        <div className="absolute top-4 right-4 z-10 flex gap-2">
-          <Button variant="ghost" size="icon" onClick={() => setActivePanel('settings')}>
-            <Settings />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={() => setActivePanel('symbolic')}>
-            <Sprout />
-          </Button>
-        </div>
-
-        {/* Bottom-center controls */}
-        <div className="absolute bottom-16 inset-x-0 flex justify-center z-10">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="rounded-full px-6 py-6"
-            onClick={() => setActivePanel('companion')}
+        {!syncMode && (
+        <div className="space-y-1">
+          <div className="text-xs font-semibold">Ground</div>
+          <select
+            disabled={syncMode}
+            className="bg-white/10 rounded px-2 py-1 text-sm w-full"
+            value={groundCategory}
+            onChange={(e)=>setGroundCategory(e.target.value as Category)}
           >
-            <UserIcon className="h-6 w-6" />
-          </Button>
+            {CATEGORIES.map(c=><option key={c} value={c}>{c}</option>)}
+          </select>
+          <input
+            type="number"
+            disabled={syncMode}
+            min={1} max={20}
+            className="w-full bg-white/10 rounded px-2 py-1 text-sm"
+            value={groundIndex}
+            onChange={e=>setGroundIndex(Number(e.target.value))}
+          />
+        </div>
+        )}
+
+        <div className="space-y-1">
+          <div className="text-xs font-semibold">Persona</div>
+          <select
+            className="bg-white/10 rounded px-2 py-1 text-sm w-full"
+            value={persona}
+            onChange={(e)=>setPersona(e.target.value as Persona)}
+          >
+            <option value="gentle">Gentle</option>
+            <option value="mythic">Mythic</option>
+            <option value="playful">Playful</option>
+            <option value="coach">Coach</option>
+          </select>
         </div>
 
-        {/* Overlay buttons for main interaction areas */}
-        <div className="absolute top-1/4 w-full text-center z-10">
-          <Button variant="ghost" className="text-muted-foreground" onClick={() => setActivePanel('sky')}>
-            The Sky
-          </Button>
+        <div className="space-y-1">
+          <div className="text-xs font-semibold">Fit Mode</div>
+          <select
+            className="bg-white/10 rounded px-2 py-1 text-sm w-full"
+            value={fitMode}
+            onChange={(e)=>setFitMode(e.target.value as "cover"|"contain")}
+          >
+            <option value="cover">Cover (fill screen, crop edges)</option>
+            <option value="contain">Contain (full video, may letterbox)</option>
+          </select>
         </div>
-        <div className="absolute bottom-1/4 w-full text-center z-10">
-          <Button variant="ghost" className="text-muted-foreground" onClick={() => setActivePanel('ground')}>
-            The Ground
-          </Button>
+
+        <div className="flex gap-2">
+          <button
+            onClick={speakSceneNow}
+            className="flex-1 bg-white/10 hover:bg-white/20 text-xs px-2 py-1 rounded"
+            aria-label="Speak Scene Now"
+          >
+            🔊 Speak Scene Now
+          </button>
+          <button
+            onClick={stopSpeaking}
+            className="px-2 py-1 rounded text-xs bg-white/10 hover:bg-white/20"
+            aria-label="Stop Narration"
+          >
+            ⏹ Stop
+          </button>
         </div>
         
-        {/* Pulsing Orb for Orb */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10">
-          <div className="h-9 w-9 text-primary animate-pulse" />
+        <div className="space-y-2 pt-2 border-t border-white/10">
+          <button onClick={handleExport} className="w-full bg-white/10 hover:bg-white/20 text-xs px-2 py-1 rounded">
+            Export 10s Clip
+          </button>
+          <button
+            className="w-full bg-white/10 hover:bg-white/20 text-xs px-2 py-1 rounded"
+            onClick={async () => {
+              try {
+                const data = await runDummyUser("test-user-001", persona);
+                pushToast({ kind: "success", text: "Dummy user run complete."});
+                for (const clip of data.tts) {
+                  const a = new Audio(clip.url);
+                  await a.play();
+                  await new Promise<void>(resolve => a.addEventListener("ended", () => resolve(), { once: true }));
+                }
+              } catch (e: any) {
+                console.error(e);
+                pushToast({ kind: "error", text: `Dummy user failed: ${e.message}`});
+              }
+            }}
+          >
+            🧪 Run Dummy User
+          </button>
         </div>
 
-        {/* Memory Blooms */}
-        <div className="absolute inset-x-0 bottom-4 flex justify-center gap-12 opacity-60 z-10">
-          <TooltipProvider>
-            {memoryBlooms?.map((bloom, i) => (
-              <Tooltip key={bloom.bloomId}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => handleBloomClick(bloom)}
-                    className="animate-fadeIn"
-                    style={{ animationDelay: `${500 + i * 150}ms` }}
-                  >
-                    <Sprout className="h-5 w-5 hover:scale-125 transition-transform" style={{ color: bloom.bloomColor }} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{bloom.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </TooltipProvider>
+        <div className="space-y-2 pt-2 border-t border-white/10">
+          <div className="flex items-center justify-between">
+            <div className="text-sm font-semibold">Orb</div>
+            <label className="flex items-center gap-2 text-xs">
+              <input type="checkbox" checked={showOrb} onChange={(e)=>setShowOrb(e.target.checked)} />
+              Show
+            </label>
+          </div>
+          <label className="flex items-center gap-2 text-xs">
+            <input type="checkbox" checked={isOrbPlaying} onChange={(e)=>setIsOrbPlaying(e.target.checked)} />
+            Playing
+          </label>
+          <label className="text-xs opacity-80">Speed: {orbSpeed.toFixed(2)}</label>
+          <input type="range" min={0.2} max={3} step={0.05} value={orbSpeed} onChange={(e)=>setOrbSpeed(Number(e.target.value))} className="w-full" />
+          <label className="text-xs opacity-80">Opacity: {Math.round(orbOpacity*100)}%</label>
+          <input type="range" min={0.2} max={1} step={0.05} value={orbOpacity} onChange={(e)=>setOrbOpacity(Number(e.target.value))} className="w-full" />
+          <label className="text-xs opacity-80">Orb Offset (px): {orbOffset}</label>
+          <input type="range" min={20} max={120} step={2} value={orbOffset} onChange={(e)=>setOrbOffset(Number(e.target.value))} className="w-full" />
         </div>
 
-        {/* Hint */}
-        <div className="absolute bottom-8 text-center z-10 text-xs text-muted-foreground w-full max-w-md">
-          <p>Tap your avatar to explore. The sky reflects your mood. Blooms are memory moments.</p>
+        <div className="flex items-center justify-between pt-2 border-t border-white/10">
+          <div className="text-sm font-semibold">Guides</div>
+          <label className="flex items-center gap-2 text-xs">
+            <input type="checkbox" checked={showGuides} onChange={(e)=>setShowGuides(e.target.checked)} />
+            Show
+          </label>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-semibold">Avatar</div>
+          <label className="flex items-center gap-2 text-xs">
+            <input
+              type="checkbox"
+              checked={showAvatar}
+              onChange={(e)=>setShowAvatar(e.target.checked)}
+            />
+            Show
+          </label>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs opacity-80">Ground Plane (px): {groundPlanePx}</label>
+          <input
+            type="range" min={500} max={900} step={5}
+            value={groundPlanePx}
+            onChange={(e)=>setGroundPlanePx(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs opacity-80">Horizon (%): {Math.round(horizonPct*100)}</label>
+          <input
+            type="range" min={30} max={80} step={1}
+            value={Math.round(horizonPct*100)}
+            onChange={(e)=>setHorizonPct(Number(e.target.value)/100)}
+            className="w-full"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs opacity-80">Safe Margin (px): {safeMarginPx}</label>
+          <input
+            type="range" min={0} max={64} step={2}
+            value={safeMarginPx}
+            onChange={(e)=>setSafeMarginPx(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+
+        <div className="text-[11px] opacity-80 leading-tight max-w-[70vw] pt-2 border-t border-white/10">
+          <div className="truncate">Sky: {skySrc || "…"}</div>
+          <div className="truncate">Ground: {groundSrc || "…"}</div>
+          <div className="mt-1 opacity-60">
+            Fit: {fitMode} (press 'f' to toggle)
+          </div>
+        </div>
+
+        <div className="text-[11px] opacity-80 leading-tight mt-2">
+          {skyInfo && <div>Sky: natural {skyInfo.nw}×{skyInfo.nh} → box {skyInfo.bw}×{skyInfo.bh}</div>}
+          {groundInfo && <div>Ground: natural {groundInfo.nw}×{groundInfo.nh} → box {groundInfo.bw}×{groundInfo.bh}</div>}
+          <div className="opacity-60">Goal: natural ~1440×3240; box ≈ device viewport; fit=object-cover</div>
         </div>
       </div>
-
-      {/* Active Panel Dialog */}
-      <AlertDialog open={!!activePanel} onOpenChange={(open) => !open && setActivePanel(null)}>
-        <AlertDialogContent className={getPanelSize()}>
-          {activePanel === 'companion' ? (
-            <CompanionChatView />
-          ) : activePanel === 'ritual' && ritual ? (
-            <RitualSuggestion
-              ritual={ritual}
-              onAccept={() => {
-                toast({ title: 'Ritual Accepted', description: 'May it bring you clarity.' });
-                setActivePanel(null);
-              }}
-              onDecline={() => setActivePanel(null)}
-            />
-          ) : (
-            <>
-              <AlertDialogHeader>
-                <AlertDialogTitle className="flex items-center gap-2">
-                  {activePanel === 'head' && <BrainCircuit className="text-primary h-5 w-5" />}
-                  {activePanel === 'torso' && <Mic className="text-primary h-5 w-5" />}
-                  {activePanel === 'legs' && <Footprints className="text-primary h-5 w-5" />}
-                  {activePanel === 'arms' && <Hand className="text-primary h-5 w-5" />}
-                  {activePanel === 'sky' && <Cloud className="text-primary h-5 w-5" />}
-                  {activePanel === 'ground' && <Spade className="text-primary h-5 w-5" />}
-                  {activePanel === 'symbolic' && <Sprout className="text-primary h-5 w-5" />}
-                  {panelContent?.title}
-                </AlertDialogTitle>
-                {panelContent?.description && (
-                  <AlertDialogDescription className="pt-2">
-                    {panelContent.description}
-                  </AlertDialogDescription>
-                )}
-              </AlertDialogHeader>
-
-              {activePanel === 'settings' ? (
-                <div className="max-h-[60vh] overflow-y-auto p-1 pr-4 -mr-4">
-                  <SettingsForm />
-                </div>
-              ) : (
-                panelContent?.content && <div className="py-4 my-2 text-sm rounded-md">{panelContent.content}</div>
-              )}
-
-              <AlertDialogFooter>
-                {activePanel === 'settings' ? (
-                  <AlertDialogCancel onClick={() => setActivePanel(null)}>Close</AlertDialogCancel>
-                ) : (
-                  <AlertDialogAction onClick={() => setActivePanel(null)}>Done</AlertDialogAction>
-                )}
-              </AlertDialogFooter>
-            </>
-          )}
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    </div>
   );
 }

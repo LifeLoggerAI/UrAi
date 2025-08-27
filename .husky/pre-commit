@@ -1,4 +1,5 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-npx lint-staged
+#!/usr/bin/env bash
+set -euo pipefail
+npm run assets:ci
+npm run assets:validate
+git add public/assets/*/manifests/*.manifest.json

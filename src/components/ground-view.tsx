@@ -31,9 +31,15 @@ export function GroundView() {
       description:
         'A visualization of your emotional growth, with flowers for joys and tangled roots for challenges.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Emotional Garden visualization coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <Sprout className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Your Emotional Garden will grow here.
+          </p>
+        </div>
       ),
     },
     {
@@ -42,9 +48,15 @@ export function GroundView() {
       description:
         'An index of your foundational stability, based on routine, rest, and self-care.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Soil Health analysis coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <BarChartHorizontal className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Analysis of your foundational stability will appear here.
+          </p>
+        </div>
       ),
     },
     {
@@ -53,15 +65,21 @@ export function GroundView() {
       description:
         'A timeline of your significant recovery events and the insights gained from them.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Recovery Roots timeline coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <HeartHandshake className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Your recovery timeline will be visualized here.
+          </p>
+        </div>
       ),
     },
   ];
 
   return (
-    <ScrollArea className="h-[70vh] -mx-6">
+    <ScrollArea className="h-[calc(100vh-8rem)] -mx-6">
       <div className="px-6 space-y-4">
         {panels.map((panel, index) => (
           <Card

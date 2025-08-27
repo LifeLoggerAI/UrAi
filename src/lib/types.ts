@@ -4,22 +4,25 @@ import { z } from 'zod';
 // Base types
 export const UserSchema = z.object({
   id: z.string().optional(),
+  uid: z.string().optional(),
   email: z.string().email(),
   displayName: z.string().optional(),
   createdAt: z.number(),
   updatedAt: z.number().optional(),
   onboardingComplete: z.boolean().optional(),
-  settings: z.object({
-    moodTrackingEnabled: z.boolean(),
-    passiveAudioEnabled: z.boolean(),
-    faceEmotionEnabled: z.boolean(),
-    dataExportEnabled: z.boolean(),
-    narratorVolume: z.number(),
-    ttsVoice: z.string(),
-    receiveWeeklyEmail: z.boolean(),
-    receiveMilestones: z.boolean(),
-    emailTone: z.string(),
-  }).optional(),
+  settings: z
+    .object({
+      moodTrackingEnabled: z.boolean(),
+      passiveAudioEnabled: z.boolean(),
+      faceEmotionEnabled: z.boolean(),
+      dataExportEnabled: z.boolean(),
+      narratorVolume: z.number(),
+      ttsVoice: z.string(),
+      receiveWeeklyEmail: z.boolean(),
+      receiveMilestones: z.boolean(),
+      emailTone: z.string(),
+    })
+    .optional(),
   personaProfile: z.any().optional(),
   symbolLexicon: z.any().optional(),
   subscriptionTier: z.string().optional(),
@@ -176,7 +179,12 @@ export type Companion = z.infer<typeof CompanionSchema>;
 export const PersonaProfileSchema = z.object({
   traits: z.record(z.number()),
   traitChanges: z.array(
-    z.object({ trait: z.string(), from: z.number(), to: z.number(), date: z.string() })
+    z.object({
+      trait: z.string(),
+      from: z.number(),
+      to: z.number(),
+      date: z.string(),
+    })
   ),
   dominantPersona: z.string(),
   moodAlignmentScore: z.number(),
@@ -185,7 +193,6 @@ export const PersonaProfileSchema = z.object({
   emotionalDrainWhen: z.array(z.string()),
 });
 export type PersonaProfile = z.infer<typeof PersonaProfileSchema>;
-
 
 export const AuraStateSchema = z.object({
   currentEmotion: z.string(),
@@ -228,11 +235,11 @@ export const SentimentSchema = z.enum(['positive', 'negative', 'neutral']);
 export type Sentiment = z.infer<typeof SentimentSchema>;
 
 export const EmotionCycleSchema = z.object({
-    windowStart: z.number(),
-    dominantEmotion: z.string(),
-    avgIntensity: z.number(),
-    cycleType: z.enum(['neutral', 'recovery', 'strain']),
-    createdAt: z.number(),
+  windowStart: z.number(),
+  dominantEmotion: z.string(),
+  avgIntensity: z.number(),
+  cycleType: z.enum(['neutral', 'recovery', 'strain']),
+  createdAt: z.number(),
 });
 export type EmotionCycle = z.infer<typeof EmotionCycleSchema>;
 
@@ -241,8 +248,22 @@ export const MoodLogSchema = z.object({
   emotion: z.string(),
   intensity: z.number(),
   source: z.string(),
+  score: z.number().optional(),
 });
 export type MoodLog = z.infer<typeof MoodLogSchema>;
+
+// Centralized Memory Schema
+export const MemorySchema = z.object({
+  id: z.string(),
+  uid: z.string(),
+  type: z.enum(['chat', 'dream', 'voice', 'reflection']),
+  content: z.string(),
+  tags: z.array(z.string()),
+  createdAt: z.number(),
+  metadata: z.record(z.any()).optional(),
+});
+export type Memory = z.infer<typeof MemorySchema>;
+
 
 // AI Flow Schemas
 export const AnalyzeDreamInputSchema = z.object({
@@ -251,21 +272,27 @@ export const AnalyzeDreamInputSchema = z.object({
 export type AnalyzeDreamInput = z.infer<typeof AnalyzeDreamInputSchema>;
 
 export const AnalyzeDreamOutputSchema = z.object({
-  emotions: z.array(z.string()).describe('Primary emotions in the dream'),
-  themes: z.array(z.string()).describe('Major themes or subjects'),
-  symbols: z.array(z.string()).describe('Key symbols and their interpretations'),
-  sentimentScore: z.number().min(-1).max(1).describe('Overall sentiment score'),
+  emotions: z.array(z.string()).describe('Primary emotions in the dream, such as "joy", "fear", or "confusion".'),
+  themes: z.array(z.string()).describe('Major themes or subjects, such as "flying", "being chased", or "loss".'),
+  symbols: z.array(z.string()).describe('Key symbols and their potential interpretations, such as "a key might represent a solution".'),
+  sentimentScore: z.number().min(-1).max(1).describe('Overall sentiment score from -1 (negative) to 1 (positive).'),
 });
 export type AnalyzeDreamOutput = z.infer<typeof AnalyzeDreamOutputSchema>;
 
 export const GenerateSpeechInputSchema = z.object({
   text: z.string().describe('Text to convert to speech'),
-  useSSML: z.boolean().optional().describe('Whether to use SSML for enhanced speech'),
+  useSSML: z
+    .boolean()
+    .optional()
+    .describe('Whether to use SSML for enhanced speech'),
   voiceName: z.string().optional().describe('Voice to use for speech'),
   rate: z.number().optional().describe('Speech rate (0.25 to 4.0)'),
   pitch: z.string().optional().describe('Speech pitch (e.g., "+2st")'),
   enableEmphasis: z.boolean().optional().describe('Enable automatic emphasis'),
-  addNaturalPauses: z.boolean().optional().describe('Add natural breathing pauses'),
+  addNaturalPauses: z
+    .boolean()
+    .optional()
+    .describe('Add natural breathing pauses'),
 });
 export type GenerateSpeechInput = z.infer<typeof GenerateSpeechInputSchema>;
 
@@ -291,6 +318,7 @@ export type TranscribeAudioOutput = z.infer<typeof TranscribeAudioOutputSchema>;
 export const CompanionChatInputSchema = z.object({
   history: z.array(ChatMessageSchema),
   message: z.string().describe('User message to the companion'),
+  uid: z.string().describe('The user ID to associate the memory with.'),
 });
 export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
 
@@ -308,10 +336,12 @@ export const UpdateUserSettingsSchema = z.object({
   narratorVolume: z.number().min(0).max(1).optional(),
   ttsVoice: z.string().optional(),
   gpsAllowed: z.boolean().optional(),
-  dataConsent: z.object({
-    shareAnonymousData: z.boolean(),
-    optedOutAt: z.number().nullable(),
-  }).optional(),
+  dataConsent: z
+    .object({
+      shareAnonymousData: z.boolean(),
+      optedOutAt: z.number().nullable(),
+    })
+    .optional(),
   allowVoiceRetention: z.boolean().optional(),
   receiveWeeklyEmail: z.boolean().optional(),
   receiveMilestones: z.boolean().optional(),
@@ -320,9 +350,13 @@ export const UpdateUserSettingsSchema = z.object({
 export type UpdateUserSettings = z.infer<typeof UpdateUserSettingsSchema>;
 
 export const AnalyzeCameraImageInputSchema = z.object({
-  imageDataUri: z.string().describe("A photo of the user's face, as a data URI."),
+  imageDataUri: z
+    .string()
+    .describe("A photo of the user's face, as a data URI."),
 });
-export type AnalyzeCameraImageInput = z.infer<typeof AnalyzeCameraImageInputSchema>;
+export type AnalyzeCameraImageInput = z.infer<
+  typeof AnalyzeCameraImageInputSchema
+>;
 
 export const AnalyzeCameraImageOutputSchema = z.object({
   emotionInference: z.record(z.number()),
@@ -338,7 +372,9 @@ export const AnalyzeCameraImageOutputSchema = z.object({
   contextualSymbolMatches: z.array(z.string()),
   linkedArchetype: z.string(),
 });
-export type AnalyzeCameraImageOutput = z.infer<typeof AnalyzeCameraImageOutputSchema>;
+export type AnalyzeCameraImageOutput = z.infer<
+  typeof AnalyzeCameraImageOutputSchema
+>;
 
 export const EnrichVoiceEventInputSchema = z.object({
   text: z.string().describe('The transcribed text of the voice event'),
@@ -353,7 +389,9 @@ export const EnrichVoiceEventOutputSchema = z.object({
   people: z.array(z.string()).optional(),
   tasks: z.array(z.string()).optional(),
 });
-export type EnrichVoiceEventOutput = z.infer<typeof EnrichVoiceEventOutputSchema>;
+export type EnrichVoiceEventOutput = z.infer<
+  typeof EnrichVoiceEventOutputSchema
+>;
 
 export const GenerateAvatarInputSchema = z.object({
   name: z.string(),
@@ -367,21 +405,29 @@ export const GenerateAvatarOutputSchema = z.object({
 export type GenerateAvatarOutput = z.infer<typeof GenerateAvatarOutputSchema>;
 
 export const GenerateSymbolicInsightInputSchema = z.object({
-  analysis: AnalyzeCameraImageOutputSchema.describe('JSON object of camera image analysis'),
+  analysis: AnalyzeCameraImageOutputSchema.describe(
+    'JSON object of camera image analysis'
+  ),
 });
-export type GenerateSymbolicInsightInput = z.infer<typeof GenerateSymbolicInsightInputSchema>;
+export type GenerateSymbolicInsightInput = z.infer<
+  typeof GenerateSymbolicInsightInputSchema
+>;
 
 export const GenerateSymbolicInsightOutputSchema = z.object({
   narratorReflection: z.string(),
   symbolAnimationTrigger: z.string(),
 });
-export type GenerateSymbolicInsightOutput = z.infer<typeof GenerateSymbolicInsightOutputSchema>;
+export type GenerateSymbolicInsightOutput = z.infer<
+  typeof GenerateSymbolicInsightOutputSchema
+>;
 
 export const ProcessOnboardingTranscriptInputSchema = z.object({
   transcript: z.string(),
   currentDate: z.string(),
 });
-export type ProcessOnboardingTranscriptInput = z.infer<typeof ProcessOnboardingTranscriptInputSchema>;
+export type ProcessOnboardingTranscriptInput = z.infer<
+  typeof ProcessOnboardingTranscriptInputSchema
+>;
 
 export const ProcessOnboardingTranscriptOutputSchema = z.object({
   goal: z.string(),
@@ -389,11 +435,14 @@ export const ProcessOnboardingTranscriptOutputSchema = z.object({
   reminderDate: z.string(),
   habitToTrack: z.string(),
 });
-export type ProcessOnboardingTranscriptOutput = z.infer<typeof ProcessOnboardingTranscriptOutputSchema>;
+export type ProcessOnboardingTranscriptOutput = z.infer<
+  typeof ProcessOnboardingTranscriptOutputSchema
+>;
 
 export const SuggestRitualInputSchema = z.object({
-  zone: z.string(),
+  uid: z.string(),
   context: z.string(),
+  zone: z.string().optional(),
 });
 export type SuggestRitualInput = z.infer<typeof SuggestRitualInputSchema>;
 
@@ -417,15 +466,21 @@ export type SummarizeTextOutput = z.infer<typeof SummarizeTextOutputSchema>;
 export const AnalyzeTextSentimentInputSchema = z.object({
   text: z.string(),
 });
-export type AnalyzeTextSentimentInput = z.infer<typeof AnalyzeTextSentimentInputSchema>;
+export type AnalyzeTextSentimentInput = z.infer<
+  typeof AnalyzeTextSentimentInputSchema
+>;
 
 export const AnalyzeTextSentimentOutputSchema = z.object({
   sentimentScore: z.number(),
 });
-export type AnalyzeTextSentimentOutput = z.infer<typeof AnalyzeTextSentimentOutputSchema>;
+export type AnalyzeTextSentimentOutput = z.infer<
+  typeof AnalyzeTextSentimentOutputSchema
+>;
 
 export const DashboardDataSchema = z.object({
-  sentimentOverTime: z.array(z.object({ date: z.string(), sentiment: z.number() })),
+  sentimentOverTime: z.array(
+    z.object({ date: z.string(), sentiment: z.number() })
+  ),
   emotionBreakdown: z.array(z.object({ name: z.string(), count: z.number() })),
   stats: z.object({
     totalMemories: z.number(),
@@ -437,20 +492,24 @@ export type DashboardData = z.infer<typeof DashboardDataSchema>;
 
 export const EventDataSchema = z.object({
   title: z.string().describe("Event title (e.g., 'Sarah's 30th Birthday')"),
-  date: z.string().describe("Date of the event"),
-  time: z.string().describe("Time of the event"),
-  context: z.string().describe("Brief context or purpose"),
-  duration: z.string().optional().describe("Duration of the event"),
+  date: z.string().describe('Date of the event'),
+  time: z.string().describe('Time of the event'),
+  context: z.string().describe('Brief context or purpose'),
+  duration: z.string().optional().describe('Duration of the event'),
 });
 export type EventData = z.infer<typeof EventDataSchema>;
 
 export const LocationDataSchema = z.object({
   name: z.string().describe("Location name (e.g., 'Central Park')"),
-  address: z.string().optional().describe("Address if available"),
-  environment: z.string().describe("Description of the environment (e.g., 'lakeside picnic')"),
-  weather: z.string().optional().describe("Weather conditions"),
-  lighting: z.string().describe("Lighting conditions (e.g., 'bright afternoon sunlight')"),
-  atmosphere: z.string().optional().describe("Overall atmosphere"),
+  address: z.string().optional().describe('Address if available'),
+  environment: z
+    .string()
+    .describe("Description of the environment (e.g., 'lakeside picnic')"),
+  weather: z.string().optional().describe('Weather conditions'),
+  lighting: z
+    .string()
+    .describe("Lighting conditions (e.g., 'bright afternoon sunlight')"),
+  atmosphere: z.string().optional().describe('Overall atmosphere'),
 });
 export type LocationData = z.infer<typeof LocationDataSchema>;
 
@@ -481,24 +540,23 @@ export const PersonDataSchema = z.object({
   distinguishingFeatures: z.array(z.string()).optional(),
   clothing: z.string().optional(),
   accessories: z.array(z.string()).optional(),
-  expression: z.string().optional().describe("Dominant emotional expression"),
-  posture: z.string().optional().describe("Body language or posture"),
+  expression: z.string().optional().describe('Dominant emotional expression'),
+  posture: z.string().optional().describe('Body language or posture'),
 });
 export type PersonData = z.infer<typeof PersonDataSchema>;
 
-
 export const ActionDataSchema = z.object({
-  description: z.string().describe("Description of the action or moment"),
-  participants: z.array(z.string()).describe("People involved"),
+  description: z.string().describe('Description of the action or moment'),
+  participants: z.array(z.string()).describe('People involved'),
   duration: z.string().optional(),
-  sequence: z.number().optional().describe("Sequence in the event timeline"),
+  sequence: z.number().optional().describe('Sequence in the event timeline'),
 });
 export type ActionData = z.infer<typeof ActionDataSchema>;
 
 export const PropObjectSchema = z.object({
-  name: z.string().describe("Name of the prop"),
-  description: z.string().describe("Description of the prop"),
-  significance: z.string().optional().describe("Its significance in the scene"),
+  name: z.string().describe('Name of the prop'),
+  description: z.string().describe('Description of the prop'),
+  significance: z.string().optional().describe('Its significance in the scene'),
 });
 export type PropObject = z.infer<typeof PropObjectSchema>;
 
@@ -537,34 +595,47 @@ export type StoryboardData = z.infer<typeof StoryboardDataSchema>;
 
 export const ShotDataSchema = z.object({
   type: z.string().describe("Type of shot (e.g., 'wide', 'close-up')"),
-  subject: z.string().describe("Main subject of the shot"),
-  action: z.string().describe("Action taking place in the shot"),
-  camera: z.string().describe("Camera movement and lens details"),
-  lighting: z.string().describe("Lighting setup and mood"),
-  imagePrompt: z.string().describe("Detailed, photo-realistic image generation prompt"),
+  subject: z.string().describe('Main subject of the shot'),
+  action: z.string().describe('Action taking place in the shot'),
+  camera: z.string().describe('Camera movement and lens details'),
+  lighting: z.string().describe('Lighting setup and mood'),
+  imagePrompt: z
+    .string()
+    .describe('Detailed, photo-realistic image generation prompt'),
 });
 export type ShotData = z.infer<typeof ShotDataSchema>;
 
 export const SceneDataSchema = z.object({
-  sceneHeader: z.string().describe("Scene header (e.g., 'Scene 1 - Rooftop: Evening')"),
+  sceneHeader: z
+    .string()
+    .describe("Scene header (e.g., 'Scene 1 - Rooftop: Evening')"),
   shots: z.array(ShotDataSchema),
-  dialogue: z.string().optional().describe("Dialogue or voice-over for the scene"),
+  dialogue: z
+    .string()
+    .optional()
+    .describe('Dialogue or voice-over for the scene'),
 });
 export type SceneData = z.infer<typeof SceneDataSchema>;
 
 export const GenerateStoryboardInputSchema = z.object({
-  eventDescription: z.string().min(10).describe("Raw text or JSON string describing the event"),
+  eventDescription: z
+    .string()
+    .min(10)
+    .describe('Raw text or JSON string describing the event'),
 });
-export type GenerateStoryboardInput = z.infer<typeof GenerateStoryboardInputSchema>;
+export type GenerateStoryboardInput = z.infer<
+  typeof GenerateStoryboardInputSchema
+>;
 
 export const GenerateStoryboardOutputSchema = z.object({
   structuredData: StoryboardDataSchema, // Removed .optional()
   scenes: z.array(SceneDataSchema),
   validationIssues: z.array(ValidationIssueSchema).optional(),
 });
-export type GenerateStoryboardOutput = z.infer<typeof GenerateStoryboardOutputSchema>;
+export type GenerateStoryboardOutput = z.infer<
+  typeof GenerateStoryboardOutputSchema
+>;
 export type StoryboardOutput = GenerateStoryboardOutput;
-
 
 export const NarrativeLoopSchema = z.object({
   loopId: z.string(),
@@ -616,12 +687,14 @@ export const AuraScrollSchema = z.object({
   scrollId: z.string(),
   uid: z.string(),
   createdAt: z.number(),
-  weeklyAuraData: z.array(z.object({
-    week: z.string(),
-    mood: z.string(),
-    color: z.string(),
-    overlays: z.array(z.string()),
-  })),
+  weeklyAuraData: z.array(
+    z.object({
+      week: z.string(),
+      mood: z.string(),
+      color: z.string(),
+      overlays: z.array(z.string()),
+    })
+  ),
   narrationVoice: z.string(),
 });
 export type AuraScroll = z.infer<typeof AuraScrollSchema>;

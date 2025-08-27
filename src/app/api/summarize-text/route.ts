@@ -1,11 +1,10 @@
-// src/app/api/summarize-text/route.ts
-'use server';
 
-// import { summarizeText } from 'functions/src/summarize-text'; // Removed direct import
-import { SummarizeTextInputSchema } from '@/lib/types';
 import { NextResponse } from 'next/server';
+import { summarizeText } from '@/ai';
+import { withApiAuth, type AuthenticatedRequest } from '@/lib/api-auth';
+import { SummarizeTextInputSchema } from '@/lib/types';
 
-export async function POST(req: Request) {
+export const POST = withApiAuth(async (req: AuthenticatedRequest) => {
   try {
     const body = await req.json();
     const validatedInput = SummarizeTextInputSchema.safeParse(body);
@@ -14,29 +13,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid input', details: validatedInput.error.format() }, { status: 400 });
     }
 
-    // Call the deployed Firebase Cloud Function for summarizeText
-    const firebaseFunctionUrl = process.env.FIREBASE_FUNCTION_URL_SUMMARIZE_TEXT;
+    const result = await summarizeText(validatedInput.data);
 
-    if (!firebaseFunctionUrl) {
-      throw new Error("Firebase Function URL for summarizeText is not configured.");
+    if (!result?.summary) {
+      return NextResponse.json({ error: 'Summarization failed' }, { status: 500 });
     }
-
-    const functionResponse = await fetch(firebaseFunctionUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(validatedInput.data),
-    });
-
-    const result = await functionResponse.json();
-
-    if (!functionResponse.ok || !result?.summary) {
-      console.error('Firebase Function call for Summarize Text failed:', result?.error || functionResponse.statusText);
-      return NextResponse.json({ error: result?.error || 'Firebase Function error' }, { status: functionResponse.status });
-    }
-
+    
     return NextResponse.json({ summary: result.summary });
   } catch (e) {
     console.error('API Summarize Text failed:', e);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = e instanceof Error ? e.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-}
+});

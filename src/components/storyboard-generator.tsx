@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 
 import React, { useState } from 'react';
@@ -13,6 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Film, Camera, Sparkles, Copy, Eye } from 'lucide-react';
 import type { GenerateStoryboardOutput } from '@/lib/types';
+<<<<<<< HEAD
 
 export function StoryboardGenerator() {
     const { user } = useAuth();
@@ -20,6 +20,17 @@ export function StoryboardGenerator() {
     const [eventDescription, setEventDescription] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
     const [storyboard, setStoryboard] = useState<GenerateStoryboardOutput | null>(null);
+=======
+import { generateStoryboard as generateStoryboardAction } from '@/app/actions';
+
+
+export function StoryboardGenerator() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [eventDescription, setEventDescription] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [storyboard, setStoryboard] = useState<GenerateStoryboardOutput | null>(null);
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
     const handleGenerate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,6 +43,7 @@ export function StoryboardGenerator() {
             return;
         }
 
+<<<<<<< HEAD
         setIsGenerating(true);
         try {
             const result = await generateStoryboard({ eventDescription });
@@ -44,6 +56,31 @@ export function StoryboardGenerator() {
                 title: "Storyboard Generated",
                 description: `Created ${result.scenes.length} scenes with detailed shots.`,
             });
+=======
+    setIsGenerating(true);
+    try {
+      const result = await generateStoryboardAction({ eventDescription });
+      
+      if(result.error || !result.data) {
+        throw new Error(result.error || 'AI storyboard generation failed.');
+      }
+      
+      setStoryboard(result.data);
+      toast({
+        title: 'Storyboard Generated',
+        description: `Created ${result.data.scenes.length} scenes with detailed shots.`,
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Generation Failed',
+        description: (error as Error).message,
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
         } catch (error) {
             toast({

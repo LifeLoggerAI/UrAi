@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Comprehensive test scenarios for storyboard generation
  */
@@ -8,6 +9,16 @@ import {
   type GenerateStoryboardInput,
   type GenerateStoryboardOutput 
 } from '../lib/types';
+=======
+
+// src/ai/test-storyboard.ts
+// This file is used for testing purposes only and should not be included in production builds.
+// It provides a mock implementation of the storyboard generation flow.
+
+// Import necessary modules and types
+import { type GenerateStoryboardOutput } from '@/lib/types';
+import { type ExecutablePrompt } from 'genkit'
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
 // Test scenarios
 const testScenarios = {
@@ -90,7 +101,17 @@ const testScenarios = {
   }
 };
 
+<<<<<<< HEAD
 function validateStoryboardStructure(output: GenerateStoryboardOutput): boolean {
+=======
+// keep it referenced so linters don't complain
+// console.log("Test 5 mock structuredData present:", !!mockOutput.structuredData);
+
+// Mock implementation of the generateStoryboard flow
+export async function generateStoryboard(
+  input: any
+): Promise<GenerateStoryboardOutput | null> {
+>>>>>>> 5be23281 (Commit before pulling remote changes)
   try {
     // The output has already been validated by Zod schema at this point
     // Just do some basic quality checks

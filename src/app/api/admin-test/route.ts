@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { admin } from '@/lib/firebase-admin';
+import { auth } from '@/lib/firebase-admin';
 
 /**
  * Example API route using Firebase Admin SDK (server-only)
@@ -7,7 +7,7 @@ import { admin } from '@/lib/firebase-admin';
  */
 export async function GET() {
   try {
-    const users = await admin.auth().listUsers(10);
+    const users = await auth.listUsers(10);
     return NextResponse.json({ 
       success: true, 
       userCount: users.users.length,

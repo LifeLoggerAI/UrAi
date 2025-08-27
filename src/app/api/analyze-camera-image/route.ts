@@ -1,11 +1,14 @@
-// src/app/api/analyze-camera-image/route.ts
-'use server';
 
-import { AnalyzeCameraImageInputSchema, AnalyzeCameraImageOutputSchema } from '@/lib/types';
 import { NextResponse } from 'next/server';
+<<<<<<< HEAD
 import { analyzeCameraImage } from 'functions/src/analyze-camera-image'; // Path to the moved function
+=======
+import { analyzeCameraImage } from '@/ai';
+import { withApiAuth, type AuthenticatedRequest } from '@/lib/api-auth';
+import { AnalyzeCameraImageInputSchema } from '@/lib/types';
+>>>>>>> 5be23281 (Commit before pulling remote changes)
 
-export async function POST(req: Request) {
+export const POST = withApiAuth(async (req: AuthenticatedRequest) => {
   try {
     const body = await req.json();
     const validatedInput = AnalyzeCameraImageInputSchema.safeParse(body);
@@ -14,6 +17,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid input', details: validatedInput.error.format() }, { status: 400 });
     }
 
+<<<<<<< HEAD
     // Call the deployed Firebase Cloud Function for analyzeCameraImage
     const firebaseFunctionUrl = process.env.FIREBASE_FUNCTION_URL_ANALYZE_CAMERA_IMAGE;
 
@@ -35,8 +39,14 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(analysisResult);
+=======
+    const result = await analyzeCameraImage(validatedInput.data);
+    
+    return NextResponse.json({ data: result });
+>>>>>>> 5be23281 (Commit before pulling remote changes)
   } catch (e) {
     console.error('API Camera image analysis failed:', e);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = e instanceof Error ? e.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-}
+});

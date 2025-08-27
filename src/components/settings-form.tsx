@@ -23,7 +23,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Save, FileDown, Trash2 } from 'lucide-react';
+import { Loader2, Save, FileDown, Trash2, Zap } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -55,6 +55,7 @@ import {
 } from './ui/alert-dialog';
 import { Separator } from './ui/separator';
 import { exportUserDataAction } from '@/app/actions';
+import { createCheckoutSessionAction } from '@/app/actions/stripe';
 
 export function SettingsForm() {
   const { user } = useAuth();
@@ -62,6 +63,7 @@ export function SettingsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [isUpgrading, setIsUpgrading] = useState(false);
 
   const form = useForm<UpdateUserSettings>({
     resolver: zodResolver(UpdateUserSettingsSchema),
@@ -125,7 +127,7 @@ export function SettingsForm() {
     try {
       const initialValues = form.getValues();
       const initialConsent = initialValues.dataConsent?.shareAnonymousData;
-      
+
       if (data.dataConsent) {
         if (initialConsent === true && data.dataConsent.shareAnonymousData === false) {
           data.dataConsent.optedOutAt = Date.now();
@@ -152,7 +154,7 @@ export function SettingsForm() {
       };
 
       const dbUpdatePromise = updateDoc(userRef, updatePayload);
-      
+
       let authUpdatePromise = Promise.resolve();
       if (auth.currentUser && auth.currentUser.displayName !== data.displayName) {
         authUpdatePromise = updateProfile(auth.currentUser, {
@@ -194,10 +196,10 @@ export function SettingsForm() {
       try {
         const result = await exportUserDataAction(user.uid);
 
-        if (result.success && result.downloadUrl) {
+        if (result.data?.success && result.data?.downloadUrl) {
           const link = document.createElement('a');
-          link.href = result.downloadUrl;
-          link.download = `uraai-data-export-${new Date().toISOString().split('T')[0]}.json`;
+          link.href = result.data.downloadUrl;
+          link.download = `urai-data-export-${new Date().toISOString().split('T')[0]}.json`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
@@ -223,6 +225,27 @@ export function SettingsForm() {
         title: "Deletion Initiated",
         description: "This feature is coming soon. Contact support for data deletion requests.",
       });
+    }
+  };
+  
+  const handleUpgrade = async () => {
+    if (!user) return;
+    setIsUpgrading(true);
+    try {
+      const { url, error } = await createCheckoutSessionAction(user.uid);
+      if (error) throw new Error(error);
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('Could not create a checkout session.');
+      }
+    } catch (err: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Upgrade Failed',
+        description: err.message,
+      });
+      setIsUpgrading(false);
     }
   };
 
@@ -257,9 +280,9 @@ export function SettingsForm() {
   }
 
   return (
+    <>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Profile Settings */}
         <Card>
           <CardHeader>
             <CardTitle className="font-headline text-2xl">
@@ -283,7 +306,6 @@ export function SettingsForm() {
                 </FormItem>
               )}
             />
-            {/* ...rest of your settings form fields exactly as before */}
           </CardContent>
           <CardFooter>
             <Button type="submit" disabled={isSubmitting || !form.formState.isDirty}>
@@ -293,6 +315,27 @@ export function SettingsForm() {
           </CardFooter>
         </Card>
       </form>
+    </Form>
+
+      <Separator className="my-8" />
+      
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline text-2xl">Subscription</CardTitle>
+          <CardDescription>Manage your UrAi Pro subscription.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <p className="text-sm mb-4">You are currently on the Free plan.</p>
+            <Button onClick={handleUpgrade} disabled={isUpgrading}>
+                {isUpgrading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                    <Zap className="mr-2 h-4 w-4" />
+                )}
+                Upgrade to Pro
+            </Button>
+        </CardContent>
+      </Card>
 
       <Separator className="my-8" />
 
@@ -315,7 +358,7 @@ export function SettingsForm() {
                 <AlertDialogTitle>Confirm Data Export</AlertDialogTitle>
                 <AlertDialogDescription>
                   This will start the process of exporting all your data. You will
-                  receive a secure download link when it&apos;s ready.
+                  receive a secure download link when it's ready.
                   This may take some time.
                 </AlertDialogDescription>
               </AlertDialogHeader>
@@ -354,6 +397,6 @@ export function SettingsForm() {
           </AlertDialog>
         </CardContent>
       </Card>
-    </Form>
+    </>
   );
 }

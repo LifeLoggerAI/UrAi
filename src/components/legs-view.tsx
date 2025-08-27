@@ -17,9 +17,15 @@ export function LegsView() {
       icon: <Map className="h-6 w-6 text-primary" />,
       description: 'Review your recent paths and travel patterns.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Movement History map coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <Map className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Your movement map will be displayed here.
+          </p>
+        </div>
       ),
     },
     {
@@ -28,9 +34,15 @@ export function LegsView() {
       description:
         'An AI-powered forecast of your upcoming movement tendencies.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Trajectory forecast coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <TrendingUp className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Future movement predictions will be shown here.
+          </p>
+        </div>
       ),
     },
     {
@@ -38,9 +50,15 @@ export function LegsView() {
       icon: <ShieldCheck className="h-6 w-6 text-primary" />,
       description: "A measure of your routine's consistency and groundedness.",
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Stability Index insights coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <ShieldCheck className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Your routine stability score will appear here.
+          </p>
+        </div>
       ),
     },
     {
@@ -49,9 +67,15 @@ export function LegsView() {
       description:
         'Highlights places, apps, or topics you may be subconsciously avoiding.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Avoidance Zone analysis coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <Cone className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            AI-detected avoidance patterns will be surfaced here.
+          </p>
+        </div>
       ),
     },
     {
@@ -60,15 +84,21 @@ export function LegsView() {
       description:
         'Measures the proactivity and forward-drive in your actions.',
       content: (
-        <p className="text-center text-muted-foreground mt-8">
-          Momentum Score coming soon.
-        </p>
+        <div className="text-center text-muted-foreground p-4">
+          <Forward className="mx-auto h-12 w-12 text-primary/50" />
+          <h3 className="mt-4 text-lg font-medium text-foreground">
+            Feature Coming Soon
+          </h3>
+          <p className="mt-1 text-sm">
+            Your forward momentum score will be calculated here.
+          </p>
+        </div>
       ),
     },
   ];
 
   return (
-    <ScrollArea className="h-[70vh] -mx-6">
+    <ScrollArea className="h-[calc(100vh-8rem)] -mx-6">
       <div className="px-6 space-y-4">
         {panels.map((panel, index) => (
           <Card

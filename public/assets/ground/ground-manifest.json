@@ -1,0 +1,71 @@
+
+{
+  "basePath": "/assets/ground",
+  "categories": {
+    "neutral": {
+      "name": "ground-neutral",
+      "videos": [
+        { "id": "01", "variants": ["a"] },
+        { "id": "02", "variants": ["a"] }
+      ]
+    },
+    "growth": {
+      "name": "ground-growth",
+      "videos": [
+        { "id": "03", "variants": ["a"] },
+        { "id": "04", "variants": ["a"] }
+      ]
+    },
+    "fracture": {
+      "name": "ground-fracture",
+      "videos": [
+        { "id": "05", "variants": ["a"] },
+        { "id": "06", "variants": ["a"] }
+      ]
+    },
+    "healing": {
+      "name": "ground-healing",
+      "videos": [
+        { "id": "07", "variants": ["a"] },
+        { "id": "08", "variants": ["a"] }
+      ]
+    },
+    "cosmic": {
+      "name": "ground-cosmic",
+      "videos": [
+        { "id": "09", "variants": ["a"] },
+        { "id": "10", "variants": ["a"] }
+      ]
+    },
+    "bloom": {
+      "name": "ground-bloom",
+      "videos": [
+        { "id": "11", "variants": ["a"] },
+        { "id": "12", "variants": ["a"] }
+      ]
+    },
+    "shadow": {
+      "name": "ground-shadow",
+      "videos": [
+        { "id": "13", "variants": ["a"] },
+        { "id": "14", "variants": ["a"] }
+      ]
+    },
+    "energy": {
+      "name": "ground-energy",
+      "videos": [
+        { "id": "15", "variants": ["a"] },
+        { "id": "16", "variants": ["a"] }
+      ]
+    },
+    "seasonal": {
+      "name": "ground-seasonal",
+      "videos": [
+        { "id": "17", "variants": ["a"] },
+        { "id": "18", "variants": ["a"] },
+        { "id": "19", "variants": ["a"] },
+        { "id": "20", "variants": ["a"] }
+      ]
+    }
+  }
+}

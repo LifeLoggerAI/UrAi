@@ -1,4 +1,6 @@
+
 {
+<<<<<<< HEAD
   "functions": {
     "source": "functions",
     "predeploy": [
@@ -12,3 +14,135 @@
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
+=======
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1"
+    },
+    "rewrites": [
+      {
+        "source": "/api/narrate",
+        "function": {
+          "functionId": "narrate",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/narrate-queue",
+        "function": {
+          "functionId": "narrateQueue",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/run-dummy-user",
+        "function": {
+          "functionId": "runDummyUser",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/track",
+        "function": {
+          "functionId": "track",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/ttsSynthesize",
+        "function": {
+          "functionId": "ttsSynthesize",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/createCheckoutSession",
+        "function": {
+          "functionId": "createCheckoutSession",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/stripeWebhook",
+        "function": {
+          "functionId": "stripeWebhook",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/sendTestPush",
+        "function": {
+          "functionId": "sendTestPush",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/export",
+        "function": {
+          "functionId": "apiExport",
+          "region": "us-central1"
+        }
+      }
+    ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs20",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
+  "firestore": {
+    "database": "(default)",
+    "location": "us-central1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true
+    },
+    "dataconnect": {
+      "dataDir": "dataconnect/.dataconnect/pgliteData"
+    }
+  },
+  "dataconnect": {
+    "source": "dataconnect"
+  }
+}
+>>>>>>> 5be23281 (Commit before pulling remote changes)

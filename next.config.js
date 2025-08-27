@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+<<<<<<< HEAD
   reactStrictMode: true,
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -38,3 +39,13 @@ const nextConfig = {
 };
 
 export default nextConfig;
+=======
+  output: 'standalone',
+  sentry: {
+    // Suppress source map uploading logs during build
+    hideSourceMaps: true,
+  },
+};
+
+module.exports = nextConfig;
+>>>>>>> 5be23281 (Commit before pulling remote changes)

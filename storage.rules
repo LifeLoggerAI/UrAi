@@ -2,17 +2,16 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    function isSignedIn() { return request.auth != null; }
 
-    // User media namespaced by uid
-    match /user/{uid}/{allPaths=**} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
-    }
-
-    // Public, non-sensitive assets
-    match /public/{allPaths=**} {
+    // Narration audio (signed URL OR public read — choose one)
+    match /narration/{allPaths=**} {
       allow read: if true;
       allow write: if false;
+    }
+
+    // Default closed
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

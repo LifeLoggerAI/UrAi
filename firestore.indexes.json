@@ -1,84 +1,51 @@
-
 {
   "indexes": [
-    {
-      "collectionGroup": "moods",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "stars",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "rituals",
-      "queryScope": "COLLECTION",
-      "fields": [
-          { "fieldPath": "uid", "order": "ASCENDING" },
-          { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
     {
       "collectionGroup": "insights",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "chats",
-      "queryScope": "COLLECTION",
-      "fields": [
-          { "fieldPath": "uid", "order": "ASCENDING" },
-          { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "events",
-      "queryScope": "COLLECTION",
-      "fields": [
-          { "fieldPath": "uid", "order": "ASCENDING" },
-          { "fieldPath": "timestamp", "order": "DESCENDING" }
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
      {
-      "collectionGroup": "voiceEvents",
+      "collectionGroup": "forecast",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "week", "order": "DESCENDING" }
       ]
     },
     {
-      "collectionGroup": "scrolls",
+      "collectionGroup": "obscuraPatterns",
       "queryScope": "COLLECTION",
       "fields": [
-          { "fieldPath": "uid", "order": "ASCENDING" },
-          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-    {
-      "collectionGroup": "assets",
+     {
+      "collectionGroup": "shadowCognition",
       "queryScope": "COLLECTION",
       "fields": [
-          { "fieldPath": "uid", "order": "ASCENDING" },
-          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-    {
-      "collectionGroup": "relationships",
+     {
+      "collectionGroup": "recoveryEvents",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "uid", "order": "ASCENDING" },
-        { "fieldPath": "lastHeardAt", "order": "DESCENDING" }
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+     {
+      "collectionGroup": "narratorLogs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     }
   ],

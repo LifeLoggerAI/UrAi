@@ -1,10 +1,11 @@
-// src/app/api/generate-symbolic-insight/route.ts
-'use server';
 
-import { GenerateSymbolicInsightInputSchema } from '@/lib/types';
 import { NextResponse } from 'next/server';
+import { generateSymbolicInsight } from '@/ai';
+import { withApiAuth, type AuthenticatedRequest } from '@/lib/api-auth';
+import { GenerateSymbolicInsightInputSchema } from '@/lib/types';
 
-export async function POST(req: Request) {
+
+export const POST = withApiAuth(async (req: AuthenticatedRequest) => {
   try {
     const body = await req.json();
     const validatedInput = GenerateSymbolicInsightInputSchema.safeParse(body);
@@ -13,29 +14,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid input', details: validatedInput.error.format() }, { status: 400 });
     }
 
-    // Call the deployed Firebase Cloud Function for generateSymbolicInsight
-    const firebaseFunctionUrl = process.env.FIREBASE_FUNCTION_URL_GENERATE_SYMBOLIC_INSIGHT;
-
-    if (!firebaseFunctionUrl) {
-      throw new Error("Firebase Function URL for generateSymbolicInsight is not configured.");
-    }
-
-    const functionResponse = await fetch(firebaseFunctionUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(validatedInput.data),
-    });
-
-    const result = await functionResponse.json();
-
-    if (!functionResponse.ok || !result) {
-      console.error('Firebase Function call for Generate Symbolic Insight failed:', result?.error || functionResponse.statusText);
-      return NextResponse.json({ error: result?.error || 'Firebase Function error' }, { status: functionResponse.status });
-    }
-
+    const result = await generateSymbolicInsight(validatedInput.data);
+    
     return NextResponse.json(result);
   } catch (e) {
     console.error('API Generate Symbolic Insight failed:', e);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = e instanceof Error ? e.message : 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
-}
+});

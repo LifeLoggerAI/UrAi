@@ -1,0 +1,224 @@
+{
+  "layer": "ground",
+  "basePath": "/assets/ground",
+  "defaults": {
+    "fps": 30,
+    "width": 1440,
+    "height": 3240
+  },
+  "categories": {
+    "neutral": [
+      {
+        "file": "ground-neutral-01.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-neutral-01a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-neutral-02.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-neutral-02a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "growth": [
+      {
+        "file": "ground-growth-03.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-growth-03a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-growth-04.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-growth-04a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "fracture": [
+      {
+        "file": "ground-fracture-05.mp4",
+        "sizeBytes": 14673603,
+        "md5": "e9fae7e6ae5416c44a84422bce2eaa80"
+      },
+      {
+        "file": "ground-fracture-05a.mp4",
+        "sizeBytes": 16395227,
+        "md5": "12f72b1bbbb48a82ed18d940f6303d88"
+      },
+      {
+        "file": "ground-fracture-06.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-fracture-06a.mp4",
+        "sizeBytes": 14673603,
+        "md5": "e9fae7e6ae5416c44a84422bce2eaa80"
+      }
+    ],
+    "healing": [
+      {
+        "file": "ground-healing-07.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-healing-07a.mp4",
+        "sizeBytes": 6537216,
+        "md5": "bd9ebff076aeaa7e6f9b613c6f4aa1f8"
+      },
+      {
+        "file": "ground-healing-08.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-healing-08a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "cosmic": [
+      {
+        "file": "ground-cosmic-09.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-cosmic-09a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-cosmic-10.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-cosmic-10a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "bloom": [
+      {
+        "file": "ground-bloom-11.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-bloom-11a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-bloom-12.mp4",
+        "sizeBytes": 6008195,
+        "md5": "cc1c1c5712cdfa1bfd9f61b4e820a967"
+      },
+      {
+        "file": "ground-bloom-12a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "shadow": [
+      {
+        "file": "ground-shadow-13.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-shadow-13a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-shadow-14.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-shadow-14a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "energy": [
+      {
+        "file": "ground-energy-15.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-energy-15a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-energy-16.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-energy-16a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "seasonal": [
+      {
+        "file": "ground-seasonal-17.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-18.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-18a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-19.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-19a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-20.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "file": "ground-seasonal-20a.mp4",
+        "sizeBytes": 0,
+        "md5": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ]
+  }
+}

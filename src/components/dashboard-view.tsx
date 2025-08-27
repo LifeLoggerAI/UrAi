@@ -1,10 +1,7 @@
-// @ts-nocheck
+
 'use client';
 
-import { useEffect, useState } from 'react';
 import type { DashboardData } from '@/lib/types';
-import { getDashboardDataAction } from '@/app/actions';
-import { useAuth } from './auth-provider';
 import {
   Card,
   CardContent,
@@ -13,58 +10,38 @@ import {
   CardDescription,
 } from './ui/card';
 import { Skeleton } from './ui/skeleton';
-import { Alert, AlertTitle, AlertDescription } from './ui/alert';
 import {
-  Bar,
-  BarChart,
   Area,
   AreaChart,
-  XAxis,
-  YAxis,
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
 } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from './ui/chart';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from './ui/chart';
 import {
   BrainCircuit,
   Users,
   TrendingUp,
-  AlertCircle,
   Sparkles,
   Mic,
 } from 'lucide-react';
 
-export function DashboardView() {
-  const { user } = useAuth();
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface DashboardViewProps {
+  data: DashboardData | null;
+}
 
-  useEffect(() => {
-    if (user) {
-      const fetchData = async () => {
-        setIsLoading(true);
-        setError(null);
-        try {
-          const result = await getDashboardDataAction(user.uid);
-          if (result.error) {
-            setError(result.error);
-          } else {
-            setData(result.data);
-          }
-        } catch {
-          setError('An unexpected error occurred.');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      fetchData();
-    }
-  }, [user]);
-
-  if (isLoading) {
+export function DashboardView({ data }: DashboardViewProps) {
+  if (!data) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fadeIn">
         <div className="grid gap-4 md:grid-cols-3">
           <Skeleton className="h-28" />
           <Skeleton className="h-28" />
@@ -76,19 +53,11 @@ export function DashboardView() {
     );
   }
 
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error Loading Dashboard</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
   if (
-    !data ||
-    (data.sentimentOverTime.length === 0 && data.emotionBreakdown.length === 0)
+    !data.sentimentOverTime ||
+    !data.emotionBreakdown ||
+    (data.sentimentOverTime.length === 0 &&
+      data.emotionBreakdown.length === 0)
   ) {
     return (
       <div className="text-center text-muted-foreground py-16 px-4 bg-card border rounded-lg animate-fadeIn">
@@ -119,7 +88,7 @@ export function DashboardView() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6 animate-fadeIn max-h-[80vh] overflow-y-auto p-1 pr-4 -mr-4">
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

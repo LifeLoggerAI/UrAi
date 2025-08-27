@@ -1,3 +1,14 @@
 {
-  "projects": { "default": "urai-4dc1d" }
+  "projects": {
+    "default": "urai"
+  },
+  "targets": {
+    "urai": {
+      "hosting": {
+        "app": [
+          "urai"
+        ]
+      }
+    }
+  }
 }
