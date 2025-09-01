@@ -1,5 +1,148 @@
 {
   "indexes": [
+    // V6 Foundation: User activity and notifications
+    {
+      "collectionGroup": "notifications",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "privacyZones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "updatedAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // V6 Foundation: Core user data collections
+    {
+      "collectionGroup": "voiceEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "dreamEvents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "innerTexts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // V7 Social: Constellation rooms and messages
+    {
+      "collectionGroup": "constellationRooms",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isPublic", "order": "ASCENDING" },
+        { "fieldPath": "lastActivity", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "roomId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    },
+
+    // V8 Global: Emotional Weather and Soul Vault
+    {
+      "collectionGroup": "globalEmotionalWeather",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "region", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "soulVault",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+
+    // V9 AI Life Mirror: Persona and narrative data
+    {
+      "collectionGroup": "personaSynthesis",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "synthesisDate", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "narrativePlaybacks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // V10 Advanced: Teams and marketplace
+    {
+      "collectionGroup": "teams",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "members", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "marketplace",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "marketplace",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "isActive", "order": "ASCENDING" },
+        { "fieldPath": "price", "order": "ASCENDING" }
+      ]
+    },
+
+    // V11 Immersive: Plugin ecosystem
+    {
+      "collectionGroup": "plugins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "rating", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "userPlugins",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "installedAt", "order": "DESCENDING" }
+      ]
+    },
+
+    // Legacy indexes (preserve existing functionality)
     {
       "collectionGroup": "insights",
       "queryScope": "COLLECTION",
@@ -8,7 +151,7 @@
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-     {
+    {
       "collectionGroup": "forecast",
       "queryScope": "COLLECTION",
       "fields": [
@@ -24,7 +167,7 @@
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-     {
+    {
       "collectionGroup": "shadowCognition",
       "queryScope": "COLLECTION",
       "fields": [
@@ -32,7 +175,7 @@
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-     {
+    {
       "collectionGroup": "recoveryEvents",
       "queryScope": "COLLECTION",
       "fields": [
@@ -40,7 +183,7 @@
         { "fieldPath": "timestamp", "order": "DESCENDING" }
       ]
     },
-     {
+    {
       "collectionGroup": "narratorLogs",
       "queryScope": "COLLECTION",
       "fields": [
