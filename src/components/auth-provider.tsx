@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -10,17 +9,10 @@ import {
   useRef,
 } from 'react';
 import type { User } from 'firebase/auth';
-<<<<<<< HEAD
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
-=======
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { app } from '@/lib/firebase';
->>>>>>> 5be23281 (Commit before pulling remote changes)
 import { Loader2 } from 'lucide-react';
 import { devMode, seedDemoData, DEMO_USER_ID } from '@/lib/dev-mode';
-
-const auth = getAuth(app);
 
 // Create a mock user object for demo mode
 const mockUser = {
@@ -30,75 +22,86 @@ const mockUser = {
   photoURL: `https://placehold.co/128x128.png?text=D`,
   emailVerified: true,
   isAnonymous: false,
-  metadata: {},
   providerData: [],
+  refreshToken: '',
+  tenantId: null,
+  metadata: {
+    creationTime: '2024-01-01T00:00:00.000Z',
+    lastSignInTime: '2024-01-01T00:00:00.000Z',
+  },
+  getIdToken: async () => 'mock-token',
+  getIdTokenResult: async () => ({
+    authTime: '',
+    expirationTime: '',
+    issuedAtTime: '',
+    signInProvider: '',
+    signInSecondFactor: null,
+    token: 'mock-token',
+    claims: {},
+  }),
+  reload: async () => {},
+  toJSON: () => ({}),
+  delete: async () => {},
 } as User;
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null;
   loading: boolean;
-};
+  isDemo: boolean;
+}
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  isDemo: false,
 });
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const initialized = useRef(false);
+  const hasSeeded = useRef(false);
 
   useEffect(() => {
-    if (initialized.current) {
+    if (devMode) {
+      setUser(mockUser);
+      setLoading(false);
+      
+      // Seed demo data once
+      if (!hasSeeded.current) {
+        hasSeeded.current = true;
+        seedDemoData();
+      }
+      
       return;
     }
-    initialized.current = true;
 
-    if (devMode) {
-      const setupDemoMode = async () => {
-        console.log('DEV MODE: Bypassing auth with mock user.');
-        await seedDemoData(DEMO_USER_ID); // Ensure data is seeded before setting user
-        setUser(mockUser);
-        setLoading(false);
-      };
-      setupDemoMode();
-    } else {
-<<<<<<< HEAD
-      // In production, use real Firebase Auth
-=======
->>>>>>> 5be23281 (Commit before pulling remote changes)
-      const unsubscribe = onAuthStateChanged(auth, user => {
-        setUser(user);
-        setLoading(false);
-      });
-<<<<<<< HEAD
-      // Cleanup subscription on unmount
-=======
->>>>>>> 5be23281 (Commit before pulling remote changes)
-      return () => unsubscribe();
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return unsubscribe;
   }, []);
 
   if (loading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, isDemo: devMode }}>
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+}
