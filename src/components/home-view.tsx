@@ -6,6 +6,7 @@ import { requestNarrationQueue, preloadNarrations, playSequence } from "@/lib/na
 import { generateCombinedScript, Persona } from "@/lib/narrator-scripts";
 import { runDummyUser } from "@/lib/dummyUser";
 import OrbLottie from "@/components/OrbLottie";
+import TiltScene from "@/components/tilt-scene";
 import { useToasts } from "@/lib/useToasts";
 import { useVideoPreloader } from "@/lib/useVideoPreloader";
 import { trackEvent } from "@/lib/analytics";
@@ -55,6 +56,10 @@ export function HomeView() {
   const [orbOpacity, setOrbOpacity] = useState(0.9);
   const [orbOffset, setOrbOffset] = useState(60);
   const [isOrbPlaying, setIsOrbPlaying] = useState(true);
+
+  // New state for tilt scene mode
+  const [useTiltScene, setUseTiltScene] = useState(false);
+  const [tiltMode, setTiltMode] = useState<'sky' | 'horizon' | 'ground'>('horizon');
 
 
   const mainSceneRef = useRef<HTMLDivElement>(null);
@@ -280,32 +285,51 @@ export function HomeView() {
         </div>
       )}
 
-      {skySrc && (
-        <video
-          ref={skyRef}
-          key={skySrc}
-          className={`absolute inset-0 w-full h-full object-${fitMode} z-10`}
-          src={skySrc}
-          playsInline
-          muted
-          loop
-          autoPlay
-          onError={() => pushToast({ kind:"error", text:"Sky failed to load" })}
+      {/* Render either TiltScene or traditional video layers */}
+      {useTiltScene ? (
+        <TiltScene
+          skyCategory={skyCategory}
+          groundCategory={groundCategory}
+          skyIndex={skyIndex}
+          groundIndex={groundIndex}
+          skyVariant={skyVariant}
+          groundVariant={groundVariant}
+          persona={persona}
+          onModeChange={setTiltMode}
+          enableBatteryOptimization={true}
+          enablePerformanceOptimization={true}
+          className="absolute inset-0"
         />
-      )}
+      ) : (
+        <>
+          {skySrc && (
+            <video
+              ref={skyRef}
+              key={skySrc}
+              className={`absolute inset-0 w-full h-full object-${fitMode} z-10`}
+              src={skySrc}
+              playsInline
+              muted
+              loop
+              autoPlay
+              onError={() => pushToast({ kind:"error", text:"Sky failed to load" })}
+            />
+          )}
 
-      {groundSrc && (
-        <video
-          ref={groundRef}
-          key={groundSrc}
-          className={`absolute inset-0 w-full h-full object-${fitMode} z-20`}
-          src={groundSrc}
-          playsInline
-          muted
-          loop
-          autoPlay
-          onError={() => pushToast({ kind:"error", text:"Ground failed to load" })}
-        />
+          {groundSrc && (
+            <video
+              ref={groundRef}
+              key={groundSrc}
+              className={`absolute inset-0 w-full h-full object-${fitMode} z-20`}
+              src={groundSrc}
+              playsInline
+              muted
+              loop
+              autoPlay
+              onError={() => pushToast({ kind:"error", text:"Ground failed to load" })}
+            />
+          )}
+        </>
       )}
 
       {showAvatar && (
@@ -525,6 +549,27 @@ export function HomeView() {
           <label className="text-xs opacity-80">Orb Offset (px): {orbOffset}</label>
           <input type="range" min={20} max={120} step={2} value={orbOffset} onChange={(e)=>setOrbOffset(Number(e.target.value))} className="w-full" />
         </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-white/10">
+          <div className="text-sm font-semibold">Tilt Scene</div>
+          <label className="flex items-center gap-2 text-xs">
+            <input 
+              type="checkbox" 
+              checked={useTiltScene} 
+              onChange={(e) => setUseTiltScene(e.target.checked)} 
+            />
+            Enable
+          </label>
+        </div>
+
+        {useTiltScene && (
+          <div className="space-y-1">
+            <div className="text-xs opacity-80">Current Mode: {tiltMode}</div>
+            <div className="text-xs opacity-60">
+              Tilt device up/down to switch between sky/horizon/ground
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center justify-between pt-2 border-t border-white/10">
           <div className="text-sm font-semibold">Guides</div>
