@@ -74,6 +74,7 @@ export function TiltScene({
   const [isLowPower, setIsLowPower] = useState(false);
   const [skyManifest, setSkyManifest] = useState<any>(null);
   const [groundManifest, setGroundManifest] = useState<any>(null);
+  const [starfieldError, setStarfieldError] = useState(false);
 
   // Refs
   const orientationTimeoutRef = useRef<NodeJS.Timeout>();
@@ -236,6 +237,12 @@ export function TiltScene({
     }));
   }, [skyManifest, groundManifest, skyCategory, skyIndex, skyVariant, groundCategory, groundIndex, groundVariant, getAssetPath]);
 
+  // Handle video load errors gracefully
+  const handleVideoError = useCallback((type: 'sky' | 'ground') => {
+    console.warn(`${type} video failed to load`);
+    // Could implement fallback behavior here
+  }, []);
+
   // Calculate layer opacities based on current mode and orientation
   const layerOpacities = useMemo(() => {
     const { beta } = orientation;
@@ -284,15 +291,40 @@ export function TiltScene({
     <div className={cn("relative w-full h-full overflow-hidden bg-black", className)}>
       {/* Starfield Background Layer */}
       <div 
-        className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+        className={cn(
+          "absolute inset-0 transition-opacity duration-1000",
+          starfieldError 
+            ? "bg-gradient-to-b from-indigo-950 via-purple-900 to-black" 
+            : "bg-cover bg-center"
+        )}
         style={{
-          backgroundImage: `url(${sceneAssets.starfieldSrc})`,
+          backgroundImage: starfieldError ? undefined : `url(${sceneAssets.starfieldSrc})`,
           opacity: layerOpacities.starfield,
           zIndex: 1,
         }}
         role="img"
         aria-label="Starfield background"
+        onError={() => setStarfieldError(true)}
       />
+
+      {/* CSS Starfield Fallback */}
+      {starfieldError && (
+        <div 
+          className="absolute inset-0 opacity-60"
+          style={{
+            background: `
+              radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+              radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.8), transparent),
+              radial-gradient(1px 1px at 60% 40%, #fff, transparent),
+              radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,0.6), transparent),
+              radial-gradient(1px 1px at 15% 80%, #fff, transparent),
+              radial-gradient(1px 1px at 85% 60%, rgba(255,255,255,0.8), transparent),
+              linear-gradient(135deg, #0c0c2e 0%, #1a1a3e 50%, #2d2d5a 100%)
+            `,
+            zIndex: 1,
+          }}
+        />
+      )}
 
       {/* Sky Video Layer */}
       {sceneAssets.skySrc && (
@@ -309,6 +341,7 @@ export function TiltScene({
           muted
           playsInline
           preload={videoQuality === 'low' ? 'none' : 'metadata'}
+          onError={() => handleVideoError('sky')}
         />
       )}
 
@@ -341,6 +374,7 @@ export function TiltScene({
             muted
             playsInline
             preload={videoQuality === 'low' ? 'none' : 'metadata'}
+            onError={() => handleVideoError('ground')}
           />
         </div>
       )}
