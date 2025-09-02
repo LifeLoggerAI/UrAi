@@ -1,0 +1,12 @@
+[
+  {
+    "id": "org1",
+    "name": "Alpha Ventures",
+    "dashboards": ["dashboard-alpha", "analytics-alpha"]
+  },
+  {
+    "id": "org2",
+    "name": "Beta Capital",
+    "dashboards": ["dashboard-beta", "analytics-beta"]
+  }
+]

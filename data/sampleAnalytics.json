@@ -1,0 +1,18 @@
+{
+  "milestones": {
+    "completed": 4,
+    "pending": 2
+  },
+  "investment": {
+    "total": 1200000,
+    "byOrg": { "org1": 700000, "org2": 500000 }
+  },
+  "compliance": {
+    "breaches": 2,
+    "lastBreach": "2025-07-23"
+  },
+  "contributors": {
+    "active": 6,
+    "byOrg": { "org1": 4, "org2": 2 }
+  }
+}
