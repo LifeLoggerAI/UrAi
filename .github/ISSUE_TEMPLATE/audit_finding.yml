@@ -1,0 +1,33 @@
+name: Audit Finding
+about: Gap or anomaly discovered in audit
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Where/how discovered (script, test, checklist)
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+  - type: checkboxes
+    id: areas
+    attributes:
+      label: Areas
+      options:
+        - label: Firestore schema
+        - label: Cloud Functions
+        - label: Privacy/Consent
+        - label: Assets
+        - label: UI/UX flow
+        - label: Exports
+        - label: Forecast/ML
+        - label: AR/VR
+  - type: textarea
+    id: fixes
+    attributes:
+      label: Proposed Fix
