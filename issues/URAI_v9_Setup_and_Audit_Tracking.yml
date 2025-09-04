@@ -1,0 +1,7 @@
+---
+actual: Setup phase initiated. No issues identified yet.
+areas: 
+context: Initial setup for URAI v9 release. This issue will track gaps, anomalies, and setup actions required for v9.
+expected: URAI v9 should be fully prepared for release, with all key requirements and tasks tracked and resolved.
+fixes: Track all setup actions and audit findings for v9. Add further subtasks as gaps or findings are discovered.
+...
