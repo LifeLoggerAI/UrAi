@@ -1,10 +1,16 @@
-import { z } from 'zod';
+// src/lib/schemas/chat.ts
+import { z } from "zod";
+
+export const RoleEnum = z.enum(["system", "user", "assistant"]);
 
 export const ChatMessageSchema = z.object({
-  id: z.string().optional(),
-  role: z.enum(['system', 'user', 'assistant', 'tool']).default('user'),
+  id: z.string().uuid().optional(),
+  role: RoleEnum,
   content: z.string(),
-  name: z.string().optional(),
-  timestamp: z.number().optional(),
+  createdAt: z.number().int().optional(),
+  meta: z.record(z.any()).optional(),
 });
+
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
+export const ChatHistorySchema = z.array(ChatMessageSchema);
+export type ChatHistory = z.infer<typeof ChatHistorySchema>;
