@@ -699,35 +699,38 @@ export const AuraScrollSchema = z.object({
 });
 export type AuraScroll = z.infer<typeof AuraScrollSchema>;
 
-export interface CrisisState {
-  userId: string;
-  isInCrisis: boolean;
-  triggeredAt: string;
-  triggerReason: string;
-  score: number; // 0 to 1
-  suggestedRitual?: string;
-}
+export const CrisisStateSchema = z.object({
+  userId: z.string(),
+  isInCrisis: z.boolean(),
+  triggeredAt: z.string(),
+  triggerReason: z.string(),
+  score: z.number().min(0).max(1),
+  suggestedRitual: z.string().optional(),
+});
+export type CrisisState = z.infer<typeof CrisisStateSchema>;
 
-export interface RecoveryBloom {
-  userId: string;
-  triggerEventId: string;
-  bloomColor: string; // e.g., "lavender-glow"
-  auraVisual: string; // e.g., "rising-petals"
-  recoveryDuration: number; // in days
-  moodBefore: string;
-  moodAfter: string;
-  createdAt: string;
-}
+export const RecoveryBloomSchema = z.object({
+  userId: z.string(),
+  triggerEventId: z.string(),
+  bloomColor: z.string(),
+  auraVisual: z.string(),
+  recoveryDuration: z.number(),
+  moodBefore: z.string(),
+  moodAfter: z.string(),
+  createdAt: z.string(),
+});
+export type RecoveryBloom = z.infer<typeof RecoveryBloomSchema>;
 
-export interface SoulThread {
-  userId: string;
-  threadLabel: string;
-  events: string[]; // Scroll IDs, dream IDs, crisis IDs
-  coreSymbol?: string;
-  dominantArchetype?: string;
-  status: 'open' | 'looping' | 'resolving' | 'complete';
-  rebirthCount: number;
-  createdAt: string;
-}
+export const SoulThreadSchema = z.object({
+  userId: z.string(),
+  threadLabel: z.string(),
+  events: z.array(z.string()),
+  coreSymbol: z.string().optional(),
+  dominantArchetype: z.string().optional(),
+  status: z.enum(['open', 'looping', 'resolving', 'complete']),
+  rebirthCount: z.number(),
+  createdAt: z.string(),
+});
+export type SoulThread = z.infer<typeof SoulThreadSchema>;
 
 export const exportUserDataActionSchema: any = {};
