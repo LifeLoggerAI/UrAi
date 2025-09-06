@@ -146,3 +146,39 @@ export async function generateSpeech(input: any): Promise<ActionResult<any>> {
     return fail(e);
   }
 }
+
+export async function analyzeAndLogCameraFrameAction(input: any): Promise<ActionResult<any>> {
+  try {
+    // Placeholder implementation
+    return ok({ logged: true });
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+export async function exportUserDataAction(input: any): Promise<ActionResult<any>> {
+  try {
+    // Placeholder implementation
+    return ok({ exported: true });
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+export async function processOnboardingVoiceAction(input: any): Promise<ActionResult<any>> {
+  try {
+    // Placeholder implementation
+    return ok({ processed: true });
+  } catch (e) {
+    return fail(e);
+  }
+}
+
+export async function summarizeWeekAction(input?: any): Promise<ActionResult<any>> {
+  try {
+    // Placeholder implementation
+    return ok({ summary: 'Placeholder week summary' });
+  } catch (e) {
+    return fail(e);
+  }
+}

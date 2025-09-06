@@ -91,13 +91,14 @@ export function PersonCard({ person }: { person: Person }) {
               </label>
               <div className="flex flex-wrap gap-1">
                 {/* Get unique roles from history */}
-                {[...new Set(person.socialRoleHistory.map(h => h.role))].map(
-                  role => (
+                {person.socialRoleHistory
+                  .map(h => h.role)
+                  .filter((role, i, arr) => arr.indexOf(role) === i)
+                  .map(role => (
                     <Badge key={role} variant="secondary">
                       {role}
                     </Badge>
-                  )
-                )}
+                  ))}
               </div>
             </div>
           )}

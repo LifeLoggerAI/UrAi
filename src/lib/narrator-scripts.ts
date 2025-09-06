@@ -81,8 +81,7 @@ const INTRO_TEMPLATES: Record<Category, string[]> = {
 };
 
 // Variant-specific descriptors (merge with category lines)
-const VARIANT_FLAVOR: Record<Variant extends string ? Variant : "-",
-  string[]> = {
+const VARIANT_FLAVOR: Record<Exclude<Variant, undefined> | '-', string[]> = {
   "-": [
     "A straightforward expression—unembellished.",
     "The clean read of this moment.",
@@ -146,8 +145,10 @@ export function generateCombinedScript(
   const skyIntro = choice(INTRO_TEMPLATES[sky.category], id + "|sky");
   const groundIntro = choice(INTRO_TEMPLATES[ground.category], id + "|ground");
 
-  const skyFlavor = choice(VARIANT_FLAVOR[(sky.variant ?? "-") as any], id + "|sv");
-  const groundFlavor = choice(VARIANT_FLAVOR[(ground.variant ?? "-") as any], id + "|gv");
+  const skyKey = (sky.variant ?? '-') as keyof typeof VARIANT_FLAVOR;
+  const groundKey = (ground.variant ?? '-') as keyof typeof VARIANT_FLAVOR;
+  const skyFlavor = choice(VARIANT_FLAVOR[skyKey], id + '|sv');
+  const groundFlavor = choice(VARIANT_FLAVOR[groundKey], id + '|gv');
 
   const hint = choice(HINTS, id + "|h");
 

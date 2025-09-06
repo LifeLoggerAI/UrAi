@@ -9,7 +9,7 @@ import { SideNav } from '@/components/side-nav';
 import { DashboardView } from '@/components/dashboard-view';
 import { CognitiveZoneView } from '@/components/cognitive-zone-view';
 import { TorsoView } from '@/components/torso-view';
-import { ArmsView } from '@/components/arms-view';
+import ArmsView from '@/components/arms-view';
 import { LegsView } from '@/components/legs-view';
 import { GroundView } from '@/components/ground-view';
 import { SettingsForm } from '@/components/settings-form';
@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Wand2 } from 'lucide-react';
-import { suggestRitualAction } from '@/app/actions';
+import { suggestRitual } from '@/app/actions';
 import type {
   Dream,
   InnerVoiceReflection,
@@ -40,7 +40,7 @@ import type {
   WeeklyScroll,
   SuggestRitualOutput,
 } from '@/lib/types';
-import { getDashboardDataAction } from '@/app/actions';
+import { getDashboardData } from '@/lib/data-access';
 import type { DashboardData } from '@/lib/types';
 
 type Panel =
@@ -82,11 +82,9 @@ export default function DashboardPage() {
       return;
     }
     
-    getDashboardDataAction({uid: user.uid}).then(result => {
-        if(result.data) {
-            setDashboardData(result.data);
-        }
-    })
+    getDashboardData(user.uid).then(data => {
+        setDashboardData(data);
+    });
 
     const unsubscribers: (() => void)[] = [];
     const collectionsToFetch = [
@@ -124,8 +122,8 @@ export default function DashboardPage() {
 
   const handleSuggestRitual = async () => {
     if (!user) return;
-    const result = await suggestRitualAction({ uid: user.uid, context: 'User requested a ritual from the dashboard.' });
-    if (result.data) {
+    const result = await suggestRitual({ uid: user.uid, context: 'User requested a ritual from the dashboard.' });
+    if (result.success) {
       setRitualSuggestion(result.data);
       setIsRitualDialogOpen(true);
     }

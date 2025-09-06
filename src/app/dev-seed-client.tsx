@@ -1,5 +1,5 @@
 'use client';
-import { seedDemoDataAction } from '@/app/actions';
+import { seedDemoData, DEMO_USER_ID } from '@/lib/dev-mode';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
@@ -11,18 +11,18 @@ export default function DevSeedClient() {
 
   const handleSeed = async () => {
     setIsLoading(true);
-    const result = await seedDemoDataAction();
-    if (result.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Seeding Failed',
-        description: result.error,
-      });
-    } else {
+    try {
+      await seedDemoData(DEMO_USER_ID);
       toast({
         title: 'Seeding Complete!',
         description:
           'Demo data has been seeded successfully. Please refresh the page.',
+      });
+    } catch (e: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Seeding Failed',
+        description: e?.message ?? String(e),
       });
     }
     setIsLoading(false);

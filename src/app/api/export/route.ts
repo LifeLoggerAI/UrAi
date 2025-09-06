@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getFirestore } from 'firebase-admin/firestore';
 import { withApiAuth, type AuthenticatedRequest } from '@/lib/api-auth';
-import { app } from '@/lib/firebase-admin';
-
-const db = getFirestore(app);
+import { db } from '@/lib/firebase-admin';
 
 // This API route queues a new export job in Firestore.
 // The `exportWorker` Cloud Function will then pick it up.

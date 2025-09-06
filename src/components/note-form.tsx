@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from './auth-provider';
 import {
   transcribeAudio as transcribeAudioAction,
-  enrichVoiceEventAction as enrichVoiceEvent,
+  enrichVoiceEvent,
 } from '@/app/actions';
 import { generateAvatar } from '@/ai/flows/generate-avatar';
 import {

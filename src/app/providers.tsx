@@ -3,7 +3,7 @@
 'use client';
 import { ReactNode, useEffect } from 'react';
 import { AuthProvider } from '@/components/auth-provider';
-import { getFirebaseApp } from "@/lib/firebaseClient";
+import { getFirebaseApp } from '@/lib/firebase-client';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { saveFcmToken } from '@/lib/fcm';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
