@@ -15,3 +15,6 @@ export const CompanionChatOutputSchema = z.object({
 
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+
+export const ChatHistorySchema = z.array(ChatMessageSchema);
+export type ChatHistory = z.infer<typeof ChatHistorySchema>;

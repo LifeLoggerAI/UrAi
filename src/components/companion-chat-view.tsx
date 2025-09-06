@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import type { ChatMessage } from '@/lib/types';
+import type { ChatMessage } from '@/ai/schemas/chat';
 import { companionChat as companionChatAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -19,7 +19,7 @@ export function CompanionChatView() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
-      role: 'model',
+      role: 'assistant',
       content: `Hello ${user?.displayName || 'there'}. What's on your mind today?`,
     },
   ]);
@@ -58,11 +58,11 @@ export function CompanionChatView() {
       }
 
       if (result.data.response) {
-        const modelMessage: ChatMessage = {
-          role: 'model',
+        const assistantMessage: ChatMessage = {
+          role: 'assistant',
           content: result.data.response,
         };
-        setMessages(prev => [...prev, modelMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
       }
     } catch (error) {
       toast({
@@ -89,7 +89,7 @@ export function CompanionChatView() {
                 message.role === 'user' ? 'justify-end' : 'justify-start'
               )}
             >
-              {message.role === 'model' && (
+              {message.role === 'assistant' && (
                 <Avatar className="h-8 w-8 border-2 border-primary/50">
                   <AvatarFallback>
                     <BotMessageSquare className="text-primary" />

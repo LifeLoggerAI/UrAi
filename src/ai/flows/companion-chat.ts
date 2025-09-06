@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ChatMessageSchema } from '../../lib/schemas/chat';
+import { ChatMessageSchema } from '../schemas/chat';
 
 // Rest of your companion-chat.ts file content
 // This includes the existing implementation
