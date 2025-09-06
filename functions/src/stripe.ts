@@ -3,6 +3,7 @@ import { logger } from "firebase-functions/v2";
 import * as admin from "firebase-admin";
 import Stripe from "stripe";
 import { defineString } from "firebase-functions/params";
+import { queueNotification } from "./notifications";
 
 // Initialize admin SDK if not already initialized
 if (admin.apps.length === 0) {
@@ -83,6 +84,16 @@ export const stripeWebhook = onRequest(async (request, response) => {
     response.status(400).send(`Webhook Error: ${(err as Error).message}`);
     return;
   }
+
+  // Idempotency check
+  const eventRef = db.collection('stripeEvents').doc(event.id);
+  const eventDoc = await eventRef.get();
+  if (eventDoc.exists) {
+    logger.info(`Event ${event.id} already processed`);
+    response.status(200).send({ received: true });
+    return;
+  }
+  await eventRef.set({ processedAt: admin.firestore.FieldValue.serverTimestamp() });
 
   // Handle the event
   switch (event.type) {
@@ -176,8 +187,18 @@ export const stripeWebhook = onRequest(async (request, response) => {
         lastPaymentFailure: admin.firestore.FieldValue.serverTimestamp(),
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       }, { merge: true });
-      
-      // TODO: Send notification to user about payment failure
+
+      try {
+        await queueNotification({
+          uid,
+          title: 'Payment Failed',
+          body: 'We could not process your subscription payment. Please update your billing information.',
+          type: 'system',
+        });
+      } catch (err) {
+        logger.error(`Failed to notify user ${uid} about payment failure`, err);
+      }
+
       logger.warn(`Payment failed for user ${uid}`);
       break;
     }

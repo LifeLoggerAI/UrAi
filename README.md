@@ -8,6 +8,10 @@ Getting started
 2. Run dev server: npm run dev
 3. Run the baseline health check: npm run health
 
+### Environment Variables
+
+Set `GOOGLE_AI_API_KEY` or `GEMINI_API_KEY` to enable AI features.
+
 Phases
 
 - Phase 0: Project scaffolding and CI baseline

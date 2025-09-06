@@ -2,28 +2,32 @@
 import { onRequest } from "firebase-functions/v2/https";
 import { ALLOWED_ORIGINS } from "./config";
 import * as Sentry from "@sentry/node";
+import * as admin from "firebase-admin";
 
-// Simple in-memory rate limiting (suitable for low-traffic functions)
-const rateLimits = new Map<string, number[]>();
-function checkRateLimit(ip: string | undefined): boolean {
-    if (!ip) return true; // Don't block if IP is not available
-    const now = Date.now();
-    const windowStart = now - 60 * 1000; // 1 minute window
-    const requests = (rateLimits.get(ip) || []).filter(t => t > windowStart);
-    
-    // Clean up old timestamps for the IP
-    setTimeout(() => {
-        const currentTimestamps = rateLimits.get(ip) || [];
-        rateLimits.set(ip, currentTimestamps.filter(t => t > Date.now() - 2 * 60 * 1000));
-    }, 2 * 60 * 1000);
+if (admin.apps.length === 0) {
+  admin.initializeApp();
+}
+const db = admin.firestore();
 
+export async function checkRateLimit(ip: string | undefined): Promise<boolean> {
+  if (!ip) return true;
 
-    if (requests.length >= 30) { // Limit to 30 requests per minute per IP
-        return false;
+  const ref = db.collection('rateLimits').doc(ip);
+  const doc = await ref.get();
+  const now = Date.now();
+  const windowMs = 60 * 1000;
+
+  if (doc.exists) {
+    const data = doc.data() as { count: number; expiresAt: admin.firestore.Timestamp };
+    if (data.expiresAt.toMillis() > now) {
+      if (data.count >= 30) return false;
+      await ref.update({ count: data.count + 1 });
+      return true;
     }
-    requests.push(now);
-    rateLimits.set(ip, requests);
-    return true;
+  }
+
+  await ref.set({ count: 1, expiresAt: new Date(now + windowMs) });
+  return true;
 }
 
 
@@ -45,7 +49,7 @@ export function withGuards(handler: (req: any, res: any) => Promise<void> | void
     }
 
     // 2. Rate Limiting
-    if (!checkRateLimit(req.ip)) {
+    if (!(await checkRateLimit(req.ip))) {
       res.status(429).json({ error: "Too many requests." });
       return;
     }

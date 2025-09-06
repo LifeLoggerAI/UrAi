@@ -33,3 +33,7 @@ public/assets/videos/
 
 # Misc
 coverage/
+
+# Test artifacts
+playwright-report/
+test-results/

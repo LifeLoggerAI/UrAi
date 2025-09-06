@@ -1,5 +1,6 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import logger from "./logger";
 
 /**
  * Queues a transactional email to be sent by the backend Cloud Function.
@@ -20,9 +21,9 @@ export async function sendTransactionalEmail(
       sent: false,
       createdAt: serverTimestamp(),
     });
-    console.log(`📧 Transactional email queued for ${to}`);
+    logger.info(`Transactional email queued for ${to}`);
   } catch (err) {
-    console.error("❌ Error queuing transactional email:", err);
+    logger.error("Error queuing transactional email:", err);
     throw err;
   }
 }
