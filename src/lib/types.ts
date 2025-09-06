@@ -1,6 +1,6 @@
 // Core type definitions for UrAi application
 import { z } from 'zod';
-import { ChatMessageSchema, ChatHistorySchema } from '@/ai/schemas/chat';
+import { ChatMessageSchema, ChatHistorySchema, CompanionChatOutputSchema } from '@/lib/schemas/chat';
 
 // Base types
 export const UserSchema = z.object({
@@ -228,6 +228,7 @@ export type Permissions = z.infer<typeof PermissionsSchema>;
 
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 export type ChatHistory = z.infer<typeof ChatHistorySchema>;
+export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
 
 export const SentimentSchema = z.enum(['positive', 'negative', 'neutral']);
 export type Sentiment = z.infer<typeof SentimentSchema>;

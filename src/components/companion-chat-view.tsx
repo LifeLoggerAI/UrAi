@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import type { ChatMessage } from '@/ai/schemas/chat';
+import type { ChatMessage } from '@/lib/schemas/chat';
 import { companionChat as companionChatAction } from '@/app/actions';
 import { useAuth } from './auth-provider';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
