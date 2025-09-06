@@ -103,17 +103,19 @@ export function ProTierManagement() {
 
     setActionLoading(priceId);
     try {
-      const result = await createCheckoutSession({
+      const result: any = await createCheckoutSession({
         priceId,
         successUrl: `${window.location.origin}/dashboard?upgrade=success`,
         cancelUrl: `${window.location.origin}/pricing?upgrade=canceled`,
       });
 
-      // Redirect to Stripe Checkout
-      const stripe = (window as any).Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-      await stripe.redirectToCheckout({
-        sessionId: result.data.sessionId,
-      });
+      const sessionId = result.data?.sessionId;
+      if (sessionId) {
+        const stripe = (window as any).Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+        await stripe.redirectToCheckout({ sessionId });
+      } else {
+        throw new Error('Failed to create checkout session');
+      }
     } catch (error) {
       console.error('Error creating checkout session:', error);
     } finally {
@@ -126,12 +128,16 @@ export function ProTierManagement() {
 
     setActionLoading('manage');
     try {
-      const result = await createPortalSession({
+      const result: any = await createPortalSession({
         returnUrl: `${window.location.origin}/dashboard`,
       });
 
-      // Redirect to Stripe Customer Portal
-      window.location.href = result.data.url;
+      const url = result.data?.url;
+      if (url) {
+        window.location.href = url;
+      } else {
+        throw new Error('Failed to create portal session');
+      }
     } catch (error) {
       console.error('Error creating portal session:', error);
     } finally {

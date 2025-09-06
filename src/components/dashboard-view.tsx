@@ -21,11 +21,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from './ui/chart';
+import { ChartContainer, ChartTooltip } from './ui/chart';
 import {
   BrainCircuit,
   Users,
@@ -73,7 +69,7 @@ export function DashboardView({ data }: DashboardViewProps) {
     );
   }
 
-  const chartConfig = {
+  const chartConfig: Record<string, { label: string; color: string }> = {
     sentiment: { label: 'Sentiment', color: 'hsl(var(--chart-2))' },
     ...data.emotionBreakdown.reduce(
       (acc, curr, index) => {
@@ -178,7 +174,7 @@ export function DashboardView({ data }: DashboardViewProps) {
                 tickMargin={8}
                 fontSize={12}
               />
-              <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+              <ChartTooltip />
               <Area
                 type="monotone"
                 dataKey="sentiment"
@@ -219,10 +215,7 @@ export function DashboardView({ data }: DashboardViewProps) {
                 tickMargin={8}
                 fontSize={12}
               />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dot" />}
-              />
+              <ChartTooltip />
               <Bar dataKey="count" radius={4}>
                 {data.emotionBreakdown.map((entry, index) => (
                   <Cell

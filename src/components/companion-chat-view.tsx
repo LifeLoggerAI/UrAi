@@ -53,8 +53,8 @@ export function CompanionChatView() {
         message: userMessage.content,
       });
 
-      if (result.error || !result.data) {
-        throw new Error(result.error || 'No response from companion.');
+      if (!result.success || !result.data) {
+        throw new Error(result.success ? 'No response from companion.' : result.error);
       }
 
       if (result.data.response) {

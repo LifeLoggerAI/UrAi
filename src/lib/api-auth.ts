@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getAuth } from 'firebase-admin/auth';
 import type { DecodedIdToken } from 'firebase-admin/auth';
-import { app } from '@/lib/firebase-admin';
-
-// Initialize auth only once, outside the handler
-const auth = getAuth(app);
+import { auth } from '@/lib/firebase-admin';
 
 export interface AuthenticatedRequest extends NextRequest {
   user: DecodedIdToken;

@@ -26,19 +26,21 @@ async function toWav(
   rate = 24000,
   sampleWidth = 2
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     const writer = new wav.Writer({
       channels,
       sampleRate: rate,
       bitDepth: sampleWidth * 8,
     });
 
-    const bufs: any[] = [];
+    const bufs: Buffer[] = [];
     writer.on('error', reject);
-    writer.on('data', d => bufs.push(d));
-    writer.on('end', () =>
-      resolve(Buffer.concat(bufs).toString('base64'))
-    );
+    writer.on('data', (d: Uint8Array | string) => {
+      bufs.push(Buffer.isBuffer(d) ? d : Buffer.from(d));
+    });
+    writer.on('end', () => {
+      resolve(Buffer.concat(bufs).toString('base64'));
+    });
 
     writer.write(pcmData);
     writer.end();

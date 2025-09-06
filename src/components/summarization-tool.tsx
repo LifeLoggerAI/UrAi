@@ -40,7 +40,7 @@ export function SummarizationTool() {
 
     try {
       const result = await summarizeWeekActionServer();
-      if (result.error) {
+      if (!result.success) {
         toast({
           variant: 'destructive',
           title: 'Summarization Failed',

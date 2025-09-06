@@ -42,7 +42,7 @@ const mockUser = {
   reload: async () => {},
   toJSON: () => ({}),
   delete: async () => {},
-} as User;
+} as unknown as User;
 
 interface AuthContextType {
   user: User | null;
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Seed demo data once
       if (!hasSeeded.current) {
         hasSeeded.current = true;
-        seedDemoData();
+        seedDemoData(DEMO_USER_ID);
       }
       
       return;
