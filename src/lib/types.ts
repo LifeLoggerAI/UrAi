@@ -224,10 +224,14 @@ export const PermissionsSchema = z.object({
   acceptedTermsVersion: z.string(),
 });
 export type Permissions = z.infer<typeof PermissionsSchema>;
+ 
+export const ChatRoleSchema = z.enum(['system', 'user', 'assistant']);
 
 export const ChatMessageSchema = z.object({
-  role: z.enum(['user', 'model']),
+  id: z.string().optional(),
+  role: ChatRoleSchema,
   content: z.string(),
+  timestamp: z.number().optional(),
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
@@ -323,7 +327,9 @@ export const CompanionChatInputSchema = z.object({
 export type CompanionChatInput = z.infer<typeof CompanionChatInputSchema>;
 
 export const CompanionChatOutputSchema = z.object({
-  response: z.string().describe('Companion response'),
+  reply: z.string(),
+  confidence: z.number().min(0).max(1).optional(),
+  meta: z.record(z.any()).optional(),
 });
 export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
 

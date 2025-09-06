@@ -35,8 +35,8 @@ async function toWav(
 
     const bufs: Buffer[] = [];
     writer.on('error', reject);
-    writer.on('data', (d: Uint8Array | string) => {
-      bufs.push(Buffer.isBuffer(d) ? d : Buffer.from(d));
+    writer.on('data', (d: Buffer) => {
+      bufs.push(d);
     });
     writer.on('end', () => {
       resolve(Buffer.concat(bufs).toString('base64'));

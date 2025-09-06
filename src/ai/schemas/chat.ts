@@ -1,17 +1,8 @@
-import { z } from "zod";
-
-export const ChatMessageSchema = z.object({
-  role: z.enum(["system", "user", "assistant"]),
-  content: z.string(),
-  timestamp: z.number().optional(),
-  meta: z.record(z.any()).optional(),
-});
-
-export const CompanionChatOutputSchema = z.object({
-  reply: z.string(),
-  moodTag: z.string().optional(),
-  insights: z.array(z.string()).optional(),
-});
-
-export type ChatMessage = z.infer<typeof ChatMessageSchema>;
-export type CompanionChatOutput = z.infer<typeof CompanionChatOutputSchema>;
+export {
+  ChatMessageSchema,
+  CompanionChatOutputSchema,
+} from '@/lib/types';
+export type {
+  ChatMessage,
+  CompanionChatOutput,
+} from '@/lib/types';

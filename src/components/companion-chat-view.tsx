@@ -54,13 +54,13 @@ export function CompanionChatView() {
       });
 
       if (!result.success || !result.data) {
-        throw new Error(result.success ? 'No response from companion.' : result.error);
+        throw new Error(result.success ? 'No reply from companion.' : result.error);
       }
 
-      if (result.data.response) {
+      if (result.data.reply) {
         const modelMessage: ChatMessage = {
           role: 'model',
-          content: result.data.response,
+          content: result.data.reply,
         };
         setMessages(prev => [...prev, modelMessage]);
       }

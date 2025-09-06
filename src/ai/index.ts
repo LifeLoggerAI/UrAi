@@ -4,7 +4,7 @@
  */
 
 // Export all existing flows
-export { companionChat } from './flows/companion-chat';
+export { default as companionPrompt } from './flows/companion-chat';
 export { analyzeCameraImage } from './flows/analyze-camera-image';
 export { analyzeDream } from './flows/analyze-dream';
 export { analyzeTextSentiment } from './flows/analyze-text-sentiment';

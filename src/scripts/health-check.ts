@@ -8,7 +8,7 @@
 import { generateSpeech } from '@/ai/flows/generate-speech';
 import { transcribeAudio } from '@/ai/flows/transcribe-audio';
 import { analyzeDream } from '@/ai/flows/analyze-dream';
-import { companionChat } from '@/ai/flows/companion-chat';
+import companionPrompt from '@/ai/flows/companion-chat';
 
 interface HealthCheckResult {
   flow: string;
@@ -127,17 +127,17 @@ async function testCompanionChat(): Promise<HealthCheckResult> {
   const flow = 'companion-chat';
 
   try {
-    const result = await companionChat({
+    const { output } = await companionPrompt({
       message: 'Hello, how are you today?',
       history: [],
     });
 
     const responseTime = Date.now() - startTime;
     const hasValidShape =
-      result &&
-      typeof result === 'object' &&
-      'response' in result &&
-      typeof result.response === 'string';
+      output &&
+      typeof output === 'object' &&
+      'reply' in output &&
+      typeof output.reply === 'string';
 
     return {
       flow,
