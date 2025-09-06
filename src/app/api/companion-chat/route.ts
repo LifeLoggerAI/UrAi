@@ -1,6 +1,6 @@
 
 import { NextResponse } from 'next/server';
-import { companionChat } from '@/ai';
+import companionPrompt from '@/ai/flows/companion-chat';
 import { withApiAuth, type AuthenticatedRequest } from '@/lib/api-auth';
 import { CompanionChatInputSchema } from '@/lib/types';
 
@@ -15,9 +15,10 @@ export const POST = withApiAuth(async (req: AuthenticatedRequest) => {
       return NextResponse.json({ error: 'Invalid input', details: validatedInput.error.format() }, { status: 400 });
     }
 
-    const result = await companionChat(validatedInput.data);
-    
-    return NextResponse.json({ response: result.response });
+    const { history, message } = validatedInput.data;
+    const { output } = await companionPrompt({ history, message });
+
+    return NextResponse.json(output);
   } catch (e) {
     console.error('API Companion Chat failed:', e);
     const errorMessage = e instanceof Error ? e.message : 'Internal server error';

@@ -1,41 +1,17 @@
 'use server';
 
+import { z } from 'zod';
+import { ChatMessageSchema, CompanionChatOutputSchema } from '@/lib/types';
 import { ai } from '@/ai/genkit';
-import {
-  CompanionChatInput,
-  CompanionChatInputSchema,
-  CompanionChatOutput,
-  CompanionChatOutputSchema,
-} from '@/lib/types';
 
-export async function companionChat(
-  input: CompanionChatInput
-): Promise<CompanionChatOutput> {
-  const history = input.history
-    .map(msg => `${msg.role}: ${msg.content}`)
-    .join('\n');
-  const { text } = await ai.generate({
-    model: 'gemini-1.5-flash',
-    prompt: [
-      {
-        text: `${history}\nuser: ${input.message}`,
-      },
-    ],
-  });
-  return { response: text };
-}
-
-const companionChatFlow = ai.defineFlow(
-  {
-    name: 'companionChatFlow',
-    inputSchema: CompanionChatInputSchema,
-    outputSchema: CompanionChatOutputSchema,
+const companionPrompt = ai.definePrompt({
+  name: 'companionPrompt',
+  input: { schema: z.object({ history: z.array(ChatMessageSchema), message: z.string() }) },
+  output: { schema: CompanionChatOutputSchema },
+  prompt: ({ history, message }) => {
+    const historyText = history.map(m => `${m.role}: ${m.content}`).join('\n');
+    return `${historyText}\nuser: ${message}`;
   },
-  async (input: CompanionChatInput) => {
-    const response = await companionChat(input);
-    return response;
-  }
-);
+});
 
-export default companionChat;
-
+export default companionPrompt;

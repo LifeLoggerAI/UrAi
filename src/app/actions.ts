@@ -57,7 +57,7 @@ export async function analyzeDream(input: any): Promise<ActionResult<any>> {
 export async function companionChat(input: any): Promise<ActionResult<any>> {
   try {
     // Placeholder implementation
-    return ok({ response: "Hello! I'm your AI companion." });
+    return ok({ reply: "Hello! I'm your AI companion." });
   } catch (e) {
     return fail(e);
   }
