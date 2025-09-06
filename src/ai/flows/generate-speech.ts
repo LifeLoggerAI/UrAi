@@ -16,6 +16,7 @@ import {
 import { z } from 'zod';
 import wav from 'wav';
 import { googleAI } from '@genkit-ai/googleai';
+import { Buffer } from 'node:buffer';
 
 /**
  * Converts raw PCM audio data into a Base64-encoded WAV format.
@@ -27,7 +28,7 @@ async function toWav(
   sampleWidth = 2
 ): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const writer = new wav.Writer({
+    const writer: NodeJS.ReadWriteStream = new wav.Writer({
       channels,
       sampleRate: rate,
       bitDepth: sampleWidth * 8,
@@ -35,9 +36,11 @@ async function toWav(
 
     const bufs: Buffer[] = [];
     writer.on('error', reject);
-    writer.on('data', (d: Buffer) => {
-      bufs.push(d);
+
+    writer.on('data', (d: Buffer | Uint8Array) => {
+      bufs.push(Buffer.isBuffer(d) ? d : Buffer.from(d));
     });
+
     writer.on('end', () => {
       resolve(Buffer.concat(bufs).toString('base64'));
     });
