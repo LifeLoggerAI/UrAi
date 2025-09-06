@@ -1,7 +1,3 @@
-/**
- * Temporary stub for generate-storyboard to satisfy imports during build.
- * Replace with your real storyboard generator later.
- */
 export type GenerateStoryboardInput = {
   transcript?: string;
   mood?: string;
@@ -41,44 +37,25 @@ export async function generateStoryboard(
     (input?.eventDescription ?? '').trim() ||
     (input?.text ?? '').trim();
 
-  const summary = raw ? raw.slice(0, 160) : 'Storyboard stub';
+  if (!raw) return null;
 
-  const scenes: StoryScene[] = [
-    {
-      sceneHeader: 'INT. OPENING - DAY',
-      shots: [
-        { description: 'Wide shot establishing the setting', durationSec: 3 },
-        { description: 'Close-up on key subject', durationSec: 2 }
-      ]
-    },
-    {
-      sceneHeader: 'EXT. BEAT 1 - DAY',
-      shots: [
-        { description: 'Action moment / key event', durationSec: 4 },
-        { description: 'Reaction shot / emotional cue', durationSec: 3 }
-      ]
-    },
-    {
-      sceneHeader: 'INT. BEAT 2 - EVENING',
-      shots: [
-        { description: 'Conflict or shift escalates', durationSec: 4 },
-        { description: 'Cutaway to detail symbol', durationSec: 2 }
-      ]
-    },
-    {
-      sceneHeader: 'EXT. CLOSING - NIGHT',
-      shots: [
-        { description: 'Resolve / denouement', durationSec: 3 },
-        { description: 'Final hold on motif', durationSec: 2 }
-      ]
-    }
-  ];
+  const sentences = raw
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const scenes: StoryScene[] = sentences.map((sentence, idx) => ({
+    sceneHeader: `SCENE ${idx + 1}`,
+    shots: [{ description: sentence, durationSec: 3 }],
+  }));
+
+  const summary = sentences.slice(0, 2).join(' ');
 
   const structuredData = {
-    location: { name: 'Default Location', environment: 'Indoor/Outdoor', lighting: 'Mixed' },
-    people: [{ name: 'Protagonist' }],
+    location: { name: 'Unknown', environment: 'unknown', lighting: 'unknown' },
+    people: [],
     props: [],
-    themes: []
+    themes: [],
   };
 
   return { scenes, summary, structuredData, validationIssues: [] };

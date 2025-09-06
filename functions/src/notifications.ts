@@ -12,7 +12,7 @@ const db = admin.firestore();
 // FCM server key for push notifications
 const fcmServerKey = defineString("FCM_SERVER_KEY");
 
-interface NotificationData {
+export interface NotificationData {
   uid: string;
   title: string;
   body: string;
@@ -45,31 +45,32 @@ export const sendNotification = onCall(async (request) => {
   }
 
   try {
-    // Store notification in Firestore
-    const notificationRef = db.collection(`notifications/${notificationData.uid}/items`);
-    const notification = {
-      ...notificationData,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      read: false,
-      sent: false,
-    };
-
-    const docRef = await notificationRef.add(notification);
-
-    // If not scheduled for later, send immediately
-    if (!notificationData.scheduleFor || notificationData.scheduleFor <= Date.now()) {
-      await sendPushNotification(notificationData);
-      
-      // Mark as sent
-      await docRef.update({ sent: true });
-    }
-
-    return { success: true, notificationId: docRef.id };
+    const { notificationId } = await queueNotification(notificationData);
+    return { success: true, notificationId };
   } catch (error) {
     logger.error("Error sending notification:", error);
     throw new Error("Failed to send notification");
   }
 });
+
+export async function queueNotification(notificationData: NotificationData): Promise<{ notificationId: string }> {
+  const notificationRef = db.collection(`notifications/${notificationData.uid}/items`);
+  const notification = {
+    ...notificationData,
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    read: false,
+    sent: false,
+  };
+
+  const docRef = await notificationRef.add(notification);
+
+  if (!notificationData.scheduleFor || notificationData.scheduleFor <= Date.now()) {
+    await sendPushNotification(notificationData);
+    await docRef.update({ sent: true });
+  }
+
+  return { notificationId: docRef.id };
+}
 
 /**
  * V6 Foundation: Process notification queue (triggered by Firestore writes)
