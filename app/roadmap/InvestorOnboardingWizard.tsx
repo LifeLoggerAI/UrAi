@@ -7,9 +7,9 @@ const steps = ["Profile", "Preferences", "Legal", "Finish"];
 export default function InvestorOnboardingWizard({ onComplete }) {
   const [step, setStep] = useState(0);
   const [profile, setProfile] = useState({ name: '', email: '', password: '' });
-  const [prefs, setPrefs] = useState({});
-  const [legal, setLegal] = useState({});
-  const [error, setError] = useState(null);
+  const [prefs, setPrefs] = useState({ emailNotify: false });
+  const [legal, setLegal] = useState({ accepted: false });
+  const [error, setError] = useState<string | null>(null);
 
   async function next() {
     if (step < steps.length - 1) {

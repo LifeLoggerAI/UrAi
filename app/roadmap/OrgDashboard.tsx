@@ -1,17 +1,32 @@
 
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, Dispatch, SetStateAction } from "react";
 import ResumableUpload from "../../src/app/ResumableUpload";
 
-const OrgContext = createContext(null);
+interface Org {
+  id: string;
+  name: string;
+}
+
+interface OrgContextType {
+  orgs: Org[];
+  selectedOrg: Org | undefined;
+  setSelectedOrg: Dispatch<SetStateAction<Org | undefined>>;
+}
+
+const OrgContext = createContext<OrgContextType>({
+  orgs: [],
+  selectedOrg: undefined,
+  setSelectedOrg: () => {},
+});
 
 export const useOrg = () => useContext(OrgContext);
 
 export const OrgProvider = ({ children }) => {
-  const [orgs, setOrgs] = useState([
+  const [orgs, setOrgs] = useState<Org[]>([
     { id: "org1", name: "Organization 1" },
     { id: "org2", name: "Organization 2" },
   ]);
-  const [selectedOrg, setSelectedOrg] = useState(orgs[0]);
+  const [selectedOrg, setSelectedOrg] = useState<Org | undefined>(orgs[0]);
 
   const value = { orgs, selectedOrg, setSelectedOrg };
 

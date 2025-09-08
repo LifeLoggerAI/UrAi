@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Each user can access their own user doc
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Top-level collections use `ownerUid`
+    match /dreams/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /rituals/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /timelineEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /personaEvolutions/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /soulThreads/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /socialArchetypes/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /weeklyScrolls/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /moods/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /shadowMetrics/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /obscuraPatterns/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /cognitiveStress/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /recoveryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /relationshipConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /voiceEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /dreamConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /memoryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /badges/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /notifications/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /journalEntries/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /events/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /insightMarket/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+
+    // User subcollections (under /users/{uid}/...)
+    match /users/{uid}/settings/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+    match /users/{uid}/tokens/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+
+    // Default deny for everything else
+    match /{document=**} { allow read, write: if false; }
+  }
+}
