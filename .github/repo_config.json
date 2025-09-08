@@ -1,0 +1,6 @@
+{
+  "auto_merge": true,
+  "default_merge_method": "squash",
+  "default_labels": ["infrastructure", "ci"],
+  "default_reviewers": ["@LifeLoggerAI"]
+}

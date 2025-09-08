@@ -1,0 +1,74 @@
+name: QA – Lighthouse & A11y
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Start app (Next.js)
+        run: |
+          (pnpm start &) 
+          echo "Waiting for localhost:3000..."
+          npx wait-on http://localhost:3000
+
+      - name: Install Lighthouse CLI
+        run: npm i -g lighthouse
+
+      - name: Run Lighthouse (Perf + A11y + SEO + PWA)
+        run: |
+          mkdir -p lh-artifacts
+          lighthouse http://localhost:3000 \
+            --only-categories=performance,accessibility,seo,pwa \
+            --output=json --output-path=./lh-artifacts/report.json \
+            --chrome-flags="--headless --no-sandbox"
+
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lh-artifacts/report.json
+
+      - name: Gate on min scores (90+)
+        run: |
+          node -e "
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync('./lh-artifacts/report.json','utf8'));
+          const cats=r.categories;
+          const s = k => Math.round((cats[k].score||0)*100);
+          const perf=s('performance'), a11y=s('accessibility'), seo=s('seo'), pwa=s('pwa');
+          console.log('Scores =>', {perf, a11y, seo, pwa});
+          const fails=[];
+          if(perf<90) fails.push('performance < 90');
+          if(a11y<90) fails.push('accessibility < 90');
+          if(seo<90) fails.push('seo < 90');
+          if(pwa<90) fails.push('pwa < 90');
+          if(fails.length){ console.error('QUALITY GATES FAILED:', fails.join(', ')); process.exit(1); }
+          "

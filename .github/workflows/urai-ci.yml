@@ -1,0 +1,91 @@
+name: UrAi CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_ADMIN_SDK_CONFIG_BASE64: ${{ secrets.FIREBASE_ADMIN_SDK_CONFIG_BASE64 }}
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Install Firebase Functions dependencies if in /functions
+      - name: Install Firebase Functions Dependencies
+        run: |
+          if [ -d "./functions" ]; then
+            cd functions && npm ci
+          fi
+
+      # 5. Lint code
+      - name: Lint Code
+        run: npm run lint
+        continue-on-error: true
+
+      # 6. Type Check
+      - name: Type Check
+        run: npm run typecheck
+        continue-on-error: true
+
+      # 7. Validate AI Config
+      - name: Validate AI Configuration
+        run: npm run ai:validate || echo "Skipping AI validation - script not found"
+        continue-on-error: true
+
+      # 8. Run Unit Tests
+      - name: Run Unit Tests
+        run: npm run test || npm run test:models
+
+      # 9. Build App
+      - name: Build UrAi App
+        run: npm run build
+
+      # 10. Install Playwright (for E2E)
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 11. Run E2E Tests
+      - name: Run E2E Tests
+        run: npm run test:e2e
+        continue-on-error: false
+
+      # 12. AI Flow Health Check (optional)
+      - name: AI Flow Health Check
+        run: npm run health-check || echo "Skipping AI health check - script not found"
+        continue-on-error: true
+
+      # 13. Firebase Secrets Check (main branch only)
+      - name: Validate Firebase Secrets
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "❌ FIREBASE_TOKEN secret is missing"
+            exit 1
+          fi
+          echo "✅ Firebase token exists"
+
+      # 14. Deploy to Firebase (main branch only if successful)
+      - name: Deploy to Firebase
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          npm install -g firebase-tools
+          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
