@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-npm run assets:ci
-npm run assets:validate
-git add public/assets/*/manifests/*.manifest.json

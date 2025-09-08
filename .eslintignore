@@ -1,9 +1,0 @@
-functions/
-src/functions/
-src/lifelogger-cleancodebase/
-lifelogger-clean/
-dataconnect-generated/
-.next/
-out/
-node_modules/
-*.d.ts

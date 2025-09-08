@@ -1,1 +1,0 @@
-<content of functions_index.js>

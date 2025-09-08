@@ -1,1 +1,0 @@
-Implement transfer-learning initialization for v9 neural systems
