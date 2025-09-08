@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { mockLogin } from "../auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const steps = ["Profile", "Preferences", "Legal", "Finish"];
 
@@ -16,12 +16,12 @@ export default function InvestorOnboardingWizard({ onComplete }) {
       setStep(step + 1);
     } else {
       try {
-        const { user, token } = await mockLogin(profile.email, profile.password);
-        // In a real app, you would probably store the token in localStorage or a cookie
-        console.log("Login successful", { user, token });
+        const auth = getAuth();
+        const { user } = await createUserWithEmailAndPassword(auth, profile.email, profile.password);
+        console.log("User created successfully", { user });
         onComplete({ profile, prefs, legal, user });
       } catch (err) {
-        setError("Login failed. Please try again.");
+        setError("Failed to create user. Please try again.");
         console.error(err);
       }
     }

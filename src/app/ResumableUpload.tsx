@@ -1,54 +1,39 @@
 
 import React, { useState } from 'react';
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 
 const ResumableUpload = () => {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadId, setUploadId] = useState(null);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const startUpload = async () => {
+  const startUpload = () => {
     if (!file) return;
 
     setIsUploading(true);
-    const newUploadId = Date.now().toString();
-    setUploadId(newUploadId);
-    const chunkSize = 1024 * 1024; // 1MB
-    let offset = 0;
+    const storage = getStorage();
+    const storageRef = ref(storage, 'uploads/' + file.name);
 
-    while (offset < file.size) {
-      const chunk = file.slice(offset, offset + chunkSize);
-      const formData = new FormData();
-      formData.append('chunk', chunk);
-      formData.append('uploadId', newUploadId);
-      formData.append('offset', offset.toString());
-      formData.append('totalSize', file.size.toString());
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-      try {
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!res.ok) {
-          throw new Error('Upload failed');
-        }
-
-        offset += chunk.size;
-        setProgress(Math.round((offset / file.size) * 100));
-      } catch (error) {
-        console.error('Upload error:', error);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(progress);
+      },
+      (error) => {
+        console.error("Upload failed:", error);
         setIsUploading(false);
-        return;
+      },
+      () => {
+        console.log("Upload complete");
+        setIsUploading(false);
       }
-    }
-
-    setIsUploading(false);
-    console.log('Upload complete');
+    );
   };
 
   return (
@@ -61,7 +46,7 @@ const ResumableUpload = () => {
       {isUploading && (
         <div>
           <progress value={progress} max="100" />
-          <span>{progress}%</span>
+          <span>{Math.round(progress)}%</span>
         </div>
       )}
     </div>

@@ -3,6 +3,11 @@ import React, { useState } from "react";
 import InvestorOnboardingWizard from "./roadmap/InvestorOnboardingWizard";
 import OrgDashboard from "./roadmap/OrgDashboard";
 import { OrgProvider } from "./roadmap/OrgDashboard";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../src/app/firebaseConfig";
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 export default function App() {
   const [user, setUser] = useState(null);
