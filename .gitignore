@@ -1,39 +1,21 @@
-# Node & build
+# Node / tooling
 node_modules/
+.pnpm-store/
+.turbo/
+# Next.js
 .next/
 out/
+.vercel/
+# Coverage / dist
+coverage/
 dist/
-build/
-
-# Local env
-.env
-.env.local
-.env.*.local
-
-# Editor
-.vscode/
-.idea/
-*.sublime-workspace
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
+# Firebase local/debug
+.firebase/
+firebase-debug.log
+firestore-debug.log
 # OS
 .DS_Store
-
-# Firebase / functions
-functions/node_modules/
-functions/.runtime/
-
-# Large or generated media (keep placeholders in public/placeholders)
-public/assets/videos/
-!public/placeholders/
-
-# Misc
-coverage/
-
-# Test artifacts
-playwright-report/
-test-results/
+Thumbs.db
+# Env (keep a template instead)
+.env*
+!env.local.template

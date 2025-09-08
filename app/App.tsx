@@ -5,6 +5,7 @@ import OrgDashboard from "./roadmap/OrgDashboard";
 import { OrgProvider } from "./roadmap/OrgDashboard";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../src/app/firebaseConfig";
+import ResumableUpload from "../src/app/ResumableUpload";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -20,6 +21,7 @@ export default function App() {
     <OrgProvider>
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-4">Investor Portal</h1>
+        <ResumableUpload />
         {!user ? (
           <InvestorOnboardingWizard onComplete={handleOnboardingComplete} />
         ) : (
