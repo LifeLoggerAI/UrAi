@@ -1,7 +1,7 @@
 
 export const mockLogin = async (email, password) => {
   // In a real application, you would make a call to your authentication API
-  console.log(`Logging in with ${email} and ${password}`);
+  console.log(`Logging in with ${email}`);
 
   // Simulate a network request
   await new Promise(resolve => setTimeout(resolve, 1000));
