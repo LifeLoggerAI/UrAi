@@ -1,26 +1,42 @@
+
 import React, { useState } from "react";
+import { mockLogin } from "../auth";
 
 const steps = ["Profile", "Preferences", "Legal", "Finish"];
 
 export default function InvestorOnboardingWizard({ onComplete }) {
   const [step, setStep] = useState(0);
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState({ name: '', email: '', password: '' });
   const [prefs, setPrefs] = useState({});
   const [legal, setLegal] = useState({});
+  const [error, setError] = useState(null);
 
-  function next() {
-    if (step < steps.length - 1) setStep(step + 1);
-    else onComplete({ profile, prefs, legal });
+  async function next() {
+    if (step < steps.length - 1) {
+      setStep(step + 1);
+    } else {
+      try {
+        const { user, token } = await mockLogin(profile.email, profile.password);
+        // In a real app, you would probably store the token in localStorage or a cookie
+        console.log("Login successful", { user, token });
+        onComplete({ profile, prefs, legal, user });
+      } catch (err) {
+        setError("Login failed. Please try again.");
+        console.error(err);
+      }
+    }
   }
 
   return (
     <div className="p-6 bg-white rounded-xl shadow">
       <h2 className="text-2xl font-bold mb-2">Investor Onboarding</h2>
+      {error && <div className="text-red-500 mb-4">{error}</div>}
       <div className="mb-4">Step {step + 1}: {steps[step]}</div>
       {step === 0 && (
         <div>
           <label>Name: <input onChange={e => setProfile({ ...profile, name: e.target.value })} /></label><br />
-          <label>Email: <input onChange={e => setProfile({ ...profile, email: e.target.value })} /></label>
+          <label>Email: <input type="email" onChange={e => setProfile({ ...profile, email: e.target.value })} /></label><br/>
+          <label>Password: <input type="password" onChange={e => setProfile({ ...profile, password: e.target.value })} /></label>
         </div>
       )}
       {step === 1 && (
