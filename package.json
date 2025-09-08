@@ -9,7 +9,9 @@
     "lint": "eslint --ext .ts,.tsx src || true",
     "typecheck": "tsc --noEmit",
     "ci": "npm ci && npm run typecheck && npm run lint && npm run build",
-    "health": "bash ./scripts/baseline_health_check.sh"
+    "health": "bash ./scripts/baseline_health_check.sh",
+    "clean": "rimraf .next node_modules .turbo",
+    "reinstall": "npm run clean && npm i"
   },
   "dependencies": {
     "firebase": "^12.2.1"
