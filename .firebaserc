@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "urai-4dc1d"
-  }
+    "default": "urai-4dc1d",
+    "prod": "urai-4dc1d"
+  },
+  "targets": {},
+  "etags": {}
 }

@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
-import InvestorOnboardingWizard from "./roadmap/InvestorOnboardingWizard";
-import OrgDashboard from "./roadmap/OrgDashboard";
-import { OrgProvider } from "./roadmap/OrgDashboard";
+import InvestorOnboardingWizard from "@/components/InvestorOnboardingWizard";
+import OrgDashboard from "@/components/OrgDashboard";
+import { OrgProvider } from "@/components/OrgDashboard";
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../src/app/firebaseConfig";
-import ResumableUpload from "../src/app/ResumableUpload";
+import { firebaseConfig } from "./firebaseConfig";
+import ResumableUpload from "@/components/ResumableUpload";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
