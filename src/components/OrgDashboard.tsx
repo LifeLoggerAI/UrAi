@@ -1,6 +1,6 @@
 
 import React, { useState, useContext, createContext, Dispatch, SetStateAction } from "react";
-import ResumableUpload from "../../src/app/ResumableUpload";
+import ResumableUpload from "@/components/ResumableUpload";
 
 interface Org {
   id: string;

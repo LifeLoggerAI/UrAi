@@ -1,6 +1,6 @@
 'use client'
 
-import OrgDashboard, { OrgProvider } from '@/app/roadmap/OrgDashboard';
+import OrgDashboard, { OrgProvider } from '@/components/OrgDashboard';
 
 export default function Home() {
   return (
