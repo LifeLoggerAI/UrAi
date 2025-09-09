@@ -1,0 +1,70 @@
+# URAI Master Project Board Configuration
+
+phases:
+  - V7: Core Engine & Foundation
+    columns:
+      - To Do
+      - In Progress
+      - Review
+      - Done
+    issues:
+      - Core Engine architecture
+      - Foundational APIs & data models
+      - Initial onboarding & compliance docs
+      - QA & regression plan
+
+  - V8: Pro Companion & Memory Expansion
+    columns:
+      - To Do
+      - In Progress
+      - Review
+      - Done
+    issues:
+      - Memory Engine & Privacy
+      - Companion UI & Customization
+      - Timeline & Journal Features
+      - AI Context & Memory Use
+      - QA & Regression (V8)
+      - Docs & Onboarding (V8)
+
+  - V9: Collective Constellations & Community
+    columns:
+      - To Do
+      - In Progress
+      - Review
+      - Done
+    issues:
+      - Community Forum & Messaging
+      - Group AR/VR & Real-Time Sync
+      - Profiles, Moderation & Notifications
+      - Constellation Visualizer & Onboarding
+      - QA, Docs & Support (V9)
+
+  - V10: Marketplace & Economy
+    columns:
+      - To Do
+      - In Progress
+      - Review
+      - Done
+    issues:
+      - Marketplace Backend & API
+      - Marketplace UI & Experience
+      - Economy Engine & Payments
+      - Marketplace Moderation & Compliance
+      - QA, Docs & Onboarding (V10)
+
+automations:
+  - Move issue to "In Progress" when assigned or work started
+  - Move issue to "Review" when PR linked or label "review" added
+  - Move issue to "Done" when closed or PR merged
+  - Notify assignees and reviewers when blocking issues are added
+  - Weekly status summary for board and milestones
+
+review_procedures:
+  - Weekly roadmap review meeting (auto-reminder)
+  - Checklist update on milestone completion
+  - Accessibility, privacy, compliance checks on "Review"
+
+onboarding:
+  - Add new contributors to board and checklist
+  - Provide .md checklist in repo root for self-tracking
