@@ -1,21 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  async redirects() {
-    return [
-      { source: '/', destination: '/home', permanent: false },
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: '/_next/:path*',
-        headers: [
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET, OPTIONS' },
-        ],
-      },
-    ];
-  },
-};
-
+const nextConfig = { reactStrictMode: true, images: { domains: [] } };
 export default nextConfig;
