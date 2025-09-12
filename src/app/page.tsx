@@ -1,7 +1,5 @@
-// src/app/page.tsx
-import { redirect } from 'next/navigation';
+import HomeScene from "@/components/HomeScene";
 
-export default function Index() {
-  redirect('/home');
-  return null;
+export default function Page() {
+  return <HomeScene />;
 }
