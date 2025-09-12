@@ -1,0 +1,23 @@
+Must-have (V1)
+
+fallback-orb-neutral-01.png — baseline idle
+
+fallback-orb-shadow-01.png — privacy/low-detail dim state
+
+fallback-orb-healing-01.png — inner bloom/glow (healing)
+
+fallback-orb-threshold-01.png — subtle fracture/tension state
+
+fallback-orb-rest-01.png — dimmed/resting state
+
+fallback-orb-energy-01.png — active/engaged (slightly brighter core)
+
+fallback-orb-voice-01.png — listening/talking state (soft concentric ripple ring baked in)
+
+fallback-orb-notify-01.png — notification ping (single faint outer ring baked in)
+
+Nice-to-have (V1.5+)
+
+fallback-orb-forecast-01.png — forecast/highlight ring
+
+fallback-orb-select-01.png — selected/active focus ring
