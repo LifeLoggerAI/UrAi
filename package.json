@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
-    "firebase": "^12.2.1"
+    "firebase": "^12.2.1",
+    "lucide-react": "^0.544.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

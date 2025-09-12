@@ -1,7 +1,8 @@
+"use client";
 import React from 'react';
-import MainLayout from '../components/layout/MainLayout';
-import Button from '../components/ui/Button';
-import Chip from '../components/ui/Chip';
+import MainLayout from '@/components/layout/MainLayout';
+import Button from '@/components/ui/Button';
+import Chip from '@/components/ui/Chip';
 
 export default function HomePage() {
   return (
