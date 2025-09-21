@@ -29,6 +29,47 @@ service cloud.firestore {
     match /events/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
     match /insightMarket/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
 
+    // Feedback + bug capture live outside auth to make onboarding frictionless
+    match /feedback/{id} {
+      allow read: if false;
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          "message",
+          "email",
+          "created_at",
+          "source",
+          "user_agent"
+        ]) &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() <= 2000 &&
+        (!request.resource.data.email || request.resource.data.email == null || (request.resource.data.email is string && request.resource.data.email.size() <= 320)) &&
+        request.resource.data.created_at is timestamp &&
+        (!request.resource.data.source || request.resource.data.source == null || (request.resource.data.source is string && request.resource.data.source.size() <= 500)) &&
+        (!request.resource.data.user_agent || request.resource.data.user_agent == null || (request.resource.data.user_agent is string && request.resource.data.user_agent.size() <= 1000));
+    }
+
+    match /bug_reports/{id} {
+      allow read: if false;
+      allow create: if
+        request.resource.data.keys().hasOnly([
+          "description",
+          "email",
+          "created_at",
+          "route",
+          "user_agent",
+          "console_log",
+          "local_storage_keys"
+        ]) &&
+        request.resource.data.description is string &&
+        request.resource.data.description.size() <= 4000 &&
+        (!request.resource.data.email || request.resource.data.email == null || (request.resource.data.email is string && request.resource.data.email.size() <= 320)) &&
+        request.resource.data.created_at is timestamp &&
+        (!request.resource.data.route || request.resource.data.route == null || (request.resource.data.route is string && request.resource.data.route.size() <= 500)) &&
+        (!request.resource.data.user_agent || request.resource.data.user_agent == null || (request.resource.data.user_agent is string && request.resource.data.user_agent.size() <= 1000)) &&
+        (!request.resource.data.console_log || request.resource.data.console_log == null || (request.resource.data.console_log is string && request.resource.data.console_log.size() <= 20000)) &&
+        (!request.resource.data.local_storage_keys || request.resource.data.local_storage_keys == null || (request.resource.data.local_storage_keys is string && request.resource.data.local_storage_keys.size() <= 5000));
+    }
+
     // User subcollections (under /users/{uid}/...)
     match /users/{uid}/settings/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
     match /users/{uid}/tokens/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
