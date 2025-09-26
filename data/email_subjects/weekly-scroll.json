@@ -1,0 +1,20 @@
+[
+  {"flow": "weekly-scroll", "language": "en", "tone": "curiosity", "subject_line": "What the UrAi community discovered this week"},
+  {"flow": "weekly-scroll", "language": "en", "tone": "clarity", "subject_line": "Your UrAi Weekly Scroll for {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "en", "tone": "urgency", "subject_line": "Don’t miss this week’s UrAi experiments"},
+  {"flow": "weekly-scroll", "language": "es", "tone": "curiosity", "subject_line": "Lo que descubrió la comunidad UrAi esta semana"},
+  {"flow": "weekly-scroll", "language": "es", "tone": "clarity", "subject_line": "Tu Scroll semanal de UrAi: {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "es", "tone": "urgency", "subject_line": "No te pierdas los experimentos UrAi de esta semana"},
+  {"flow": "weekly-scroll", "language": "pt", "tone": "curiosity", "subject_line": "O que a comunidade UrAi descobriu nesta semana"},
+  {"flow": "weekly-scroll", "language": "pt", "tone": "clarity", "subject_line": "Seu Scroll semanal UrAi: {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "pt", "tone": "urgency", "subject_line": "Não perca os experimentos UrAi desta semana"},
+  {"flow": "weekly-scroll", "language": "fr", "tone": "curiosity", "subject_line": "Ce que la communauté UrAi a révélé cette semaine"},
+  {"flow": "weekly-scroll", "language": "fr", "tone": "clarity", "subject_line": "Votre Scroll hebdomadaire UrAi — {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "fr", "tone": "urgency", "subject_line": "Ne manquez pas les expériences UrAi de la semaine"},
+  {"flow": "weekly-scroll", "language": "hi", "tone": "curiosity", "subject_line": "इस सप्ताह UrAi समुदाय ने क्या खोजा"},
+  {"flow": "weekly-scroll", "language": "hi", "tone": "clarity", "subject_line": "आपका UrAi साप्ताहिक Scroll — {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "hi", "tone": "urgency", "subject_line": "इस सप्ताह के UrAi प्रयोग न चूकें"},
+  {"flow": "weekly-scroll", "language": "zh", "tone": "curiosity", "subject_line": "本周 UrAi 社区的新发现"},
+  {"flow": "weekly-scroll", "language": "zh", "tone": "clarity", "subject_line": "你的 UrAi 每周速览 — {{week_range}}"},
+  {"flow": "weekly-scroll", "language": "zh", "tone": "urgency", "subject_line": "别错过本周的 UrAi 实验"}
+]

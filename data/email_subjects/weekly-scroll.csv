@@ -1,0 +1,19 @@
+flow,language,tone,subject_line
+weekly-scroll,en,curiosity,What the UrAi community discovered this week
+weekly-scroll,en,clarity,Your UrAi Weekly Scroll for {{week_range}}
+weekly-scroll,en,urgency,Don’t miss this week’s UrAi experiments
+weekly-scroll,es,curiosity,Lo que descubrió la comunidad UrAi esta semana
+weekly-scroll,es,clarity,Tu Scroll semanal de UrAi: {{week_range}}
+weekly-scroll,es,urgency,No te pierdas los experimentos UrAi de esta semana
+weekly-scroll,pt,curiosity,O que a comunidade UrAi descobriu nesta semana
+weekly-scroll,pt,clarity,Seu Scroll semanal UrAi: {{week_range}}
+weekly-scroll,pt,urgency,Não perca os experimentos UrAi desta semana
+weekly-scroll,fr,curiosity,Ce que la communauté UrAi a révélé cette semaine
+weekly-scroll,fr,clarity,Votre Scroll hebdomadaire UrAi — {{week_range}}
+weekly-scroll,fr,urgency,Ne manquez pas les expériences UrAi de la semaine
+weekly-scroll,hi,curiosity,इस सप्ताह UrAi समुदाय ने क्या खोजा
+weekly-scroll,hi,clarity,आपका UrAi साप्ताहिक Scroll — {{week_range}}
+weekly-scroll,hi,urgency,इस सप्ताह के UrAi प्रयोग न चूकें
+weekly-scroll,zh,curiosity,本周 UrAi 社区的新发现
+weekly-scroll,zh,clarity,你的 UrAi 每周速览 — {{week_range}}
+weekly-scroll,zh,urgency,别错过本周的 UrAi 实验

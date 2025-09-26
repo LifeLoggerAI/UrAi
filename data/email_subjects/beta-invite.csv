@@ -1,0 +1,19 @@
+flow,language,tone,subject_line
+beta-invite,en,exclusivity,{{first_name}}, you’re on the list for {{beta_feature_name}}
+beta-invite,en,clarity,Instructions for your {{beta_feature_name}} early access
+beta-invite,en,urgency,Activate {{beta_feature_name}} before the window closes {{access_window}}
+beta-invite,es,exclusivity,{{first_name}}, estás en la lista para {{beta_feature_name}}
+beta-invite,es,clarity,Instrucciones para tu acceso anticipado a {{beta_feature_name}}
+beta-invite,es,urgency,Activa {{beta_feature_name}} antes de que cierre {{access_window}}
+beta-invite,pt,exclusivity,{{first_name}}, você está na lista do {{beta_feature_name}}
+beta-invite,pt,clarity,Passo a passo para acessar antes o {{beta_feature_name}}
+beta-invite,pt,urgency,Ative o {{beta_feature_name}} antes do fim de {{access_window}}
+beta-invite,fr,exclusivity,{{first_name}}, vous êtes sélectionné·e pour {{beta_feature_name}}
+beta-invite,fr,clarity,Mode d’emploi pour accéder en avant-première à {{beta_feature_name}}
+beta-invite,fr,urgency,Activez {{beta_feature_name}} avant la fin de {{access_window}}
+beta-invite,hi,exclusivity,{{first_name}}, आपको {{beta_feature_name}} की विशेष पहुँच मिली है
+beta-invite,hi,clarity,{{beta_feature_name}} अर्ली एक्सेस के निर्देश
+beta-invite,hi,urgency,{{access_window}} से पहले {{beta_feature_name}} सक्रिय करें
+beta-invite,zh,exclusivity,{{first_name}}，你已获选体验 {{beta_feature_name}}
+beta-invite,zh,clarity,{{beta_feature_name}} 早鸟体验指南
+beta-invite,zh,urgency,请在 {{access_window}} 前激活 {{beta_feature_name}}

@@ -1,0 +1,20 @@
+[
+  {"flow": "donor-thank-you", "language": "en", "tone": "gratitude", "subject_line": "Your gift is already in motion, {{first_name}}"},
+  {"flow": "donor-thank-you", "language": "en", "tone": "clarity", "subject_line": "Receipt and impact path for your UrAi donation"},
+  {"flow": "donor-thank-you", "language": "en", "tone": "celebration", "subject_line": "You unlocked the next UrAi experiment!"},
+  {"flow": "donor-thank-you", "language": "es", "tone": "gratitude", "subject_line": "Tu contribución ya está en marcha, {{first_name}}"},
+  {"flow": "donor-thank-you", "language": "es", "tone": "clarity", "subject_line": "Recibo e impacto de tu donación a UrAi"},
+  {"flow": "donor-thank-you", "language": "es", "tone": "celebration", "subject_line": "¡Activaste el próximo experimento de UrAi!"},
+  {"flow": "donor-thank-you", "language": "pt", "tone": "gratitude", "subject_line": "Sua contribuição já está gerando impacto, {{first_name}}"},
+  {"flow": "donor-thank-you", "language": "pt", "tone": "clarity", "subject_line": "Recibo e plano de impacto da sua doação UrAi"},
+  {"flow": "donor-thank-you", "language": "pt", "tone": "celebration", "subject_line": "Você habilitou o próximo experimento UrAi!"},
+  {"flow": "donor-thank-you", "language": "fr", "tone": "gratitude", "subject_line": "Votre contribution agit déjà, {{first_name}}"},
+  {"flow": "donor-thank-you", "language": "fr", "tone": "clarity", "subject_line": "Reçu et feuille de route d’impact pour votre don UrAi"},
+  {"flow": "donor-thank-you", "language": "fr", "tone": "celebration", "subject_line": "Vous avez déclenché la prochaine expérimentation UrAi !"},
+  {"flow": "donor-thank-you", "language": "hi", "tone": "gratitude", "subject_line": "आपका सहयोग अभी असर ला रहा है, {{first_name}}"},
+  {"flow": "donor-thank-you", "language": "hi", "tone": "clarity", "subject_line": "UrAi दान की रसीद और प्रभाव योजना"},
+  {"flow": "donor-thank-you", "language": "hi", "tone": "celebration", "subject_line": "आपने अगला UrAi प्रयोग शुरू कर दिया!"},
+  {"flow": "donor-thank-you", "language": "zh", "tone": "gratitude", "subject_line": "你的支持正在发挥作用，{{first_name}}"},
+  {"flow": "donor-thank-you", "language": "zh", "tone": "clarity", "subject_line": "UrAi 捐赠回执与影响路径"},
+  {"flow": "donor-thank-you", "language": "zh", "tone": "celebration", "subject_line": "你点亮了下一场 UrAi 实验！"}
+]

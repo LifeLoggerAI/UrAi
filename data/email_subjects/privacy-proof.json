@@ -1,0 +1,20 @@
+[
+  {"flow": "privacy-proof", "language": "en", "tone": "curiosity", "subject_line": "See the latest proof of how UrAi guards your data"},
+  {"flow": "privacy-proof", "language": "en", "tone": "clarity", "subject_line": "Your privacy dashboard updates are ready"},
+  {"flow": "privacy-proof", "language": "en", "tone": "urgency", "subject_line": "Review today’s UrAi security audit highlights"},
+  {"flow": "privacy-proof", "language": "es", "tone": "curiosity", "subject_line": "Conoce cómo UrAi protege tus datos hoy"},
+  {"flow": "privacy-proof", "language": "es", "tone": "clarity", "subject_line": "Tus paneles de privacidad ya tienen novedades"},
+  {"flow": "privacy-proof", "language": "es", "tone": "urgency", "subject_line": "Revisa los puntos clave de seguridad de UrAi hoy"},
+  {"flow": "privacy-proof", "language": "pt", "tone": "curiosity", "subject_line": "Descubra como a UrAi protege seus dados agora"},
+  {"flow": "privacy-proof", "language": "pt", "tone": "clarity", "subject_line": "Seus painéis de privacidade foram atualizados"},
+  {"flow": "privacy-proof", "language": "pt", "tone": "urgency", "subject_line": "Veja os destaques da auditoria de segurança UrAi hoje"},
+  {"flow": "privacy-proof", "language": "fr", "tone": "curiosity", "subject_line": "Découvrez comment UrAi protège vos données"},
+  {"flow": "privacy-proof", "language": "fr", "tone": "clarity", "subject_line": "Votre tableau de bord confidentialité est à jour"},
+  {"flow": "privacy-proof", "language": "fr", "tone": "urgency", "subject_line": "Consultez dès aujourd’hui les points clés de l’audit UrAi"},
+  {"flow": "privacy-proof", "language": "hi", "tone": "curiosity", "subject_line": "आज जानें UrAi आपके डेटा को कैसे सुरक्षित रखता है"},
+  {"flow": "privacy-proof", "language": "hi", "tone": "clarity", "subject_line": "आपका प्राइवेसी डैशबोर्ड अपडेट हो गया है"},
+  {"flow": "privacy-proof", "language": "hi", "tone": "urgency", "subject_line": "UrAi सुरक्षा ऑडिट की मुख्य बातें अभी देखें"},
+  {"flow": "privacy-proof", "language": "zh", "tone": "curiosity", "subject_line": "看看 UrAi 今天如何守护你的数据"},
+  {"flow": "privacy-proof", "language": "zh", "tone": "clarity", "subject_line": "你的隐私面板已有最新更新"},
+  {"flow": "privacy-proof", "language": "zh", "tone": "urgency", "subject_line": "立即查看 UrAi 安全审计要点"}
+]

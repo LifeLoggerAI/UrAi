@@ -1,0 +1,20 @@
+[
+  {"flow": "welcome", "language": "en", "tone": "curiosity", "subject_line": "Welcome inside UrAi — see what’s waiting, {{first_name}}"},
+  {"flow": "welcome", "language": "en", "tone": "clarity", "subject_line": "Your UrAi tools are ready to explore"},
+  {"flow": "welcome", "language": "en", "tone": "urgency", "subject_line": "Start your UrAi journey today, {{first_name}}"},
+  {"flow": "welcome", "language": "es", "tone": "curiosity", "subject_line": "Descubre lo que UrAi preparó para ti, {{first_name}}"},
+  {"flow": "welcome", "language": "es", "tone": "clarity", "subject_line": "Tus herramientas de UrAi ya están listas"},
+  {"flow": "welcome", "language": "es", "tone": "urgency", "subject_line": "Empieza hoy tu recorrido UrAi, {{first_name}}"},
+  {"flow": "welcome", "language": "pt", "tone": "curiosity", "subject_line": "Veja o que a UrAi reservou para você, {{first_name}}"},
+  {"flow": "welcome", "language": "pt", "tone": "clarity", "subject_line": "Suas ferramentas UrAi estão prontas para uso"},
+  {"flow": "welcome", "language": "pt", "tone": "urgency", "subject_line": "Comece sua jornada UrAi hoje, {{first_name}}"},
+  {"flow": "welcome", "language": "fr", "tone": "curiosity", "subject_line": "Explorez ce qu’UrAi vous réserve, {{first_name}}"},
+  {"flow": "welcome", "language": "fr", "tone": "clarity", "subject_line": "Vos outils UrAi sont prêts à l’emploi"},
+  {"flow": "welcome", "language": "fr", "tone": "urgency", "subject_line": "Lancez votre parcours UrAi dès aujourd’hui, {{first_name}}"},
+  {"flow": "welcome", "language": "hi", "tone": "curiosity", "subject_line": "जानें UrAi ने आपके लिए क्या तैयार किया है, {{first_name}}"},
+  {"flow": "welcome", "language": "hi", "tone": "clarity", "subject_line": "आपके UrAi टूल अब तैयार हैं"},
+  {"flow": "welcome", "language": "hi", "tone": "urgency", "subject_line": "आज ही अपना UrAi सफ़र शुरू करें, {{first_name}}"},
+  {"flow": "welcome", "language": "zh", "tone": "curiosity", "subject_line": "来看看 UrAi 为你准备了什么，{{first_name}}"},
+  {"flow": "welcome", "language": "zh", "tone": "clarity", "subject_line": "你的 UrAi 工具已就绪"},
+  {"flow": "welcome", "language": "zh", "tone": "urgency", "subject_line": "立即开启你的 UrAi 旅程，{{first_name}}"}
+]
