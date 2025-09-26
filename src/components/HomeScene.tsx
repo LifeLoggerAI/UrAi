@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function HomeScene() {
   return (
     <div className="relative w-full h-dvh bg-black overflow-hidden">
@@ -17,12 +19,12 @@ export default function HomeScene() {
         loop
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <video
-        src="/assets/avatar/avatar-demo.mp4"
-        autoPlay
-        muted
-        loop
-        className="absolute inset-0 w-full h-full object-contain"
+      <Image
+        src="/assets/avatar/Texture.png"
+        alt="Avatar preview"
+        fill
+        className="object-contain"
+        priority
       />
     </div>
   );
