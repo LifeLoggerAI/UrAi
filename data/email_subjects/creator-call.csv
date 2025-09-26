@@ -1,0 +1,19 @@
+flow,language,tone,subject_line
+creator-call,en,anticipation,Creators circle: reserve your seat for {{call_date}}
+creator-call,en,clarity,Agenda and prep for our upcoming creator call
+creator-call,en,urgency,Last spots for the UrAi creator session on {{call_date}}
+creator-call,es,anticipation,Círculo de creadores: reserva tu lugar para {{call_date}}
+creator-call,es,clarity,Agenda y preparación para la próxima llamada de creadores
+creator-call,es,urgency,Últimos lugares para la sesión de creadores de UrAi en {{call_date}}
+creator-call,pt,anticipation,Círculo de criadores: garanta sua vaga em {{call_date}}
+creator-call,pt,clarity,Agenda e preparos para nossa próxima call de criadores
+creator-call,pt,urgency,Últimas vagas para a sessão de criadores UrAi em {{call_date}}
+creator-call,fr,anticipation,Cercle des créateur·rices : réservez pour le {{call_date}}
+creator-call,fr,clarity,Agenda et préparation pour notre prochain appel créateur·rices
+creator-call,fr,urgency,Dernières places pour la session créateur·rices UrAi du {{call_date}}
+creator-call,hi,anticipation,क्रिएटर सर्कल: {{call_date}} सत्र के लिए स्थान सुरक्षित करें
+creator-call,hi,clarity,हमारी अगली क्रिएटर कॉल की एजेंडा और तैयारी
+creator-call,hi,urgency,{{call_date}} की UrAi क्रिएटर सत्र में सीमित स्थान शेष हैं
+creator-call,zh,anticipation,创作者圈：立即预留 {{call_date}} 的席位
+creator-call,zh,clarity,UrAi 创作者会议议程与准备清单
+creator-call,zh,urgency,{{call_date}} UrAi 创作者会仅剩少量席位
