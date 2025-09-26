@@ -2,11 +2,18 @@
 
 import Link from "next/link";
 import React from "react";
+import { usePathname } from "next/navigation";
 import BugReportButton from "@/components/BugReportButton";
 import FeedbackBox from "@/components/FeedbackBox";
 import BottomNav from "@/components/layout/BottomNav";
 
 const MainLayout = ({ children }) => {
+  const pathname = usePathname();
+
+  if (pathname === "/onboarding") {
+    return <>{children}</>;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <main className="pb-24">{children}</main>
