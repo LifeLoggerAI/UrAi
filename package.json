@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --ext .ts,.tsx src || true",
+    "test": "jest",
     "ci": "npm ci && npm run check:types && npm run lint && npm run build",
     "health": "bash ./scripts/baseline_health_check.sh",
     "clean": "rimraf .next node_modules .turbo",
