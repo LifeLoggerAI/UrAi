@@ -1,5 +1,5 @@
 import React from 'react';
-import Chip from '../../components/ui/Chip';
+import Chip from '@/components/ui/Chip';
 
 export default function LifeMapPage() {
   return (

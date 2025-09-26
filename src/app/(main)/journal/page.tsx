@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from '../../components/ui/Card';
-import journalEntries from '../../../data/journal-entries.json';
+import Card from '@/components/ui/Card';
+import journalEntries from '@/data/journal-entries.json';
 
 export default function JournalPage() {
   return (

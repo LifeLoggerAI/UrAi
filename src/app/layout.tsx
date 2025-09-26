@@ -1,19 +1,14 @@
 import './globals.css';
-import MainLayout from '../components/layout/MainLayout';
 
 export const metadata = {
   title: 'URAI',
   description: 'Your Emotional Media OS',
 };
 
-export default function RootLayout({ children, ...props }) {
-  const isOnboarding = props.router?.pathname === '/onboarding';
-
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        {isOnboarding ? children : <MainLayout>{children}</MainLayout>}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
