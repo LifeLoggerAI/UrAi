@@ -15,7 +15,8 @@
     "codemod:dry": "node scripts/replace-demo-user.mjs --dry",
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:types": "tsc --noEmit",
-    "preflight": "npm run check:types && npm run lint && npm run build"
+    "preflight": "npm run check:types && npm run lint && npm run build",
+    "test": "jest"
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
