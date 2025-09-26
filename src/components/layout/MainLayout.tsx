@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import { useEffect } from "react";
 import BugReportButton from "@/components/BugReportButton";
 import FeedbackBox from "@/components/FeedbackBox";
 import BottomNav from "@/components/layout/BottomNav";
+import { installConsoleRecorder } from "@/lib/consoleLogger";
 
 const MainLayout = ({ children }) => {
+  useEffect(() => {
+    installConsoleRecorder();
+  }, []);
+
   return (
     <div className="min-h-screen bg-black text-white">
       <main className="pb-24">{children}</main>
