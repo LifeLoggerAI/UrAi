@@ -14,7 +14,11 @@
     "codemod:dry": "node scripts/replace-demo-user.mjs --dry",
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:types": "tsc --noEmit",
-    "preflight": "npm run check:types && npm run lint && npm run build"
+    "preflight": "npm run check:types && npm run lint && npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ci": "npx firebase-tools emulators:exec --project demo-urai --only auth,firestore,storage \"npx playwright test\""
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
@@ -25,8 +29,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
-    "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.0",
     "eslint": "^8.0.0",
     "jest": "^29.7.0",

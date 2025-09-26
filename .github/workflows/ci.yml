@@ -1,17 +1,39 @@
-name: CI
+name: ci
+
 on:
-  pull_request:
   push:
-    branches: [ "!main" ]
+    branches: [main]
+  pull_request:
+    branches: [main]
+
 jobs:
-  build:
+  validation:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-        with: { lfs: true }
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run build
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run check:types
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Playwright end-to-end tests (Firebase emulators)
+        run: npm run test:e2e:ci
