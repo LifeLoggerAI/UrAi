@@ -14,7 +14,8 @@
     "codemod:dry": "node scripts/replace-demo-user.mjs --dry",
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:types": "tsc --noEmit",
-    "preflight": "npm run check:types && npm run lint && npm run build"
+    "preflight": "npm run check:types && npm run lint && npm run build",
+    "test:rules": "jest --config jest.config.js tests/rules"
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
@@ -24,6 +25,7 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.0",
     "@playwright/test": "^1.40.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",

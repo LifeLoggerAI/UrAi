@@ -1,33 +1,81 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function ownerUid() {
+      return request.method == 'create'
+        ? request.resource.data.ownerUid
+        : resource.data.ownerUid;
+    }
+
     // Each user can access their own user doc
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
     // Top-level collections use `ownerUid`
-    match /dreams/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /rituals/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /timelineEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /personaEvolutions/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /soulThreads/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /socialArchetypes/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /weeklyScrolls/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /moods/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /shadowMetrics/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /obscuraPatterns/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /cognitiveStress/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /recoveryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /relationshipConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /voiceEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /dreamConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /memoryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /badges/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /notifications/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /journalEntries/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /events/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /insightMarket/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /dreams/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /rituals/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /timelineEvents/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /personaEvolutions/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /soulThreads/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /socialArchetypes/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /weeklyScrolls/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /moods/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /shadowMetrics/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /obscuraPatterns/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /cognitiveStress/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /recoveryBlooms/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /relationshipConstellations/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /voiceEvents/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /dreamConstellations/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /memoryBlooms/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /badges/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /notifications/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /journalEntries/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /events/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
+    match /insightMarket/{id} {
+      allow read, write: if request.auth != null && request.auth.uid == ownerUid();
+    }
 
     // Feedback + bug capture live outside auth to make onboarding frictionless
     match /feedback/{id} {
