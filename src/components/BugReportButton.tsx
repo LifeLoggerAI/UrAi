@@ -53,7 +53,7 @@ export default function BugReportButton() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FB_PROJECT_ID);
+  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 
   useEffect(() => {
     installConsoleRecorder();
