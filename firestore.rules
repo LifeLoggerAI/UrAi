@@ -6,28 +6,166 @@ service cloud.firestore {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
 
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function ownsExistingDoc() {
+      return isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    function ownsIncomingDoc() {
+      return (
+        isSignedIn() &&
+        request.resource.data.ownerUid is string &&
+        request.resource.data.ownerUid == request.auth.uid
+      );
+    }
+
+    function canReadOwnerDoc() {
+      return ownsExistingDoc();
+    }
+
+    function canCreateOwnerDoc() {
+      return ownsIncomingDoc();
+    }
+
+    function canUpdateOwnerDoc() {
+      return ownsExistingDoc() && ownsIncomingDoc() &&
+        resource.data.ownerUid == request.resource.data.ownerUid;
+    }
+
+    function canDeleteOwnerDoc() {
+      return ownsExistingDoc();
+    }
+
     // Top-level collections use `ownerUid`
-    match /dreams/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /rituals/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /timelineEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /personaEvolutions/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /soulThreads/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /socialArchetypes/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /weeklyScrolls/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /moods/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /shadowMetrics/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /obscuraPatterns/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /cognitiveStress/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /recoveryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /relationshipConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /voiceEvents/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /dreamConstellations/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /memoryBlooms/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /badges/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /notifications/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /journalEntries/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /events/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
-    match /insightMarket/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.ownerUid; }
+    match /dreams/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /rituals/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /timelineEvents/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /personaEvolutions/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /soulThreads/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /socialArchetypes/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /weeklyScrolls/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /moods/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /shadowMetrics/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /obscuraPatterns/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /cognitiveStress/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /recoveryBlooms/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /relationshipConstellations/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /voiceEvents/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /dreamConstellations/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /memoryBlooms/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /badges/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /notifications/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /journalEntries/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /events/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+    match /insightMarket/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
 
     // Feedback + bug capture live outside auth to make onboarding frictionless
     match /feedback/{id} {
