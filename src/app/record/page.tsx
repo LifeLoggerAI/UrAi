@@ -1,14 +1,14 @@
 'use client';
 
-import React from 'react';
+import { useRef, useState } from 'react';
 import Button from '../../components/ui/Button';
 
 export default function RecordPage() {
-  const [isRecording, setIsRecording] = React.useState(false);
-  const [audioBlob, setAudioBlob] = React.useState<Blob | null>(null);
-  const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
-  const [transcription, setTranscription] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [transcription, setTranscription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleStartRecording = async () => {
     setAudioBlob(null);
