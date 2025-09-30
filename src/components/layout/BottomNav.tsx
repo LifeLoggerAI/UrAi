@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Home, Star, BarChart2, MessageSquare, Sun } from 'lucide-react';
