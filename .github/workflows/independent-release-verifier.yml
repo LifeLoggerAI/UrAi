@@ -19,6 +19,13 @@ on:
       - main
       - system-release-verifier
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   verify-release:
     name: Verify URAI release readiness
