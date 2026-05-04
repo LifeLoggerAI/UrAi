@@ -16,7 +16,13 @@
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:types": "tsc --noEmit",
     "preflight": "npm run check:types && npm run lint && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "test:unit": "jest tests/unit --passWithNoTests",
+    "test:integration": "jest tests/integration --passWithNoTests",
+    "test:e2e": "playwright test",
+    "test:smoke": "playwright test tests/e2e --grep @smoke",
+    "verify:release": "node scripts/independent-release-verifier.mjs",
+    "verify:release:full": "URAI_VERIFIER_RUN_COMMANDS=1 node scripts/independent-release-verifier.mjs"
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
