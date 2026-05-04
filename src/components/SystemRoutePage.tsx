@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 export type SystemRoutePageProps = {
@@ -5,7 +6,7 @@ export type SystemRoutePageProps = {
   eyebrow?: string;
   description: string;
   status?: "wired" | "guarded" | "demo";
-  children?: React.ReactNode;
+  children?: ReactNode;
 };
 
 export default function SystemRoutePage({
