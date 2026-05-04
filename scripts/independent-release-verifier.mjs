@@ -87,7 +87,7 @@ const checks = [];
 function walk(dir, out = []) {
   if (!existsSync(dir)) return out;
   for (const entry of readdirSync(dir)) {
-    if (['node_modules', '.git', '.next', 'dist', 'build', 'coverage'].includes(entry)) continue;
+    if (['node_modules', '.git', '.next', 'dist', 'build', 'coverage', 'release-verification'].includes(entry)) continue;
     const full = join(dir, entry);
     const st = statSync(full);
     if (st.isDirectory()) walk(full, out);
@@ -96,11 +96,22 @@ function walk(dir, out = []) {
   return out;
 }
 
+const ignoredEvidencePaths = new Set([
+  'scripts/independent-release-verifier.mjs',
+  'docs/INDEPENDENT_RELEASE_VERIFIER.md',
+  '.github/workflows/independent-release-verifier.yml',
+]);
+
+function rel(path) { return relative(root, path); }
+function isVerifierEvidence(file) { return ignoredEvidencePaths.has(rel(file)); }
+
 const files = walk(root);
 const textFiles = files.filter((file) => /\.(ts|tsx|js|jsx|mjs|cjs|json|md|rules|yml|yaml)$/.test(file));
-const corpus = textFiles.map((file) => {
-  try { return { file, text: readFileSync(file, 'utf8') }; } catch { return { file, text: '' }; }
-});
+const corpus = textFiles
+  .filter((file) => !isVerifierEvidence(file))
+  .map((file) => {
+    try { return { file, text: readFileSync(file, 'utf8') }; } catch { return { file, text: '' }; }
+  });
 
 function add(name, status, evidence = '', remediation = '') {
   checks.push({ name, status, evidence, remediation });
@@ -108,7 +119,6 @@ function add(name, status, evidence = '', remediation = '') {
 
 function hasFile(path) { return existsSync(join(root, path)); }
 function findText(pattern) { return corpus.filter(({ text }) => pattern.test(text)).map(({ file }) => relative(root, file)); }
-function rel(path) { return relative(root, path); }
 
 for (const report of requiredReports) {
   add(`Required report exists: ${report}`, hasFile(report) || hasFile(`docs/${report}`) ? 'pass' : 'fail', hasFile(report) ? report : hasFile(`docs/${report}`) ? `docs/${report}` : '', `Create or update ${report}.`);
@@ -140,7 +150,6 @@ for (const fn of firebaseFunctions) {
   add(`Firebase function present/referenceable: ${fn}`, refs.length ? 'pass' : 'fail', refs.slice(0, 5).join(', '), `Implement/export Cloud Function '${fn}' or document why it is blocked.`);
 }
 
-const rulesFiles = ['firestore.rules', 'storage.rules'].filter(hasFile);
 add('Firestore rules file exists', hasFile('firestore.rules') ? 'pass' : 'fail', hasFile('firestore.rules') ? 'firestore.rules' : '', 'Add firestore.rules.');
 add('Storage rules file exists', hasFile('storage.rules') ? 'pass' : 'fail', hasFile('storage.rules') ? 'storage.rules' : '', 'Add storage.rules.');
 
@@ -170,10 +179,10 @@ for (const consent of consents) {
   add(`Consent gate configured: ${consent}`, refs.length ? 'pass' : 'fail', refs.slice(0, 5).join(', '), `Add consent field and processing guard for ${consent}.`);
 }
 
-const seedRefs = files.filter((file) => /seed|demo|staging/i.test(file)).map(rel);
+const seedRefs = files.filter((file) => !isVerifierEvidence(file) && /seed|demo|staging/i.test(file)).map(rel);
 add('Deterministic demo/staging seed scripts exist', seedRefs.length ? 'pass' : 'fail', seedRefs.slice(0, 12).join(', '), 'Add scripts/seed.ts, scripts/seed_staging.ts, and scripts/reset_demo.ts.');
 
-const e2eRefs = files.filter((file) => /e2e|playwright|smoke/i.test(file)).map(rel);
+const e2eRefs = files.filter((file) => !isVerifierEvidence(file) && /e2e|playwright|smoke/i.test(file)).map(rel);
 add('E2E/smoke tests exist', e2eRefs.length ? 'pass' : 'fail', e2eRefs.slice(0, 12).join(', '), 'Add Playwright E2E tests for the core user journey.');
 
 const lockText = hasFile('LOCK.md') ? readFileSync(join(root, 'LOCK.md'), 'utf8') : '';
