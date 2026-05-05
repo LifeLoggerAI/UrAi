@@ -196,3 +196,51 @@ export function computeChronoValidation(event: ChronoValidationEvent) {
     },
   };
 }
+
+export interface FeltTimeReplayInput {
+  id: string;
+  label: string;
+  startTime?: string;
+  endTime?: string;
+  signals: ChronoSignalWindow;
+}
+
+export interface FeltTimeReplaySegment {
+  id: string;
+  label: string;
+  startTime?: string;
+  endTime?: string;
+  clockOrder: number;
+  feltWeight: number;
+  feltDurationPercent: number;
+  replayTempo: "compressed" | "normal" | "expanded";
+  mirror: ChronoMirrorResult;
+}
+
+export function computeFeltTimeReplaySegments(items: FeltTimeReplayInput[]): FeltTimeReplaySegment[] {
+  const enriched = items.map((item, index) => {
+    const mirror = computeChronoMirror(item.signals);
+    const feltWeight = Math.max(
+      0.05,
+      mirror.realityDensity * 0.28 +
+        mirror.emotionalFrameRate * 0.2 +
+        mirror.memoryDensity * 0.18 +
+        mirror.aftermathDuration * 0.16 +
+        mirror.anticipationStretch * 0.1 +
+        mirror.timeToMeaning * 0.08,
+    );
+    return { item, index, mirror, feltWeight };
+  });
+  const total = enriched.reduce((sum, segment) => sum + segment.feltWeight, 0) || 1;
+  return enriched.map(({ item, index, mirror, feltWeight }) => ({
+    id: item.id,
+    label: item.label,
+    startTime: item.startTime,
+    endTime: item.endTime,
+    clockOrder: index,
+    feltWeight,
+    feltDurationPercent: feltWeight / total,
+    replayTempo: feltWeight / total > 0.28 ? "expanded" : feltWeight / total < 0.08 ? "compressed" : "normal",
+    mirror,
+  }));
+}
