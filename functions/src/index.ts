@@ -35,3 +35,4 @@ export * from "./personalMirror";
 export * from "./predictiveMirror";
 export * from "./challengeMirror";
 export * from "./coachingMirror";
+export * from "./adaptiveMirror";
