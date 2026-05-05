@@ -34,3 +34,4 @@ export * from "./corePipeline";
 export * from "./personalMirror";
 export * from "./predictiveMirror";
 export * from "./challengeMirror";
+export * from "./coachingMirror";
