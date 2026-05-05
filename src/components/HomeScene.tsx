@@ -2,18 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
+import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
 
 type HomeMode = "home" | "transitioning" | "lifemap";
-type EmotionalTone = "calm" | "focused" | "charged" | "restorative";
 
-function getEmotionalTone(hour: number): EmotionalTone {
-  if (hour < 6) return "restorative";
-  if (hour < 12) return "focused";
-  if (hour < 18) return "charged";
-  return "calm";
-}
-
-const TONE_COPY: Record<EmotionalTone, { idle: string; opening: string }> = {
+const TONE_COPY = {
   calm: {
     idle: "Tap the sky to open your Life Map",
     opening: "Softening into the Life Map...",
@@ -35,7 +28,7 @@ const TONE_COPY: Record<EmotionalTone, { idle: string; opening: string }> = {
 export default function HomeScene() {
   const [mode, setMode] = useState<HomeMode>("home");
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [emotionalTone, setEmotionalTone] = useState<EmotionalTone>("calm");
+  const emotionalTone = useEmotionalTone();
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -47,10 +40,6 @@ export default function HomeScene() {
     mq.addEventListener("change", onChange);
 
     return () => mq.removeEventListener("change", onChange);
-  }, []);
-
-  useEffect(() => {
-    setEmotionalTone(getEmotionalTone(new Date().getHours()));
   }, []);
 
   const transitionDuration = useMemo(() => {
