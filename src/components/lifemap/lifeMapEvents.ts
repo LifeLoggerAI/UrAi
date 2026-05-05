@@ -1,3 +1,5 @@
+import type { EmotionalTone, EmotionEngineInput } from './useEmotionalTone';
+
 export type ChapterId =
   | 'season-of-becoming'
   | 'threshold'
@@ -30,6 +32,15 @@ type NarratorEventPayload = {
   action?: 'replay' | 'reflect' | 'resolve';
 };
 
+type NarratorTonePayload = {
+  event: 'narrator.tone.update';
+  tone: EmotionalTone;
+  voiceStyle: 'soft' | 'clear' | 'urgent' | 'restorative';
+  line: string;
+  source: 'emotion-engine';
+  input?: EmotionEngineInput | null;
+};
+
 type TimelineSyncPayload = {
   phase: LifeMapPhase;
   activeStarId?: string | null;
@@ -42,6 +53,20 @@ export function dispatchNarratorEvent(payload: NarratorEventPayload) {
   window.dispatchEvent(
     new CustomEvent<NarratorEventPayload>('urai:narrator-event', {
       detail: payload,
+    }),
+  );
+}
+
+export function dispatchNarratorToneEvent(payload: Omit<NarratorTonePayload, 'event' | 'source'>) {
+  if (typeof window === 'undefined') return;
+
+  window.dispatchEvent(
+    new CustomEvent<NarratorTonePayload>('urai:narrator-event', {
+      detail: {
+        event: 'narrator.tone.update',
+        source: 'emotion-engine',
+        ...payload,
+      },
     }),
   );
 }
