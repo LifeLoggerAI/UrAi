@@ -29,6 +29,111 @@ computeFeltTimeReplaySegments()
 
 ---
 
+# Runtime Status
+
+## Implemented
+
+- ChronoMirror cognition engine
+- Replay weighting engine
+- Forecast engine
+- Emotional physics layer
+- Temporal identity layer
+- Memory density constellation builder
+- Firestore repository layer
+- Analytics emitters
+- Narrator bindings
+- Sky/Rive bindings
+- Cognitive Mirror runtime UI
+- Resonance interaction UI
+- Firestore persistence
+- Analytics schemas
+
+## Remaining Production Tasks
+
+### Build Verification
+
+Run locally:
+
+```bash
+npm install
+npm run check:types
+npm run build
+```
+
+### Replace Demo Auth
+
+Replace:
+
+```ts
+const DEMO_USER_ID = 'demo-user';
+```
+
+with authenticated Firebase user/session.
+
+### Firestore Rules
+
+Protect:
+- chronoMirrorSnapshots
+- chrono_validation_events
+
+so users only access their own records.
+
+### Firestore Indexes
+
+Add:
+
+```txt
+userId + createdAt desc
+```
+
+for snapshots and validation events.
+
+### Real Passive Signal Sources
+
+Connect:
+- sleep systems
+- mood systems
+- GPS novelty
+- notification friction
+- social silence
+- journaling
+- recovery actions
+- memory anchors
+
+### Rive Consumption
+
+Consume:
+- particleVelocity
+- particleDensity
+- cloudOpacity
+- auroraIntensity
+- fractureIntensity
+- dawnGlow
+
+inside actual sky runtime.
+
+### Narrator Consumption
+
+Consume:
+- ttsRate
+- ttsPitch
+- silenceMs
+- emotionalIntensity
+- prompt
+
+inside narrator/TTS engine.
+
+### Tests
+
+Add tests for:
+- computeChronoMirror
+- computeFeltTimeReplaySegments
+- computeChronoForecast
+- computeEmotionalPhysics
+- mapUserDataToChronoSignals
+
+---
+
 # Firestore Schema
 
 Collection:
@@ -154,48 +259,6 @@ Current UI surfaces:
 - chrono therapy mode
 - temporal orientation
 - recurrence loops
-
----
-
-# Future Integration Targets
-
-## Sky Engine
-Map chrono states to:
-- Rive animations
-- particle velocity
-- atmospheric lighting
-- constellation activity
-- cloud density
-
-## Narrator Engine
-Adapt:
-- pacing
-- silence
-- tone
-- cadence
-- emotional intensity
-
-## Threshold Detection
-Detect:
-- identity transitions
-- collapse periods
-- rebirth periods
-- symbolic chapter shifts
-
-## Forecast Engine
-Predict:
-- burnout windows
-- emotional slowdown
-- dissociation periods
-- recovery windows
-- anticipation spikes
-
-## Memory Density Map
-Render:
-- high-resolution life chapters
-- memory deserts
-- trauma wells
-- transformation constellations
 
 ---
 
