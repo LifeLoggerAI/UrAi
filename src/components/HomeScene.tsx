@@ -1,13 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
 
 type HomeMode = "home" | "transitioning" | "lifemap";
+type EmotionalTone = "calm" | "focused" | "charged" | "restorative";
+
+function getEmotionalTone(hour: number): EmotionalTone {
+  if (hour < 6) return "restorative";
+  if (hour < 12) return "focused";
+  if (hour < 18) return "charged";
+  return "calm";
+}
+
+const TONE_COPY: Record<EmotionalTone, { idle: string; opening: string }> = {
+  calm: {
+    idle: "Tap the sky to open your Life Map",
+    opening: "Softening into the Life Map...",
+  },
+  focused: {
+    idle: "Tap the sky to trace today’s pattern",
+    opening: "Focusing the constellation...",
+  },
+  charged: {
+    idle: "Tap the sky to see what is lighting up",
+    opening: "Opening the active pattern...",
+  },
+  restorative: {
+    idle: "Tap the sky to enter quiet memory space",
+    opening: "Entering gently...",
+  },
+};
 
 export default function HomeScene() {
   const [mode, setMode] = useState<HomeMode>("home");
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [emotionalTone, setEmotionalTone] = useState<EmotionalTone>("calm");
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -22,6 +50,18 @@ export default function HomeScene() {
   }, []);
 
   useEffect(() => {
+    setEmotionalTone(getEmotionalTone(new Date().getHours()));
+  }, []);
+
+  const transitionDuration = useMemo(() => {
+    if (reduceMotion) return 0;
+    if (emotionalTone === "restorative") return 1700;
+    if (emotionalTone === "charged") return 1150;
+    if (emotionalTone === "focused") return 1325;
+    return 1450;
+  }, [emotionalTone, reduceMotion]);
+
+  useEffect(() => {
     if (mode !== "transitioning") return undefined;
 
     if (reduceMotion) {
@@ -29,9 +69,9 @@ export default function HomeScene() {
       return undefined;
     }
 
-    const timer = window.setTimeout(() => setMode("lifemap"), 1450);
+    const timer = window.setTimeout(() => setMode("lifemap"), transitionDuration);
     return () => window.clearTimeout(timer);
-  }, [mode, reduceMotion]);
+  }, [mode, reduceMotion, transitionDuration]);
 
   const openLifeMap = () => {
     setMode(reduceMotion ? "lifemap" : "transitioning");
@@ -58,9 +98,10 @@ export default function HomeScene() {
   }
 
   const isTransitioning = mode === "transitioning";
+  const copy = TONE_COPY[emotionalTone];
 
   return (
-    <div className={`home-scene ${isTransitioning ? "is-transitioning" : ""}`}>
+    <div className={`home-scene tone-${emotionalTone} ${isTransitioning ? "is-transitioning" : ""}`}>
       <button
         type="button"
         onClick={openLifeMap}
@@ -71,6 +112,7 @@ export default function HomeScene() {
         <span className="sr-only">Open URAI Life Map</span>
       </button>
 
+      <div className="emotional-wash" aria-hidden />
       <div className="ambient-drift" aria-hidden />
       <div className="sky-breath" aria-hidden />
 
@@ -121,18 +163,52 @@ export default function HomeScene() {
 
       <div className="transition-vignette" aria-hidden />
 
-      <div className="tap-hint">
-        {isTransitioning ? "Opening the Life Map..." : "Tap the sky to open your Life Map"}
+      <div className="tone-chip" aria-hidden>
+        {emotionalTone}
       </div>
+
+      <div className="tap-hint">{isTransitioning ? copy.opening : copy.idle}</div>
 
       <style jsx>{`
         .home-scene {
+          --tone-a: rgba(125, 211, 252, 0.14);
+          --tone-b: rgba(196, 181, 253, 0.12);
+          --tone-c: rgba(255, 255, 255, 0.07);
+          --tone-speed: 1;
           position: relative;
           width: 100%;
           height: 100dvh;
           overflow: hidden;
           background: #000;
           isolation: isolate;
+        }
+
+        .tone-calm {
+          --tone-a: rgba(125, 211, 252, 0.13);
+          --tone-b: rgba(196, 181, 253, 0.1);
+          --tone-c: rgba(255, 255, 255, 0.06);
+          --tone-speed: 1;
+        }
+
+        .tone-focused {
+          --tone-a: rgba(96, 165, 250, 0.15);
+          --tone-b: rgba(45, 212, 191, 0.1);
+          --tone-c: rgba(219, 234, 254, 0.08);
+          --tone-speed: 0.9;
+        }
+
+        .tone-charged {
+          --tone-a: rgba(251, 191, 36, 0.13);
+          --tone-b: rgba(244, 114, 182, 0.1);
+          --tone-c: rgba(255, 255, 255, 0.08);
+          --tone-speed: 0.75;
+        }
+
+        .tone-restorative {
+          --tone-a: rgba(167, 139, 250, 0.14);
+          --tone-b: rgba(14, 165, 233, 0.09);
+          --tone-c: rgba(226, 232, 240, 0.06);
+          --tone-speed: 1.25;
         }
 
         .sky-trigger {
@@ -157,23 +233,35 @@ export default function HomeScene() {
           will-change: transform, opacity, filter;
         }
 
+        .emotional-wash,
         .ambient-drift,
         .sky-breath {
           position: absolute;
           inset: -8%;
-          z-index: 4;
           pointer-events: none;
           will-change: transform, opacity;
         }
 
-        .ambient-drift {
+        .emotional-wash {
+          z-index: 7;
           background:
-            radial-gradient(circle at 18% 22%, rgba(125, 211, 252, 0.12), transparent 18%),
-            radial-gradient(circle at 78% 30%, rgba(196, 181, 253, 0.1), transparent 22%),
-            radial-gradient(circle at 50% 70%, rgba(255, 255, 255, 0.06), transparent 26%);
+            radial-gradient(circle at 28% 22%, var(--tone-a), transparent 24%),
+            radial-gradient(circle at 74% 36%, var(--tone-b), transparent 26%),
+            linear-gradient(180deg, transparent 20%, var(--tone-c) 100%);
+          mix-blend-mode: screen;
+          opacity: 0.78;
+          transition: opacity 900ms ease, transform 1200ms ease;
+        }
+
+        .ambient-drift {
+          z-index: 4;
+          background:
+            radial-gradient(circle at 18% 22%, var(--tone-a), transparent 18%),
+            radial-gradient(circle at 78% 30%, var(--tone-b), transparent 22%),
+            radial-gradient(circle at 50% 70%, var(--tone-c), transparent 26%);
           mix-blend-mode: screen;
           opacity: 0.75;
-          animation: ambientDrift 18s ease-in-out infinite alternate;
+          animation: ambientDrift calc(18s * var(--tone-speed)) ease-in-out infinite alternate;
         }
 
         .sky-breath {
@@ -181,27 +269,27 @@ export default function HomeScene() {
           background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.13), transparent 18%);
           mix-blend-mode: screen;
           opacity: 0.32;
-          animation: skyBreath 6.5s ease-in-out infinite;
+          animation: skyBreath calc(6.5s * var(--tone-speed)) ease-in-out infinite;
         }
 
         .sky-layer {
           object-fit: cover;
           z-index: 1;
-          animation: skyIdle 16s ease-in-out infinite alternate;
+          animation: skyIdle calc(16s * var(--tone-speed)) ease-in-out infinite alternate;
           transition: transform 1450ms cubic-bezier(0.16, 1, 0.3, 1), filter 1450ms ease, opacity 900ms ease;
         }
 
         .ground-layer {
           object-fit: cover;
           z-index: 2;
-          animation: groundIdle 18s ease-in-out infinite alternate;
+          animation: groundIdle calc(18s * var(--tone-speed)) ease-in-out infinite alternate;
           transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 900ms ease, filter 900ms ease;
         }
 
         .avatar-layer {
           object-fit: contain;
           z-index: 3;
-          animation: avatarFloat 7.5s ease-in-out infinite;
+          animation: avatarFloat calc(7.5s * var(--tone-speed)) ease-in-out infinite;
           transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease, filter 800ms ease;
         }
 
@@ -218,16 +306,16 @@ export default function HomeScene() {
           position: absolute;
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.9);
-          box-shadow: 0 0 16px rgba(255, 255, 255, 0.7), 0 0 32px rgba(125, 211, 252, 0.35);
+          box-shadow: 0 0 16px rgba(255, 255, 255, 0.7), 0 0 32px var(--tone-a);
         }
 
-        .parallax-near span:nth-child(1) { left: 18%; top: 26%; width: 0.22rem; height: 0.22rem; animation: nearDrift 11s ease-in-out infinite alternate; }
-        .parallax-near span:nth-child(2) { left: 72%; top: 38%; width: 0.18rem; height: 0.18rem; animation: nearDrift 13s ease-in-out infinite alternate-reverse; }
-        .parallax-near span:nth-child(3) { left: 52%; top: 16%; width: 0.16rem; height: 0.16rem; animation: nearDrift 10s ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(1) { left: 28%; top: 14%; width: 0.12rem; height: 0.12rem; animation: farDrift 18s ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(2) { left: 80%; top: 22%; width: 0.1rem; height: 0.1rem; animation: farDrift 20s ease-in-out infinite alternate-reverse; }
-        .parallax-far span:nth-child(3) { left: 64%; top: 62%; width: 0.11rem; height: 0.11rem; animation: farDrift 17s ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(4) { left: 12%; top: 58%; width: 0.09rem; height: 0.09rem; animation: farDrift 21s ease-in-out infinite alternate-reverse; }
+        .parallax-near span:nth-child(1) { left: 18%; top: 26%; width: 0.22rem; height: 0.22rem; animation: nearDrift calc(11s * var(--tone-speed)) ease-in-out infinite alternate; }
+        .parallax-near span:nth-child(2) { left: 72%; top: 38%; width: 0.18rem; height: 0.18rem; animation: nearDrift calc(13s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
+        .parallax-near span:nth-child(3) { left: 52%; top: 16%; width: 0.16rem; height: 0.16rem; animation: nearDrift calc(10s * var(--tone-speed)) ease-in-out infinite alternate; }
+        .parallax-far span:nth-child(1) { left: 28%; top: 14%; width: 0.12rem; height: 0.12rem; animation: farDrift calc(18s * var(--tone-speed)) ease-in-out infinite alternate; }
+        .parallax-far span:nth-child(2) { left: 80%; top: 22%; width: 0.1rem; height: 0.1rem; animation: farDrift calc(20s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
+        .parallax-far span:nth-child(3) { left: 64%; top: 62%; width: 0.11rem; height: 0.11rem; animation: farDrift calc(17s * var(--tone-speed)) ease-in-out infinite alternate; }
+        .parallax-far span:nth-child(4) { left: 12%; top: 58%; width: 0.09rem; height: 0.09rem; animation: farDrift calc(21s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
 
         .star-tunnel {
           position: absolute;
@@ -238,8 +326,8 @@ export default function HomeScene() {
           pointer-events: none;
           background:
             radial-gradient(circle at 50% 32%, rgba(205, 225, 255, 0.45), transparent 6%),
-            radial-gradient(circle at 42% 44%, rgba(170, 190, 255, 0.22), transparent 12%),
-            radial-gradient(circle at 58% 48%, rgba(125, 211, 252, 0.18), transparent 14%);
+            radial-gradient(circle at 42% 44%, var(--tone-b), transparent 12%),
+            radial-gradient(circle at 58% 48%, var(--tone-a), transparent 14%);
           transition: opacity 800ms ease, transform 1450ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -249,7 +337,7 @@ export default function HomeScene() {
           height: 0.42rem;
           border-radius: 999px;
           background: white;
-          box-shadow: 0 0 18px rgba(255, 255, 255, 0.95), 0 0 42px rgba(125, 211, 252, 0.75);
+          box-shadow: 0 0 18px rgba(255, 255, 255, 0.95), 0 0 42px var(--tone-a);
           opacity: 0.85;
         }
 
@@ -269,22 +357,41 @@ export default function HomeScene() {
           transition: opacity 1200ms ease;
         }
 
+        .tone-chip,
         .tap-hint {
           position: absolute;
-          bottom: 1.5rem;
-          left: 50%;
           z-index: 30;
-          transform: translateX(-50%);
           border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 999px;
           background: rgba(0, 0, 0, 0.4);
           color: rgba(255, 255, 255, 0.85);
-          padding: 0.5rem 1rem;
-          font-size: 0.875rem;
           backdrop-filter: blur(8px);
           pointer-events: none;
+        }
+
+        .tone-chip {
+          top: 1rem;
+          right: 1rem;
+          border-radius: 999px;
+          padding: 0.35rem 0.75rem;
+          font-size: 0.7rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          opacity: 0.62;
+        }
+
+        .tap-hint {
+          bottom: 1.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
           transition: opacity 500ms ease, transform 500ms ease;
         }
+
+        .tone-restorative .sky-layer { filter: saturate(0.92) brightness(0.92); }
+        .tone-charged .sky-layer { filter: saturate(1.18) brightness(1.05); }
+        .tone-focused .sky-layer { filter: saturate(1.08) contrast(1.04); }
 
         .home-scene.is-transitioning .sky-layer {
           animation-play-state: paused;
@@ -306,6 +413,7 @@ export default function HomeScene() {
           filter: blur(10px);
         }
 
+        .home-scene.is-transitioning .emotional-wash,
         .home-scene.is-transitioning .ambient-drift,
         .home-scene.is-transitioning .sky-breath {
           opacity: 1;
@@ -375,6 +483,7 @@ export default function HomeScene() {
 
         @media (prefers-reduced-motion: reduce) {
           .scene-layer,
+          .emotional-wash,
           .ambient-drift,
           .sky-breath,
           .parallax-field,
