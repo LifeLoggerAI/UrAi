@@ -1,27 +1,27 @@
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { app } from "@/lib/firebase";
 
-export type CognitiveMirrorInsight = {
-  title?: string;
-  summary?: string;
-  createdAt?: string;
-};
-
 export async function sendCognitiveMirrorEvent() {
-  const functions = getFunctions(app);
-  const ingestEvent = httpsCallable(functions, "ingestEvent");
-  const result = await ingestEvent({
-    type: "manual",
-    mood: "curious",
-    source: "home_scene",
-    text: "User tapped the Cognitive Mirror pulse.",
-  });
-  return result.data as { insight?: CognitiveMirrorInsight };
+  const fn = httpsCallable(getFunctions(app), "ingestEvent");
+  return (await fn({ type: "manual", mood: "curious", text: "User signal" })).data;
 }
 
 export async function fetchLatestInsight() {
-  const functions = getFunctions(app);
-  const getLatestInsight = httpsCallable(functions, "getLatestInsight");
-  const result = await getLatestInsight({});
-  return result.data as { insight?: CognitiveMirrorInsight | null; message?: string };
+  return (await httpsCallable(getFunctions(app), "getLatestInsight")({})).data;
+}
+
+export async function fetchPersonalMirror() {
+  return (await httpsCallable(getFunctions(app), "getPersonalMirror")({})).data;
+}
+
+export async function fetchPrediction() {
+  return (await httpsCallable(getFunctions(app), "getPredictiveMirror")({})).data;
+}
+
+export async function fetchChallenge() {
+  return (await httpsCallable(getFunctions(app), "getChallengeMirror")({})).data;
+}
+
+export async function fetchCoaching() {
+  return (await httpsCallable(getFunctions(app), "getCoachingMirror")({})).data;
 }
