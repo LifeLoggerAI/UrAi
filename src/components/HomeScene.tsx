@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import GroundLayer from "@/components/GroundLayer";
 import { sendCognitiveMirrorEvent, fetchLatestInsight } from "@/lib/uraiPipeline";
+import { speakNarrator } from "@/lib/narratorVoice";
 
 export default function HomeScene() {
   const [insight, setInsight] = useState<any>(null);
@@ -13,6 +14,9 @@ export default function HomeScene() {
     try {
       const res = await fetchLatestInsight();
       setInsight(res.insight);
+      if (res?.insight?.summary) {
+        speakNarrator(res.insight.summary, "calm");
+      }
     } catch {
       setInsight(null);
     }
@@ -24,7 +28,10 @@ export default function HomeScene() {
 
     try {
       const res: any = await sendCognitiveMirrorEvent();
-      if (res?.insight) setInsight(res.insight);
+      if (res?.insight) {
+        setInsight(res.insight);
+        speakNarrator(res.insight.summary, "curious");
+      }
     } finally {
       setLoading(false);
       window.setTimeout(() => setRevealing(false), 1800);
