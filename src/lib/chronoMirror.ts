@@ -244,3 +244,108 @@ export function computeFeltTimeReplaySegments(items: FeltTimeReplayInput[]): Fel
     mirror,
   }));
 }
+
+export interface ChronoRawUserData {
+  moodScore?: number;
+  stressScore?: number;
+  sleepDebtHours?: number;
+  uniqueLocationCount?: number;
+  routineRepeatScore?: number;
+  notificationFrictionScore?: number;
+  journalEmotionScore?: number;
+  socialGapScore?: number;
+  flowSessionMinutes?: number;
+  openLoopCount?: number;
+  recoveryActionCount?: number;
+  memoryAnchorCount?: number;
+}
+
+export function mapUserDataToChronoSignals(data: ChronoRawUserData): ChronoSignalWindow {
+  return {
+    emotionalIntensity: clamp01(avg(data.journalEmotionScore ?? 0, data.stressScore ?? 0)),
+    positiveValence: clamp01(data.moodScore),
+    stressLoad: clamp01(data.stressScore),
+    noveltyDensity: clamp01((data.uniqueLocationCount ?? 0) / 6),
+    routineDensity: clamp01(data.routineRepeatScore),
+    uncertaintyLoad: clamp01((data.openLoopCount ?? 0) / 8),
+    memoryAnchorCount: data.memoryAnchorCount,
+    socialSilenceLoad: clamp01(data.socialGapScore),
+    sleepDebt: clamp01((data.sleepDebtHours ?? 0) / 8),
+    deviceFriction: clamp01(data.notificationFrictionScore),
+    flowContinuity: clamp01((data.flowSessionMinutes ?? 0) / 180),
+    replayLoopLoad: clamp01((data.openLoopCount ?? 0) / 8),
+    anticipationLoad: clamp01((data.openLoopCount ?? 0) / 10),
+    recoverySignal: clamp01((data.recoveryActionCount ?? 0) / 4),
+  };
+}
+
+export function buildSkyRiveParams(result: ChronoMirrorResult) {
+  return {
+    skyTempo: result.visualState.skyTempo,
+    particleVelocity: clamp01(1 - result.timeDilationScore + result.timeCompressionScore * 0.5),
+    particleDensity: result.visualState.particleDensity,
+    cloudOpacity: clamp01(result.lifeDragIndex + result.autopilotCollapse * 0.35),
+    auroraIntensity: result.visualState.skyTempo === "aurora" ? result.timeCompressionScore : 0,
+    fractureIntensity: result.visualState.skyTempo === "fractured" ? result.emotionalFrameRate : 0,
+    dawnGlow: result.visualState.skyTempo === "dawn" ? result.narrativeVelocity : 0,
+  };
+}
+
+export function buildChronoNarratorProfile(result: ChronoMirrorResult) {
+  return {
+    pacing: result.perceivedSpeed === "dilated" ? "slow" : result.perceivedSpeed === "compressed" ? "light" : "steady",
+    silenceMs: Math.round(400 + result.lifeDragIndex * 1600),
+    tone: result.chronoTherapyMode.replace(/_/g, " "),
+    intensity: clamp01(result.emotionalFrameRate),
+    prompt: result.narratorPrompt,
+  };
+}
+
+export function computeChronoForecast(history: ChronoMirrorResult[]) {
+  const recent = history.slice(-7);
+  const avgDrag = avg(...recent.map((item) => item.lifeDragIndex));
+  const avgRecovery = avg(...recent.map((item) => item.narrativeVelocity));
+  const avgFuture = avg(...recent.map((item) => item.futureHorizon));
+  return {
+    burnoutRisk: clamp01(avgDrag * 0.65 + (1 - avgFuture) * 0.35),
+    recoveryProbability: clamp01(avgRecovery * 0.55 + avgFuture * 0.45),
+    likelyTimeState: avgDrag > 0.65 ? "dilated" : avgRecovery > 0.65 ? "compressed" : "normal",
+    nextBestMode: avgDrag > 0.65 ? "grounding" : avgFuture < 0.42 ? "short_horizon" : "reflective_replay",
+  };
+}
+
+export function computeTemporalIdentity(result: ChronoMirrorResult) {
+  return {
+    identityDistance: result.identityDistance,
+    continuityState:
+      result.identityDistance > 0.72 ? "fractured" :
+      result.identityDistance > 0.45 ? "transitioning" : "continuous",
+    chapterSignal:
+      result.narrativeVelocity > 0.72 ? "rebirth" :
+      result.lifeDragIndex > 0.72 ? "collapse" :
+      result.realityDensity > 0.72 ? "threshold" : "ordinary",
+  };
+}
+
+export function computeEmotionalPhysics(result: ChronoMirrorResult) {
+  return {
+    emotionalGravity: clamp01(result.realityDensity * 0.4 + result.aftermathDuration * 0.35 + result.lifeDragIndex * 0.25),
+    emotionalMomentum: clamp01(result.narrativeVelocity * 0.6 + result.futureHorizon * 0.4),
+    recoveryVelocity: clamp01(result.futureHorizon * 0.5 + (1 - result.lifeDragIndex) * 0.5),
+    anticipationMass: result.anticipationStretch,
+    memoryOrbit: clamp01(result.memoryDensity * 0.55 + result.temporalProfile.recurrenceLoops.length * 0.15),
+  };
+}
+
+export function buildMemoryDensityConstellation(segments: FeltTimeReplaySegment[]) {
+  return segments.map((segment, index) => ({
+    id: segment.id,
+    label: segment.label,
+    radius: 4 + segment.mirror.memoryDensity * 18,
+    brightness: clamp01(segment.mirror.realityDensity),
+    orbitWeight: clamp01(segment.feltDurationPercent * segments.length),
+    cluster: segment.mirror.chronoTherapyMode,
+    x: Math.cos(index) * (80 + segment.mirror.identityDistance * 120),
+    y: Math.sin(index) * (80 + segment.mirror.lifeDragIndex * 120),
+  }));
+}
