@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useReducer, useRef, type CSSProperties } from 'react';
+import NarratorPanel from './NarratorPanel';
 import {
   dispatchNarratorEvent,
   dispatchTimelineSyncEvent,
@@ -395,6 +396,8 @@ export default function LifeMapScene() {
           })}
         </div>
       </section>
+
+      <NarratorPanel />
 
       <aside className="panel export-panel" aria-label="Export panel">
         <button type="button">Export snapshot</button>
