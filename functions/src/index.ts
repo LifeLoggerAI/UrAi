@@ -33,3 +33,4 @@ export async function renderStoryMovieMP4(
 export * from "./corePipeline";
 export * from "./personalMirror";
 export * from "./predictiveMirror";
+export * from "./challengeMirror";
