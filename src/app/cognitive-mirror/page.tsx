@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../../components/ui/Card';
 import ChronoMirrorCard from '../../components/chrono/ChronoMirrorCard';
+import ChronoResonanceActions from '../../components/chrono/ChronoResonanceActions';
 import {
   ChronoRawUserData,
   computeChronoMirror,
@@ -12,7 +13,6 @@ import {
   getLatestChronoMirrorSnapshot,
 } from '../../lib/chronoMirrorRepository';
 import {
-  emitChronoAnalytics,
   getChronoNarratorBinding,
   getChronoRiveBinding,
 } from '../../lib/chronoAnalytics';
@@ -52,14 +52,6 @@ export default async function CognitiveMirrorPage() {
 
   const riveBinding = getChronoRiveBinding(chronoResult);
   const narratorBinding = getChronoNarratorBinding(chronoResult);
-
-  await emitChronoAnalytics(DEMO_USER_ID, {
-    insightResonanceScore: 4,
-    replayCount: 1,
-    pauseDurationMs: 12000,
-    returnedWithin24h: true,
-    replayResolved: true,
-  });
 
   const replaySegments = computeFeltTimeReplaySegments([
     {
@@ -123,6 +115,8 @@ export default async function CognitiveMirrorPage() {
       </div>
 
       <ChronoMirrorCard result={chronoResult} />
+
+      <ChronoResonanceActions userId={DEMO_USER_ID} />
 
       <Card header="Felt-Time Replay">
         <div className="space-y-4">
