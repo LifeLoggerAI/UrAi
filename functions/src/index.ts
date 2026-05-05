@@ -14,7 +14,6 @@ if (!admin.apps.length) {
 
 const bucket = admin.storage().bucket();
 
-// EXISTING MOVIE RENDER CODE KEPT
 export interface MovieDoc {
   durationSec?: number | null;
   renderProfile?: string | null;
@@ -26,16 +25,10 @@ export async function renderStoryMovieMP4(
   movieId: string,
   movie: MovieDoc
 ): Promise<{localOut: string}> {
-  const total = Math.max(6, Math.min(movie.durationSec ?? 10, 120));
-  const introDur = Math.max(1.5, Math.round(total * 0.2 * 10) / 10);
-  const midDur = Math.max(3.0, Math.round(total * 0.6 * 10) / 10);
-  const outroDur = Math.max(1.5, Math.round(total * 0.2 * 10) / 10);
-
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), `urai-${movieId}-`));
   const outPath = path.join(tmpDir, "out.mp4");
-
   return {localOut: outPath};
 }
 
-// NEW PIPELINE EXPORTS
 export * from "./corePipeline";
+export * from "./personalMirror";
