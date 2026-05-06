@@ -22,6 +22,7 @@ export const CHRONO_MIRROR_SNAPSHOTS = 'chronoMirrorSnapshots';
 export const CHRONO_VALIDATION_EVENTS = 'chrono_validation_events';
 
 export interface ChronoMirrorSnapshotDoc extends ChronoMirrorResult {
+  ownerUid: string;
   userId: string;
   source: 'live' | 'demo' | 'imported';
   rawData?: ChronoRawUserData;
@@ -29,14 +30,15 @@ export interface ChronoMirrorSnapshotDoc extends ChronoMirrorResult {
 }
 
 export async function createChronoMirrorSnapshot(
-  userId: string,
+  ownerUid: string,
   rawData: ChronoRawUserData,
   source: ChronoMirrorSnapshotDoc['source'] = 'live',
 ) {
   const signals = mapUserDataToChronoSignals(rawData);
   const result = computeChronoMirror(signals);
   return addDoc(collection(db(), CHRONO_MIRROR_SNAPSHOTS), {
-    userId,
+    ownerUid,
+    userId: ownerUid,
     source,
     rawData,
     ...result,
@@ -46,10 +48,10 @@ export async function createChronoMirrorSnapshot(
   });
 }
 
-export async function getLatestChronoMirrorSnapshot(userId: string) {
+export async function getLatestChronoMirrorSnapshot(ownerUid: string) {
   const snapshotQuery = query(
     collection(db(), CHRONO_MIRROR_SNAPSHOTS),
-    where('userId', '==', userId),
+    where('ownerUid', '==', ownerUid),
     orderBy('createdAt', 'desc'),
     limit(1),
   );
@@ -58,10 +60,10 @@ export async function getLatestChronoMirrorSnapshot(userId: string) {
   return snapshot.docs[0].data() as ChronoMirrorSnapshotDoc;
 }
 
-export async function getRecentChronoMirrorSnapshots(userId: string, count = 7) {
+export async function getRecentChronoMirrorSnapshots(ownerUid: string, count = 7) {
   const snapshotQuery = query(
     collection(db(), CHRONO_MIRROR_SNAPSHOTS),
-    where('userId', '==', userId),
+    where('ownerUid', '==', ownerUid),
     orderBy('createdAt', 'desc'),
     limit(count),
   );
@@ -70,13 +72,14 @@ export async function getRecentChronoMirrorSnapshots(userId: string, count = 7) 
 }
 
 export async function recordChronoValidationEvent(
-  userId: string,
+  ownerUid: string,
   event: ChronoValidationEvent,
   snapshotId?: string,
 ) {
   const computed = computeChronoValidation(event);
   return addDoc(collection(db(), CHRONO_VALIDATION_EVENTS), {
-    userId,
+    ownerUid,
+    userId: ownerUid,
     snapshotId: snapshotId ?? null,
     ...event,
     computed,
