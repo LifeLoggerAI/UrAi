@@ -15,6 +15,7 @@
     "codemod:dry": "node scripts/replace-demo-user.mjs --dry",
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "preflight": "npm run check:types && npm run lint && npm run build",
     "test": "jest",
     "test:unit": "jest tests/unit --passWithNoTests",
@@ -22,7 +23,17 @@
     "test:e2e": "playwright test",
     "test:smoke": "playwright test tests/e2e --grep @smoke",
     "verify:release": "node scripts/independent-release-verifier.mjs",
-    "verify:release:full": "URAI_VERIFIER_RUN_COMMANDS=1 node scripts/independent-release-verifier.mjs"
+    "verify:release:full": "URAI_VERIFIER_RUN_COMMANDS=1 node scripts/independent-release-verifier.mjs",
+    "urai:tier1:lock": "node scripts/tier-lock/tier1-launch-lock.mjs",
+    "urai:tier2:polish": "node scripts/tier-lock/route-audit.mjs",
+    "urai:tier3:audit": "pnpm typecheck && pnpm build && node scripts/tier-lock/route-audit.mjs && node scripts/tier-lock/console-warning-audit.mjs",
+    "urai:tier4:deploy-check": "node scripts/tier-lock/env-readiness-audit.mjs && pnpm build",
+    "urai:tier5:launch-lock": "pnpm urai:tier1:lock && pnpm urai:tier3:audit && pnpm urai:tier4:deploy-check && node scripts/tier-lock/tier-lock-report.mjs",
+    "urai:tier1": "pnpm urai:tier1:lock",
+    "urai:tier2": "pnpm urai:tier2:polish",
+    "urai:tier3": "pnpm urai:tier3:audit",
+    "urai:tier4": "pnpm urai:tier4:deploy-check",
+    "urai:tier5": "pnpm urai:tier5:launch-lock"
   },
   "dependencies": {
     "eslint-config-next": "^15.5.2",
