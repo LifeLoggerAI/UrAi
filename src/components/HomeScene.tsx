@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import AncientSignalAmbientLayer from "@/components/ancient-signals/AncientSignalAmbientLayer";
 import CompanionChat from "@/components/CompanionChat";
@@ -179,12 +180,12 @@ export default function HomeScene() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <a
+            <Link
               href="/u/adamclamp"
               className="inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-black"
             >
               Open public constellation
-            </a>
+            </Link>
 
             <button
               type="button"
