@@ -13,6 +13,8 @@ The current V1 repo focus is the **demo spine**:
 
 ## Quick start
 
+Use Node 20, then install and run the V1 app:
+
 ```bash
 npm install
 npm run check:v1
@@ -36,9 +38,20 @@ npm run check:v1
 npm run seed:demo
 npm run test:unit
 npm run check:types
+npm run lint
 npm run build
 npm run preflight
 ```
+
+Run browser coverage for the core demo paths:
+
+```bash
+npx playwright install --with-deps chromium
+npm run test:smoke
+npm run test:e2e
+```
+
+`npm run test:smoke` covers the launch-critical home route, public constellation route, waitlist happy path, waitlist invalid-email state, companion happy path, and companion empty-input guard.
 
 ## Utility commands
 
@@ -48,6 +61,8 @@ npm run preflight
 | `npm run seed:demo` | Writes `tmp/urai-demo-seed.json` |
 | `npm run seed:firestore` | Writes demo seed data to Firestore when Firebase Admin env vars are configured |
 | `npm run waitlist:export` | Exports `waitlistSignups` to `tmp/waitlist-export.csv` or a dry-run sample row locally |
+| `npm run test:smoke` | Runs launch-critical Playwright smoke tests |
+| `npm run test:e2e` | Runs the full Playwright suite across configured desktop and mobile projects |
 | `npm run preflight` | Runs V1 sanity check, typecheck, lint, unit tests, and build |
 
 ## Important lockfile note
