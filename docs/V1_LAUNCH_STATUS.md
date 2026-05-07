@@ -2,7 +2,7 @@
 
 ## Current status
 
-V1 demo spine is implemented and repo-wired, but still needs local/CI runtime validation and a refreshed `package-lock.json`.
+V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer, but still needs local/CI runtime validation and a refreshed `package-lock.json`.
 
 ## Implemented
 
@@ -29,6 +29,11 @@ V1 demo spine is implemented and repo-wired, but still needs local/CI runtime va
 - SEO/Open Graph metadata
 - Robots and sitemap metadata routes
 - Product, API, QA, deploy, privacy, consent, AI safety, and demo docs
+- Ancient Signals runtime engine
+- Ancient Signals HomeView body-weather overlay
+- Ancient Signals Firestore collection, owner-scoped rules, and indexes
+- Ancient Signals callable Functions and scheduled daily rollup
+- Ancient Signals passive rollup adapter
 
 ## Known blocker
 
@@ -60,6 +65,16 @@ npm run preflight
 npm run test:smoke
 ```
 
+## Functions validation
+
+Ancient Signals added Firebase Functions modules, so validate Functions separately:
+
+```bash
+cd functions
+npm install
+npm run build
+```
+
 ## Firebase validation
 
 With Firebase Admin env vars configured:
@@ -67,8 +82,19 @@ With Firebase Admin env vars configured:
 ```bash
 npm run seed:firestore
 npm run waitlist:export
-firebase deploy --only firestore:rules,firestore:indexes
+firebase deploy --only firestore:rules,firestore:indexes,functions
 ```
+
+## Ancient Signals validation
+
+- [ ] HomeView renders the body-weather overlay in demo mode
+- [ ] `GroundLayer` responds to Ancient Signals state, not a forced demo tier
+- [ ] Signed-in test user uses latest persisted `ancientSignals` snapshot when present
+- [ ] `generateAncientSignalsSnapshot` callable persists owner-scoped snapshots
+- [ ] `rollupAncientSignalsDaily` callable persists a daily rollup
+- [ ] `scheduledAncientSignalsDailyRollup` appears in deployed Functions
+- [ ] Scheduled rollups skip explicit Ancient Signals or health/wellness opt-outs
+- [ ] User-facing copy avoids diagnosis, lie-detection, and unsupported scent claims
 
 ## Launch readiness checklist
 
@@ -80,5 +106,6 @@ firebase deploy --only firestore:rules,firestore:indexes
 - [ ] `/u/adamclamp` checked on mobile and desktop
 - [ ] Waitlist dry-run checked locally
 - [ ] Waitlist Firestore write checked in configured environment
-- [ ] Firestore rules/indexes deployed
+- [ ] Ancient Signals demo and persisted snapshot paths checked
+- [ ] Firestore rules/indexes/functions deployed
 - [ ] `NEXT_PUBLIC_SITE_URL` set for deployment
