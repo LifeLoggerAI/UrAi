@@ -42,6 +42,40 @@ buildAncientSkyParams()
 buildAncientNarratorProfile()
 ```
 
+## Firestore Repository Module
+
+Location:
+
+```txt
+src/lib/ancientSignalsRepository.ts
+```
+
+Primary exports:
+
+```ts
+createAncientSignalSnapshot()
+createAncientSignalSnapshotFromSignals()
+getLatestAncientSignalSnapshot()
+getRecentAncientSignalSnapshots()
+```
+
+## Callable Functions
+
+Location:
+
+```txt
+functions/src/index.ts
+```
+
+Exported functions:
+
+```txt
+generateAncientSignalsSnapshot
+generateAuraAtmosphere
+generatePreverbalInsight
+rollupAncientSignalsDaily
+```
+
 ---
 
 # Runtime Status
@@ -56,7 +90,15 @@ buildAncientNarratorProfile()
 - Narrator profile bindings
 - Firestore snapshot type
 - Raw telemetry mapper
+- Firestore repository wrapper
+- Authenticated callable snapshot persistence
+- Aura/preverbal callable helpers
+- Daily rollup callable scaffold
+- Firestore owner-scoped security rule
+- Firestore composite index for `ownerUid + createdAt desc`
+- Firebase deploy config for Firestore rules/indexes/functions
 - System contract registration
+- Cognitive Mirror UI card
 - Unit tests
 
 ## Remaining Production Tasks
@@ -70,60 +112,18 @@ npm install
 npm run check:types
 npm test -- ancientSignals
 npm run build
+cd functions && npm install && npm run build
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
-### Firestore Persistence
+### Cloud Functions Verification
 
-Create production write path for:
+Run locally after function dependencies are installed:
 
-```txt
-ancientSignals/{snapshotId}
-```
-
-Document shape is represented by:
-
-```ts
-AncientSignalSnapshot
-```
-
-### Firestore Rules
-
-Protect:
-
-```txt
-ancientSignals
-```
-
-so users only access documents where `ownerUid == request.auth.uid`.
-
-### Firestore Indexes
-
-Add:
-
-```txt
-ownerUid + createdAt desc
-```
-
-### Cloud Functions
-
-Registered function names:
-
-```txt
-generateAncientSignalsSnapshot
-rollupAncientSignalsDaily
-generateAuraAtmosphere
-generatePreverbalInsight
-```
-
-Expected flow:
-
-```txt
-ingestEvent
-  -> enrichEvent
-  -> rollupDailyMetrics
-  -> generateAncientSignalsSnapshot
-  -> generateMoodForecast / generateDailyInsights / generateLifeMapStar
-  -> HomeView + Cognitive Mirror + Companion + Replay
+```bash
+cd functions
+npm run build
+firebase emulators:start --only functions,firestore
 ```
 
 ### Real Passive Signal Sources
@@ -141,6 +141,10 @@ Connect:
 - location rhythm when consented
 - audio rhythm and pause features when consented
 
+### HomeView Integration
+
+Cognitive Mirror currently previews Ancient Sky/HomeView bindings. The next visual task is to consume these values inside the actual HomeView atmosphere/orb/sky scene.
+
 ---
 
 # Firestore Schema
@@ -155,15 +159,19 @@ Document shape:
 
 ```ts
 {
-  id: string;
+  id?: string;
   ownerUid: string;
-  createdAt: string;
-  updatedAt: string;
-  sourceWindow: {
+  userId: string;
+  source: 'live' | 'demo' | 'imported' | 'rollup';
+  rawData?: Record<string, unknown> | null;
+  input?: Record<string, unknown>;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  sourceWindow?: {
     startAt: string;
     endAt: string;
     durationMinutes: number;
-  };
+  } | null;
   preverbalState: 'settled' | 'activated' | 'guarded' | 'seeking' | 'withdrawing' | 'overloaded' | 'recovering' | 'numb' | 'unknown';
   activationScore: number;
   withdrawalScore: number;
@@ -224,6 +232,42 @@ Document shape:
 
 ---
 
+# Firestore Rules
+
+`firestore.rules` protects:
+
+```txt
+ancientSignals/{id}
+```
+
+with the existing owner-scoped helper pattern:
+
+```txt
+read/update/delete require resource.data.ownerUid == request.auth.uid
+create requires request.resource.data.ownerUid == request.auth.uid
+```
+
+---
+
+# Firestore Index
+
+`firestore.indexes.json` includes:
+
+```txt
+collectionGroup: ancientSignals
+ownerUid ASC
+createdAt DESC
+```
+
+This supports:
+
+```ts
+getLatestAncientSignalSnapshot(ownerUid)
+getRecentAncientSignalSnapshots(ownerUid)
+```
+
+---
+
 # Consent Model
 
 Ancient Signals uses existing gates from `src/lib/system-of-systems-contract.ts`.
@@ -266,10 +310,15 @@ Your signals suggest a lower-stimulation mode may help.
 
 # UI Integration
 
-Recommended components:
+Implemented component:
 
 ```txt
 src/components/ancient-signals/AncientSignalCard.tsx
+```
+
+Recommended next components:
+
+```txt
 src/components/ancient-signals/AuraAtmosphere.tsx
 src/components/ancient-signals/PreverbalStateBadge.tsx
 src/components/ancient-signals/SignalDepthStack.tsx
