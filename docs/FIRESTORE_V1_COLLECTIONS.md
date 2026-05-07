@@ -2,7 +2,15 @@
 
 This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
-## users/{userId}
+## Ownership convention
+
+Private user-owned Firestore documents must include `ownerUid`. Security rules use `ownerUid` for authenticated ownership checks.
+
+Demo/static data may also contain `userId` for display and seed readability, but production private collections should write `ownerUid` before client access is enabled.
+
+Server-only collections, such as `waitlistSignups`, do not require `ownerUid` because writes happen through Firebase Admin routes.
+
+## users/{uid}
 
 ```ts
 {
@@ -19,7 +27,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   occurredAt: string;
   title: string;
   detail: string;
@@ -34,7 +43,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   title: string;
   summary: string;
   emotionalTone: string;
@@ -47,7 +57,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   generatedAt: string;
   rhythmState: "stable" | "off-rhythm" | "overstimulated" | "recovering";
   summary: string;
@@ -60,7 +71,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   weekOf: string;
   title: string;
   highlights: string[];
@@ -72,7 +84,7 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId?: string;
+  ownerUid?: string;
   sessionId: string;
   role: "user" | "assistant" | "system";
   content: string;
@@ -86,7 +98,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   sourceIds: string[];
   sourceTypes: string[];
   title: string;
@@ -101,7 +114,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   title: string;
   prompt: string;
   symbolicTags: string[];
@@ -115,7 +129,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   personKey: string;
   signalType: string;
   emotionalTone: string;
@@ -128,7 +143,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   source: string;
   signalType: string;
   value: unknown;
@@ -142,7 +158,8 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 ```ts
 {
-  userId: string;
+  ownerUid: string;
+  userId?: string;
   skyState: "clear" | "mist" | "stars" | "storm" | "dawn";
   groundTier: 1 | 2 | 3 | 4 | 5;
   aura: string;
@@ -151,7 +168,7 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 }
 ```
 
-## waitlistSignups/{signupId}
+## waitlistSignups/{normalizedEmail}
 
 ```ts
 {
@@ -159,8 +176,12 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
   source: string;
   handle?: string;
   intent?: string;
+  status: "joined";
   createdAt: string;
-  userAgent?: string;
+  updatedAt: string;
+  lastSource?: string;
+  lastHandle?: string;
+  lastIntent?: string;
 }
 ```
 
@@ -180,6 +201,6 @@ This is the minimum data contract for the URAI V1 demo spine and launch funnel.
 
 - Public demo data can be served from static seed data.
 - Waitlist writes should be allowed only through server routes or Cloud Functions.
-- User private memory data should require authenticated ownership checks.
+- User private memory data should require authenticated ownership checks using `ownerUid`.
 - Passive signals should never be publicly readable.
 - Relationship signals should never be publicly readable.
