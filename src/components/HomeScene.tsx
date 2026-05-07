@@ -18,7 +18,6 @@ export default function HomeScene() {
       <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
       <AncientSignalAmbientLayer result={ancientResult} source={source} loading={loading} />
       <GroundLayer
-        forcedTier={profile.symbolicState.groundTier}
         state={{
           moodScore: ancientResult.auraAtmosphere.warmth,
           rhythmState: ancientResult.preverbalState === "recovering" ? "recovering" : ancientResult.preverbalState === "activated" ? "overstimulated" : "stable",
