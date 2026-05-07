@@ -181,6 +181,13 @@ service cloud.firestore {
       allow delete: if canDeleteOwnerDoc();
     }
 
+    match /ancientSignals/{id} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if canDeleteOwnerDoc();
+    }
+
     // Feedback + bug capture live outside auth to make onboarding frictionless
     match /feedback/{id} {
       allow read: if false;
