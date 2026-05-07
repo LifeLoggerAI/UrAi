@@ -20,18 +20,21 @@ import {
 
 export const ANCIENT_SIGNAL_SNAPSHOTS = 'ancientSignals';
 
+export type AncientSignalSnapshotSource = 'live' | 'demo' | 'imported' | 'rollup' | 'scheduled_rollup';
+
 export interface AncientSignalSnapshotDoc extends AncientSignalResult {
   ownerUid: string;
   userId: string;
-  source: 'live' | 'demo' | 'imported' | 'rollup';
-  rawData?: AncientRawUserData;
-  input?: AncientSignalWindow;
+  source: AncientSignalSnapshotSource;
+  rollupDate?: string;
+  rawData?: AncientRawUserData | Record<string, unknown> | null;
+  input?: AncientSignalWindow | Record<string, unknown>;
   consentBasis: AncientSignalConsentBasis;
   sourceWindow?: {
     startAt: string;
     endAt: string;
     durationMinutes: number;
-  };
+  } | null;
   createdAt?: unknown;
   updatedAt?: unknown;
 }
@@ -40,7 +43,7 @@ export async function createAncientSignalSnapshot(
   ownerUid: string,
   rawData: AncientRawUserData,
   options: {
-    source?: AncientSignalSnapshotDoc['source'];
+    source?: AncientSignalSnapshotSource;
     consentBasis?: AncientSignalConsentBasis;
     sourceWindow?: AncientSignalSnapshotDoc['sourceWindow'];
   } = {},
@@ -66,7 +69,7 @@ export async function createAncientSignalSnapshotFromSignals(
   ownerUid: string,
   input: AncientSignalWindow,
   options: {
-    source?: AncientSignalSnapshotDoc['source'];
+    source?: AncientSignalSnapshotSource;
     consentBasis?: AncientSignalConsentBasis;
     sourceWindow?: AncientSignalSnapshotDoc['sourceWindow'];
   } = {},
