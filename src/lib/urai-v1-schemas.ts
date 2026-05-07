@@ -18,6 +18,11 @@ export type SymbolicTag =
   | "companion"
   | "bloom";
 
+export type OwnedDocument = {
+  ownerUid: string;
+  userId?: string;
+};
+
 export type UserProfile = {
   id: string;
   handle: string;
@@ -28,9 +33,8 @@ export type UserProfile = {
   createdAt: string;
 };
 
-export type TimelineEvent = {
+export type TimelineEvent = OwnedDocument & {
   id: string;
-  userId: string;
   occurredAt: string;
   title: string;
   detail: string;
@@ -40,9 +44,8 @@ export type TimelineEvent = {
   bloomId?: string;
 };
 
-export type MemoryBloom = {
+export type MemoryBloom = OwnedDocument & {
   id: string;
-  userId: string;
   title: string;
   summary: string;
   emotionalTone: EmotionalTone;
@@ -50,9 +53,8 @@ export type MemoryBloom = {
   narratorLine: string;
 };
 
-export type MoodForecast = {
+export type MoodForecast = OwnedDocument & {
   id: string;
-  userId: string;
   generatedAt: string;
   rhythmState: "stable" | "off-rhythm" | "overstimulated" | "recovering";
   summary: string;
@@ -60,18 +62,16 @@ export type MoodForecast = {
   nextBestAction: string;
 };
 
-export type WeeklyReflection = {
+export type WeeklyReflection = OwnedDocument & {
   id: string;
-  userId: string;
   weekOf: string;
   title: string;
   highlights: string[];
   narratorSummary: string;
 };
 
-export type SymbolicState = {
+export type SymbolicState = OwnedDocument & {
   id: string;
-  userId: string;
   skyState: "clear" | "mist" | "stars" | "storm" | "dawn";
   groundTier: 1 | 2 | 3 | 4 | 5;
   aura: string;
@@ -89,6 +89,19 @@ export type CompanionChatOutput = {
   reply: string;
   moodTag: EmotionalTone;
   insights: string[];
+};
+
+export type WaitlistSignup = {
+  email: string;
+  source: string;
+  handle?: string;
+  intent?: string;
+  status: "joined";
+  createdAt: string;
+  updatedAt: string;
+  lastSource?: string;
+  lastHandle?: string;
+  lastIntent?: string;
 };
 
 export type UraiDemoProfile = {
