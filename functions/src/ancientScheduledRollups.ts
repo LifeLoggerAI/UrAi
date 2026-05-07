@@ -8,6 +8,8 @@ if (!admin.apps.length) {
 }
 
 const firestore = admin.firestore();
+const USER_PAGE_SIZE = 250;
+const MAX_USERS_PER_RUN = 5000;
 
 function previousUtcDate() {
   const date = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -77,6 +79,34 @@ async function writeScheduledAncientSignalRollup(ownerUid: string, date: string)
   };
 }
 
+async function processUserPage(
+  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  date: string,
+) {
+  const results: Array<Record<string, unknown>> = [];
+
+  for (const user of users.docs) {
+    if (!userAllowsAncientSignals(user.data())) {
+      results.push({ownerUid: user.id, status: "skipped_consent_or_feature_flag"});
+      continue;
+    }
+
+    if (await hasExistingDailyRollup(user.id, date)) {
+      results.push({ownerUid: user.id, status: "skipped_existing"});
+      continue;
+    }
+
+    try {
+      results.push(await writeScheduledAncientSignalRollup(user.id, date));
+    } catch (error) {
+      console.error("Scheduled Ancient Signals rollup failed", user.id, error);
+      results.push({ownerUid: user.id, status: "failed"});
+    }
+  }
+
+  return results;
+}
+
 export const scheduledAncientSignalsDailyRollup = onSchedule(
   {
     schedule: "every day 03:30",
@@ -85,31 +115,33 @@ export const scheduledAncientSignalsDailyRollup = onSchedule(
   },
   async () => {
     const date = previousUtcDate();
-    const users = await firestore.collection("users").limit(500).get();
     const results: Array<Record<string, unknown>> = [];
+    let lastDoc: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+    let processedUsers = 0;
+    let hasMore = true;
 
-    for (const user of users.docs) {
-      if (!userAllowsAncientSignals(user.data())) {
-        results.push({ownerUid: user.id, status: "skipped_consent_or_feature_flag"});
-        continue;
+    while (hasMore && processedUsers < MAX_USERS_PER_RUN) {
+      let usersQuery = firestore.collection("users")
+        .orderBy(admin.firestore.FieldPath.documentId())
+        .limit(USER_PAGE_SIZE);
+
+      if (lastDoc) {
+        usersQuery = usersQuery.startAfter(lastDoc);
       }
 
-      if (await hasExistingDailyRollup(user.id, date)) {
-        results.push({ownerUid: user.id, status: "skipped_existing"});
-        continue;
-      }
+      const users = await usersQuery.get();
+      if (users.empty) break;
 
-      try {
-        results.push(await writeScheduledAncientSignalRollup(user.id, date));
-      } catch (error) {
-        console.error("Scheduled Ancient Signals rollup failed", user.id, error);
-        results.push({ownerUid: user.id, status: "failed"});
-      }
+      results.push(...await processUserPage(users, date));
+      processedUsers += users.size;
+      lastDoc = users.docs[users.docs.length - 1] ?? null;
+      hasMore = users.size === USER_PAGE_SIZE;
     }
 
     console.log("scheduledAncientSignalsDailyRollup", {
       date,
-      totalUsers: users.size,
+      processedUsers,
+      capped: processedUsers >= MAX_USERS_PER_RUN,
       created: results.filter((result) => result.status === "created").length,
       skipped: results.filter((result) => String(result.status).startsWith("skipped")).length,
       failed: results.filter((result) => result.status === "failed").length,
