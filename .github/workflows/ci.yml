@@ -1,21 +1,45 @@
 name: CI
+
 on:
   pull_request:
   push:
-    branches: [ "!main" ]
+    branches:
+      - "**"
+      - "!main"
+
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
     steps:
-      - uses: actions/checkout@v4
-        with: { lfs: true }
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
       # Use npm install until package-lock.json is regenerated after dependency changes.
       # Switch back to npm ci once package-lock.json includes firebase-admin, tailwindcss, postcss, and autoprefixer.
-      - run: npm install
-      - run: npm run seed:demo
-      - run: npm run test:unit
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run build
+      - name: Install dependencies
+        run: npm install
+
+      - name: Seed demo data
+        run: npm run seed:demo
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
