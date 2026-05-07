@@ -1,4 +1,5 @@
 import ForecastCard from "@/components/ForecastCard";
+import WaitlistForm from "@/components/WaitlistForm";
 import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
 import { getDemoProfileByHandle } from "@/lib/demo-data";
 
@@ -12,9 +13,10 @@ export default function PublicConstellationPage({ params }: { params: { handle: 
         <h1 className="mt-4 text-4xl font-semibold">@{profile.user.handle}</h1>
         <p className="mt-3 max-w-2xl text-white/65">{profile.user.tagline}</p>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
           <ForecastCard forecast={profile.moodForecast} />
           <WeeklyReflectionCard reflection={profile.weeklyReflection} />
+          <WaitlistForm source="public-constellation" handle={profile.user.handle} />
         </div>
 
         <section className="mt-8">
