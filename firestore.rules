@@ -64,12 +64,12 @@ service cloud.firestore {
     match /insightMarket/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /chronoMirrorSnapshots/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /chrono_validation_events/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
+    match /ancientSignals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /companionMessages/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /narratorInsights/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /passiveSignals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
     match /symbolicStates/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
 
-    // Waitlist writes are handled by the server route with Firebase Admin.
     match /waitlistSignups/{id} {
       allow read, write: if false;
     }
