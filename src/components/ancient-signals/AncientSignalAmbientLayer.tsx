@@ -2,9 +2,12 @@
 
 import React from "react";
 import { AncientSignalResult } from "@/lib/ancientSignals";
+import { AncientSignalsSource } from "@/lib/useAncientSignals";
 
 type Props = {
   result: AncientSignalResult;
+  source?: AncientSignalsSource;
+  loading?: boolean;
   className?: string;
 };
 
@@ -12,7 +15,7 @@ const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const percent = (value: number) => `${Math.round(clamp01(value) * 100)}%`;
 const label = (value: string) => value.replace(/_/g, " ");
 
-export default function AncientSignalAmbientLayer({ result, className }: Props) {
+export default function AncientSignalAmbientLayer({ result, source = "demo", loading = false, className }: Props) {
   const activation = clamp01(result.activationScore);
   const recovery = clamp01(result.recoveryPulseScore);
   const withdrawal = clamp01(result.withdrawalScore);
@@ -20,12 +23,14 @@ export default function AncientSignalAmbientLayer({ result, className }: Props) 
   const haze = clamp01(result.visualState.skyHaze);
   const staticCharge = clamp01(result.auraAtmosphere.staticCharge);
   const bloom = clamp01(result.visualState.bloomReadiness);
+  const sourceLabel = loading ? "loading" : source === "persisted" ? "live snapshot" : source;
 
   return (
     <div
       aria-label={`Ancient Signals body-weather: ${label(result.preverbalState)}`}
       className={["absolute inset-0 pointer-events-none", className ?? ""].join(" ")}
       data-preverbal-state={result.preverbalState}
+      data-ancient-signals-source={source}
     >
       <div
         aria-hidden
@@ -62,9 +67,14 @@ export default function AncientSignalAmbientLayer({ result, className }: Props) 
       <div className="absolute bottom-8 left-1/2 w-[min(92vw,720px)] -translate-x-1/2 rounded-3xl border border-white/10 bg-black/30 p-4 text-white shadow-2xl backdrop-blur-xl">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.32em] text-cyan-200/70">
-              Ancient Signals
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-[10px] uppercase tracking-[0.32em] text-cyan-200/70">
+                Ancient Signals
+              </p>
+              <span className="rounded-full bg-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.18em] text-white/45">
+                {sourceLabel}
+              </span>
+            </div>
             <p className="mt-1 text-lg font-semibold capitalize">
               Body-weather: {label(result.preverbalState)}
             </p>
