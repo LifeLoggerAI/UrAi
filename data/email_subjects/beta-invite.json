@@ -1,0 +1,20 @@
+[
+  {"flow": "beta-invite", "language": "en", "tone": "exclusivity", "subject_line": "{{first_name}}, you’re on the list for {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "en", "tone": "clarity", "subject_line": "Instructions for your {{beta_feature_name}} early access"},
+  {"flow": "beta-invite", "language": "en", "tone": "urgency", "subject_line": "Activate {{beta_feature_name}} before the window closes {{access_window}}"},
+  {"flow": "beta-invite", "language": "es", "tone": "exclusivity", "subject_line": "{{first_name}}, estás en la lista para {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "es", "tone": "clarity", "subject_line": "Instrucciones para tu acceso anticipado a {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "es", "tone": "urgency", "subject_line": "Activa {{beta_feature_name}} antes de que cierre {{access_window}}"},
+  {"flow": "beta-invite", "language": "pt", "tone": "exclusivity", "subject_line": "{{first_name}}, você está na lista do {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "pt", "tone": "clarity", "subject_line": "Passo a passo para acessar antes o {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "pt", "tone": "urgency", "subject_line": "Ative o {{beta_feature_name}} antes do fim de {{access_window}}"},
+  {"flow": "beta-invite", "language": "fr", "tone": "exclusivity", "subject_line": "{{first_name}}, vous êtes sélectionné·e pour {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "fr", "tone": "clarity", "subject_line": "Mode d’emploi pour accéder en avant-première à {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "fr", "tone": "urgency", "subject_line": "Activez {{beta_feature_name}} avant la fin de {{access_window}}"},
+  {"flow": "beta-invite", "language": "hi", "tone": "exclusivity", "subject_line": "{{first_name}}, आपको {{beta_feature_name}} की विशेष पहुँच मिली है"},
+  {"flow": "beta-invite", "language": "hi", "tone": "clarity", "subject_line": "{{beta_feature_name}} अर्ली एक्सेस के निर्देश"},
+  {"flow": "beta-invite", "language": "hi", "tone": "urgency", "subject_line": "{{access_window}} से पहले {{beta_feature_name}} सक्रिय करें"},
+  {"flow": "beta-invite", "language": "zh", "tone": "exclusivity", "subject_line": "{{first_name}}，你已获选体验 {{beta_feature_name}}"},
+  {"flow": "beta-invite", "language": "zh", "tone": "clarity", "subject_line": "{{beta_feature_name}} 早鸟体验指南"},
+  {"flow": "beta-invite", "language": "zh", "tone": "urgency", "subject_line": "请在 {{access_window}} 前激活 {{beta_feature_name}}"}
+]

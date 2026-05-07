@@ -1,0 +1,19 @@
+flow,language,tone,subject_line
+welcome,en,curiosity,Welcome inside UrAi — see what’s waiting, {{first_name}}
+welcome,en,clarity,Your UrAi tools are ready to explore
+welcome,en,urgency,Start your UrAi journey today, {{first_name}}
+welcome,es,curiosity,Descubre lo que UrAi preparó para ti, {{first_name}}
+welcome,es,clarity,Tus herramientas de UrAi ya están listas
+welcome,es,urgency,Empieza hoy tu recorrido UrAi, {{first_name}}
+welcome,pt,curiosity,Veja o que a UrAi reservou para você, {{first_name}}
+welcome,pt,clarity,Suas ferramentas UrAi estão prontas para uso
+welcome,pt,urgency,Comece sua jornada UrAi hoje, {{first_name}}
+welcome,fr,curiosity,Explorez ce qu’UrAi vous réserve, {{first_name}}
+welcome,fr,clarity,Vos outils UrAi sont prêts à l’emploi
+welcome,fr,urgency,Lancez votre parcours UrAi dès aujourd’hui, {{first_name}}
+welcome,hi,curiosity,जानें UrAi ने आपके लिए क्या तैयार किया है, {{first_name}}
+welcome,hi,clarity,आपके UrAi टूल अब तैयार हैं
+welcome,hi,urgency,आज ही अपना UrAi सफ़र शुरू करें, {{first_name}}
+welcome,zh,curiosity,来看看 UrAi 为你准备了什么，{{first_name}}
+welcome,zh,clarity,你的 UrAi 工具已就绪
+welcome,zh,urgency,立即开启你的 UrAi 旅程，{{first_name}}

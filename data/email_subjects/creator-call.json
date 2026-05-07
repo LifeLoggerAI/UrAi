@@ -1,0 +1,20 @@
+[
+  {"flow": "creator-call", "language": "en", "tone": "anticipation", "subject_line": "Creators circle: reserve your seat for {{call_date}}"},
+  {"flow": "creator-call", "language": "en", "tone": "clarity", "subject_line": "Agenda and prep for our upcoming creator call"},
+  {"flow": "creator-call", "language": "en", "tone": "urgency", "subject_line": "Last spots for the UrAi creator session on {{call_date}}"},
+  {"flow": "creator-call", "language": "es", "tone": "anticipation", "subject_line": "Círculo de creadores: reserva tu lugar para {{call_date}}"},
+  {"flow": "creator-call", "language": "es", "tone": "clarity", "subject_line": "Agenda y preparación para la próxima llamada de creadores"},
+  {"flow": "creator-call", "language": "es", "tone": "urgency", "subject_line": "Últimos lugares para la sesión de creadores de UrAi en {{call_date}}"},
+  {"flow": "creator-call", "language": "pt", "tone": "anticipation", "subject_line": "Círculo de criadores: garanta sua vaga em {{call_date}}"},
+  {"flow": "creator-call", "language": "pt", "tone": "clarity", "subject_line": "Agenda e preparos para nossa próxima call de criadores"},
+  {"flow": "creator-call", "language": "pt", "tone": "urgency", "subject_line": "Últimas vagas para a sessão de criadores UrAi em {{call_date}}"},
+  {"flow": "creator-call", "language": "fr", "tone": "anticipation", "subject_line": "Cercle des créateur·rices : réservez pour le {{call_date}}"},
+  {"flow": "creator-call", "language": "fr", "tone": "clarity", "subject_line": "Agenda et préparation pour notre prochain appel créateur·rices"},
+  {"flow": "creator-call", "language": "fr", "tone": "urgency", "subject_line": "Dernières places pour la session créateur·rices UrAi du {{call_date}}"},
+  {"flow": "creator-call", "language": "hi", "tone": "anticipation", "subject_line": "क्रिएटर सर्कल: {{call_date}} सत्र के लिए स्थान सुरक्षित करें"},
+  {"flow": "creator-call", "language": "hi", "tone": "clarity", "subject_line": "हमारी अगली क्रिएटर कॉल की एजेंडा और तैयारी"},
+  {"flow": "creator-call", "language": "hi", "tone": "urgency", "subject_line": "{{call_date}} की UrAi क्रिएटर सत्र में सीमित स्थान शेष हैं"},
+  {"flow": "creator-call", "language": "zh", "tone": "anticipation", "subject_line": "创作者圈：立即预留 {{call_date}} 的席位"},
+  {"flow": "creator-call", "language": "zh", "tone": "clarity", "subject_line": "UrAi 创作者会议议程与准备清单"},
+  {"flow": "creator-call", "language": "zh", "tone": "urgency", "subject_line": "{{call_date}} UrAi 创作者会仅剩少量席位"}
+]

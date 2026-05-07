@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import AncientSignalAmbientLayer from "@/components/ancient-signals/AncientSignalAmbientLayer";
+import CompanionChat from "@/components/CompanionChat";
+import ForecastCard from "@/components/ForecastCard";
+import GroundLayer from "@/components/GroundLayer";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
 import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
+import WaitlistForm from "@/components/WaitlistForm";
+import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
+import { adamClampDemoProfile } from "@/lib/demo-data";
+import { useAncientSignals } from "@/lib/useAncientSignals";
 
 type HomeMode = "home" | "transitioning" | "lifemap";
 
@@ -26,6 +34,9 @@ const TONE_COPY = {
 };
 
 export default function HomeScene() {
+  const profile = adamClampDemoProfile;
+  const { result: ancientResult, source, loading } = useAncientSignals();
+
   const [mode, setMode] = useState<HomeMode>("home");
   const [reduceMotion, setReduceMotion] = useState(false);
   const emotionalTone = useEmotionalTone();
@@ -72,7 +83,7 @@ export default function HomeScene() {
 
   if (mode === "lifemap") {
     return (
-      <div className="relative w-full h-dvh bg-black overflow-hidden">
+      <div className="relative h-dvh w-full overflow-hidden bg-black">
         <LifeMapScene />
         <button
           type="button"
@@ -90,7 +101,11 @@ export default function HomeScene() {
   const copy = TONE_COPY[emotionalTone];
 
   return (
-    <div className={`home-scene tone-${emotionalTone} ${isTransitioning ? "is-transitioning" : ""}`}>
+    <main
+      className={`home-scene tone-${emotionalTone} ${
+        isTransitioning ? "is-transitioning" : ""
+      } relative min-h-dvh overflow-hidden bg-black text-white`}
+    >
       <button
         type="button"
         onClick={openLifeMap}
@@ -101,40 +116,36 @@ export default function HomeScene() {
         <span className="sr-only">Open URAI Life Map</span>
       </button>
 
+      <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
+
+      <AncientSignalAmbientLayer result={ancientResult} source={source} loading={loading} />
+
+      <GroundLayer
+        state={{
+          moodScore: ancientResult.auraAtmosphere.warmth,
+          rhythmState:
+            ancientResult.preverbalState === "recovering"
+              ? "recovering"
+              : ancientResult.preverbalState === "activated"
+                ? "overstimulated"
+                : "stable",
+          recoveryScore: ancientResult.recoveryPulseScore,
+          vitalityScore: ancientResult.seekingScore,
+          symbolicIntensity: ancientResult.signalDepth.auraAtmosphere,
+          shadowStress: ancientResult.activationScore,
+        }}
+      />
+
       <div className="emotional-wash" aria-hidden />
       <div className="ambient-drift" aria-hidden />
       <div className="sky-breath" aria-hidden />
-
-      <video
-        src="/assets/sky/sky-demo.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="scene-layer sky-layer"
-      />
-      <video
-        src="/assets/ground/ground-demo.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="scene-layer ground-layer"
-      />
-      <video
-        src="/assets/avatar/avatar-demo.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="scene-layer avatar-layer"
-      />
 
       <div className="parallax-field parallax-near" aria-hidden>
         <span />
         <span />
         <span />
       </div>
+
       <div className="parallax-field parallax-far" aria-hidden>
         <span />
         <span />
@@ -152,6 +163,48 @@ export default function HomeScene() {
 
       <div className="transition-vignette" aria-hidden />
 
+      <section className="relative z-20 mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-between px-5 py-8">
+        <div className="max-w-3xl pt-10">
+          <p className="text-xs uppercase tracking-[0.45em] text-white/50">
+            URAI V1 Demo Spine
+          </p>
+
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
+            A passive emotional operating system for memory, mood, and meaning.
+          </h1>
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
+            This route renders the core loop: symbolic environment, mood forecast,
+            weekly reflection, companion narrator, and Ancient Signals body-weather.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="/u/adamclamp"
+              className="inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-black"
+            >
+              Open public constellation
+            </a>
+
+            <button
+              type="button"
+              onClick={openLifeMap}
+              disabled={isTransitioning}
+              className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 disabled:cursor-progress disabled:opacity-70"
+            >
+              {isTransitioning ? copy.opening : "Open Life Map"}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
+          <ForecastCard forecast={profile.moodForecast} />
+          <WeeklyReflectionCard reflection={profile.weeklyReflection} />
+          <CompanionChat />
+          <WaitlistForm source="home" />
+        </div>
+      </section>
+
       <div className="tone-chip" aria-hidden>
         {emotionalTone}
       </div>
@@ -164,11 +217,6 @@ export default function HomeScene() {
           --tone-b: rgba(196, 181, 253, 0.12);
           --tone-c: rgba(255, 255, 255, 0.07);
           --tone-speed: 1;
-          position: relative;
-          width: 100%;
-          height: 100dvh;
-          overflow: hidden;
-          background: #000;
           isolation: isolate;
         }
 
@@ -203,7 +251,7 @@ export default function HomeScene() {
         .sky-trigger {
           position: absolute;
           inset: 0;
-          z-index: 20;
+          z-index: 10;
           cursor: zoom-in;
           border: 0;
           background: transparent;
@@ -211,15 +259,6 @@ export default function HomeScene() {
 
         .sky-trigger:disabled {
           cursor: progress;
-        }
-
-        .scene-layer {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          will-change: transform, opacity, filter;
         }
 
         .emotional-wash,
@@ -239,7 +278,9 @@ export default function HomeScene() {
             linear-gradient(180deg, transparent 20%, var(--tone-c) 100%);
           mix-blend-mode: screen;
           opacity: 0.78;
-          transition: opacity 900ms ease, transform 1200ms ease;
+          transition:
+            opacity 900ms ease,
+            transform 1200ms ease;
         }
 
         .ambient-drift {
@@ -255,31 +296,14 @@ export default function HomeScene() {
 
         .sky-breath {
           z-index: 5;
-          background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.13), transparent 18%);
+          background: radial-gradient(
+            circle at 50% 35%,
+            rgba(255, 255, 255, 0.13),
+            transparent 18%
+          );
           mix-blend-mode: screen;
           opacity: 0.32;
           animation: skyBreath calc(6.5s * var(--tone-speed)) ease-in-out infinite;
-        }
-
-        .sky-layer {
-          object-fit: cover;
-          z-index: 1;
-          animation: skyIdle calc(16s * var(--tone-speed)) ease-in-out infinite alternate;
-          transition: transform 1450ms cubic-bezier(0.16, 1, 0.3, 1), filter 1450ms ease, opacity 900ms ease;
-        }
-
-        .ground-layer {
-          object-fit: cover;
-          z-index: 2;
-          animation: groundIdle calc(18s * var(--tone-speed)) ease-in-out infinite alternate;
-          transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 900ms ease, filter 900ms ease;
-        }
-
-        .avatar-layer {
-          object-fit: contain;
-          z-index: 3;
-          animation: avatarFloat calc(7.5s * var(--tone-speed)) ease-in-out infinite;
-          transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease, filter 800ms ease;
         }
 
         .parallax-field {
@@ -295,16 +319,66 @@ export default function HomeScene() {
           position: absolute;
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.9);
-          box-shadow: 0 0 16px rgba(255, 255, 255, 0.7), 0 0 32px var(--tone-a);
+          box-shadow:
+            0 0 16px rgba(255, 255, 255, 0.7),
+            0 0 32px var(--tone-a);
         }
 
-        .parallax-near span:nth-child(1) { left: 18%; top: 26%; width: 0.22rem; height: 0.22rem; animation: nearDrift calc(11s * var(--tone-speed)) ease-in-out infinite alternate; }
-        .parallax-near span:nth-child(2) { left: 72%; top: 38%; width: 0.18rem; height: 0.18rem; animation: nearDrift calc(13s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
-        .parallax-near span:nth-child(3) { left: 52%; top: 16%; width: 0.16rem; height: 0.16rem; animation: nearDrift calc(10s * var(--tone-speed)) ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(1) { left: 28%; top: 14%; width: 0.12rem; height: 0.12rem; animation: farDrift calc(18s * var(--tone-speed)) ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(2) { left: 80%; top: 22%; width: 0.1rem; height: 0.1rem; animation: farDrift calc(20s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
-        .parallax-far span:nth-child(3) { left: 64%; top: 62%; width: 0.11rem; height: 0.11rem; animation: farDrift calc(17s * var(--tone-speed)) ease-in-out infinite alternate; }
-        .parallax-far span:nth-child(4) { left: 12%; top: 58%; width: 0.09rem; height: 0.09rem; animation: farDrift calc(21s * var(--tone-speed)) ease-in-out infinite alternate-reverse; }
+        .parallax-near span:nth-child(1) {
+          left: 18%;
+          top: 26%;
+          width: 0.22rem;
+          height: 0.22rem;
+          animation: nearDrift calc(11s * var(--tone-speed)) ease-in-out infinite alternate;
+        }
+
+        .parallax-near span:nth-child(2) {
+          left: 72%;
+          top: 38%;
+          width: 0.18rem;
+          height: 0.18rem;
+          animation: nearDrift calc(13s * var(--tone-speed)) ease-in-out infinite alternate-reverse;
+        }
+
+        .parallax-near span:nth-child(3) {
+          left: 52%;
+          top: 16%;
+          width: 0.16rem;
+          height: 0.16rem;
+          animation: nearDrift calc(10s * var(--tone-speed)) ease-in-out infinite alternate;
+        }
+
+        .parallax-far span:nth-child(1) {
+          left: 28%;
+          top: 14%;
+          width: 0.12rem;
+          height: 0.12rem;
+          animation: farDrift calc(18s * var(--tone-speed)) ease-in-out infinite alternate;
+        }
+
+        .parallax-far span:nth-child(2) {
+          left: 80%;
+          top: 22%;
+          width: 0.1rem;
+          height: 0.1rem;
+          animation: farDrift calc(20s * var(--tone-speed)) ease-in-out infinite alternate-reverse;
+        }
+
+        .parallax-far span:nth-child(3) {
+          left: 64%;
+          top: 62%;
+          width: 0.11rem;
+          height: 0.11rem;
+          animation: farDrift calc(17s * var(--tone-speed)) ease-in-out infinite alternate;
+        }
+
+        .parallax-far span:nth-child(4) {
+          left: 12%;
+          top: 58%;
+          width: 0.09rem;
+          height: 0.09rem;
+          animation: farDrift calc(21s * var(--tone-speed)) ease-in-out infinite alternate-reverse;
+        }
 
         .star-tunnel {
           position: absolute;
@@ -317,7 +391,9 @@ export default function HomeScene() {
             radial-gradient(circle at 50% 32%, rgba(205, 225, 255, 0.45), transparent 6%),
             radial-gradient(circle at 42% 44%, var(--tone-b), transparent 12%),
             radial-gradient(circle at 58% 48%, var(--tone-a), transparent 14%);
-          transition: opacity 800ms ease, transform 1450ms cubic-bezier(0.16, 1, 0.3, 1);
+          transition:
+            opacity 800ms ease,
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .star {
@@ -326,15 +402,44 @@ export default function HomeScene() {
           height: 0.42rem;
           border-radius: 999px;
           background: white;
-          box-shadow: 0 0 18px rgba(255, 255, 255, 0.95), 0 0 42px var(--tone-a);
+          box-shadow:
+            0 0 18px rgba(255, 255, 255, 0.95),
+            0 0 42px var(--tone-a);
           opacity: 0.85;
         }
 
-        .star-one { left: 30%; top: 24%; }
-        .star-two { left: 45%; top: 18%; width: 0.32rem; height: 0.32rem; }
-        .star-three { left: 58%; top: 31%; width: 0.5rem; height: 0.5rem; }
-        .star-four { left: 66%; top: 43%; width: 0.28rem; height: 0.28rem; }
-        .star-five { left: 38%; top: 52%; width: 0.24rem; height: 0.24rem; }
+        .star-one {
+          left: 30%;
+          top: 24%;
+        }
+
+        .star-two {
+          left: 45%;
+          top: 18%;
+          width: 0.32rem;
+          height: 0.32rem;
+        }
+
+        .star-three {
+          left: 58%;
+          top: 31%;
+          width: 0.5rem;
+          height: 0.5rem;
+        }
+
+        .star-four {
+          left: 66%;
+          top: 43%;
+          width: 0.28rem;
+          height: 0.28rem;
+        }
+
+        .star-five {
+          left: 38%;
+          top: 52%;
+          width: 0.24rem;
+          height: 0.24rem;
+        }
 
         .transition-vignette {
           position: absolute;
@@ -342,7 +447,12 @@ export default function HomeScene() {
           z-index: 9;
           opacity: 0;
           pointer-events: none;
-          background: radial-gradient(circle at 50% 35%, transparent 0%, rgba(5, 8, 22, 0.25) 35%, rgba(0, 0, 0, 0.92) 100%);
+          background: radial-gradient(
+            circle at 50% 35%,
+            transparent 0%,
+            rgba(5, 8, 22, 0.25) 35%,
+            rgba(0, 0, 0, 0.92) 100%
+          );
           transition: opacity 1200ms ease;
         }
 
@@ -375,31 +485,9 @@ export default function HomeScene() {
           border-radius: 999px;
           padding: 0.5rem 1rem;
           font-size: 0.875rem;
-          transition: opacity 500ms ease, transform 500ms ease;
-        }
-
-        .tone-restorative .sky-layer { filter: saturate(0.92) brightness(0.92); }
-        .tone-charged .sky-layer { filter: saturate(1.18) brightness(1.05); }
-        .tone-focused .sky-layer { filter: saturate(1.08) contrast(1.04); }
-
-        .home-scene.is-transitioning .sky-layer {
-          animation-play-state: paused;
-          transform: scale(2.42) translateY(10%);
-          filter: saturate(1.25) brightness(1.12) blur(1px);
-        }
-
-        .home-scene.is-transitioning .ground-layer {
-          animation-play-state: paused;
-          opacity: 0;
-          transform: scale(1.2) translateY(18%);
-          filter: blur(8px);
-        }
-
-        .home-scene.is-transitioning .avatar-layer {
-          animation-play-state: paused;
-          opacity: 0;
-          transform: scale(0.9) translateY(8%);
-          filter: blur(10px);
+          transition:
+            opacity 500ms ease,
+            transform 500ms ease;
         }
 
         .home-scene.is-transitioning .emotional-wash,
@@ -412,13 +500,17 @@ export default function HomeScene() {
         .home-scene.is-transitioning .parallax-near {
           opacity: 1;
           transform: scale(1.5) translateY(-5%);
-          transition: transform 1450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease;
+          transition:
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 800ms ease;
         }
 
         .home-scene.is-transitioning .parallax-far {
           opacity: 1;
           transform: scale(1.25) translateY(-2%);
-          transition: transform 1450ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease;
+          transition:
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 800ms ease;
         }
 
         .home-scene.is-transitioning .star-tunnel {
@@ -435,43 +527,56 @@ export default function HomeScene() {
           opacity: 0.92;
         }
 
-        @keyframes skyIdle {
-          from { transform: scale(1.015) translate3d(-0.35%, -0.25%, 0); }
-          to { transform: scale(1.045) translate3d(0.45%, 0.35%, 0); }
-        }
-
-        @keyframes groundIdle {
-          from { transform: scale(1.01) translate3d(0.2%, 0.1%, 0); }
-          to { transform: scale(1.025) translate3d(-0.25%, 0.35%, 0); }
-        }
-
-        @keyframes avatarFloat {
-          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-          50% { transform: translate3d(0, -0.65%, 0) scale(1.006); }
-        }
-
         @keyframes ambientDrift {
-          from { transform: translate3d(-1.5%, -0.8%, 0) scale(1); opacity: 0.52; }
-          to { transform: translate3d(1.2%, 0.9%, 0) scale(1.08); opacity: 0.78; }
+          from {
+            transform: translate3d(-1.5%, -0.8%, 0) scale(1);
+            opacity: 0.52;
+          }
+
+          to {
+            transform: translate3d(1.2%, 0.9%, 0) scale(1.08);
+            opacity: 0.78;
+          }
         }
 
         @keyframes skyBreath {
-          0%, 100% { transform: scale(0.92); opacity: 0.22; }
-          50% { transform: scale(1.08); opacity: 0.38; }
+          0%,
+          100% {
+            transform: scale(0.92);
+            opacity: 0.22;
+          }
+
+          50% {
+            transform: scale(1.08);
+            opacity: 0.38;
+          }
         }
 
         @keyframes nearDrift {
-          from { transform: translate3d(-0.35rem, -0.25rem, 0); opacity: 0.55; }
-          to { transform: translate3d(0.45rem, 0.3rem, 0); opacity: 0.95; }
+          from {
+            transform: translate3d(-0.35rem, -0.25rem, 0);
+            opacity: 0.55;
+          }
+
+          to {
+            transform: translate3d(0.45rem, 0.3rem, 0);
+            opacity: 0.95;
+          }
         }
 
         @keyframes farDrift {
-          from { transform: translate3d(0.2rem, -0.18rem, 0); opacity: 0.35; }
-          to { transform: translate3d(-0.18rem, 0.22rem, 0); opacity: 0.7; }
+          from {
+            transform: translate3d(0.2rem, -0.18rem, 0);
+            opacity: 0.35;
+          }
+
+          to {
+            transform: translate3d(-0.18rem, 0.22rem, 0);
+            opacity: 0.7;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .scene-layer,
           .emotional-wash,
           .ambient-drift,
           .sky-breath,
@@ -484,6 +589,6 @@ export default function HomeScene() {
           }
         }
       `}</style>
-    </div>
+    </main>
   );
 }

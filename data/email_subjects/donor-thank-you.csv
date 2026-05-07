@@ -1,0 +1,19 @@
+flow,language,tone,subject_line
+donor-thank-you,en,gratitude,Your gift is already in motion, {{first_name}}
+donor-thank-you,en,clarity,Receipt and impact path for your UrAi donation
+donor-thank-you,en,celebration,You unlocked the next UrAi experiment!
+donor-thank-you,es,gratitude,Tu contribución ya está en marcha, {{first_name}}
+donor-thank-you,es,clarity,Recibo e impacto de tu donación a UrAi
+donor-thank-you,es,celebration,¡Activaste el próximo experimento de UrAi!
+donor-thank-you,pt,gratitude,Sua contribuição já está gerando impacto, {{first_name}}
+donor-thank-you,pt,clarity,Recibo e plano de impacto da sua doação UrAi
+donor-thank-you,pt,celebration,Você habilitou o próximo experimento UrAi!
+donor-thank-you,fr,gratitude,Votre contribution agit déjà, {{first_name}}
+donor-thank-you,fr,clarity,Reçu et feuille de route d’impact pour votre don UrAi
+donor-thank-you,fr,celebration,Vous avez déclenché la prochaine expérimentation UrAi !
+donor-thank-you,hi,gratitude,आपका सहयोग अभी असर ला रहा है, {{first_name}}
+donor-thank-you,hi,clarity,UrAi दान की रसीद और प्रभाव योजना
+donor-thank-you,hi,celebration,आपने अगला UrAi प्रयोग शुरू कर दिया!
+donor-thank-you,zh,gratitude,你的支持正在发挥作用，{{first_name}}
+donor-thank-you,zh,clarity,UrAi 捐赠回执与影响路径
+donor-thank-you,zh,celebration,你点亮了下一场 UrAi 实验！

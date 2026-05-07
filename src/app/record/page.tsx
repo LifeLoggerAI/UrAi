@@ -1,12 +1,14 @@
-import React from 'react';
+"use client";
+
+import { useRef, useState } from 'react';
 import Button from '../../components/ui/Button';
 
 export default function RecordPage() {
-  const [isRecording, setIsRecording] = React.useState(false);
-  const [audioBlob, setAudioBlob] = React.useState(null);
-  const mediaRecorderRef = React.useRef(null);
-  const [transcription, setTranscription] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const [transcription, setTranscription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleStartRecording = async () => {
     setAudioBlob(null);
@@ -14,9 +16,9 @@ export default function RecordPage() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
-    const audioChunks = [];
+    const audioChunks: BlobPart[] = [];
 
-    mediaRecorder.ondataavailable = (event) => {
+    mediaRecorder.ondataavailable = (event: BlobEvent) => {
       audioChunks.push(event.data);
     };
 
@@ -30,7 +32,7 @@ export default function RecordPage() {
   };
 
   const handleStopRecording = () => {
-    mediaRecorderRef.current.stop();
+    mediaRecorderRef.current?.stop();
     setIsRecording(false);
   };
 
