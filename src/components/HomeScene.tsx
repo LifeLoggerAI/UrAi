@@ -3,6 +3,7 @@
 import CompanionChat from "@/components/CompanionChat";
 import ForecastCard from "@/components/ForecastCard";
 import GroundLayer from "@/components/GroundLayer";
+import WaitlistForm from "@/components/WaitlistForm";
 import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
 import { adamClampDemoProfile } from "@/lib/demo-data";
 
@@ -28,10 +29,11 @@ export default function HomeScene() {
           </a>
         </div>
 
-        <div className="grid gap-4 pb-4 md:grid-cols-3">
+        <div className="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
           <ForecastCard forecast={profile.moodForecast} />
           <WeeklyReflectionCard reflection={profile.weeklyReflection} />
           <CompanionChat />
+          <WaitlistForm source="home" />
         </div>
       </section>
     </main>
