@@ -1,14 +1,68 @@
-# UrAi
+# URAI
 
-Trigger hosting build: tiny commit (added newline).
+URAI is a passive emotional operating system prototype: a symbolic life mirror, mood forecast layer, memory constellation, and companion narrator experience.
+
+The current V1 repo focus is the **demo spine**:
+
+- `/` cinematic home scene
+- `/u/adamclamp` public constellation demo
+- `/api/companion` companion narrator endpoint
+- `/api/waitlist` early-access capture endpoint
+- seeded demo data for memory blooms, timeline stars, mood forecast, and weekly reflection
+- Firebase rules/index scaffolding for V1 launch collections
+
+## Quick start
+
+```bash
+npm install
+npm run seed:demo
+npm run dev
+```
+
+Then open:
+
+```txt
+http://localhost:3014
+http://localhost:3014/u/adamclamp
+```
+
+## Validation
+
+Run the V1 validation path before deploying or sharing the demo:
+
+```bash
+npm run seed:demo
+npm run test:unit
+npm run check:types
+npm run build
+npm run preflight
+```
+
+## Important lockfile note
+
+`package.json` has recently changed to include `firebase-admin`, `tailwindcss`, `postcss`, and `autoprefixer`.
+
+Run:
+
+```bash
+npm install
+```
+
+Then commit the refreshed `package-lock.json`. See `docs/LOCKFILE_REFRESH.md` for the exact steps.
 
 ## Firebase configuration
 
 The app expects a consistent set of Firebase environment variables that share the
-`NEXT_PUBLIC_FIREBASE_` prefix. Populate these keys in your `.env.local` file (copy
-`env.local.template` to get started) so the web client can initialize Firebase:
+`NEXT_PUBLIC_FIREBASE_` prefix. Populate these keys in your `.env.local` file by copying
+`env.local.template`:
 
+```bash
+cp env.local.template .env.local
 ```
+
+Public web config:
+
+```txt
 NEXT_PUBLIC_FIREBASE_API_KEY
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 NEXT_PUBLIC_FIREBASE_PROJECT_ID
@@ -17,13 +71,37 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID
 ```
 
-If you maintain separate staging and production Firebase projects, duplicate the
-variables with an additional suffix (for example `NEXT_PUBLIC_FIREBASE_API_KEY_STAGING`)
-and switch between them as needed. Server-side Firebase Admin access requires the
-matching service account credentials (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`,
-`FIREBASE_PRIVATE_KEY`). Store staging credentials locally when developing against a
-staging backend and provide production credentials only in the deployment environment.
+Server-side Firebase Admin access requires:
 
-At runtime the Firebase module will log a descriptive error and fail fast if any of the
-required keys are missing. This helps surface misconfiguration early—if you see the
-error, revisit your `.env.local` to ensure every key above is defined.
+```txt
+FIREBASE_PROJECT_ID
+FIREBASE_CLIENT_EMAIL
+FIREBASE_PRIVATE_KEY
+```
+
+The waitlist route works in local dry-run mode without Admin credentials. With Admin credentials configured, `/api/waitlist` writes to `waitlistSignups/{normalizedEmail}`.
+
+## Demo routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Home demo spine with symbolic ground, mood forecast, reflection, companion chat, and waitlist form |
+| `/u/adamclamp` | Public constellation demo with blooms, timeline stars, forecast, reflection, and waitlist CTA |
+| `/api/companion` | POST endpoint for mocked companion narrator responses |
+| `/api/waitlist` | POST endpoint for early-access signups |
+
+## Firebase deploy
+
+Deploy rules and indexes:
+
+```bash
+firebase deploy --only firestore:rules,firestore:indexes
+```
+
+See:
+
+- `docs/V1_DEPLOY_CHECKLIST.md`
+- `docs/V1_QA_CHECKLIST.md`
+- `docs/FIRESTORE_V1_COLLECTIONS.md`
+- `docs/IMPLEMENTATION_NEXT.md`
+- `docs/URAI_MASTER_COMPLETION_PROMPT.md`
