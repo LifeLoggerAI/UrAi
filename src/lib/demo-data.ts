@@ -1,5 +1,6 @@
 import type { UraiDemoProfile } from "@/lib/urai-v1-schemas";
 
+const DEMO_OWNER_UID = "demo-adam-clamp";
 const baseDate = new Date("2026-05-06T12:00:00.000Z");
 
 function daysAgo(days: number): string {
@@ -8,9 +9,13 @@ function daysAgo(days: number): string {
   return date.toISOString();
 }
 
+function owned() {
+  return { ownerUid: DEMO_OWNER_UID, userId: DEMO_OWNER_UID };
+}
+
 export const adamClampDemoProfile: UraiDemoProfile = {
   user: {
-    id: "demo-adam-clamp",
+    id: DEMO_OWNER_UID,
     handle: "adamclamp",
     displayName: "Adam Clamp",
     tagline: "Building URAI as a passive emotional operating system.",
@@ -20,7 +25,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
   },
   symbolicState: {
     id: "symbolic-demo-adam",
-    userId: "demo-adam-clamp",
+    ...owned(),
     skyState: "stars",
     groundTier: 4,
     aura: "violet-gold",
@@ -28,7 +33,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
   },
   moodForecast: {
     id: "forecast-demo-adam",
-    userId: "demo-adam-clamp",
+    ...owned(),
     generatedAt: baseDate.toISOString(),
     rhythmState: "recovering",
     summary: "Calm focus is rising after a heavy build cycle. The next 24 hours favor implementation over ideation.",
@@ -37,7 +42,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
   },
   weeklyReflection: {
     id: "weekly-demo-adam",
-    userId: "demo-adam-clamp",
+    ...owned(),
     weekOf: "2026-05-04",
     title: "The week the blueprint became buildable",
     highlights: [
@@ -51,7 +56,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
   memoryBlooms: [
     {
       id: "bloom-001",
-      userId: "demo-adam-clamp",
+      ...owned(),
       title: "Blueprint Locked",
       summary: "The complete URAI master prompt moved from chat into the repo as a permanent build artifact.",
       emotionalTone: "focused",
@@ -60,7 +65,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "bloom-002",
-      userId: "demo-adam-clamp",
+      ...owned(),
       title: "Demo Spine Chosen",
       summary: "The next implementation path became clear: public route, companion flow, forecast, reflection, seed data.",
       emotionalTone: "recovering",
@@ -69,7 +74,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "bloom-003",
-      userId: "demo-adam-clamp",
+      ...owned(),
       title: "Launch Signal",
       summary: "The build direction narrowed toward waitlist, demo readiness, and deployment gates.",
       emotionalTone: "threshold",
@@ -80,7 +85,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
   timelineEvents: [
     {
       id: "star-001",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(0),
       title: "Implementation spine started",
       detail: "Moved from architecture into repo-backed demo work.",
@@ -91,7 +96,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-002",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(1),
       title: "Master prompt committed",
       detail: "URAI completion directive became a versioned repo artifact.",
@@ -102,7 +107,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-003",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(2),
       title: "Build path clarified",
       detail: "Prioritized demo, schemas, seed data, narrator, and waitlist.",
@@ -112,7 +117,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-004",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(3),
       title: "Ground system stabilized",
       detail: "The symbolic ground layer began representing recovery and vitality tiers.",
@@ -122,7 +127,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-005",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(4),
       title: "Narrator voice refined",
       detail: "The companion tone shifted toward gentle but execution-focused guidance.",
@@ -132,7 +137,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-006",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(5),
       title: "Forecast became practical",
       detail: "Mood forecasting moved from concept to a visible card users can understand.",
@@ -142,7 +147,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-007",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(6),
       title: "Weekly reflection framed",
       detail: "The product began translating build progress into narrative memory.",
@@ -152,7 +157,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-008",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(7),
       title: "Threshold mode surfaced",
       detail: "URAI recognized the transition from ideation into launch pressure.",
@@ -163,7 +168,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-009",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(8),
       title: "Public route imagined",
       detail: "The demo path centered on a shareable public life constellation.",
@@ -173,7 +178,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-010",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(9),
       title: "Memory bloom language sharpened",
       detail: "Recovery, focus, and symbolic milestones became easier to render visually.",
@@ -183,7 +188,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-011",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(10),
       title: "Launch gates defined",
       detail: "Typecheck, build, preflight, and tier locks became the standard for done.",
@@ -193,7 +198,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     },
     {
       id: "star-012",
-      userId: "demo-adam-clamp",
+      ...owned(),
       occurredAt: daysAgo(11),
       title: "Waitlist became essential",
       detail: "The next product milestone became capturing demand before deeper feature expansion.",
