@@ -39,6 +39,7 @@
   "dependencies": {
     "eslint-config-next": "^15.5.2",
     "firebase": "^12.2.1",
+    "firebase-admin": "^13.0.0",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
