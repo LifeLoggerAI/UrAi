@@ -2,7 +2,7 @@
 
 ## Current status
 
-V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer, but still needs local/CI runtime validation and a refreshed `package-lock.json`.
+V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer. Lockfiles were refreshed by the Dependabot/npm update merge, but local/CI runtime validation is still required before launch.
 
 ## Implemented
 
@@ -37,20 +37,7 @@ V1 demo spine is implemented and repo-wired, including the merged Ancient Signal
 
 ## Known blocker
 
-`package-lock.json` is stale after dependency changes.
-
-Run locally:
-
-```bash
-npm install
-```
-
-Then commit:
-
-```bash
-git add package-lock.json
-git commit -m "Refresh package lockfile"
-```
+No repo-level blocker is currently documented after the lockfile refresh merge. Runtime/build/deploy validation is still pending.
 
 ## Required validation
 
@@ -98,7 +85,6 @@ firebase deploy --only firestore:rules,firestore:indexes,functions
 
 ## Launch readiness checklist
 
-- [ ] `package-lock.json` refreshed and committed
 - [ ] `npm run check:lockfile` passes
 - [ ] `npm run preflight` passes
 - [ ] `npm run test:smoke` passes
