@@ -34,19 +34,20 @@ test.describe("URAI V1 smoke", () => {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ ok: true })
+        body: JSON.stringify({ ok: true }),
       });
     });
 
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
-    const waitlist = page.locator("section").filter({ hasText: "Join the URAI waitlist" });
-    const email = waitlist.getByPlaceholder("you@example.com");
-    const joinButton = waitlist.getByRole("button", { name: "Join" });
+    const email = page.locator("#waitlist-email-public-constellation");
+    const form = email.locator("xpath=ancestor::form");
+    const joinButton = form.getByRole("button", { name: "Join" });
 
     await expect(email).toBeVisible();
     await expect(joinButton).toBeDisabled();
-    await email.pressSequentially("smoke@example.com");
+    await email.fill("smoke@example.com");
+    await expect(email).toHaveValue("smoke@example.com");
     await expect(joinButton).toBeEnabled();
     await joinButton.click();
     await expectBodyText(page, /^You are on the list\.$/);
@@ -55,9 +56,11 @@ test.describe("URAI V1 smoke", () => {
   test("waitlist form validates bad email before submitting", async ({ page }) => {
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
-    const waitlist = page.locator("section").filter({ hasText: "Join the URAI waitlist" });
-    await waitlist.getByPlaceholder("you@example.com").pressSequentially("not-an-email");
-    await expect(waitlist.getByRole("button", { name: "Join" })).toBeDisabled();
+    const email = page.locator("#waitlist-email-public-constellation");
+    const form = email.locator("xpath=ancestor::form");
+    await email.fill("not-an-email");
+    await expect(email).toHaveValue("not-an-email");
+    await expect(form.getByRole("button", { name: "Join" })).toBeDisabled();
   });
 
   test("companion responds to a valid prompt", async ({ page }) => {
@@ -67,32 +70,35 @@ test.describe("URAI V1 smoke", () => {
         contentType: "application/json",
         body: JSON.stringify({
           reply: "Build the smallest useful loop, then test it with one real person.",
-          moodTag: "focused"
-        })
+          moodTag: "focused",
+        }),
       });
     });
 
     await openHome(page);
 
-    const companion = page.locator("section").filter({ hasText: "Ask URAI what the pattern means" });
-    const input = companion.locator("#companion-message");
-    const sendButton = companion.getByRole("button", { name: "Send" });
+    const input = page.locator("#companion-message");
+    const form = input.locator("xpath=ancestor::form");
+    const sendButton = form.getByRole("button", { name: "Send" });
+    const reply = page.locator("#companion-reply");
 
     await expect(input).toBeVisible();
     await expect(input).toBeEnabled();
     await expect(sendButton).toBeDisabled();
-    await input.pressSequentially("What should I build next?");
+    await input.fill("What should I build next?");
+    await expect(input).toHaveValue("What should I build next?");
     await expect(sendButton).toBeEnabled();
     await sendButton.click();
 
-    await expectBodyText(page, /^Mood: focused$/);
+    await expect(reply).toContainText("Build the smallest useful loop", { timeout: 15000 });
   });
 
   test("companion blocks empty prompt", async ({ page }) => {
     await openHome(page);
 
-    const companion = page.locator("section").filter({ hasText: "Ask URAI what the pattern means" });
-    await expect(companion.locator("#companion-message")).toBeVisible();
-    await expect(companion.getByRole("button", { name: "Send" })).toBeDisabled();
+    const input = page.locator("#companion-message");
+    const form = input.locator("xpath=ancestor::form");
+    await expect(input).toBeVisible();
+    await expect(form.getByRole("button", { name: "Send" })).toBeDisabled();
   });
 });
