@@ -2,7 +2,7 @@
 
 ## Current status
 
-V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer, but still needs local/CI runtime validation and a refreshed `package-lock.json`.
+V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer and LifeMap scene transition. Lockfiles are expected to be current and CI now validates the V1 wiring, lockfile, demo seed, types, lint, tests, rules, integration tests, and production build.
 
 ## Implemented
 
@@ -34,32 +34,41 @@ V1 demo spine is implemented and repo-wired, including the merged Ancient Signal
 - Ancient Signals Firestore collection, owner-scoped rules, and indexes
 - Ancient Signals callable Functions and scheduled daily rollup
 - Ancient Signals passive rollup adapter
+- LifeMap scene entry from HomeScene
+- Reduced-motion-aware LifeMap transition state
 
 ## Known blocker
 
-`package-lock.json` is stale after dependency changes.
+No repo-level blocker is currently documented after the lockfile refresh. Runtime/build/deploy validation must still pass before launch.
 
-Run locally:
+## CI validation
 
-```bash
-npm install
-```
-
-Then commit:
+The primary CI workflow runs:
 
 ```bash
-git add package-lock.json
-git commit -m "Refresh package lockfile"
+npm ci
+npm run check:v1
+npm run check:lockfile
+npm run seed:demo
+npm run check:types
+npm run lint
+npm run test:unit -- --runInBand
+npm run test:rules -- --runInBand
+npm run test:integration -- --runInBand
+npm run build
 ```
 
-## Required validation
+## Required local validation
 
 ```bash
 npm run check:v1
 npm run check:lockfile
 npm run seed:demo
-npm run test:unit
+npm run test:unit -- --runInBand
+npm run test:rules -- --runInBand
+npm run test:integration -- --runInBand
 npm run check:types
+npm run lint
 npm run build
 npm run preflight
 npm run test:smoke
@@ -71,7 +80,7 @@ Ancient Signals added Firebase Functions modules, so validate Functions separate
 
 ```bash
 cd functions
-npm install
+npm ci
 npm run build
 ```
 
@@ -96,10 +105,18 @@ firebase deploy --only firestore:rules,firestore:indexes,functions
 - [ ] Scheduled rollups skip explicit Ancient Signals or health/wellness opt-outs
 - [ ] User-facing copy avoids diagnosis, lie-detection, and unsupported scent claims
 
+## LifeMap validation
+
+- [ ] HomeScene opens LifeMap via the sky trigger
+- [ ] HomeScene opens LifeMap via the visible `Open Life Map` button
+- [ ] Reduced-motion users skip the animated transition
+- [ ] `Return home` exits LifeMap scene state
+- [ ] Home page content remains clickable above the invisible sky trigger
+
 ## Launch readiness checklist
 
-- [ ] `package-lock.json` refreshed and committed
 - [ ] `npm run check:lockfile` passes
+- [ ] Primary CI workflow passes
 - [ ] `npm run preflight` passes
 - [ ] `npm run test:smoke` passes
 - [ ] `/` checked on mobile and desktop
@@ -107,5 +124,6 @@ firebase deploy --only firestore:rules,firestore:indexes,functions
 - [ ] Waitlist dry-run checked locally
 - [ ] Waitlist Firestore write checked in configured environment
 - [ ] Ancient Signals demo and persisted snapshot paths checked
+- [ ] LifeMap transition checked on mobile and desktop
 - [ ] Firestore rules/indexes/functions deployed
 - [ ] `NEXT_PUBLIC_SITE_URL` set for deployment
