@@ -26,8 +26,9 @@ jobs:
           cache: 'npm'
 
       # 3. Install dependencies
+      # Use npm install until package-lock.json is regenerated after dependency changes.
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       # 4. Install Firebase Functions dependencies if in /functions
       - name: Install Firebase Functions Dependencies
