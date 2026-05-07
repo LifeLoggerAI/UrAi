@@ -76,6 +76,65 @@ generatePreverbalInsight
 rollupAncientSignalsDaily
 ```
 
+## Passive Rollup Adapter
+
+Location:
+
+```txt
+functions/src/ancientPassiveRollups.ts
+```
+
+Purpose:
+
+```txt
+Read recent owner-scoped URAI collections, normalize known numeric signal fields, and map them into Ancient Signals input fields.
+```
+
+Supported source collections in the first pass:
+
+```txt
+moods
+moodWeather
+shadowMetrics
+obscuraSignals
+mentalLoadScores
+chronoMirrorSnapshots
+socialGraph
+relationships
+events
+recoveryBlooms
+```
+
+Supported generated fields include:
+
+```txt
+positiveValence
+moodIntensity
+mentalLoadScore
+recoverySignal
+nocturnalDrift
+shadowScore
+obscuraScore
+frictionTapScore
+hesitationScore
+cancelLoopScore
+scrollVelocityScore
+motionJitter
+stagnationScore
+notificationFriction
+chronoCompression
+chronoDilation
+wordDisclosure
+socialAbsence
+connectionPull
+conflictResidue
+voiceTension
+pauseDensity
+speechCompression
+sighLikelihood
+silenceWeight
+```
+
 ---
 
 # Runtime Status
@@ -93,12 +152,15 @@ rollupAncientSignalsDaily
 - Firestore repository wrapper
 - Authenticated callable snapshot persistence
 - Aura/preverbal callable helpers
-- Daily rollup callable scaffold
+- Daily passive rollup callable
+- Passive rollup adapter for likely URAI signal collections
 - Firestore owner-scoped security rule
 - Firestore composite index for `ownerUid + createdAt desc`
 - Firebase deploy config for Firestore rules/indexes/functions
 - System contract registration
 - Cognitive Mirror UI card
+- HomeView ambient overlay
+- Persisted snapshot loading hook
 - Unit tests
 
 ## Remaining Production Tasks
@@ -126,9 +188,46 @@ npm run build
 firebase emulators:start --only functions,firestore
 ```
 
+### Passive Rollup Usage
+
+Generate and persist a snapshot from passive rollups:
+
+```ts
+await httpsCallable(functions, 'generateAncientSignalsSnapshot')({
+  usePassiveRollups: true,
+  daysBack: 1,
+});
+```
+
+Generate a daily passive rollup:
+
+```ts
+await httpsCallable(functions, 'rollupAncientSignalsDaily')({
+  date: '2026-05-06',
+});
+```
+
+Preview aura atmosphere from rollups without persisting:
+
+```ts
+await httpsCallable(functions, 'generateAuraAtmosphere')({
+  usePassiveRollups: true,
+  daysBack: 1,
+});
+```
+
+Preview preverbal insight from rollups without persisting:
+
+```ts
+await httpsCallable(functions, 'generatePreverbalInsight')({
+  usePassiveRollups: true,
+  daysBack: 1,
+});
+```
+
 ### Real Passive Signal Sources
 
-Connect:
+The passive adapter is intentionally tolerant of missing collections/fields. Next work should tighten mappings once production schemas are finalized for:
 
 - Shadow Cognition metrics
 - Obscura Patterns
@@ -140,10 +239,6 @@ Connect:
 - sleep/motion systems
 - location rhythm when consented
 - audio rhythm and pause features when consented
-
-### HomeView Integration
-
-Cognitive Mirror currently previews Ancient Sky/HomeView bindings. The next visual task is to consume these values inside the actual HomeView atmosphere/orb/sky scene.
 
 ---
 
@@ -310,10 +405,17 @@ Your signals suggest a lower-stimulation mode may help.
 
 # UI Integration
 
-Implemented component:
+Implemented components:
 
 ```txt
 src/components/ancient-signals/AncientSignalCard.tsx
+src/components/ancient-signals/AncientSignalAmbientLayer.tsx
+```
+
+Implemented hook:
+
+```txt
+src/lib/useAncientSignals.ts
 ```
 
 Recommended next components:
