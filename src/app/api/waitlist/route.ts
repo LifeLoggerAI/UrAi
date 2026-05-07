@@ -18,6 +18,10 @@ function cleanOptionalText(value: unknown, maxLength: number): string | undefine
   return cleaned || undefined;
 }
 
+function waitlistIdForEmail(email: string): string {
+  return email.replace(/[^a-z0-9._-]/g, "_").slice(0, 180);
+}
+
 export async function POST(req: Request) {
   try {
     const body = (await req.json()) as WaitlistRequest;
@@ -30,12 +34,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
     }
 
+    const now = new Date().toISOString();
     const signup = {
       email,
       source,
       handle,
       intent,
-      createdAt: new Date().toISOString()
+      createdAt: now,
+      updatedAt: now,
+      status: "joined"
     };
 
     const db = getAdminDb();
@@ -43,8 +50,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, mode: "dry-run", signup });
     }
 
-    const docRef = await db.collection("waitlistSignups").add(signup);
-    return NextResponse.json({ ok: true, id: docRef.id, signup });
+    const docId = waitlistIdForEmail(email);
+    const docRef = db.collection("waitlistSignups").doc(docId);
+    const existing = await docRef.get();
+
+    if (existing.exists) {
+      await docRef.set(
+        {
+          email,
+          updatedAt: now,
+          lastSource: source,
+          lastHandle: handle,
+          lastIntent: intent,
+          status: "joined"
+        },
+        { merge: true }
+      );
+      return NextResponse.json({ ok: true, id: docId, duplicate: true });
+    }
+
+    await docRef.set(signup);
+    return NextResponse.json({ ok: true, id: docId, signup });
   } catch {
     return NextResponse.json({ error: "Unable to join waitlist." }, { status: 400 });
   }
