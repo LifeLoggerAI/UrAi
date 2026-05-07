@@ -1,5 +1,5 @@
 // src/lib/firebase.ts
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
@@ -13,16 +13,23 @@ const REQUIRED_FIREBASE_ENV_VARS = [
   "NEXT_PUBLIC_FIREBASE_APP_ID",
 ] as const;
 
-const firebaseConfig = (() => {
-  const missing = REQUIRED_FIREBASE_ENV_VARS.filter((key) => !process.env[key]);
+function getMissingFirebaseEnvVars() {
+  return REQUIRED_FIREBASE_ENV_VARS.filter((key) => !process.env[key]);
+}
+
+function createMissingConfigError(missing: readonly string[]) {
+  return new Error(
+    "Firebase configuration is incomplete. Missing environment variables: " +
+      missing.join(", ") +
+      ". Check the README for setup instructions.",
+  );
+}
+
+function getFirebaseConfig() {
+  const missing = getMissingFirebaseEnvVars();
 
   if (missing.length) {
-    const message =
-      "Firebase configuration is incomplete. Missing environment variables: " +
-      missing.join(", ") +
-      ". Check the README for setup instructions.";
-    console.error(message);
-    throw new Error(message);
+    throw createMissingConfigError(missing);
   }
 
   return {
@@ -33,9 +40,26 @@ const firebaseConfig = (() => {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID as string,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID as string,
   };
-})();
+}
 
-export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const auth = () => getAuth(app);
-export const storage = () => getStorage(app);
-export const db = () => getFirestore(app);
+let cachedApp: FirebaseApp | null = null;
+
+export function isFirebaseConfigured() {
+  return getMissingFirebaseEnvVars().length === 0;
+}
+
+export function getFirebaseApp() {
+  if (cachedApp) return cachedApp;
+  cachedApp = getApps().length ? getApp() : initializeApp(getFirebaseConfig());
+  return cachedApp;
+}
+
+export const app = new Proxy({} as FirebaseApp, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getFirebaseApp(), prop, receiver);
+  },
+});
+
+export const auth = () => getAuth(getFirebaseApp());
+export const storage = () => getStorage(getFirebaseApp());
+export const db = () => getFirestore(getFirebaseApp());
