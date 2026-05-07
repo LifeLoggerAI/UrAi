@@ -22,8 +22,10 @@ function convertRulesSyntax(source) {
 
 function extractFunctionsBlock(rules) {
   const start = rules.indexOf('function isSignedIn');
-  const end = rules.indexOf('// Top-level collections');
-  if (start === -1 || end === -1) {
+  const marker = rules.indexOf('// Top-level collections');
+  const firstMatch = rules.indexOf('\n    match /', start);
+  const end = marker !== -1 ? marker : firstMatch;
+  if (start === -1 || end === -1 || end <= start) {
     throw new Error('Unable to locate reusable functions in firestore.rules');
   }
   const block = rules.slice(start, end);
@@ -33,7 +35,7 @@ function extractFunctionsBlock(rules) {
 function extractCollectionRules(rules, collections) {
   const map = new Map();
   for (const collection of collections) {
-    const pattern = new RegExp(`match \\/${collection}\\/\\{[^}]+\\} \\{([\\s\\S]*?)\\n\\s*\\}`, 'm');
+    const pattern = new RegExp(`match\\s+\\/${collection}\\/\\{[^}]+\\}\\s*\\{([^}]*)\\}`, 'm');
     const match = pattern.exec(rules);
     if (!match) {
       throw new Error(`Missing rules for collection: ${collection}`);
