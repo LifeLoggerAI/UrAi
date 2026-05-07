@@ -1,4 +1,4 @@
-import { buildCompanionReply, normalizeCompanionMessage } from "../../src/lib/companion-engine";
+import { buildCompanionReply, normalizeCompanionMessage } from "@/lib/companion-engine";
 
 describe("companion engine", () => {
   it("normalizes message input", () => {
