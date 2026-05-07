@@ -1,0 +1,73 @@
+name: Ancient Signals Verification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/**"
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ancient-signals-verify.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "functions/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/ancient-signals-verify.yml"
+
+jobs:
+  app:
+    name: App typecheck and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Check V1 contract
+        run: npm run check:v1
+
+      - name: Typecheck app
+        run: npm run check:types
+
+      - name: Build app
+        run: npm run build
+
+  functions:
+    name: Firebase Functions build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: functions
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install function dependencies
+        run: npm ci
+
+      - name: Build functions
+        run: npm run build
