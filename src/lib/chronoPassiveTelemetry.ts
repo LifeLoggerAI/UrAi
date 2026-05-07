@@ -5,6 +5,7 @@ import {
   orderBy,
   query,
   where,
+  type DocumentData,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { ChronoRawUserData } from './chronoMirror';
@@ -17,7 +18,7 @@ function average(values: number[]) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
 }
 
-async function recentOwnerDocs(collectionName: string, ownerUid: string, count = 20) {
+async function recentOwnerDocs(collectionName: string, ownerUid: string, count = 20): Promise<DocumentData[]> {
   const q = query(
     collection(db(), collectionName),
     where('ownerUid', '==', ownerUid),
@@ -29,7 +30,7 @@ async function recentOwnerDocs(collectionName: string, ownerUid: string, count =
 }
 
 export async function loadChronoPassiveTelemetry(ownerUid: string): Promise<ChronoRawUserData> {
-  const [moods, journals, shadowMetrics, obscuraPatterns, recoveryBlooms, events] = await Promise.allSettled([
+  const [moods, journals, shadowMetrics, obscuraPatterns, recoveryBlooms, eventResult] = await Promise.allSettled([
     recentOwnerDocs('moods', ownerUid, 14),
     recentOwnerDocs('journalEntries', ownerUid, 14),
     recentOwnerDocs('shadowMetrics', ownerUid, 14),
@@ -43,7 +44,7 @@ export async function loadChronoPassiveTelemetry(ownerUid: string): Promise<Chro
   const shadowDocs = shadowMetrics.status === 'fulfilled' ? shadowMetrics.value : [];
   const obscuraDocs = obscuraPatterns.status === 'fulfilled' ? obscuraPatterns.value : [];
   const recoveryDocs = recoveryBlooms.status === 'fulfilled' ? recoveryBlooms.value : [];
-  const eventDocs = events.status === 'fulfilled' ? events.value : [];
+  const eventDocs = eventResult.status === 'fulfilled' ? eventResult.value : [];
 
   const moodScore = average(moodDocs.map((doc) => numberValue(doc.score ?? doc.moodScore ?? doc.valence, 0.5)));
   const stressScore = average([
@@ -63,7 +64,7 @@ export async function loadChronoPassiveTelemetry(ownerUid: string): Promise<Chro
     notificationFrictionScore: average(obscuraDocs.map((doc) => numberValue(doc.notificationFrictionScore ?? doc.deviceFriction, 0))),
     journalEmotionScore,
     socialGapScore: average(shadowDocs.map((doc) => numberValue(doc.socialGapScore ?? doc.socialSilenceLoad, 0))),
-    flowSessionMinutes: average(events.map((doc) => numberValue(doc.flowSessionMinutes ?? doc.focusMinutes, 0))),
+    flowSessionMinutes: average(eventDocs.map((doc) => numberValue(doc.flowSessionMinutes ?? doc.focusMinutes, 0))),
     openLoopCount: shadowDocs.filter((doc) => Boolean(doc.openLoop ?? doc.unresolvedPattern)).length,
     recoveryActionCount: recoveryDocs.length,
     memoryAnchorCount,
