@@ -11,7 +11,11 @@ jobs:
         with: { lfs: true }
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - run: npm ci
+      # Use npm install until package-lock.json is regenerated after dependency changes.
+      # Switch back to npm ci once package-lock.json includes firebase-admin, tailwindcss, postcss, and autoprefixer.
+      - run: npm install
+      - run: npm run seed:demo
+      - run: npm run test:unit
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
