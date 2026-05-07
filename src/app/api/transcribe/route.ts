@@ -2,6 +2,11 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
 
+type TranscriptionEntry = {
+    timestamp: string;
+    transcription: string;
+};
+
 const transcriptionsPath = path.resolve(process.cwd(), 'data/transcriptions.json');
 const journalEntriesPath = path.resolve(process.cwd(), 'data/journal-entries.json');
 const audioUploadPath = path.resolve(process.cwd(), '.uploads/audio');
@@ -24,10 +29,10 @@ function isAuthorized(request: Request) {
 }
 
 async function saveTranscription(transcription: string) {
-    let transcriptions = [];
+    let transcriptions: TranscriptionEntry[] = [];
     try {
         const currentTranscriptions = await fs.readFile(transcriptionsPath, 'utf-8');
-        transcriptions = JSON.parse(currentTranscriptions);
+        transcriptions = JSON.parse(currentTranscriptions) as TranscriptionEntry[];
     } catch (error) {
         // File doesn't exist yet
     }
@@ -40,10 +45,10 @@ async function saveTranscription(transcription: string) {
 }
 
 async function saveJournalEntry(transcription: string) {
-    let journalEntries = [];
+    let journalEntries: TranscriptionEntry[] = [];
     try {
         const currentJournalEntries = await fs.readFile(journalEntriesPath, 'utf-8');
-        journalEntries = JSON.parse(currentJournalEntries);
+        journalEntries = JSON.parse(currentJournalEntries) as TranscriptionEntry[];
     } catch (error) {
         // File doesn't exist yet
     }
@@ -61,7 +66,7 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData();
-    const audio = formData.get('audio') as File;
+    const audio = formData.get('audio') as File | null;
 
     if (!audio) {
         return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
