@@ -36,11 +36,16 @@
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.d.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "scripts/**/*.mjs",
+    "*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "functions",
+    ".next"
   ]
 }
