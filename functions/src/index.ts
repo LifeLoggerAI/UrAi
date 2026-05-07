@@ -6,6 +6,7 @@ import * as path from "path";
 import * as admin from "firebase-admin";
 import {setGlobalOptions} from "firebase-functions";
 import {HttpsError, onCall} from "firebase-functions/v2/https";
+import {buildAncientSignalsFromPassiveRollups} from "./ancientPassiveRollups";
 
 setGlobalOptions({maxInstances: 10});
 
@@ -182,6 +183,10 @@ export async function renderStoryMovieMP4(
 interface AncientSignalCallableInput {
   rawData?: Record<string, unknown>;
   signals?: Record<string, unknown>;
+  usePassiveRollups?: boolean;
+  date?: string;
+  daysBack?: number;
+  limitPerCollection?: number;
   source?: "live" | "demo" | "imported" | "rollup";
   sourceWindow?: {
     startAt: string;
@@ -235,6 +240,75 @@ function mapRawAncientSignals(rawData: Record<string, unknown>) {
     obscuraScore: avg(frictionTapScore, hesitationScore, cancelLoopScore),
     moodIntensity: Math.max(num(rawData, "moodScore"), stressScore),
     positiveValence: num(rawData, "moodScore"),
+  };
+}
+
+function resolveRollupWindow(payload: AncientSignalCallableInput) {
+  if (payload.sourceWindow) return payload.sourceWindow;
+
+  const daysBack = Math.max(1, Math.min(payload.daysBack ?? 1, 30));
+  if (payload.date) {
+    return {
+      startAt: `${payload.date}T00:00:00.000Z`,
+      endAt: `${payload.date}T23:59:59.999Z`,
+      durationMinutes: 1440,
+    };
+  }
+
+  const end = new Date();
+  const start = new Date(end.getTime() - daysBack * 24 * 60 * 60 * 1000);
+  return {
+    startAt: start.toISOString(),
+    endAt: end.toISOString(),
+    durationMinutes: daysBack * 1440,
+  };
+}
+
+async function resolveAncientInput(ownerUid: string, payload: AncientSignalCallableInput) {
+  if (payload.signals) {
+    return {
+      input: payload.signals,
+      rawData: payload.rawData ?? null,
+      sourceWindow: payload.sourceWindow ?? null,
+      source: payload.source ?? "live",
+    };
+  }
+
+  if (payload.rawData && !payload.usePassiveRollups) {
+    return {
+      input: mapRawAncientSignals(payload.rawData),
+      rawData: payload.rawData,
+      sourceWindow: payload.sourceWindow ?? null,
+      source: payload.source ?? "live",
+    };
+  }
+
+  const sourceWindow = resolveRollupWindow(payload);
+  const rollup = await buildAncientSignalsFromPassiveRollups(firestore, {
+    ownerUid,
+    startAt: sourceWindow.startAt,
+    endAt: sourceWindow.endAt,
+    limitPerCollection: payload.limitPerCollection ?? 25,
+  });
+
+  if (!Object.keys(rollup.input).length && payload.rawData) {
+    return {
+      input: mapRawAncientSignals(payload.rawData),
+      rawData: {
+        ...payload.rawData,
+        passiveRollupFallback: true,
+        passiveRollupSources: rollup.sourceCollections,
+      },
+      sourceWindow,
+      source: payload.source ?? "live",
+    };
+  }
+
+  return {
+    input: rollup.input,
+    rawData: rollup.rawData,
+    sourceWindow: rollup.sourceWindow,
+    source: payload.source ?? "rollup",
   };
 }
 
@@ -324,18 +398,18 @@ function requireAuthUid(auth: {uid?: string} | undefined): string {
 export const generateAncientSignalsSnapshot = onCall<AncientSignalCallableInput>(async (request) => {
   const ownerUid = requireAuthUid(request.auth);
   const payload = request.data ?? {};
-  const input = payload.signals ?? mapRawAncientSignals(payload.rawData ?? {});
-  const computed = computeAncientSignalPayload(input);
+  const resolved = await resolveAncientInput(ownerUid, payload);
+  const computed = computeAncientSignalPayload(resolved.input);
   const now = admin.firestore.FieldValue.serverTimestamp();
 
   const doc = await firestore.collection("ancientSignals").add({
     ownerUid,
     userId: ownerUid,
-    source: payload.source ?? "live",
-    rawData: payload.rawData ?? null,
-    input,
+    source: resolved.source,
+    rawData: resolved.rawData,
+    input: resolved.input,
     consentBasis: payload.consentBasis ?? {},
-    sourceWindow: payload.sourceWindow ?? null,
+    sourceWindow: resolved.sourceWindow,
     ...computed,
     createdAt: now,
     updatedAt: now,
@@ -343,17 +417,21 @@ export const generateAncientSignalsSnapshot = onCall<AncientSignalCallableInput>
 
   return {
     id: doc.id,
+    source: resolved.source,
+    sourceWindow: resolved.sourceWindow,
     ...computed,
   };
 });
 
 export const generateAuraAtmosphere = onCall<AncientSignalCallableInput>(async (request) => {
-  requireAuthUid(request.auth);
+  const ownerUid = requireAuthUid(request.auth);
   const payload = request.data ?? {};
-  const input = payload.signals ?? mapRawAncientSignals(payload.rawData ?? {});
-  const computed = computeAncientSignalPayload(input);
+  const resolved = await resolveAncientInput(ownerUid, payload);
+  const computed = computeAncientSignalPayload(resolved.input);
 
   return {
+    source: resolved.source,
+    sourceWindow: resolved.sourceWindow,
     preverbalState: computed.preverbalState,
     auraAtmosphere: computed.auraAtmosphere,
     visualState: computed.visualState,
@@ -361,12 +439,14 @@ export const generateAuraAtmosphere = onCall<AncientSignalCallableInput>(async (
 });
 
 export const generatePreverbalInsight = onCall<AncientSignalCallableInput>(async (request) => {
-  requireAuthUid(request.auth);
+  const ownerUid = requireAuthUid(request.auth);
   const payload = request.data ?? {};
-  const input = payload.signals ?? mapRawAncientSignals(payload.rawData ?? {});
-  const computed = computeAncientSignalPayload(input);
+  const resolved = await resolveAncientInput(ownerUid, payload);
+  const computed = computeAncientSignalPayload(resolved.input);
 
   return {
+    source: resolved.source,
+    sourceWindow: resolved.sourceWindow,
     preverbalState: computed.preverbalState,
     confidence: computed.confidence,
     narratorHint: computed.narratorHint,
@@ -374,25 +454,30 @@ export const generatePreverbalInsight = onCall<AncientSignalCallableInput>(async
   };
 });
 
-export const rollupAncientSignalsDaily = onCall<{date?: string}>(async (request) => {
+export const rollupAncientSignalsDaily = onCall<{date?: string; limitPerCollection?: number}>(async (request) => {
   const ownerUid = requireAuthUid(request.auth);
   const date = request.data?.date ?? new Date().toISOString().slice(0, 10);
-  const startAt = `${date}T00:00:00.000Z`;
-  const endAt = `${date}T23:59:59.999Z`;
-  const computed = computeAncientSignalPayload({});
+  const sourceWindow = {
+    startAt: `${date}T00:00:00.000Z`,
+    endAt: `${date}T23:59:59.999Z`,
+    durationMinutes: 1440,
+  };
+  const rollup = await buildAncientSignalsFromPassiveRollups(firestore, {
+    ownerUid,
+    startAt: sourceWindow.startAt,
+    endAt: sourceWindow.endAt,
+    limitPerCollection: request.data?.limitPerCollection ?? 25,
+  });
+  const computed = computeAncientSignalPayload(rollup.input);
 
   const doc = await firestore.collection("ancientSignals").add({
     ownerUid,
     userId: ownerUid,
     source: "rollup",
-    rawData: null,
-    input: {},
+    rawData: rollup.rawData,
+    input: rollup.input,
     consentBasis: {},
-    sourceWindow: {
-      startAt,
-      endAt,
-      durationMinutes: 1440,
-    },
+    sourceWindow: rollup.sourceWindow,
     ...computed,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -401,6 +486,8 @@ export const rollupAncientSignalsDaily = onCall<{date?: string}>(async (request)
   return {
     id: doc.id,
     date,
+    sourceCollections: rollup.sourceCollections,
+    sourceWindow: rollup.sourceWindow,
     ...computed,
   };
 });
