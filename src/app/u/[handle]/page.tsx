@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ForecastCard from "@/components/ForecastCard";
 import WaitlistForm from "@/components/WaitlistForm";
 import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
@@ -6,6 +7,28 @@ import { getDemoProfileByHandle } from "@/lib/demo-data";
 type PageProps = {
   params: Promise<{ handle: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { handle } = await params;
+  const profile = getDemoProfileByHandle(handle);
+  const title = `@${profile.user.handle} Public Constellation`;
+  const description = `${profile.user.displayName}'s URAI memory constellation, mood forecast, weekly reflection, and symbolic timeline.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "profile"
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description
+    }
+  };
+}
 
 export default async function PublicConstellationPage({ params }: PageProps) {
   const { handle } = await params;
