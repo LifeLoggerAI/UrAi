@@ -15,6 +15,7 @@ The current V1 repo focus is the **demo spine**:
 
 ```bash
 npm install
+npm run check:v1
 npm run seed:demo
 npm run dev
 ```
@@ -31,12 +32,23 @@ http://localhost:3014/u/adamclamp
 Run the V1 validation path before deploying or sharing the demo:
 
 ```bash
+npm run check:v1
 npm run seed:demo
 npm run test:unit
 npm run check:types
 npm run build
 npm run preflight
 ```
+
+## Utility commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run check:v1` | Verifies the required V1 files, scripts, dependencies, and Firebase config exist |
+| `npm run seed:demo` | Writes `tmp/urai-demo-seed.json` |
+| `npm run seed:firestore` | Writes demo seed data to Firestore when Firebase Admin env vars are configured |
+| `npm run waitlist:export` | Exports `waitlistSignups` to `tmp/waitlist-export.csv` or a dry-run sample row locally |
+| `npm run preflight` | Runs V1 sanity check, typecheck, lint, unit tests, and build |
 
 ## Important lockfile note
 
@@ -100,8 +112,10 @@ firebase deploy --only firestore:rules,firestore:indexes
 
 See:
 
+- `docs/API_V1.md`
 - `docs/V1_DEPLOY_CHECKLIST.md`
 - `docs/V1_QA_CHECKLIST.md`
+- `docs/V1_MANUAL_TESTS.md`
 - `docs/FIRESTORE_V1_COLLECTIONS.md`
 - `docs/IMPLEMENTATION_NEXT.md`
 - `docs/URAI_MASTER_COMPLETION_PROMPT.md`
