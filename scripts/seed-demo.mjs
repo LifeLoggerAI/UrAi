@@ -3,6 +3,7 @@ import path from "node:path";
 
 const outputDir = path.join(process.cwd(), "tmp");
 const outputPath = path.join(outputDir, "urai-demo-seed.json");
+const ownerUid = "demo-adam-clamp";
 
 const baseDate = new Date("2026-05-06T12:00:00.000Z");
 const daysAgo = (days) => {
@@ -11,9 +12,11 @@ const daysAgo = (days) => {
   return date.toISOString();
 };
 
+const owned = () => ({ ownerUid, userId: ownerUid });
+
 const seed = {
   users: {
-    "demo-adam-clamp": {
+    [ownerUid]: {
       handle: "adamclamp",
       displayName: "Adam Clamp",
       tagline: "Building URAI as a passive emotional operating system.",
@@ -24,7 +27,7 @@ const seed = {
   },
   moodForecasts: {
     "forecast-demo-adam": {
-      userId: "demo-adam-clamp",
+      ...owned(),
       generatedAt: baseDate.toISOString(),
       rhythmState: "recovering",
       summary: "Calm focus is rising after a heavy build cycle. The next 24 hours favor implementation over ideation.",
@@ -34,7 +37,7 @@ const seed = {
   },
   weeklyReflections: {
     "weekly-demo-adam": {
-      userId: "demo-adam-clamp",
+      ...owned(),
       weekOf: "2026-05-04",
       title: "The week the blueprint became buildable",
       highlights: [
@@ -47,7 +50,7 @@ const seed = {
   },
   symbolicStates: {
     "symbolic-demo-adam": {
-      userId: "demo-adam-clamp",
+      ...owned(),
       skyState: "stars",
       groundTier: 4,
       aura: "violet-gold",
