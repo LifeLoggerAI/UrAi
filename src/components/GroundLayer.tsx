@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { GroundSignalState, GroundTier, resolveGroundTier, coerceGroundTier } from "@/lib/ground-system";
+import { coerceGroundTier, resolveGroundTier, type GroundSignalState, type GroundTier } from "@/lib/ground-system";
 
 type Props = {
   state?: GroundSignalState;
@@ -16,6 +16,13 @@ const TIER_CLASSES: Record<GroundTier, string> = {
   4: "opacity-100",
   5: "opacity-100"
 };
+
+const BLOOM_SCALES = [0.72, 0.95, 0.82, 1.12, 0.68, 1.04, 0.88];
+const PARTICLES = Array.from({ length: 12 }).map((_, index) => ({
+  top: `${(index * 23) % 100}%`,
+  left: `${(index * 37) % 100}%`,
+  opacity: 0.45 + (index % 4) * 0.12
+}));
 
 export default function GroundLayer({ state, forcedTier, className }: Props) {
   const coerced = coerceGroundTier(forcedTier);
@@ -33,7 +40,6 @@ export default function GroundLayer({ state, forcedTier, className }: Props) {
       data-ground-tier={tier}
     >
       <div className="w-full h-1/3 relative">
-        {/* Base soil gradient */}
         <div
           className="absolute inset-0"
           style={{
@@ -50,7 +56,6 @@ export default function GroundLayer({ state, forcedTier, className }: Props) {
           }}
         />
 
-        {/* Glow / vitality layer */}
         <div
           className="absolute inset-0"
           style={{
@@ -61,18 +66,17 @@ export default function GroundLayer({ state, forcedTier, className }: Props) {
           }}
         />
 
-        {/* Bloom layer */}
         {tier >= 4 && (
           <div className="absolute inset-0 flex items-end justify-center pb-6">
             <div className="flex gap-3">
-              {Array.from({ length: tier === 5 ? 7 : 4 }).map((_, i) => (
+              {BLOOM_SCALES.slice(0, tier === 5 ? 7 : 4).map((scale, index) => (
                 <div
-                  key={i}
+                  key={index}
                   className="w-2 h-6 rounded-full"
                   style={{
                     background: tier === 5 ? "#baffc9" : "#7cff9e",
                     boxShadow: tier === 5 ? "0 0 10px rgba(186,255,201,0.8)" : "0 0 6px rgba(124,255,158,0.6)",
-                    transform: `scaleY(${0.6 + Math.random() * 0.6})`
+                    transform: `scaleY(${scale})`
                   }}
                 />
               ))}
@@ -80,18 +84,17 @@ export default function GroundLayer({ state, forcedTier, className }: Props) {
           </div>
         )}
 
-        {/* Mythic particles */}
         {tier === 5 && (
           <div className="absolute inset-0">
-            {Array.from({ length: 12 }).map((_, i) => (
+            {PARTICLES.map((particle, index) => (
               <div
-                key={i}
+                key={index}
                 className="absolute w-1 h-1 rounded-full"
                 style={{
                   background: "#e6fff2",
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
-                  opacity: 0.7
+                  top: particle.top,
+                  left: particle.left,
+                  opacity: particle.opacity
                 }}
               />
             ))}
