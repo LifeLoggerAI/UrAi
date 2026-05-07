@@ -9,7 +9,6 @@ import {
   dispatchTimelineSyncEvent,
   type ChapterId,
   type LifeMapPhase,
-  type MemoryEmotion,
 } from './lifeMapEvents';
 import { chooseGlowingStars, createSeededRandom, type GlowHistoryEntry } from './lifeMapGlowScheduler';
 
@@ -219,7 +218,7 @@ export default function LifeMapScene() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return undefined;
-    let timer: ReturnType<typeof window.setTimeout>;
+    let timer: number | undefined;
     const run = () => {
       const picked = chooseGlowingStars(
         state.stars.filter((star) => star.id !== state.activeStarId),
@@ -240,7 +239,11 @@ export default function LifeMapScene() {
       timer = window.setTimeout(run, state.reducedMotion ? 14000 : 9000);
     };
     timer = window.setTimeout(run, state.reducedMotion ? 14000 : 9000);
-    return () => window.clearTimeout(timer);
+    return () => {
+      if (timer !== undefined) {
+        window.clearTimeout(timer);
+      }
+    };
   }, [state.stars, state.activeStarId, state.activeChapterId, state.reducedMotion]);
 
   useEffect(() => {

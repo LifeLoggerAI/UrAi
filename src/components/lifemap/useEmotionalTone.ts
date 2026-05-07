@@ -173,7 +173,7 @@ export function useEmotionalTone() {
 
       unsubs = paths.map((pathParts) =>
         onSnapshot(
-          doc(db(), ...pathParts),
+          doc(db(), pathParts[0], ...pathParts.slice(1)),
           (snapshot) => {
             latest[pathParts.join("/")] = toInput(snapshot.data());
             publish();

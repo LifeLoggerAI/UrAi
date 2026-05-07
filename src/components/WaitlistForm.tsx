@@ -7,27 +7,55 @@ type Props = {
   handle?: string;
 };
 
+type WaitlistStatus = "idle" | "sending" | "joined" | "error";
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function WaitlistForm({ source, handle }: Props) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "joined" | "error">("idle");
+  const [status, setStatus] = useState<WaitlistStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const trimmedEmail = email.trim();
+  const canSubmit = emailPattern.test(trimmedEmail) && status !== "sending";
+  const statusId = `waitlist-status-${source}`;
 
   async function joinWaitlist() {
-    if (!email.trim() || status === "sending") return;
+    if (status === "sending") return;
+
+    if (!emailPattern.test(trimmedEmail)) {
+      setStatus("error");
+      setErrorMessage("Enter a valid email address before joining.");
+      return;
+    }
+
     setStatus("sending");
+    setErrorMessage("");
 
-    const response = await fetch("/api/waitlist", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        source,
-        handle,
-        intent: "early-access"
-      })
-    });
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          source,
+          handle,
+          intent: "early-access"
+        })
+      });
 
-    setStatus(response.ok ? "joined" : "error");
-    if (response.ok) setEmail("");
+      if (!response.ok) {
+        setStatus("error");
+        setErrorMessage("We could not join the waitlist. Check the email and try again.");
+        return;
+      }
+
+      setStatus("joined");
+      setEmail("");
+    } catch {
+      setStatus("error");
+      setErrorMessage("Network issue. Try again when your connection is stable.");
+    }
   }
 
   return (
@@ -37,29 +65,46 @@ export default function WaitlistForm({ source, handle }: Props) {
       <p className="mt-2 text-sm leading-6 text-white/70">
         Get the first public build when the demo spine moves into launch testing.
       </p>
-      <div className="mt-4 flex gap-2">
+      <form
+        className="mt-4 flex flex-col gap-2 sm:flex-row"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void joinWaitlist();
+        }}
+      >
+        <label className="sr-only" htmlFor={`waitlist-email-${source}`}>
+          Email address
+        </label>
         <input
+          id={`waitlist-email-${source}`}
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") void joinWaitlist();
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (status === "error") {
+              setStatus("idle");
+              setErrorMessage("");
+            }
           }}
           type="email"
+          inputMode="email"
+          autoComplete="email"
           placeholder="you@example.com"
-          className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none"
-          aria-label="Email address"
+          className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-black/25 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-white/40 focus:ring-2 focus:ring-white/20"
+          aria-describedby={status === "idle" ? undefined : statusId}
+          aria-invalid={status === "error"}
         />
         <button
-          type="button"
-          onClick={() => void joinWaitlist()}
-          disabled={status === "sending" || !email.trim()}
-          className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black disabled:opacity-40"
+          type="submit"
+          disabled={!canSubmit}
+          className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {status === "sending" ? "..." : "Join"}
+          {status === "sending" ? "Joining..." : "Join"}
         </button>
+      </form>
+      <div id={statusId} aria-live="polite">
+        {status === "joined" && <p className="mt-3 text-sm text-emerald-200">You are on the list.</p>}
+        {status === "error" && <p className="mt-3 text-sm text-red-200">{errorMessage}</p>}
       </div>
-      {status === "joined" && <p className="mt-3 text-sm text-emerald-200">You are on the list.</p>}
-      {status === "error" && <p className="mt-3 text-sm text-red-200">Enter a valid email and try again.</p>}
     </section>
   );
 }

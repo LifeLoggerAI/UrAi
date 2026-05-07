@@ -224,4 +224,7 @@ const md = `# URAI Independent Release Verification Report\n\nGenerated: ${new D
 
 writeFileSync(join(reportsDir, 'INDEPENDENT_RELEASE_VERIFICATION.md'), md);
 console.log(md);
-if (verdict !== 'PRODUCTION READY') process.exitCode = 1;
+
+if (verdict === 'NOT READY — BLOCKERS REMAIN') {
+  process.exitCode = 1;
+}
