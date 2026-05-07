@@ -6,6 +6,7 @@ export const FIRESTORE_DOMAINS = [
   "insights",
   "forecasts",
   "moodWeather",
+  "ancientSignals",
   "lifeMapEvents",
   "constellations",
   "rituals",
@@ -86,6 +87,10 @@ export const FIREBASE_FUNCTIONS = [
   "generateDailyInsights",
   "generateWeeklyRecap",
   "generateMoodForecast",
+  "generateAncientSignalsSnapshot",
+  "rollupAncientSignalsDaily",
+  "generateAuraAtmosphere",
+  "generatePreverbalInsight",
   "generateLifeMapStar",
   "generateConstellation",
   "generateRitualSuggestion",
@@ -115,6 +120,7 @@ export const FEATURE_FLAGS = {
   "mentalLoad.enabled": true,
   "obscura.enabled": true,
   "shadowMetrics.enabled": true,
+  "ancientSignals.enabled": true,
   "xr.enabled": false,
   "proDashboard.enabled": true,
   "demoMode.enabled": true,
@@ -135,6 +141,14 @@ export const CONSENT_GATES = {
 } as const;
 
 export type ConsentGateName = keyof typeof CONSENT_GATES;
+
+export const ANCIENT_SIGNAL_CONSENT_GATES = {
+  voiceProxy: "audioProcessing",
+  movementContext: "healthWellnessInsights",
+  locationRhythm: "locationContext",
+  socialField: "relationshipInsights",
+  narratorOutput: "healthWellnessInsights",
+} as const satisfies Record<string, ConsentGateName>;
 
 export function hasConsent(consents: Partial<Record<ConsentGateName, boolean>>, gate: ConsentGateName) {
   return consents[gate] === true;
