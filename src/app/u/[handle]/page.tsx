@@ -3,8 +3,13 @@ import WaitlistForm from "@/components/WaitlistForm";
 import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
 import { getDemoProfileByHandle } from "@/lib/demo-data";
 
-export default function PublicConstellationPage({ params }: { params: { handle: string } }) {
-  const profile = getDemoProfileByHandle(params.handle);
+type PageProps = {
+  params: Promise<{ handle: string }>;
+};
+
+export default async function PublicConstellationPage({ params }: PageProps) {
+  const { handle } = await params;
+  const profile = getDemoProfileByHandle(handle);
 
   return (
     <main className="min-h-dvh bg-black px-5 py-8 text-white">
