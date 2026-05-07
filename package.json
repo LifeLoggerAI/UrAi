@@ -17,6 +17,7 @@
     "check:types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "preflight": "npm run check:types && npm run lint && npm run build",
+    "seed:demo": "node scripts/seed-demo.mjs",
     "test": "jest",
     "test:unit": "jest tests/unit --passWithNoTests",
     "test:integration": "jest tests/integration --passWithNoTests",
