@@ -21,23 +21,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
+          cache: 'npm'
 
       - name: Install deps
-        run: pnpm install
+        run: npm install
 
       - name: Build app
-        run: pnpm build
+        run: npm run build
 
       - name: Start app (Next.js)
         run: |
-          (pnpm start &) 
-          echo "Waiting for localhost:3000..."
-          npx wait-on http://localhost:3000
+          (npm run start &) 
+          echo "Waiting for localhost:3014..."
+          npx wait-on http://localhost:3014
 
       - name: Install Lighthouse CLI
         run: npm i -g lighthouse
@@ -45,7 +41,7 @@ jobs:
       - name: Run Lighthouse (Perf + A11y + SEO + PWA)
         run: |
           mkdir -p lh-artifacts
-          lighthouse http://localhost:3000 \
+          lighthouse http://localhost:3014 \
             --only-categories=performance,accessibility,seo,pwa \
             --output=json --output-path=./lh-artifacts/report.json \
             --chrome-flags="--headless --no-sandbox"
