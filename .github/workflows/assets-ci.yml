@@ -21,33 +21,47 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Detect asset validation tooling
+        id: assets
+        run: |
+          if node -e "const p=require('./package.json'); process.exit(p.scripts && p.scripts['assets:ci'] ? 0 : 1)"; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping Assets CI because package.json does not define an assets:ci script."
+          fi
+
       - name: Install FFmpeg (ffprobe)
+        if: steps.assets.outputs.enabled == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
       - name: Install deps
+        if: steps.assets.outputs.enabled == 'true'
         run: npm install
 
       - name: Make scripts executable (if committed with +x locally you can skip)
+        if: steps.assets.outputs.enabled == 'true'
         run: |
           chmod +x scripts/generateManifests.mjs || true
           chmod +x scripts/validateManifests.mjs || true
 
       - name: Generate + Validate Manifests
+        if: steps.assets.outputs.enabled == 'true'
         run: |
           set -e
           npm run assets:ci | tee assets_validation.log
 
       - name: Upload validation log (always)
-        if: always()
+        if: always() && steps.assets.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: assets-validation-log
           path: assets_validation.log
 
       - name: Upload manifests (debug)
-        if: failure()
+        if: failure() && steps.assets.outputs.enabled == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: manifests-after-gen
