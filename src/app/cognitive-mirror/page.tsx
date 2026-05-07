@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../../components/ui/Card';
+import AncientSignalCard from '../../components/ancient-signals/AncientSignalCard';
 import ChronoMirrorCard from '../../components/chrono/ChronoMirrorCard';
 import ChronoResonanceActions from '../../components/chrono/ChronoResonanceActions';
 import {
@@ -8,6 +9,12 @@ import {
   computeFeltTimeReplaySegments,
   mapUserDataToChronoSignals,
 } from '../../lib/chronoMirror';
+import {
+  buildAncientNarratorProfile,
+  buildAncientSkyParams,
+  computeAncientSignals,
+  mapUserDataToAncientSignals,
+} from '../../lib/ancientSignals';
 import {
   createChronoMirrorSnapshot,
   getLatestChronoMirrorSnapshot,
@@ -49,9 +56,32 @@ async function loadChronoState() {
 
 export default async function CognitiveMirrorPage() {
   const chronoResult = await loadChronoState();
+  const ancientResult = computeAncientSignals(
+    mapUserDataToAncientSignals({
+      moodScore: demoRawData.moodScore,
+      stressScore: demoRawData.stressScore,
+      sleepDebtHours: demoRawData.sleepDebtHours,
+      notificationFrictionScore: demoRawData.notificationFrictionScore,
+      socialGapScore: demoRawData.socialGapScore,
+      recoveryActionCount: demoRawData.recoveryActionCount,
+      lateNightUseScore: 0.58,
+      frictionTapScore: 0.66,
+      hesitationScore: 0.54,
+      cancelLoopScore: 0.48,
+      scrollVelocityScore: 0.62,
+      pauseDensity: 0.51,
+      voiceTension: 0.57,
+      speechCompression: chronoResult.timeCompressionScore,
+      chronoCompression: chronoResult.timeCompressionScore,
+      chronoDilation: chronoResult.timeDilationScore,
+      wordDisclosure: chronoResult.timeToMeaning,
+    }),
+  );
 
   const riveBinding = getChronoRiveBinding(chronoResult);
   const narratorBinding = getChronoNarratorBinding(chronoResult);
+  const ancientSkyBinding = buildAncientSkyParams(ancientResult);
+  const ancientNarratorBinding = buildAncientNarratorProfile(ancientResult);
 
   const replaySegments = computeFeltTimeReplaySegments([
     {
@@ -96,25 +126,30 @@ export default async function CognitiveMirrorPage() {
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300/70">
-              ChronoMirror
+              ChronoMirror + Ancient Signals
             </p>
             <h1 className="mt-2 text-4xl font-black tracking-tight">
               Cognitive Mirror
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-white/60">
-              Subjective time perception, emotional density, replay pacing,
-              symbolic thresholds, and temporal cognition modeling.
+              Subjective time perception, emotional density, preverbal rhythm,
+              symbolic thresholds, and the signal beneath speech.
             </p>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/60 backdrop-blur-xl">
             <p>Cloud opacity: {riveBinding.inputs.cloudOpacity.toFixed(2)}</p>
             <p>Narrator silence: {narratorBinding.silenceMs}ms</p>
+            <p>Orb pulse: {ancientSkyBinding.orbPulseRate.toFixed(2)}</p>
+            <p>Body-weather: {ancientResult.preverbalState}</p>
           </div>
         </div>
       </div>
 
-      <ChronoMirrorCard result={chronoResult} />
+      <div className="grid gap-6 lg:grid-cols-2">
+        <ChronoMirrorCard result={chronoResult} />
+        <AncientSignalCard result={ancientResult} />
+      </div>
 
       <ChronoResonanceActions userId={DEMO_USER_ID} />
 
@@ -154,19 +189,33 @@ export default async function CognitiveMirrorPage() {
         </div>
       </Card>
 
-      <Card header="Chrono Runtime Bindings">
+      <Card header="Runtime Bindings">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/70">
-            <p className="mb-2 font-semibold text-white">Sky / Rive</p>
+            <p className="mb-2 font-semibold text-white">Chrono Sky / Rive</p>
             <pre className="overflow-x-auto text-xs text-cyan-100/70">
               {JSON.stringify(riveBinding, null, 2)}
             </pre>
           </div>
 
           <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/70">
-            <p className="mb-2 font-semibold text-white">Narrator</p>
+            <p className="mb-2 font-semibold text-white">Chrono Narrator</p>
             <pre className="overflow-x-auto text-xs text-violet-100/70">
               {JSON.stringify(narratorBinding, null, 2)}
+            </pre>
+          </div>
+
+          <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/70">
+            <p className="mb-2 font-semibold text-white">Ancient Sky / HomeView</p>
+            <pre className="overflow-x-auto text-xs text-cyan-100/70">
+              {JSON.stringify(ancientSkyBinding, null, 2)}
+            </pre>
+          </div>
+
+          <div className="rounded-2xl bg-white/5 p-4 text-sm text-white/70">
+            <p className="mb-2 font-semibold text-white">Ancient Narrator</p>
+            <pre className="overflow-x-auto text-xs text-violet-100/70">
+              {JSON.stringify(ancientNarratorBinding, null, 2)}
             </pre>
           </div>
         </div>
