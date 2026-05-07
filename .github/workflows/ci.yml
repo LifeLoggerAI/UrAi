@@ -10,7 +10,7 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -24,22 +24,32 @@ jobs:
           node-version: "20"
           cache: npm
 
-      # Use npm install until package-lock.json is regenerated after dependency changes.
-      # Switch back to npm ci once package-lock.json includes firebase-admin, tailwindcss, postcss, and autoprefixer.
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Validate V1 wiring
+        run: npm run check:v1
+
+      - name: Validate lockfile
+        run: npm run check:lockfile
 
       - name: Seed demo data
         run: npm run seed:demo
 
-      - name: Unit tests
-        run: npm run test:unit
-
       - name: Type check
-        run: npm run typecheck
+        run: npm run check:types
 
       - name: Lint
         run: npm run lint
+
+      - name: Unit tests
+        run: npm run test:unit -- --runInBand
+
+      - name: Firestore rules tests
+        run: npm run test:rules -- --runInBand
+
+      - name: Integration tests
+        run: npm run test:integration -- --runInBand
 
       - name: Build
         run: npm run build
