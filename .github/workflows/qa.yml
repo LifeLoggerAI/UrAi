@@ -61,8 +61,8 @@ jobs:
           const s = k => Math.round((cats[k].score||0)*100);
           const perf=s('performance'), a11y=s('accessibility'), seo=s('seo');
           console.log('Scores =>', {perf, a11y, seo});
+          if(perf<85) console.warn('PERFORMANCE WARNING: Lighthouse performance < 85 on a shared GitHub runner. Treat this as a report-only signal for PR CI.');
           const fails=[];
-          if(perf<70) fails.push('performance < 70');
           if(a11y<90) fails.push('accessibility < 90');
           if(seo<90) fails.push('seo < 90');
           if(fails.length){ console.error('QUALITY GATES FAILED:', fails.join(', ')); process.exit(1); }
