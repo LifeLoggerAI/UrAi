@@ -15,7 +15,7 @@ test.describe("URAI V1 smoke", () => {
 
     await expectBodyText(page, /^Mood Forecast$/);
     await expectBodyText(page, /^Weekly Reflection$/);
-    await expectBodyText(page, /^Companion$/);
+    await expectBodyText(page, /^Companion Demo$/);
     await expectBodyText(page, /^Early Access$/);
   });
 
@@ -23,6 +23,7 @@ test.describe("URAI V1 smoke", () => {
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
     await expectBodyText(page, /^Public Constellation$/);
+    await expectBodyText(page, /^Demo data · public-safe view$/);
     await expectBodyText(page, /^@adamclamp$/);
     await expectBodyText(page, /^Memory Blooms$/);
     await expectBodyText(page, /^Star Timeline$/);
@@ -50,7 +51,7 @@ test.describe("URAI V1 smoke", () => {
     const email = page.locator("#waitlist-email-public-constellation");
     const form = email.locator("xpath=ancestor::form");
     await expect(email).toBeVisible();
-    await expect(form.getByRole("button", { name: "Join" })).toBeDisabled();
+    await expect(form.getByRole("button", { name: /Join|Joined/ })).toBeDisabled();
   });
 
   test("companion API responds to a valid prompt", async ({ request }) => {
@@ -73,6 +74,6 @@ test.describe("URAI V1 smoke", () => {
     const input = page.locator("#companion-message");
     const form = input.locator("xpath=ancestor::form");
     await expect(input).toBeVisible();
-    await expect(form.getByRole("button", { name: "Send" })).toBeDisabled();
+    await expect(form.getByRole("button", { name: "Ask" })).toBeDisabled();
   });
 });

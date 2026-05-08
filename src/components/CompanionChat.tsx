@@ -16,7 +16,7 @@ export default function CompanionChat() {
     if (isSending) return;
 
     if (!trimmedMessage) {
-      setErrorMessage("Write a question for the companion first.");
+      setErrorMessage("Ask a short question first so the demo can respond clearly.");
       return;
     }
 
@@ -31,7 +31,7 @@ export default function CompanionChat() {
       });
 
       if (!response.ok) {
-        setErrorMessage("URAI could not read that pattern yet. Try a shorter question.");
+        setErrorMessage("The companion could not read that prompt yet. Try a shorter question.");
         return;
       }
 
@@ -47,8 +47,11 @@ export default function CompanionChat() {
 
   return (
     <section className="rounded-3xl border border-white/10 bg-black/35 p-4 text-white shadow-2xl backdrop-blur-md">
-      <p className="text-xs uppercase tracking-[0.3em] text-white/50">Companion</p>
-      <h2 className="mb-3 text-lg font-semibold">Ask URAI what the pattern means</h2>
+      <p className="text-xs uppercase tracking-[0.3em] text-white/50">Companion Demo</p>
+      <h2 className="mb-2 text-lg font-semibold">Ask what the pattern means</h2>
+      <p className="mb-3 text-sm leading-6 text-white/60">
+        Try one focused prompt. The demo returns a short interpretation of the visible constellation.
+      </p>
       <form
         className="flex flex-col gap-2 sm:flex-row"
         onSubmit={(event) => {
@@ -66,7 +69,7 @@ export default function CompanionChat() {
             setMessage(event.target.value);
             if (errorMessage) setErrorMessage("");
           }}
-          placeholder="What should I build next?"
+          placeholder="What pattern stands out today?"
           className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/45 outline-none transition focus:border-white/40 focus:ring-2 focus:ring-white/20"
           aria-describedby={errorMessage ? "companion-error" : reply ? "companion-reply" : undefined}
           aria-invalid={Boolean(errorMessage)}
@@ -76,7 +79,7 @@ export default function CompanionChat() {
           disabled={!canSubmit}
           className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {isSending ? "Reading..." : "Send"}
+          {isSending ? "Reading..." : "Ask"}
         </button>
       </form>
       {errorMessage && (
@@ -87,7 +90,7 @@ export default function CompanionChat() {
       {reply && (
         <div id="companion-reply" className="mt-4 rounded-2xl bg-white/10 p-3" aria-live="polite">
           <p className="text-sm leading-6 text-white/90">{reply.reply}</p>
-          <p className="mt-2 text-xs text-white/60">Mood: {reply.moodTag}</p>
+          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/50">Mood tag · {reply.moodTag}</p>
         </div>
       )}
     </section>
