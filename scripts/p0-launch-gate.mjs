@@ -10,8 +10,13 @@ fs.mkdirSync(reportDir, { recursive: true });
 const runCommands = process.env.URAI_P0_RUN_COMMANDS === "1";
 const checks = [];
 
+function normalizeStatus(status) {
+  if (["pass", "fail", "unverified"].includes(status)) return status;
+  return status ? "pass" : "fail";
+}
+
 function add(name, status, evidence = "", remediation = "") {
-  checks.push({ name, status, evidence, remediation });
+  checks.push({ name, status: normalizeStatus(status), evidence, remediation });
 }
 
 function exists(file) {
@@ -31,12 +36,12 @@ function hasText(file, pattern) {
 }
 
 function checkFile(file, why) {
-  add(`Required file exists: ${file}`, exists(file) ? "pass" : "fail", exists(file) ? file : "missing", why);
+  add(`Required file exists: ${file}`, exists(file), exists(file) ? file : "missing", why);
 }
 
 function checkPackageScript(packageJson, script) {
   const command = packageJson.scripts?.[script];
-  add(`package script exists: ${script}`, command ? "pass" : "fail", command || "missing", `Add npm script '${script}'.`);
+  add(`package script exists: ${script}`, Boolean(command), command || "missing", `Add npm script '${script}'.`);
 }
 
 const requiredFiles = [
@@ -86,19 +91,19 @@ if (exists("package.json")) {
     checkPackageScript(packageJson, script);
   }
 
-  add("Node engine pinned to 20 for app", packageJson.engines?.node === "20" ? "pass" : "fail", packageJson.engines?.node || "missing", "Set package.json engines.node to 20.");
+  add("Node engine pinned to 20 for app", packageJson.engines?.node === "20", packageJson.engines?.node || "missing", "Set package.json engines.node to 20.");
 }
 
 if (exists("functions/package.json")) {
   const functionsPackageJson = readJson("functions/package.json");
-  add("Firebase Functions build script exists", functionsPackageJson.scripts?.build ? "pass" : "fail", functionsPackageJson.scripts?.build || "missing", "Add functions/package.json build script.");
-  add("Firebase Functions Node engine pinned to 22", functionsPackageJson.engines?.node === "22" ? "pass" : "fail", functionsPackageJson.engines?.node || "missing", "Set functions/package.json engines.node to 22.");
+  add("Firebase Functions build script exists", Boolean(functionsPackageJson.scripts?.build), functionsPackageJson.scripts?.build || "missing", "Add functions/package.json build script.");
+  add("Firebase Functions Node engine pinned to 22", functionsPackageJson.engines?.node === "22", functionsPackageJson.engines?.node || "missing", "Set functions/package.json engines.node to 22.");
 }
 
 if (exists("firebase.json")) {
   const firebaseJson = readJson("firebase.json");
-  add("firebase.json points to firestore.rules", firebaseJson.firestore?.rules === "firestore.rules" ? "pass" : "fail", firebaseJson.firestore?.rules || "missing", "Set firestore.rules to firestore.rules.");
-  add("firebase.json points to firestore.indexes.json", firebaseJson.firestore?.indexes === "firestore.indexes.json" ? "pass" : "fail", firebaseJson.firestore?.indexes || "missing", "Set firestore.indexes to firestore.indexes.json.");
+  add("firebase.json points to firestore.rules", firebaseJson.firestore?.rules === "firestore.rules", firebaseJson.firestore?.rules || "missing", "Set firestore.rules to firestore.rules.");
+  add("firebase.json points to firestore.indexes.json", firebaseJson.firestore?.indexes === "firestore.indexes.json", firebaseJson.firestore?.indexes || "missing", "Set firestore.indexes to firestore.indexes.json.");
 }
 
 if (exists("firestore.rules")) {
@@ -108,7 +113,7 @@ if (exists("firestore.rules")) {
 }
 
 const routeChecks = [
-  ["README documents home route", "README.md", /\/` cinematic home scene|`\/` cinematic home scene/],
+  ["README documents home route", "README.md", /`\/` cinematic home scene/],
   ["README documents Adam Clamp route", "README.md", /\/u\/adamclamp/],
   ["README documents companion API", "README.md", /\/api\/companion/],
   ["README documents waitlist API", "README.md", /\/api\/waitlist/],
@@ -118,7 +123,7 @@ const routeChecks = [
 ];
 
 for (const [name, file, pattern] of routeChecks) {
-  add(name, hasText(file, pattern) ? "pass" : "fail", file, `Update ${file} so this route or test is explicitly covered.`);
+  add(name, hasText(file, pattern), file, `Update ${file} so this route or test is explicitly covered.`);
 }
 
 if (exists(".github/workflows/ci.yml")) {
@@ -126,16 +131,16 @@ if (exists(".github/workflows/ci.yml")) {
   for (const token of [
     "npm run check:lockfile",
     "npm run check:v1",
+    "npm run launch:p0",
     "npm run seed:demo",
     "npm run test:unit",
     "npm run test:rules",
     "npm run typecheck",
     "npm run lint",
     "npm run build",
-    "working-directory: functions",
-    "npm run build"
+    "working-directory: functions"
   ]) {
-    add(`CI includes ${token}`, ci.includes(token) ? "pass" : "fail", ".github/workflows/ci.yml", `Add '${token}' to CI.`);
+    add(`CI includes ${token}`, ci.includes(token), ".github/workflows/ci.yml", `Add '${token}' to CI.`);
   }
 }
 
@@ -160,7 +165,7 @@ for (const command of commands) {
   const [bin, ...args] = command.split(" ");
   const result = spawnSync(bin, args, { cwd: root, encoding: "utf8", stdio: "pipe" });
   const output = `${result.stdout || ""}\n${result.stderr || ""}`.trim().slice(-3000);
-  add(`Command passes: ${command}`, result.status === 0 ? "pass" : "fail", output || `exit ${result.status}`, `Fix failing command: ${command}`);
+  add(`Command passes: ${command}`, result.status === 0, output || `exit ${result.status}`, `Fix failing command: ${command}`);
 }
 
 const manualEvidence = [
@@ -173,7 +178,7 @@ const manualEvidence = [
 ];
 
 for (const [name, value] of manualEvidence) {
-  add(name, value ? "pass" : "unverified", value || "missing", `Set evidence env var or paste proof into the P0 issue before marking done.`);
+  add(name, value ? "pass" : "unverified", value || "missing", "Set evidence env var or paste proof into the P0 issue before marking done.");
 }
 
 const passed = checks.filter((check) => check.status === "pass");
