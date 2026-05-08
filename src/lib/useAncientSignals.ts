@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
-import {auth} from "@/lib/firebase";
+import {auth, isFirebaseConfigured} from "@/lib/firebase";
 import {
   AncientSignalResult,
   computeAncientSignals,
@@ -50,6 +50,16 @@ export function useAncientSignals(): UseAncientSignalsResult {
 
   useEffect(() => {
     let mounted = true;
+
+    if (!isFirebaseConfigured()) {
+      setResult(demoResult);
+      setSource("demo");
+      setLoading(false);
+      setError(null);
+      return () => {
+        mounted = false;
+      };
+    }
 
     const unsubscribe = onAuthStateChanged(auth(), async (user) => {
       if (!mounted) return;
