@@ -50,13 +50,6 @@ function emit(event: TelemetryEvent) {
       }
     }
   }
-
-  if (process.env.NODE_ENV !== "production") {
-    const { type, route, action, metadata } = event;
-    const payload = { route, action, metadata };
-    // eslint-disable-next-line no-console
-    console.debug(`[telemetry] ${type}`, payload);
-  }
 }
 
 export function trackRouteLoadStart(route: string, metadata?: TelemetryMetadata) {
