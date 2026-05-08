@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot, type DocumentData } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { auth, db, isFirebaseConfigured } from "@/lib/firebase";
 
 export type EmotionalTone = "calm" | "focused" | "charged" | "restorative";
 
@@ -142,6 +142,11 @@ export function useEmotionalTone() {
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
+
+    if (!isFirebaseConfigured()) {
+      setInput(readStoredEmotionState());
+      return undefined;
+    }
 
     let unsubs: Array<() => void> = [];
     const unsubscribeAuth = onAuthStateChanged(auth(), (user) => {
