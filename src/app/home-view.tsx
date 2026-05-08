@@ -19,7 +19,7 @@ const HERO_IMAGES = [
   { src: "/assets/ground/ground-demo.mp4", alt: "Ground energy" },
 ];
 
-export default function HomeView(): JSX.Element {
+export default function HomeView(): React.ReactElement {
   const [statusIndex, setStatusIndex] = useState(0);
   const statusMessage = useMemo(() => STATUS_MESSAGES[statusIndex], [statusIndex]);
 
