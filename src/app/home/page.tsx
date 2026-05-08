@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center text-center">
       <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-4">
-        <span className="text-sm">Listening locally</span>
+        <span className="text-sm">URAI companion listening locally</span>
         <Button variant="secondary">Local-Only</Button>
       </div>
 
@@ -23,7 +23,7 @@ export default function HomePage() {
       <div className="mb-24 flex space-x-4">
         <Chip>Mirror</Chip>
         <Chip>Narrator</Chip>
-        <Chip>Rituals</Chip>
+        <Chip>Life Map</Chip>
       </div>
     </div>
   );
