@@ -8,6 +8,12 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '../..');
 const auditDir = path.join(repoRoot, 'audit', 'tier-lock');
 
+const FIREBASE_ADMIN_KEYS = [
+  'FIREBASE_PROJECT_ID',
+  'FIREBASE_CLIENT_EMAIL',
+  'FIREBASE_PRIVATE_KEY',
+];
+
 const ENV_KEYS = [
   'NEXT_PUBLIC_FIREBASE_API_KEY',
   'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
@@ -15,9 +21,7 @@ const ENV_KEYS = [
   'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
   'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
   'NEXT_PUBLIC_FIREBASE_APP_ID',
-  'FIREBASE_PROJECT_ID',
-  'FIREBASE_CLIENT_EMAIL',
-  'FIREBASE_PRIVATE_KEY',
+  ...FIREBASE_ADMIN_KEYS,
   'OPENAI_API_KEY',
   'ELEVENLABS_API_KEY',
   'ELEVENLABS_VOICE_ID',
@@ -95,14 +99,36 @@ function collectReferencedKeys() {
   return rows;
 }
 
+function isTruthy(value) {
+  return ['1', 'true', 'yes', 'required'].includes(String(value ?? '').trim().toLowerCase());
+}
+
+function isFirebaseAdminKey(key) {
+  return FIREBASE_ADMIN_KEYS.includes(key);
+}
+
 export function runEnvReadinessAudit() {
   const references = collectReferencedKeys();
   const presence = collectEnvPresence();
+  const adminPresentCount = FIREBASE_ADMIN_KEYS.filter((key) =>
+    Boolean(presence.filePresence.get(key) || presence.processPresence.get(key)),
+  ).length;
+  const requireFirebaseAdmin = isTruthy(process.env.URAI_REQUIRE_FIREBASE_ADMIN) || adminPresentCount > 0;
+
   const rows = ENV_KEYS.map((key) => {
     const referencedIn = references.get(key) || [];
     const referenced = referencedIn.length > 0;
     const present = Boolean(presence.filePresence.get(key) || presence.processPresence.get(key));
-    const status = referenced ? (present ? 'PASS' : 'FAIL') : (present ? 'PRESENT_OPTIONAL' : 'OPTIONAL_NOT_DETECTED');
+    const optionalGuarded = referenced && isFirebaseAdminKey(key) && !requireFirebaseAdmin;
+    const status = referenced
+      ? present
+        ? 'PASS'
+        : optionalGuarded
+          ? 'OPTIONAL_GUARDED'
+          : 'FAIL'
+      : present
+        ? 'PRESENT_OPTIONAL'
+        : 'OPTIONAL_NOT_DETECTED';
     return {
       key,
       referenced,
@@ -117,6 +143,7 @@ export function runEnvReadinessAudit() {
     rows,
     failures,
     envFilesChecked: presence.envFiles,
+    firebaseAdminRequired: requireFirebaseAdmin,
   };
 }
 
@@ -128,8 +155,10 @@ export function writeEnvReadinessAuditReport(audit = runEnvReadinessAudit()) {
   lines.push(`Status: ${audit.status}`);
   lines.push(`Generated: ${new Date().toISOString()}`);
   lines.push(`Env files checked: ${audit.envFilesChecked.join(', ')}`);
+  lines.push(`Firebase Admin required: ${audit.firebaseAdminRequired ? 'yes' : 'no'}`);
   lines.push('');
   lines.push('Secret values are never printed. This report only shows present/missing status.');
+  lines.push('Firebase Admin keys are optional for local dry-run mode unless `URAI_REQUIRE_FIREBASE_ADMIN=1` is set or a partial Admin credential set is present.');
   lines.push('');
   lines.push('| Key | Referenced | Present | Status | Referenced In |');
   lines.push('| --- | --- | --- | --- | --- |');
