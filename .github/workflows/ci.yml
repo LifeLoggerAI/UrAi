@@ -35,6 +35,9 @@ jobs:
       - name: Check V1 wiring
         run: npm run check:v1
 
+      - name: Check P0 launch gate
+        run: npm run launch:p0
+
       - name: Seed demo data
         run: npm run seed:demo
 
