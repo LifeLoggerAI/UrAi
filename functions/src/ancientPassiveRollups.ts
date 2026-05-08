@@ -1,5 +1,3 @@
-import * as admin from "firebase-admin";
-
 export interface PassiveRollupOptions {
   ownerUid: string;
   startAt: string;
