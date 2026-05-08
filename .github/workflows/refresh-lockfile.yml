@@ -49,3 +49,5 @@ jobs:
           git add package-lock.json .github/workflows/ci.yml .github/workflows/refresh-lockfile.yml
           git commit -m "Refresh package lockfile and restore npm ci"
           git push origin fix-npm-ci-lockfile
+
+# Triggered after workflow file creation.
