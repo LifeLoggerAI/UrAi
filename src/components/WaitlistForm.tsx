@@ -25,7 +25,7 @@ export default function WaitlistForm({ source, handle }: Props) {
 
     if (!emailPattern.test(trimmedEmail)) {
       setStatus("error");
-      setErrorMessage("Enter a valid email address before joining.");
+      setErrorMessage("Enter a valid email address to join the waitlist.");
       return;
     }
 
@@ -46,7 +46,7 @@ export default function WaitlistForm({ source, handle }: Props) {
 
       if (!response.ok) {
         setStatus("error");
-        setErrorMessage("We could not join the waitlist. Check the email and try again.");
+        setErrorMessage("We could not save that email. Check it and try again.");
         return;
       }
 
@@ -63,7 +63,7 @@ export default function WaitlistForm({ source, handle }: Props) {
       <p className="text-xs uppercase tracking-[0.3em] text-white/50">Early Access</p>
       <h2 className="mt-1 text-xl font-semibold">Join the URAI waitlist</h2>
       <p className="mt-2 text-sm leading-6 text-white/70">
-        Get the first public build when the demo spine moves into launch testing.
+        Get notified when the public V1 demo is ready for broader testing.
       </p>
       <form
         className="mt-4 flex flex-col gap-2 sm:flex-row"
@@ -98,11 +98,12 @@ export default function WaitlistForm({ source, handle }: Props) {
           disabled={!canSubmit}
           className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {status === "sending" ? "Joining..." : "Join"}
+          {status === "sending" ? "Joining..." : status === "joined" ? "Joined" : "Join"}
         </button>
       </form>
       <div id={statusId} aria-live="polite">
-        {status === "joined" && <p className="mt-3 text-sm text-emerald-200">You are on the list.</p>}
+        {status === "sending" && <p className="mt-3 text-sm text-white/55">Saving your spot...</p>}
+        {status === "joined" && <p className="mt-3 text-sm text-emerald-200">You are on the list. We will send launch access here.</p>}
         {status === "error" && <p className="mt-3 text-sm text-red-200">{errorMessage}</p>}
       </div>
     </section>
