@@ -17,11 +17,11 @@ type HomeMode = "home" | "transitioning" | "lifemap";
 
 const TONE_COPY = {
   calm: {
-    idle: "Tap the sky to open your Life Map",
+    idle: "Tap the sky to open the demo Life Map",
     opening: "Softening into the Life Map...",
   },
   focused: {
-    idle: "Tap the sky to trace today’s pattern",
+    idle: "Tap the sky to trace the demo pattern",
     opening: "Focusing the constellation...",
   },
   charged: {
@@ -112,9 +112,9 @@ export default function HomeScene() {
         onClick={openLifeMap}
         disabled={isTransitioning}
         className="sky-trigger"
-        aria-label="Open URAI Life Map from the sky"
+        aria-label="Open URAI demo Life Map from the sky"
       >
-        <span className="sr-only">Open URAI Life Map</span>
+        <span className="sr-only">Open URAI demo Life Map</span>
       </button>
 
       <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-black to-black" />
@@ -166,17 +166,27 @@ export default function HomeScene() {
 
       <section className="relative z-20 mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-between px-5 py-8">
         <div className="max-w-3xl pt-10">
-          <p className="text-xs uppercase tracking-[0.45em] text-white/50">
-            URAI V1 Demo Spine
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="text-xs uppercase tracking-[0.45em] text-white/50">
+              URAI V1 Demo Spine
+            </p>
+            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/60">
+              Public-safe demo data
+            </span>
+          </div>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            A passive emotional operating system for memory, mood, and meaning.
+            A public demo for memory patterns, mood signals, and personal meaning.
           </h1>
 
           <p className="mt-5 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
-            This route renders the core loop: symbolic environment, mood forecast,
-            weekly reflection, companion narrator, and Ancient Signals body-weather.
+            This launch path shows the working V1 loop: a symbolic environment, a mood forecast,
+            a weekly reflection, a companion interpretation, and a waitlist CTA.
+          </p>
+
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
+            The demo is intentionally narrow: it uses curated demo data, avoids private memory exposure,
+            and keeps future roadmap surfaces out of the public path.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -193,7 +203,7 @@ export default function HomeScene() {
               disabled={isTransitioning}
               className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 disabled:cursor-progress disabled:opacity-70"
             >
-              {isTransitioning ? copy.opening : "Open Life Map"}
+              {isTransitioning ? copy.opening : "Preview Life Map"}
             </button>
           </div>
         </div>
