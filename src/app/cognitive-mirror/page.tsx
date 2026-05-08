@@ -8,16 +8,18 @@ import {
   computeFeltTimeReplaySegments,
   mapUserDataToChronoSignals,
 } from '../../lib/chronoMirror';
-import {
-  createChronoMirrorSnapshot,
-  getLatestChronoMirrorSnapshot,
-} from '../../lib/chronoMirrorRepository';
+import { getLatestChronoMirrorSnapshot } from '../../lib/chronoMirrorRepository';
 import {
   getChronoNarratorBinding,
   getChronoRiveBinding,
 } from '../../lib/chronoAnalytics';
+import { isFirebaseConfigured } from '../../lib/firebase';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const DEMO_USER_ID = 'demo-user';
+const CHRONO_FIRESTORE_TIMEOUT_MS = 2500;
 
 const demoRawData: ChronoRawUserData = {
   moodScore: 0.34,
@@ -34,17 +36,43 @@ const demoRawData: ChronoRawUserData = {
   memoryAnchorCount: 9,
 };
 
-async function loadChronoState() {
-  try {
-    const existing = await getLatestChronoMirrorSnapshot(DEMO_USER_ID);
-    if (existing) return existing;
+const demoChronoResult = computeChronoMirror(mapUserDataToChronoSignals(demoRawData));
 
-    await createChronoMirrorSnapshot(DEMO_USER_ID, demoRawData, 'demo');
-  } catch (error) {
-    console.warn('ChronoMirror fallback mode active', error);
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise.then(
+      (value) => {
+        clearTimeout(timeout);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      },
+    );
+  });
+}
+
+async function loadChronoState() {
+  if (process.env.NEXT_PHASE === 'phase-production-build' || !isFirebaseConfigured()) {
+    return demoChronoResult;
   }
 
-  return computeChronoMirror(mapUserDataToChronoSignals(demoRawData));
+  try {
+    const existing = await withTimeout(
+      getLatestChronoMirrorSnapshot(DEMO_USER_ID),
+      CHRONO_FIRESTORE_TIMEOUT_MS,
+      'ChronoMirror snapshot lookup',
+    );
+    return existing ?? demoChronoResult;
+  } catch (error) {
+    console.warn('ChronoMirror fallback mode active', error);
+    return demoChronoResult;
+  }
 }
 
 export default async function CognitiveMirrorPage() {
