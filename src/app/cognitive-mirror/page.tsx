@@ -57,8 +57,16 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): 
   });
 }
 
+function shouldUseChronoFirestore() {
+  return process.env.URAI_ENABLE_CHRONO_FIRESTORE === '1';
+}
+
 async function loadChronoState() {
-  if (process.env.NEXT_PHASE === 'phase-production-build' || !isFirebaseConfigured()) {
+  if (
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    !isFirebaseConfigured() ||
+    !shouldUseChronoFirestore()
+  ) {
     return demoChronoResult;
   }
 
