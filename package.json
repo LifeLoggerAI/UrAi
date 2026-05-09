@@ -23,6 +23,8 @@
     "release:p1": "node scripts/p1-release-gate.mjs",
     "seed:demo": "node scripts/seed-demo.mjs",
     "seed:firestore": "node scripts/seed-demo.mjs --firestore",
+    "seed:tier2": "node scripts/seed-tier2-access.mjs",
+    "seed:tier2:firestore": "node scripts/seed-tier2-access.mjs --firestore",
     "waitlist:export": "node scripts/export-waitlist.mjs",
     "test": "jest",
     "test:unit": "jest tests/unit --passWithNoTests",
