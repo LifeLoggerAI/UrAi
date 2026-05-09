@@ -34,8 +34,89 @@ service cloud.firestore {
       return ownsExistingDoc();
     }
 
+    function hasNoProtectedUserFields() {
+      return !request.resource.data.keys().hasAny([
+        "entitlementTier",
+        "roles",
+        "admin",
+        "founder",
+        "internal",
+        "internalOverride",
+        "isAdmin",
+        "isFounder"
+      ]);
+    }
+
+    function onlyConsentFields() {
+      return request.resource.data.keys().hasOnly([
+        "ownerUid",
+        "source",
+        "status",
+        "acceptedAt",
+        "updatedAt",
+        "version"
+      ]);
+    }
+
+    function validConsentSource(source) {
+      return source in [
+        "profile",
+        "timeline_events",
+        "memory_blooms",
+        "mood_inference",
+        "relationship_signals",
+        "rituals",
+        "offline_cache"
+      ];
+    }
+
+    function canCreateConsent(uid, source) {
+      return isSignedIn() &&
+        request.auth.uid == uid &&
+        request.resource.data.ownerUid == uid &&
+        request.resource.data.source == source &&
+        validConsentSource(source) &&
+        request.resource.data.status in ["accepted", "declined", "revoked"] &&
+        onlyConsentFields();
+    }
+
+    function canUpdateConsent(uid, source) {
+      return isSignedIn() &&
+        request.auth.uid == uid &&
+        resource.data.ownerUid == uid &&
+        request.resource.data.ownerUid == uid &&
+        request.resource.data.source == source &&
+        validConsentSource(source) &&
+        request.resource.data.status in ["accepted", "declined", "revoked"] &&
+        onlyConsentFields();
+    }
+
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
+      allow delete: if request.auth != null && request.auth.uid == uid;
+
+      match /consents/{source} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow create: if canCreateConsent(uid, source);
+        allow update: if canUpdateConsent(uid, source);
+        allow delete: if false;
+      }
+
+      match /settings/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+      match /tokens/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+    }
+
+    match /features/{flagId} {
+      allow read, write: if false;
+    }
+
+    match /entitlements/{uid} {
+      allow read, write: if false;
+    }
+
+    match /auditLogs/{id} {
+      allow read, write: if false;
     }
 
     match /dreams/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
@@ -99,9 +180,6 @@ service cloud.firestore {
         (!request.resource.data.console_log || request.resource.data.console_log == null || (request.resource.data.console_log is string && request.resource.data.console_log.size() <= 20000)) &&
         (!request.resource.data.local_storage_keys || request.resource.data.local_storage_keys == null || (request.resource.data.local_storage_keys is string && request.resource.data.local_storage_keys.size() <= 5000));
     }
-
-    match /users/{uid}/settings/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
-    match /users/{uid}/tokens/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
 
     match /{document=**} { allow read, write: if false; }
   }
