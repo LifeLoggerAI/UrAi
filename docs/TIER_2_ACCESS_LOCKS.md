@@ -42,11 +42,29 @@ The current additive implementation is intentionally small:
 - `src/lib/tier-locks/useTier2AccessLock.ts`
 - `src/lib/tier-locks/client.ts`
 - `src/app/api/tier-lock/tier2/route.ts`
+- `scripts/seed-tier2-access.mjs`
 - `tests/unit/tier-locks/evaluateTierLock.test.ts`
 - `tests/unit/tier-locks/requestTier2AccessLock.test.ts`
+- `tests/unit/tier-locks/tier2SeedScript.test.ts`
 - `tests/rules/tier2-policy.test.js`
 
 This layer is safe to build during Tier-1 lock because it does not change the locked routes, home scene, public routing, or live data capture.
+
+## Staging seed commands
+
+Dry-run JSON seed:
+
+```bash
+npm run seed:tier2
+```
+
+Firestore staging seed, requires Firebase Admin environment variables:
+
+```bash
+URAI_TIER2_SEED_UID=demo-adam-clamp npm run seed:tier2:firestore
+```
+
+The seed writes Tier-2 feature flag docs, a Tier-2 internal demo user marker, and owner-bound consent docs. It should be used only for non-public staging/testing until Tier-1 is sealed.
 
 ## Tier-2 feature gates
 
@@ -85,5 +103,4 @@ These are intentionally not activated by this parallel foundation pass:
 ## Next integration steps
 
 1. Add Playwright coverage proving Tier-1 fallback and Tier-2 unlock.
-2. Seed non-public staging feature docs and consent docs.
-3. Wire Tier-2 UI only behind flags after Tier-1 is sealed.
+2. Wire Tier-2 UI only behind flags after Tier-1 is sealed.
