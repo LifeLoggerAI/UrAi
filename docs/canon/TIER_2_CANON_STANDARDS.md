@@ -8,6 +8,10 @@ Tier-2 extends Tier-1. It does not redefine, weaken, duplicate, or bypass Tier-1
 
 Tier-1 remains the locked foundation for public baseline experience. Tier-2 work can proceed in parallel only when it is additive, gated, tested, and capable of falling back to Tier-1.
 
+## Repo boundary
+
+This file belongs to the main `LifeLoggerAI/UrAi` repo. It does not move or redefine the separate `urai-spatial` repo. Spatial remains a protected Tier-2 system category, but the access-lock implementation in this branch is the main URAI app Tier-2 access layer.
+
 ## Protected systems
 
 Tier-2 covers these systems:
@@ -60,8 +64,8 @@ Runtime-facing canon constants live in:
 - `src/canon/tier2.ts`
 - `src/canon/index.ts`
 
-Spatial Tier-2 lock behavior is documented in:
+Main URAI app Tier-2 access behavior is documented in:
 
-- `docs/SPATIAL_TIER_LOCKS.md`
-- `docs/SPATIAL_LOCK_MATRIX.md`
-- `docs/SPATIAL_LOCK_QA_CHECKLIST.md`
+- `docs/TIER_2_ACCESS_LOCKS.md`
+- `docs/TIER_2_ACCESS_LOCK_MATRIX.md`
+- `docs/TIER_2_ACCESS_QA_CHECKLIST.md`
