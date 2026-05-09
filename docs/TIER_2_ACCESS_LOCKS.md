@@ -38,9 +38,12 @@ The current additive implementation is intentionally small:
 - `src/lib/tier-locks/types.ts`
 - `src/lib/tier-locks/config.ts`
 - `src/lib/tier-locks/evaluateTierLock.ts`
+- `src/lib/tier-locks/requestTier2AccessLock.ts`
+- `src/lib/tier-locks/useTier2AccessLock.ts`
 - `src/lib/tier-locks/client.ts`
 - `src/app/api/tier-lock/tier2/route.ts`
 - `tests/unit/tier-locks/evaluateTierLock.test.ts`
+- `tests/unit/tier-locks/requestTier2AccessLock.test.ts`
 - `tests/rules/tier2-policy.test.js`
 
 This layer is safe to build during Tier-1 lock because it does not change the locked routes, home scene, public routing, or live data capture.
@@ -81,7 +84,6 @@ These are intentionally not activated by this parallel foundation pass:
 
 ## Next integration steps
 
-1. Add a `useTier2AccessLock(featureId)` hook that calls the server evaluator.
-2. Add Playwright coverage proving Tier-1 fallback and Tier-2 unlock.
-3. Seed non-public staging feature docs and consent docs.
-4. Wire Tier-2 UI only behind flags after Tier-1 is sealed.
+1. Add Playwright coverage proving Tier-1 fallback and Tier-2 unlock.
+2. Seed non-public staging feature docs and consent docs.
+3. Wire Tier-2 UI only behind flags after Tier-1 is sealed.
