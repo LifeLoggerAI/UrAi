@@ -1,8 +1,15 @@
-// Content for components/ui/AvatarFallback.tsx
+import Image from 'next/image';
 import React from 'react';
 
 const AvatarFallback = () => {
-  return <img src='path/to/fallback/avatar.png' alt='Fallback Avatar' />;
+  return (
+    <Image
+      src="/path/to/fallback/avatar.png"
+      alt="Fallback Avatar"
+      width={96}
+      height={96}
+    />
+  );
 };
 
 export default AvatarFallback;
