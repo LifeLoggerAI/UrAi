@@ -37,6 +37,8 @@ From the release-candidate commit:
 
 ```bash
 npm install
+npm run check:lockfile
+npm run check:v1
 npm run launch:p0
 npm run release:p1
 npm run seed:demo
@@ -51,11 +53,12 @@ Record the command output summary in #196.
 
 ## 3. Run strict P1 promotion gate
 
-Strict P1 requires real deployment evidence values.
+Strict P1 requires real deployment evidence values. Include `URAI_P0_RUN_COMMANDS=1` so the generated P1 report contains full P0 command evidence instead of only the nested P0 pass/fail marker.
 
 ```bash
 URAI_P1_STRICT=1 \
 URAI_P1_RUN_COMMANDS=1 \
+URAI_P0_RUN_COMMANDS=1 \
 URAI_STAGING_PROJECT_ID="..." \
 URAI_PRODUCTION_PROJECT_ID="..." \
 URAI_RELEASE_CANDIDATE_SHA="..." \
@@ -190,9 +193,11 @@ Production URL: `...`
 
 ### Gates
 
+- [ ] `npm run check:lockfile` passed
+- [ ] `npm run check:v1` passed
 - [ ] `npm run launch:p0` passed
 - [ ] `npm run release:p1` passed
-- [ ] strict P1 gate passed
+- [ ] strict P1 gate passed with `URAI_P0_RUN_COMMANDS=1`
 - [ ] `tmp/p1-release-gate-report.md` summary attached
 
 ### Visual proof
