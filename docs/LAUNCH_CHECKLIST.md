@@ -5,6 +5,7 @@
 - [ ] Public copy says V1 is a demo spine, not a full passive sensing product.
 - [ ] No claims of therapy, diagnosis, crisis support, marketplace, AR/VR, B2B, or studio exports as live features.
 - [ ] `/`, `/u/adamclamp`, `/api/companion`, and `/api/waitlist` are the only launch-critical surfaces.
+- [ ] `npm run check:public-copy` passes before any public copy or marketing text is merged.
 
 ## Local checks
 
@@ -12,6 +13,7 @@
 npm install
 npm run check:v1
 npm run check:firestore-contract
+npm run check:public-copy
 npm run seed:demo
 npm run test:unit
 npm run check:types
