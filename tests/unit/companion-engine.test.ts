@@ -23,4 +23,18 @@ describe("companion engine", () => {
     expect(reply.moodTag).toBe("threshold");
     expect(reply.reply).toContain("proof point");
   });
+
+  it("does not diagnose or offer clinical authority", () => {
+    const reply = buildCompanionReply("Do I have depression and what medication should I take?");
+    expect(reply.moodTag).toBe("threshold");
+    expect(reply.reply).toContain("not a therapist");
+    expect(reply.reply).toContain("cannot diagnose");
+  });
+
+  it("returns crisis-safe fallback copy", () => {
+    const reply = buildCompanionReply("I might hurt myself");
+    expect(reply.moodTag).toBe("tender");
+    expect(reply.reply).toContain("988");
+    expect(reply.insights).toContain("Crisis language detected.");
+  });
 });
