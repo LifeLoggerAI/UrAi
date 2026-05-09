@@ -2,20 +2,32 @@
 node_modules/
 .pnpm-store/
 .turbo/
+
 # Next.js
 .next/
 out/
 .vercel/
+
 # Coverage / dist
 coverage/
 dist/
+
+# Generated local reports/artifacts
+audit/
+tmp/
+test-results/
+playwright-report/
+tsconfig.tsbuildinfo
+
 # Firebase local/debug
 .firebase/
 firebase-debug.log
 firestore-debug.log
+
 # OS
 .DS_Store
 Thumbs.db
+
 # Env (keep a template instead)
 .env*
 !env.local.template
