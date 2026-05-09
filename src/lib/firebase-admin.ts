@@ -1,4 +1,5 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
 function hasAdminEnv(): boolean {
@@ -13,11 +14,7 @@ function getPrivateKey(): string {
   return String(process.env.FIREBASE_PRIVATE_KEY ?? "").replace(/\\n/g, "\n");
 }
 
-export function isFirebaseAdminConfigured(): boolean {
-  return hasAdminEnv();
-}
-
-export function getAdminDb() {
+function ensureAdminApp() {
   if (!hasAdminEnv()) return null;
 
   if (!getApps().length) {
@@ -30,5 +27,21 @@ export function getAdminDb() {
     });
   }
 
-  return getFirestore();
+  return getApps()[0];
+}
+
+export function isFirebaseAdminConfigured(): boolean {
+  return hasAdminEnv();
+}
+
+export function getAdminDb() {
+  const app = ensureAdminApp();
+  if (!app) return null;
+  return getFirestore(app);
+}
+
+export function getAdminAuth() {
+  const app = ensureAdminApp();
+  if (!app) return null;
+  return getAuth(app);
 }
