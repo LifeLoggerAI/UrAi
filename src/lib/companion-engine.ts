@@ -1,3 +1,4 @@
+import { evaluateCompanionSafety } from "@/lib/companion-safety";
 import { isChatMessage, type ChatMessage, type CompanionChatOutput } from "@/lib/urai-v1-schemas";
 
 export type CompanionRequestBody = {
@@ -16,6 +17,16 @@ export function normalizeCompanionMessage(message: unknown): string {
 
 export function buildCompanionReply(message: string, history: ChatMessage[] = []): CompanionChatOutput {
   const trimmed = message.trim();
+  const safety = evaluateCompanionSafety(trimmed);
+
+  if (!safety.safe) {
+    return {
+      reply: safety.reply,
+      moodTag: safety.moodTag,
+      insights: safety.insights
+    };
+  }
+
   const hasMomentumWords = /build|ship|repo|deploy|launch|implement|finish|commit|release/i.test(trimmed);
   const hasHeavyWords = /stuck|overwhelmed|tired|anxious|scared|lost|burned out|burnt out/i.test(trimmed);
   const hasVisionWords = /future|vision|category|investor|pitch|moat|roadmap/i.test(trimmed);
