@@ -38,6 +38,7 @@ const requiredPackageScripts = [
 ];
 
 const requiredContractTokens = [
+  "adminUsers",
   "profiles",
   "consents",
   "narratorMemory",
@@ -74,6 +75,54 @@ const requiredContractTokens = [
   "enterprise",
   "admin",
   "explainability.enabled",
+];
+
+const requiredRulesCollections = [
+  "adminUsers",
+  "adminAuditLogs",
+  "auditLogs",
+  "creatorSubmissions",
+  "incidents",
+  "waitlistEntries",
+  "contactMessages",
+  "marketplaceItems",
+  "jobs",
+  "featureFlags",
+  "systemStatus",
+  "profiles",
+  "consents",
+  "narratorMemory",
+  "memoryShards",
+  "insights",
+  "journeys",
+  "journeyChapters",
+  "stars",
+  "moodWeather",
+  "emotionalForecasts",
+  "weeklyRecaps",
+  "storyProjects",
+  "storyAssets",
+  "marketplacePurchases",
+  "referrals",
+  "jobApplications",
+  "telemetryEvents",
+  "safetyEvents",
+  "dataExportRequests",
+  "accountDeletionRequests",
+  "eventEnrichments",
+  "lifeMapEvents",
+  "constellations",
+  "scrolls",
+  "storyScripts",
+  "relationships",
+  "socialGraph",
+  "obscuraSignals",
+  "mentalLoadScores",
+  "councilSessions",
+  "narratorMessages",
+  "entitlements",
+  "transactions",
+  "dataRequests",
 ];
 
 const requiredFunctionExports = [
@@ -133,6 +182,16 @@ for (const token of requiredContractTokens) {
   if (!contract.includes(token)) problems.push(`Contract missing token: ${token}`);
 }
 
+const firestoreRules = read("firestore.rules");
+for (const collection of requiredRulesCollections) {
+  if (!firestoreRules.includes(`match /${collection}/{id}`)) {
+    problems.push(`Firestore rules missing canonical collection: ${collection}`);
+  }
+}
+if (!firestoreRules.includes("match /{document=**} { allow read, write: if false; }")) {
+  problems.push("Firestore rules missing deny-by-default fallback");
+}
+
 const functionIndex = read("functions/src/index.ts");
 const functionFacade = read("functions/src/uraiCompletionFunctions.ts");
 for (const fn of requiredFunctionExports) {
@@ -149,4 +208,4 @@ if (problems.length > 0) {
 }
 
 console.log("URAI completion audit passed.");
-console.log(`Checked ${requiredFiles.length} files, ${requiredPackageScripts.length} scripts, ${requiredContractTokens.length} contract tokens, and ${requiredFunctionExports.length} function exports.`);
+console.log(`Checked ${requiredFiles.length} files, ${requiredPackageScripts.length} scripts, ${requiredContractTokens.length} contract tokens, ${requiredRulesCollections.length} Firestore rule matches, and ${requiredFunctionExports.length} function exports.`);
