@@ -1,5 +1,6 @@
 export const FIRESTORE_DOMAINS = [
   "users",
+  "adminUsers",
   "profiles",
   "consents",
   "narratorMemory",
@@ -150,7 +151,7 @@ export const OWNER_SCOPED_COLLECTIONS = [
 ] as const satisfies readonly FirestoreDomain[];
 
 export const PUBLIC_READ_COLLECTIONS = ["marketplaceItems", "jobs", "featureFlags", "systemStatus"] as const satisfies readonly FirestoreDomain[];
-export const SERVER_ONLY_COLLECTIONS = ["waitlistEntries", "contactMessages", "creatorSubmissions", "adminAuditLogs", "auditLogs", "incidents"] as const satisfies readonly FirestoreDomain[];
+export const SERVER_ONLY_COLLECTIONS = ["adminUsers", "waitlistEntries", "contactMessages", "creatorSubmissions", "adminAuditLogs", "auditLogs", "incidents"] as const satisfies readonly FirestoreDomain[];
 
 export type OwnerScopedCollection = (typeof OWNER_SCOPED_COLLECTIONS)[number];
 export type PublicReadCollection = (typeof PUBLIC_READ_COLLECTIONS)[number];
@@ -166,6 +167,18 @@ export type OwnerScopedDocument = {
   ownerUid: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type AdminUserDocument = {
+  id: string;
+  uid: string;
+  email: string;
+  roles: UraiRole[];
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  disabled?: boolean;
+  lastReviewedAt?: string;
 };
 
 export type UraiSystemDocument = OwnerScopedDocument & {
@@ -201,6 +214,23 @@ export const UraiSystemDocumentSchema = {
   },
 };
 
+export const AdminUserDocumentSchema = {
+  name: "AdminUserDocumentSchema",
+  required: ["id", "uid", "email", "roles", "createdAt", "updatedAt", "createdBy"],
+  validate(value: Partial<AdminUserDocument>): value is AdminUserDocument {
+    return Boolean(
+      value.id &&
+        value.uid &&
+        value.email &&
+        Array.isArray(value.roles) &&
+        value.roles.every((role) => ["user", "creator", "enterprise_admin", "support", "admin"].includes(role)) &&
+        value.createdAt &&
+        value.updatedAt &&
+        value.createdBy,
+    );
+  },
+};
+
 export const firestorePath = {
   collection(domain: FirestoreDomain) {
     return domain;
@@ -210,6 +240,9 @@ export const firestorePath = {
   },
   user(uid: string) {
     return `users/${uid}`;
+  },
+  adminUser(uid: string) {
+    return `adminUsers/${uid}`;
   },
 };
 
