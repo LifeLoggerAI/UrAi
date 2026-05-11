@@ -73,7 +73,7 @@ const requiredContractTokens = [
   "creator",
   "enterprise",
   "admin",
-  "Why am I seeing this",
+  "explainability.enabled",
 ];
 
 const requiredFunctionExports = [
