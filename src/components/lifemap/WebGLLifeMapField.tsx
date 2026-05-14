@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const STAR_COUNT = 700;
+const STAR_COUNT = 220;
 const FLOATS_PER_STAR = 7;
 const VERTEX_SHADER = `
 attribute vec3 a_position;
@@ -14,17 +14,17 @@ varying vec3 v_color;
 varying float v_alpha;
 
 void main() {
-  float drift = sin(u_time * 0.00018 + a_position.z * 0.008) * 0.045;
+  float drift = sin(u_time * 0.00012 + a_position.z * 0.008) * 0.035;
   vec3 position = a_position;
   position.x += drift;
-  position.y += cos(u_time * 0.00014 + a_position.x * 2.0) * 0.035;
+  position.y += cos(u_time * 0.00010 + a_position.x * 2.0) * 0.025;
 
-  float depth = 1.0 / (1.65 - position.z);
+  float depth = 1.0 / (1.85 - position.z);
   vec2 projected = position.xy * depth;
-  gl_Position = vec4(projected, position.z * 0.38, 1.0);
-  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.026;
+  gl_Position = vec4(projected, position.z * 0.34, 1.0);
+  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.010;
   v_color = a_color;
-  v_alpha = clamp(depth * 0.72, 0.16, 0.95);
+  v_alpha = clamp(depth * 0.22, 0.04, 0.36);
 }
 `;
 
@@ -36,10 +36,10 @@ varying float v_alpha;
 void main() {
   vec2 uv = gl_PointCoord - vec2(0.5);
   float d = length(uv);
-  float core = smoothstep(0.24, 0.0, d);
-  float halo = smoothstep(0.5, 0.08, d) * 0.46;
+  float core = smoothstep(0.12, 0.0, d);
+  float halo = smoothstep(0.44, 0.10, d) * 0.16;
   float alpha = (core + halo) * v_alpha;
-  if (alpha < 0.02) discard;
+  if (alpha < 0.012) discard;
   gl_FragColor = vec4(v_color, alpha);
 }
 `;
@@ -85,21 +85,17 @@ function createStarData() {
     const offset = i * FLOATS_PER_STAR;
     const ring = i / STAR_COUNT;
     const angle = i * 2.399963229728653;
-    const radius = 0.08 + Math.sqrt(ring) * 1.05;
-    const wobble = (Math.random() - 0.5) * 0.28;
-    const x = Math.cos(angle) * radius + wobble;
-    const y = Math.sin(angle) * radius * 0.68 + (Math.random() - 0.5) * 0.22;
-    const z = -1.0 + Math.random() * 1.8;
-    const size = 4.0 + Math.random() * 7.5;
+    const radius = 0.12 + Math.sqrt(ring) * 0.96;
+    const wobble = (Math.random() - 0.5) * 0.16;
     const colorShift = Math.random();
 
-    data[offset] = x;
-    data[offset + 1] = y;
-    data[offset + 2] = z;
-    data[offset + 3] = size;
-    data[offset + 4] = 0.62 + colorShift * 0.28;
-    data[offset + 5] = 0.78 + colorShift * 0.18;
-    data[offset + 6] = 1.0;
+    data[offset] = Math.cos(angle) * radius + wobble;
+    data[offset + 1] = Math.sin(angle) * radius * 0.58 + (Math.random() - 0.5) * 0.16;
+    data[offset + 2] = -1.0 + Math.random() * 1.72;
+    data[offset + 3] = 2.0 + Math.random() * 3.2;
+    data[offset + 4] = 0.42 + colorShift * 0.22;
+    data[offset + 5] = 0.62 + colorShift * 0.18;
+    data[offset + 6] = 0.95;
   }
 
   return data;
@@ -143,7 +139,7 @@ export default function WebGLLifeMapField() {
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     gl.useProgram(program);
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.disable(gl.DEPTH_TEST);
 
     gl.enableVertexAttribArray(positionLocation);
