@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AncientSignalAmbientLayer from "@/components/ancient-signals/AncientSignalAmbientLayer";
 import CompanionChat from "@/components/CompanionChat";
 import ForecastCard from "@/components/ForecastCard";
 import GroundLayer from "@/components/GroundLayer";
-import LifeMapScene from "@/components/lifemap/LifeMapScene";
 import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
 import WaitlistForm from "@/components/WaitlistForm";
 import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
 import { adamClampDemoProfile } from "@/lib/demo-data";
 import { useAncientSignals } from "@/lib/useAncientSignals";
 
-type HomeMode = "home" | "transitioning" | "lifemap";
+type HomeMode = "home" | "transitioning";
 
 const TONE_COPY = {
   calm: {
@@ -35,6 +35,7 @@ const TONE_COPY = {
 };
 
 export default function HomeScene() {
+  const router = useRouter();
   const profile = adamClampDemoProfile;
   const { result: ancientResult, source, loading } = useAncientSignals();
 
@@ -66,37 +67,17 @@ export default function HomeScene() {
     if (mode !== "transitioning") return undefined;
 
     if (reduceMotion) {
-      setMode("lifemap");
+      router.push("/life-map");
       return undefined;
     }
 
-    const timer = window.setTimeout(() => setMode("lifemap"), transitionDuration);
+    const timer = window.setTimeout(() => router.push("/life-map"), transitionDuration);
     return () => window.clearTimeout(timer);
-  }, [mode, reduceMotion, transitionDuration]);
+  }, [mode, reduceMotion, router, transitionDuration]);
 
   const openLifeMap = () => {
-    setMode(reduceMotion ? "lifemap" : "transitioning");
+    setMode("transitioning");
   };
-
-  const returnHome = () => {
-    setMode("home");
-  };
-
-  if (mode === "lifemap") {
-    return (
-      <div className="relative h-dvh w-full overflow-hidden bg-black">
-        <LifeMapScene />
-        <button
-          type="button"
-          onClick={returnHome}
-          className="absolute left-4 top-4 z-50 rounded-full border border-white/30 bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10"
-          aria-label="Return to home scene"
-        >
-          Return home
-        </button>
-      </div>
-    );
-  }
 
   const isTransitioning = mode === "transitioning";
   const copy = TONE_COPY[emotionalTone];
@@ -203,7 +184,7 @@ export default function HomeScene() {
               disabled={isTransitioning}
               className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 disabled:cursor-progress disabled:opacity-70"
             >
-              {isTransitioning ? copy.opening : "Preview Life Map"}
+              {isTransitioning ? copy.opening : "Preview Sky Map V1"}
             </button>
           </div>
         </div>
