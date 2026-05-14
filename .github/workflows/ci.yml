@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Validate Firebase target
+        run: npm run check:firebase
+
       - name: Check lockfile
         run: npm run check:lockfile
 
