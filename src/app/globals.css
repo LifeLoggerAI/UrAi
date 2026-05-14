@@ -7,3 +7,140 @@ body {
   color: #fff;
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
+
+.home-webgl-sky,
+.webgl-life-map-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.home-webgl-sky {
+  opacity: 0.72;
+}
+
+.webgl-life-map-field {
+  opacity: 0.92;
+}
+
+.life-map-shell::before,
+.life-map-shell::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.life-map-shell::before {
+  background:
+    radial-gradient(circle at 22% 28%, rgba(125, 211, 252, 0.16), transparent 18%),
+    radial-gradient(circle at 76% 34%, rgba(196, 181, 253, 0.14), transparent 20%),
+    radial-gradient(ellipse at 50% 86%, rgba(15, 23, 42, 0.95), transparent 34%);
+  filter: blur(10px);
+  opacity: 0.84;
+  animation: uraiSpatialNebula 24s ease-in-out infinite alternate;
+}
+
+.life-map-shell::after {
+  inset: auto -12% -18% -12%;
+  height: 44%;
+  background:
+    radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.12), transparent 18%),
+    radial-gradient(ellipse at 50% 28%, rgba(125, 211, 252, 0.14), transparent 28%),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
+  opacity: 0.9;
+  transform: perspective(800px) rotateX(58deg);
+  transform-origin: center bottom;
+}
+
+.lifemap-space::before,
+.lifemap-space::after {
+  content: "";
+  position: absolute;
+  inset: 8% 10% 18%;
+  pointer-events: none;
+  border-radius: 999px;
+  z-index: 0;
+}
+
+.lifemap-space::before {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 60px rgba(125, 211, 252, 0.12),
+    inset 0 0 80px rgba(196, 181, 253, 0.08);
+  transform: perspective(900px) rotateX(62deg) scale(0.92);
+}
+
+.lifemap-space::after {
+  inset: 16% 18% 26%;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  transform: perspective(900px) rotateX(62deg) scale(1.18);
+  animation: uraiDepthRing 18s linear infinite;
+}
+
+.starfield,
+.connections,
+.memory-star {
+  z-index: 1;
+}
+
+.companion-orb .orb-core {
+  animation: uraiOrbCorePulse 5.5s ease-in-out infinite !important;
+}
+
+.avatar-heart {
+  animation: uraiAvatarHeartPulse 4.8s ease-in-out infinite !important;
+}
+
+@keyframes uraiSpatialNebula {
+  from {
+    transform: translate3d(-1.5%, -0.8%, 0) scale(1);
+    opacity: 0.62;
+  }
+  to {
+    transform: translate3d(1.2%, 1.1%, 0) scale(1.08);
+    opacity: 0.92;
+  }
+}
+
+@keyframes uraiDepthRing {
+  to {
+    transform: perspective(900px) rotateX(62deg) scale(1.18) rotateZ(360deg);
+  }
+}
+
+@keyframes uraiOrbCorePulse {
+  0%, 100% {
+    transform: scale(0.96);
+    opacity: 0.82;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes uraiAvatarHeartPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(0.96);
+    opacity: 0.78;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .life-map-shell::before,
+  .lifemap-space::after,
+  .companion-orb .orb-core,
+  .avatar-heart {
+    animation: none !important;
+  }
+}

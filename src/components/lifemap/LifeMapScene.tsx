@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useReducer, useRef, type CSSProperties } from 'react';
 import NarratorPanel from './NarratorPanel';
+import WebGLLifeMapField from './WebGLLifeMapField';
 import { buildPatternClusters } from './patternClusteringEngine';
 import { useMemoryStars, type MemoryStar } from './useMemoryStars';
 import {
@@ -255,6 +256,7 @@ export default function LifeMapScene() {
 
   return (
     <main className="life-map-shell" aria-label="URAI Spatial Life Map scene">
+      <WebGLLifeMapField />
       <section className={`lifemap-space ${activeStar ? 'is-focused' : ''}`}>
         <div className="starfield" style={starfieldStyle}>
           <svg className="connections" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -320,7 +322,7 @@ export default function LifeMapScene() {
       </nav>
       <style jsx>{`
         .life-map-shell { min-height: 100vh; background: radial-gradient(circle at 50% 28%, #26366d, #0a0f20 58%, #05060f 100%); color: #eef3ff; position: relative; padding: 1rem; overflow: hidden; }
-        .lifemap-space { position: absolute; inset: 0 0 120px; }
+        .lifemap-space { position: absolute; inset: 0 0 120px; z-index: 1; }
         .starfield { position: absolute; inset: 0; transform: translate(calc(50% - var(--camera-x)), calc(50% - var(--camera-y))) scale(var(--camera-zoom)); transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1); }
         .connections { position: absolute; inset: 0; width: 100%; height: 100%; }
         .connection-line { stroke: rgba(190, 220, 255, 0.22); stroke-width: 0.2; stroke-dasharray: 1 1.8; }
@@ -334,7 +336,7 @@ export default function LifeMapScene() {
         .memory-star.is-dimmed { opacity: .34; }
         .memory-star.is-chapter-focused { box-shadow: 0 0 16px rgba(255,255,255,.9), 0 0 44px rgba(196,181,253,.65); }
         .memory-star.is-pattern-focused { box-shadow: 0 0 18px rgba(255,255,255,.95), 0 0 54px rgba(251,191,36,.55), 0 0 90px rgba(251,191,36,.28); }
-        .panel { position: absolute; background: rgba(7,10,25,.75); border: 1px solid rgba(157,196,255,.32); border-radius: 12px; padding: .8rem; backdrop-filter: blur(6px); }
+        .panel { position: absolute; z-index: 4; background: rgba(7,10,25,.75); border: 1px solid rgba(157,196,255,.32); border-radius: 12px; padding: .8rem; backdrop-filter: blur(6px); }
         .export-panel { left: 1rem; top: 1rem; display: flex; gap: .5rem; }
         .pattern-panel { left: 1rem; top: 74px; width: 320px; border-color: rgba(251,191,36,.42); animation: patternPanelIn 520ms ease both; }
         .pattern-panel h2 { margin: 0 0 .4rem; font-size: .95rem; }
@@ -346,7 +348,7 @@ export default function LifeMapScene() {
         button { font: inherit; }
         .panel button, .chapter-pill { border: 1px solid rgba(157,196,255,.4); background: rgba(13,20,45,.85); color: #edf4ff; }
         .panel button { border-radius: 999px; padding: .45rem .7rem; cursor: pointer; }
-        .chapter-row { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
+        .chapter-row { position: absolute; z-index: 4; left: 1rem; right: 1rem; bottom: 1rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5rem; }
         .chapter-pill { border-radius: 999px; padding: .5rem .7rem; text-align: left; cursor: pointer; }
         .chapter-pill.active { border-color: #b9d7ff; box-shadow: 0 0 18px rgba(125,211,252,.35); }
         .chapter-pill small { display: block; opacity: .8; }
