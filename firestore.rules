@@ -1,96 +1,3 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function ownsExistingDoc() {
-      return isSignedIn() && resource.data.ownerUid == request.auth.uid;
-    }
-
-    function ownsIncomingDoc() {
-      return (
-        isSignedIn() &&
-        request.resource.data.ownerUid is string &&
-        request.resource.data.ownerUid == request.auth.uid
-      );
-    }
-
-    function canReadOwnerDoc() {
-      return ownsExistingDoc();
-    }
-
-    function canCreateOwnerDoc() {
-      return ownsIncomingDoc();
-    }
-
-    function canUpdateOwnerDoc() {
-      return ownsExistingDoc() && ownsIncomingDoc() &&
-        resource.data.ownerUid == request.resource.data.ownerUid;
-    }
-
-    function canDeleteOwnerDoc() {
-      return ownsExistingDoc();
-    }
-
-    function hasNoProtectedUserFields() {
-      return !request.resource.data.keys().hasAny([
-        "entitlementTier",
-        "roles",
-        "admin",
-        "founder",
-        "internal",
-        "internalOverride",
-        "isAdmin",
-        "isFounder"
-      ]);
-    }
-
-    function onlyConsentFields() {
-      return request.resource.data.keys().hasOnly([
-        "ownerUid",
-        "source",
-        "status",
-        "acceptedAt",
-        "updatedAt",
-        "version"
-      ]);
-    }
-
-    function validConsentSource(source) {
-      return source in [
-        "profile",
-        "timeline_events",
-        "memory_blooms",
-        "mood_inference",
-        "relationship_signals",
-        "rituals",
-        "offline_cache"
-      ];
-    }
-
-    function canCreateConsent(uid, source) {
-      return isSignedIn() &&
-        request.auth.uid == uid &&
-        request.resource.data.ownerUid == uid &&
-        request.resource.data.source == source &&
-        validConsentSource(source) &&
-        request.resource.data.status in ["accepted", "declined", "revoked"] &&
-        onlyConsentFields();
-    }
-
-    function canUpdateConsent(uid, source) {
-      return isSignedIn() &&
-        request.auth.uid == uid &&
-        resource.data.ownerUid == uid &&
-        request.resource.data.ownerUid == uid &&
-        request.resource.data.source == source &&
-        validConsentSource(source) &&
-        request.resource.data.status in ["accepted", "declined", "revoked"] &&
-        onlyConsentFields();
-    }
-
     match /users/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
@@ -103,8 +10,13 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /settings/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
-      match /tokens/{doc} { allow read, write: if request.auth != null && request.auth.uid == uid; }
+      match /settings/{doc} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /tokens/{doc} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
     }
 
     match /features/{flagId} {
@@ -114,73 +26,3 @@ service cloud.firestore {
     match /entitlements/{uid} {
       allow read, write: if false;
     }
-
-    match /auditLogs/{id} {
-      allow read, write: if false;
-    }
-
-    match /dreams/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /rituals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /timelineEvents/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /personaEvolutions/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /soulThreads/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /socialArchetypes/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /weeklyScrolls/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /weeklyReflections/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /moods/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /moodForecasts/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /shadowMetrics/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /obscuraPatterns/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /cognitiveStress/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /recoveryBlooms/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /memoryBlooms/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /relationshipConstellations/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /relationshipSignals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /voiceEvents/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /dreamConstellations/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /badges/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /notifications/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /journalEntries/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /events/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /insightMarket/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /chronoMirrorSnapshots/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /chrono_validation_events/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /ancientSignals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /companionMessages/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /narratorInsights/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /passiveSignals/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-    match /symbolicStates/{id} { allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc(); allow update: if canUpdateOwnerDoc(); allow delete: if canDeleteOwnerDoc(); }
-
-    match /waitlistSignups/{id} {
-      allow read, write: if false;
-    }
-
-    match /feedback/{id} {
-      allow read: if false;
-      allow create: if
-        request.resource.data.keys().hasOnly(["message", "email", "created_at", "source", "user_agent"]) &&
-        request.resource.data.message is string &&
-        request.resource.data.message.size() <= 2000 &&
-        (!request.resource.data.email || request.resource.data.email == null || (request.resource.data.email is string && request.resource.data.email.size() <= 320)) &&
-        request.resource.data.created_at is timestamp &&
-        (!request.resource.data.source || request.resource.data.source == null || (request.resource.data.source is string && request.resource.data.source.size() <= 500)) &&
-        (!request.resource.data.user_agent || request.resource.data.user_agent == null || (request.resource.data.user_agent is string && request.resource.data.user_agent.size() <= 1000));
-    }
-
-    match /bug_reports/{id} {
-      allow read: if false;
-      allow create: if
-        request.resource.data.keys().hasOnly(["description", "email", "created_at", "route", "user_agent", "console_log", "local_storage_keys"]) &&
-        request.resource.data.description is string &&
-        request.resource.data.description.size() <= 4000 &&
-        (!request.resource.data.email || request.resource.data.email == null || (request.resource.data.email is string && request.resource.data.email.size() <= 320)) &&
-        request.resource.data.created_at is timestamp &&
-        (!request.resource.data.route || request.resource.data.route == null || (request.resource.data.route is string && request.resource.data.route.size() <= 500)) &&
-        (!request.resource.data.user_agent || request.resource.data.user_agent == null || (request.resource.data.user_agent is string && request.resource.data.user_agent.size() <= 1000)) &&
-        (!request.resource.data.console_log || request.resource.data.console_log == null || (request.resource.data.console_log is string && request.resource.data.console_log.size() <= 20000)) &&
-        (!request.resource.data.local_storage_keys || request.resource.data.local_storage_keys == null || (request.resource.data.local_storage_keys is string && request.resource.data.local_storage_keys.size() <= 5000));
-    }
-
-    match /{document=**} { allow read, write: if false; }
-  }
-}

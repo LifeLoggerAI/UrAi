@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          lfs: true
+          lfs: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -70,6 +70,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          lfs: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
