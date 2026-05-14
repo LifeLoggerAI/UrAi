@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const PARTICLE_COUNT = 520;
+const PARTICLE_COUNT = 280;
 const FLOATS_PER_PARTICLE = 7;
 
 const VERTEX_SHADER = `
@@ -15,15 +15,15 @@ varying vec3 v_color;
 varying float v_alpha;
 
 void main() {
-  float lift = mod(a_position.y + u_time * 0.000035, 2.4) - 1.2;
-  float sway = sin(u_time * 0.00016 + a_position.z * 8.0 + a_position.x * 2.0) * 0.055;
+  float lift = mod(a_position.y + u_time * 0.000026, 2.4) - 1.2;
+  float sway = sin(u_time * 0.00012 + a_position.z * 8.0 + a_position.x * 2.0) * 0.038;
   vec3 position = vec3(a_position.x + sway, lift, a_position.z);
-  float depth = 1.0 / (1.58 - position.z);
+  float depth = 1.0 / (1.7 - position.z);
   vec2 projected = position.xy * depth;
-  gl_Position = vec4(projected, position.z * 0.32, 1.0);
-  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.021;
+  gl_Position = vec4(projected, position.z * 0.3, 1.0);
+  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.014;
   v_color = a_color;
-  v_alpha = clamp(depth * 0.55, 0.08, 0.78);
+  v_alpha = clamp(depth * 0.24, 0.035, 0.34);
 }
 `;
 
@@ -35,10 +35,10 @@ varying float v_alpha;
 void main() {
   vec2 uv = gl_PointCoord - vec2(0.5);
   float d = length(uv);
-  float core = smoothstep(0.18, 0.0, d);
-  float halo = smoothstep(0.5, 0.08, d) * 0.34;
+  float core = smoothstep(0.14, 0.0, d);
+  float halo = smoothstep(0.48, 0.12, d) * 0.16;
   float alpha = (core + halo) * v_alpha;
-  if (alpha < 0.015) discard;
+  if (alpha < 0.012) discard;
   gl_FragColor = vec4(v_color, alpha);
 }
 `;
@@ -84,16 +84,16 @@ function createParticleData() {
     const offset = i * FLOATS_PER_PARTICLE;
     const ring = i / PARTICLE_COUNT;
     const angle = i * 2.399963229728653;
-    const radius = 0.18 + Math.sqrt(ring) * 1.22;
+    const radius = 0.22 + Math.sqrt(ring) * 1.12;
     const colorShift = Math.random();
 
-    data[offset] = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.22;
-    data[offset + 1] = Math.sin(angle) * radius * 0.82 + (Math.random() - 0.5) * 0.32;
-    data[offset + 2] = -1.0 + Math.random() * 1.82;
-    data[offset + 3] = 2.8 + Math.random() * 5.4;
-    data[offset + 4] = 0.52 + colorShift * 0.38;
-    data[offset + 5] = 0.66 + colorShift * 0.24;
-    data[offset + 6] = 1.0;
+    data[offset] = Math.cos(angle) * radius + (Math.random() - 0.5) * 0.16;
+    data[offset + 1] = Math.sin(angle) * radius * 0.74 + (Math.random() - 0.5) * 0.22;
+    data[offset + 2] = -1.0 + Math.random() * 1.76;
+    data[offset + 3] = 2.0 + Math.random() * 3.6;
+    data[offset + 4] = 0.46 + colorShift * 0.3;
+    data[offset + 5] = 0.62 + colorShift * 0.2;
+    data[offset + 6] = 0.95;
   }
 
   return data;
@@ -135,7 +135,7 @@ export default function HomeWebGLSky() {
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     gl.useProgram(program);
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.disable(gl.DEPTH_TEST);
 
     gl.enableVertexAttribArray(positionLocation);
