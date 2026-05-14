@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
-const Card = ({ children, header }) => {
+type CardProps = {
+  children?: ReactNode;
+  header?: ReactNode;
+};
+
+const Card = ({ children, header }: CardProps) => {
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg">
       {header && <div className="p-4 border-b border-white/10">{header}</div>}
