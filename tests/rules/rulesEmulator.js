@@ -13,7 +13,7 @@ function normalizeAuth(auth) {
   if (!auth) {
     return null;
   }
-  return { uid: auth.uid };
+  return { uid: auth.uid, token: auth.token || {} };
 }
 
 function convertRulesSyntax(source) {
@@ -197,8 +197,8 @@ class TestEnvironment {
     this.store.clear();
   }
 
-  authenticatedContext(uid) {
-    return new AuthenticatedContext(this, { uid });
+  authenticatedContext(uid, token = {}) {
+    return new AuthenticatedContext(this, { uid, token });
   }
 
   unauthenticatedContext() {
@@ -224,11 +224,11 @@ class AuthenticatedContext {
 
 class AdminContext extends AuthenticatedContext {
   constructor(env) {
-    super(env, null);
+    super(env, { uid: '__admin__', token: { admin: true } });
   }
 
   firestore() {
-    return new FirestoreClient(this.env, { uid: '__admin__' }, true);
+    return new FirestoreClient(this.env, { uid: '__admin__', token: { admin: true } }, true);
   }
 }
 
