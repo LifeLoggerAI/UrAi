@@ -17,20 +17,20 @@ type HomeMode = "home" | "transitioning" | "lifemap";
 
 const TONE_COPY = {
   calm: {
-    idle: "Tap the sky to open the demo Life Map",
-    opening: "Softening into the Life Map...",
+    idle: "Tap the orb or sky to open the demo Life Map",
+    opening: "The orb is lifting you into the Life Map...",
   },
   focused: {
-    idle: "Tap the sky to trace the demo pattern",
-    opening: "Focusing the constellation...",
+    idle: "Tap the orb to trace the demo pattern",
+    opening: "The constellation is focusing around you...",
   },
   charged: {
-    idle: "Tap the sky to see what is lighting up",
-    opening: "Opening the active pattern...",
+    idle: "Tap the orb to see what is lighting up",
+    opening: "The active pattern is opening...",
   },
   restorative: {
-    idle: "Tap the sky to enter quiet memory space",
-    opening: "Entering gently...",
+    idle: "Tap the orb to enter quiet memory space",
+    opening: "Entering gently through the sky...",
   },
 };
 
@@ -56,10 +56,10 @@ export default function HomeScene() {
 
   const transitionDuration = useMemo(() => {
     if (reduceMotion) return 0;
-    if (emotionalTone === "restorative") return 1700;
-    if (emotionalTone === "charged") return 1150;
-    if (emotionalTone === "focused") return 1325;
-    return 1450;
+    if (emotionalTone === "restorative") return 1850;
+    if (emotionalTone === "charged") return 1280;
+    if (emotionalTone === "focused") return 1450;
+    return 1580;
   }, [emotionalTone, reduceMotion]);
 
   useEffect(() => {
@@ -122,6 +122,7 @@ export default function HomeScene() {
       <AncientSignalAmbientLayer result={ancientResult} source={source} loading={loading} />
 
       <GroundLayer
+        className="home-ground"
         state={{
           moodScore: ancientResult.auraAtmosphere.warmth,
           rhythmState:
@@ -140,6 +141,8 @@ export default function HomeScene() {
       <div className="emotional-wash" aria-hidden />
       <div className="ambient-drift" aria-hidden />
       <div className="sky-breath" aria-hidden />
+      <div className="cloud-veil cloud-low" aria-hidden />
+      <div className="cloud-veil cloud-high" aria-hidden />
 
       <div className="parallax-field parallax-near" aria-hidden>
         <span />
@@ -154,6 +157,29 @@ export default function HomeScene() {
         <span />
       </div>
 
+      <div className="soul-anchor" aria-hidden>
+        <div className="avatar-halo" />
+        <div className="avatar-silhouette">
+          <span className="avatar-head" />
+          <span className="avatar-body" />
+          <span className="avatar-heart" />
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="companion-orb"
+        onClick={openLifeMap}
+        disabled={isTransitioning}
+        aria-label="Open Life Map through the companion orb"
+      >
+        <span className="orb-core" />
+        <span className="orb-ring orb-ring-one" />
+        <span className="orb-ring orb-ring-two" />
+      </button>
+
+      <div className="ascent-column" aria-hidden />
+
       <div className="star-tunnel" aria-hidden>
         <span className="star star-one" />
         <span className="star star-two" />
@@ -164,7 +190,7 @@ export default function HomeScene() {
 
       <div className="transition-vignette" aria-hidden />
 
-      <section className="relative z-20 mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-between px-5 py-8">
+      <section className="content-stage relative z-20 mx-auto flex min-h-dvh w-full max-w-6xl flex-col justify-between px-5 py-8">
         <div className="max-w-3xl pt-10">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-xs uppercase tracking-[0.45em] text-white/50">
@@ -208,7 +234,7 @@ export default function HomeScene() {
           </div>
         </div>
 
-        <div className="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="demo-card-grid grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
           <ForecastCard forecast={profile.moodForecast} />
           <WeeklyReflectionCard reflection={profile.weeklyReflection} />
           <CompanionChat />
@@ -274,7 +300,9 @@ export default function HomeScene() {
 
         .emotional-wash,
         .ambient-drift,
-        .sky-breath {
+        .sky-breath,
+        .cloud-veil,
+        .ascent-column {
           position: absolute;
           inset: -8%;
           pointer-events: none;
@@ -315,6 +343,25 @@ export default function HomeScene() {
           mix-blend-mode: screen;
           opacity: 0.32;
           animation: skyBreath calc(6.5s * var(--tone-speed)) ease-in-out infinite;
+        }
+
+        .cloud-veil {
+          z-index: 6;
+          opacity: 0.32;
+          filter: blur(18px);
+          mix-blend-mode: screen;
+          background:
+            radial-gradient(ellipse at 20% 64%, rgba(255,255,255,.12), transparent 22%),
+            radial-gradient(ellipse at 58% 58%, rgba(125,211,252,.12), transparent 26%),
+            radial-gradient(ellipse at 84% 70%, rgba(196,181,253,.1), transparent 22%);
+          transition:
+            opacity 1100ms ease,
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cloud-high {
+          opacity: 0.18;
+          transform: translateY(-16%) scale(1.1);
         }
 
         .parallax-field {
@@ -391,10 +438,156 @@ export default function HomeScene() {
           animation: farDrift calc(21s * var(--tone-speed)) ease-in-out infinite alternate-reverse;
         }
 
+        .soul-anchor {
+          position: absolute;
+          left: 50%;
+          bottom: 18%;
+          z-index: 11;
+          width: min(32vw, 340px);
+          height: min(42vh, 440px);
+          transform: translateX(-50%);
+          pointer-events: none;
+          opacity: 0.78;
+          transition:
+            opacity 900ms ease,
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1),
+            filter 900ms ease;
+        }
+
+        .avatar-halo {
+          position: absolute;
+          inset: 6% 12% 2%;
+          border-radius: 999px 999px 48% 48%;
+          background:
+            radial-gradient(ellipse at 50% 28%, rgba(255,255,255,.16), transparent 22%),
+            radial-gradient(ellipse at 50% 58%, var(--tone-a), transparent 48%);
+          filter: blur(18px);
+          opacity: 0.62;
+        }
+
+        .avatar-silhouette {
+          position: absolute;
+          left: 50%;
+          bottom: 4%;
+          width: 42%;
+          height: 80%;
+          transform: translateX(-50%);
+          opacity: 0.74;
+          filter: drop-shadow(0 0 22px rgba(125,211,252,.22));
+        }
+
+        .avatar-head {
+          position: absolute;
+          left: 50%;
+          top: 3%;
+          width: 42%;
+          aspect-ratio: 1;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          background:
+            radial-gradient(circle at 45% 35%, rgba(255,255,255,.42), rgba(255,255,255,.12) 42%, rgba(255,255,255,.03) 72%, transparent 100%);
+          border: 1px solid rgba(255,255,255,.12);
+        }
+
+        .avatar-body {
+          position: absolute;
+          left: 50%;
+          top: 27%;
+          width: 62%;
+          height: 65%;
+          transform: translateX(-50%);
+          border-radius: 52% 52% 40% 40%;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,.13), rgba(125,211,252,.07) 48%, rgba(0,0,0,.02)),
+            radial-gradient(ellipse at 50% 28%, rgba(255,255,255,.2), transparent 42%);
+          border: 1px solid rgba(255,255,255,.1);
+        }
+
+        .avatar-heart {
+          position: absolute;
+          left: 50%;
+          top: 43%;
+          width: 0.9rem;
+          height: 0.9rem;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          background: rgba(255,255,255,.92);
+          box-shadow:
+            0 0 18px rgba(255,255,255,.9),
+            0 0 44px var(--tone-a),
+            0 0 80px var(--tone-b);
+          animation: orbPulse calc(4.8s * var(--tone-speed)) ease-in-out infinite;
+        }
+
+        .companion-orb {
+          position: absolute;
+          left: 50%;
+          top: 48%;
+          z-index: 23;
+          width: clamp(72px, 11vw, 132px);
+          height: clamp(72px, 11vw, 132px);
+          transform: translate(-50%, -50%);
+          border: 0;
+          border-radius: 999px;
+          background: transparent;
+          cursor: zoom-in;
+          transition:
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1),
+            opacity 800ms ease,
+            filter 800ms ease;
+        }
+
+        .companion-orb:disabled {
+          cursor: progress;
+        }
+
+        .orb-core,
+        .orb-ring {
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+        }
+
+        .orb-core {
+          inset: 22%;
+          background:
+            radial-gradient(circle at 40% 35%, #fff, rgba(255,255,255,.82) 22%, rgba(125,211,252,.45) 50%, rgba(196,181,253,.08) 76%, transparent 100%);
+          box-shadow:
+            0 0 18px rgba(255,255,255,.9),
+            0 0 58px var(--tone-a),
+            0 0 112px var(--tone-b);
+          animation: orbPulse calc(5.5s * var(--tone-speed)) ease-in-out infinite;
+        }
+
+        .orb-ring-one {
+          border: 1px solid rgba(255,255,255,.2);
+          box-shadow: 0 0 38px rgba(125,211,252,.18) inset;
+          animation: orbOrbit calc(13s * var(--tone-speed)) linear infinite;
+        }
+
+        .orb-ring-two {
+          inset: 10%;
+          border: 1px solid rgba(196,181,253,.18);
+          transform: rotate(32deg) scaleX(.72);
+          animation: orbOrbit calc(16s * var(--tone-speed)) linear infinite reverse;
+        }
+
+        .ascent-column {
+          z-index: 12;
+          background:
+            radial-gradient(ellipse at 50% 58%, rgba(255,255,255,.13), transparent 16%),
+            linear-gradient(180deg, transparent 0%, rgba(125,211,252,.08) 42%, rgba(196,181,253,.07) 70%, transparent 100%);
+          opacity: 0.16;
+          filter: blur(4px);
+          transition:
+            opacity 1000ms ease,
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         .star-tunnel {
           position: absolute;
           inset: 0;
-          z-index: 8;
+          z-index: 18;
           opacity: 0;
           transform: scale(0.85);
           pointer-events: none;
@@ -455,7 +648,7 @@ export default function HomeScene() {
         .transition-vignette {
           position: absolute;
           inset: 0;
-          z-index: 9;
+          z-index: 19;
           opacity: 0;
           pointer-events: none;
           background: radial-gradient(
@@ -501,6 +694,52 @@ export default function HomeScene() {
             transform 500ms ease;
         }
 
+        .content-stage,
+        .demo-card-grid {
+          transition:
+            opacity 900ms ease,
+            transform 1450ms cubic-bezier(0.16, 1, 0.3, 1),
+            filter 900ms ease;
+        }
+
+        .home-scene.is-transitioning .content-stage {
+          opacity: 0.42;
+          transform: translateY(2.5rem) scale(0.985);
+          filter: blur(1.5px);
+        }
+
+        .home-scene.is-transitioning .demo-card-grid {
+          opacity: 0.18;
+          transform: translateY(4rem) scale(0.96);
+        }
+
+        .home-scene.is-transitioning .soul-anchor {
+          opacity: 0.96;
+          transform: translateX(-50%) translateY(-9vh) scale(1.08);
+          filter: drop-shadow(0 0 42px var(--tone-a));
+        }
+
+        .home-scene.is-transitioning .companion-orb {
+          transform: translate(-50%, -74%) scale(1.72);
+          opacity: 1;
+          filter: drop-shadow(0 0 54px rgba(255,255,255,.5));
+        }
+
+        .home-scene.is-transitioning .ascent-column {
+          opacity: 0.72;
+          transform: translateY(-12%) scaleY(1.2);
+        }
+
+        .home-scene.is-transitioning .cloud-low {
+          opacity: 0.52;
+          transform: translateY(-8%) scale(1.18);
+        }
+
+        .home-scene.is-transitioning .cloud-high {
+          opacity: 0.44;
+          transform: translateY(-30%) scale(1.32);
+        }
+
         .home-scene.is-transitioning .emotional-wash,
         .home-scene.is-transitioning .ambient-drift,
         .home-scene.is-transitioning .sky-breath {
@@ -526,7 +765,7 @@ export default function HomeScene() {
 
         .home-scene.is-transitioning .star-tunnel {
           opacity: 1;
-          transform: scale(1.7);
+          transform: scale(1.9) translateY(-5%);
         }
 
         .home-scene.is-transitioning .transition-vignette {
@@ -587,14 +826,53 @@ export default function HomeScene() {
           }
         }
 
+        @keyframes orbPulse {
+          0%,
+          100% {
+            transform: translateX(-50%) scale(0.96);
+            opacity: 0.78;
+          }
+
+          50% {
+            transform: translateX(-50%) scale(1.08);
+            opacity: 1;
+          }
+        }
+
+        @keyframes orbOrbit {
+          to {
+            transform: rotate(360deg) scaleX(.82);
+          }
+        }
+
+        @media (max-width: 900px) {
+          .soul-anchor {
+            width: min(52vw, 280px);
+            height: min(36vh, 360px);
+            bottom: 22%;
+            opacity: 0.5;
+          }
+
+          .companion-orb {
+            top: 44%;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .emotional-wash,
           .ambient-drift,
           .sky-breath,
+          .cloud-veil,
           .parallax-field,
           .star-tunnel,
           .transition-vignette,
-          .tap-hint {
+          .tap-hint,
+          .soul-anchor,
+          .companion-orb,
+          .ascent-column,
+          .avatar-heart,
+          .orb-core,
+          .orb-ring {
             transition-duration: 0.01ms !important;
             animation: none !important;
           }
