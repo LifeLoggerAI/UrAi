@@ -1,9 +1,9 @@
 import React, { type ReactNode } from 'react';
 
-type CardProps = {
-  children?: ReactNode;
+type CardProps = React.PropsWithChildren<{
   header?: ReactNode;
-};
+  key?: React.Key;
+}>;
 
 const Card = ({ children, header }: CardProps) => {
   return (
