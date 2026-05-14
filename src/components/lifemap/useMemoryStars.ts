@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, limit, onSnapshot, orderBy, query, type DocumentData } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { auth, db, isFirebaseConfigured } from "@/lib/firebase";
 import type { ChapterId, MemoryEmotion } from "./lifeMapEvents";
 import type { StarState } from "./lifeMapGlowScheduler";
 import { enrichMemorySignal } from "./memoryIntelligenceEngine";
@@ -67,41 +67,52 @@ export function useMemoryStars(fallbackStars: MemoryStar[]) {
   const [stars, setStars] = useState(fallbackStars);
 
   useEffect(() => {
+    if (!isFirebaseConfigured()) {
+      setStars(fallbackStars);
+      return undefined;
+    }
+
     let unsubscribeMemories: (() => void) | null = null;
+    let unsubscribeAuth: (() => void) | null = null;
 
-    const unsubscribeAuth = onAuthStateChanged(auth(), (user) => {
-      if (unsubscribeMemories) {
-        unsubscribeMemories();
-        unsubscribeMemories = null;
-      }
+    try {
+      unsubscribeAuth = onAuthStateChanged(auth(), (user) => {
+        if (unsubscribeMemories) {
+          unsubscribeMemories();
+          unsubscribeMemories = null;
+        }
 
-      if (!user) {
-        setStars(fallbackStars);
-        return;
-      }
+        if (!user) {
+          setStars(fallbackStars);
+          return;
+        }
 
-      const memoriesQuery = query(
-        collection(db(), "users", user.uid, "memories"),
-        orderBy("createdAt", "desc"),
-        limit(32),
-      );
+        const memoriesQuery = query(
+          collection(db(), "users", user.uid, "memories"),
+          orderBy("createdAt", "desc"),
+          limit(32),
+        );
 
-      unsubscribeMemories = onSnapshot(
-        memoriesQuery,
-        (snapshot) => {
-          const next = snapshot.docs.map((docSnap, index) =>
-            toMemoryStar(docSnap.id, docSnap.data(), index),
-          );
+        unsubscribeMemories = onSnapshot(
+          memoriesQuery,
+          (snapshot) => {
+            const next = snapshot.docs.map((docSnap, index) =>
+              toMemoryStar(docSnap.id, docSnap.data(), index),
+            );
 
-          setStars(next.length ? addFallbackConnections(next) : fallbackStars);
-        },
-        () => setStars(fallbackStars),
-      );
-    });
+            setStars(next.length ? addFallbackConnections(next) : fallbackStars);
+          },
+          () => setStars(fallbackStars),
+        );
+      }, () => setStars(fallbackStars));
+    } catch {
+      setStars(fallbackStars);
+      return undefined;
+    }
 
     return () => {
       if (unsubscribeMemories) unsubscribeMemories();
-      unsubscribeAuth();
+      if (unsubscribeAuth) unsubscribeAuth();
     };
   }, [fallbackStars]);
 
