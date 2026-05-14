@@ -8,6 +8,25 @@ body {
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
+.home-webgl-sky,
+.webgl-life-map-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.home-webgl-sky {
+  opacity: 0.72;
+}
+
+.webgl-life-map-field {
+  opacity: 0.92;
+}
+
 .life-map-shell::before,
 .life-map-shell::after {
   content: "";
@@ -37,17 +56,6 @@ body {
   opacity: 0.9;
   transform: perspective(800px) rotateX(58deg);
   transform-origin: center bottom;
-}
-
-.webgl-life-map-field {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.92;
-  pointer-events: none;
-  mix-blend-mode: screen;
 }
 
 .lifemap-space::before,
