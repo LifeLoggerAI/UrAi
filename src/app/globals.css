@@ -41,6 +41,135 @@ body {
   animation: uraiAvatarHeartPulse 4.8s ease-in-out infinite !important;
 }
 
+/*
+ * /home cinematic composition overrides.
+ * These intentionally sit in globals with !important because HomeScene uses styled-jsx.
+ * Goal: remove the washed-out center sky, soften the hard ground band, and make the
+ * avatar/orb read as a grounded scene while the upper sky remains the Life Map doorway.
+ */
+.home-scene .asset-sky {
+  opacity: 0.42 !important;
+  filter: saturate(1.15) contrast(1.12) brightness(0.72) !important;
+}
+
+.home-scene .sky-base {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(92, 113, 198, 0.2), transparent 22%),
+    radial-gradient(ellipse at 50% 49%, rgba(33, 67, 125, 0.16), transparent 48%),
+    linear-gradient(180deg, #02040d 0%, #061225 44%, #03120c 73%, #000 100%) !important;
+}
+
+.home-scene .asset-clouds {
+  opacity: 0.16 !important;
+  filter: blur(0.4px) brightness(0.8) !important;
+}
+
+.home-scene .sky-depth {
+  opacity: 0.58 !important;
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(230, 242, 255, 0.06), transparent 17%),
+    radial-gradient(ellipse at 50% 52%, rgba(71, 116, 185, 0.08), transparent 27%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 58%, rgba(0, 0, 0, 0.88) 100%) !important;
+}
+
+.home-scene .sky-portal {
+  opacity: 0.36 !important;
+  transform: translateY(-34vh) scale(0.92) !important;
+}
+
+.home-scene .sky-whisper {
+  top: 18.5% !important;
+  opacity: 0.72 !important;
+}
+
+.home-scene .ascend-hint {
+  opacity: 0.06 !important;
+}
+
+.home-scene .asset-ground {
+  height: 34% !important;
+  opacity: 0.28 !important;
+  mix-blend-mode: screen !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.18) 12%, rgba(0, 0, 0, 0.82) 42%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.18) 12%, rgba(0, 0, 0, 0.82) 42%, #000 100%) !important;
+}
+
+.home-scene .terrain-world {
+  height: 31% !important;
+  filter: saturate(0.92) brightness(0.78) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 15%, #000 46%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 15%, #000 46%, #000 100%) !important;
+}
+
+.home-scene .terrain-world::before {
+  inset: -64% -18% 0 !important;
+  background:
+    radial-gradient(ellipse at 50% 8%, rgba(110, 231, 183, 0.05), transparent 24%),
+    radial-gradient(ellipse at 50% 30%, rgba(125, 211, 252, 0.035), transparent 38%),
+    linear-gradient(180deg, transparent 0%, rgba(2, 18, 12, 0.11) 40%, rgba(0, 0, 0, 0.98) 100%) !important;
+}
+
+.home-scene .terrain-mist {
+  opacity: 0.2 !important;
+  top: -58% !important;
+}
+
+.home-scene .hill-back {
+  opacity: 0.18 !important;
+  bottom: 57% !important;
+}
+
+.home-scene .hill-front {
+  opacity: 0.72 !important;
+  bottom: -52% !important;
+}
+
+.home-scene .orb-wash {
+  opacity: 0.58 !important;
+  background-image:
+    radial-gradient(circle at 53% 70%, rgba(210, 238, 255, 0.15), rgba(125, 211, 252, 0.08) 7%, transparent 20%),
+    radial-gradient(circle at 42% 68%, rgba(180, 226, 255, 0.08), transparent 14%) !important;
+}
+
+.home-scene .avatar-figure {
+  left: calc(50% - min(13vw, 182px)) !important;
+  top: 56% !important;
+  width: clamp(188px, 12.5vw, 230px) !important;
+  filter: contrast(1.08) brightness(1.04) !important;
+}
+
+.home-scene .asset-avatar {
+  opacity: 0.2 !important;
+}
+
+.home-scene .companion-orb {
+  left: 53.5% !important;
+  top: 70.5% !important;
+  width: clamp(138px, 9.8vw, 176px) !important;
+  height: clamp(138px, 9.8vw, 176px) !important;
+}
+
+.home-scene .orb-glow {
+  opacity: 0.72 !important;
+  filter: blur(20px) !important;
+}
+
+.home-scene .orb-core {
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 0.74),
+    0 0 64px rgba(125, 211, 252, 0.42),
+    0 0 120px rgba(196, 181, 253, 0.12) !important;
+}
+
+.home-scene .orb-shadow {
+  opacity: 0.7 !important;
+  top: 96% !important;
+}
+
+.home-scene.is-transitioning .companion-orb {
+  transform: translate(-50%, -560%) scale(0.58) !important;
+}
+
 @keyframes uraiOrbCorePulse {
   0%, 100% {
     transform: scale(0.96);
@@ -60,6 +189,20 @@ body {
   50% {
     transform: translateX(-50%) scale(1.08);
     opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-scene .companion-orb {
+    left: 54.5% !important;
+    top: 70% !important;
+    width: 132px !important;
+    height: 132px !important;
+  }
+
+  .home-scene .avatar-figure {
+    left: calc(50% - 116px) !important;
+    top: 56% !important;
   }
 }
 
