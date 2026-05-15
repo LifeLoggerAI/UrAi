@@ -17,7 +17,7 @@ type HomeMode = "home" | "transitioning" | "lifemap";
 
 const TONE_COPY = {
   calm: {
-    idle: "Tap the orb or sky to open the demo Life Map",
+    idle: "Tap the orb to enter the demo Life Map",
     opening: "The orb is lifting you into the Life Map...",
   },
   focused: {
@@ -125,6 +125,7 @@ export default function HomeScene() {
         <span className="orb-core" />
         <span className="orb-ring orb-ring-one" />
         <span className="orb-ring orb-ring-two" />
+        <span className="orb-cta">Enter</span>
       </button>
 
       <div className="star-tunnel" aria-hidden>
@@ -138,41 +139,47 @@ export default function HomeScene() {
       <section className="content-stage">
         <div className="hero-copy">
           <div className="flex flex-wrap items-center gap-3">
-            <p className="text-xs uppercase tracking-[0.45em] text-white/50">URAI V1 Demo Spine</p>
-            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/60">
-              WebGL spatial home · Public-safe demo data
+            <p className="text-xs uppercase tracking-[0.45em] text-white/55">URAI Preview</p>
+            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/65">
+              Interactive Life Map · Sample data
             </span>
           </div>
 
           <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            A public demo for memory patterns, mood signals, and personal meaning.
+            Your life patterns, mapped as meaning.
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/70 md:text-lg">
-            This launch path shows the working V1 loop: a WebGL emotional sky, symbolic ground,
-            mood forecast, weekly reflection, companion interpretation, and waitlist CTA.
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/76 md:text-lg">
+            URAI turns passive mood, memory, behavior, and reflection signals into a private emotional constellation — helping you notice what is changing, repeating, and ready to heal.
           </p>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
-            Tap the orb to ascend from the home scene into the WebGL-backed Life Map.
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/55">
+            This public preview uses sample data. No private user data is shown.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/u/adamclamp" className="inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-black">
-              Open public constellation
-            </Link>
             <button
               type="button"
               onClick={openLifeMap}
               disabled={isTransitioning}
-              className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 disabled:cursor-progress disabled:opacity-70"
+              className="inline-flex min-h-11 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/60 disabled:cursor-progress disabled:opacity-70"
             >
-              {isTransitioning ? copy.opening : "Preview Life Map"}
+              {isTransitioning ? copy.opening : "Enter Life Map"}
             </button>
+            <Link
+              href="/u/adamclamp"
+              className="inline-flex min-h-11 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/40"
+            >
+              Explore Public Constellation
+            </Link>
           </div>
         </div>
 
-        <div className="demo-card-grid grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="orb-instruction" aria-hidden>
+          <span>Tap the orb to enter the demo Life Map</span>
+        </div>
+
+        <div className="demo-card-grid grid gap-4 pb-14 md:grid-cols-2 xl:grid-cols-4">
           <ForecastCard forecast={profile.moodForecast} />
           <WeeklyReflectionCard reflection={profile.weeklyReflection} />
           <CompanionChat />
@@ -180,6 +187,9 @@ export default function HomeScene() {
         </div>
       </section>
 
+      <div className="trust-strip">
+        Private by default · Explainable insights · User-controlled data · Reflective insights, not medical diagnosis
+      </div>
       <div className="tone-chip" aria-hidden>{emotionalTone}</div>
       <div className="tap-hint">{isTransitioning ? copy.opening : copy.idle}</div>
 
@@ -242,36 +252,34 @@ export default function HomeScene() {
           opacity: .82;
         }
 
-        .orb-stage {
-          z-index: 9;
-        }
+        .orb-stage { z-index: 9; }
 
         .orb-shadow {
           position: absolute;
           left: 50%;
           top: 68%;
-          width: min(34vw, 390px);
-          height: min(9vh, 92px);
+          width: min(40vw, 460px);
+          height: min(10vh, 105px);
           transform: translate(-50%, -50%);
           border-radius: 999px;
-          background: radial-gradient(ellipse at center, rgba(125, 211, 252, .16), rgba(24, 55, 68, .08) 38%, transparent 72%);
-          filter: blur(10px);
+          background: radial-gradient(ellipse at center, rgba(125, 211, 252, .2), rgba(24, 55, 68, .09) 38%, transparent 72%);
+          filter: blur(12px);
         }
 
         .orb-pedestal {
           position: absolute;
           left: 50%;
-          top: 62%;
-          width: min(16vw, 170px);
-          height: min(18vh, 170px);
+          top: 59%;
+          width: min(20vw, 220px);
+          height: min(22vh, 220px);
           transform: translate(-50%, -50%);
           border-radius: 999px;
           background:
-            radial-gradient(circle at 50% 42%, rgba(255,255,255,.12), transparent 20%),
-            radial-gradient(circle at 50% 50%, rgba(125,211,252,.1), transparent 48%);
-          border: 1px solid rgba(255,255,255,.06);
+            radial-gradient(circle at 50% 42%, rgba(255,255,255,.14), transparent 20%),
+            radial-gradient(circle at 50% 50%, rgba(125,211,252,.12), transparent 48%);
+          border: 1px solid rgba(255,255,255,.08);
           filter: blur(.2px);
-          opacity: .86;
+          opacity: .92;
         }
 
         .sky-trigger {
@@ -286,16 +294,21 @@ export default function HomeScene() {
         .companion-orb {
           position: absolute;
           left: 50%;
-          top: 56%;
+          top: 53%;
           z-index: 23;
-          width: clamp(86px, 9vw, 118px);
-          height: clamp(86px, 9vw, 118px);
+          width: clamp(112px, 11vw, 150px);
+          height: clamp(112px, 11vw, 150px);
           transform: translate(-50%, -50%);
           border: 0;
           border-radius: 999px;
           background: transparent;
           cursor: zoom-in;
           transition: transform 1450ms cubic-bezier(.16,1,.3,1), opacity 800ms ease, filter 800ms ease;
+        }
+
+        .companion-orb:focus-visible {
+          outline: 2px solid rgba(255,255,255,.85);
+          outline-offset: 8px;
         }
 
         .orb-core,
@@ -308,11 +321,28 @@ export default function HomeScene() {
         .orb-core {
           inset: 18%;
           background: radial-gradient(circle at 42% 34%, #fff, rgba(219,242,255,.92) 18%, rgba(125,211,252,.55) 48%, rgba(45,89,120,.2) 76%, transparent 100%);
-          box-shadow: 0 0 14px rgba(255,255,255,.65), 0 0 46px rgba(125,211,252,.28), 0 0 88px rgba(196,181,253,.12);
+          box-shadow: 0 0 18px rgba(255,255,255,.72), 0 0 58px rgba(125,211,252,.36), 0 0 110px rgba(196,181,253,.14);
         }
 
-        .orb-ring-one { border: 1px solid rgba(255,255,255,.22); box-shadow: inset 0 0 18px rgba(125,211,252,.08); animation: orbOrbit calc(16s * var(--tone-speed)) linear infinite; }
-        .orb-ring-two { inset: 9%; border: 1px solid rgba(196,181,253,.16); transform: rotate(32deg) scaleX(.72); animation: orbOrbit calc(20s * var(--tone-speed)) linear infinite reverse; }
+        .orb-ring-one { border: 1px solid rgba(255,255,255,.24); box-shadow: inset 0 0 18px rgba(125,211,252,.08); animation: orbOrbit calc(16s * var(--tone-speed)) linear infinite; }
+        .orb-ring-two { inset: 9%; border: 1px solid rgba(196,181,253,.18); transform: rotate(32deg) scaleX(.72); animation: orbOrbit calc(20s * var(--tone-speed)) linear infinite reverse; }
+
+        .orb-cta {
+          position: absolute;
+          left: 50%;
+          bottom: -1.6rem;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,.16);
+          background: rgba(0,0,0,.42);
+          padding: .35rem .8rem;
+          font-size: .72rem;
+          font-weight: 700;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,.84);
+          backdrop-filter: blur(8px);
+        }
 
         .ascent-column {
           z-index: 12;
@@ -353,20 +383,33 @@ export default function HomeScene() {
           z-index: 20;
           min-height: 100dvh;
           width: 100%;
-          max-width: 72rem;
+          max-width: 78rem;
           margin: 0 auto;
           padding: 2rem 1.25rem;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          gap: 2rem;
           transition: opacity 900ms ease, transform 1450ms cubic-bezier(.16,1,.3,1), filter 900ms ease;
         }
 
-        .hero-copy { max-width: 48rem; padding-top: 2.5rem; }
+        .hero-copy { max-width: 50rem; padding-top: 2.5rem; }
+        .orb-instruction {
+          align-self: center;
+          margin-top: auto;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,.14);
+          background: rgba(0,0,0,.26);
+          padding: .55rem 1rem;
+          color: rgba(255,255,255,.74);
+          font-size: .86rem;
+          backdrop-filter: blur(8px);
+        }
         .demo-card-grid { position: relative; z-index: 25; transition: opacity 900ms ease, transform 1450ms cubic-bezier(.16,1,.3,1); }
 
         .tone-chip,
-        .tap-hint {
+        .tap-hint,
+        .trust-strip {
           position: absolute;
           z-index: 30;
           border: 1px solid rgba(255,255,255,.18);
@@ -378,6 +421,7 @@ export default function HomeScene() {
 
         .tone-chip { top: 1rem; right: 1rem; border-radius: 999px; padding: .35rem .75rem; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; opacity: .62; }
         .tap-hint { bottom: 1.5rem; left: 50%; transform: translateX(-50%); border-radius: 999px; padding: .5rem 1rem; font-size: .875rem; transition: opacity 500ms ease, transform 500ms ease; }
+        .trust-strip { left: 50%; bottom: 4.25rem; transform: translateX(-50%); border-radius: 999px; padding: .45rem .9rem; font-size: .72rem; color: rgba(255,255,255,.64); white-space: nowrap; }
 
         .home-scene.is-transitioning .content-stage { opacity: .38; transform: translateY(2.5rem) scale(.985); filter: blur(1.5px); }
         .home-scene.is-transitioning .demo-card-grid { opacity: .16; transform: translateY(4rem) scale(.96); }
@@ -391,9 +435,15 @@ export default function HomeScene() {
         @keyframes orbOrbit { to { transform: rotate(360deg) scaleX(.82); } }
 
         @media (max-width: 900px) {
-          .companion-orb { top: 54%; width: 86px; height: 86px; }
-          .orb-pedestal { top: 60%; width: 150px; height: 150px; }
+          .content-stage { justify-content: flex-start; padding-bottom: 7rem; }
+          .hero-copy { padding-top: 1rem; }
+          .companion-orb { position: relative; left: 50%; top: auto; margin: 1rem 0 2.25rem; width: 112px; height: 112px; }
+          .orb-pedestal { top: 44%; width: 150px; height: 150px; }
           .clean-horizon { height: 38%; }
+          .orb-instruction { display: none; }
+          .trust-strip { left: 1rem; right: 1rem; bottom: 4rem; transform: none; white-space: normal; text-align: center; }
+          .tap-hint { left: 1rem; right: 1rem; bottom: 1rem; transform: none; text-align: center; }
+          .home-scene.is-transitioning .tap-hint { transform: translateY(-.35rem); }
         }
 
         @media (prefers-reduced-motion: reduce) {
