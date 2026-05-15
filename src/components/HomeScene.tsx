@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import AncientSignalAmbientLayer from "@/components/ancient-signals/AncientSignalAmbientLayer";
 import CompanionChat from "@/components/CompanionChat";
 import ForecastCard from "@/components/ForecastCard";
+import HomePreviewPanel from "@/components/HomePreviewPanel";
 import HomeWebGLSky from "@/components/HomeWebGLSky";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
 import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
@@ -36,6 +37,8 @@ const TONE_COPY = {
 
 export default function HomeScene() {
   const profile = adamClampDemoProfile;
+  const sampleEvent = profile.timelineEvents[0];
+  const sampleBloom = profile.memoryBlooms.find((bloom) => bloom.id === sampleEvent.bloomId) ?? profile.memoryBlooms[0];
   const { result: ancientResult, source, loading } = useAncientSignals();
   const [mode, setMode] = useState<HomeMode>("home");
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -179,6 +182,8 @@ export default function HomeScene() {
           <span>Tap the orb to enter the demo Life Map</span>
         </div>
 
+        <HomePreviewPanel event={sampleEvent} bloom={sampleBloom} onOpenLifeMap={openLifeMap} />
+
         <div className="demo-card-grid grid gap-4 pb-14 md:grid-cols-2 xl:grid-cols-4">
           <ForecastCard forecast={profile.moodForecast} />
           <WeeklyReflectionCard reflection={profile.weeklyReflection} />
@@ -201,7 +206,8 @@ export default function HomeScene() {
           --tone-speed: 1;
           position: relative;
           min-height: 100dvh;
-          overflow: hidden;
+          overflow-x: hidden;
+          overflow-y: auto;
           background: #000;
           color: white;
           isolation: isolate;
@@ -224,6 +230,7 @@ export default function HomeScene() {
 
         .sky-base {
           z-index: 0;
+          position: fixed;
           background:
             radial-gradient(circle at 52% 24%, rgba(68, 86, 154, 0.72), transparent 28%),
             linear-gradient(180deg, #060913 0%, #101936 42%, #07100d 78%, #010203 100%);
@@ -231,6 +238,7 @@ export default function HomeScene() {
 
         .emotional-wash {
           z-index: 3;
+          position: fixed;
           background:
             radial-gradient(circle at 50% 36%, rgba(125, 211, 252, 0.11), transparent 18%),
             radial-gradient(circle at 50% 58%, rgba(196, 181, 253, 0.08), transparent 22%),
@@ -242,6 +250,7 @@ export default function HomeScene() {
 
         .clean-horizon {
           z-index: 7;
+          position: fixed;
           inset: auto -8% 0 -8%;
           height: 34%;
           background:
@@ -252,7 +261,7 @@ export default function HomeScene() {
           opacity: .82;
         }
 
-        .orb-stage { z-index: 9; }
+        .orb-stage { z-index: 9; position: fixed; }
 
         .orb-shadow {
           position: absolute;
@@ -283,7 +292,7 @@ export default function HomeScene() {
         }
 
         .sky-trigger {
-          position: absolute;
+          position: fixed;
           inset: 0;
           z-index: 10;
           border: 0;
@@ -292,7 +301,7 @@ export default function HomeScene() {
         }
 
         .companion-orb {
-          position: absolute;
+          position: fixed;
           left: 50%;
           top: 53%;
           z-index: 23;
@@ -346,6 +355,7 @@ export default function HomeScene() {
 
         .ascent-column {
           z-index: 12;
+          position: fixed;
           inset: -8%;
           background: radial-gradient(ellipse at 50% 56%, rgba(255,255,255,.08), transparent 12%), linear-gradient(180deg, transparent 0%, rgba(125,211,252,.045) 48%, rgba(196,181,253,.035) 70%, transparent 100%);
           opacity: .12;
@@ -354,7 +364,7 @@ export default function HomeScene() {
         }
 
         .star-tunnel {
-          position: absolute;
+          position: fixed;
           inset: 0;
           z-index: 18;
           opacity: 0;
@@ -372,6 +382,7 @@ export default function HomeScene() {
         .star-five { left: 38%; top: 52%; width: .2rem; height: .2rem; }
 
         .transition-vignette {
+          position: fixed;
           z-index: 19;
           opacity: 0;
           background: radial-gradient(circle at 50% 42%, transparent 0%, rgba(5,8,22,.25) 35%, rgba(0,0,0,.92) 100%);
@@ -385,7 +396,7 @@ export default function HomeScene() {
           width: 100%;
           max-width: 78rem;
           margin: 0 auto;
-          padding: 2rem 1.25rem;
+          padding: 2rem 1.25rem 8rem;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -410,7 +421,7 @@ export default function HomeScene() {
         .tone-chip,
         .tap-hint,
         .trust-strip {
-          position: absolute;
+          position: fixed;
           z-index: 30;
           border: 1px solid rgba(255,255,255,.18);
           background: rgba(0,0,0,.34);
@@ -435,7 +446,7 @@ export default function HomeScene() {
         @keyframes orbOrbit { to { transform: rotate(360deg) scaleX(.82); } }
 
         @media (max-width: 900px) {
-          .content-stage { justify-content: flex-start; padding-bottom: 7rem; }
+          .content-stage { justify-content: flex-start; padding-bottom: 8rem; }
           .hero-copy { padding-top: 1rem; }
           .companion-orb { position: relative; left: 50%; top: auto; margin: 1rem 0 2.25rem; width: 112px; height: 112px; }
           .orb-pedestal { top: 44%; width: 150px; height: 150px; }
