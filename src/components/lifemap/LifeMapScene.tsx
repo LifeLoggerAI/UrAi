@@ -8,6 +8,7 @@ import { dispatchNarratorEvent, dispatchTimelineSyncEvent, type ChapterId, type 
 type Camera = { x: number; y: number; zoom: number };
 type FieldStyle = CSSProperties & { '--x': string; '--y': string; '--z': string };
 type NodeStyle = CSSProperties & { '--depth': string; '--scale': string; '--hue': string; '--alpha': string };
+type BloomStyle = CSSProperties & { '--bloom-hue': string };
 
 type Chapter = { id: ChapterId; title: string; subtitle: string; x: number; y: number };
 
@@ -73,6 +74,7 @@ export default function LifeMapScene() {
   const dragRef = useRef({ active: false, x: 0, y: 0 });
 
   const activeStar = stars.find((star) => star.id === activeStarId) ?? null;
+  const activeChapter = activeStar ? CHAPTERS.find((chapter) => chapter.id === activeStar.chapterId) : null;
   const starById = useMemo(() => new Map(stars.map((star) => [star.id, star])), [stars]);
 
   const fieldStyle: FieldStyle = {
@@ -94,7 +96,7 @@ export default function LifeMapScene() {
     setActiveChapterId(star.chapterId);
     setShowThreads(false);
     setMessage(star.narratorLine);
-    setClampedCamera({ x: star.x, y: star.y, zoom: 1.82 });
+    setClampedCamera(INITIAL_CAMERA);
     dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
     dispatchTimelineSyncEvent({ phase: 'focus' as LifeMapPhase, activeStarId: star.id, activeChapterId: star.chapterId });
   }, [setClampedCamera]);
@@ -119,27 +121,27 @@ export default function LifeMapScene() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' || event.key === '0') resetView();
-      if (event.key === '+' || event.key === '=') zoom(-1);
-      if (event.key === '-' || event.key === '_') zoom(1);
-      if (event.key === 't' || event.key === 'T') setShowThreads((value) => !value);
+      if (!activeStar && (event.key === '+' || event.key === '=')) zoom(-1);
+      if (!activeStar && (event.key === '-' || event.key === '_')) zoom(1);
+      if (!activeStar && (event.key === 't' || event.key === 'T')) setShowThreads((value) => !value);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [resetView, zoom]);
+  }, [activeStar, resetView, zoom]);
 
   const handleWheel = useCallback((event: WheelEvent<HTMLElement>) => {
     event.preventDefault();
-    zoom(event.deltaY);
-  }, [zoom]);
+    if (!activeStar) zoom(event.deltaY);
+  }, [activeStar, zoom]);
 
   const handlePointerDown = useCallback((event: PointerEvent<HTMLElement>) => {
-    if ((event.target as HTMLElement).closest('button, a')) return;
+    if (activeStar || (event.target as HTMLElement).closest('button, a')) return;
     dragRef.current = { active: true, x: event.clientX, y: event.clientY };
     event.currentTarget.setPointerCapture(event.pointerId);
-  }, []);
+  }, [activeStar]);
 
   const handlePointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
-    if (!dragRef.current.active) return;
+    if (!dragRef.current.active || activeStar) return;
     const dx = ((event.clientX - dragRef.current.x) / Math.max(window.innerWidth, 1)) * 100;
     const dy = ((event.clientY - dragRef.current.y) / Math.max(window.innerHeight, 1)) * 100;
     dragRef.current = { active: true, x: event.clientX, y: event.clientY };
@@ -148,7 +150,7 @@ export default function LifeMapScene() {
       x: clamp(current.x - dx / Math.max(current.zoom, 1), 20, 80),
       y: clamp(current.y - dy / Math.max(current.zoom, 1), 22, 78),
     }));
-  }, []);
+  }, [activeStar]);
 
   const handlePointerUp = useCallback((event: PointerEvent<HTMLElement>) => {
     dragRef.current.active = false;
@@ -164,6 +166,8 @@ export default function LifeMapScene() {
     return () => window.clearInterval(timer);
   }, [activeStarId, stars]);
 
+  const bloomStyle: BloomStyle | undefined = activeStar ? { '--bloom-hue': hueFor(activeStar) } : undefined;
+
   return (
     <main className={`life-map-shell ${activeStar ? 'has-active' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
       <WebGLLifeMapField />
@@ -175,7 +179,7 @@ export default function LifeMapScene() {
       <header className="hud">
         <p>URAI Life Map</p>
         <h1>{activeStar ? activeStar.title : 'Immersive memory field'}</h1>
-        <span>{activeStar ? 'Memory opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
+        <span>{activeStar ? 'Memory bloom opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
       </header>
 
       <section className={`field ${showThreads ? 'show-threads' : ''}`}>
@@ -215,16 +219,23 @@ export default function LifeMapScene() {
       <aside className="companion"><strong>Companion</strong><span>{message}</span></aside>
 
       {activeStar && (
-        <aside className="memory-card" aria-live="polite">
-          <p>{CHAPTERS.find((chapter) => chapter.id === activeStar.chapterId)?.title}</p>
-          <h2>{activeStar.title}</h2>
-          <span>{activeStar.narratorLine}</span>
-          <div>
-            <button type="button" onClick={() => setMessage('Replaying the emotional thread.')}>Replay</button>
-            <button type="button" onClick={() => setMessage('This one has softened.')}>Soften</button>
-            <button type="button" onClick={resetView}>Close</button>
+        <section className="bloom-scene" style={bloomStyle} aria-live="polite">
+          <div className="bloom-aura" aria-hidden>
+            <span className="bloom-ring bloom-ring-one" />
+            <span className="bloom-ring bloom-ring-two" />
+            <span className="bloom-orb" />
           </div>
-        </aside>
+          <article className="bloom-card">
+            <p>{activeChapter?.title ?? activeStar.chapterId}</p>
+            <h2>{activeStar.title}</h2>
+            <span>{activeStar.narratorLine}</span>
+            <div>
+              <button type="button" onClick={() => setMessage('Replaying the emotional thread.')}>Replay voice</button>
+              <button type="button" onClick={() => setMessage('This memory softened without disappearing.')}>Soften</button>
+              <button type="button" onClick={resetView}>Return to galaxy</button>
+            </div>
+          </article>
+        </section>
       )}
 
       <div className="controls">
@@ -261,11 +272,11 @@ export default function LifeMapScene() {
         .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.045); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
         .orbit-one { width: min(46vw, 580px); height: min(21vw, 270px); }
         .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .28; }
-        .hud { position: absolute; z-index: 8; left: 50%; top: 1rem; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 2px 16px rgba(0,0,0,.85); }
+        .hud { position: absolute; z-index: 8; left: 50%; top: 1rem; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 2px 16px rgba(0,0,0,.85); transition: opacity .35s ease, transform .35s ease; }
         .hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
         .hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); }
         .hud span { display: block; margin-top: .25rem; font-size: .72rem; color: rgba(255,255,255,.56); }
-        .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; }
+        .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; transition: opacity .55s ease, filter .55s ease, transform .55s ease; }
         .camera { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: var(--x) var(--y); will-change: transform; transform: perspective(1500px) translate3d(calc(50% - var(--x)), calc(50% - var(--y)), 0) scale(var(--z)); transition: transform 500ms cubic-bezier(.19,1,.22,1); }
         .threads { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; transform: translateZ(-150px); }
         .show-threads .threads { opacity: .12; }
@@ -278,23 +289,35 @@ export default function LifeMapScene() {
         .node.dim { opacity: .28; }
         .node-label { display: none; position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
         .node:hover .node-label { display: block; opacity: .9; }
-        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(280px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.2); border-radius: 16px; background: rgba(4,7,18,.46); backdrop-filter: blur(10px); padding: .75rem .85rem; color: rgba(255,255,255,.76); box-shadow: 0 20px 54px rgba(0,0,0,.22); }
+        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(280px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.2); border-radius: 16px; background: rgba(4,7,18,.46); backdrop-filter: blur(10px); padding: .75rem .85rem; color: rgba(255,255,255,.76); box-shadow: 0 20px 54px rgba(0,0,0,.22); transition: opacity .35s ease; }
         .companion strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
         .companion span { font-size: .8rem; line-height: 1.45; }
-        .controls, .chapters, .memory-card { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.22); background: rgba(5,8,20,.5); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.25); }
+        .controls, .chapters { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.22); background: rgba(5,8,20,.5); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.25); transition: opacity .35s ease, transform .35s ease; }
         .controls { left: 50%; bottom: 6.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .36rem; }
-        .controls button, .controls span, .memory-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
+        .controls button, .controls span, .bloom-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
         .chapters { left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(880px, calc(100vw - 2rem)); border-radius: 28px; padding: .45rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
         .chapters button { border: 0; border-radius: 22px; background: transparent; color: rgba(255,255,255,.62); padding: .55rem .65rem; text-align: left; transition: background .2s ease, color .2s ease; }
         .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; }
         .chapters strong { display: block; font-size: .78rem; }
         .chapters span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
-        .memory-card { left: 50%; bottom: 10.4rem; transform: translateX(-50%); width: min(520px, calc(100vw - 2rem)); border-radius: 24px; padding: 1rem; text-align: center; }
-        .memory-card p { margin: 0; font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.48); }
-        .memory-card h2 { margin: .35rem 0 .5rem; font-size: 1.5rem; }
-        .memory-card span { display: block; color: rgba(255,255,255,.78); line-height: 1.55; }
-        .memory-card div { display: flex; justify-content: center; gap: .5rem; margin-top: .9rem; flex-wrap: wrap; }
-        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .memory-card { bottom: 13.3rem; } }
+        .has-active .field { opacity: .2; filter: blur(1.2px) saturate(.75); transform: scale(.985); pointer-events: none; }
+        .has-active .controls, .has-active .chapters { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(.75rem); }
+        .has-active .companion { opacity: .55; }
+        .has-active .hud { opacity: .38; transform: translateX(-50%) translateY(-.35rem); }
+        .bloom-scene { position: absolute; z-index: 12; inset: 0; display: grid; place-items: center; padding: 4rem 1rem 2rem; background: radial-gradient(circle at 50% 48%, hsl(var(--bloom-hue) 90% 60% / .2), rgba(1,2,10,.18) 34%, rgba(0,0,0,.72) 100%); animation: bloomIn .55s cubic-bezier(.19,1,.22,1) both; }
+        .bloom-aura { position: relative; width: min(46vw, 520px); height: min(46vw, 520px); min-width: 290px; min-height: 290px; display: grid; place-items: center; }
+        .bloom-orb { width: clamp(92px, 13vw, 150px); height: clamp(92px, 13vw, 150px); border-radius: 999px; background: radial-gradient(circle at 35% 30%, #fff 0%, #f5fbff 18%, hsl(var(--bloom-hue) 90% 77%) 52%, hsl(var(--bloom-hue) 85% 48% / .2) 100%); box-shadow: 0 0 26px rgba(255,255,255,.9), 0 0 90px hsl(var(--bloom-hue) 90% 70% / .55), 0 0 190px hsl(var(--bloom-hue) 90% 60% / .22); animation: breathe 4.6s ease-in-out infinite; }
+        .bloom-ring { position: absolute; inset: 18%; border-radius: 999px; border: 1px solid hsl(var(--bloom-hue) 90% 80% / .18); box-shadow: inset 0 0 40px hsl(var(--bloom-hue) 90% 70% / .08); }
+        .bloom-ring-one { transform: rotate(-18deg) scaleX(1.42); }
+        .bloom-ring-two { transform: rotate(24deg) scaleX(1.66); opacity: .58; }
+        .bloom-card { position: absolute; left: 50%; bottom: 5.8rem; transform: translateX(-50%); width: min(580px, calc(100vw - 2rem)); border: 1px solid hsl(var(--bloom-hue) 80% 78% / .26); border-radius: 30px; background: rgba(5,8,20,.66); backdrop-filter: blur(16px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.15rem; text-align: center; }
+        .bloom-card p { margin: 0; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--bloom-hue) 90% 82% / .58); }
+        .bloom-card h2 { margin: .35rem 0 .5rem; font-size: clamp(1.8rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.04em; }
+        .bloom-card span { display: block; max-width: 46rem; margin: 0 auto; color: rgba(255,255,255,.82); line-height: 1.6; }
+        .bloom-card div { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+        @keyframes bloomIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+        @keyframes breathe { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.07); filter: brightness(1.12); } }
+        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-card { bottom: 2rem; } .has-active .companion { opacity: 0; pointer-events: none; } }
       `}</style>
     </main>
   );
