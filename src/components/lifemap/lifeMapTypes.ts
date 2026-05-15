@@ -39,6 +39,7 @@ export type LifeMapInteractionMode =
   | 'entering'
   | 'immersive'
   | 'thread_view'
+  | 'cluster'
   | 'node_selected'
   | 'replay'
   | 'mirror_mode';
