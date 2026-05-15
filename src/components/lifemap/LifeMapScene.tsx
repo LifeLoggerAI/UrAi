@@ -66,11 +66,12 @@ type StarStyle = CSSProperties & {
   '--star-z': string;
   '--star-scale': string;
   '--star-alpha': string;
+  '--star-hue': string;
 };
 
 const INITIAL_CAMERA: Camera = { x: 50, y: 50, zoom: 1, tilt: 0 };
-const MIN_ZOOM = 0.78;
-const MAX_ZOOM = 4.2;
+const MIN_ZOOM = 0.68;
+const MAX_ZOOM = 4.6;
 
 const SOURCE_PRIORITY: Record<MessageSource, number> = {
   focus: 5,
@@ -109,14 +110,18 @@ const CHAPTER_LINES: Record<ChapterId, string> = {
 };
 
 const INITIAL_STARS: MemoryStar[] = [
-  { id: 'star-1', title: 'First Signal', x: 37, y: 40, size: 10, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.62, recency: 0.78, unresolvedWeight: 0.35, lastActivatedAt: null, narratorLine: 'This was one of the first signals that your rhythm was changing.', connectedTo: ['star-2', 'star-4'] },
-  { id: 'star-2', title: 'Threshold Pulse', x: 49, y: 31, size: 11, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.92, recency: 0.72, unresolvedWeight: 0.82, lastActivatedAt: null, narratorLine: 'This moment marks a threshold where the old pattern started breaking.', connectedTo: ['star-1', 'star-3', 'star-8'] },
-  { id: 'star-3', title: 'Recovery Bloom', x: 62, y: 43, size: 12, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.88, recency: 0.9, unresolvedWeight: 0.24, lastActivatedAt: null, narratorLine: 'This is where your system began recovering after pressure.', connectedTo: ['star-2', 'star-5', 'star-7'] },
-  { id: 'star-4', title: 'Dream Echo', x: 41, y: 61, size: 10, emotion: 'dream', chapterId: 'purple-dream-field', state: 'idle', intensity: 0.72, recency: 0.52, unresolvedWeight: 0.48, lastActivatedAt: null, narratorLine: 'This dream-like memory keeps echoing through the larger pattern.', connectedTo: ['star-1', 'star-5'] },
-  { id: 'star-5', title: 'Mirror Moment', x: 64, y: 61, size: 13, emotion: 'mirror', chapterId: 'mirror-of-becoming', state: 'idle', intensity: 0.95, recency: 0.84, unresolvedWeight: 0.55, lastActivatedAt: null, narratorLine: 'This moment reflects a deeper identity pattern coming into focus.', connectedTo: ['star-3', 'star-4'] },
-  { id: 'star-6', title: 'Quiet Return', x: 54, y: 52, size: 9, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.66, recency: 0.7, unresolvedWeight: 0.22, lastActivatedAt: null, narratorLine: 'A quieter rhythm returned after the noise softened.', connectedTo: ['star-3'] },
-  { id: 'star-7', title: 'Protected Hour', x: 59, y: 35, size: 8, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.58, recency: 0.64, unresolvedWeight: 0.18, lastActivatedAt: null, narratorLine: 'A protected hour became a small doorway back into clarity.', connectedTo: ['star-3'] },
-  { id: 'star-8', title: 'Pressure Named', x: 46, y: 49, size: 9, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.74, recency: 0.62, unresolvedWeight: 0.68, lastActivatedAt: null, narratorLine: 'The pressure changed when it became something you could name.', connectedTo: ['star-2'] },
+  { id: 'star-1', title: 'First Signal', x: 37, y: 40, size: 12, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.62, recency: 0.78, unresolvedWeight: 0.35, lastActivatedAt: null, narratorLine: 'This was one of the first signals that your rhythm was changing.', connectedTo: ['star-2', 'star-4'] },
+  { id: 'star-2', title: 'Threshold Pulse', x: 49, y: 31, size: 14, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.92, recency: 0.72, unresolvedWeight: 0.82, lastActivatedAt: null, narratorLine: 'This moment marks a threshold where the old pattern started breaking.', connectedTo: ['star-1', 'star-3', 'star-8'] },
+  { id: 'star-3', title: 'Recovery Bloom', x: 62, y: 43, size: 15, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.88, recency: 0.9, unresolvedWeight: 0.24, lastActivatedAt: null, narratorLine: 'This is where your system began recovering after pressure.', connectedTo: ['star-2', 'star-5', 'star-7'] },
+  { id: 'star-4', title: 'Dream Echo', x: 41, y: 61, size: 12, emotion: 'dream', chapterId: 'purple-dream-field', state: 'idle', intensity: 0.72, recency: 0.52, unresolvedWeight: 0.48, lastActivatedAt: null, narratorLine: 'This dream-like memory keeps echoing through the larger pattern.', connectedTo: ['star-1', 'star-5'] },
+  { id: 'star-5', title: 'Mirror Moment', x: 64, y: 61, size: 16, emotion: 'mirror', chapterId: 'mirror-of-becoming', state: 'idle', intensity: 0.95, recency: 0.84, unresolvedWeight: 0.55, lastActivatedAt: null, narratorLine: 'This moment reflects a deeper identity pattern coming into focus.', connectedTo: ['star-3', 'star-4'] },
+  { id: 'star-6', title: 'Quiet Return', x: 54, y: 52, size: 10, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.66, recency: 0.7, unresolvedWeight: 0.22, lastActivatedAt: null, narratorLine: 'A quieter rhythm returned after the noise softened.', connectedTo: ['star-3'] },
+  { id: 'star-7', title: 'Protected Hour', x: 59, y: 35, size: 10, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.58, recency: 0.64, unresolvedWeight: 0.18, lastActivatedAt: null, narratorLine: 'A protected hour became a small doorway back into clarity.', connectedTo: ['star-3'] },
+  { id: 'star-8', title: 'Pressure Named', x: 46, y: 49, size: 11, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.74, recency: 0.62, unresolvedWeight: 0.68, lastActivatedAt: null, narratorLine: 'The pressure changed when it became something you could name.', connectedTo: ['star-2'] },
+  { id: 'star-9', title: 'Small Light', x: 33, y: 54, size: 7, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.42, recency: 0.48, unresolvedWeight: 0.12, lastActivatedAt: null, narratorLine: 'A small focus signal survived the noise.', connectedTo: ['star-1'] },
+  { id: 'star-10', title: 'Softened Edge', x: 57, y: 67, size: 8, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.5, recency: 0.56, unresolvedWeight: 0.16, lastActivatedAt: null, narratorLine: 'The edge of the week softened.', connectedTo: ['star-5'] },
+  { id: 'star-11', title: 'Old Echo', x: 70, y: 50, size: 9, emotion: 'dream', chapterId: 'purple-dream-field', state: 'idle', intensity: 0.61, recency: 0.42, unresolvedWeight: 0.52, lastActivatedAt: null, narratorLine: 'An older echo appeared near the edge of the field.', connectedTo: ['star-4'] },
+  { id: 'star-12', title: 'New Center', x: 50, y: 58, size: 9, emotion: 'mirror', chapterId: 'mirror-of-becoming', state: 'idle', intensity: 0.68, recency: 0.66, unresolvedWeight: 0.28, lastActivatedAt: null, narratorLine: 'A new center began forming quietly.', connectedTo: ['star-5'] },
 ];
 
 function clamp(value: number, min: number, max: number) {
@@ -125,15 +130,23 @@ function clamp(value: number, min: number, max: number) {
 
 function clampCamera(camera: Camera): Camera {
   return {
-    x: clamp(camera.x, 24, 76),
-    y: clamp(camera.y, 26, 74),
+    x: clamp(camera.x, 22, 78),
+    y: clamp(camera.y, 24, 76),
     zoom: clamp(camera.zoom, MIN_ZOOM, MAX_ZOOM),
-    tilt: clamp(camera.tilt, 0, 12),
+    tilt: clamp(camera.tilt, 0, 10),
   };
 }
 
 function starDepth(star: MemoryStar) {
-  return Math.round((star.intensity * 92) + (star.recency * 48) - (star.unresolvedWeight * 30));
+  return Math.round((star.intensity * 96) + (star.recency * 54) - (star.unresolvedWeight * 28));
+}
+
+function emotionHue(star: MemoryStar) {
+  if (star.emotion === 'recovery') return '158deg';
+  if (star.emotion === 'threshold') return '282deg';
+  if (star.emotion === 'dream') return '252deg';
+  if (star.emotion === 'mirror') return '42deg';
+  return '205deg';
 }
 
 function createMessage(source: MessageSource, text: string, ttl: number | null): MessageEnvelope {
@@ -163,7 +176,7 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'SET_STARS': {
       const activeStillExists = action.stars.some((star) => star.id === state.activeStarId);
-      return { ...state, stars: action.stars, activeStarId: activeStillExists ? state.activeStarId : null, activeChapterId: activeStillExists ? state.activeChapterId : null, phase: activeStillExists ? state.phase : 'living' };
+      return { ...state, stars: action.stars.length < 10 ? INITIAL_STARS : action.stars, activeStarId: activeStillExists ? state.activeStarId : null, activeChapterId: activeStillExists ? state.activeChapterId : null, phase: activeStillExists ? state.phase : 'living' };
     }
     case 'SET_REDUCED_MOTION':
       return { ...state, reducedMotion: action.value };
@@ -178,7 +191,7 @@ function reducer(state: State, action: Action): State {
         activeChapterId: star.chapterId,
         phase: 'focus',
         showThreads: true,
-        camera: clampCamera({ x: star.x, y: star.y, zoom: 2.55, tilt: 7 }),
+        camera: clampCamera({ x: star.x, y: star.y, zoom: 2.55, tilt: 5 }),
         stars: state.stars.map((item) => {
           if (item.id === star.id) return { ...item, state: 'active', lastActivatedAt: Date.now() };
           if (item.state === 'active') return { ...item, state: 'idle' };
@@ -205,7 +218,7 @@ function reducer(state: State, action: Action): State {
       };
     case 'ZOOM_CAMERA': {
       const nextZoom = clamp(state.camera.zoom * (action.delta > 0 ? 0.9 : 1.13), MIN_ZOOM, MAX_ZOOM);
-      const nextTilt = nextZoom > 1.8 ? 6 : 0;
+      const nextTilt = nextZoom > 1.9 ? 4 : 0;
       return {
         ...state,
         camera: clampCamera({ ...state.camera, zoom: nextZoom, tilt: nextTilt }),
@@ -280,7 +293,6 @@ export default function LifeMapScene() {
   const activeStar = state.stars.find((star) => star.id === state.activeStarId) ?? null;
   const activeMessage = getActiveMessage(state.messages);
   const starById = useMemo(() => new Map(state.stars.map((star) => [star.id, star])), [state.stars]);
-  const isDeep = state.camera.zoom > 1.45 || Boolean(activeStar);
   const fieldStyle: FieldStyle = {
     '--camera-x': `${state.camera.x}%`,
     '--camera-y': `${state.camera.y}%`,
@@ -340,15 +352,17 @@ export default function LifeMapScene() {
   }, [state.stars, state.activeStarId, state.reducedMotion]);
 
   return (
-    <main className={`life-map-shell ${isDeep ? 'is-deep' : ''} ${activeStar ? 'has-active-star' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+    <main className={`life-map-shell ${activeStar ? 'has-active-star' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
       <WebGLLifeMapField />
       <div className="cosmic-vignette" aria-hidden />
-      <div className="life-map-orb" aria-hidden />
+      <div className="galaxy-core" aria-hidden />
+      <div className="orbit-ring ring-one" aria-hidden />
+      <div className="orbit-ring ring-two" aria-hidden />
 
       <header className="life-map-hud" aria-label="Life Map status">
         <p>URAI Life Map</p>
         <h1>{activeStar ? activeStar.title : 'Immersive memory field'}</h1>
-        <span>{activeStar ? 'Memory opened' : 'Wheel inward · drag to drift · click a glowing star'}</span>
+        <span>{activeStar ? 'Memory opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
       </header>
 
       <section className={`field-space ${state.showThreads || activeStar ? 'show-threads' : ''}`}>
@@ -372,8 +386,9 @@ export default function LifeMapScene() {
               width: `${star.size}px`,
               height: `${star.size}px`,
               '--star-z': `${depth}px`,
-              '--star-scale': String(1 + depth / 520),
-              '--star-alpha': String(clamp(0.52 + star.recency * 0.42, 0.5, 0.96)),
+              '--star-scale': String(1 + depth / 540),
+              '--star-alpha': String(clamp(0.58 + star.recency * 0.38, 0.52, 0.98)),
+              '--star-hue': emotionHue(star),
             };
             return (
               <button key={star.id} type="button" className={`memory-node state-${star.state} ${star.id === activeStar?.id ? 'active' : ''} ${dimmed ? 'dimmed' : ''}`} style={style} aria-label={`Open ${star.title}`} onClick={(event) => {
@@ -397,7 +412,7 @@ export default function LifeMapScene() {
       <nav className="chapter-dock" aria-label="Life Map chapters">
         {CHAPTERS.map((chapter) => (
           <button key={chapter.id} type="button" className={state.activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
-            dispatch({ type: 'FOCUS_CHAPTER', chapterId: chapter.id, camera: { x: chapter.x, y: chapter.y, zoom: 1.55, tilt: 4 }, text: CHAPTER_LINES[chapter.id] });
+            dispatch({ type: 'FOCUS_CHAPTER', chapterId: chapter.id, camera: { x: chapter.x, y: chapter.y, zoom: 1.55, tilt: 3 }, text: CHAPTER_LINES[chapter.id] });
             dispatchNarratorEvent({ event: 'lifemap.cluster.focus', chapterId: chapter.id });
             dispatchTimelineSyncEvent({ phase: 'cluster', activeStarId: null, activeChapterId: chapter.id });
           }}>
@@ -434,27 +449,46 @@ export default function LifeMapScene() {
           position: relative;
           overflow: hidden;
           color: white;
-          background: radial-gradient(circle at 50% 44%, #17295c 0%, #070c1d 54%, #01020a 100%);
+          background: radial-gradient(circle at 50% 47%, #213b78 0%, #081025 48%, #01020a 100%);
           touch-action: none;
           cursor: grab;
-          perspective: 1400px;
+          perspective: 1500px;
           isolation: isolate;
         }
         .life-map-shell:active { cursor: grabbing; }
-        .cosmic-vignette, .life-map-orb { position: absolute; inset: 0; pointer-events: none; }
+        .cosmic-vignette, .galaxy-core, .orbit-ring { position: absolute; pointer-events: none; }
         .cosmic-vignette {
           z-index: 2;
+          inset: 0;
           background:
-            radial-gradient(circle at 50% 48%, transparent 0 26%, rgba(0,0,0,.18) 56%, rgba(0,0,0,.76) 100%),
-            radial-gradient(circle at 50% 54%, rgba(125,211,252,.09), transparent 34%);
+            radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.82) 100%),
+            radial-gradient(circle at 50% 54%, rgba(125,211,252,.11), transparent 34%);
         }
-        .life-map-orb {
+        .galaxy-core {
           z-index: 1;
-          inset: 18% 20% 14%;
+          left: 50%;
+          top: 51%;
+          width: min(52vw, 660px);
+          height: min(52vw, 660px);
+          transform: translate(-50%, -50%);
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(125,211,252,.12), rgba(75,92,190,.04) 44%, transparent 68%);
-          filter: blur(8px);
+          background:
+            radial-gradient(circle, rgba(255,255,255,.1), transparent 13%),
+            radial-gradient(circle, rgba(125,211,252,.16), rgba(70,90,190,.06) 44%, transparent 70%);
+          filter: blur(10px);
+          opacity: .95;
         }
+        .orbit-ring {
+          z-index: 3;
+          left: 50%;
+          top: 51%;
+          border: 1px solid rgba(170,210,255,.08);
+          border-radius: 999px;
+          transform: translate(-50%, -50%) rotate(-12deg);
+          opacity: .6;
+        }
+        .ring-one { width: min(46vw, 580px); height: min(22vw, 280px); }
+        .ring-two { width: min(61vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(17deg); opacity: .38; }
         .life-map-hud {
           position: absolute;
           z-index: 8;
@@ -465,14 +499,14 @@ export default function LifeMapScene() {
           pointer-events: none;
           text-shadow: 0 2px 16px rgba(0,0,0,.85);
         }
-        .life-map-hud p { margin: 0; font-size: .62rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.48); }
-        .life-map-hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2.1vw, 1.8rem); letter-spacing: .02em; }
-        .life-map-hud span { display: block; margin-top: .25rem; font-size: .74rem; color: rgba(255,255,255,.58); }
+        .life-map-hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
+        .life-map-hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); letter-spacing: .02em; }
+        .life-map-hud span { display: block; margin-top: .25rem; font-size: .72rem; color: rgba(255,255,255,.56); }
         .field-space {
           position: absolute;
           z-index: 4;
           inset: 0;
-          perspective: 1400px;
+          perspective: 1500px;
           transform-style: preserve-3d;
         }
         .field-camera {
@@ -481,30 +515,32 @@ export default function LifeMapScene() {
           transform-style: preserve-3d;
           transform-origin: var(--camera-x) var(--camera-y);
           will-change: transform;
-          transform: perspective(1400px) rotateX(var(--camera-tilt)) translate3d(calc(50% - var(--camera-x)), calc(50% - var(--camera-y)), 0) scale(var(--camera-zoom));
-          transition: transform 480ms cubic-bezier(.19, 1, .22, 1);
+          transform: perspective(1500px) rotateX(var(--camera-tilt)) translate3d(calc(50% - var(--camera-x)), calc(50% - var(--camera-y)), 0) scale(var(--camera-zoom));
+          transition: transform 500ms cubic-bezier(.19, 1, .22, 1);
         }
         .threads {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
-          transform: translateZ(-110px);
+          transform: translateZ(-140px);
           opacity: 0;
           transition: opacity .45s ease;
         }
-        .show-threads .threads { opacity: .34; }
-        .thread { stroke: rgba(180,215,255,.18); stroke-width: .11; }
-        .thread.active { stroke: rgba(220,245,255,.48); stroke-width: .16; filter: drop-shadow(0 0 5px rgba(125,211,252,.42)); }
+        .show-threads .threads { opacity: .3; }
+        .thread { stroke: rgba(180,215,255,.16); stroke-width: .1; }
+        .thread.active { stroke: rgba(220,245,255,.46); stroke-width: .16; filter: drop-shadow(0 0 5px rgba(125,211,252,.42)); }
         .memory-node {
           position: absolute;
           transform: translate3d(-50%, -50%, var(--star-z)) scale(var(--star-scale));
-          width: 10px;
-          height: 10px;
           border: 0;
           border-radius: 999px;
-          background: radial-gradient(circle at 42% 32%, #fff 0%, #dcecff 22%, #8fb2ff 54%, rgba(116,151,255,.12) 100%);
-          box-shadow: 0 0 8px rgba(255,255,255,.76), 0 0 28px rgba(125,170,255,.48), 0 0 72px rgba(125,211,252,.16);
+          background:
+            radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 19%, hsl(var(--star-hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%);
+          box-shadow:
+            0 0 10px rgba(255,255,255,.78),
+            0 0 32px hsl(var(--star-hue) 86% 68% / .42),
+            0 0 82px hsl(var(--star-hue) 92% 64% / .16);
           opacity: var(--star-alpha);
           cursor: pointer;
           transition: opacity .35s ease, transform .35s ease, filter .35s ease;
@@ -513,56 +549,56 @@ export default function LifeMapScene() {
         .memory-node::before {
           content: '';
           position: absolute;
-          inset: -16px;
+          inset: -18px;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(255,255,255,.18), transparent 62%);
-          opacity: .32;
+          background: radial-gradient(circle, hsl(var(--star-hue) 90% 70% / .22), transparent 64%);
+          opacity: .5;
         }
         .memory-node:hover, .memory-node.active {
           opacity: 1;
-          filter: brightness(1.18);
-          transform: translate3d(-50%, -50%, calc(var(--star-z) + 54px)) scale(calc(var(--star-scale) * 1.18));
+          filter: brightness(1.24);
+          transform: translate3d(-50%, -50%, calc(var(--star-z) + 58px)) scale(calc(var(--star-scale) * 1.2));
         }
         .memory-node.state-glowing { animation: nodePulse 3.2s ease-in-out infinite; }
-        .memory-node.dimmed { opacity: .18; }
+        .memory-node.dimmed { opacity: .16; }
         .memory-node span {
           position: absolute;
-          top: calc(100% + .5rem);
+          top: calc(100% + .55rem);
           left: 50%;
           transform: translateX(-50%);
           white-space: nowrap;
-          color: rgba(255,255,255,.78);
-          font-size: .62rem;
+          color: rgba(255,255,255,.84);
+          font-size: .66rem;
           letter-spacing: .015em;
           text-shadow: 0 2px 12px rgba(0,0,0,.95);
           opacity: 0;
           pointer-events: none;
           transition: opacity .25s ease;
         }
-        .is-deep .memory-node span, .memory-node:hover span, .memory-node.active span { opacity: .88; }
+        .memory-node:hover span, .memory-node.active span { opacity: .95; }
         .companion-whisper {
           position: absolute;
           z-index: 8;
           right: 1rem;
           top: 1rem;
           width: min(280px, calc(100vw - 2rem));
-          border: 1px solid rgba(157,196,255,.22);
+          border: 1px solid rgba(157,196,255,.2);
           border-radius: 16px;
-          background: rgba(4,7,18,.52);
+          background: rgba(4,7,18,.46);
           backdrop-filter: blur(10px);
           padding: .75rem .85rem;
           color: rgba(255,255,255,.76);
           box-shadow: 0 20px 54px rgba(0,0,0,.22);
         }
-        .companion-whisper strong { display: block; margin-bottom: .3rem; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.52); }
-        .companion-whisper span { font-size: .82rem; line-height: 1.45; }
+        .companion-whisper strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
+        .companion-whisper span { font-size: .8rem; line-height: 1.45; }
         .camera-dock, .chapter-dock, .memory-card {
           position: absolute;
           z-index: 9;
-          border: 1px solid rgba(157,196,255,.24);
-          background: rgba(5,8,20,.56);
+          border: 1px solid rgba(157,196,255,.22);
+          background: rgba(5,8,20,.5);
           backdrop-filter: blur(12px);
-          box-shadow: 0 24px 64px rgba(0,0,0,.26);
+          box-shadow: 0 24px 64px rgba(0,0,0,.25);
         }
         .camera-dock {
           left: 50%;
@@ -620,7 +656,7 @@ export default function LifeMapScene() {
         .memory-card div { display: flex; justify-content: center; gap: .5rem; margin-top: .9rem; flex-wrap: wrap; }
         @keyframes nodePulse {
           0%, 100% { transform: translate3d(-50%, -50%, var(--star-z)) scale(var(--star-scale)); }
-          50% { transform: translate3d(-50%, -50%, calc(var(--star-z) + 28px)) scale(calc(var(--star-scale) * 1.12)); }
+          50% { transform: translate3d(-50%, -50%, calc(var(--star-z) + 30px)) scale(calc(var(--star-scale) * 1.13)); }
         }
         @media (max-width: 760px) {
           .life-map-hud { left: 1rem; right: 1rem; transform: none; }
