@@ -52,59 +52,72 @@ body {
 }
 
 .home-scene::before {
-  z-index: 5;
-  opacity: 0.58;
+  z-index: 14;
+  opacity: 0.72;
   background-image:
-    radial-gradient(circle at 10% 23%, rgba(222, 244, 255, 0.62) 0 1px, transparent 2.2px),
-    radial-gradient(circle at 18% 43%, rgba(190, 232, 255, 0.52) 0 1px, transparent 2px),
-    radial-gradient(circle at 31% 17%, rgba(240, 249, 255, 0.46) 0 1px, transparent 2px),
-    radial-gradient(circle at 39% 36%, rgba(181, 221, 255, 0.4) 0 1px, transparent 2.1px),
-    radial-gradient(circle at 58% 28%, rgba(240, 249, 255, 0.55) 0 1.2px, transparent 2.5px),
-    radial-gradient(circle at 69% 40%, rgba(183, 222, 255, 0.5) 0 1px, transparent 2.2px),
-    radial-gradient(circle at 82% 20%, rgba(230, 246, 255, 0.46) 0 1px, transparent 2.2px),
-    radial-gradient(circle at 92% 49%, rgba(175, 217, 255, 0.42) 0 1px, transparent 2.4px),
-    radial-gradient(circle at 24% 62%, rgba(175, 217, 255, 0.32) 0 1px, transparent 2.4px),
-    radial-gradient(circle at 75% 64%, rgba(175, 217, 255, 0.34) 0 1px, transparent 2.5px);
+    radial-gradient(circle at 7% 18%, rgba(222, 244, 255, 0.55) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 10% 48%, rgba(222, 244, 255, 0.72) 0 1.3px, transparent 2.8px),
+    radial-gradient(circle at 18% 43%, rgba(190, 232, 255, 0.58) 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 62%, rgba(175, 217, 255, 0.48) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 31% 17%, rgba(240, 249, 255, 0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 39% 36%, rgba(181, 221, 255, 0.5) 0 1px, transparent 2.1px),
+    radial-gradient(circle at 46% 57%, rgba(240, 249, 255, 0.42) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 58% 28%, rgba(240, 249, 255, 0.64) 0 1.2px, transparent 2.5px),
+    radial-gradient(circle at 62% 44%, rgba(183, 222, 255, 0.42) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 69% 40%, rgba(183, 222, 255, 0.55) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 75% 64%, rgba(175, 217, 255, 0.48) 0 1px, transparent 2.5px),
+    radial-gradient(circle at 82% 20%, rgba(230, 246, 255, 0.56) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 92% 49%, rgba(175, 217, 255, 0.52) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 95% 24%, rgba(240, 249, 255, 0.42) 0 1px, transparent 2.2px);
   background-size: 100% 100%;
-  filter: drop-shadow(0 0 9px rgba(125, 211, 252, 0.28));
+  filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.34));
 }
 
 .home-scene::after {
   z-index: 9;
   background:
-    radial-gradient(ellipse at 48% 82%, rgba(96, 190, 158, 0.13), transparent 16%),
-    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.95), transparent 39%),
-    linear-gradient(180deg, transparent 0%, transparent 54%, rgba(0, 0, 0, 0.18) 72%, rgba(0, 0, 0, 0.86) 100%);
+    radial-gradient(ellipse at 53.7% 72%, rgba(125, 211, 252, 0.16), transparent 11%),
+    radial-gradient(ellipse at 48% 84%, rgba(96, 190, 158, 0.12), transparent 17%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.95), transparent 38%),
+    linear-gradient(180deg, transparent 0%, transparent 56%, rgba(0, 0, 0, 0.2) 73%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.home-scene .home-webgl-sky {
+  position: fixed !important;
+  z-index: 13 !important;
+  opacity: 0.96 !important;
+  filter: contrast(1.55) brightness(1.7) saturate(1.16) drop-shadow(0 0 6px rgba(125, 211, 252, 0.28)) !important;
+  mix-blend-mode: screen !important;
 }
 
 .home-scene .asset-sky {
-  opacity: 0.32 !important;
-  filter: saturate(1.08) contrast(1.2) brightness(0.54) !important;
+  opacity: 0.26 !important;
+  filter: saturate(1.06) contrast(1.24) brightness(0.46) !important;
 }
 
 .home-scene .sky-base {
   background:
-    radial-gradient(circle at 50% 17%, rgba(87, 105, 186, 0.16), transparent 20%),
-    radial-gradient(ellipse at 50% 50%, rgba(29, 61, 112, 0.12), transparent 43%),
-    radial-gradient(ellipse at 50% 78%, rgba(7, 35, 27, 0.16), transparent 26%),
+    radial-gradient(circle at 50% 17%, rgba(87, 105, 186, 0.14), transparent 20%),
+    radial-gradient(ellipse at 50% 50%, rgba(29, 61, 112, 0.1), transparent 43%),
+    radial-gradient(ellipse at 50% 78%, rgba(7, 35, 27, 0.16), transparent 25%),
     linear-gradient(180deg, #01030b 0%, #041023 45%, #020d0a 75%, #000 100%) !important;
 }
 
 .home-scene .asset-clouds {
-  opacity: 0.1 !important;
-  filter: blur(0.7px) brightness(0.55) !important;
+  opacity: 0.08 !important;
+  filter: blur(0.7px) brightness(0.48) !important;
 }
 
 .home-scene .sky-depth {
-  opacity: 0.46 !important;
+  opacity: 0.38 !important;
   background:
-    radial-gradient(ellipse at 50% 28%, rgba(205, 227, 255, 0.035), transparent 16%),
-    radial-gradient(ellipse at 50% 52%, rgba(62, 104, 175, 0.045), transparent 25%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.12) 58%, rgba(0, 0, 0, 0.9) 100%) !important;
+    radial-gradient(ellipse at 50% 28%, rgba(205, 227, 255, 0.025), transparent 16%),
+    radial-gradient(ellipse at 50% 52%, rgba(62, 104, 175, 0.035), transparent 25%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 58%, rgba(0, 0, 0, 0.9) 100%) !important;
 }
 
 .home-scene .sky-portal {
-  opacity: 0.33 !important;
+  opacity: 0.32 !important;
   transform: translateY(-35vh) scale(0.9) !important;
 }
 
@@ -118,86 +131,86 @@ body {
 }
 
 .home-scene .asset-ground {
-  height: 30% !important;
-  opacity: 0.16 !important;
+  height: 28% !important;
+  opacity: 0.12 !important;
   mix-blend-mode: screen !important;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 18%, rgba(0, 0, 0, 0.3) 38%, #000 100%) !important;
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 18%, rgba(0, 0, 0, 0.3) 38%, #000 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.26) 50%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.26) 50%, #000 100%) !important;
 }
 
 .home-scene .terrain-world {
-  height: 28% !important;
-  filter: saturate(0.82) brightness(0.58) blur(0.2px) !important;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 21%, rgba(0, 0, 0, 0.45) 42%, #000 75%, #000 100%) !important;
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 21%, rgba(0, 0, 0, 0.45) 42%, #000 75%, #000 100%) !important;
+  height: 25% !important;
+  filter: saturate(0.78) brightness(0.46) blur(0.25px) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0, 0, 0, 0.38) 54%, #000 80%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0, 0, 0, 0.38) 54%, #000 80%, #000 100%) !important;
 }
 
 .home-scene .terrain-world::before {
-  inset: -72% -18% 0 !important;
+  inset: -82% -18% 0 !important;
   background:
-    radial-gradient(ellipse at 50% 14%, rgba(110, 231, 183, 0.035), transparent 28%),
-    radial-gradient(ellipse at 50% 38%, rgba(125, 211, 252, 0.028), transparent 42%),
-    linear-gradient(180deg, transparent 0%, rgba(2, 18, 12, 0.06) 44%, rgba(0, 0, 0, 0.98) 100%) !important;
+    radial-gradient(ellipse at 50% 18%, rgba(110, 231, 183, 0.026), transparent 31%),
+    radial-gradient(ellipse at 50% 42%, rgba(125, 211, 252, 0.02), transparent 45%),
+    linear-gradient(180deg, transparent 0%, rgba(2, 18, 12, 0.045) 48%, rgba(0, 0, 0, 0.98) 100%) !important;
 }
 
 .home-scene .terrain-mist {
-  opacity: 0.14 !important;
-  top: -66% !important;
+  opacity: 0.1 !important;
+  top: -70% !important;
 }
 
 .home-scene .hill-back {
-  opacity: 0.09 !important;
-  bottom: 62% !important;
+  opacity: 0.06 !important;
+  bottom: 66% !important;
 }
 
 .home-scene .hill-front {
-  opacity: 0.58 !important;
-  bottom: -58% !important;
+  opacity: 0.48 !important;
+  bottom: -62% !important;
 }
 
 .home-scene .orb-wash {
-  opacity: 0.42 !important;
+  opacity: 0.34 !important;
   background-image:
-    radial-gradient(circle at 54% 68%, rgba(210, 238, 255, 0.12), rgba(125, 211, 252, 0.07) 7%, transparent 19%),
-    radial-gradient(circle at 42% 66%, rgba(180, 226, 255, 0.055), transparent 13%) !important;
+    radial-gradient(circle at 54% 67%, rgba(210, 238, 255, 0.1), rgba(125, 211, 252, 0.06) 7%, transparent 18%),
+    radial-gradient(circle at 42% 66%, rgba(180, 226, 255, 0.045), transparent 13%) !important;
 }
 
 .home-scene .avatar-figure {
   left: calc(50% - min(12.5vw, 172px)) !important;
-  top: 55.5% !important;
-  width: clamp(194px, 12.8vw, 238px) !important;
-  filter: contrast(1.18) brightness(1.1) !important;
+  top: 55.3% !important;
+  width: clamp(198px, 13vw, 244px) !important;
+  filter: contrast(1.22) brightness(1.12) !important;
 }
 
 .home-scene .asset-avatar {
-  opacity: 0.16 !important;
+  opacity: 0.14 !important;
 }
 
 .home-scene .companion-orb {
   left: 53.7% !important;
-  top: 69.3% !important;
-  width: clamp(144px, 10vw, 184px) !important;
-  height: clamp(144px, 10vw, 184px) !important;
+  top: 68.4% !important;
+  width: clamp(148px, 10.2vw, 190px) !important;
+  height: clamp(148px, 10.2vw, 190px) !important;
 }
 
 .home-scene .orb-glow {
-  opacity: 0.54 !important;
+  opacity: 0.48 !important;
   filter: blur(22px) !important;
 }
 
 .home-scene .asset-orb {
-  opacity: 0.42 !important;
+  opacity: 0.4 !important;
 }
 
 .home-scene .orb-core {
   box-shadow:
-    0 0 18px rgba(255, 255, 255, 0.72),
-    0 0 52px rgba(125, 211, 252, 0.38),
-    0 0 104px rgba(196, 181, 253, 0.1) !important;
+    0 0 18px rgba(255, 255, 255, 0.74),
+    0 0 48px rgba(125, 211, 252, 0.38),
+    0 0 92px rgba(196, 181, 253, 0.1) !important;
 }
 
 .home-scene .orb-shadow {
-  opacity: 0.62 !important;
+  opacity: 0.56 !important;
   top: 96% !important;
 }
 
@@ -230,14 +243,14 @@ body {
 @media (max-width: 900px) {
   .home-scene .companion-orb {
     left: 54.5% !important;
-    top: 69% !important;
-    width: 136px !important;
-    height: 136px !important;
+    top: 68.2% !important;
+    width: 138px !important;
+    height: 138px !important;
   }
 
   .home-scene .avatar-figure {
     left: calc(50% - 116px) !important;
-    top: 55.5% !important;
+    top: 55.3% !important;
   }
 }
 
