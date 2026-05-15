@@ -175,6 +175,7 @@ export default function LifeMapScene() {
       <div className="core" aria-hidden />
       <div className="orbit orbit-one" aria-hidden />
       <div className="orbit orbit-two" aria-hidden />
+      <div className="deep-mist" aria-hidden />
 
       <header className="hud">
         <p>URAI Life Map</p>
@@ -264,24 +265,26 @@ export default function LifeMapScene() {
       </nav>
 
       <style jsx>{`
-        .life-map-shell { min-height: 100vh; position: relative; overflow: hidden; isolation: isolate; color: white; background: radial-gradient(circle at 50% 48%, #203c78 0%, #081026 48%, #01020a 100%); touch-action: none; cursor: grab; perspective: 1500px; }
+        .life-map-shell { min-height: 100vh; position: relative; overflow: hidden; isolation: isolate; color: white; background: radial-gradient(circle at 50% 48%, #203c78 0%, #081026 48%, #01020a 100%); touch-action: none; cursor: grab; perspective: 1500px; user-select: none; -webkit-user-select: none; }
+        .life-map-shell * { user-select: none; -webkit-user-select: none; }
         .life-map-shell:active { cursor: grabbing; }
-        .vignette, .core, .orbit { position: absolute; pointer-events: none; }
+        .vignette, .core, .orbit, .deep-mist { position: absolute; pointer-events: none; }
         .vignette { z-index: 2; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.84) 100%), radial-gradient(circle at 50% 54%, rgba(125,211,252,.12), transparent 34%); }
         .core { z-index: 1; left: 50%; top: 52%; width: min(52vw, 660px); height: min(52vw, 660px); transform: translate(-50%, -50%); border-radius: 999px; background: radial-gradient(circle, rgba(255,255,255,.11), transparent 12%), radial-gradient(circle, rgba(125,211,252,.17), rgba(70,90,190,.06) 46%, transparent 72%); filter: blur(10px); opacity: .95; }
-        .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.045); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
+        .deep-mist { z-index: 3; inset: 14% 12% 18%; background: radial-gradient(ellipse at 50% 50%, rgba(120,165,255,.08), transparent 64%); filter: blur(22px); opacity: .8; }
+        .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.035); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
         .orbit-one { width: min(46vw, 580px); height: min(21vw, 270px); }
-        .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .28; }
+        .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .22; }
         .hud { position: absolute; z-index: 8; left: 50%; top: 1rem; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 2px 16px rgba(0,0,0,.85); transition: opacity .35s ease, transform .35s ease; }
-        .hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
-        .hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); }
-        .hud span { display: block; margin-top: .25rem; font-size: .72rem; color: rgba(255,255,255,.56); }
+        .hud p { margin: 0; font-size: .56rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.34); }
+        .hud h1 { margin: .2rem 0 0; font-size: clamp(.95rem, 1.6vw, 1.32rem); font-weight: 600; }
+        .hud span { display: block; margin-top: .25rem; font-size: .66rem; color: rgba(255,255,255,.45); }
         .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; transition: opacity .55s ease, filter .55s ease, transform .55s ease; }
         .camera { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: var(--x) var(--y); will-change: transform; transform: perspective(1500px) translate3d(calc(50% - var(--x)), calc(50% - var(--y)), 0) scale(var(--z)); transition: transform 500ms cubic-bezier(.19,1,.22,1); }
         .threads { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; transform: translateZ(-150px); }
-        .show-threads .threads { opacity: .12; }
-        .thread { stroke: rgba(180,215,255,.1); stroke-width: .07; }
-        .thread.active { stroke: rgba(220,245,255,.22); stroke-width: .1; filter: none; }
+        .show-threads .threads { opacity: .1; }
+        .thread { stroke: rgba(180,215,255,.08); stroke-width: .06; }
+        .thread.active { stroke: rgba(220,245,255,.18); stroke-width: .08; filter: none; }
         .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 32px hsl(var(--hue) 86% 68% / .42), 0 0 82px hsl(var(--hue) 92% 64% / .16); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
         .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; }
         .node:hover { opacity: 1; filter: brightness(1.18); transform: translate3d(-50%, -50%, calc(var(--depth) + 30px)) scale(calc(var(--scale) * 1.08)); }
@@ -289,10 +292,11 @@ export default function LifeMapScene() {
         .node.dim { opacity: .28; }
         .node-label { display: none; position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
         .node:hover .node-label { display: block; opacity: .9; }
-        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(280px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.2); border-radius: 16px; background: rgba(4,7,18,.46); backdrop-filter: blur(10px); padding: .75rem .85rem; color: rgba(255,255,255,.76); box-shadow: 0 20px 54px rgba(0,0,0,.22); transition: opacity .35s ease; }
-        .companion strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
-        .companion span { font-size: .8rem; line-height: 1.45; }
-        .controls, .chapters { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.22); background: rgba(5,8,20,.5); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.25); transition: opacity .35s ease, transform .35s ease; }
+        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(260px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(4,7,18,.34); backdrop-filter: blur(10px); padding: .68rem .75rem; color: rgba(255,255,255,.68); box-shadow: 0 20px 54px rgba(0,0,0,.18); transition: opacity .35s ease; }
+        .companion strong { display: block; margin-bottom: .3rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.38); }
+        .companion span { font-size: .74rem; line-height: 1.45; }
+        .controls, .chapters { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.18); background: rgba(5,8,20,.38); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.18); transition: opacity .35s ease, transform .35s ease, background .25s ease; opacity: .24; }
+        .life-map-shell:hover .controls, .life-map-shell:hover .chapters, .controls:focus-within, .chapters:focus-within { opacity: .92; }
         .controls { left: 50%; bottom: 6.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .36rem; }
         .controls button, .controls span, .bloom-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
         .chapters { left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(880px, calc(100vw - 2rem)); border-radius: 28px; padding: .45rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
@@ -300,24 +304,24 @@ export default function LifeMapScene() {
         .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; }
         .chapters strong { display: block; font-size: .78rem; }
         .chapters span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
-        .has-active .field { opacity: .2; filter: blur(1.2px) saturate(.75); transform: scale(.985); pointer-events: none; }
+        .has-active .field { opacity: .14; filter: blur(1.6px) saturate(.7); transform: scale(.985); pointer-events: none; }
         .has-active .controls, .has-active .chapters { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(.75rem); }
-        .has-active .companion { opacity: .55; }
-        .has-active .hud { opacity: .38; transform: translateX(-50%) translateY(-.35rem); }
-        .bloom-scene { position: absolute; z-index: 12; inset: 0; display: grid; place-items: center; padding: 4rem 1rem 2rem; background: radial-gradient(circle at 50% 48%, hsl(var(--bloom-hue) 90% 60% / .2), rgba(1,2,10,.18) 34%, rgba(0,0,0,.72) 100%); animation: bloomIn .55s cubic-bezier(.19,1,.22,1) both; }
-        .bloom-aura { position: relative; width: min(46vw, 520px); height: min(46vw, 520px); min-width: 290px; min-height: 290px; display: grid; place-items: center; }
-        .bloom-orb { width: clamp(92px, 13vw, 150px); height: clamp(92px, 13vw, 150px); border-radius: 999px; background: radial-gradient(circle at 35% 30%, #fff 0%, #f5fbff 18%, hsl(var(--bloom-hue) 90% 77%) 52%, hsl(var(--bloom-hue) 85% 48% / .2) 100%); box-shadow: 0 0 26px rgba(255,255,255,.9), 0 0 90px hsl(var(--bloom-hue) 90% 70% / .55), 0 0 190px hsl(var(--bloom-hue) 90% 60% / .22); animation: breathe 4.6s ease-in-out infinite; }
-        .bloom-ring { position: absolute; inset: 18%; border-radius: 999px; border: 1px solid hsl(var(--bloom-hue) 90% 80% / .18); box-shadow: inset 0 0 40px hsl(var(--bloom-hue) 90% 70% / .08); }
+        .has-active .companion { opacity: 0; pointer-events: none; }
+        .has-active .hud { opacity: 0; transform: translateX(-50%) translateY(-.45rem); }
+        .bloom-scene { position: absolute; z-index: 12; inset: 0; display: grid; place-items: center; padding: 4rem 1rem 2rem; background: radial-gradient(circle at 50% 48%, hsl(var(--bloom-hue) 90% 60% / .2), rgba(1,2,10,.18) 34%, rgba(0,0,0,.74) 100%); animation: bloomIn .55s cubic-bezier(.19,1,.22,1) both; }
+        .bloom-aura { position: relative; width: min(48vw, 560px); height: min(48vw, 560px); min-width: 310px; min-height: 310px; display: grid; place-items: center; transform: translateY(-2.5rem); }
+        .bloom-orb { width: clamp(108px, 15vw, 172px); height: clamp(108px, 15vw, 172px); border-radius: 999px; background: radial-gradient(circle at 35% 30%, #fff 0%, #f5fbff 18%, hsl(var(--bloom-hue) 90% 77%) 52%, hsl(var(--bloom-hue) 85% 48% / .2) 100%); box-shadow: 0 0 28px rgba(255,255,255,.9), 0 0 96px hsl(var(--bloom-hue) 90% 70% / .55), 0 0 220px hsl(var(--bloom-hue) 90% 60% / .25); animation: breathe 4.6s ease-in-out infinite; }
+        .bloom-ring { position: absolute; inset: 17%; border-radius: 999px; border: 1px solid hsl(var(--bloom-hue) 90% 80% / .18); box-shadow: inset 0 0 40px hsl(var(--bloom-hue) 90% 70% / .08); }
         .bloom-ring-one { transform: rotate(-18deg) scaleX(1.42); }
         .bloom-ring-two { transform: rotate(24deg) scaleX(1.66); opacity: .58; }
-        .bloom-card { position: absolute; left: 50%; bottom: 5.8rem; transform: translateX(-50%); width: min(580px, calc(100vw - 2rem)); border: 1px solid hsl(var(--bloom-hue) 80% 78% / .26); border-radius: 30px; background: rgba(5,8,20,.66); backdrop-filter: blur(16px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.15rem; text-align: center; }
+        .bloom-card { position: absolute; left: 50%; bottom: 5.1rem; transform: translateX(-50%); width: min(620px, calc(100vw - 2rem)); border: 1px solid hsl(var(--bloom-hue) 80% 78% / .22); border-radius: 32px; background: linear-gradient(180deg, rgba(10,14,34,.62), rgba(5,8,20,.42)); backdrop-filter: blur(18px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.35rem; text-align: center; }
         .bloom-card p { margin: 0; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--bloom-hue) 90% 82% / .58); }
-        .bloom-card h2 { margin: .35rem 0 .5rem; font-size: clamp(1.8rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.04em; }
+        .bloom-card h2 { margin: .35rem 0 .5rem; font-size: clamp(1.9rem, 4.2vw, 3.8rem); line-height: 1; letter-spacing: -.04em; }
         .bloom-card span { display: block; max-width: 46rem; margin: 0 auto; color: rgba(255,255,255,.82); line-height: 1.6; }
         .bloom-card div { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
         @keyframes bloomIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
         @keyframes breathe { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.07); filter: brightness(1.12); } }
-        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-card { bottom: 2rem; } .has-active .companion { opacity: 0; pointer-events: none; } }
+        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-aura { transform: translateY(-5rem); } .bloom-card { bottom: 2rem; } .has-active .companion { opacity: 0; pointer-events: none; } }
       `}</style>
     </main>
   );
