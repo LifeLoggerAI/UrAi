@@ -1,3 +1,5 @@
+import type { ChapterId } from './lifeMapEvents';
+
 export type LifeMapTone =
   | 'calm'
   | 'clarity'
@@ -40,6 +42,8 @@ export type LifeMapChapterId =
   | 'dream-field'
   | 'shadow'
   | 'mirror';
+
+export type LifeMapLayerChapterId = LifeMapChapterId | ChapterId;
 
 export type LifeMapPrivacyLevel = 'private' | 'sensitive' | 'safeSummary' | 'shareable';
 
@@ -402,7 +406,7 @@ export type LifeMapThread = {
 };
 
 export type LifeMapCategory = {
-  id: LifeMapChapterId;
+  id: LifeMapLayerChapterId;
   label: string;
   subtitle: string;
   icon: string;
@@ -416,7 +420,7 @@ export type LifeMapInteraction = {
   zoomLevel: number;
   selectedNodeId?: string | null;
   selectedThreadId?: string | null;
-  activeCategoryId?: LifeMapChapterId | null;
+  activeCategoryId?: LifeMapLayerChapterId | null;
   showThreads: boolean;
   cameraFocus?: {
     x: number;
