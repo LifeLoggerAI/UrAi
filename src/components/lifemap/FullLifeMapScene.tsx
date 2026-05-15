@@ -97,7 +97,7 @@ function starClass(star: MemoryStar, active: boolean, dim: boolean) {
     `tone-${star.emotionalTone}`,
     star.starType === 'ritual_completion' && 'ritual',
     star.starType === 'threshold_moment' && 'threshold',
-    star.starType === 'relationship_echo' && 'relationship',
+    (star.starType === 'relationship_moment' || star.starType === 'repair_moment' || star.starType === 'social_silence') && 'relationship',
   );
 }
 
