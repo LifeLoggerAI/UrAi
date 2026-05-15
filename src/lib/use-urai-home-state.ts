@@ -16,7 +16,7 @@ import { auth, db, isFirebaseConfigured } from "@/lib/firebase";
 
 export type RhythmState = "stable" | "focused" | "overstimulated" | "offRhythm" | "recovering";
 export type CompanionMode = "quiet" | "listening" | "reflecting" | "forecasting" | "ritual" | "protective";
-export type LifeMapNodeType = "memory" | "ritual" | "relationship" | "forecast" | "recovery" | "threshold";
+export type LifeMapNodeType = "memory" | "ritual" | "relationship" | "forecast" | "recovery" | "threshold" | "becoming" | "dream" | "mirror" | "breakthrough" | "warning" | "legacy";
 export type SocialEnergy = "high" | "balanced" | "low" | "silent" | "strained";
 export type HomeVisualState =
   | "calm"
@@ -76,7 +76,7 @@ export type UraiHomeViewModel = {
 };
 
 export const DEMO_URAI_HOME_STATE: UraiHomeViewModel = {
-  moodWeather: "Clouded Focus",
+  moodWeather: "Live Focus Field",
   rhythmState: "focused",
   visualState: "focused",
   auraColor: "#7ee7ff",
@@ -86,9 +86,9 @@ export const DEMO_URAI_HOME_STATE: UraiHomeViewModel = {
   bloomReady: false,
   memoryNodeCount: 12,
   forecastSummary: "Soft shift ahead",
-  forecastMessage: "Your day appears to be moving toward a quieter rhythm.",
+  forecastMessage: "Live home state is reading rhythm, recovery, memory nodes, and companion mode.",
   companionMode: "listening",
-  narratorWhisper: "A quiet pattern is becoming visible.",
+  narratorWhisper: "Your active field is coming online.",
   socialEnergy: "balanced",
   shadowLoad: 0.22,
   cognitiveLoad: 0.34,
@@ -97,11 +97,11 @@ export const DEMO_URAI_HOME_STATE: UraiHomeViewModel = {
   source: "demo",
   loading: false,
   insight: {
-    id: "demo-quiet-pattern",
-    title: "A quiet pattern is becoming visible.",
-    body: "URAI is reading the quieter shape of your day.",
-    ctaLabel: "View Mirror",
-    ctaRoute: "/mirror",
+    id: "demo-live-field",
+    title: "Your active field is coming online.",
+    body: "URAI is wiring the home view to mood, rhythm, recovery, companion, and Life Map nodes.",
+    ctaLabel: "Enter Life Map",
+    ctaRoute: "/lifemap",
     confidence: 0.72,
   },
   nodes: [
@@ -110,6 +110,28 @@ export const DEMO_URAI_HOME_STATE: UraiHomeViewModel = {
     { id: "focus-thread", type: "memory", title: "Focus Thread", subtitle: "Attention returned around one repeated proof action.", emotionalWeight: 0.78, x: 59, y: 27, auraColor: "#7ee7ff" },
     { id: "relationship-echo", type: "relationship", title: "Relationship Echo", subtitle: "A silence pattern is asking to be seen without judgment.", emotionalWeight: 0.58, x: 72, y: 40, auraColor: "#a78bfa" },
   ],
+};
+
+const LIFE_MAP_NODE_TYPE_ALIASES: Record<string, LifeMapNodeType> = {
+  becoming: "becoming",
+  breakthrough: "breakthrough",
+  habit: "memory",
+  voice: "memory",
+  location: "memory",
+  warning: "warning",
+  dream: "dream",
+  mirror: "mirror",
+  legacy: "legacy",
+  memory: "memory",
+  ritual: "ritual",
+  relationship: "relationship",
+  forecast: "forecast",
+  recovery: "recovery",
+  threshold: "threshold",
+  stress_spike: "threshold",
+  emotional_moment: "memory",
+  recurring_pattern: "memory",
+  urai_insight: "forecast",
 };
 
 function asString(value: unknown, fallback: string) {
@@ -160,25 +182,33 @@ function asSocialEnergy(value: unknown): SocialEnergy {
 }
 
 function asNodeType(value: unknown): LifeMapNodeType {
-  return value === "memory" || value === "ritual" || value === "relationship" || value === "forecast" || value === "recovery" || value === "threshold" ? value : "memory";
+  if (typeof value !== "string") return "memory";
+  return LIFE_MAP_NODE_TYPE_ALIASES[value] ?? "memory";
 }
 
 function clampPercent(value: unknown, fallback: number) {
   return clamp(value, fallback, 5, 95);
 }
 
+function normalizeAuraColor(value: unknown, fallback: string) {
+  if (typeof value !== "string" || !value.trim()) return fallback;
+  if (value.endsWith("deg")) return `hsl(${value} 90% 72%)`;
+  return value;
+}
+
 function normalizeNode(id: string, data: DocumentData, index: number): UraiLifeMapNode {
   const fallback = DEMO_URAI_HOME_STATE.nodes[index % DEMO_URAI_HOME_STATE.nodes.length];
   const position = typeof data.position === "object" && data.position ? data.position as Record<string, unknown> : undefined;
+  const emotionalWeight = clamp(data.emotionalWeight ?? data.weight ?? data.importance ?? data.intensity ?? data.emotionalIntensity ?? data.glow, fallback.emotionalWeight, 0.15, 1);
   return {
     id,
-    type: asNodeType(data.type),
+    type: asNodeType(data.type ?? data.starType),
     title: asString(data.title ?? data.label, fallback.title),
-    subtitle: asString(data.subtitle ?? data.detail ?? data.summary, fallback.subtitle),
-    emotionalWeight: clamp(data.emotionalWeight ?? data.weight ?? data.importance, fallback.emotionalWeight, 0.15, 1),
+    subtitle: asString(data.subtitle ?? data.detail ?? data.summary ?? data.narratorLine, fallback.subtitle),
+    emotionalWeight,
     x: clampPercent(data.x ?? data.positionX ?? position?.x, fallback.x),
     y: clampPercent(data.y ?? data.positionY ?? position?.y, fallback.y),
-    auraColor: asString(data.auraColor ?? data.color, fallback.auraColor),
+    auraColor: normalizeAuraColor(data.auraColor ?? data.color, fallback.auraColor),
   };
 }
 
@@ -192,6 +222,17 @@ function normalizeRecentStars(home?: DocumentData): UraiLifeMapNode[] | undefine
 function nested(source: DocumentData | undefined, key: string): Record<string, unknown> | undefined {
   const value = source?.[key];
   return typeof value === "object" && value ? value as Record<string, unknown> : undefined;
+}
+
+function deriveMoodWeatherFromNodes(nodes: UraiLifeMapNode[], fallback: string) {
+  if (!nodes.length) return fallback;
+  const strongest = [...nodes].sort((a, b) => b.emotionalWeight - a.emotionalWeight)[0];
+  if (strongest.type === "threshold" || strongest.type === "warning") return "Threshold Field";
+  if (strongest.type === "recovery") return "Recovery Weather";
+  if (strongest.type === "dream") return "Dream Signal";
+  if (strongest.type === "mirror") return "Mirror Clarity";
+  if (strongest.type === "breakthrough") return "Breakthrough Glow";
+  return fallback;
 }
 
 function mergeHomeData(home?: DocumentData, forecast?: DocumentData, companion?: DocumentData, visual?: DocumentData, nodes?: UraiLifeMapNode[]): UraiHomeViewModel {
@@ -211,33 +252,39 @@ function mergeHomeData(home?: DocumentData, forecast?: DocumentData, companion?:
   const bloomReady = Boolean(recovery?.bloomReady ?? home?.bloomReady ?? false);
   const socialEnergy = asSocialEnergy(social?.energy ?? home?.socialEnergy);
   const rhythmState = asRhythm(rhythm?.state ?? home?.rhythmState ?? visual?.rhythmState);
+  const recoveryScore = clamp(recovery?.score ?? home?.recoveryScore ?? home?.recovery, DEMO_URAI_HOME_STATE.recoveryScore, 0, 100);
+  const strongestNode = [...mergedNodes].sort((a, b) => b.emotionalWeight - a.emotionalWeight)[0];
+  const defaultTitle = strongestNode ? `${strongestNode.title} is active.` : DEMO_URAI_HOME_STATE.insight.title;
+  const defaultBody = strongestNode ? strongestNode.subtitle : DEMO_URAI_HOME_STATE.insight.body;
+  const forecastText = asString(homeForecast?.message ?? forecast?.message ?? home?.forecastMessage, `Recovery is ${Math.round(recoveryScore)}%. ${mergedNodes.length} memory signals are currently shaping the field.`);
+  const moodWeather = deriveMoodWeatherFromNodes(mergedNodes, asString(mood?.label ?? home?.moodWeather ?? home?.moodLabel ?? visual?.moodWeather, DEMO_URAI_HOME_STATE.moodWeather));
 
   return {
-    moodWeather: asString(mood?.label ?? home?.moodWeather ?? home?.moodLabel ?? visual?.moodWeather, DEMO_URAI_HOME_STATE.moodWeather),
+    moodWeather,
     rhythmState,
     visualState: asVisualState(homeVisual?.state ?? home?.visualState ?? visual?.visualState, rhythmState, thresholdRisk, bloomReady, socialEnergy),
     auraColor: asString(homeVisual?.auraColor ?? visual?.auraColor ?? home?.auraColor, DEMO_URAI_HOME_STATE.auraColor),
     auraSecondaryColor: asString(homeVisual?.auraSecondaryColor ?? visual?.auraSecondaryColor ?? home?.auraSecondaryColor, DEMO_URAI_HOME_STATE.auraSecondaryColor),
-    recoveryScore: clamp(recovery?.score ?? home?.recoveryScore ?? home?.recovery, DEMO_URAI_HOME_STATE.recoveryScore, 0, 100),
+    recoveryScore,
     recoveryDirection: recovery?.direction === "rising" || recovery?.direction === "flat" || recovery?.direction === "falling" ? recovery.direction : DEMO_URAI_HOME_STATE.recoveryDirection,
     bloomReady,
     memoryNodeCount: Math.max(mergedNodes.length, asNumber(memory?.nodeCount ?? home?.memoryNodeCount ?? home?.memoryNodes, mergedNodes.length)),
-    forecastSummary: asString(homeForecast?.label ?? forecast?.summary ?? forecast?.forecastSummary ?? home?.forecastSummary, DEMO_URAI_HOME_STATE.forecastSummary),
-    forecastMessage: asString(homeForecast?.message ?? forecast?.message ?? home?.forecastMessage, DEMO_URAI_HOME_STATE.forecastMessage),
+    forecastSummary: asString(homeForecast?.label ?? forecast?.summary ?? forecast?.forecastSummary ?? home?.forecastSummary, strongestNode ? `${strongestNode.type} signal active` : DEMO_URAI_HOME_STATE.forecastSummary),
+    forecastMessage: forecastText,
     companionMode: asCompanionMode(homeCompanion?.state ?? companion?.mode ?? companion?.companionMode ?? home?.companionMode),
-    narratorWhisper: asString(homeCompanion?.message ?? companion?.narratorWhisper ?? companion?.whisper ?? home?.narratorWhisper, DEMO_URAI_HOME_STATE.narratorWhisper),
+    narratorWhisper: asString(homeCompanion?.message ?? companion?.narratorWhisper ?? companion?.whisper ?? home?.narratorWhisper, defaultTitle),
     socialEnergy,
     shadowLoad: clamp(stress?.shadowLoad ?? home?.shadowLoad, DEMO_URAI_HOME_STATE.shadowLoad),
     cognitiveLoad: clamp(stress?.cognitiveLoad ?? home?.cognitiveLoad, DEMO_URAI_HOME_STATE.cognitiveLoad),
     thresholdRisk,
-    moodConfidence: clamp(mood?.confidence ?? home?.moodConfidence, DEMO_URAI_HOME_STATE.moodConfidence),
+    moodConfidence: clamp(mood?.confidence ?? home?.moodConfidence ?? strongestNode?.emotionalWeight, DEMO_URAI_HOME_STATE.moodConfidence),
     insight: {
-      id: asString(insight?.id, DEMO_URAI_HOME_STATE.insight.id),
-      title: asString(insight?.title ?? home?.narratorWhisper, DEMO_URAI_HOME_STATE.insight.title),
-      body: asString(insight?.body ?? home?.insightBody, DEMO_URAI_HOME_STATE.insight.body),
-      ctaLabel: asString(insight?.ctaLabel, DEMO_URAI_HOME_STATE.insight.ctaLabel ?? "View Mirror"),
-      ctaRoute: asString(insight?.ctaRoute, DEMO_URAI_HOME_STATE.insight.ctaRoute ?? "/mirror"),
-      confidence: clamp(insight?.confidence, DEMO_URAI_HOME_STATE.insight.confidence ?? 0.7),
+      id: asString(insight?.id, strongestNode?.id ?? DEMO_URAI_HOME_STATE.insight.id),
+      title: asString(insight?.title ?? home?.narratorWhisper, defaultTitle),
+      body: asString(insight?.body ?? home?.insightBody, defaultBody),
+      ctaLabel: asString(insight?.ctaLabel, "Enter Life Map"),
+      ctaRoute: asString(insight?.ctaRoute, "/lifemap"),
+      confidence: clamp(insight?.confidence ?? strongestNode?.emotionalWeight, DEMO_URAI_HOME_STATE.insight.confidence ?? 0.7),
     },
     nodes: mergedNodes,
     source: "firestore",
