@@ -46,7 +46,7 @@ const sceneLayers = (state: HomeVisualState): UraiVisualLayer[] => [
   { id: `${state}-horizon`, kind: "image", slot: "ground", src: `${URAI_ASSET_ROOT}/ground/${state}-horizon-1440x3120.png`, fallbackClass: "horizon-glow", zIndex: 4, opacity: 0.9, blendMode: "screen" },
   { id: `${state}-silhouette`, kind: "image", slot: "silhouette", src: `${URAI_ASSET_ROOT}/silhouette/${state}-body-1440x3120.png`, fallbackClass: "procedural-silhouette", zIndex: 20, opacity: 0.76 },
   { id: `${state}-aura`, kind: "image", slot: "aura", src: `${URAI_ASSET_ROOT}/aura/${state}-aura-1440x3120.png`, fallbackClass: "aura-field", zIndex: 23, opacity: 0.88, blendMode: "screen" },
-  { id: `${state}-orb", kind: "image", slot: "orb", src: `${URAI_ASSET_ROOT}/orb/${state}-orb-1024.png`, fallbackClass: "procedural-orb", zIndex: 25, opacity: 1 },
+  { id: `${state}-orb`, kind: "image", slot: "orb", src: `${URAI_ASSET_ROOT}/orb/${state}-orb-1024.png`, fallbackClass: "procedural-orb", zIndex: 25, opacity: 1 },
 ];
 
 export const URAI_HOME_VISUAL_SCENES: Record<HomeVisualState, UraiVisualScene> = {
