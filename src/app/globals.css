@@ -20,36 +20,11 @@ body {
 }
 
 .home-webgl-sky {
-  opacity: 0.72;
+  opacity: 0.58;
 }
 
 .webgl-life-map-field {
-  opacity: 0.92;
-}
-
-.lifemap-space::before,
-.lifemap-space::after {
-  content: "";
-  position: absolute;
-  inset: 8% 10% 18%;
-  pointer-events: none;
-  border-radius: 999px;
-  z-index: 0;
-}
-
-.lifemap-space::before {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 0 60px rgba(125, 211, 252, 0.12),
-    inset 0 0 80px rgba(196, 181, 253, 0.08);
-  transform: perspective(900px) rotateX(62deg) scale(0.92);
-}
-
-.lifemap-space::after {
-  inset: 16% 18% 26%;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  transform: perspective(900px) rotateX(62deg) scale(1.18);
-  animation: uraiDepthRing 18s linear infinite;
+  opacity: 0.7;
 }
 
 .starfield,
@@ -64,12 +39,6 @@ body {
 
 .avatar-heart {
   animation: uraiAvatarHeartPulse 4.8s ease-in-out infinite !important;
-}
-
-@keyframes uraiDepthRing {
-  to {
-    transform: perspective(900px) rotateX(62deg) scale(1.18) rotateZ(360deg);
-  }
 }
 
 @keyframes uraiOrbCorePulse {
@@ -95,7 +64,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lifemap-space::after,
   .companion-orb .orb-core,
   .avatar-heart {
     animation: none !important;
