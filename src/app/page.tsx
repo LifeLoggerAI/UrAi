@@ -1,7 +1,7 @@
-import HomeScene from "@/components/HomeScene";
+import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
 
 export default function Page() {
-  return <HomeScene />;
+  return <UraiResolvedHomeScene />;
 }
 
 export const metadata = {
