@@ -1,9 +1,9 @@
-import HomeScene from "@/components/HomeScene";
+import UraiProductionEntry from "@/components/urai-production/UraiProductionEntry";
 
 export const metadata = {
-  description: "URAI companion shell with WebGL sky, narrator, aura, early access, and Life Map preview.",
+  description: "URAI cinematic companion shell with Ascent, Memory Stars, Symbolic Life Map, Replay, narrator, and Aura Field.",
 };
 
 export default function HomePage() {
-  return <HomeScene />;
+  return <UraiProductionEntry entry="home" />;
 }
