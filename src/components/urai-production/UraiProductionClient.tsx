@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { UraiCinematicData } from "./types";
 import { cameraPhases } from "./camera-machine";
@@ -10,6 +10,7 @@ import { useUraiCinematicController } from "./use-urai-cinematic-controller";
 
 export default function UraiProductionClient({ entry, data }: { entry: "home" | "lifeMap" | "replay"; data: UraiCinematicData }) {
   const reduceMotion = useReducedMotion();
+  const directReplayStartedRef = useRef(false);
   const initialPhase = entry === "home" ? "idle" : "lifeMap";
   const cinematic = useUraiCinematicController(initialPhase);
   const replay = useReplayTimeline({ beats: data.replayBeats, isPlaying: cinematic.phase === "replaying", initialProgressMs: data.replayEra.progressMs ?? 0, onComplete: cinematic.exitReplay });
@@ -26,7 +27,9 @@ export default function UraiProductionClient({ entry, data }: { entry: "home" | 
 
   useEffect(() => {
     if (entry !== "replay") return undefined;
+    if (directReplayStartedRef.current) return undefined;
     if (cinematic.phase !== "lifeMap") return undefined;
+    directReplayStartedRef.current = true;
     const timer = window.setTimeout(() => cinematic.beginReplay(data.replayEra), 140);
     return () => window.clearTimeout(timer);
   }, [cinematic, data.replayEra, entry]);
