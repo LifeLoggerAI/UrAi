@@ -246,16 +246,16 @@ const seed = {
           recovery: { score: 74, direction: "rising", bloomReady: true },
           stress: { shadowLoad: 0.18, cognitiveLoad: 0.31, thresholdRisk: 0.12 },
           forecast: {
-            label: "6 live nodes shaping the field",
-            message: "Recovery is rising while the Mirror Pattern and Launch Edge stay active in the map."
+            label: "6 memory signals shaping the field",
+            message: "URAI is turning today's mood, recovery, and memory signals into your private Life Map."
           },
           social: { energy: "balanced" },
-          companion: { state: "reflecting", message: "Mirror Pattern is active." },
+          companion: { state: "reflecting", message: "Your patterns are becoming visible." },
           visual: { state: "recovery", auraColor: "#7ee7ff", auraSecondaryColor: "#fbbf24" },
           insight: {
-            id: "home-mirror-pattern",
-            title: "Mirror Pattern is active.",
-            body: "The home field is now reading seeded Life Map nodes instead of placeholder copy.",
+            id: "home-visible-patterns",
+            title: "Your patterns are becoming visible.",
+            body: "The home field is reading Life Map nodes, recovery state, companion state, and mood weather as one live emotional surface.",
             ctaLabel: "Enter Life Map",
             ctaRoute: "/lifemap",
             confidence: 0.9
@@ -264,8 +264,8 @@ const seed = {
       },
       moodForecasts: {
         current: {
-          summary: "6 live nodes shaping the field",
-          message: "Recovery is rising while the Mirror Pattern and Launch Edge stay active in the map.",
+          summary: "6 memory signals shaping the field",
+          message: "URAI is turning today's mood, recovery, and memory signals into your private Life Map.",
           rhythmState: "focused",
           confidence: 0.9
         }
@@ -273,7 +273,7 @@ const seed = {
       companionState: {
         current: {
           mode: "reflecting",
-          narratorWhisper: "Mirror Pattern is active.",
+          narratorWhisper: "Your patterns are becoming visible.",
           trustLevel: 0.74
         }
       },

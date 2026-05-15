@@ -45,6 +45,22 @@ const NODE_TYPE_BY_EMOTION: Record<MemoryStar['emotion'], LifeMapNodeType> = {
   focus: 'becoming',
 };
 
+const HUMAN_NODE_LABEL: Record<LifeMapNodeType, string> = {
+  becoming: 'Growth signal',
+  threshold: 'Threshold signal',
+  recovery: 'Recovery bloom',
+  dream: 'Dream signal',
+  mirror: 'Mirror signal',
+  relationship: 'Relationship signal',
+  habit: 'Habit signal',
+  voice: 'Voice signal',
+  location: 'Place signal',
+  ritual: 'Ritual signal',
+  warning: 'Pressure signal',
+  breakthrough: 'Breakthrough signal',
+  legacy: 'Legacy signal',
+};
+
 const FALLBACK_STARS: MemoryStar[] = [
   { id: 'star-1', title: 'First Signal', x: 37, y: 40, size: 12, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.62, recency: 0.78, unresolvedWeight: 0.35, lastActivatedAt: null, narratorLine: 'This was one of the first signals that your rhythm was changing.', connectedTo: ['star-2', 'star-4'] },
   { id: 'star-2', title: 'Threshold Pulse', x: 49, y: 31, size: 14, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.92, recency: 0.72, unresolvedWeight: 0.82, lastActivatedAt: null, narratorLine: 'This moment marks a threshold where the old pattern started breaking.', connectedTo: ['star-1', 'star-3', 'star-8'] },
@@ -74,6 +90,25 @@ function hueFor(star: MemoryStar) {
 
 function depthFor(star: MemoryStar) {
   return Math.round(star.intensity * 105 + star.recency * 60 - star.unresolvedWeight * 32);
+}
+
+function depthLabel(zoomLevel: number) {
+  if (zoomLevel < 1) return 'Whole life';
+  if (zoomLevel < 1.55) return 'Wide field';
+  if (zoomLevel < 2.45) return 'Near memory';
+  return 'Inside signal';
+}
+
+function whyTextFor(star: MemoryStar) {
+  const nodeType = HUMAN_NODE_LABEL[NODE_TYPE_BY_EMOTION[star.emotion]];
+  const confidence = Math.round(clamp(star.intensity * 0.58 + star.recency * 0.26 + (1 - star.unresolvedWeight) * 0.16, 0, 1) * 100);
+  return {
+    nodeType,
+    confidence,
+    reason: `${nodeType} appeared because emotional tone, recency, connected memories, and unresolved weight clustered around this point.`,
+    source: 'Generated from: emotional tone · recency · linked memory nodes · recovery/pressure weighting',
+    safety: 'Reflective AI pattern, not a diagnosis. You control what gets saved, replayed, or turned into a ritual.',
+  };
 }
 
 function buildThread(star: MemoryStar, starById: Map<string, MemoryStar>): LifeMapThread {
@@ -113,7 +148,7 @@ function buildReplay(star: MemoryStar): MemoryReplay {
     narratorScript: `${star.narratorLine} The map is showing this because its signal is bright enough to become part of the larger story.`,
     emotionalArc: [star.emotion, star.intensity > 0.78 ? 'high-intensity' : 'soft-signal'],
     sourceSignals: ['emotional tone', 'recency', 'connected memories', 'unresolved weight'],
-    suggestedRitual: star.emotion === 'threshold' ? 'Take a grounding breath and name the pressure without solving it yet.' : 'Let the memory play once without forcing a conclusion.',
+    suggestedRitual: star.emotion === 'threshold' ? 'Grounding. Slower pacing. No pressure to act.' : 'Let the memory play once without forcing a conclusion.',
     replayScenes: [
       { id: `${star.id}-aura`, order: 1, visualMode: 'aura', caption: star.title, ttsLine: star.narratorLine, durationMs: 4200, animationCue: 'bloom-orb-breathe' },
       { id: `${star.id}-thread`, order: 2, visualMode: 'constellation', caption: 'Thread revealed', ttsLine: 'Related signals begin to connect around this point.', durationMs: 3600, animationCue: 'thread-glow' },
@@ -151,7 +186,8 @@ export default function LifeMapScene() {
   const [activeChapterId, setActiveChapterId] = useState<ChapterId | null>(null);
   const [showThreads, setShowThreads] = useState(false);
   const [replayOpen, setReplayOpen] = useState(false);
-  const [message, setMessage] = useState('Wheel inward to enter the memory field. Click a bright memory when it feels alive.');
+  const [whyOpen, setWhyOpen] = useState(false);
+  const [message, setMessage] = useState('A threshold cluster is active. Click the brightest memory to see why.');
   const [interactionMode, setInteractionMode] = useState<LifeMapInteractionMode>('overview');
   const dragRef = useRef({ active: false, x: 0, y: 0 });
 
@@ -163,6 +199,7 @@ export default function LifeMapScene() {
   const activeReplay = useMemo(() => (activeStar ? buildReplay(activeStar) : null), [activeStar]);
   const mirrorInsight = useMemo(() => (activeStar?.emotion === 'mirror' ? buildMirrorInsight(activeStar) : null), [activeStar]);
   const thresholdNode = useMemo(() => (activeStar && ['threshold', 'grief', 'shadow'].includes(activeStar.emotion) ? buildThresholdNode(activeStar) : null), [activeStar]);
+  const whyDetails = useMemo(() => (activeStar ? whyTextFor(activeStar) : null), [activeStar]);
   const companionPrompt = useMemo(() => buildCompanionPrompt(thresholdNode ? 'warning' : mirrorInsight ? 'reflecting' : replayOpen ? 'memory_replay' : activeStar ? 'explaining' : showThreads ? 'guiding' : 'idle', message, activeStar?.id), [activeStar, message, mirrorInsight, replayOpen, showThreads, thresholdNode]);
   const interaction: LifeMapInteraction = { mode: interactionMode, zoomLevel: camera.zoom, selectedNodeId: activeStarId, selectedThreadId: activeThread?.id ?? null, activeCategoryId: activeChapterId, showThreads, cameraFocus: { x: camera.x, y: camera.y, z: camera.zoom } };
 
@@ -182,8 +219,9 @@ export default function LifeMapScene() {
     setActiveChapterId(star.chapterId);
     setShowThreads(true);
     setReplayOpen(false);
+    setWhyOpen(false);
     setInteractionMode(star.emotion === 'mirror' ? 'mirror_mode' : 'node_selected');
-    setMessage(star.emotion === 'threshold' ? 'Slow down. This threshold memory is here to be named gently, not solved all at once.' : star.narratorLine);
+    setMessage(star.emotion === 'threshold' ? 'I found a threshold cluster. We can look at why it is glowing without rushing to solve it.' : star.narratorLine);
     setClampedCamera({ x: star.x, y: star.y, zoom: 1.72 });
     dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
     dispatchTimelineSyncEvent({ phase: 'focus' as LifeMapPhase, activeStarId: star.id, activeChapterId: star.chapterId });
@@ -194,6 +232,7 @@ export default function LifeMapScene() {
     setActiveChapterId(null);
     setShowThreads(false);
     setReplayOpen(false);
+    setWhyOpen(false);
     setInteractionMode('overview');
     setMessage('The map returned to its full shape.');
     setClampedCamera(INITIAL_CAMERA);
@@ -251,7 +290,7 @@ export default function LifeMapScene() {
     const timer = window.setInterval(() => {
       if (activeStarId) return;
       const glowing = visibleStars[Math.floor(Math.random() * visibleStars.length)];
-      if (glowing) setMessage(`${glowing.title} is beginning to glow.`);
+      if (glowing) setMessage(`${glowing.title} is beginning to glow. Tap it to see why.`);
     }, 9000);
     return () => window.clearInterval(timer);
   }, [activeStarId, visibleStars]);
@@ -272,7 +311,7 @@ export default function LifeMapScene() {
 
       <header className="hud">
         <p>URAI Life Map</p>
-        <h1>{activeStar ? activeStar.title : 'Immersive memory field'}</h1>
+        <h1>{activeStar ? activeStar.title : 'Private symbolic memory field'}</h1>
         <span>{activeStar ? 'Memory bloom opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
       </header>
 
@@ -309,7 +348,7 @@ export default function LifeMapScene() {
         {activeThread && <em>{activeThread.narratorSummary}</em>}
       </aside>
 
-      {activeStar && activeReplay && (
+      {activeStar && activeReplay && whyDetails && (
         <section className="bloom-scene" style={bloomStyle} aria-live="polite">
           <div className="bloom-aura" aria-hidden>
             <span className="bloom-ring bloom-ring-one" />
@@ -321,17 +360,18 @@ export default function LifeMapScene() {
             <h2>{activeStar.title}</h2>
             <span>{activeReplay.summary}</span>
             <dl className="memory-meta">
-              <div><dt>Type</dt><dd>{NODE_TYPE_BY_EMOTION[activeStar.emotion]}</dd></div>
-              <div><dt>Tone</dt><dd>{activeStar.emotion}</dd></div>
-              <div><dt>Why now</dt><dd>{activeReplay.sourceSignals.join(' · ')}</dd></div>
+              <div><dt>Signal</dt><dd>{whyDetails.nodeType}</dd></div>
+              <div><dt>Confidence</dt><dd>{whyDetails.confidence}%</dd></div>
+              <div><dt>Why now</dt><dd>{whyDetails.reason}</dd></div>
             </dl>
-            {thresholdNode && <div className="safety-card"><strong>Threshold mode</strong><span>Severity: {thresholdNode.severity}. Recommended response: {thresholdNode.recommendedResponse}. Use softer pacing and grounding copy.</span></div>}
+            {whyOpen && <div className="why-card"><strong>Why this appeared</strong><span>{whyDetails.source}</span><small>{whyDetails.safety}</small></div>}
+            {thresholdNode && <div className="safety-card"><strong>Recommended response</strong><span>{activeReplay.suggestedRitual} Severity: {thresholdNode.severity}. Use softer pacing and grounding copy.</span></div>}
             {mirrorInsight && <div className="mirror-card"><strong>{mirrorInsight.title}</strong><span>{mirrorInsight.narratorReflection}</span></div>}
             {replayOpen && <ol className="replay-list">{activeReplay.replayScenes.map((scene) => <li key={scene.id}><strong>{scene.caption}</strong><span>{scene.ttsLine}</span></li>)}</ol>}
-            <div>
-              <button type="button" onClick={() => { setReplayOpen(true); setInteractionMode('replay'); setMessage('Replaying the emotional thread.'); }}>Replay</button>
+            <div className="bloom-actions">
+              <button type="button" onClick={() => { setReplayOpen(true); setWhyOpen(false); setInteractionMode('replay'); setMessage('Replaying the emotional thread.'); }}>Replay</button>
               <button type="button" onClick={() => setMessage(activeReplay.suggestedRitual ?? 'A ritual can be created from this memory.')}>Create ritual</button>
-              <button type="button" onClick={() => setMessage(activeReplay.narratorScript)}>Why am I seeing this?</button>
+              <button type="button" onClick={() => { setWhyOpen((value) => !value); setMessage(activeReplay.narratorScript); }}>Why this appeared</button>
               <button type="button" onClick={resetView}>Close</button>
             </div>
           </article>
@@ -339,11 +379,11 @@ export default function LifeMapScene() {
       )}
 
       <div className="controls">
-        <button type="button" onClick={() => { setInteractionMode('entering'); zoom(-1); }}>Enter</button>
-        <button type="button" onClick={() => zoom(1)}>Pull back</button>
-        <button type="button" onClick={() => { setShowThreads((value) => !value); setInteractionMode('thread_view'); }}>{showThreads ? 'Hide threads' : 'Show threads'}</button>
-        <button type="button" onClick={resetView}>Reset</button>
-        <span>{Math.round(camera.zoom * 100)}%</span>
+        <button type="button" onClick={() => { setInteractionMode('entering'); zoom(-1); }}>Open memory</button>
+        <button type="button" onClick={() => zoom(1)}>Zoom out</button>
+        <button type="button" onClick={() => { setShowThreads((value) => !value); setInteractionMode('thread_view'); }}>{showThreads ? 'Hide threads' : 'Reveal threads'}</button>
+        <button type="button" onClick={resetView}>Recenter</button>
+        <span>Depth: {depthLabel(camera.zoom)}</span>
       </div>
 
       <nav className="chapters" aria-label="Life Map chapters">
@@ -351,6 +391,7 @@ export default function LifeMapScene() {
           <button key={chapter.id} type="button" className={activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
             setActiveStarId(null);
             setReplayOpen(false);
+            setWhyOpen(false);
             setActiveChapterId(chapter.id);
             setShowThreads(false);
             setInteractionMode('cluster');
@@ -392,11 +433,14 @@ export default function LifeMapScene() {
         .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 calc(28px * var(--node-glow)) hsl(var(--hue) 86% 68% / .48), 0 0 calc(80px * var(--node-glow)) hsl(var(--hue) 92% 64% / .2); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
         .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; animation: pulse 4.8s ease-in-out infinite; }
         .node:hover, .node.active { opacity: 1; filter: brightness(1.18); transform: translate3d(-50%, -50%, calc(var(--depth) + 30px)) scale(calc(var(--scale) * 1.08)); }
-        .node-threshold::after, .node-warning::after { content: ''; position: absolute; inset: -8px; border-radius: inherit; border: 1px solid rgba(216,180,254,.24); }
+        .node-threshold::after, .node-warning::after { content: ''; position: absolute; inset: -9px; border-radius: inherit; border: 1px solid rgba(216,180,254,.32); box-shadow: 0 0 18px rgba(216,180,254,.16); }
+        .node-recovery::after { content: ''; position: absolute; inset: -12px; border-radius: inherit; border: 1px solid rgba(94,234,212,.18); box-shadow: 0 0 18px rgba(94,234,212,.2); }
+        .node-dream::after { content: ''; position: absolute; inset: -16px; border-radius: inherit; background: radial-gradient(circle, rgba(167,139,250,.16), transparent 68%); filter: blur(5px); }
+        .node-mirror::after { content: ''; position: absolute; inset: -10px; border-radius: inherit; border: 1px solid rgba(255,255,255,.22); box-shadow: 0 0 22px rgba(255,255,255,.22); }
         .node.dim { opacity: .28; }
         .node-label { display: none; position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
         .node:hover .node-label { display: block; opacity: .9; }
-        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(260px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(4,7,18,.34); backdrop-filter: blur(10px); padding: .68rem .75rem; color: rgba(255,255,255,.68); box-shadow: 0 20px 54px rgba(0,0,0,.18); transition: opacity .35s ease; }
+        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(292px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(4,7,18,.34); backdrop-filter: blur(10px); padding: .68rem .75rem; color: rgba(255,255,255,.68); box-shadow: 0 20px 54px rgba(0,0,0,.18); transition: opacity .35s ease; }
         .companion-warning { border-color: rgba(216,180,254,.28); background: rgba(23, 12, 34, .42); }
         .companion strong, .companion em { display: block; margin-bottom: .3rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.38); font-style: normal; }
         .companion em { margin-top: .55rem; margin-bottom: 0; line-height: 1.45; text-transform: none; letter-spacing: 0; color: rgba(255,255,255,.48); }
@@ -405,38 +449,40 @@ export default function LifeMapScene() {
         .life-map-shell:hover .controls, .life-map-shell:hover .chapters, .controls:focus-within, .chapters:focus-within { opacity: .92; }
         .controls { left: 50%; bottom: 6.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .36rem; }
         .controls button, .controls span, .bloom-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
+        .controls span { color: rgba(226,242,255,.68); }
         .chapters { left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(880px, calc(100vw - 2rem)); border-radius: 28px; padding: .45rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
         .chapters button { border: 0; border-radius: 22px; background: transparent; color: rgba(255,255,255,.62); padding: .55rem .65rem; text-align: left; transition: background .2s ease, color .2s ease, transform .2s ease; }
         .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; transform: translateY(-1px); }
         .chapters strong { display: block; font-size: .78rem; }
         .chapters span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
-        .has-active .field { opacity: .14; filter: blur(1.6px) saturate(.7); transform: scale(.985); pointer-events: none; }
+        .has-active .field { opacity: .18; filter: blur(1.1px) saturate(.78); transform: scale(.985); pointer-events: none; }
         .has-active .controls, .has-active .chapters { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(.75rem); }
         .has-active .companion { opacity: 0; pointer-events: none; }
         .has-active .hud { opacity: 0; transform: translateX(-50%) translateY(-.45rem); }
         .bloom-scene { position: absolute; z-index: 12; inset: 0; display: grid; place-items: center; padding: 4rem 1rem 2rem; background: radial-gradient(circle at 50% 48%, hsl(var(--bloom-hue) 90% 60% / .2), rgba(1,2,10,.18) 34%, rgba(0,0,0,.74) 100%); animation: bloomIn .55s cubic-bezier(.19,1,.22,1) both; }
-        .bloom-aura { position: relative; width: min(48vw, 560px); height: min(48vw, 560px); min-width: 310px; min-height: 310px; display: grid; place-items: center; transform: translateY(-2.5rem); }
-        .bloom-orb { width: clamp(108px, 15vw, 172px); height: clamp(108px, 15vw, 172px); border-radius: 999px; background: radial-gradient(circle at 35% 30%, #fff 0%, #f5fbff 18%, hsl(var(--bloom-hue) 90% 77%) 52%, hsl(var(--bloom-hue) 85% 48% / .2) 100%); box-shadow: 0 0 28px rgba(255,255,255,.9), 0 0 96px hsl(var(--bloom-hue) 90% 70% / .55), 0 0 220px hsl(var(--bloom-hue) 90% 60% / .25); animation: breathe 4.6s ease-in-out infinite; }
+        .bloom-aura { position: relative; width: min(48vw, 560px); height: min(48vw, 560px); min-width: 310px; min-height: 310px; display: grid; place-items: center; transform: translateY(-3rem); }
+        .bloom-orb { width: clamp(112px, 15vw, 176px); height: clamp(112px, 15vw, 176px); border-radius: 999px; background: radial-gradient(circle at 35% 30%, #fff 0%, #f5fbff 18%, hsl(var(--bloom-hue) 90% 77%) 52%, hsl(var(--bloom-hue) 85% 48% / .2) 100%); box-shadow: 0 0 28px rgba(255,255,255,.9), 0 0 96px hsl(var(--bloom-hue) 90% 70% / .55), 0 0 220px hsl(var(--bloom-hue) 90% 60% / .25); animation: breathe 4.6s ease-in-out infinite; }
         .bloom-ring { position: absolute; inset: 17%; border-radius: 999px; border: 1px solid hsl(var(--bloom-hue) 90% 80% / .18); box-shadow: inset 0 0 40px hsl(var(--bloom-hue) 90% 70% / .08); }
         .bloom-ring-one { transform: rotate(-18deg) scaleX(1.42); }
         .bloom-ring-two { transform: rotate(24deg) scaleX(1.66); opacity: .58; }
-        .bloom-card { position: absolute; left: 50%; bottom: 3.2rem; transform: translateX(-50%); width: min(680px, calc(100vw - 2rem)); max-height: 48vh; overflow: auto; border: 1px solid hsl(var(--bloom-hue) 80% 78% / .22); border-radius: 32px; background: linear-gradient(180deg, rgba(10,14,34,.72), rgba(5,8,20,.52)); backdrop-filter: blur(18px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.35rem; text-align: center; }
-        .bloom-card p { margin: 0; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--bloom-hue) 90% 82% / .58); }
-        .bloom-card h2 { margin: .35rem 0 .5rem; font-size: clamp(1.9rem, 4.2vw, 3.8rem); line-height: 1; letter-spacing: -.04em; }
-        .bloom-card span { display: block; max-width: 46rem; margin: 0 auto; color: rgba(255,255,255,.82); line-height: 1.6; }
-        .bloom-card div:last-child { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
-        .memory-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 0; text-align: left; }
-        .memory-meta div, .safety-card, .mirror-card, .replay-list li { border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(255,255,255,.04); padding: .65rem; }
+        .bloom-card { position: absolute; left: 50%; bottom: 2.4rem; transform: translateX(-50%); width: min(760px, calc(100vw - 2rem)); border: 1px solid hsl(var(--bloom-hue) 80% 78% / .22); border-radius: 32px; background: linear-gradient(180deg, rgba(10,14,34,.78), rgba(5,8,20,.58)); backdrop-filter: blur(20px); box-shadow: 0 30px 90px rgba(0,0,0,.38); padding: 1.25rem; text-align: center; }
+        .bloom-card p { margin: 0; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--bloom-hue) 90% 82% / .62); }
+        .bloom-card h2 { margin: .32rem 0 .45rem; font-size: clamp(1.65rem, 3.6vw, 3.2rem); line-height: 1; letter-spacing: -.04em; }
+        .bloom-card span { display: block; max-width: 46rem; margin: 0 auto; color: rgba(255,255,255,.82); line-height: 1.55; }
+        .bloom-actions { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+        .memory-meta { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: .5rem; margin: 1rem 0 0; text-align: left; }
+        .memory-meta div, .safety-card, .mirror-card, .why-card, .replay-list li { border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(255,255,255,.04); padding: .65rem; }
         .memory-meta dt { font-size: .58rem; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.38); }
         .memory-meta dd { margin: .25rem 0 0; font-size: .72rem; color: rgba(255,255,255,.76); }
-        .safety-card, .mirror-card { margin-top: .7rem; text-align: left; }
-        .safety-card strong, .mirror-card strong, .replay-list strong { display: block; margin-bottom: .25rem; color: rgba(255,255,255,.86); }
-        .replay-list { display: grid; gap: .5rem; margin: .8rem 0 0; padding: 0; list-style: none; text-align: left; }
+        .safety-card, .mirror-card, .why-card { margin-top: .7rem; text-align: left; }
+        .safety-card strong, .mirror-card strong, .why-card strong, .replay-list strong { display: block; margin-bottom: .25rem; color: rgba(255,255,255,.86); }
+        .why-card small { display: block; margin-top: .45rem; color: rgba(226,242,255,.52); line-height: 1.45; }
+        .replay-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: .8rem 0 0; padding: 0; list-style: none; text-align: left; }
         @keyframes bloomIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
         @keyframes breathe { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.07); filter: brightness(1.12); } }
         @keyframes pulse { 0%, 100% { opacity: .32; transform: scale(.96); } 50% { opacity: .78; transform: scale(1.05); } }
         @keyframes drift { from { transform: translate3d(-1%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
-        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-aura { transform: translateY(-5rem); } .bloom-card { bottom: 2rem; max-height: 52vh; } .memory-meta { grid-template-columns: 1fr; } .has-active .companion { opacity: 0; pointer-events: none; } }
+        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-aura { transform: translateY(-5rem); } .bloom-card { bottom: 1rem; max-height: none; width: calc(100vw - 1rem); padding: 1rem; } .memory-meta { grid-template-columns: 1fr; } .replay-list { grid-template-columns: 1fr; } .has-active .companion { opacity: 0; pointer-events: none; } }
       `}</style>
     </main>
   );
