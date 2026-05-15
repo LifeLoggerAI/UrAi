@@ -3,44 +3,39 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import AncientSignalAmbientLayer from "@/components/ancient-signals/AncientSignalAmbientLayer";
-import CompanionChat from "@/components/CompanionChat";
-import ForecastCard from "@/components/ForecastCard";
-import HomePreviewPanel from "@/components/HomePreviewPanel";
 import HomeWebGLSky from "@/components/HomeWebGLSky";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
 import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
-import WaitlistForm from "@/components/WaitlistForm";
-import WeeklyReflectionCard from "@/components/WeeklyReflectionCard";
 import { adamClampDemoProfile } from "@/lib/demo-data";
 import { useAncientSignals } from "@/lib/useAncientSignals";
 
 type HomeMode = "home" | "transitioning" | "lifemap";
+type HomePanel = "forecast" | "reflection" | "whisper" | "access" | null;
 
 const TONE_COPY = {
   calm: {
-    idle: "Tap the orb to enter the demo Life Map",
-    opening: "The orb is lifting you into the Life Map...",
+    whisper: "A quiet pattern is becoming visible.",
+    opening: "The sky is opening into your Life Map...",
   },
   focused: {
-    idle: "Tap the orb to trace the demo pattern",
+    whisper: "A small signal is asking for your attention.",
     opening: "The constellation is focusing around you...",
   },
   charged: {
-    idle: "Tap the orb to see what is lighting up",
+    whisper: "Something bright is rising through the noise.",
     opening: "The active pattern is opening...",
   },
   restorative: {
-    idle: "Tap the orb to enter quiet memory space",
-    opening: "Entering gently through the sky...",
+    whisper: "Recovery is returning in small, visible ways.",
+    opening: "Entering gently through the emotional sky...",
   },
 };
 
 export default function HomeScene() {
   const profile = adamClampDemoProfile;
-  const sampleEvent = profile.timelineEvents[0];
-  const sampleBloom = profile.memoryBlooms.find((bloom) => bloom.id === sampleEvent.bloomId) ?? profile.memoryBlooms[0];
   const { result: ancientResult, source, loading } = useAncientSignals();
   const [mode, setMode] = useState<HomeMode>("home");
+  const [activePanel, setActivePanel] = useState<HomePanel>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
   const emotionalTone = useEmotionalTone();
 
@@ -81,7 +76,7 @@ export default function HomeScene() {
         <button
           type="button"
           onClick={returnHome}
-          className="absolute left-4 top-4 z-50 rounded-full border border-white/30 bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10"
+          className="absolute left-4 top-4 z-50 rounded-full border border-white/24 bg-black/40 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur transition hover:bg-white/10"
           aria-label="Return to home scene"
         >
           Return home
@@ -92,6 +87,8 @@ export default function HomeScene() {
 
   const isTransitioning = mode === "transitioning";
   const copy = TONE_COPY[emotionalTone];
+  const forecast = profile.moodForecast;
+  const reflection = profile.weeklyReflection;
 
   return (
     <main className={`home-scene tone-${emotionalTone} ${isTransitioning ? "is-transitioning" : ""}`}>
@@ -100,37 +97,18 @@ export default function HomeScene() {
         onClick={openLifeMap}
         disabled={isTransitioning}
         className="sky-trigger"
-        aria-label="Open URAI demo Life Map from the sky"
+        aria-label="Open URAI Life Map from the emotional sky"
       >
-        <span className="sr-only">Open URAI demo Life Map</span>
+        <span className="sr-only">Open URAI Life Map</span>
       </button>
 
       <div className="sky-base" aria-hidden />
       <HomeWebGLSky />
       <AncientSignalAmbientLayer result={ancientResult} source={source} loading={loading} />
-
       <div className="emotional-wash" aria-hidden />
-      <div className="clean-horizon" aria-hidden />
-      <div className="orb-stage" aria-hidden>
-        <span className="orb-shadow" />
-        <span className="orb-pedestal" />
-      </div>
-      <div className="ascent-column" aria-hidden />
+      <div className="horizon-glow" aria-hidden />
+      <div className="aura-column" aria-hidden />
       <div className="transition-vignette" aria-hidden />
-
-      <button
-        type="button"
-        className="companion-orb"
-        onClick={openLifeMap}
-        disabled={isTransitioning}
-        aria-label="Open Life Map through the companion orb"
-      >
-        <span className="orb-core" />
-        <span className="orb-ring orb-ring-one" />
-        <span className="orb-ring orb-ring-two" />
-        <span className="orb-cta">Enter</span>
-      </button>
-
       <div className="star-tunnel" aria-hidden>
         <span className="star star-one" />
         <span className="star star-two" />
@@ -139,156 +117,176 @@ export default function HomeScene() {
         <span className="star star-five" />
       </div>
 
-      <section className="content-stage">
-        <div className="hero-copy">
-          <div className="flex flex-wrap items-center gap-3">
-            <p className="text-xs uppercase tracking-[0.45em] text-white/55">URAI Preview</p>
-            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs text-white/65">
-              Interactive Life Map · Sample data
-            </span>
-          </div>
+      <section className="world-stage" aria-label="URAI emotional home scene">
+        <header className="demo-badge">
+          <span>Public demo</span>
+          <small>sample emotional data</small>
+        </header>
 
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            Your life patterns, mapped as meaning.
-          </h1>
+        <section className="hero-world">
+          <p className="eyebrow">URAI Preview</p>
+          <h1>Your life patterns, mapped as meaning.</h1>
+          <p className="hero-whisper">{copy.whisper}</p>
+        </section>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/76 md:text-lg">
-            URAI turns passive mood, memory, behavior, and reflection signals into a private emotional constellation — helping you notice what is changing, repeating, and ready to heal.
-          </p>
+        <button
+          type="button"
+          className="companion-orb"
+          onClick={openLifeMap}
+          disabled={isTransitioning}
+          aria-label="Enter the Life Map through the companion orb"
+        >
+          <span className="orb-halo" />
+          <span className="orb-core" />
+          <span className="orb-ring orb-ring-one" />
+          <span className="orb-ring orb-ring-two" />
+          <span className="orb-label">{isTransitioning ? "Opening" : "Enter"}</span>
+        </button>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/55">
-            This public preview uses sample data. No private user data is shown.
-          </p>
+        <aside className="companion-whisper" aria-live="polite">
+          <strong>Companion</strong>
+          <span>{isTransitioning ? copy.opening : copy.whisper}</span>
+        </aside>
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={openLifeMap}
-              disabled={isTransitioning}
-              className="inline-flex min-h-11 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90 focus:outline-none focus:ring-2 focus:ring-white/60 disabled:cursor-progress disabled:opacity-70"
-            >
-              {isTransitioning ? copy.opening : "Enter Life Map"}
-            </button>
-            <Link
-              href="/u/adamclamp"
-              className="inline-flex min-h-11 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/40"
-            >
-              Explore Public Constellation
-            </Link>
-          </div>
-        </div>
+        <nav className="quiet-dock" aria-label="URAI preview controls">
+          <button type="button" className={activePanel === "forecast" ? "active" : ""} onClick={(event) => { event.stopPropagation(); setActivePanel(activePanel === "forecast" ? null : "forecast"); }}>
+            <span>Mood weather</span>
+            <strong>{forecast.state}</strong>
+          </button>
+          <button type="button" className={activePanel === "reflection" ? "active" : ""} onClick={(event) => { event.stopPropagation(); setActivePanel(activePanel === "reflection" ? null : "reflection"); }}>
+            <span>Weekly scroll</span>
+            <strong>{reflection.title}</strong>
+          </button>
+          <button type="button" className={activePanel === "whisper" ? "active" : ""} onClick={(event) => { event.stopPropagation(); setActivePanel(activePanel === "whisper" ? null : "whisper"); }}>
+            <span>Ask URAI</span>
+            <strong>What changed?</strong>
+          </button>
+          <button type="button" className={activePanel === "access" ? "active" : ""} onClick={(event) => { event.stopPropagation(); setActivePanel(activePanel === "access" ? null : "access"); }}>
+            <span>Early access</span>
+            <strong>Join quietly</strong>
+          </button>
+        </nav>
 
-        <div className="orb-instruction" aria-hidden>
-          <span>Tap the orb to enter the demo Life Map</span>
-        </div>
+        {activePanel && (
+          <aside className="floating-panel" onClick={(event) => event.stopPropagation()}>
+            {activePanel === "forecast" && (
+              <>
+                <p>Mood weather</p>
+                <h2>{forecast.state}</h2>
+                <span>{forecast.summary}</span>
+                <small>Confidence {forecast.confidence}% · {forecast.recommendation}</small>
+              </>
+            )}
+            {activePanel === "reflection" && (
+              <>
+                <p>Weekly scroll</p>
+                <h2>{reflection.title}</h2>
+                <span>{reflection.summary}</span>
+                <small>{reflection.highlights[0]}</small>
+              </>
+            )}
+            {activePanel === "whisper" && (
+              <>
+                <p>Companion whisper</p>
+                <h2>Ask what the pattern means.</h2>
+                <span>URAI answers in plain language, without turning the home scene into a dashboard.</span>
+                <div className="prompt-row"><button type="button">Explain this mood</button><button type="button">What should I protect?</button></div>
+              </>
+            )}
+            {activePanel === "access" && (
+              <>
+                <p>Early access</p>
+                <h2>Join the private demo list.</h2>
+                <span>No spam. Launch updates only. Your data remains user-controlled.</span>
+                <div className="email-row"><input type="email" placeholder="you@example.com" aria-label="Email address" /><button type="button">Request</button></div>
+              </>
+            )}
+          </aside>
+        )}
 
-        <HomePreviewPanel event={sampleEvent} bloom={sampleBloom} onOpenLifeMap={openLifeMap} />
-
-        <div className="demo-card-grid grid gap-4 pb-14 md:grid-cols-2 xl:grid-cols-4">
-          <ForecastCard forecast={profile.moodForecast} />
-          <WeeklyReflectionCard reflection={profile.weeklyReflection} />
-          <CompanionChat />
-          <WaitlistForm source="home" />
+        <div className="primary-actions">
+          <button type="button" onClick={openLifeMap} disabled={isTransitioning}>{isTransitioning ? copy.opening : "Enter Life Map"}</button>
+          <Link href="/u/adamclamp" onClick={(event) => event.stopPropagation()}>Public constellation</Link>
         </div>
       </section>
 
-      <div className="trust-strip">
-        Private by default · Explainable insights · User-controlled data · Reflective insights, not medical diagnosis
-      </div>
+      <div className="trust-strip">Private by default · Sample data shown · Reflective insights, not medical diagnosis</div>
       <div className="tone-chip" aria-hidden>{emotionalTone}</div>
-      <div className="tap-hint">{isTransitioning ? copy.opening : copy.idle}</div>
 
       <style jsx>{`
         .home-scene {
-          --tone-a: rgba(125, 211, 252, 0.12);
-          --tone-b: rgba(196, 181, 253, 0.1);
+          --tone-a: rgba(125, 211, 252, 0.14);
+          --tone-b: rgba(196, 181, 253, 0.12);
           --tone-c: rgba(255, 255, 255, 0.05);
           --tone-speed: 1;
           position: relative;
           min-height: 100dvh;
-          overflow-x: hidden;
-          overflow-y: auto;
+          overflow: hidden;
           background: #000;
           color: white;
           isolation: isolate;
+          user-select: none;
         }
 
-        .tone-focused { --tone-a: rgba(96,165,250,.14); --tone-b: rgba(45,212,191,.08); --tone-speed: .9; }
-        .tone-charged { --tone-a: rgba(251,191,36,.1); --tone-b: rgba(244,114,182,.08); --tone-speed: .8; }
-        .tone-restorative { --tone-a: rgba(167,139,250,.12); --tone-b: rgba(14,165,233,.08); --tone-speed: 1.25; }
+        .tone-focused { --tone-a: rgba(96,165,250,.16); --tone-b: rgba(45,212,191,.1); --tone-speed: .9; }
+        .tone-charged { --tone-a: rgba(251,191,36,.12); --tone-b: rgba(244,114,182,.1); --tone-speed: .8; }
+        .tone-restorative { --tone-a: rgba(167,139,250,.14); --tone-b: rgba(14,165,233,.1); --tone-speed: 1.25; }
 
         .sky-base,
         .emotional-wash,
-        .clean-horizon,
-        .orb-stage,
-        .ascent-column,
+        .horizon-glow,
+        .aura-column,
         .transition-vignette {
-          position: absolute;
+          position: fixed;
           inset: 0;
           pointer-events: none;
         }
 
         .sky-base {
           z-index: 0;
-          position: fixed;
           background:
             radial-gradient(circle at 52% 24%, rgba(68, 86, 154, 0.72), transparent 28%),
-            linear-gradient(180deg, #060913 0%, #101936 42%, #07100d 78%, #010203 100%);
+            linear-gradient(180deg, #060913 0%, #101936 48%, #07100d 82%, #010203 100%);
         }
 
         .emotional-wash {
           z-index: 3;
-          position: fixed;
           background:
-            radial-gradient(circle at 50% 36%, rgba(125, 211, 252, 0.11), transparent 18%),
-            radial-gradient(circle at 50% 58%, rgba(196, 181, 253, 0.08), transparent 22%),
-            linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(4,8,18,.16) 58%, rgba(0,0,0,.5) 100%);
+            radial-gradient(circle at 50% 42%, rgba(125, 211, 252, 0.16), transparent 21%),
+            radial-gradient(circle at 50% 58%, rgba(196, 181, 253, 0.1), transparent 26%),
+            linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(4,8,18,.14) 62%, rgba(0,0,0,.62) 100%);
           mix-blend-mode: screen;
-          opacity: .68;
+          opacity: .82;
           transition: opacity 900ms ease, transform 1200ms ease;
         }
 
-        .clean-horizon {
+        .horizon-glow {
           z-index: 7;
-          position: fixed;
           inset: auto -8% 0 -8%;
-          height: 34%;
+          height: 36%;
           background:
-            radial-gradient(ellipse at 50% 10%, rgba(126, 220, 170, 0.13), transparent 34%),
-            radial-gradient(ellipse at 50% 72%, rgba(32, 90, 58, 0.32), transparent 46%),
-            linear-gradient(180deg, rgba(0,0,0,0), rgba(7, 22, 14, 0.72) 58%, rgba(0,0,0,.88));
-          filter: blur(0.2px);
-          opacity: .82;
+            radial-gradient(ellipse at 50% 8%, rgba(126, 220, 170, 0.14), transparent 34%),
+            radial-gradient(ellipse at 50% 80%, rgba(32, 90, 58, 0.32), transparent 48%),
+            linear-gradient(180deg, rgba(0,0,0,0), rgba(7, 22, 14, 0.72) 58%, rgba(0,0,0,.9));
+          opacity: .72;
         }
 
-        .orb-stage { z-index: 9; position: fixed; }
-
-        .orb-shadow {
-          position: absolute;
-          left: 50%;
-          top: 68%;
-          width: min(40vw, 460px);
-          height: min(10vh, 105px);
-          transform: translate(-50%, -50%);
-          border-radius: 999px;
-          background: radial-gradient(ellipse at center, rgba(125, 211, 252, .2), rgba(24, 55, 68, .09) 38%, transparent 72%);
-          filter: blur(12px);
+        .aura-column {
+          z-index: 12;
+          inset: -8%;
+          background:
+            radial-gradient(ellipse at 50% 51%, rgba(255,255,255,.11), transparent 10%),
+            linear-gradient(180deg, transparent 0%, rgba(125,211,252,.055) 45%, rgba(196,181,253,.04) 70%, transparent 100%);
+          opacity: .18;
+          filter: blur(6px);
+          transition: opacity 1000ms ease, transform 1450ms cubic-bezier(.16,1,.3,1);
         }
 
-        .orb-pedestal {
-          position: absolute;
-          left: 50%;
-          top: 59%;
-          width: min(20vw, 220px);
-          height: min(22vh, 220px);
-          transform: translate(-50%, -50%);
-          border-radius: 999px;
-          background:
-            radial-gradient(circle at 50% 42%, rgba(255,255,255,.14), transparent 20%),
-            radial-gradient(circle at 50% 50%, rgba(125,211,252,.12), transparent 48%);
-          border: 1px solid rgba(255,255,255,.08);
-          filter: blur(.2px);
-          opacity: .92;
+        .transition-vignette {
+          z-index: 29;
+          opacity: 0;
+          background: radial-gradient(circle at 50% 46%, transparent 0%, rgba(5,8,22,.25) 34%, rgba(0,0,0,.94) 100%);
+          transition: opacity 1200ms ease;
         }
 
         .sky-trigger {
@@ -300,13 +298,59 @@ export default function HomeScene() {
           cursor: zoom-in;
         }
 
+        .world-stage {
+          position: relative;
+          z-index: 20;
+          min-height: 100dvh;
+          width: 100%;
+          display: grid;
+          place-items: center;
+          padding: 2rem;
+          transition: opacity 900ms ease, transform 1450ms cubic-bezier(.16,1,.3,1), filter 900ms ease;
+        }
+
+        .demo-badge {
+          position: fixed;
+          left: 50%;
+          top: 1.35rem;
+          transform: translateX(-50%);
+          z-index: 35;
+          display: inline-flex;
+          align-items: center;
+          gap: .6rem;
+          border: 1px solid rgba(255,255,255,.12);
+          background: rgba(0,0,0,.22);
+          border-radius: 999px;
+          padding: .42rem .8rem;
+          color: rgba(255,255,255,.72);
+          backdrop-filter: blur(10px);
+          pointer-events: none;
+        }
+        .demo-badge span { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; }
+        .demo-badge small { font-size: .72rem; color: rgba(255,255,255,.45); }
+
+        .hero-world {
+          position: fixed;
+          top: 13%;
+          left: 50%;
+          z-index: 28;
+          width: min(720px, calc(100vw - 2rem));
+          transform: translateX(-50%);
+          text-align: center;
+          pointer-events: none;
+          text-shadow: 0 2px 24px rgba(0,0,0,.7);
+        }
+        .eyebrow { margin: 0 0 .8rem; font-size: .68rem; letter-spacing: .44em; text-transform: uppercase; color: rgba(255,255,255,.42); }
+        .hero-world h1 { margin: 0 auto; max-width: 760px; font-size: clamp(2.4rem, 6vw, 5.8rem); line-height: .95; letter-spacing: -.06em; font-weight: 680; }
+        .hero-whisper { margin: 1rem auto 0; max-width: 32rem; font-size: clamp(1rem, 1.6vw, 1.22rem); line-height: 1.55; color: rgba(255,255,255,.66); }
+
         .companion-orb {
           position: fixed;
           left: 50%;
-          top: 53%;
-          z-index: 23;
-          width: clamp(112px, 11vw, 150px);
-          height: clamp(112px, 11vw, 150px);
+          top: 52%;
+          z-index: 26;
+          width: clamp(178px, 18vw, 270px);
+          height: clamp(178px, 18vw, 270px);
           transform: translate(-50%, -50%);
           border: 0;
           border-radius: 999px;
@@ -314,54 +358,149 @@ export default function HomeScene() {
           cursor: zoom-in;
           transition: transform 1450ms cubic-bezier(.16,1,.3,1), opacity 800ms ease, filter 800ms ease;
         }
-
-        .companion-orb:focus-visible {
-          outline: 2px solid rgba(255,255,255,.85);
-          outline-offset: 8px;
-        }
-
+        .companion-orb:focus-visible { outline: 2px solid rgba(255,255,255,.85); outline-offset: 10px; }
+        .orb-halo,
         .orb-core,
-        .orb-ring {
-          position: absolute;
-          inset: 0;
-          border-radius: 999px;
+        .orb-ring { position: absolute; border-radius: 999px; }
+        .orb-halo {
+          inset: -26%;
+          background: radial-gradient(circle, rgba(255,255,255,.14), var(--tone-a) 34%, transparent 68%);
+          filter: blur(14px);
+          opacity: .92;
+          animation: orbBreathe calc(5.8s * var(--tone-speed)) ease-in-out infinite;
         }
-
         .orb-core {
-          inset: 18%;
-          background: radial-gradient(circle at 42% 34%, #fff, rgba(219,242,255,.92) 18%, rgba(125,211,252,.55) 48%, rgba(45,89,120,.2) 76%, transparent 100%);
-          box-shadow: 0 0 18px rgba(255,255,255,.72), 0 0 58px rgba(125,211,252,.36), 0 0 110px rgba(196,181,253,.14);
+          inset: 23%;
+          background: radial-gradient(circle at 38% 32%, #fff, rgba(219,242,255,.95) 18%, rgba(125,211,252,.65) 48%, rgba(45,89,120,.22) 76%, transparent 100%);
+          box-shadow: 0 0 24px rgba(255,255,255,.8), 0 0 82px rgba(125,211,252,.45), 0 0 170px rgba(196,181,253,.18);
         }
-
-        .orb-ring-one { border: 1px solid rgba(255,255,255,.24); box-shadow: inset 0 0 18px rgba(125,211,252,.08); animation: orbOrbit calc(16s * var(--tone-speed)) linear infinite; }
-        .orb-ring-two { inset: 9%; border: 1px solid rgba(196,181,253,.18); transform: rotate(32deg) scaleX(.72); animation: orbOrbit calc(20s * var(--tone-speed)) linear infinite reverse; }
-
-        .orb-cta {
+        .orb-ring-one { inset: 0; border: 1px solid rgba(255,255,255,.22); box-shadow: inset 0 0 24px rgba(125,211,252,.08); animation: orbOrbit calc(18s * var(--tone-speed)) linear infinite; }
+        .orb-ring-two { inset: 10%; border: 1px solid rgba(196,181,253,.18); transform: rotate(32deg) scaleX(.72); animation: orbOrbit calc(24s * var(--tone-speed)) linear infinite reverse; }
+        .orb-label {
           position: absolute;
           left: 50%;
-          bottom: -1.6rem;
+          bottom: -1.2rem;
           transform: translateX(-50%);
           border-radius: 999px;
-          border: 1px solid rgba(255,255,255,.16);
-          background: rgba(0,0,0,.42);
-          padding: .35rem .8rem;
+          border: 1px solid rgba(255,255,255,.14);
+          background: rgba(0,0,0,.34);
+          padding: .45rem .9rem;
           font-size: .72rem;
           font-weight: 700;
-          letter-spacing: .12em;
+          letter-spacing: .18em;
           text-transform: uppercase;
-          color: rgba(255,255,255,.84);
-          backdrop-filter: blur(8px);
+          color: rgba(255,255,255,.82);
+          backdrop-filter: blur(10px);
         }
 
-        .ascent-column {
-          z-index: 12;
+        .companion-whisper {
           position: fixed;
-          inset: -8%;
-          background: radial-gradient(ellipse at 50% 56%, rgba(255,255,255,.08), transparent 12%), linear-gradient(180deg, transparent 0%, rgba(125,211,252,.045) 48%, rgba(196,181,253,.035) 70%, transparent 100%);
-          opacity: .12;
-          filter: blur(4px);
-          transition: opacity 1000ms ease, transform 1450ms cubic-bezier(.16,1,.3,1);
+          right: 1.2rem;
+          top: 1.2rem;
+          z-index: 32;
+          width: min(280px, calc(100vw - 2.4rem));
+          border: 1px solid rgba(255,255,255,.12);
+          background: rgba(0,0,0,.24);
+          border-radius: 18px;
+          padding: .85rem;
+          backdrop-filter: blur(12px);
+          color: rgba(255,255,255,.76);
+          pointer-events: none;
         }
+        .companion-whisper strong { display: block; margin-bottom: .3rem; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+        .companion-whisper span { display: block; font-size: .86rem; line-height: 1.45; }
+
+        .quiet-dock {
+          position: fixed;
+          left: 50%;
+          bottom: 1.35rem;
+          z-index: 35;
+          width: min(860px, calc(100vw - 2rem));
+          transform: translateX(-50%);
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: .4rem;
+          border: 1px solid rgba(255,255,255,.12);
+          border-radius: 30px;
+          background: rgba(2,6,18,.34);
+          padding: .45rem;
+          backdrop-filter: blur(14px);
+          opacity: .38;
+          transition: opacity .28s ease, transform .28s ease;
+        }
+        .quiet-dock:hover, .quiet-dock:focus-within { opacity: .96; transform: translateX(-50%) translateY(-.15rem); }
+        .quiet-dock button {
+          border: 0;
+          border-radius: 22px;
+          background: transparent;
+          color: rgba(255,255,255,.58);
+          padding: .7rem .8rem;
+          text-align: left;
+          cursor: pointer;
+          transition: background .2s ease, color .2s ease;
+        }
+        .quiet-dock button:hover, .quiet-dock button.active { background: rgba(255,255,255,.08); color: white; }
+        .quiet-dock span { display: block; margin-bottom: .16rem; font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; opacity: .6; }
+        .quiet-dock strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .82rem; }
+
+        .floating-panel {
+          position: fixed;
+          left: 50%;
+          bottom: 7.2rem;
+          z-index: 38;
+          width: min(520px, calc(100vw - 2rem));
+          transform: translateX(-50%);
+          border: 1px solid rgba(255,255,255,.16);
+          border-radius: 28px;
+          background: rgba(5,9,22,.68);
+          padding: 1.05rem;
+          text-align: center;
+          box-shadow: 0 32px 90px rgba(0,0,0,.34);
+          backdrop-filter: blur(18px);
+          animation: panelIn .3s cubic-bezier(.19,1,.22,1) both;
+        }
+        .floating-panel p { margin: 0 0 .4rem; font-size: .66rem; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.45); }
+        .floating-panel h2 { margin: 0 0 .5rem; font-size: clamp(1.25rem, 2vw, 1.8rem); }
+        .floating-panel span { display: block; color: rgba(255,255,255,.76); line-height: 1.55; }
+        .floating-panel small { display: block; margin-top: .7rem; color: rgba(255,255,255,.52); line-height: 1.45; }
+        .prompt-row, .email-row { margin-top: .9rem; display: flex; justify-content: center; gap: .45rem; flex-wrap: wrap; }
+        .prompt-row button, .email-row button, .email-row input {
+          border: 1px solid rgba(255,255,255,.16);
+          border-radius: 999px;
+          background: rgba(255,255,255,.08);
+          color: white;
+          padding: .56rem .75rem;
+          font-size: .8rem;
+        }
+        .email-row input { min-width: 14rem; outline: none; }
+        .email-row input::placeholder { color: rgba(255,255,255,.4); }
+
+        .primary-actions {
+          position: fixed;
+          left: 50%;
+          top: calc(52% + min(17vw, 255px));
+          z-index: 31;
+          transform: translateX(-50%);
+          display: flex;
+          gap: .65rem;
+          align-items: center;
+          justify-content: center;
+        }
+        .primary-actions button,
+        .primary-actions a {
+          min-height: 2.7rem;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,.16);
+          padding: .75rem 1rem;
+          font-size: .88rem;
+          font-weight: 700;
+          text-decoration: none;
+          backdrop-filter: blur(10px);
+          transition: transform .2s ease, background .2s ease, opacity .2s ease;
+        }
+        .primary-actions button { background: rgba(255,255,255,.92); color: #050711; border-color: transparent; }
+        .primary-actions a { background: rgba(0,0,0,.26); color: rgba(255,255,255,.86); }
+        .primary-actions button:hover, .primary-actions a:hover { transform: translateY(-1px); }
 
         .star-tunnel {
           position: fixed;
@@ -373,7 +512,6 @@ export default function HomeScene() {
           background: radial-gradient(circle at 50% 32%, rgba(205,225,255,.32), transparent 6%), radial-gradient(circle at 42% 44%, var(--tone-b), transparent 12%), radial-gradient(circle at 58% 48%, var(--tone-a), transparent 14%);
           transition: opacity 800ms ease, transform 1450ms cubic-bezier(.16,1,.3,1);
         }
-
         .star { position: absolute; width: .32rem; height: .32rem; border-radius: 999px; background: white; box-shadow: 0 0 14px rgba(255,255,255,.65), 0 0 32px var(--tone-a); opacity: .72; }
         .star-one { left: 30%; top: 24%; }
         .star-two { left: 45%; top: 18%; width: .24rem; height: .24rem; }
@@ -381,90 +519,51 @@ export default function HomeScene() {
         .star-four { left: 66%; top: 43%; width: .22rem; height: .22rem; }
         .star-five { left: 38%; top: 52%; width: .2rem; height: .2rem; }
 
-        .transition-vignette {
+        .trust-strip,
+        .tone-chip {
           position: fixed;
-          z-index: 19;
-          opacity: 0;
-          background: radial-gradient(circle at 50% 42%, transparent 0%, rgba(5,8,22,.25) 35%, rgba(0,0,0,.92) 100%);
-          transition: opacity 1200ms ease;
-        }
-
-        .content-stage {
-          position: relative;
-          z-index: 20;
-          min-height: 100dvh;
-          width: 100%;
-          max-width: 78rem;
-          margin: 0 auto;
-          padding: 2rem 1.25rem 8rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          gap: 2rem;
-          transition: opacity 900ms ease, transform 1450ms cubic-bezier(.16,1,.3,1), filter 900ms ease;
-        }
-
-        .hero-copy { max-width: 50rem; padding-top: 2.5rem; }
-        .orb-instruction {
-          align-self: center;
-          margin-top: auto;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,.14);
-          background: rgba(0,0,0,.26);
-          padding: .55rem 1rem;
-          color: rgba(255,255,255,.74);
-          font-size: .86rem;
-          backdrop-filter: blur(8px);
-        }
-        .demo-card-grid { position: relative; z-index: 25; transition: opacity 900ms ease, transform 1450ms cubic-bezier(.16,1,.3,1); }
-
-        .tone-chip,
-        .tap-hint,
-        .trust-strip {
-          position: fixed;
-          z-index: 30;
-          border: 1px solid rgba(255,255,255,.18);
-          background: rgba(0,0,0,.34);
-          color: rgba(255,255,255,.82);
-          backdrop-filter: blur(8px);
+          z-index: 36;
+          border: 1px solid rgba(255,255,255,.12);
+          background: rgba(0,0,0,.22);
+          color: rgba(255,255,255,.58);
+          backdrop-filter: blur(10px);
           pointer-events: none;
         }
+        .trust-strip { left: 50%; bottom: 5.2rem; transform: translateX(-50%); border-radius: 999px; padding: .45rem .9rem; font-size: .72rem; white-space: nowrap; opacity: .42; }
+        .tone-chip { top: 1rem; right: 1rem; border-radius: 999px; padding: .35rem .75rem; font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; opacity: .52; }
 
-        .tone-chip { top: 1rem; right: 1rem; border-radius: 999px; padding: .35rem .75rem; font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; opacity: .62; }
-        .tap-hint { bottom: 1.5rem; left: 50%; transform: translateX(-50%); border-radius: 999px; padding: .5rem 1rem; font-size: .875rem; transition: opacity 500ms ease, transform 500ms ease; }
-        .trust-strip { left: 50%; bottom: 4.25rem; transform: translateX(-50%); border-radius: 999px; padding: .45rem .9rem; font-size: .72rem; color: rgba(255,255,255,.64); white-space: nowrap; }
-
-        .home-scene.is-transitioning .content-stage { opacity: .38; transform: translateY(2.5rem) scale(.985); filter: blur(1.5px); }
-        .home-scene.is-transitioning .demo-card-grid { opacity: .16; transform: translateY(4rem) scale(.96); }
-        .home-scene.is-transitioning .companion-orb { transform: translate(-50%, -90%) scale(1.72); opacity: 1; filter: drop-shadow(0 0 54px rgba(255,255,255,.38)); }
-        .home-scene.is-transitioning .ascent-column { opacity: .58; transform: translateY(-12%) scaleY(1.2); }
-        .home-scene.is-transitioning .emotional-wash { opacity: .9; transform: scale(1.12); }
-        .home-scene.is-transitioning .star-tunnel { opacity: .72; transform: scale(1.9) translateY(-5%); }
+        .home-scene.is-transitioning .world-stage { opacity: .36; transform: translateY(2.5rem) scale(.985); filter: blur(1.5px); }
+        .home-scene.is-transitioning .companion-orb { transform: translate(-50%, -84%) scale(1.9); opacity: 1; filter: drop-shadow(0 0 70px rgba(255,255,255,.45)); }
+        .home-scene.is-transitioning .aura-column { opacity: .64; transform: translateY(-12%) scaleY(1.2); }
+        .home-scene.is-transitioning .emotional-wash { opacity: .95; transform: scale(1.12); }
+        .home-scene.is-transitioning .star-tunnel { opacity: .8; transform: scale(2.05) translateY(-5%); }
         .home-scene.is-transitioning .transition-vignette { opacity: 1; }
-        .home-scene.is-transitioning .tap-hint { transform: translateX(-50%) translateY(-.35rem); opacity: .92; }
 
         @keyframes orbOrbit { to { transform: rotate(360deg) scaleX(.82); } }
+        @keyframes orbBreathe { 0%, 100% { transform: scale(.96); opacity: .74; } 50% { transform: scale(1.06); opacity: 1; } }
+        @keyframes panelIn { from { opacity: 0; transform: translateX(-50%) translateY(.6rem) scale(.98); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
 
         @media (max-width: 900px) {
-          .content-stage { justify-content: flex-start; padding-bottom: 8rem; }
-          .hero-copy { padding-top: 1rem; }
-          .companion-orb { position: relative; left: 50%; top: auto; margin: 1rem 0 2.25rem; width: 112px; height: 112px; }
-          .orb-pedestal { top: 44%; width: 150px; height: 150px; }
-          .clean-horizon { height: 38%; }
-          .orb-instruction { display: none; }
-          .trust-strip { left: 1rem; right: 1rem; bottom: 4rem; transform: none; white-space: normal; text-align: center; }
-          .tap-hint { left: 1rem; right: 1rem; bottom: 1rem; transform: none; text-align: center; }
-          .home-scene.is-transitioning .tap-hint { transform: translateY(-.35rem); }
+          .home-scene { overflow-y: auto; }
+          .hero-world { top: 10%; }
+          .hero-world h1 { font-size: clamp(2.2rem, 12vw, 4rem); }
+          .companion-orb { top: 48%; width: 170px; height: 170px; }
+          .primary-actions { top: calc(48% + 130px); flex-direction: column; }
+          .quiet-dock { grid-template-columns: 1fr 1fr; bottom: 1rem; max-height: 7.2rem; overflow: auto; }
+          .trust-strip { left: 1rem; right: 1rem; bottom: 8.9rem; transform: none; white-space: normal; text-align: center; }
+          .companion-whisper { right: 1rem; left: 1rem; top: auto; bottom: 11.2rem; width: auto; opacity: .88; }
+          .demo-badge { top: .8rem; }
+          .floating-panel { bottom: 11rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .emotional-wash,
           .star-tunnel,
           .transition-vignette,
-          .tap-hint,
           .companion-orb,
-          .ascent-column,
-          .orb-ring {
+          .aura-column,
+          .orb-ring,
+          .orb-halo {
             transition-duration: .01ms !important;
             animation: none !important;
           }
