@@ -18,7 +18,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     id: DEMO_OWNER_UID,
     handle: "adamclamp",
     displayName: "Adam Clamp",
-    tagline: "Building URAI as a passive emotional operating system.",
+    tagline: "Exploring URAI as a private emotional constellation.",
     currentTone: "focused",
     companionName: "URAI Companion",
     createdAt: daysAgo(21)
@@ -36,50 +36,51 @@ export const adamClampDemoProfile: UraiDemoProfile = {
     ...owned(),
     generatedAt: baseDate.toISOString(),
     rhythmState: "recovering",
-    summary: "Calm focus is rising after a heavy build cycle. The next 24 hours favor implementation over ideation.",
+    summary:
+      "Your recent rhythm suggests calm focus is returning after a heavier emotional stretch. This demo forecast is based on sample signals, not private user data.",
     confidence: 0.82,
-    nextBestAction: "Ship one visible demo loop before adding another advanced feature."
+    nextBestAction: "Protect one quiet work block today before adding another demand to the system."
   },
   weeklyReflection: {
     id: "weekly-demo-adam",
     ...owned(),
     weekOf: "2026-05-04",
-    title: "The week the blueprint became buildable",
+    title: "The week you became more readable to yourself",
     highlights: [
-      "Locked the master completion prompt into the repo.",
-      "Shifted from vision expansion to implementation spine.",
-      "Prioritized demo, schemas, narrator, and public launch route."
+      "Recovery signals rose after several high-pressure days.",
+      "Focus became steadier when the day had fewer competing inputs.",
+      "The clearest pattern was simple: protect rhythm before chasing expansion."
     ],
     narratorSummary:
-      "This week was not about adding more ideas. It was about turning the constellation into a path someone can walk."
+      "This sample reflection shows how URAI turns a week of mood, memory, and behavior signals into a story you can understand without reading raw data."
   },
   memoryBlooms: [
     {
       id: "bloom-001",
       ...owned(),
-      title: "Blueprint Locked",
-      summary: "The complete URAI master prompt moved from chat into the repo as a permanent build artifact.",
-      emotionalTone: "focused",
-      symbolicTags: ["focus", "bloom"],
-      narratorLine: "You stopped carrying the whole system in your head and gave it a foundation."
+      title: "Recovery Pattern Appeared",
+      summary: "A calmer rhythm returned after several overloaded days, creating a visible recovery bloom in the Life Map.",
+      emotionalTone: "recovering",
+      symbolicTags: ["recovery", "bloom"],
+      narratorLine: "You began returning to yourself when the noise became quieter."
     },
     {
       id: "bloom-002",
       ...owned(),
-      title: "Demo Spine Chosen",
-      summary: "The next implementation path became clear: public route, companion flow, forecast, reflection, seed data.",
-      emotionalTone: "recovering",
-      symbolicTags: ["recovery", "companion"],
-      narratorLine: "A product becomes real when a stranger can feel it in one minute."
+      title: "Focus Became Steadier",
+      summary: "The constellation shows fewer scattered signals and a stronger center of attention across the week.",
+      emotionalTone: "focused",
+      symbolicTags: ["focus", "companion"],
+      narratorLine: "A pattern becomes useful when it helps you protect what is working."
     },
     {
       id: "bloom-003",
       ...owned(),
-      title: "Launch Signal",
-      summary: "The build direction narrowed toward waitlist, demo readiness, and deployment gates.",
+      title: "Threshold Moment",
+      summary: "A transition point appeared where pressure shifted from invisible stress into a pattern that could be named.",
       emotionalTone: "threshold",
       symbolicTags: ["threshold", "ritual"],
-      narratorLine: "This is the edge where vision has to become rhythm."
+      narratorLine: "This is the edge where awareness becomes a door."
     }
   ],
   timelineEvents: [
@@ -87,30 +88,30 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-001",
       ...owned(),
       occurredAt: daysAgo(0),
-      title: "Implementation spine started",
-      detail: "Moved from architecture into repo-backed demo work.",
-      emotionalTone: "focused",
-      symbolicTags: ["focus"],
+      title: "Calm focus returned",
+      detail: "Sample signals show a steadier rhythm after several heavier days.",
+      emotionalTone: "recovering",
+      symbolicTags: ["recovery"],
       intensity: 0.92,
-      bloomId: "bloom-002"
+      bloomId: "bloom-001"
     },
     {
       id: "star-002",
       ...owned(),
       occurredAt: daysAgo(1),
-      title: "Master prompt committed",
-      detail: "URAI completion directive became a versioned repo artifact.",
-      emotionalTone: "celebratory",
-      symbolicTags: ["bloom", "ritual"],
+      title: "Attention became less scattered",
+      detail: "The demo constellation clusters around fewer competing signals.",
+      emotionalTone: "focused",
+      symbolicTags: ["focus"],
       intensity: 0.86,
-      bloomId: "bloom-001"
+      bloomId: "bloom-002"
     },
     {
       id: "star-003",
       ...owned(),
       occurredAt: daysAgo(2),
-      title: "Build path clarified",
-      detail: "Prioritized demo, schemas, seed data, narrator, and waitlist.",
+      title: "Overload markers softened",
+      detail: "Friction and pressure indicators decreased in the sample weekly pattern.",
       emotionalTone: "focused",
       symbolicTags: ["focus"],
       intensity: 0.8
@@ -119,8 +120,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-004",
       ...owned(),
       occurredAt: daysAgo(3),
-      title: "Ground system stabilized",
-      detail: "The symbolic ground layer began representing recovery and vitality tiers.",
+      title: "Recovery ground strengthened",
+      detail: "The symbolic ground layer brightened as the demo profile moved toward steadier rhythm.",
       emotionalTone: "recovering",
       symbolicTags: ["recovery"],
       intensity: 0.68
@@ -129,8 +130,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-005",
       ...owned(),
       occurredAt: daysAgo(4),
-      title: "Narrator voice refined",
-      detail: "The companion tone shifted toward gentle but execution-focused guidance.",
+      title: "Companion tone softened",
+      detail: "The narrator shifted toward gentle, practical interpretation instead of raw analysis.",
       emotionalTone: "tender",
       symbolicTags: ["companion"],
       intensity: 0.74
@@ -139,8 +140,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-006",
       ...owned(),
       occurredAt: daysAgo(5),
-      title: "Forecast became practical",
-      detail: "Mood forecasting moved from concept to a visible card users can understand.",
+      title: "Forecast became actionable",
+      detail: "The mood forecast translated the pattern into one clear next action.",
       emotionalTone: "calm",
       symbolicTags: ["focus"],
       intensity: 0.63
@@ -149,8 +150,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-007",
       ...owned(),
       occurredAt: daysAgo(6),
-      title: "Weekly reflection framed",
-      detail: "The product began translating build progress into narrative memory.",
+      title: "Weekly story formed",
+      detail: "The product began turning sample signals into a reflection someone can feel and verify.",
       emotionalTone: "social",
       symbolicTags: ["ritual"],
       intensity: 0.58
@@ -159,8 +160,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-008",
       ...owned(),
       occurredAt: daysAgo(7),
-      title: "Threshold mode surfaced",
-      detail: "URAI recognized the transition from ideation into launch pressure.",
+      title: "Threshold became visible",
+      detail: "A pressure point became easier to understand once it appeared as a named pattern.",
       emotionalTone: "threshold",
       symbolicTags: ["threshold"],
       intensity: 0.78,
@@ -170,8 +171,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-009",
       ...owned(),
       occurredAt: daysAgo(8),
-      title: "Public route imagined",
-      detail: "The demo path centered on a shareable public life constellation.",
+      title: "Social signal quieted",
+      detail: "The demo map shows how fewer social inputs can change the shape of the week.",
       emotionalTone: "focused",
       symbolicTags: ["social"],
       intensity: 0.7
@@ -181,7 +182,7 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       ...owned(),
       occurredAt: daysAgo(9),
       title: "Memory bloom language sharpened",
-      detail: "Recovery, focus, and symbolic milestones became easier to render visually.",
+      detail: "Recovery, focus, and pressure became easier to see as symbolic milestones.",
       emotionalTone: "recovering",
       symbolicTags: ["recovery", "bloom"],
       intensity: 0.66
@@ -190,8 +191,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-011",
       ...owned(),
       occurredAt: daysAgo(10),
-      title: "Launch gates defined",
-      detail: "Typecheck, build, preflight, and tier locks became the standard for done.",
+      title: "Rhythm protected attention",
+      detail: "The pattern suggests that steadier routines supported better emotional clarity.",
       emotionalTone: "focused",
       symbolicTags: ["focus"],
       intensity: 0.77
@@ -200,8 +201,8 @@ export const adamClampDemoProfile: UraiDemoProfile = {
       id: "star-012",
       ...owned(),
       occurredAt: daysAgo(11),
-      title: "Waitlist became essential",
-      detail: "The next product milestone became capturing demand before deeper feature expansion.",
+      title: "Meaning became navigable",
+      detail: "The Life Map turned scattered sample events into an emotional path someone can explore.",
       emotionalTone: "social",
       symbolicTags: ["social"],
       intensity: 0.72
