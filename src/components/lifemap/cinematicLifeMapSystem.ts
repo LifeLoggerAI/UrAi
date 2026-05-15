@@ -14,7 +14,6 @@ export type CameraPhase =
   | 'returningHome';
 
 export type SceneDepth = 'ground' | 'sky' | 'map' | 'focus' | 'replay';
-
 export type CinematicEase = [number, number, number, number];
 
 export type CameraPhaseConfig = {
@@ -45,13 +44,7 @@ export type CameraTransform = {
 };
 
 export type ReplayBeatType = 'stable' | 'strained' | 'recovery' | 'ritual' | 'threshold' | 'rebirth' | 'reflection';
-
-export type ReplayCameraTarget = {
-  x: number;
-  y: number;
-  scale: number;
-  depth: number;
-};
+export type ReplayCameraTarget = { x: number; y: number; scale: number; depth: number };
 
 export type ReplayBeat = {
   id: string;
@@ -111,15 +104,19 @@ export function phaseTransform(phase: CameraPhase): CameraTransform {
 
 export function focusTransformForStar(star: MemoryStar | null): CameraTransform {
   if (!star) return phaseTransform('lifeMap');
-  return {
-    scale: 1.16,
-    x: (50 - star.position.x) * 0.34,
-    y: (50 - star.position.y) * 0.26,
-    blur: 0.45,
-    opacity: 1,
-    durationMs: 520,
-    easing: cinematicEase.focus,
-  };
+  return { scale: 1.16, x: (50 - star.position.x) * 0.34, y: (50 - star.position.y) * 0.26, blur: 0.45, opacity: 1, durationMs: 520, easing: cinematicEase.focus };
+}
+
+function toTimestamp(value: MemoryStar['timestamp']) {
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === 'number') return new Date(value).toISOString();
+  return value ?? new Date().toISOString();
+}
+
+function timestampMs(value: MemoryStar['timestamp']) {
+  const timestamp = toTimestamp(value);
+  const ms = new Date(timestamp).getTime();
+  return Number.isFinite(ms) ? ms : 0;
 }
 
 function beatTypeFor(star: MemoryStar): ReplayBeatType {
@@ -139,22 +136,22 @@ function transitionStyleFor(beatType: ReplayBeatType): ReplayBeat['transitionSty
 
 export function buildReplayBeats(stars: MemoryStar[], eraId = 'current-era'): ReplayBeat[] {
   return stars
-    .filter((star) => star.replayEligible !== false)
-    .sort((a, b) => new Date(a.timestamp ?? 0).getTime() - new Date(b.timestamp ?? 0).getTime())
+    .filter((star) => star.isVisible)
+    .sort((a, b) => timestampMs(a.timestamp) - timestampMs(b.timestamp))
     .map((star, index) => {
       const beatType = beatTypeFor(star);
       return {
         id: `${eraId}-beat-${star.id}`,
         eraId,
-        timestamp: String(star.timestamp ?? new Date().toISOString()),
+        timestamp: toTimestamp(star.timestamp),
         starId: star.id,
         beatType,
-        cameraTarget: { x: star.position.x, y: star.position.y, scale: 1.12 + Math.min(0.32, star.importanceScore * 0.22), depth: star.position.z ?? 0 },
+        cameraTarget: { x: star.position.x, y: star.position.y, scale: 1.12 + Math.min(0.32, star.importanceScore * 0.22), depth: star.position.z },
         durationMs: 2200 + Math.round(star.importanceScore * 1200) + index * 80,
-        narratorCueId: star.narratorCueId,
+        narratorCueId: `cue-${star.id}`,
         narratorLine: star.narratorLine,
         emotionalWeatherState: star.emotionalTone,
-        auraState: star.auraColor ?? star.emotionalTone,
+        auraState: star.auraColor || star.emotionalTone,
         transitionStyle: transitionStyleFor(beatType),
         importanceScore: star.importanceScore,
       };
