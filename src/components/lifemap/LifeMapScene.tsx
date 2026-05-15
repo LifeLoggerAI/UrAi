@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type WheelEvent } from 'react';
 import WebGLLifeMapField from './WebGLLifeMapField';
 import { useMemoryStars, type MemoryStar } from './useMemoryStars';
-import { dispatchNarratorEvent, dispatchTimelineSyncEvent, type ChapterId } from './lifeMapEvents';
+import { dispatchNarratorEvent, dispatchTimelineSyncEvent, type ChapterId, type LifeMapPhase } from './lifeMapEvents';
 
 type Camera = { x: number; y: number; zoom: number };
 type FieldStyle = CSSProperties & { '--x': string; '--y': string; '--z': string };
