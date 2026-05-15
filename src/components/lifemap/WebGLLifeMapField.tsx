@@ -78,6 +78,11 @@ function createProgram(gl: WebGLRenderingContext) {
   return program;
 }
 
+function seededNoise(seed: number) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
+}
+
 function createStarData() {
   const data = new Float32Array(STAR_COUNT * FLOATS_PER_STAR);
 
@@ -85,14 +90,18 @@ function createStarData() {
     const offset = i * FLOATS_PER_STAR;
     const ring = i / STAR_COUNT;
     const angle = i * 2.399963229728653;
-    const radius = 0.12 + Math.sqrt(ring) * 0.96;
-    const wobble = (Math.random() - 0.5) * 0.16;
-    const colorShift = Math.random();
+    const radiusNoise = seededNoise(i + 17);
+    const wobbleNoise = seededNoise(i + 31) - 0.5;
+    const yNoise = seededNoise(i + 43) - 0.5;
+    const depthNoise = seededNoise(i + 59);
+    const sizeNoise = seededNoise(i + 73);
+    const colorShift = seededNoise(i + 97);
+    const radius = 0.12 + Math.sqrt(ring) * (0.9 + radiusNoise * 0.12);
 
-    data[offset] = Math.cos(angle) * radius + wobble;
-    data[offset + 1] = Math.sin(angle) * radius * 0.58 + (Math.random() - 0.5) * 0.16;
-    data[offset + 2] = -1.0 + Math.random() * 1.72;
-    data[offset + 3] = 2.0 + Math.random() * 3.2;
+    data[offset] = Math.cos(angle) * radius + wobbleNoise * 0.16;
+    data[offset + 1] = Math.sin(angle) * radius * 0.58 + yNoise * 0.16;
+    data[offset + 2] = -1.0 + depthNoise * 1.72;
+    data[offset + 3] = 2.0 + sizeNoise * 3.2;
     data[offset + 4] = 0.42 + colorShift * 0.22;
     data[offset + 5] = 0.62 + colorShift * 0.18;
     data[offset + 6] = 0.95;
