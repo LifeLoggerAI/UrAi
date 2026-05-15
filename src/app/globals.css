@@ -27,37 +27,6 @@ body {
   opacity: 0.92;
 }
 
-.life-map-shell::before,
-.life-map-shell::after {
-  content: "";
-  position: absolute;
-  inset: -18%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.life-map-shell::before {
-  background:
-    radial-gradient(circle at 22% 28%, rgba(125, 211, 252, 0.16), transparent 18%),
-    radial-gradient(circle at 76% 34%, rgba(196, 181, 253, 0.14), transparent 20%),
-    radial-gradient(ellipse at 50% 86%, rgba(15, 23, 42, 0.95), transparent 34%);
-  filter: blur(10px);
-  opacity: 0.84;
-  animation: uraiSpatialNebula 24s ease-in-out infinite alternate;
-}
-
-.life-map-shell::after {
-  inset: auto -12% -18% -12%;
-  height: 44%;
-  background:
-    radial-gradient(ellipse at 50% 10%, rgba(255, 255, 255, 0.12), transparent 18%),
-    radial-gradient(ellipse at 50% 28%, rgba(125, 211, 252, 0.14), transparent 28%),
-    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
-  opacity: 0.9;
-  transform: perspective(800px) rotateX(58deg);
-  transform-origin: center bottom;
-}
-
 .lifemap-space::before,
 .lifemap-space::after {
   content: "";
@@ -97,17 +66,6 @@ body {
   animation: uraiAvatarHeartPulse 4.8s ease-in-out infinite !important;
 }
 
-@keyframes uraiSpatialNebula {
-  from {
-    transform: translate3d(-1.5%, -0.8%, 0) scale(1);
-    opacity: 0.62;
-  }
-  to {
-    transform: translate3d(1.2%, 1.1%, 0) scale(1.08);
-    opacity: 0.92;
-  }
-}
-
 @keyframes uraiDepthRing {
   to {
     transform: perspective(900px) rotateX(62deg) scale(1.18) rotateZ(360deg);
@@ -137,7 +95,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .life-map-shell::before,
   .lifemap-space::after,
   .companion-orb .orb-core,
   .avatar-heart {
