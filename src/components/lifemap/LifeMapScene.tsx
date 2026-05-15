@@ -4,24 +4,25 @@ import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, 
 import WebGLLifeMapField from './WebGLLifeMapField';
 import { useMemoryStars, type MemoryStar } from './useMemoryStars';
 import { dispatchNarratorEvent, dispatchTimelineSyncEvent, type ChapterId, type LifeMapPhase } from './lifeMapEvents';
+import type { CompanionPrompt, LifeMapCategory, LifeMapInteraction, LifeMapInteractionMode, LifeMapNodeType, LifeMapThread, MemoryReplay, MirrorInsight, ThresholdNode } from './lifeMapTypes';
 
 type Camera = { x: number; y: number; zoom: number };
 type FieldStyle = CSSProperties & { '--x': string; '--y': string; '--z': string };
-type NodeStyle = CSSProperties & { '--depth': string; '--scale': string; '--hue': string; '--alpha': string };
+type NodeStyle = CSSProperties & { '--depth': string; '--scale': string; '--hue': string; '--alpha': string; '--node-glow': string };
 type BloomStyle = CSSProperties & { '--bloom-hue': string };
 
-type Chapter = { id: ChapterId; title: string; subtitle: string; x: number; y: number };
+type Chapter = { id: ChapterId; title: string; subtitle: string; x: number; y: number; category: LifeMapCategory };
 
 const INITIAL_CAMERA: Camera = { x: 50, y: 50, zoom: 1 };
 const MIN_ZOOM = 0.72;
 const MAX_ZOOM = 4.8;
 
 const CHAPTERS: Chapter[] = [
-  { id: 'season-of-becoming', title: 'Becoming', subtitle: 'growth', x: 38, y: 39 },
-  { id: 'threshold', title: 'Threshold', subtitle: 'crossing', x: 50, y: 31 },
-  { id: 'recovery-arc', title: 'Recovery', subtitle: 'softening', x: 62, y: 43 },
-  { id: 'purple-dream-field', title: 'Dream Field', subtitle: 'symbols', x: 41, y: 61 },
-  { id: 'mirror-of-becoming', title: 'Mirror', subtitle: 'identity', x: 64, y: 61 },
+  { id: 'season-of-becoming', title: 'Becoming', subtitle: 'growth', x: 38, y: 39, category: { id: 'season-of-becoming', label: 'Becoming', subtitle: 'growth', icon: 'seed', color: '205deg', nodeTypes: ['becoming', 'breakthrough', 'habit', 'voice'] } },
+  { id: 'threshold', title: 'Threshold', subtitle: 'crossing', x: 50, y: 31, category: { id: 'threshold', label: 'Threshold', subtitle: 'crossing', icon: 'gate', color: '285deg', nodeTypes: ['threshold', 'warning'] } },
+  { id: 'recovery-arc', title: 'Recovery', subtitle: 'softening', x: 62, y: 43, category: { id: 'recovery-arc', label: 'Recovery', subtitle: 'softening', icon: 'bloom', color: '158deg', nodeTypes: ['recovery', 'ritual', 'relationship'] } },
+  { id: 'purple-dream-field', title: 'Dream Field', subtitle: 'symbols', x: 41, y: 61, category: { id: 'purple-dream-field', label: 'Dream Field', subtitle: 'symbols', icon: 'moon', color: '248deg', nodeTypes: ['dream', 'legacy', 'location'] } },
+  { id: 'mirror-of-becoming', title: 'Mirror', subtitle: 'identity', x: 64, y: 61, category: { id: 'mirror-of-becoming', label: 'Mirror', subtitle: 'identity', icon: 'mirror', color: '42deg', nodeTypes: ['mirror', 'relationship', 'breakthrough'] } },
 ];
 
 const CHAPTER_LINES: Record<ChapterId, string> = {
@@ -30,6 +31,18 @@ const CHAPTER_LINES: Record<ChapterId, string> = {
   'recovery-arc': 'The recovery arc shows strain turning back into rhythm.',
   'purple-dream-field': 'Symbolic echoes are gathering in the dream field.',
   'mirror-of-becoming': 'The mirror shows who the pattern is helping you become.',
+};
+
+const NODE_TYPE_BY_EMOTION: Record<MemoryStar['emotion'], LifeMapNodeType> = {
+  threshold: 'threshold',
+  grief: 'threshold',
+  recovery: 'recovery',
+  shadow: 'warning',
+  mirror: 'mirror',
+  dream: 'dream',
+  calm: 'ritual',
+  joy: 'breakthrough',
+  focus: 'becoming',
 };
 
 const FALLBACK_STARS: MemoryStar[] = [
@@ -53,14 +66,81 @@ function clamp(value: number, min: number, max: number) {
 
 function hueFor(star: MemoryStar) {
   if (star.emotion === 'recovery') return '158deg';
-  if (star.emotion === 'threshold') return '285deg';
+  if (star.emotion === 'threshold' || star.emotion === 'grief' || star.emotion === 'shadow') return '285deg';
   if (star.emotion === 'dream') return '248deg';
-  if (star.emotion === 'mirror') return '42deg';
+  if (star.emotion === 'mirror' || star.emotion === 'joy') return '42deg';
   return '205deg';
 }
 
 function depthFor(star: MemoryStar) {
   return Math.round(star.intensity * 105 + star.recency * 60 - star.unresolvedWeight * 32);
+}
+
+function buildThread(star: MemoryStar, starById: Map<string, MemoryStar>): LifeMapThread {
+  const connected = star.connectedTo.filter((id) => starById.has(id));
+  const type: LifeMapThread['type'] = star.emotion === 'recovery' ? 'recovery_arc' : star.emotion === 'threshold' ? 'shadow_arc' : star.emotion === 'dream' ? 'dream_arc' : star.emotion === 'mirror' ? 'identity_arc' : 'growth_arc';
+
+  return {
+    id: `${star.id}-thread`,
+    type,
+    title: `${star.title} thread`,
+    nodeIds: [star.id, ...connected],
+    dominantEmotion: star.emotion,
+    arcStrength: clamp(star.intensity + connected.length * 0.08, 0, 1),
+    color: hueFor(star),
+    narratorSummary: connected.length ? `${star.title} is linked to ${connected.length} memory point${connected.length === 1 ? '' : 's'}.` : 'This memory is still forming its constellation.',
+  };
+}
+
+function buildCompanionPrompt(mode: CompanionPrompt['mode'], body: string, linkedNodeId?: string): CompanionPrompt {
+  return {
+    id: `lifemap-${mode}-${linkedNodeId ?? 'field'}`,
+    mode,
+    title: mode === 'warning' ? 'Grounding companion' : mode === 'reflecting' ? 'Mirror companion' : mode === 'memory_replay' ? 'Memory replay' : 'Companion',
+    body,
+    voiceTone: mode === 'warning' ? 'grounding' : mode === 'reflecting' ? 'wise' : mode === 'ritual_prompt' ? 'ceremonial' : 'soft',
+    linkedNodeId,
+  };
+}
+
+function buildReplay(star: MemoryStar): MemoryReplay {
+  return {
+    id: `${star.id}-replay`,
+    nodeId: star.id,
+    title: star.title,
+    dateRange: { start: new Date().toISOString() },
+    summary: star.narratorLine,
+    narratorScript: `${star.narratorLine} The map is showing this because its signal is bright enough to become part of the larger story.`,
+    emotionalArc: [star.emotion, star.intensity > 0.78 ? 'high-intensity' : 'soft-signal'],
+    sourceSignals: ['emotional tone', 'recency', 'connected memories', 'unresolved weight'],
+    suggestedRitual: star.emotion === 'threshold' ? 'Take a grounding breath and name the pressure without solving it yet.' : 'Let the memory play once without forcing a conclusion.',
+    replayScenes: [
+      { id: `${star.id}-aura`, order: 1, visualMode: 'aura', caption: star.title, ttsLine: star.narratorLine, durationMs: 4200, animationCue: 'bloom-orb-breathe' },
+      { id: `${star.id}-thread`, order: 2, visualMode: 'constellation', caption: 'Thread revealed', ttsLine: 'Related signals begin to connect around this point.', durationMs: 3600, animationCue: 'thread-glow' },
+    ],
+  };
+}
+
+function buildMirrorInsight(star: MemoryStar): MirrorInsight {
+  return {
+    id: `${star.id}-mirror`,
+    title: 'Mirror of Becoming',
+    identityTheme: 'identity pattern forming',
+    recurringPattern: star.connectedTo.length ? 'This signal repeats across nearby memory points.' : 'This signal is early and still becoming legible.',
+    oldSelfSignal: 'reactive pattern',
+    newSelfSignal: 'chosen rhythm',
+    confidence: clamp(star.intensity * 0.72 + star.recency * 0.28, 0, 1),
+    narratorReflection: 'This pattern has appeared before. Not as failure, as rehearsal.',
+  };
+}
+
+function buildThresholdNode(star: MemoryStar): ThresholdNode {
+  return {
+    severity: star.intensity > 0.86 || star.unresolvedWeight > 0.75 ? 'high' : star.intensity > 0.65 ? 'medium' : 'low',
+    triggerSignals: ['pressure spike', 'unresolved weight', 'recent intensity'],
+    recommendedResponse: star.unresolvedWeight > 0.75 ? 'grounding' : 'journal',
+    safetySensitive: star.unresolvedWeight > 0.8,
+  };
 }
 
 export default function LifeMapScene() {
@@ -70,33 +150,41 @@ export default function LifeMapScene() {
   const [activeStarId, setActiveStarId] = useState<string | null>(null);
   const [activeChapterId, setActiveChapterId] = useState<ChapterId | null>(null);
   const [showThreads, setShowThreads] = useState(false);
+  const [replayOpen, setReplayOpen] = useState(false);
   const [message, setMessage] = useState('Wheel inward to enter the memory field. Click a bright memory when it feels alive.');
+  const [interactionMode, setInteractionMode] = useState<LifeMapInteractionMode>('overview');
   const dragRef = useRef({ active: false, x: 0, y: 0 });
 
   const activeStar = stars.find((star) => star.id === activeStarId) ?? null;
   const activeChapter = activeStar ? CHAPTERS.find((chapter) => chapter.id === activeStar.chapterId) : null;
+  const activeCategory = CHAPTERS.find((chapter) => chapter.id === activeChapterId)?.category ?? null;
   const starById = useMemo(() => new Map(stars.map((star) => [star.id, star])), [stars]);
+  const activeThread = useMemo(() => (activeStar ? buildThread(activeStar, starById) : null), [activeStar, starById]);
+  const activeReplay = useMemo(() => (activeStar ? buildReplay(activeStar) : null), [activeStar]);
+  const mirrorInsight = useMemo(() => (activeStar?.emotion === 'mirror' ? buildMirrorInsight(activeStar) : null), [activeStar]);
+  const thresholdNode = useMemo(() => (activeStar && ['threshold', 'grief', 'shadow'].includes(activeStar.emotion) ? buildThresholdNode(activeStar) : null), [activeStar]);
+  const companionPrompt = useMemo(() => buildCompanionPrompt(thresholdNode ? 'warning' : mirrorInsight ? 'reflecting' : replayOpen ? 'memory_replay' : activeStar ? 'explaining' : showThreads ? 'guiding' : 'idle', message, activeStar?.id), [activeStar, message, mirrorInsight, replayOpen, showThreads, thresholdNode]);
+  const interaction: LifeMapInteraction = { mode: interactionMode, zoomLevel: camera.zoom, selectedNodeId: activeStarId, selectedThreadId: activeThread?.id ?? null, activeCategoryId: activeChapterId, showThreads, cameraFocus: { x: camera.x, y: camera.y, z: camera.zoom } };
 
-  const fieldStyle: FieldStyle = {
-    '--x': `${camera.x}%`,
-    '--y': `${camera.y}%`,
-    '--z': String(camera.zoom),
-  };
+  const visibleStars = useMemo(() => {
+    if (!activeCategory) return stars;
+    return stars.filter((star) => activeCategory.nodeTypes.includes(NODE_TYPE_BY_EMOTION[star.emotion]) || star.chapterId === activeCategory.id);
+  }, [activeCategory, stars]);
+
+  const fieldStyle: FieldStyle = { '--x': `${camera.x}%`, '--y': `${camera.y}%`, '--z': String(camera.zoom) };
 
   const setClampedCamera = useCallback((next: Camera) => {
-    setCamera({
-      x: clamp(next.x, 20, 80),
-      y: clamp(next.y, 22, 78),
-      zoom: clamp(next.zoom, MIN_ZOOM, MAX_ZOOM),
-    });
+    setCamera({ x: clamp(next.x, 20, 80), y: clamp(next.y, 22, 78), zoom: clamp(next.zoom, MIN_ZOOM, MAX_ZOOM) });
   }, []);
 
   const focusStar = useCallback((star: MemoryStar) => {
     setActiveStarId(star.id);
     setActiveChapterId(star.chapterId);
-    setShowThreads(false);
-    setMessage(star.narratorLine);
-    setClampedCamera(INITIAL_CAMERA);
+    setShowThreads(true);
+    setReplayOpen(false);
+    setInteractionMode(star.emotion === 'mirror' ? 'mirror_mode' : 'node_selected');
+    setMessage(star.emotion === 'threshold' ? 'Slow down. This threshold memory is here to be named gently, not solved all at once.' : star.narratorLine);
+    setClampedCamera({ x: star.x, y: star.y, zoom: 1.72 });
     dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
     dispatchTimelineSyncEvent({ phase: 'focus' as LifeMapPhase, activeStarId: star.id, activeChapterId: star.chapterId });
   }, [setClampedCamera]);
@@ -105,6 +193,8 @@ export default function LifeMapScene() {
     setActiveStarId(null);
     setActiveChapterId(null);
     setShowThreads(false);
+    setReplayOpen(false);
+    setInteractionMode('overview');
     setMessage('The map returned to its full shape.');
     setClampedCamera(INITIAL_CAMERA);
     dispatchTimelineSyncEvent({ phase: 'living' as LifeMapPhase, activeStarId: null, activeChapterId: null });
@@ -113,6 +203,7 @@ export default function LifeMapScene() {
   const zoom = useCallback((delta: number) => {
     setCamera((current) => {
       const nextZoom = clamp(current.zoom * (delta > 0 ? 0.9 : 1.13), MIN_ZOOM, MAX_ZOOM);
+      setInteractionMode(nextZoom > 1.18 ? 'immersive' : 'overview');
       setMessage(nextZoom > current.zoom ? 'Entering the memory field.' : 'Pulling back into the larger sky.');
       return { ...current, zoom: nextZoom };
     });
@@ -123,7 +214,10 @@ export default function LifeMapScene() {
       if (event.key === 'Escape' || event.key === '0') resetView();
       if (!activeStar && (event.key === '+' || event.key === '=')) zoom(-1);
       if (!activeStar && (event.key === '-' || event.key === '_')) zoom(1);
-      if (!activeStar && (event.key === 't' || event.key === 'T')) setShowThreads((value) => !value);
+      if (!activeStar && (event.key === 't' || event.key === 'T')) {
+        setShowThreads((value) => !value);
+        setInteractionMode('thread_view');
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -145,11 +239,7 @@ export default function LifeMapScene() {
     const dx = ((event.clientX - dragRef.current.x) / Math.max(window.innerWidth, 1)) * 100;
     const dy = ((event.clientY - dragRef.current.y) / Math.max(window.innerHeight, 1)) * 100;
     dragRef.current = { active: true, x: event.clientX, y: event.clientY };
-    setCamera((current) => ({
-      ...current,
-      x: clamp(current.x - dx / Math.max(current.zoom, 1), 20, 80),
-      y: clamp(current.y - dy / Math.max(current.zoom, 1), 22, 78),
-    }));
+    setCamera((current) => ({ ...current, x: clamp(current.x - dx / Math.max(current.zoom, 1), 20, 80), y: clamp(current.y - dy / Math.max(current.zoom, 1), 22, 78) }));
   }, [activeStar]);
 
   const handlePointerUp = useCallback((event: PointerEvent<HTMLElement>) => {
@@ -160,19 +250,22 @@ export default function LifeMapScene() {
   useEffect(() => {
     const timer = window.setInterval(() => {
       if (activeStarId) return;
-      const glowing = stars[Math.floor(Math.random() * stars.length)];
+      const glowing = visibleStars[Math.floor(Math.random() * visibleStars.length)];
       if (glowing) setMessage(`${glowing.title} is beginning to glow.`);
     }, 9000);
     return () => window.clearInterval(timer);
-  }, [activeStarId, stars]);
+  }, [activeStarId, visibleStars]);
 
   const bloomStyle: BloomStyle | undefined = activeStar ? { '--bloom-hue': hueFor(activeStar) } : undefined;
+  const shellClasses = ['life-map-shell', activeStar ? 'has-active' : '', thresholdNode ? 'threshold-mode' : '', replayOpen ? 'replay-mode' : ''].filter(Boolean).join(' ');
 
   return (
-    <main className={`life-map-shell ${activeStar ? 'has-active' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+    <main className={shellClasses} aria-label="URAI immersive Life Map" data-mode={interaction.mode} onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
       <WebGLLifeMapField />
+      <div className="cosmic-background" aria-hidden />
       <div className="vignette" aria-hidden />
       <div className="core" aria-hidden />
+      <div className="weather-layer" aria-hidden />
       <div className="orbit orbit-one" aria-hidden />
       <div className="orbit orbit-two" aria-hidden />
       <div className="deep-mist" aria-hidden />
@@ -186,7 +279,7 @@ export default function LifeMapScene() {
       <section className={`field ${showThreads ? 'show-threads' : ''}`}>
         <div className="camera" style={fieldStyle}>
           <svg className="threads" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-            {stars.flatMap((star) => star.connectedTo.map((to) => [star.id, to] as const)).filter(([a, b]) => a < b).map(([a, b]) => {
+            {visibleStars.flatMap((star) => star.connectedTo.map((to) => [star.id, to] as const)).filter(([a, b]) => a < b).map(([a, b]) => {
               const s1 = starById.get(a);
               const s2 = starById.get(b);
               if (!s1 || !s2) return null;
@@ -195,21 +288,14 @@ export default function LifeMapScene() {
             })}
           </svg>
 
-          {stars.map((star) => {
+          {visibleStars.map((star) => {
             const depth = depthFor(star);
             const dim = activeStar && star.id !== activeStar.id && !activeStar.connectedTo.includes(star.id);
             const style: NodeStyle = {
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: `${star.size}px`,
-              height: `${star.size}px`,
-              '--depth': `${depth}px`,
-              '--scale': String(1 + depth / 560),
-              '--hue': hueFor(star),
-              '--alpha': String(clamp(0.62 + star.recency * 0.32, 0.54, 0.98)),
+              left: `${star.x}%`, top: `${star.y}%`, width: `${star.size}px`, height: `${star.size}px`, '--depth': `${depth}px`, '--scale': String(1 + depth / 560), '--hue': hueFor(star), '--alpha': String(clamp(0.62 + star.recency * 0.32, 0.54, 0.98)), '--node-glow': String(clamp(star.intensity + star.recency * 0.28, 0.35, 1.2)),
             };
             return (
-              <button key={star.id} type="button" className={`node ${star.id === activeStar?.id ? 'active' : ''} ${dim ? 'dim' : ''}`} style={style} aria-label={`Open ${star.title}`} onClick={(event) => { event.stopPropagation(); focusStar(star); }}>
+              <button key={star.id} type="button" className={`node node-${NODE_TYPE_BY_EMOTION[star.emotion]} ${star.id === activeStar?.id ? 'active' : ''} ${dim ? 'dim' : ''}`} style={style} aria-label={`Open ${star.title}`} onClick={(event) => { event.stopPropagation(); focusStar(star); }}>
                 <span className="node-label">{star.title}</span>
               </button>
             );
@@ -217,9 +303,13 @@ export default function LifeMapScene() {
         </div>
       </section>
 
-      <aside className="companion"><strong>Companion</strong><span>{message}</span></aside>
+      <aside className={`companion companion-${companionPrompt.mode}`}>
+        <strong>{companionPrompt.title}</strong>
+        <span>{companionPrompt.body}</span>
+        {activeThread && <em>{activeThread.narratorSummary}</em>}
+      </aside>
 
-      {activeStar && (
+      {activeStar && activeReplay && (
         <section className="bloom-scene" style={bloomStyle} aria-live="polite">
           <div className="bloom-aura" aria-hidden>
             <span className="bloom-ring bloom-ring-one" />
@@ -229,20 +319,29 @@ export default function LifeMapScene() {
           <article className="bloom-card">
             <p>{activeChapter?.title ?? activeStar.chapterId}</p>
             <h2>{activeStar.title}</h2>
-            <span>{activeStar.narratorLine}</span>
+            <span>{activeReplay.summary}</span>
+            <dl className="memory-meta">
+              <div><dt>Type</dt><dd>{NODE_TYPE_BY_EMOTION[activeStar.emotion]}</dd></div>
+              <div><dt>Tone</dt><dd>{activeStar.emotion}</dd></div>
+              <div><dt>Why now</dt><dd>{activeReplay.sourceSignals.join(' · ')}</dd></div>
+            </dl>
+            {thresholdNode && <div className="safety-card"><strong>Threshold mode</strong><span>Severity: {thresholdNode.severity}. Recommended response: {thresholdNode.recommendedResponse}. Use softer pacing and grounding copy.</span></div>}
+            {mirrorInsight && <div className="mirror-card"><strong>{mirrorInsight.title}</strong><span>{mirrorInsight.narratorReflection}</span></div>}
+            {replayOpen && <ol className="replay-list">{activeReplay.replayScenes.map((scene) => <li key={scene.id}><strong>{scene.caption}</strong><span>{scene.ttsLine}</span></li>)}</ol>}
             <div>
-              <button type="button" onClick={() => setMessage('Replaying the emotional thread.')}>Replay voice</button>
-              <button type="button" onClick={() => setMessage('This memory softened without disappearing.')}>Soften</button>
-              <button type="button" onClick={resetView}>Return to galaxy</button>
+              <button type="button" onClick={() => { setReplayOpen(true); setInteractionMode('replay'); setMessage('Replaying the emotional thread.'); }}>Replay</button>
+              <button type="button" onClick={() => setMessage(activeReplay.suggestedRitual ?? 'A ritual can be created from this memory.')}>Create ritual</button>
+              <button type="button" onClick={() => setMessage(activeReplay.narratorScript)}>Why am I seeing this?</button>
+              <button type="button" onClick={resetView}>Close</button>
             </div>
           </article>
         </section>
       )}
 
       <div className="controls">
-        <button type="button" onClick={() => zoom(-1)}>Enter</button>
+        <button type="button" onClick={() => { setInteractionMode('entering'); zoom(-1); }}>Enter</button>
         <button type="button" onClick={() => zoom(1)}>Pull back</button>
-        <button type="button" onClick={() => setShowThreads((value) => !value)}>{showThreads ? 'Hide threads' : 'Show threads'}</button>
+        <button type="button" onClick={() => { setShowThreads((value) => !value); setInteractionMode('thread_view'); }}>{showThreads ? 'Hide threads' : 'Show threads'}</button>
         <button type="button" onClick={resetView}>Reset</button>
         <span>{Math.round(camera.zoom * 100)}%</span>
       </div>
@@ -251,8 +350,10 @@ export default function LifeMapScene() {
         {CHAPTERS.map((chapter) => (
           <button key={chapter.id} type="button" className={activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
             setActiveStarId(null);
+            setReplayOpen(false);
             setActiveChapterId(chapter.id);
             setShowThreads(false);
+            setInteractionMode('cluster');
             setMessage(CHAPTER_LINES[chapter.id]);
             setClampedCamera({ x: chapter.x, y: chapter.y, zoom: 1.42 });
             dispatchNarratorEvent({ event: 'lifemap.cluster.focus', chapterId: chapter.id });
@@ -268,9 +369,12 @@ export default function LifeMapScene() {
         .life-map-shell { min-height: 100vh; position: relative; overflow: hidden; isolation: isolate; color: white; background: radial-gradient(circle at 50% 48%, #203c78 0%, #081026 48%, #01020a 100%); touch-action: none; cursor: grab; perspective: 1500px; user-select: none; -webkit-user-select: none; }
         .life-map-shell * { user-select: none; -webkit-user-select: none; }
         .life-map-shell:active { cursor: grabbing; }
-        .vignette, .core, .orbit, .deep-mist { position: absolute; pointer-events: none; }
+        .cosmic-background, .vignette, .core, .orbit, .deep-mist, .weather-layer { position: absolute; pointer-events: none; }
+        .cosmic-background { z-index: 1; inset: -10%; background: radial-gradient(circle at 35% 28%, rgba(111, 158, 255, .16), transparent 28%), radial-gradient(circle at 68% 55%, rgba(94, 234, 212, .1), transparent 22%), radial-gradient(circle at 50% 62%, rgba(255, 255, 255, .06), transparent 18%); filter: blur(14px); animation: drift 26s ease-in-out infinite alternate; }
         .vignette { z-index: 2; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.84) 100%), radial-gradient(circle at 50% 54%, rgba(125,211,252,.12), transparent 34%); }
         .core { z-index: 1; left: 50%; top: 52%; width: min(52vw, 660px); height: min(52vw, 660px); transform: translate(-50%, -50%); border-radius: 999px; background: radial-gradient(circle, rgba(255,255,255,.11), transparent 12%), radial-gradient(circle, rgba(125,211,252,.17), rgba(70,90,190,.06) 46%, transparent 72%); filter: blur(10px); opacity: .95; }
+        .weather-layer { z-index: 3; inset: 0; opacity: 0; transition: opacity .45s ease; background: radial-gradient(circle at 50% 48%, rgba(168, 85, 247, .14), transparent 36%), linear-gradient(180deg, rgba(2,6,23,.2), rgba(2,6,23,.68)); backdrop-filter: blur(1px); }
+        .threshold-mode .weather-layer { opacity: .88; }
         .deep-mist { z-index: 3; inset: 14% 12% 18%; background: radial-gradient(ellipse at 50% 50%, rgba(120,165,255,.08), transparent 64%); filter: blur(22px); opacity: .8; }
         .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.035); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
         .orbit-one { width: min(46vw, 580px); height: min(21vw, 270px); }
@@ -282,26 +386,28 @@ export default function LifeMapScene() {
         .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; transition: opacity .55s ease, filter .55s ease, transform .55s ease; }
         .camera { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: var(--x) var(--y); will-change: transform; transform: perspective(1500px) translate3d(calc(50% - var(--x)), calc(50% - var(--y)), 0) scale(var(--z)); transition: transform 500ms cubic-bezier(.19,1,.22,1); }
         .threads { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; transform: translateZ(-150px); }
-        .show-threads .threads { opacity: .1; }
-        .thread { stroke: rgba(180,215,255,.08); stroke-width: .06; }
-        .thread.active { stroke: rgba(220,245,255,.18); stroke-width: .08; filter: none; }
-        .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 32px hsl(var(--hue) 86% 68% / .42), 0 0 82px hsl(var(--hue) 92% 64% / .16); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
-        .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; }
-        .node:hover { opacity: 1; filter: brightness(1.18); transform: translate3d(-50%, -50%, calc(var(--depth) + 30px)) scale(calc(var(--scale) * 1.08)); }
-        .node.active { opacity: 1; filter: brightness(1.12); transform: translate3d(-50%, -50%, calc(var(--depth) + 26px)) scale(calc(var(--scale) * 1.06)); }
+        .show-threads .threads { opacity: .28; }
+        .thread { stroke: rgba(180,215,255,.12); stroke-width: .06; }
+        .thread.active { stroke: rgba(220,245,255,.42); stroke-width: .11; filter: drop-shadow(0 0 6px rgba(190,225,255,.4)); }
+        .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 calc(28px * var(--node-glow)) hsl(var(--hue) 86% 68% / .48), 0 0 calc(80px * var(--node-glow)) hsl(var(--hue) 92% 64% / .2); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
+        .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; animation: pulse 4.8s ease-in-out infinite; }
+        .node:hover, .node.active { opacity: 1; filter: brightness(1.18); transform: translate3d(-50%, -50%, calc(var(--depth) + 30px)) scale(calc(var(--scale) * 1.08)); }
+        .node-threshold::after, .node-warning::after { content: ''; position: absolute; inset: -8px; border-radius: inherit; border: 1px solid rgba(216,180,254,.24); }
         .node.dim { opacity: .28; }
         .node-label { display: none; position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
         .node:hover .node-label { display: block; opacity: .9; }
         .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(260px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(4,7,18,.34); backdrop-filter: blur(10px); padding: .68rem .75rem; color: rgba(255,255,255,.68); box-shadow: 0 20px 54px rgba(0,0,0,.18); transition: opacity .35s ease; }
-        .companion strong { display: block; margin-bottom: .3rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.38); }
+        .companion-warning { border-color: rgba(216,180,254,.28); background: rgba(23, 12, 34, .42); }
+        .companion strong, .companion em { display: block; margin-bottom: .3rem; font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.38); font-style: normal; }
+        .companion em { margin-top: .55rem; margin-bottom: 0; line-height: 1.45; text-transform: none; letter-spacing: 0; color: rgba(255,255,255,.48); }
         .companion span { font-size: .74rem; line-height: 1.45; }
-        .controls, .chapters { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.18); background: rgba(5,8,20,.38); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.18); transition: opacity .35s ease, transform .35s ease, background .25s ease; opacity: .24; }
+        .controls, .chapters { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.18); background: rgba(5,8,20,.38); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.18); transition: opacity .35s ease, transform .35s ease, background .25s ease; opacity: .34; }
         .life-map-shell:hover .controls, .life-map-shell:hover .chapters, .controls:focus-within, .chapters:focus-within { opacity: .92; }
         .controls { left: 50%; bottom: 6.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .36rem; }
         .controls button, .controls span, .bloom-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
         .chapters { left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(880px, calc(100vw - 2rem)); border-radius: 28px; padding: .45rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
-        .chapters button { border: 0; border-radius: 22px; background: transparent; color: rgba(255,255,255,.62); padding: .55rem .65rem; text-align: left; transition: background .2s ease, color .2s ease; }
-        .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; }
+        .chapters button { border: 0; border-radius: 22px; background: transparent; color: rgba(255,255,255,.62); padding: .55rem .65rem; text-align: left; transition: background .2s ease, color .2s ease, transform .2s ease; }
+        .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; transform: translateY(-1px); }
         .chapters strong { display: block; font-size: .78rem; }
         .chapters span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
         .has-active .field { opacity: .14; filter: blur(1.6px) saturate(.7); transform: scale(.985); pointer-events: none; }
@@ -314,14 +420,23 @@ export default function LifeMapScene() {
         .bloom-ring { position: absolute; inset: 17%; border-radius: 999px; border: 1px solid hsl(var(--bloom-hue) 90% 80% / .18); box-shadow: inset 0 0 40px hsl(var(--bloom-hue) 90% 70% / .08); }
         .bloom-ring-one { transform: rotate(-18deg) scaleX(1.42); }
         .bloom-ring-two { transform: rotate(24deg) scaleX(1.66); opacity: .58; }
-        .bloom-card { position: absolute; left: 50%; bottom: 5.1rem; transform: translateX(-50%); width: min(620px, calc(100vw - 2rem)); border: 1px solid hsl(var(--bloom-hue) 80% 78% / .22); border-radius: 32px; background: linear-gradient(180deg, rgba(10,14,34,.62), rgba(5,8,20,.42)); backdrop-filter: blur(18px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.35rem; text-align: center; }
+        .bloom-card { position: absolute; left: 50%; bottom: 3.2rem; transform: translateX(-50%); width: min(680px, calc(100vw - 2rem)); max-height: 48vh; overflow: auto; border: 1px solid hsl(var(--bloom-hue) 80% 78% / .22); border-radius: 32px; background: linear-gradient(180deg, rgba(10,14,34,.72), rgba(5,8,20,.52)); backdrop-filter: blur(18px); box-shadow: 0 30px 90px rgba(0,0,0,.36); padding: 1.35rem; text-align: center; }
         .bloom-card p { margin: 0; font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: hsl(var(--bloom-hue) 90% 82% / .58); }
         .bloom-card h2 { margin: .35rem 0 .5rem; font-size: clamp(1.9rem, 4.2vw, 3.8rem); line-height: 1; letter-spacing: -.04em; }
         .bloom-card span { display: block; max-width: 46rem; margin: 0 auto; color: rgba(255,255,255,.82); line-height: 1.6; }
-        .bloom-card div { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+        .bloom-card div:last-child { display: flex; justify-content: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+        .memory-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 0; text-align: left; }
+        .memory-meta div, .safety-card, .mirror-card, .replay-list li { border: 1px solid rgba(157,196,255,.16); border-radius: 16px; background: rgba(255,255,255,.04); padding: .65rem; }
+        .memory-meta dt { font-size: .58rem; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.38); }
+        .memory-meta dd { margin: .25rem 0 0; font-size: .72rem; color: rgba(255,255,255,.76); }
+        .safety-card, .mirror-card { margin-top: .7rem; text-align: left; }
+        .safety-card strong, .mirror-card strong, .replay-list strong { display: block; margin-bottom: .25rem; color: rgba(255,255,255,.86); }
+        .replay-list { display: grid; gap: .5rem; margin: .8rem 0 0; padding: 0; list-style: none; text-align: left; }
         @keyframes bloomIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
         @keyframes breathe { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.07); filter: brightness(1.12); } }
-        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-aura { transform: translateY(-5rem); } .bloom-card { bottom: 2rem; } .has-active .companion { opacity: 0; pointer-events: none; } }
+        @keyframes pulse { 0%, 100% { opacity: .32; transform: scale(.96); } 50% { opacity: .78; transform: scale(1.05); } }
+        @keyframes drift { from { transform: translate3d(-1%, -1%, 0) scale(1); } to { transform: translate3d(1.5%, 1%, 0) scale(1.04); } }
+        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .bloom-aura { transform: translateY(-5rem); } .bloom-card { bottom: 2rem; max-height: 52vh; } .memory-meta { grid-template-columns: 1fr; } .has-active .companion { opacity: 0; pointer-events: none; } }
       `}</style>
     </main>
   );
