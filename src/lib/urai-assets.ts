@@ -39,44 +39,44 @@ export type UraiResolvedAsset = {
 const LOCAL_ASSETS: Partial<Record<UraiVisualSlot, UraiResolvedAsset>> = {
   "home.sky.background": {
     slot: "home.sky.background",
-    kind: "image",
-    src: "/assets/urai/sky/sky-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.sky.background"),
+    source: "procedural",
     alt: "URAI symbolic sky background",
   },
   "home.sky.clouds": {
     slot: "home.sky.clouds",
-    kind: "image",
-    src: "/assets/urai/sky/clouds-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.sky.clouds"),
+    source: "procedural",
     alt: "URAI symbolic cloud layer",
   },
   "home.aura.blob": {
     slot: "home.aura.blob",
-    kind: "image",
-    src: "/assets/urai/aura/aura-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.aura.blob"),
+    source: "procedural",
     alt: "URAI aura field",
   },
   "home.orb.core": {
     slot: "home.orb.core",
-    kind: "image",
-    src: "/assets/urai/orb/orb-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.orb.core"),
+    source: "procedural",
     alt: "URAI companion orb",
   },
   "home.silhouette.body": {
     slot: "home.silhouette.body",
-    kind: "image",
-    src: "/assets/urai/silhouette/body-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.silhouette.body"),
+    source: "procedural",
     alt: "URAI human silhouette",
   },
   "home.ground.base": {
     slot: "home.ground.base",
-    kind: "image",
-    src: "/assets/urai/ground/ground-default.webp",
-    source: "local",
+    kind: "svg",
+    svg: proceduralSvg("home.ground.base"),
+    source: "procedural",
     alt: "URAI symbolic ground plane",
   },
   "spatial.bloom.memory": {
@@ -165,11 +165,19 @@ function proceduralSvg(slot: UraiVisualSlot): string {
   const id = `urai-${slot.replaceAll(".", "-")}`;
 
   if (slot.includes("sky")) {
-    return `<svg id="${id}" viewBox="0 0 1440 3120" xmlns="http://www.w3.org/2000/svg" role="img"><defs><radialGradient id="${id}-g" cx="50%" cy="25%" r="85%"><stop offset="0%" stop-color="#243B73"/><stop offset="55%" stop-color="#101A3A"/><stop offset="100%" stop-color="#050713"/></radialGradient><filter id="${id}-blur"><feGaussianBlur stdDeviation="32"/></filter></defs><rect width="1440" height="3120" fill="url(#${id}-g)"/><circle cx="260" cy="520" r="180" fill="#7EA7FF" opacity="0.16" filter="url(#${id}-blur)"/><circle cx="1120" cy="860" r="260" fill="#B17CFF" opacity="0.12" filter="url(#${id}-blur)"/><circle cx="720" cy="1420" r="420" fill="#5EE6D2" opacity="0.06" filter="url(#${id}-blur)"/></svg>`;
+    return `<svg id="${id}" viewBox="0 0 1440 3120" xmlns="http://www.w3.org/2000/svg" role="img"><defs><radialGradient id="${id}-g" cx="50%" cy="22%" r="80%"><stop offset="0%" stop-color="#273B77"/><stop offset="46%" stop-color="#0B1834"/><stop offset="100%" stop-color="#02040B"/></radialGradient><filter id="${id}-blur"><feGaussianBlur stdDeviation="24"/></filter></defs><rect width="1440" height="3120" fill="url(#${id}-g)"/><g opacity="0.65"><circle cx="220" cy="520" r="3" fill="#DDF4FF"/><circle cx="1160" cy="410" r="4" fill="#DDF4FF"/><circle cx="1050" cy="900" r="2" fill="#BFEAFF"/><circle cx="420" cy="980" r="3" fill="#BFEAFF"/><circle cx="720" cy="760" r="4" fill="#FFFFFF"/><circle cx="880" cy="1180" r="2" fill="#DDF4FF"/><circle cx="520" cy="1320" r="2" fill="#DDF4FF"/><circle cx="1220" cy="1320" r="3" fill="#FFFFFF"/><circle cx="300" cy="1500" r="2" fill="#BFEAFF"/></g><circle cx="720" cy="900" r="330" fill="#7EA7FF" opacity="0.12" filter="url(#${id}-blur)"/><circle cx="720" cy="1640" r="420" fill="#5EE6D2" opacity="0.045" filter="url(#${id}-blur)"/></svg>`;
+  }
+
+  if (slot.includes("ground")) {
+    return `<svg id="${id}" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" role="img"><defs><linearGradient id="${id}-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#0B2A1D" stop-opacity="0"/><stop offset="44%" stop-color="#0B2A1D" stop-opacity="0.2"/><stop offset="100%" stop-color="#000000" stop-opacity="0.95"/></linearGradient><radialGradient id="${id}-mist" cx="50%" cy="24%" r="58%"><stop offset="0%" stop-color="#7EE7FF" stop-opacity="0.13"/><stop offset="100%" stop-color="#7EE7FF" stop-opacity="0"/></radialGradient></defs><rect width="1440" height="900" fill="url(#${id}-g)"/><ellipse cx="720" cy="210" rx="780" ry="170" fill="url(#${id}-mist)"/><path d="M0 376 C260 314 448 398 720 354 C980 312 1180 360 1440 310 L1440 900 L0 900 Z" fill="#03120C" opacity="0.5"/><path d="M0 520 C320 470 560 540 870 492 C1100 456 1260 494 1440 462 L1440 900 L0 900 Z" fill="#010705" opacity="0.84"/></svg>`;
   }
 
   if (slot.includes("aura")) {
-    return `<svg id="${id}" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img"><defs><radialGradient id="${id}-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F7E6FF" stop-opacity="0.95"/><stop offset="45%" stop-color="#8DDCFF" stop-opacity="0.42"/><stop offset="100%" stop-color="#7B61FF" stop-opacity="0"/></radialGradient><filter id="${id}-blur"><feGaussianBlur stdDeviation="18"/></filter></defs><ellipse cx="400" cy="400" rx="250" ry="310" fill="url(#${id}-g)" filter="url(#${id}-blur)"/></svg>`;
+    return `<svg id="${id}" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img"><defs><radialGradient id="${id}-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F7E6FF" stop-opacity="0.78"/><stop offset="42%" stop-color="#8DDCFF" stop-opacity="0.34"/><stop offset="100%" stop-color="#7B61FF" stop-opacity="0"/></radialGradient><filter id="${id}-blur"><feGaussianBlur stdDeviation="18"/></filter></defs><ellipse cx="400" cy="400" rx="250" ry="310" fill="url(#${id}-g)" filter="url(#${id}-blur)"/></svg>`;
+  }
+
+  if (slot.includes("orb")) {
+    return `<svg id="${id}" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img"><defs><radialGradient id="${id}-g" cx="38%" cy="31%" r="62%"><stop offset="0%" stop-color="#FFFFFF"/><stop offset="24%" stop-color="#DDF5FF"/><stop offset="58%" stop-color="#7DD7F7"/><stop offset="100%" stop-color="#102638" stop-opacity="0"/></radialGradient></defs><circle cx="256" cy="256" r="176" fill="url(#${id}-g)"/><circle cx="256" cy="256" r="205" fill="none" stroke="#DDF5FF" stroke-opacity="0.28" stroke-width="10"/></svg>`;
   }
 
   if (slot.includes("star")) {
@@ -177,7 +185,7 @@ function proceduralSvg(slot: UraiVisualSlot): string {
   }
 
   if (slot.includes("silhouette")) {
-    return `<svg id="${id}" viewBox="0 0 720 1400" xmlns="http://www.w3.org/2000/svg" role="img"><defs><linearGradient id="${id}-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#10182F"/><stop offset="100%" stop-color="#04050C"/></linearGradient></defs><circle cx="360" cy="210" r="112" fill="url(#${id}-g)" opacity="0.92"/><path d="M260 350 C220 520 230 790 260 1120 C285 1260 435 1260 460 1120 C490 790 500 520 460 350 C420 320 300 320 260 350Z" fill="url(#${id}-g)" opacity="0.92"/></svg>`;
+    return `<svg id="${id}" viewBox="0 0 720 1400" xmlns="http://www.w3.org/2000/svg" role="img"><defs><linearGradient id="${id}-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#BDEBFF" stop-opacity="0.5"/><stop offset="100%" stop-color="#021018" stop-opacity="0"/></linearGradient></defs><path d="M382 92 C456 110 504 176 504 262 C504 350 444 414 368 416 C292 418 242 356 250 280 C258 188 304 100 382 92Z" fill="url(#${id}-g)" opacity="0.9"/><path d="M380 430 C512 590 548 884 488 1310 C420 1375 302 1376 232 1310 C172 884 220 590 330 430Z" fill="url(#${id}-g)" opacity="0.82"/></svg>`;
   }
 
   if (slot.includes("card")) {
