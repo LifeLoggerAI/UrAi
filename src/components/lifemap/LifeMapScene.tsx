@@ -1,115 +1,37 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useReducer, useRef, type CSSProperties, type PointerEvent, type WheelEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent, type WheelEvent } from 'react';
 import WebGLLifeMapField from './WebGLLifeMapField';
 import { useMemoryStars, type MemoryStar } from './useMemoryStars';
-import {
-  dispatchNarratorEvent,
-  dispatchTimelineSyncEvent,
-  type ChapterId,
-  type LifeMapPhase,
-} from './lifeMapEvents';
-import { chooseGlowingStars, createSeededRandom, type GlowHistoryEntry } from './lifeMapGlowScheduler';
+import { dispatchNarratorEvent, dispatchTimelineSyncEvent, type ChapterId } from './lifeMapEvents';
 
-type Camera = { x: number; y: number; zoom: number; tilt: number };
-type MessageSource = 'focus' | 'resolved' | 'glow' | 'camera';
+type Camera = { x: number; y: number; zoom: number };
+type FieldStyle = CSSProperties & { '--x': string; '--y': string; '--z': string };
+type NodeStyle = CSSProperties & { '--depth': string; '--scale': string; '--hue': string; '--alpha': string };
 
-type MessageEnvelope = {
-  id: string;
-  source: MessageSource;
-  priority: number;
-  text: string;
-  createdAt: number;
-  expiresAt: number | null;
-};
+type Chapter = { id: ChapterId; title: string; subtitle: string; x: number; y: number };
 
-type MessageState = {
-  queue: MessageEnvelope[];
-  lastBySource: Partial<Record<MessageSource, number>>;
-  lastText: string | null;
-};
+const INITIAL_CAMERA: Camera = { x: 50, y: 50, zoom: 1 };
+const MIN_ZOOM = 0.72;
+const MAX_ZOOM = 4.8;
 
-type State = {
-  stars: MemoryStar[];
-  activeStarId: string | null;
-  activeChapterId: ChapterId | null;
-  camera: Camera;
-  phase: LifeMapPhase;
-  messages: MessageState;
-  reducedMotion: boolean;
-  showThreads: boolean;
-};
-
-type Action =
-  | { type: 'SET_STARS'; stars: MemoryStar[] }
-  | { type: 'SET_REDUCED_MOTION'; value: boolean }
-  | { type: 'SET_GLOWING_STARS'; ids: string[] }
-  | { type: 'FOCUS_STAR'; starId: string }
-  | { type: 'FOCUS_CHAPTER'; chapterId: ChapterId; camera: Camera; text: string }
-  | { type: 'MARK_RESOLVED'; starId: string }
-  | { type: 'CLEAR_FOCUS' }
-  | { type: 'SET_CAMERA'; camera: Camera; announce?: boolean }
-  | { type: 'ZOOM_CAMERA'; delta: number }
-  | { type: 'PAN_CAMERA'; dx: number; dy: number }
-  | { type: 'TOGGLE_THREADS' }
-  | { type: 'PUSH_MESSAGE'; msg: MessageEnvelope }
-  | { type: 'PRUNE_MESSAGES' };
-
-type FieldStyle = CSSProperties & {
-  '--camera-x': string;
-  '--camera-y': string;
-  '--camera-zoom': string;
-  '--camera-tilt': string;
-};
-
-type StarStyle = CSSProperties & {
-  '--star-z': string;
-  '--star-scale': string;
-  '--star-alpha': string;
-  '--star-hue': string;
-};
-
-const INITIAL_CAMERA: Camera = { x: 50, y: 50, zoom: 1, tilt: 0 };
-const MIN_ZOOM = 0.68;
-const MAX_ZOOM = 4.6;
-
-const SOURCE_PRIORITY: Record<MessageSource, number> = {
-  focus: 5,
-  resolved: 4,
-  camera: 3,
-  glow: 2,
-};
-
-const SOURCE_COOLDOWN: Record<MessageSource, number> = {
-  focus: 0,
-  resolved: 1800,
-  camera: 900,
-  glow: 5200,
-};
-
-const GLOW_LINES = [
-  'A memory is beginning to glow.',
-  'One part of the map is asking for attention.',
-  'A soft signal is rising from the background.',
-];
-
-const CHAPTERS: Array<{ id: ChapterId; title: string; subtitle: string; x: number; y: number }> = [
+const CHAPTERS: Chapter[] = [
   { id: 'season-of-becoming', title: 'Becoming', subtitle: 'growth', x: 38, y: 39 },
-  { id: 'threshold', title: 'Threshold', subtitle: 'major shifts', x: 50, y: 31 },
+  { id: 'threshold', title: 'Threshold', subtitle: 'crossing', x: 50, y: 31 },
   { id: 'recovery-arc', title: 'Recovery', subtitle: 'softening', x: 62, y: 43 },
   { id: 'purple-dream-field', title: 'Dream Field', subtitle: 'symbols', x: 41, y: 61 },
-  { id: 'mirror-of-becoming', title: 'Mirror', subtitle: 'life synthesis', x: 64, y: 61 },
+  { id: 'mirror-of-becoming', title: 'Mirror', subtitle: 'identity', x: 64, y: 61 },
 ];
 
 const CHAPTER_LINES: Record<ChapterId, string> = {
-  'season-of-becoming': 'The becoming chapter shows where growth signals are collecting.',
-  threshold: 'A threshold is where pressure becomes visible enough to name.',
-  'recovery-arc': 'The recovery arc shows strain turning into steadier rhythm.',
-  'purple-dream-field': 'The dream field gathers symbolic echoes and soft memory fragments.',
-  'mirror-of-becoming': 'The mirror chapter reflects the larger pattern of who you are becoming.',
+  'season-of-becoming': 'Growth signals are collecting into a new pattern.',
+  threshold: 'This chapter marks the crossing point where pressure became visible.',
+  'recovery-arc': 'The recovery arc shows strain turning back into rhythm.',
+  'purple-dream-field': 'Symbolic echoes are gathering in the dream field.',
+  'mirror-of-becoming': 'The mirror shows who the pattern is helping you become.',
 };
 
-const INITIAL_STARS: MemoryStar[] = [
+const FALLBACK_STARS: MemoryStar[] = [
   { id: 'star-1', title: 'First Signal', x: 37, y: 40, size: 12, emotion: 'focus', chapterId: 'season-of-becoming', state: 'idle', intensity: 0.62, recency: 0.78, unresolvedWeight: 0.35, lastActivatedAt: null, narratorLine: 'This was one of the first signals that your rhythm was changing.', connectedTo: ['star-2', 'star-4'] },
   { id: 'star-2', title: 'Threshold Pulse', x: 49, y: 31, size: 14, emotion: 'threshold', chapterId: 'threshold', state: 'idle', intensity: 0.92, recency: 0.72, unresolvedWeight: 0.82, lastActivatedAt: null, narratorLine: 'This moment marks a threshold where the old pattern started breaking.', connectedTo: ['star-1', 'star-3', 'star-8'] },
   { id: 'star-3', title: 'Recovery Bloom', x: 62, y: 43, size: 15, emotion: 'recovery', chapterId: 'recovery-arc', state: 'idle', intensity: 0.88, recency: 0.9, unresolvedWeight: 0.24, lastActivatedAt: null, narratorLine: 'This is where your system began recovering after pressure.', connectedTo: ['star-2', 'star-5', 'star-7'] },
@@ -128,182 +50,87 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
-function clampCamera(camera: Camera): Camera {
-  return {
-    x: clamp(camera.x, 22, 78),
-    y: clamp(camera.y, 24, 76),
-    zoom: clamp(camera.zoom, MIN_ZOOM, MAX_ZOOM),
-    tilt: clamp(camera.tilt, 0, 10),
-  };
-}
-
-function starDepth(star: MemoryStar) {
-  return Math.round((star.intensity * 96) + (star.recency * 54) - (star.unresolvedWeight * 28));
-}
-
-function emotionHue(star: MemoryStar) {
+function hueFor(star: MemoryStar) {
   if (star.emotion === 'recovery') return '158deg';
-  if (star.emotion === 'threshold') return '282deg';
-  if (star.emotion === 'dream') return '252deg';
+  if (star.emotion === 'threshold') return '285deg';
+  if (star.emotion === 'dream') return '248deg';
   if (star.emotion === 'mirror') return '42deg';
   return '205deg';
 }
 
-function createMessage(source: MessageSource, text: string, ttl: number | null): MessageEnvelope {
-  const now = Date.now();
-  return { id: `${source}-${now}`, source, priority: SOURCE_PRIORITY[source], text, createdAt: now, expiresAt: ttl ? now + ttl : null };
-}
-
-function pushMessage(state: MessageState, msg: MessageEnvelope): MessageState {
-  const now = Date.now();
-  const last = state.lastBySource[msg.source] ?? 0;
-  if (now - last < SOURCE_COOLDOWN[msg.source]) return state;
-  if (state.lastText === msg.text) return state;
-  const queue = [...state.queue, msg].sort((a, b) => b.priority - a.priority || b.createdAt - a.createdAt);
-  return { queue: queue.slice(0, 4), lastBySource: { ...state.lastBySource, [msg.source]: now }, lastText: msg.text };
-}
-
-function pruneMessages(state: MessageState): MessageState {
-  const now = Date.now();
-  return { ...state, queue: state.queue.filter((message) => !message.expiresAt || message.expiresAt > now) };
-}
-
-function getActiveMessage(state: MessageState) {
-  return state.queue[0]?.text ?? 'Wheel inward to enter the memory field. Click a glowing star when it feels alive.';
-}
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'SET_STARS': {
-      const activeStillExists = action.stars.some((star) => star.id === state.activeStarId);
-      return { ...state, stars: action.stars.length < 10 ? INITIAL_STARS : action.stars, activeStarId: activeStillExists ? state.activeStarId : null, activeChapterId: activeStillExists ? state.activeChapterId : null, phase: activeStillExists ? state.phase : 'living' };
-    }
-    case 'SET_REDUCED_MOTION':
-      return { ...state, reducedMotion: action.value };
-    case 'SET_GLOWING_STARS':
-      return { ...state, stars: state.stars.map((star) => (star.id === state.activeStarId || star.state === 'resolved' ? star : { ...star, state: action.ids.includes(star.id) ? 'glowing' : 'idle' })) };
-    case 'FOCUS_STAR': {
-      const star = state.stars.find((item) => item.id === action.starId);
-      if (!star) return state;
-      return {
-        ...state,
-        activeStarId: star.id,
-        activeChapterId: star.chapterId,
-        phase: 'focus',
-        showThreads: true,
-        camera: clampCamera({ x: star.x, y: star.y, zoom: 2.55, tilt: 5 }),
-        stars: state.stars.map((item) => {
-          if (item.id === star.id) return { ...item, state: 'active', lastActivatedAt: Date.now() };
-          if (item.state === 'active') return { ...item, state: 'idle' };
-          return item;
-        }),
-        messages: pushMessage(state.messages, createMessage('focus', star.narratorLine, null)),
-      };
-    }
-    case 'FOCUS_CHAPTER':
-      return { ...state, phase: 'cluster', activeChapterId: action.chapterId, activeStarId: null, showThreads: false, camera: clampCamera(action.camera), messages: pushMessage(state.messages, createMessage('camera', action.text, 12000)) };
-    case 'MARK_RESOLVED':
-      return { ...state, stars: state.stars.map((star) => (star.id === action.starId ? { ...star, state: 'resolved' } : star)), messages: pushMessage(state.messages, createMessage('resolved', 'This one has softened.', null)) };
-    case 'CLEAR_FOCUS':
-      return { ...state, phase: 'living', activeStarId: null, activeChapterId: null, camera: INITIAL_CAMERA, showThreads: false, stars: state.stars.map((star) => (star.state === 'active' ? { ...star, state: 'idle' } : star)) };
-    case 'SET_CAMERA':
-      return {
-        ...state,
-        phase: action.announce ? 'living' : state.phase,
-        activeStarId: action.announce ? null : state.activeStarId,
-        activeChapterId: action.announce ? null : state.activeChapterId,
-        showThreads: action.announce ? false : state.showThreads,
-        camera: clampCamera(action.camera),
-        messages: action.announce ? pushMessage(state.messages, createMessage('camera', 'The map returned to its full shape.', 5200)) : state.messages,
-      };
-    case 'ZOOM_CAMERA': {
-      const nextZoom = clamp(state.camera.zoom * (action.delta > 0 ? 0.9 : 1.13), MIN_ZOOM, MAX_ZOOM);
-      const nextTilt = nextZoom > 1.9 ? 4 : 0;
-      return {
-        ...state,
-        camera: clampCamera({ ...state.camera, zoom: nextZoom, tilt: nextTilt }),
-        messages: pushMessage(state.messages, createMessage('camera', nextZoom > state.camera.zoom ? 'Entering the memory field.' : 'Pulling back into the larger sky.', 4200)),
-      };
-    }
-    case 'PAN_CAMERA':
-      return { ...state, camera: clampCamera({ ...state.camera, x: state.camera.x - action.dx / Math.max(state.camera.zoom, 1), y: state.camera.y - action.dy / Math.max(state.camera.zoom, 1) }) };
-    case 'TOGGLE_THREADS':
-      return { ...state, showThreads: !state.showThreads };
-    case 'PUSH_MESSAGE':
-      return { ...state, messages: pushMessage(state.messages, action.msg) };
-    case 'PRUNE_MESSAGES':
-      return { ...state, messages: pruneMessages(state.messages) };
-    default:
-      return state;
-  }
+function depthFor(star: MemoryStar) {
+  return Math.round(star.intensity * 105 + star.recency * 60 - star.unresolvedWeight * 32);
 }
 
 export default function LifeMapScene() {
-  const fallbackStars = useMemo(() => INITIAL_STARS, []);
-  const liveStars = useMemoryStars(fallbackStars);
-  const [state, dispatch] = useReducer(reducer, {
-    stars: fallbackStars,
-    activeStarId: null,
-    activeChapterId: null,
-    camera: INITIAL_CAMERA,
-    phase: 'living',
-    reducedMotion: false,
-    showThreads: false,
-    messages: { queue: [], lastBySource: {}, lastText: null },
-  });
+  const liveStars = useMemoryStars(FALLBACK_STARS);
+  const stars = liveStars.length < 10 ? FALLBACK_STARS : liveStars;
+  const [camera, setCamera] = useState<Camera>(INITIAL_CAMERA);
+  const [activeStarId, setActiveStarId] = useState<string | null>(null);
+  const [activeChapterId, setActiveChapterId] = useState<ChapterId | null>(null);
+  const [showThreads, setShowThreads] = useState(false);
+  const [message, setMessage] = useState('Wheel inward to enter the memory field. Click a bright memory when it feels alive.');
+  const dragRef = useRef({ active: false, x: 0, y: 0 });
 
-  const glowHistoryRef = useRef<GlowHistoryEntry[]>([]);
-  const tickRef = useRef(0);
-  const rngRef = useRef(createSeededRandom(90210));
-  const dragRef = useRef<{ active: boolean; x: number; y: number }>({ active: false, x: 0, y: 0 });
+  const activeStar = stars.find((star) => star.id === activeStarId) ?? null;
+  const starById = useMemo(() => new Map(stars.map((star) => [star.id, star])), [stars]);
 
-  useEffect(() => {
-    dispatch({ type: 'SET_STARS', stars: liveStars });
-  }, [liveStars]);
+  const fieldStyle: FieldStyle = {
+    '--x': `${camera.x}%`,
+    '--y': `${camera.y}%`,
+    '--z': String(camera.zoom),
+  };
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const onChange = () => dispatch({ type: 'SET_REDUCED_MOTION', value: mq.matches });
-    onChange();
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
+  const setClampedCamera = useCallback((next: Camera) => {
+    setCamera({
+      x: clamp(next.x, 20, 80),
+      y: clamp(next.y, 22, 78),
+      zoom: clamp(next.zoom, MIN_ZOOM, MAX_ZOOM),
+    });
+  }, []);
+
+  const focusStar = useCallback((star: MemoryStar) => {
+    setActiveStarId(star.id);
+    setActiveChapterId(star.chapterId);
+    setShowThreads(true);
+    setMessage(star.narratorLine);
+    setClampedCamera({ x: star.x, y: star.y, zoom: 2.55 });
+    dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
+    dispatchTimelineSyncEvent({ phase: 'focus' as LifeMapPhase, activeStarId: star.id, activeChapterId: star.chapterId });
+  }, [setClampedCamera]);
+
+  const resetView = useCallback(() => {
+    setActiveStarId(null);
+    setActiveChapterId(null);
+    setShowThreads(false);
+    setMessage('The map returned to its full shape.');
+    setClampedCamera(INITIAL_CAMERA);
+    dispatchTimelineSyncEvent({ phase: 'living' as LifeMapPhase, activeStarId: null, activeChapterId: null });
+  }, [setClampedCamera]);
+
+  const zoom = useCallback((delta: number) => {
+    setCamera((current) => {
+      const nextZoom = clamp(current.zoom * (delta > 0 ? 0.9 : 1.13), MIN_ZOOM, MAX_ZOOM);
+      setMessage(nextZoom > current.zoom ? 'Entering the memory field.' : 'Pulling back into the larger sky.');
+      return { ...current, zoom: nextZoom };
+    });
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        dispatch({ type: 'CLEAR_FOCUS' });
-        dispatchTimelineSyncEvent({ phase: 'living', activeStarId: null, activeChapterId: null });
-      }
-      if (event.key === '+' || event.key === '=') dispatch({ type: 'ZOOM_CAMERA', delta: -1 });
-      if (event.key === '-' || event.key === '_') dispatch({ type: 'ZOOM_CAMERA', delta: 1 });
-      if (event.key === '0') dispatch({ type: 'SET_CAMERA', camera: INITIAL_CAMERA, announce: true });
-      if (event.key === 't' || event.key === 'T') dispatch({ type: 'TOGGLE_THREADS' });
-      if (event.key === 'ArrowLeft') dispatch({ type: 'PAN_CAMERA', dx: -2, dy: 0 });
-      if (event.key === 'ArrowRight') dispatch({ type: 'PAN_CAMERA', dx: 2, dy: 0 });
-      if (event.key === 'ArrowUp') dispatch({ type: 'PAN_CAMERA', dx: 0, dy: -2 });
-      if (event.key === 'ArrowDown') dispatch({ type: 'PAN_CAMERA', dx: 0, dy: 2 });
+      if (event.key === 'Escape' || event.key === '0') resetView();
+      if (event.key === '+' || event.key === '=') zoom(-1);
+      if (event.key === '-' || event.key === '_') zoom(1);
+      if (event.key === 't' || event.key === 'T') setShowThreads((value) => !value);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
-
-  const activeStar = state.stars.find((star) => star.id === state.activeStarId) ?? null;
-  const activeMessage = getActiveMessage(state.messages);
-  const starById = useMemo(() => new Map(state.stars.map((star) => [star.id, star])), [state.stars]);
-  const fieldStyle: FieldStyle = {
-    '--camera-x': `${state.camera.x}%`,
-    '--camera-y': `${state.camera.y}%`,
-    '--camera-zoom': String(state.camera.zoom),
-    '--camera-tilt': `${state.camera.tilt}deg`,
-  };
+  }, [resetView, zoom]);
 
   const handleWheel = useCallback((event: WheelEvent<HTMLElement>) => {
     event.preventDefault();
-    dispatch({ type: 'ZOOM_CAMERA', delta: event.deltaY });
-  }, []);
+    zoom(event.deltaY);
+  }, [zoom]);
 
   const handlePointerDown = useCallback((event: PointerEvent<HTMLElement>) => {
     if ((event.target as HTMLElement).closest('button, a')) return;
@@ -316,7 +143,11 @@ export default function LifeMapScene() {
     const dx = ((event.clientX - dragRef.current.x) / Math.max(window.innerWidth, 1)) * 100;
     const dy = ((event.clientY - dragRef.current.y) / Math.max(window.innerHeight, 1)) * 100;
     dragRef.current = { active: true, x: event.clientX, y: event.clientY };
-    dispatch({ type: 'PAN_CAMERA', dx, dy });
+    setCamera((current) => ({
+      ...current,
+      x: clamp(current.x - dx / Math.max(current.zoom, 1), 20, 80),
+      y: clamp(current.y - dy / Math.max(current.zoom, 1), 22, 78),
+    }));
   }, []);
 
   const handlePointerUp = useCallback((event: PointerEvent<HTMLElement>) => {
@@ -325,110 +156,63 @@ export default function LifeMapScene() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-    let timer: number | undefined;
-    const run = () => {
-      const picked = chooseGlowingStars(
-        state.stars.filter((star) => star.id !== state.activeStarId),
-        glowHistoryRef.current,
-        { count: 1, tick: tickRef.current, minTicksBetweenGlows: 2, repeatWindowTicks: 6, maxRepeatsPerWindow: 2 },
-        rngRef.current,
-      );
-      dispatch({ type: 'SET_GLOWING_STARS', ids: picked });
-      dispatch({ type: 'PUSH_MESSAGE', msg: createMessage('glow', GLOW_LINES[Math.floor(rngRef.current() * GLOW_LINES.length)], 9000) });
-      dispatch({ type: 'PRUNE_MESSAGES' });
-      picked.forEach((id) => {
-        const star = state.stars.find((item) => item.id === id);
-        dispatchNarratorEvent({ event: 'lifemap.star.glow', starId: id, chapterId: star?.chapterId ?? null, emotion: star?.emotion ?? null });
-      });
-      glowHistoryRef.current = [...glowHistoryRef.current.slice(-20), { tick: tickRef.current, ids: picked }];
-      tickRef.current += 1;
-      timer = window.setTimeout(run, state.reducedMotion ? 14000 : 9000);
-    };
-    timer = window.setTimeout(run, state.reducedMotion ? 14000 : 9000);
-    return () => {
-      if (timer !== undefined) window.clearTimeout(timer);
-    };
-  }, [state.stars, state.activeStarId, state.reducedMotion]);
+    const timer = window.setInterval(() => {
+      if (activeStarId) return;
+      const glowing = stars[Math.floor(Math.random() * stars.length)];
+      if (glowing) setMessage(`${glowing.title} is beginning to glow.`);
+    }, 9000);
+    return () => window.clearInterval(timer);
+  }, [activeStarId, stars]);
 
   return (
-    <main className={`life-map-shell ${activeStar ? 'has-active-star' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+    <main className={`life-map-shell ${activeStar ? 'has-active' : ''}`} aria-label="URAI immersive Life Map" onWheel={handleWheel} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
       <WebGLLifeMapField />
-      <div className="cosmic-vignette" aria-hidden />
-      <div className="galaxy-core" aria-hidden />
-      <div className="orbit-ring ring-one" aria-hidden />
-      <div className="orbit-ring ring-two" aria-hidden />
+      <div className="vignette" aria-hidden />
+      <div className="core" aria-hidden />
+      <div className="orbit orbit-one" aria-hidden />
+      <div className="orbit orbit-two" aria-hidden />
 
-      <header className="life-map-hud" aria-label="Life Map status">
+      <header className="hud">
         <p>URAI Life Map</p>
         <h1>{activeStar ? activeStar.title : 'Immersive memory field'}</h1>
         <span>{activeStar ? 'Memory opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
       </header>
 
-      <section className={`field-space ${state.showThreads || activeStar ? 'show-threads' : ''}`}>
-        <div className="field-camera" style={fieldStyle}>
+      <section className={`field ${showThreads || activeStar ? 'show-threads' : ''}`}>
+        <div className="camera" style={fieldStyle}>
           <svg className="threads" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-            {state.stars.flatMap((star) => star.connectedTo.map((to) => [star.id, to] as const)).filter(([a, b]) => a < b).map(([a, b]) => {
+            {stars.flatMap((star) => star.connectedTo.map((to) => [star.id, to] as const)).filter(([a, b]) => a < b).map(([a, b]) => {
               const s1 = starById.get(a);
               const s2 = starById.get(b);
               if (!s1 || !s2) return null;
-              const activeThread = !!activeStar && (a === activeStar.id || b === activeStar.id || activeStar.connectedTo.includes(a) || activeStar.connectedTo.includes(b));
-              return <line key={`${a}-${b}`} className={activeThread ? 'thread active' : 'thread'} x1={s1.x} y1={s1.y} x2={s2.x} y2={s2.y} />;
+              const active = activeStar && (a === activeStar.id || b === activeStar.id || activeStar.connectedTo.includes(a) || activeStar.connectedTo.includes(b));
+              return <line key={`${a}-${b}`} className={active ? 'thread active' : 'thread'} x1={s1.x} y1={s1.y} x2={s2.x} y2={s2.y} />;
             })}
           </svg>
 
-          {state.stars.map((star) => {
-            const depth = starDepth(star);
-            const dimmed = !!activeStar && star.id !== activeStar.id && !activeStar.connectedTo.includes(star.id);
-            const style: StarStyle = {
+          {stars.map((star) => {
+            const depth = depthFor(star);
+            const dim = activeStar && star.id !== activeStar.id && !activeStar.connectedTo.includes(star.id);
+            const style: NodeStyle = {
               left: `${star.x}%`,
               top: `${star.y}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
-              '--star-z': `${depth}px`,
-              '--star-scale': String(1 + depth / 540),
-              '--star-alpha': String(clamp(0.58 + star.recency * 0.38, 0.52, 0.98)),
-              '--star-hue': emotionHue(star),
+              '--depth': `${depth}px`,
+              '--scale': String(1 + depth / 560),
+              '--hue': hueFor(star),
+              '--alpha': String(clamp(0.62 + star.recency * 0.32, 0.54, 0.98)),
             };
             return (
-              <button key={star.id} type="button" className={`memory-node state-${star.state} ${star.id === activeStar?.id ? 'active' : ''} ${dimmed ? 'dimmed' : ''}`} style={style} aria-label={`Open ${star.title}`} onClick={(event) => {
-                event.stopPropagation();
-                dispatch({ type: 'FOCUS_STAR', starId: star.id });
-                dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
-                dispatchTimelineSyncEvent({ phase: 'focus', activeStarId: star.id, activeChapterId: star.chapterId });
-              }}>
-                <span>{star.title}</span>
+              <button key={star.id} type="button" className={`node ${star.id === activeStar?.id ? 'active' : ''} ${dim ? 'dim' : ''}`} style={style} aria-label={`Open ${star.title}`} onClick={(event) => { event.stopPropagation(); focusStar(star); }}>
+                <span className="node-label">{star.title}</span>
               </button>
             );
           })}
         </div>
       </section>
 
-      <aside className="companion-whisper" aria-live="polite">
-        <strong>Companion</strong>
-        <span>{activeMessage}</span>
-      </aside>
-
-      <nav className="chapter-dock" aria-label="Life Map chapters">
-        {CHAPTERS.map((chapter) => (
-          <button key={chapter.id} type="button" className={state.activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
-            dispatch({ type: 'FOCUS_CHAPTER', chapterId: chapter.id, camera: { x: chapter.x, y: chapter.y, zoom: 1.55, tilt: 3 }, text: CHAPTER_LINES[chapter.id] });
-            dispatchNarratorEvent({ event: 'lifemap.cluster.focus', chapterId: chapter.id });
-            dispatchTimelineSyncEvent({ phase: 'cluster', activeStarId: null, activeChapterId: chapter.id });
-          }}>
-            <strong>{chapter.title}</strong>
-            <span>{chapter.subtitle}</span>
-          </button>
-        ))}
-      </nav>
-
-      <div className="camera-dock" aria-label="Camera controls">
-        <button type="button" onClick={() => dispatch({ type: 'ZOOM_CAMERA', delta: -1 })}>Enter</button>
-        <button type="button" onClick={() => dispatch({ type: 'ZOOM_CAMERA', delta: 1 })}>Pull back</button>
-        <button type="button" onClick={() => dispatch({ type: 'TOGGLE_THREADS' })}>{state.showThreads ? 'Hide threads' : 'Show threads'}</button>
-        <button type="button" onClick={() => dispatch({ type: 'SET_CAMERA', camera: INITIAL_CAMERA, announce: true })}>Reset</button>
-        <span>{Math.round(state.camera.zoom * 100)}%</span>
-      </div>
+      <aside className="companion"><strong>Companion</strong><span>{message}</span></aside>
 
       {activeStar && (
         <aside className="memory-card" aria-live="polite">
@@ -436,238 +220,79 @@ export default function LifeMapScene() {
           <h2>{activeStar.title}</h2>
           <span>{activeStar.narratorLine}</span>
           <div>
-            <button type="button" onClick={() => dispatch({ type: 'PUSH_MESSAGE', msg: createMessage('focus', 'Replaying the emotional thread.', 9000) })}>Replay</button>
-            <button type="button" onClick={() => dispatch({ type: 'MARK_RESOLVED', starId: activeStar.id })}>Soften</button>
-            <button type="button" onClick={() => dispatch({ type: 'CLEAR_FOCUS' })}>Close</button>
+            <button type="button" onClick={() => setMessage('Replaying the emotional thread.')}>Replay</button>
+            <button type="button" onClick={() => setMessage('This one has softened.')}>Soften</button>
+            <button type="button" onClick={resetView}>Close</button>
           </div>
         </aside>
       )}
 
+      <div className="controls">
+        <button type="button" onClick={() => zoom(-1)}>Enter</button>
+        <button type="button" onClick={() => zoom(1)}>Pull back</button>
+        <button type="button" onClick={() => setShowThreads((value) => !value)}>{showThreads ? 'Hide threads' : 'Show threads'}</button>
+        <button type="button" onClick={resetView}>Reset</button>
+        <span>{Math.round(camera.zoom * 100)}%</span>
+      </div>
+
+      <nav className="chapters" aria-label="Life Map chapters">
+        {CHAPTERS.map((chapter) => (
+          <button key={chapter.id} type="button" className={activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
+            setActiveStarId(null);
+            setActiveChapterId(chapter.id);
+            setMessage(CHAPTER_LINES[chapter.id]);
+            setClampedCamera({ x: chapter.x, y: chapter.y, zoom: 1.58 });
+            dispatchNarratorEvent({ event: 'lifemap.cluster.focus', chapterId: chapter.id });
+            dispatchTimelineSyncEvent({ phase: 'cluster' as LifeMapPhase, activeStarId: null, activeChapterId: chapter.id });
+          }}>
+            <strong>{chapter.title}</strong>
+            <span>{chapter.subtitle}</span>
+          </button>
+        ))}
+      </nav>
+
       <style jsx>{`
-        .life-map-shell {
-          min-height: 100vh;
-          position: relative;
-          overflow: hidden;
-          color: white;
-          background: radial-gradient(circle at 50% 47%, #213b78 0%, #081025 48%, #01020a 100%);
-          touch-action: none;
-          cursor: grab;
-          perspective: 1500px;
-          isolation: isolate;
-        }
+        .life-map-shell { min-height: 100vh; position: relative; overflow: hidden; isolation: isolate; color: white; background: radial-gradient(circle at 50% 48%, #203c78 0%, #081026 48%, #01020a 100%); touch-action: none; cursor: grab; perspective: 1500px; }
         .life-map-shell:active { cursor: grabbing; }
-        .cosmic-vignette, .galaxy-core, .orbit-ring { position: absolute; pointer-events: none; }
-        .cosmic-vignette {
-          z-index: 2;
-          inset: 0;
-          background:
-            radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.1) 50%, rgba(0,0,0,.82) 100%),
-            radial-gradient(circle at 50% 54%, rgba(125,211,252,.11), transparent 34%);
-        }
-        .galaxy-core {
-          z-index: 1;
-          left: 50%;
-          top: 51%;
-          width: min(52vw, 660px);
-          height: min(52vw, 660px);
-          transform: translate(-50%, -50%);
-          border-radius: 999px;
-          background:
-            radial-gradient(circle, rgba(255,255,255,.1), transparent 13%),
-            radial-gradient(circle, rgba(125,211,252,.16), rgba(70,90,190,.06) 44%, transparent 70%);
-          filter: blur(10px);
-          opacity: .95;
-        }
-        .orbit-ring {
-          z-index: 3;
-          left: 50%;
-          top: 51%;
-          border: 1px solid rgba(170,210,255,.08);
-          border-radius: 999px;
-          transform: translate(-50%, -50%) rotate(-12deg);
-          opacity: .6;
-        }
-        .ring-one { width: min(46vw, 580px); height: min(22vw, 280px); }
-        .ring-two { width: min(61vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(17deg); opacity: .38; }
-        .life-map-hud {
-          position: absolute;
-          z-index: 8;
-          left: 50%;
-          top: 1rem;
-          transform: translateX(-50%);
-          text-align: center;
-          pointer-events: none;
-          text-shadow: 0 2px 16px rgba(0,0,0,.85);
-        }
-        .life-map-hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
-        .life-map-hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); letter-spacing: .02em; }
-        .life-map-hud span { display: block; margin-top: .25rem; font-size: .72rem; color: rgba(255,255,255,.56); }
-        .field-space {
-          position: absolute;
-          z-index: 4;
-          inset: 0;
-          perspective: 1500px;
-          transform-style: preserve-3d;
-        }
-        .field-camera {
-          position: absolute;
-          inset: 0;
-          transform-style: preserve-3d;
-          transform-origin: var(--camera-x) var(--camera-y);
-          will-change: transform;
-          transform: perspective(1500px) rotateX(var(--camera-tilt)) translate3d(calc(50% - var(--camera-x)), calc(50% - var(--camera-y)), 0) scale(var(--camera-zoom));
-          transition: transform 500ms cubic-bezier(.19, 1, .22, 1);
-        }
-        .threads {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          transform: translateZ(-140px);
-          opacity: 0;
-          transition: opacity .45s ease;
-        }
+        .vignette, .core, .orbit { position: absolute; pointer-events: none; }
+        .vignette { z-index: 2; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.84) 100%), radial-gradient(circle at 50% 54%, rgba(125,211,252,.12), transparent 34%); }
+        .core { z-index: 1; left: 50%; top: 52%; width: min(52vw, 660px); height: min(52vw, 660px); transform: translate(-50%, -50%); border-radius: 999px; background: radial-gradient(circle, rgba(255,255,255,.11), transparent 12%), radial-gradient(circle, rgba(125,211,252,.17), rgba(70,90,190,.06) 46%, transparent 72%); filter: blur(10px); opacity: .95; }
+        .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.08); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
+        .orbit-one { width: min(46vw, 580px); height: min(21vw, 270px); }
+        .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .45; }
+        .hud { position: absolute; z-index: 8; left: 50%; top: 1rem; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 2px 16px rgba(0,0,0,.85); }
+        .hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
+        .hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); }
+        .hud span { display: block; margin-top: .25rem; font-size: .72rem; color: rgba(255,255,255,.56); }
+        .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; }
+        .camera { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: var(--x) var(--y); will-change: transform; transform: perspective(1500px) translate3d(calc(50% - var(--x)), calc(50% - var(--y)), 0) scale(var(--z)); transition: transform 500ms cubic-bezier(.19,1,.22,1); }
+        .threads { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; transform: translateZ(-150px); }
         .show-threads .threads { opacity: .3; }
-        .thread { stroke: rgba(180,215,255,.16); stroke-width: .1; }
-        .thread.active { stroke: rgba(220,245,255,.46); stroke-width: .16; filter: drop-shadow(0 0 5px rgba(125,211,252,.42)); }
-        .memory-node {
-          position: absolute;
-          transform: translate3d(-50%, -50%, var(--star-z)) scale(var(--star-scale));
-          border: 0;
-          border-radius: 999px;
-          background:
-            radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 19%, hsl(var(--star-hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%);
-          box-shadow:
-            0 0 10px rgba(255,255,255,.78),
-            0 0 32px hsl(var(--star-hue) 86% 68% / .42),
-            0 0 82px hsl(var(--star-hue) 92% 64% / .16);
-          opacity: var(--star-alpha);
-          cursor: pointer;
-          transition: opacity .35s ease, transform .35s ease, filter .35s ease;
-          transform-style: preserve-3d;
-        }
-        .memory-node::before {
-          content: '';
-          position: absolute;
-          inset: -18px;
-          border-radius: 999px;
-          background: radial-gradient(circle, hsl(var(--star-hue) 90% 70% / .22), transparent 64%);
-          opacity: .5;
-        }
-        .memory-node:hover, .memory-node.active {
-          opacity: 1;
-          filter: brightness(1.24);
-          transform: translate3d(-50%, -50%, calc(var(--star-z) + 58px)) scale(calc(var(--star-scale) * 1.2));
-        }
-        .memory-node.state-glowing { animation: nodePulse 3.2s ease-in-out infinite; }
-        .memory-node.dimmed { opacity: .16; }
-        .memory-node span {
-          position: absolute;
-          top: calc(100% + .55rem);
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap;
-          color: rgba(255,255,255,.84);
-          font-size: .66rem;
-          letter-spacing: .015em;
-          text-shadow: 0 2px 12px rgba(0,0,0,.95);
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity .25s ease;
-        }
-        .memory-node:hover span, .memory-node.active span { opacity: .95; }
-        .companion-whisper {
-          position: absolute;
-          z-index: 8;
-          right: 1rem;
-          top: 1rem;
-          width: min(280px, calc(100vw - 2rem));
-          border: 1px solid rgba(157,196,255,.2);
-          border-radius: 16px;
-          background: rgba(4,7,18,.46);
-          backdrop-filter: blur(10px);
-          padding: .75rem .85rem;
-          color: rgba(255,255,255,.76);
-          box-shadow: 0 20px 54px rgba(0,0,0,.22);
-        }
-        .companion-whisper strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
-        .companion-whisper span { font-size: .8rem; line-height: 1.45; }
-        .camera-dock, .chapter-dock, .memory-card {
-          position: absolute;
-          z-index: 9;
-          border: 1px solid rgba(157,196,255,.22);
-          background: rgba(5,8,20,.5);
-          backdrop-filter: blur(12px);
-          box-shadow: 0 24px 64px rgba(0,0,0,.25);
-        }
-        .camera-dock {
-          left: 50%;
-          bottom: 6.2rem;
-          transform: translateX(-50%);
-          display: flex;
-          align-items: center;
-          gap: .4rem;
-          border-radius: 999px;
-          padding: .36rem;
-        }
-        .camera-dock button, .camera-dock span, .memory-card button {
-          border: 1px solid rgba(157,196,255,.24);
-          border-radius: 999px;
-          background: rgba(13,20,45,.64);
-          color: white;
-          font-size: .72rem;
-          padding: .44rem .7rem;
-        }
-        .chapter-dock {
-          left: 50%;
-          bottom: 1rem;
-          transform: translateX(-50%);
-          width: min(880px, calc(100vw - 2rem));
-          border-radius: 28px;
-          padding: .45rem;
-          display: grid;
-          grid-template-columns: repeat(5, minmax(0, 1fr));
-          gap: .35rem;
-        }
-        .chapter-dock button {
-          border: 0;
-          border-radius: 22px;
-          background: transparent;
-          color: rgba(255,255,255,.62);
-          padding: .55rem .65rem;
-          text-align: left;
-          transition: background .2s ease, color .2s ease;
-        }
-        .chapter-dock button:hover, .chapter-dock button.active { background: rgba(255,255,255,.08); color: white; }
-        .chapter-dock strong { display: block; font-size: .78rem; }
-        .chapter-dock span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
-        .memory-card {
-          left: 50%;
-          bottom: 10.4rem;
-          transform: translateX(-50%);
-          width: min(520px, calc(100vw - 2rem));
-          border-radius: 24px;
-          padding: 1rem;
-          text-align: center;
-        }
+        .thread { stroke: rgba(180,215,255,.15); stroke-width: .1; }
+        .thread.active { stroke: rgba(220,245,255,.5); stroke-width: .16; filter: drop-shadow(0 0 5px rgba(125,211,252,.45)); }
+        .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 32px hsl(var(--hue) 86% 68% / .42), 0 0 82px hsl(var(--hue) 92% 64% / .16); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
+        .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; }
+        .node:hover, .node.active { opacity: 1; filter: brightness(1.24); transform: translate3d(-50%, -50%, calc(var(--depth) + 58px)) scale(calc(var(--scale) * 1.2)); }
+        .node.dim { opacity: .16; }
+        .node-label { position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+        .node:hover .node-label, .node.active .node-label { opacity: .95; }
+        .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(280px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.2); border-radius: 16px; background: rgba(4,7,18,.46); backdrop-filter: blur(10px); padding: .75rem .85rem; color: rgba(255,255,255,.76); box-shadow: 0 20px 54px rgba(0,0,0,.22); }
+        .companion strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
+        .companion span { font-size: .8rem; line-height: 1.45; }
+        .controls, .chapters, .memory-card { position: absolute; z-index: 9; border: 1px solid rgba(157,196,255,.22); background: rgba(5,8,20,.5); backdrop-filter: blur(12px); box-shadow: 0 24px 64px rgba(0,0,0,.25); }
+        .controls { left: 50%; bottom: 6.2rem; transform: translateX(-50%); display: flex; align-items: center; gap: .4rem; border-radius: 999px; padding: .36rem; }
+        .controls button, .controls span, .memory-card button { border: 1px solid rgba(157,196,255,.24); border-radius: 999px; background: rgba(13,20,45,.64); color: white; font-size: .72rem; padding: .44rem .7rem; }
+        .chapters { left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(880px, calc(100vw - 2rem)); border-radius: 28px; padding: .45rem; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; }
+        .chapters button { border: 0; border-radius: 22px; background: transparent; color: rgba(255,255,255,.62); padding: .55rem .65rem; text-align: left; transition: background .2s ease, color .2s ease; }
+        .chapters button:hover, .chapters button.active { background: rgba(255,255,255,.08); color: white; }
+        .chapters strong { display: block; font-size: .78rem; }
+        .chapters span { display: block; margin-top: .12rem; font-size: .62rem; opacity: .66; }
+        .memory-card { left: 50%; bottom: 10.4rem; transform: translateX(-50%); width: min(520px, calc(100vw - 2rem)); border-radius: 24px; padding: 1rem; text-align: center; }
         .memory-card p { margin: 0; font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.48); }
         .memory-card h2 { margin: .35rem 0 .5rem; font-size: 1.5rem; }
         .memory-card span { display: block; color: rgba(255,255,255,.78); line-height: 1.55; }
         .memory-card div { display: flex; justify-content: center; gap: .5rem; margin-top: .9rem; flex-wrap: wrap; }
-        @keyframes nodePulse {
-          0%, 100% { transform: translate3d(-50%, -50%, var(--star-z)) scale(var(--star-scale)); }
-          50% { transform: translate3d(-50%, -50%, calc(var(--star-z) + 30px)) scale(calc(var(--star-scale) * 1.13)); }
-        }
-        @media (max-width: 760px) {
-          .life-map-hud { left: 1rem; right: 1rem; transform: none; }
-          .companion-whisper { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; }
-          .camera-dock { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; }
-          .chapter-dock { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; }
-          .memory-card { bottom: 13.3rem; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .field-camera, .memory-node, .threads { animation: none !important; transition-duration: .01ms !important; }
-        }
+        @media (max-width: 760px) { .hud { left: 1rem; right: 1rem; transform: none; } .companion { left: 1rem; right: 1rem; top: auto; bottom: 10rem; width: auto; } .controls { bottom: 6.8rem; width: calc(100vw - 2rem); overflow-x: auto; justify-content: flex-start; } .chapters { grid-template-columns: 1fr 1fr; max-height: 5.6rem; overflow: auto; } .memory-card { bottom: 13.3rem; } }
       `}</style>
     </main>
   );
