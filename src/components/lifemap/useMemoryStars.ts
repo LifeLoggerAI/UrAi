@@ -26,11 +26,11 @@ export type MemoryStar = {
 };
 
 function positionForIndex(index: number) {
-  const radius = 25 + (index % 4) * 6;
+  const radius = 13 + (index % 5) * 3.8;
   const angle = index * 2.399963229728653;
   return {
-    x: Math.max(12, Math.min(88, 50 + Math.cos(angle) * radius)),
-    y: Math.max(14, Math.min(82, 48 + Math.sin(angle) * radius)),
+    x: Math.max(26, Math.min(74, 50 + Math.cos(angle) * radius)),
+    y: Math.max(25, Math.min(72, 48 + Math.sin(angle) * radius * 0.78)),
   };
 }
 
@@ -43,7 +43,7 @@ function toMemoryStar(id: string, data: DocumentData, index: number): MemoryStar
     title: enriched.title,
     x: position.x,
     y: position.y,
-    size: 16 + Math.round(enriched.intensity * 12),
+    size: 8 + Math.round(enriched.intensity * 8),
     emotion: enriched.emotion,
     chapterId: enriched.chapterId,
     state: data.resolved === true ? "resolved" : "idle",
@@ -54,13 +54,6 @@ function toMemoryStar(id: string, data: DocumentData, index: number): MemoryStar
     narratorLine: enriched.narratorLine,
     connectedTo: [],
   };
-}
-
-function addFallbackConnections(stars: MemoryStar[]) {
-  return stars.map((star, index) => ({
-    ...star,
-    connectedTo: [stars[index - 1]?.id, stars[index + 1]?.id].filter(Boolean) as string[],
-  }));
 }
 
 export function useMemoryStars(fallbackStars: MemoryStar[]) {
@@ -100,7 +93,7 @@ export function useMemoryStars(fallbackStars: MemoryStar[]) {
               toMemoryStar(docSnap.id, docSnap.data(), index),
             );
 
-            setStars(next.length ? addFallbackConnections(next) : fallbackStars);
+            setStars(next.length ? next : fallbackStars);
           },
           () => setStars(fallbackStars),
         );
