@@ -239,6 +239,51 @@ const seed = {
   waitlistSignups: {},
   userSubcollections: {
     [ownerUid]: {
+      homeState: {
+        current: {
+          mood: { label: "Mirror Clarity", confidence: 0.9 },
+          rhythm: { state: "focused" },
+          recovery: { score: 74, direction: "rising", bloomReady: true },
+          stress: { shadowLoad: 0.18, cognitiveLoad: 0.31, thresholdRisk: 0.12 },
+          forecast: {
+            label: "6 live nodes shaping the field",
+            message: "Recovery is rising while the Mirror Pattern and Launch Edge stay active in the map."
+          },
+          social: { energy: "balanced" },
+          companion: { state: "reflecting", message: "Mirror Pattern is active." },
+          visual: { state: "recovery", auraColor: "#7ee7ff", auraSecondaryColor: "#fbbf24" },
+          insight: {
+            id: "home-mirror-pattern",
+            title: "Mirror Pattern is active.",
+            body: "The home field is now reading seeded Life Map nodes instead of placeholder copy.",
+            ctaLabel: "Enter Life Map",
+            ctaRoute: "/lifemap",
+            confidence: 0.9
+          }
+        }
+      },
+      moodForecasts: {
+        current: {
+          summary: "6 live nodes shaping the field",
+          message: "Recovery is rising while the Mirror Pattern and Launch Edge stay active in the map.",
+          rhythmState: "focused",
+          confidence: 0.9
+        }
+      },
+      companionState: {
+        current: {
+          mode: "reflecting",
+          narratorWhisper: "Mirror Pattern is active.",
+          trustLevel: 0.74
+        }
+      },
+      visualState: {
+        current: {
+          visualState: "recovery",
+          auraColor: "#7ee7ff",
+          auraSecondaryColor: "#fbbf24"
+        }
+      },
       lifeMapNodes
     }
   }
