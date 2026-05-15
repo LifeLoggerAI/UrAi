@@ -257,6 +257,10 @@ export default function LifeMapScene() {
   return (
     <main className="life-map-shell" aria-label="URAI WebGL Spatial Life Map scene">
       <WebGLLifeMapField />
+      <header className="lifemap-title" aria-label="Life Map title">
+        <p>URAI Sky Map V1 · WebGL spatial</p>
+        <h1>WebGL Life Map with accessible constellation controls</h1>
+      </header>
       <section className={`lifemap-space ${activeStar ? 'is-focused' : ''}`}>
         <div className="starfield" style={starfieldStyle}>
           <svg className="connections" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
@@ -322,8 +326,9 @@ export default function LifeMapScene() {
       </nav>
       <style jsx>{`
         .life-map-shell { min-height: 100vh; background: radial-gradient(circle at 50% 28%, #26366d, #0a0f20 58%, #05060f 100%); color: #eef3ff; position: relative; padding: 1rem; overflow: hidden; }
-        .life-map-shell::before { content: 'URAI Sky Map V1 · WebGL spatial'; position: absolute; z-index: 5; left: 29%; top: 1rem; color: rgba(238, 243, 255, 0.55); font-size: 0.64rem; letter-spacing: 0.32em; text-transform: uppercase; }
-        .life-map-shell::after { content: 'WebGL Life Map with accessible constellation controls'; position: absolute; z-index: 5; left: 29%; top: 2rem; color: rgba(255, 255, 255, 0.94); font-size: 1rem; font-weight: 700; }
+        .lifemap-title { position: absolute; z-index: 7; left: 29%; top: 1rem; pointer-events: none; }
+        .lifemap-title p { margin: 0; color: rgba(238, 243, 255, 0.55); font-size: 0.64rem; letter-spacing: 0.32em; text-transform: uppercase; }
+        .lifemap-title h1 { margin: 0.25rem 0 0; color: rgba(255, 255, 255, 0.94); font-size: 1rem; font-weight: 700; }
         .lifemap-space { position: absolute; inset: 0 0 120px; z-index: 1; }
         .starfield { position: absolute; inset: 0; transform: translate(calc(50% - var(--camera-x)), calc(50% - var(--camera-y))) scale(var(--camera-zoom)); transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1); }
         .connections { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -357,7 +362,7 @@ export default function LifeMapScene() {
         @keyframes constellationFlow { to { stroke-dashoffset: -80; } }
         @keyframes starPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.12); } }
         @keyframes patternPanelIn { from { opacity: 0; transform: translateY(-8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @media (max-width: 760px) { .life-map-shell::before, .life-map-shell::after { left: 1rem; } .companion-panel, .detail, .pattern-panel { left: 1rem; right: 1rem; width: auto; } .pattern-panel { top: 4.5rem; } .detail { top: auto; bottom: 7.5rem; } .chapter-row { grid-template-columns: 1fr; max-height: 6.5rem; overflow: auto; } }
+        @media (max-width: 760px) { .lifemap-title { left: 1rem; } .companion-panel, .detail, .pattern-panel { left: 1rem; right: 1rem; width: auto; } .pattern-panel { top: 4.5rem; } .detail { top: auto; bottom: 7.5rem; } .chapter-row { grid-template-columns: 1fr; max-height: 6.5rem; overflow: auto; } }
         @media (prefers-reduced-motion: reduce) { .memory-star, .connection-line, .starfield, .pattern-panel { animation: none !important; transition-duration: .01ms !important; } }
       `}</style>
     </main>
