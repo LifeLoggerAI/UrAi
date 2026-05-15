@@ -19,6 +19,15 @@ type StarStyle = CSSProperties & {
   '--alpha': string;
 };
 
+type DustStyle = CSSProperties & {
+  '--x': string;
+  '--y': string;
+  '--s': string;
+  '--a': string;
+  '--d': string;
+  '--twinkle': string;
+};
+
 type OverlayStyle = CSSProperties & {
   '--overlay-x': string;
   '--overlay-y': string;
@@ -41,15 +50,20 @@ const hueByTone: Record<LifeMapTone, string> = {
   focus: '202deg',
 };
 
-const chapterCopy: Record<LifeMapChapterId, string> = {
-  becoming: 'Growth signals, focus returns, and small future-facing memory lights.',
-  threshold: 'Crossing points where pressure became visible enough to name.',
-  recovery: 'Recovery blooms, sleep shifts, grounding rituals, and return arcs.',
-  relationships: 'Relationship orbits, silence trails, repair threads, and social warmth.',
-  'dream-field': 'Symbolic echoes, dream signals, and recurring inner imagery.',
-  shadow: 'Hidden strain, digital friction, bedtime loops, and protective uncertainty.',
-  mirror: 'Long-term identity synthesis and Mirror of Becoming signals.',
-};
+const DEEP_STARS = Array.from({ length: 168 }, (_, index) => {
+  const x = (index * 37 + 11) % 100;
+  const y = (index * 61 + 7) % 100;
+  const layer = index % 5;
+  return {
+    id: `deep-star-${index}`,
+    x,
+    y,
+    size: layer === 0 ? 1.9 : layer === 1 ? 1.35 : layer === 2 ? 1.05 : 0.72,
+    alpha: layer === 0 ? 0.86 : layer === 1 ? 0.62 : layer === 2 ? 0.44 : 0.28,
+    depth: layer,
+    twinkle: 3.4 + (index % 7) * 0.47,
+  };
+});
 
 function cx(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(' ');
@@ -75,6 +89,18 @@ function lineFor(starsById: Map<string, MemoryStar>, a: string, b: string) {
   return { first, second };
 }
 
+function starClass(star: MemoryStar, active: boolean, dim: boolean) {
+  return cx(
+    'life-star',
+    active && 'active',
+    dim && 'dim',
+    `tone-${star.emotionalTone}`,
+    star.starType === 'ritual_completion' && 'ritual',
+    star.starType === 'threshold_moment' && 'threshold',
+    star.starType === 'relationship_echo' && 'relationship',
+  );
+}
+
 export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: boolean }) {
   const data = useFullLifeMapData(forceDemo);
   const [selectedStarId, setSelectedStarId] = useState<string | null>(null);
@@ -95,14 +121,14 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
   const selectedBloom = getBloomForStar(data, selectedStarId);
   const relatedIds = activeRelatedIds(selectedStar, data.constellations);
   const selectedConstellation = selectedConstellationId ? data.constellations.find((item) => item.id === selectedConstellationId) ?? null : null;
-  const companionLine = selectedStar?.narratorLine ?? selectedConstellation?.narratorLine ?? data.companion.currentPrompt;
+  const companionLine = selectedStar?.narratorLine ?? selectedConstellation?.narratorLine ?? 'Choose a bright star. URAI will open the memory, thread, and reason it appeared.';
 
   const handleStar = useCallback((star: MemoryStar) => {
     setSelectedStarId(star.id);
     setSelectedConstellationId(star.constellationIds[0] ?? null);
     setShowWhy(false);
     setMode('focus');
-    setZoom(1.18);
+    setZoom(1.16);
   }, []);
 
   const reset = useCallback(() => {
@@ -122,25 +148,39 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
   const replayStars = selectedConstellation?.starIds ?? selectedStar?.constellationIds.flatMap((id) => data.constellations.find((item) => item.id === id)?.starIds ?? []) ?? [];
 
   return (
-    <main className={cx('life-map-v2', mode !== 'galaxy' && 'is-layered')} aria-label="URAI Life Map final implementation">
-      <div className="sky-vignette" aria-hidden />
-      <div className="emotional-core" aria-hidden />
-      <div className="particle-dust" aria-hidden />
+    <main className={cx('life-map-v3', mode !== 'galaxy' && 'is-layered')} aria-label="URAI Life Map">
+      <div className="void" aria-hidden />
+      <div className="nebula nebula-blue" aria-hidden />
+      <div className="nebula nebula-violet" aria-hidden />
+      <div className="nebula nebula-gold" aria-hidden />
+      <div className="star-dust" aria-hidden>
+        {DEEP_STARS.map((star) => {
+          const style: DustStyle = {
+            '--x': `${star.x}%`,
+            '--y': `${star.y}%`,
+            '--s': `${star.size}px`,
+            '--a': String(star.alpha),
+            '--d': `${star.depth * 28}px`,
+            '--twinkle': `${star.twinkle}s`,
+          };
+          return <span key={star.id} style={style} />;
+        })}
+      </div>
 
       {data.overlays.map((overlay, index) => {
         const style: OverlayStyle = {
-          '--overlay-x': `${33 + index * 18}%`,
-          '--overlay-y': `${38 + (index % 2) * 18}%`,
+          '--overlay-x': `${30 + index * 20}%`,
+          '--overlay-y': `${36 + (index % 2) * 22}%`,
           '--overlay-color': toneHue(overlay.overlayType === 'shadow' ? 'shadow' : overlay.overlayType === 'threshold' ? 'threshold' : 'recovery'),
-          '--overlay-alpha': String(Math.max(0.12, overlay.intensity * 0.34)),
+          '--overlay-alpha': String(Math.max(0.08, overlay.intensity * 0.22)),
         };
         return <div key={overlay.id} className={`symbolic-overlay ${overlay.overlayType}`} style={style} aria-hidden />;
       })}
 
       <header className="life-map-header">
-        <p>URAI Life Map</p>
-        <h1>{mode === 'focus' && selectedStar ? selectedStar.title : mode === 'mirror' ? 'Mirror of Becoming' : 'Emotional constellation of your life'}</h1>
-        <span>{data.source === 'firestore' ? 'Live Firestore signals' : 'Demo passive-signal field'} · pinch, wheel, drag, tap, replay, export</span>
+        <p>URAI LIFE MAP</p>
+        <h1>{mode === 'focus' && selectedStar ? selectedStar.title : mode === 'mirror' ? 'Mirror of Becoming' : 'Memory galaxy'}</h1>
+        <span>{data.stars.length} memory stars · {data.constellations.length} emotional threads · private symbolic map</span>
       </header>
 
       <Link href="/" className="home-link">Return home</Link>
@@ -148,10 +188,14 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
       <section className="companion-panel" aria-live="polite">
         <strong>Companion</strong>
         <span>{companionLine}</span>
-        <small>{data.loading ? 'Forming your Life Map…' : `${data.stars.length} memory stars · ${data.constellations.length} constellations`}</small>
+        <small>{data.loading ? 'Forming the field…' : 'Tap a star to open the bloom.'}</small>
       </section>
 
       <section className="galaxy-shell" style={{ transform: `scale(${zoom})` }}>
+        <div className="galaxy-plane galaxy-plane-back" aria-hidden />
+        <div className="galaxy-plane galaxy-plane-mid" aria-hidden />
+        <div className="galaxy-plane galaxy-plane-front" aria-hidden />
+
         <svg className={cx('constellation-svg', showThreads && 'visible')} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
           {data.constellations.map((constellation) => {
             const ids = constellation.starIds;
@@ -180,23 +224,25 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
             '--x': `${star.position.x}%`,
             '--y': `${star.position.y}%`,
             '--z': `${star.position.z}px`,
-            '--size': `${star.visual.size}px`,
+            '--size': `${Math.max(7, star.visual.size * 0.72)}px`,
             '--hue': toneHue(star.emotionalTone),
-            '--aura': `${star.visual.auraRadius}px`,
-            '--pulse': `${1.6 + star.visual.pulseSpeed * 2.8}s`,
-            '--alpha': String(Math.max(0.38, star.confidence)),
+            '--aura': `${Math.max(28, star.visual.auraRadius * 0.82)}px`,
+            '--pulse': `${1.7 + star.visual.pulseSpeed * 2.9}s`,
+            '--alpha': String(Math.max(0.48, star.confidence)),
           };
           return (
             <button
               key={star.id}
               type="button"
-              className={cx('life-star', active && 'active', selectedStar && !related && 'dim', star.starType === 'ritual_completion' && 'ritual', star.starType === 'threshold_moment' && 'threshold')}
+              className={starClass(star, active, Boolean(selectedStar && !related))}
               style={style}
               onClick={() => handleStar(star)}
               onDoubleClick={() => setMode('replay')}
               aria-label={`Open memory bloom for ${star.title}`}
             >
-              <span className="star-glyph">{star.glyphType}</span>
+              <span className="star-core" />
+              <span className="star-ray ray-one" />
+              <span className="star-ray ray-two" />
               <span className="star-label"><strong>{star.title}</strong><small>{star.subtitle}</small></span>
             </button>
           );
@@ -204,7 +250,7 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
       </section>
 
       <nav className="lens-bar" aria-label="Life Map lenses">
-        <button className={lens === 'all' ? 'active' : ''} onClick={() => setLens('all')}>All life</button>
+        <button className={lens === 'all' ? 'active' : ''} onClick={() => setLens('all')}>All stars</button>
         {data.chapters.map((chapter) => (
           <button key={chapter.id} className={lens === chapter.id ? 'active' : ''} onClick={() => { setLens(chapter.id); setSelectedConstellationId(chapter.constellationIds[0] ?? null); }}>
             <strong>{chapter.title}</strong><small>{chapter.subtitle}</small>
@@ -213,11 +259,9 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
       </nav>
 
       <div className="control-dock">
-        <button onClick={() => setZoom((value) => Math.min(1.75, value + 0.12))}>Enter</button>
-        <button onClick={() => setZoom((value) => Math.max(0.72, value - 0.12))}>Pull back</button>
-        <button onClick={() => setShowThreads((value) => !value)}>{showThreads ? 'Hide threads' : 'Show threads'}</button>
-        <button onClick={() => setMode('relationship')}>Relationships</button>
-        <button onClick={() => setMode('ritual')}>Rituals</button>
+        <button onClick={() => setZoom((value) => Math.min(1.82, value + 0.12))}>Enter field</button>
+        <button onClick={() => setZoom((value) => Math.max(0.78, value - 0.12))}>Pull back</button>
+        <button onClick={() => setShowThreads((value) => !value)}>{showThreads ? 'Hide threads' : 'Reveal threads'}</button>
         <button onClick={createScroll}>Weekly scroll</button>
         <button onClick={() => setMode('mirror')}>Mirror</button>
         <button onClick={reset}>Reset</button>
@@ -237,7 +281,7 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
             </div>
             {showWhy && (
               <div className="why-box">
-                <strong>Why am I seeing this?</strong>
+                <strong>Why this appeared</strong>
                 <p>{selectedBloom?.whyThis.explanation ?? 'URAI surfaced this because it crossed the Life Map importance threshold using passive, privacy-filtered signal categories.'}</p>
               </div>
             )}
@@ -287,7 +331,7 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
           <p>Weekly scroll export</p>
           <h2>{localScroll?.title ?? data.scrollExports[0]?.title ?? 'Weekly scroll'}</h2>
           <span>{localScroll?.generatedText ?? data.scrollExports[0]?.generatedText}</span>
-          <small>Export stub: private HTML/JSON draft. PDF, image, and video come next.</small>
+          <small>Private HTML/JSON draft. PDF, image, and video exports come next.</small>
           <button onClick={() => setMode('galaxy')}>Return</button>
         </section>
       )}
@@ -308,7 +352,7 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
         <section className="side-sheet privacy-sheet">
           <p>Privacy controls</p>
           <h2>{selectedStar?.title ?? 'Life Map privacy'}</h2>
-          <span>Raw private content is not shown in the map. This layer should support hide, delete, mark inaccurate, disable signal type, export data, and private mode.</span>
+          <span>Raw private content is not shown in the map. This layer supports hiding, deleting, marking inaccurate, disabling signal types, and exporting data.</span>
           <div className="bloom-actions vertical">
             <button>Hide this star</button>
             <button>Mark inaccurate</button>
@@ -320,64 +364,74 @@ export default function FullLifeMapScene({ forceDemo = false }: { forceDemo?: bo
       )}
 
       <style jsx>{`
-        .life-map-v2 { min-height: 100dvh; position: relative; overflow: hidden; color: white; background: radial-gradient(circle at 50% 48%, #203d78 0%, #071026 48%, #01020a 100%); isolation: isolate; }
-        .sky-vignette { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent 0 30%, rgba(0,0,0,.18) 58%, rgba(0,0,0,.88) 100%), linear-gradient(180deg, rgba(10,20,55,.2), transparent 28%, rgba(0,0,0,.25)); }
-        .emotional-core { position: absolute; z-index: 0; left: 50%; top: 50%; width: min(72vw, 880px); height: min(72vw, 880px); transform: translate(-50%,-50%); border-radius: 999px; background: radial-gradient(circle, rgba(255,255,255,.12), rgba(125,165,255,.2) 16%, rgba(68,87,190,.11) 48%, transparent 72%); filter: blur(16px); animation: coreBreath 8s ease-in-out infinite; }
-        .particle-dust { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .55; background-image: radial-gradient(circle, rgba(255,255,255,.22) 0 1px, transparent 1.6px); background-size: 53px 53px; mask-image: radial-gradient(circle at 50% 50%, #000 0 42%, transparent 76%); animation: drift 30s linear infinite; }
-        .symbolic-overlay { position: absolute; z-index: 2; left: var(--overlay-x); top: var(--overlay-y); width: min(35vw, 420px); height: min(24vw, 300px); transform: translate(-50%,-50%) rotate(-16deg); border-radius: 999px; background: radial-gradient(ellipse, hsl(var(--overlay-color) 88% 65% / var(--overlay-alpha)), transparent 68%); filter: blur(22px); opacity: .9; pointer-events: none; }
-        .symbolic-overlay.shadow { mix-blend-mode: screen; opacity: .48; }
-        .life-map-header { position: absolute; z-index: 8; top: 1rem; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 12px 40px rgba(0,0,0,.65); }
-        .life-map-header p, .side-sheet p, .mirror-layer p, .memory-bloom p { margin: 0; text-transform: uppercase; letter-spacing: .34em; font-size: .58rem; color: rgba(255,255,255,.4); }
-        .life-map-header h1 { margin: .2rem 0; font-size: clamp(1.05rem, 2.2vw, 1.75rem); }
-        .life-map-header span { color: rgba(255,255,255,.52); font-size: .72rem; }
-        .home-link { position: absolute; z-index: 20; left: 1rem; top: 1rem; border: 1px solid rgba(255,255,255,.24); border-radius: 999px; padding: .6rem .9rem; color: white; text-decoration: none; background: rgba(0,0,0,.36); backdrop-filter: blur(12px); }
-        .companion-panel { position: absolute; z-index: 9; right: 1rem; top: 1rem; width: min(285px, calc(100vw - 2rem)); border: 1px solid rgba(170,205,255,.18); background: rgba(3,6,18,.46); backdrop-filter: blur(14px); border-radius: 18px; padding: .8rem; box-shadow: 0 20px 70px rgba(0,0,0,.25); }
-        .companion-panel strong { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; color: rgba(255,255,255,.46); margin-bottom: .35rem; }
-        .companion-panel span, .side-sheet span, .mirror-layer span, .memory-bloom article > span { display: block; color: rgba(255,255,255,.76); font-size: .82rem; line-height: 1.5; }
-        .companion-panel small { display: block; margin-top: .45rem; color: rgba(255,255,255,.38); }
-        .galaxy-shell { position: absolute; z-index: 4; inset: 6rem 3rem 8.8rem; transform-origin: 50% 50%; transition: transform .7s cubic-bezier(.19,1,.22,1), filter .45s ease, opacity .45s ease; }
-        .is-layered .galaxy-shell { filter: saturate(.82) blur(.7px); opacity: .62; }
-        .constellation-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .45s ease; overflow: visible; }
-        .constellation-svg.visible { opacity: 1; }
-        .constellation-line { stroke: rgba(190,220,255,.13); stroke-width: .09; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(160,210,255,.16)); transition: stroke .3s ease, stroke-width .3s ease, opacity .3s ease; }
-        .constellation-line.active { stroke: rgba(230,248,255,.38); stroke-width: .14; }
-        .constellation-line.replay { stroke-dasharray: 4 3; animation: dash 1.2s linear infinite; stroke: rgba(255,255,255,.72); }
-        .life-star { position: absolute; left: var(--x); top: var(--y); width: var(--size); height: var(--size); transform: translate3d(-50%,-50%,var(--z)); border: 0; border-radius: 999px; cursor: pointer; background: radial-gradient(circle at 35% 28%, #fff 0 12%, #eef8ff 18%, hsl(var(--hue) 88% 72%) 48%, hsl(var(--hue) 90% 58% / .12) 100%); box-shadow: 0 0 12px rgba(255,255,255,.86), 0 0 var(--aura) hsl(var(--hue) 88% 68% / .46), 0 0 calc(var(--aura) * 2) hsl(var(--hue) 88% 62% / .18); opacity: var(--alpha); transition: transform .35s ease, opacity .35s ease, filter .35s ease; animation: starPulse var(--pulse) ease-in-out infinite; }
-        .life-star::before { content: ''; position: absolute; inset: -18px; border-radius: inherit; background: radial-gradient(circle, hsl(var(--hue) 90% 72% / .22), transparent 66%); }
-        .life-star.ritual::after, .life-star.threshold::after { content: ''; position: absolute; inset: -14px; border-radius: inherit; border: 1px solid hsl(var(--hue) 90% 82% / .28); transform: rotate(-16deg) scaleX(1.7); }
-        .life-star:hover, .life-star.active { transform: translate3d(-50%,-50%,calc(var(--z) + 44px)) scale(1.24); opacity: 1; filter: brightness(1.2); z-index: 10; }
-        .life-star.dim { opacity: .18; filter: blur(.5px) saturate(.5); }
-        .star-glyph { display: none; }
+        .life-map-v3 { position: fixed; inset: 0; min-height: 100vh; min-height: 100dvh; overflow: hidden; color: white; background: #01030b; isolation: isolate; font-family: inherit; }
+        .void { position: absolute; inset: 0; z-index: 0; background: radial-gradient(circle at 50% 54%, rgba(35, 62, 118, .22) 0 18%, rgba(7, 13, 35, .62) 38%, #02030b 76%, #000 100%); }
+        .nebula { position: absolute; z-index: 1; pointer-events: none; border-radius: 999px; filter: blur(48px); opacity: .5; mix-blend-mode: screen; }
+        .nebula-blue { left: 22%; top: 25%; width: 56vw; height: 40vh; background: radial-gradient(ellipse, rgba(58, 118, 220, .34), transparent 72%); animation: nebulaDrift 26s ease-in-out infinite alternate; }
+        .nebula-violet { right: 10%; top: 20%; width: 34vw; height: 46vh; background: radial-gradient(ellipse, rgba(145, 89, 255, .18), transparent 68%); animation: nebulaDrift 31s ease-in-out infinite alternate-reverse; }
+        .nebula-gold { left: 40%; bottom: 16%; width: 28vw; height: 26vh; background: radial-gradient(ellipse, rgba(255, 218, 119, .09), transparent 70%); }
+        .star-dust { position: absolute; inset: 0; z-index: 2; pointer-events: none; perspective: 900px; }
+        .star-dust span { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: rgba(255,255,255,var(--a)); box-shadow: 0 0 8px rgba(190,220,255,var(--a)); transform: translate3d(-50%, -50%, var(--d)); animation: dustTwinkle var(--twinkle) ease-in-out infinite; }
+        .symbolic-overlay { position: absolute; z-index: 2; left: var(--overlay-x); top: var(--overlay-y); width: min(28vw, 360px); height: min(20vw, 260px); transform: translate(-50%,-50%) rotate(-16deg); border-radius: 999px; background: radial-gradient(ellipse, hsl(var(--overlay-color) 88% 65% / var(--overlay-alpha)), transparent 70%); filter: blur(36px); pointer-events: none; }
+        .life-map-header { position: absolute; z-index: 20; top: 1.05rem; left: 50%; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 12px 40px rgba(0,0,0,.88); }
+        .life-map-header p, .side-sheet p, .mirror-layer p, .memory-bloom p { margin: 0; text-transform: uppercase; letter-spacing: .34em; font-size: .58rem; color: rgba(255,255,255,.46); }
+        .life-map-header h1 { margin: .2rem 0; font-size: clamp(1.15rem, 2.3vw, 2rem); letter-spacing: -.03em; }
+        .life-map-header span { color: rgba(226,242,255,.62); font-size: .72rem; }
+        .home-link { position: absolute; z-index: 30; left: 1rem; top: 1rem; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: .55rem .85rem; color: white; text-decoration: none; background: rgba(0,0,0,.34); backdrop-filter: blur(12px); }
+        .companion-panel { position: absolute; z-index: 21; right: 1rem; top: 1rem; width: min(292px, calc(100vw - 2rem)); border: 1px solid rgba(170,205,255,.16); background: rgba(2,5,16,.48); backdrop-filter: blur(16px); border-radius: 18px; padding: .78rem; box-shadow: 0 20px 70px rgba(0,0,0,.28); }
+        .companion-panel strong { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; color: rgba(255,255,255,.48); margin-bottom: .35rem; }
+        .companion-panel span, .side-sheet span, .mirror-layer span, .memory-bloom article > span { display: block; color: rgba(255,255,255,.78); font-size: .82rem; line-height: 1.5; }
+        .companion-panel small { display: block; margin-top: .45rem; color: rgba(255,255,255,.42); }
+        .galaxy-shell { position: absolute; z-index: 8; inset: 5.2rem 3rem 8.4rem; transform-origin: 50% 50%; transition: transform .7s cubic-bezier(.19,1,.22,1), filter .45s ease, opacity .45s ease; perspective: 1200px; transform-style: preserve-3d; }
+        .is-layered .galaxy-shell { filter: saturate(.9); opacity: .75; }
+        .galaxy-plane { position: absolute; left: 50%; top: 50%; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%) rotate(-14deg); border: 1px solid rgba(170,210,255,.05); }
+        .galaxy-plane-back { width: 78%; height: 43%; box-shadow: 0 0 90px rgba(60,112,220,.12); }
+        .galaxy-plane-mid { width: 58%; height: 29%; transform: translate(-50%, -50%) rotate(18deg); box-shadow: inset 0 0 70px rgba(130,170,255,.08); }
+        .galaxy-plane-front { width: 38%; height: 18%; transform: translate(-50%, -50%) rotate(34deg); opacity: .55; }
+        .constellation-svg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .45s ease; overflow: visible; transform: translateZ(-80px); }
+        .constellation-svg.visible { opacity: .9; }
+        .constellation-line { stroke: rgba(190,220,255,.16); stroke-width: .08; stroke-linecap: round; filter: drop-shadow(0 0 7px rgba(160,210,255,.2)); transition: stroke .3s ease, stroke-width .3s ease, opacity .3s ease; }
+        .constellation-line.active { stroke: rgba(235,248,255,.52); stroke-width: .14; }
+        .constellation-line.replay { stroke-dasharray: 4 3; animation: dash 1.2s linear infinite; stroke: rgba(255,255,255,.78); }
+        .life-star { position: absolute; left: var(--x); top: var(--y); width: var(--size); height: var(--size); transform: translate3d(-50%,-50%,var(--z)); border: 0; border-radius: 999px; cursor: pointer; background: transparent; opacity: var(--alpha); transition: transform .35s ease, opacity .35s ease, filter .35s ease; animation: starPulse var(--pulse) ease-in-out infinite; }
+        .star-core { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 42% 36%, #fff 0 16%, #f5fbff 20%, hsl(var(--hue) 92% 78%) 45%, hsl(var(--hue) 88% 48% / .22) 74%, transparent 100%); box-shadow: 0 0 9px rgba(255,255,255,.95), 0 0 var(--aura) hsl(var(--hue) 90% 68% / .5), 0 0 calc(var(--aura) * 2.5) hsl(var(--hue) 90% 58% / .16); }
+        .star-core::before { content: ''; position: absolute; inset: -130%; border-radius: 50%; background: radial-gradient(circle, hsl(var(--hue) 90% 72% / .22), transparent 62%); filter: blur(3px); }
+        .star-ray { position: absolute; left: 50%; top: 50%; width: calc(var(--size) * 4.2); height: 1px; transform-origin: center; background: linear-gradient(90deg, transparent, rgba(255,255,255,.82), transparent); opacity: .62; filter: blur(.15px); }
+        .ray-one { transform: translate(-50%,-50%); }
+        .ray-two { transform: translate(-50%,-50%) rotate(90deg); opacity: .42; width: calc(var(--size) * 3.2); }
+        .life-star.threshold .star-core::after, .life-star.ritual .star-core::after, .life-star.relationship .star-core::after { content: ''; position: absolute; inset: -90%; border-radius: 50%; border: 1px solid hsl(var(--hue) 90% 82% / .28); transform: rotate(-18deg) scaleX(1.72); }
+        .life-star:hover, .life-star.active { transform: translate3d(-50%,-50%,calc(var(--z) + 70px)) scale(1.55); opacity: 1; filter: brightness(1.22); z-index: 12; }
+        .life-star.dim { opacity: .16; filter: blur(.4px) saturate(.45); }
         .star-label { position: absolute; left: 50%; top: calc(100% + .7rem); transform: translateX(-50%); min-width: 150px; text-align: center; opacity: 0; pointer-events: none; transition: opacity .2s ease; text-shadow: 0 6px 25px black; }
         .life-star:hover .star-label, .life-star.active .star-label { opacity: 1; }
         .star-label strong, .star-label small { display: block; }
         .star-label strong { font-size: .75rem; }
-        .star-label small { color: rgba(255,255,255,.58); font-size: .62rem; }
-        .lens-bar { position: absolute; z-index: 10; left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(980px, calc(100vw - 2rem)); display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap: .35rem; border: 1px solid rgba(170,205,255,.2); border-radius: 28px; background: rgba(3,6,18,.42); backdrop-filter: blur(14px); padding: .45rem; }
-        .lens-bar button, .control-dock button, .memory-bloom button, .side-sheet button, .mirror-layer button { border: 1px solid rgba(170,205,255,.22); border-radius: 999px; background: rgba(12,19,44,.62); color: white; padding: .56rem .72rem; font-size: .73rem; cursor: pointer; }
-        .lens-bar button { border: 0; border-radius: 20px; text-align: left; background: transparent; color: rgba(255,255,255,.62); }
+        .star-label small { color: rgba(255,255,255,.62); font-size: .62rem; }
+        .lens-bar { position: absolute; z-index: 22; left: 50%; bottom: 1rem; transform: translateX(-50%); width: min(980px, calc(100vw - 2rem)); display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap: .35rem; border: 1px solid rgba(170,205,255,.16); border-radius: 28px; background: rgba(2,5,16,.52); backdrop-filter: blur(16px); padding: .45rem; }
+        .lens-bar button, .control-dock button, .memory-bloom button, .side-sheet button, .mirror-layer button { border: 1px solid rgba(170,205,255,.2); border-radius: 999px; background: rgba(10,18,44,.64); color: white; padding: .56rem .72rem; font-size: .73rem; cursor: pointer; }
+        .lens-bar button { border: 0; border-radius: 20px; text-align: left; background: transparent; color: rgba(255,255,255,.64); }
         .lens-bar button.active, .lens-bar button:hover { background: rgba(255,255,255,.08); color: white; }
         .lens-bar strong, .lens-bar small { display: block; }
-        .lens-bar small { opacity: .6; font-size: .58rem; }
-        .control-dock { position: absolute; z-index: 11; left: 50%; bottom: 6.25rem; transform: translateX(-50%); display: flex; gap: .35rem; flex-wrap: wrap; justify-content: center; max-width: min(900px, calc(100vw - 2rem)); border: 1px solid rgba(170,205,255,.16); border-radius: 999px; padding: .4rem; background: rgba(3,6,18,.38); backdrop-filter: blur(14px); }
-        .memory-bloom { position: absolute; z-index: 30; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 48%, rgba(255,255,255,.06), rgba(0,0,0,.72)); padding: 2rem; }
+        .lens-bar small { opacity: .62; font-size: .58rem; }
+        .control-dock { position: absolute; z-index: 23; left: 50%; bottom: 6.25rem; transform: translateX(-50%); display: flex; gap: .35rem; flex-wrap: wrap; justify-content: center; max-width: min(900px, calc(100vw - 2rem)); border: 1px solid rgba(170,205,255,.14); border-radius: 999px; padding: .4rem; background: rgba(2,5,16,.48); backdrop-filter: blur(16px); }
+        .memory-bloom { position: absolute; z-index: 40; inset: 0; display: grid; place-items: center; background: radial-gradient(circle at 50% 48%, rgba(255,255,255,.05), rgba(0,0,0,.78)); padding: 2rem; }
         .bloom-orb { width: clamp(130px, 18vw, 220px); height: clamp(130px, 18vw, 220px); border-radius: 999px; background: radial-gradient(circle at 34% 28%, #fff, hsl(var(--hue) 90% 76%) 42%, hsl(var(--hue) 90% 52% / .18)); box-shadow: 0 0 34px white, 0 0 130px hsl(var(--hue) 90% 68% / .42); animation: bloomBreath 4s ease-in-out infinite; }
-        .memory-bloom article { position: absolute; bottom: 4rem; width: min(660px, calc(100vw - 2rem)); text-align: center; border: 1px solid rgba(205,226,255,.22); border-radius: 34px; padding: 1.35rem; background: linear-gradient(180deg, rgba(10,16,38,.72), rgba(3,6,18,.52)); backdrop-filter: blur(18px); }
+        .memory-bloom article { position: absolute; bottom: 4rem; width: min(660px, calc(100vw - 2rem)); text-align: center; border: 1px solid rgba(205,226,255,.2); border-radius: 34px; padding: 1.35rem; background: linear-gradient(180deg, rgba(10,16,38,.74), rgba(3,6,18,.58)); backdrop-filter: blur(18px); }
         .memory-bloom h2, .side-sheet h2, .mirror-layer h2 { margin: .35rem 0 .55rem; font-size: clamp(1.6rem, 4vw, 3.7rem); line-height: .96; letter-spacing: -.05em; }
         .source-row, .bloom-actions { display: flex; gap: .45rem; justify-content: center; flex-wrap: wrap; margin-top: .9rem; }
-        .source-row small, .side-sheet small, .mirror-layer small { color: rgba(255,255,255,.52); }
+        .source-row small, .side-sheet small, .mirror-layer small { color: rgba(255,255,255,.55); }
         .why-box { margin: 1rem auto 0; max-width: 560px; border: 1px solid rgba(255,255,255,.14); border-radius: 20px; padding: .85rem; background: rgba(255,255,255,.06); text-align: left; }
-        .why-box p { margin: .35rem 0 0; color: rgba(255,255,255,.68); line-height: 1.5; }
-        .side-sheet { position: absolute; z-index: 28; right: 1rem; top: 6rem; bottom: 1rem; width: min(410px, calc(100vw - 2rem)); border: 1px solid rgba(205,226,255,.2); border-radius: 28px; background: rgba(3,6,18,.66); backdrop-filter: blur(18px); padding: 1rem; overflow: auto; box-shadow: 0 30px 100px rgba(0,0,0,.4); }
+        .why-box p { margin: .35rem 0 0; color: rgba(255,255,255,.7); line-height: 1.5; }
+        .side-sheet { position: absolute; z-index: 38; right: 1rem; top: 6rem; bottom: 1rem; width: min(410px, calc(100vw - 2rem)); border: 1px solid rgba(205,226,255,.18); border-radius: 28px; background: rgba(3,6,18,.72); backdrop-filter: blur(18px); padding: 1rem; overflow: auto; box-shadow: 0 30px 100px rgba(0,0,0,.45); }
         .metric-row, .replay-step, .mirror-grid div { border: 1px solid rgba(255,255,255,.1); border-radius: 18px; padding: .75rem; margin-top: .65rem; background: rgba(255,255,255,.055); }
         .metric-row span, .metric-row b, .metric-row small, .replay-step span, .replay-step small { display: block; }
         .replay-step b { display: inline-grid; place-items: center; width: 1.65rem; height: 1.65rem; border-radius: 999px; background: rgba(255,255,255,.12); margin-bottom: .4rem; }
-        .mirror-layer { position: absolute; z-index: 29; inset: 3rem; display: grid; place-items: center; align-content: center; text-align: center; border: 1px solid rgba(255,255,255,.14); border-radius: 42px; background: radial-gradient(circle, rgba(255,255,255,.09), rgba(4,6,18,.82)); backdrop-filter: blur(18px); padding: 2rem; }
+        .mirror-layer { position: absolute; z-index: 39; inset: 3rem; display: grid; place-items: center; align-content: center; text-align: center; border: 1px solid rgba(255,255,255,.14); border-radius: 42px; background: radial-gradient(circle, rgba(255,255,255,.09), rgba(4,6,18,.86)); backdrop-filter: blur(18px); padding: 2rem; }
         .mirror-grid { margin: 1rem auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; max-width: 900px; }
         .vertical { flex-direction: column; }
-        @keyframes coreBreath { 0%,100% { transform: translate(-50%,-50%) scale(.96); opacity: .74; } 50% { transform: translate(-50%,-50%) scale(1.04); opacity: 1; } }
-        @keyframes drift { from { transform: translate3d(0,0,0); } to { transform: translate3d(54px,54px,0); } }
-        @keyframes starPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
+        @keyframes dustTwinkle { 0%,100% { opacity: calc(var(--a) * .58); transform: translate3d(-50%, -50%, var(--d)) scale(.82); } 50% { opacity: var(--a); transform: translate3d(-50%, -50%, var(--d)) scale(1.2); } }
+        @keyframes nebulaDrift { from { transform: translate3d(-2%, -1%, 0) scale(.98); } to { transform: translate3d(2%, 1%, 0) scale(1.04); } }
+        @keyframes starPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.24); } }
         @keyframes bloomBreath { 0%,100% { transform: scale(.96); } 50% { transform: scale(1.04); } }
         @keyframes dash { to { stroke-dashoffset: -14; } }
         @media (max-width: 760px) { .life-map-header { top: 5.2rem; width: calc(100vw - 2rem); } .companion-panel { left: 1rem; right: 1rem; top: auto; bottom: 9.9rem; width: auto; } .galaxy-shell { inset: 8rem 1rem 15rem; } .control-dock { bottom: 6.7rem; border-radius: 24px; } .lens-bar { grid-template-columns: repeat(2, minmax(0,1fr)); bottom: .5rem; border-radius: 22px; } .side-sheet { left: 1rem; right: 1rem; width: auto; top: 7rem; } .mirror-layer { inset: 1rem; } .mirror-grid { grid-template-columns: 1fr; } .memory-bloom article { bottom: 1rem; } }
