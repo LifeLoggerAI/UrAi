@@ -1,11 +1,5 @@
-import SystemRoutePage from "@/components/SystemRoutePage";
+import UraiProductionEntry from "@/components/urai-production/UraiProductionEntry";
 
 export default function ReplayPage() {
-  return (
-    <SystemRoutePage
-      title="URAI Replay"
-      description="Replay is the URAI felt-time review shell for revisiting meaningful moments, narrator reflections, and recovery loops."
-      status="demo"
-    />
-  );
+  return <UraiProductionEntry entry="replay" />;
 }
