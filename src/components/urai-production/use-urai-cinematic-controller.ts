@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { CameraPhase, MemoryStar, ReplayEra } from "./types";
 import { cameraPhases, canTransition } from "./camera-machine";
 
-type TimerId = ReturnType<typeof window.setTimeout>;
+type TimerId = number;
 
 export function useUraiCinematicController(initialPhase: CameraPhase = "idle") {
   const [phase, setPhaseState] = useState<CameraPhase>(initialPhase);
