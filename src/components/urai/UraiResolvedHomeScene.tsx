@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
-import { ResolvedVisual } from "@/components/urai/ResolvedVisual";
-import { UraiVisualBackdrop } from "@/components/urai/UraiVisualBackdrop";
-import { resolveUraiAssets } from "@/lib/urai-assets";
 
 type Mode = "home" | "transitioning" | "lifemap";
 type HomePanel = "companion" | "self" | "biome" | null;
@@ -19,12 +16,6 @@ type MemoryNode = {
   size: number;
   delay: string;
 };
-
-const HOME_SLOTS = [
-  "home.orb.core",
-  "home.silhouette.body",
-  "spatial.star.default",
-] as const;
 
 const TONE_COPY = {
   home: "A quiet pattern is becoming visible.",
@@ -45,16 +36,25 @@ const MEMORY_NODES: MemoryNode[] = [
     label: "Recovery Signal",
     detail: "A calmer pattern appeared after the late-night loop.",
     x: "28%",
-    y: "24%",
-    size: 22,
+    y: "25%",
+    size: 21,
     delay: "-.4s",
+  },
+  {
+    id: "forecast-shift",
+    label: "Forecast Shift",
+    detail: "The next state is trending softer, not solved yet.",
+    x: "52%",
+    y: "11%",
+    size: 24,
+    delay: "-1.2s",
   },
   {
     id: "focus-thread",
     label: "Focus Thread",
     detail: "Attention returned around one repeated proof action.",
-    x: "58%",
-    y: "26%",
+    x: "59%",
+    y: "27%",
     size: 28,
     delay: "-1.7s",
   },
@@ -63,27 +63,25 @@ const MEMORY_NODES: MemoryNode[] = [
     label: "Relationship Echo",
     detail: "A silence pattern is asking to be seen without judgment.",
     x: "72%",
-    y: "39%",
+    y: "40%",
     size: 20,
     delay: "-2.6s",
   },
-  {
-    id: "forecast-shift",
-    label: "Forecast Shift",
-    detail: "The next state is trending softer, not solved yet.",
-    x: "51%",
-    y: "10%",
-    size: 24,
-    delay: "-3.2s",
-  },
 ];
+
+const AMBIENT_STARS = [
+  ["12%", "64%", 5, "-0.2s"],
+  ["36%", "50%", 9, "-1.1s"],
+  ["42%", "17%", 8, "-2.1s"],
+  ["66%", "56%", 7, "-3.1s"],
+  ["82%", "55%", 6, "-4.1s"],
+] as const;
 
 export default function UraiResolvedHomeScene() {
   const [mode, setMode] = useState<Mode>("home");
   const [activePanel, setActivePanel] = useState<HomePanel>(null);
   const [activeNode, setActiveNode] = useState<MemoryNode | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const assets = useMemo(() => resolveUraiAssets(HOME_SLOTS), []);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -100,7 +98,7 @@ export default function UraiResolvedHomeScene() {
       setMode("lifemap");
       return undefined;
     }
-    const timer = window.setTimeout(() => setMode("lifemap"), 1350);
+    const timer = window.setTimeout(() => setMode("lifemap"), 1100);
     return () => window.clearTimeout(timer);
   }, [mode, reduceMotion]);
 
@@ -125,7 +123,7 @@ export default function UraiResolvedHomeScene() {
   if (mode === "lifemap") {
     return (
       <main className="resolved-shell lifemap-shell">
-        <UraiVisualBackdrop mode="lifemap" />
+        <div className="lifemap-backdrop" aria-hidden="true" />
         <div className="lifemap-layer">
           <LifeMapScene />
         </div>
@@ -141,13 +139,15 @@ export default function UraiResolvedHomeScene() {
 
   return (
     <main className={`resolved-shell ${isTransitioning ? "is-transitioning" : ""}`} onClick={openLifeMap}>
-      <UraiVisualBackdrop mode={isTransitioning ? "lifemap" : "home"} />
+      <div className="cinematic-backdrop" aria-hidden="true">
+        <div className="aurora aurora-one" />
+        <div className="aurora aurora-two" />
+        <div className="light-beam" />
+        <div className="terrain" />
+      </div>
       <button type="button" className="sky-hitbox" onClick={openLifeMap} aria-label="Open URAI Life Map" />
 
       <section className="home-stage" aria-label="URAI resolved visual home scene">
-        <div className="atmosphere-drift" aria-hidden="true" />
-        <div className="horizon-glow" aria-hidden="true" />
-
         <button
           type="button"
           className="biome-hitbox"
@@ -157,7 +157,7 @@ export default function UraiResolvedHomeScene() {
           }}
           aria-label="Open Emotional Biome"
         >
-          <span>Emotional Biome</span>
+          Emotional Biome
         </button>
 
         <button
@@ -169,8 +169,8 @@ export default function UraiResolvedHomeScene() {
           }}
           aria-label="Open Self State"
         >
-          <ResolvedVisual asset={assets["home.silhouette.body"]} className="silhouette-asset" />
-          <span className="silhouette-rim" aria-hidden="true" />
+          <span className="silhouette-head" />
+          <span className="silhouette-body" />
           <span className="hotspot-label silhouette-label">Self State</span>
         </button>
 
@@ -187,10 +187,10 @@ export default function UraiResolvedHomeScene() {
           }}
           aria-label="Open URAI companion"
         >
-          <span className="orb-fallback-glow" aria-hidden="true" />
-          <span className="orb-ring orb-ring-one" aria-hidden="true" />
-          <span className="orb-ring orb-ring-two" aria-hidden="true" />
-          <ResolvedVisual asset={assets["home.orb.core"]} className="orb-asset" />
+          <span className="orb-fallback-glow" />
+          <span className="orb-ring orb-ring-one" />
+          <span className="orb-ring orb-ring-two" />
+          <span className="orb-core" />
           <span className="hotspot-label orb-label">Companion</span>
         </button>
 
@@ -208,12 +208,12 @@ export default function UraiResolvedHomeScene() {
               }}
               aria-label={`Open ${node.label} memory node`}
             >
-              <ResolvedVisual asset={assets["spatial.star.default"]} className="memory-star-asset" />
+              <span className="star-core" />
               <span className="star-label">{node.label}</span>
             </button>
           ))}
-          {Array.from({ length: 5 }).map((_, index) => (
-            <ResolvedVisual key={index} asset={assets["spatial.star.default"]} className={`ambient-star ambient-star-${index + 1}`} />
+          {AMBIENT_STARS.map(([left, top, size, delay], index) => (
+            <span key={`${left}-${top}-${index}`} className="ambient-star" style={{ left, top, width: size, height: size, animationDelay: delay }} />
           ))}
         </div>
 
@@ -242,11 +242,7 @@ export default function UraiResolvedHomeScene() {
         </div>
 
         {(activePanel || activeNode) && (
-          <aside
-            className="context-card"
-            onClick={(event) => event.stopPropagation()}
-            aria-live="polite"
-          >
+          <aside className="context-card" onClick={(event) => event.stopPropagation()} aria-live="polite">
             {activeNode ? (
               <>
                 <span className="context-eyebrow">Memory Node</span>
@@ -290,22 +286,106 @@ export default function UraiResolvedHomeScene() {
 
 const shellStyles = `
   .resolved-shell {
-    position: relative;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
     min-height: 100dvh;
     height: 100dvh;
+    width: 100vw;
     overflow: hidden;
     isolation: isolate;
-    background: #000;
+    background: #020617;
     color: white;
     cursor: zoom-in;
     user-select: none;
+    contain: paint;
   }
   .lifemap-shell {
     cursor: default;
   }
+  .lifemap-backdrop,
+  .cinematic-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 51% 68%, rgba(125, 211, 252, .34), transparent 19%),
+      radial-gradient(circle at 48% 44%, rgba(99, 102, 241, .26), transparent 31%),
+      radial-gradient(circle at 27% 29%, rgba(74, 99, 187, .22), transparent 26%),
+      linear-gradient(180deg, #071431 0%, #101c49 48%, #304a80 74%, #020617 100%);
+  }
+  .cinematic-backdrop::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background:
+      radial-gradient(circle at 15% 64%, rgba(221, 244, 255, .72) 0 2px, transparent 3px),
+      radial-gradient(circle at 28% 25%, rgba(221, 244, 255, .78) 0 1px, transparent 3px),
+      radial-gradient(circle at 43% 19%, rgba(221, 244, 255, .75) 0 2px, transparent 3px),
+      radial-gradient(circle at 52% 10%, rgba(255, 255, 255, .9) 0 2px, transparent 4px),
+      radial-gradient(circle at 59% 27%, rgba(255, 255, 255, .9) 0 3px, transparent 6px),
+      radial-gradient(circle at 72% 40%, rgba(221, 244, 255, .8) 0 2px, transparent 4px),
+      radial-gradient(circle at 81% 55%, rgba(221, 244, 255, .72) 0 2px, transparent 4px);
+    filter: drop-shadow(0 0 12px rgba(191, 234, 255, .56));
+    opacity: .78;
+    pointer-events: none;
+  }
+  .aurora {
+    position: fixed;
+    z-index: 1;
+    border-radius: 999px;
+    filter: blur(40px);
+    opacity: .68;
+    animation: auraDrift 15s ease-in-out infinite alternate;
+  }
+  .aurora-one {
+    left: 19vw;
+    top: 18vh;
+    width: 44vw;
+    height: 42vh;
+    background: radial-gradient(circle, rgba(96,165,250,.28), transparent 67%);
+  }
+  .aurora-two {
+    right: 9vw;
+    top: 28vh;
+    width: 42vw;
+    height: 48vh;
+    background: radial-gradient(circle, rgba(167,139,250,.22), transparent 70%);
+    animation-delay: -4s;
+  }
+  .light-beam {
+    position: fixed;
+    left: 50%;
+    bottom: 1vh;
+    z-index: 4;
+    width: min(410px, 32vw);
+    height: 76vh;
+    transform: translateX(-50%);
+    clip-path: polygon(50% 0%, 92% 100%, 8% 100%);
+    background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(225,238,255,.5) 55%, rgba(255,255,255,.08) 100%);
+    opacity: .75;
+    filter: blur(.25px);
+  }
+  .terrain {
+    position: fixed;
+    left: 50%;
+    bottom: -24vh;
+    z-index: 5;
+    width: min(1180px, 96vw);
+    height: 48vh;
+    transform: translateX(-50%);
+    border-radius: 50% 50% 0 0;
+    background:
+      radial-gradient(ellipse at 50% 8%, rgba(220, 244, 255, .56), rgba(125, 211, 252, .22) 34%, rgba(67, 56, 202, .08) 58%, transparent 76%),
+      linear-gradient(to top, rgba(255,255,255,.18), transparent 62%);
+    box-shadow: 0 -24px 120px rgba(125, 211, 252, .28);
+    animation: horizonBreathe 8s ease-in-out infinite;
+  }
   .lifemap-layer {
     position: relative;
-    z-index: 2;
+    z-index: 5;
     min-height: 100dvh;
   }
   .return-home {
@@ -337,97 +417,74 @@ const shellStyles = `
     place-items: center;
     pointer-events: none;
   }
-  .atmosphere-drift {
-    position: fixed;
-    inset: 8vh 12vw 16vh;
-    z-index: 18;
-    background:
-      radial-gradient(circle at 32% 58%, rgba(125, 211, 252, .14), transparent 30%),
-      radial-gradient(circle at 68% 42%, rgba(167, 139, 250, .12), transparent 34%),
-      linear-gradient(110deg, transparent 10%, rgba(255,255,255,.05) 48%, transparent 78%);
-    filter: blur(24px);
-    opacity: .75;
-    animation: auraDrift 14s ease-in-out infinite alternate;
-  }
-  .horizon-glow {
-    position: fixed;
-    left: 50%;
-    bottom: -24vh;
-    z-index: 21;
-    width: min(1120px, 92vw);
-    height: 48vh;
-    transform: translateX(-50%);
-    border-radius: 50% 50% 0 0;
-    background:
-      radial-gradient(ellipse at 50% 8%, rgba(186, 230, 253, .46), rgba(125, 211, 252, .18) 34%, rgba(79, 70, 229, .08) 58%, transparent 76%),
-      linear-gradient(to top, rgba(255,255,255,.18), transparent 62%);
-    filter: blur(1px);
-    box-shadow: 0 -24px 120px rgba(125, 211, 252, .28);
-    animation: horizonBreathe 8s ease-in-out infinite;
-  }
   .biome-hitbox {
     position: fixed;
     left: 50%;
     bottom: 4vh;
     z-index: 42;
     transform: translateX(-50%);
-    border: 1px solid rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.16);
     border-radius: 999px;
-    background: rgba(3, 7, 18, .18);
-    color: rgba(255,255,255,.5);
-    padding: .48rem .78rem;
+    background: rgba(15, 23, 42, .34);
+    color: rgba(255,255,255,.62);
+    padding: .5rem .85rem;
     font-size: .62rem;
     letter-spacing: .22em;
     text-transform: uppercase;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
     cursor: pointer;
     pointer-events: auto;
-    opacity: .62;
     transition: opacity 240ms ease, border-color 240ms ease, color 240ms ease, transform 240ms ease;
   }
   .biome-hitbox:hover,
   .biome-hitbox:focus-visible {
-    opacity: 1;
-    color: rgba(255,255,255,.86);
-    border-color: rgba(125, 211, 252, .42);
+    color: rgba(255,255,255,.9);
+    border-color: rgba(125, 211, 252, .56);
     transform: translateX(-50%) translateY(-2px);
   }
   .silhouette-wrap {
     position: fixed;
     left: calc(50% - min(16vw, 230px));
-    bottom: 4vh;
+    bottom: 10vh;
     z-index: 25;
-    width: clamp(160px, 13.6vw, 240px);
-    height: clamp(380px, 60vh, 630px);
+    width: clamp(118px, 10vw, 170px);
+    height: clamp(300px, 44vh, 480px);
     border: 0;
     padding: 0;
     background: transparent;
-    opacity: .86;
-    filter: drop-shadow(0 0 42px rgba(126,231,255,.26));
     cursor: pointer;
     pointer-events: auto;
-    transition: transform 900ms cubic-bezier(.16, 1, .3, 1), opacity 700ms ease, filter 700ms ease;
+    opacity: .88;
+    filter: drop-shadow(0 0 42px rgba(126,231,255,.34));
+    transition: transform 700ms cubic-bezier(.16, 1, .3, 1), opacity 500ms ease, filter 500ms ease;
   }
   .silhouette-wrap:hover,
   .silhouette-wrap:focus-visible {
     opacity: 1;
-    filter: drop-shadow(0 0 54px rgba(186,230,253,.38));
     transform: translateY(-4px);
+    filter: drop-shadow(0 0 58px rgba(186,230,253,.48));
   }
-  .silhouette-wrap :global(img),
-  .silhouette-wrap :global(svg) {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .silhouette-rim {
+  .silhouette-head,
+  .silhouette-body {
     position: absolute;
-    inset: 8% 16% 7%;
-    border-radius: 52% 52% 34% 34%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-    filter: blur(18px);
-    opacity: .72;
-    pointer-events: none;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+    background: linear-gradient(180deg, rgba(190,235,255,.55), rgba(74,112,160,.18), transparent);
+    box-shadow: inset 0 0 35px rgba(255,255,255,.08);
+  }
+  .silhouette-head {
+    top: 0;
+    width: 50%;
+    height: 21%;
+    border-radius: 50%;
+  }
+  .silhouette-body {
+    top: 20%;
+    width: 82%;
+    height: 78%;
+    border-radius: 50% 50% 28% 28%;
+    clip-path: polygon(42% 0, 58% 0, 80% 24%, 92% 100%, 8% 100%, 20% 24%);
   }
   .orb-button {
     position: fixed;
@@ -442,7 +499,7 @@ const shellStyles = `
     background: transparent;
     cursor: pointer;
     pointer-events: auto;
-    transition: transform 900ms cubic-bezier(.16, 1, .3, 1), opacity 700ms ease, filter 700ms ease;
+    transition: transform 700ms cubic-bezier(.16, 1, .3, 1), filter 500ms ease;
     animation: orbBreath 6.4s ease-in-out infinite;
   }
   .orb-button:hover,
@@ -450,49 +507,52 @@ const shellStyles = `
     transform: translate(-50%, -50%) scale(1.08);
     filter: drop-shadow(0 0 72px rgba(125,211,252,.7));
   }
-  .orb-button :global(img),
-  .orb-button :global(svg) {
+  .orb-core {
     position: absolute;
-    inset: 0;
+    inset: 22%;
     z-index: 3;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 0 44px rgba(126,231,255,.9));
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 36% 30%, rgba(255,255,255,1), rgba(207,250,254,.92) 18%, rgba(103,232,249,.84) 50%, rgba(21,94,117,.62) 77%, transparent 100%);
+    box-shadow:
+      inset -18px -20px 35px rgba(15,23,42,.35),
+      inset 18px 16px 25px rgba(255,255,255,.22),
+      0 0 26px rgba(255,255,255,.76),
+      0 0 68px rgba(103,232,249,.58);
   }
   .orb-fallback-glow {
     position: absolute;
     inset: -64%;
     z-index: 1;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(255,255,255,.34), rgba(103,232,249,.24) 32%, rgba(139,92,246,.12) 58%, transparent 76%);
+    background: radial-gradient(circle, rgba(255,255,255,.36), rgba(103,232,249,.24) 32%, rgba(139,92,246,.12) 58%, transparent 76%);
     filter: blur(20px);
     animation: orbPulse 5.5s ease-in-out infinite;
   }
   .orb-ring {
     position: absolute;
-    inset: 5%;
+    inset: 6%;
     z-index: 2;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.22);
+    border: 1px solid rgba(255,255,255,.25);
     box-shadow: 0 0 30px rgba(125,211,252,.16);
     animation: orbitRing 8s linear infinite;
   }
   .orb-ring-two {
     inset: -4%;
-    opacity: .55;
+    opacity: .56;
     animation-duration: 12s;
     animation-direction: reverse;
   }
-  .hotspot-label {
+  .hotspot-label,
+  .star-label {
     position: absolute;
     left: 50%;
-    z-index: 9;
     transform: translateX(-50%) translateY(8px);
     border: 1px solid rgba(255,255,255,.14);
     border-radius: 999px;
-    background: rgba(2, 6, 23, .36);
-    color: rgba(255,255,255,.68);
+    background: rgba(2, 6, 23, .5);
+    color: rgba(255,255,255,.72);
     padding: .35rem .55rem;
     font-size: .58rem;
     letter-spacing: .18em;
@@ -508,7 +568,9 @@ const shellStyles = `
   .silhouette-wrap:hover .hotspot-label,
   .silhouette-wrap:focus-visible .hotspot-label,
   .orb-button:hover .hotspot-label,
-  .orb-button:focus-visible .hotspot-label {
+  .orb-button:focus-visible .hotspot-label,
+  .memory-star:hover .star-label,
+  .memory-star:focus-visible .star-label {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
@@ -517,16 +579,11 @@ const shellStyles = `
     inset: 0;
     z-index: 30;
     pointer-events: none;
-    opacity: .92;
+    opacity: .95;
     transition: transform 900ms cubic-bezier(.16, 1, .3, 1), opacity 700ms ease;
   }
-  .memory-star,
-  .ambient-star {
-    position: absolute;
-    filter: drop-shadow(0 0 20px rgba(255,255,255,.78));
-    animation: starFloat 7s ease-in-out infinite;
-  }
   .memory-star {
+    position: absolute;
     z-index: 2;
     border: 0;
     padding: 0;
@@ -534,56 +591,54 @@ const shellStyles = `
     cursor: pointer;
     pointer-events: auto;
     transform: translate(-50%, -50%);
+    animation: starFloat 7s ease-in-out infinite;
+    transition: filter 180ms ease;
   }
   .memory-star:hover,
   .memory-star:focus-visible {
     filter: drop-shadow(0 0 34px rgba(255,255,255,.95)) drop-shadow(0 0 18px rgba(125,211,252,.66));
-    transform: translate(-50%, -50%) scale(1.28);
   }
-  .memory-star :global(img),
-  .memory-star :global(svg),
-  .ambient-star :global(img),
-  .ambient-star :global(svg) {
-    width: 100%;
-    height: 100%;
+  .star-core,
+  .ambient-star {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: 999px;
+    background: radial-gradient(circle, white 0 16%, #b9e8ff 26%, rgba(138,108,255,.34) 60%, transparent 72%);
+    filter: drop-shadow(0 0 16px rgba(255,255,255,.76));
   }
-  .star-label {
+  .star-core::before {
+    content: "";
     position: absolute;
     left: 50%;
-    top: calc(100% + .42rem);
-    transform: translateX(-50%);
-    border: 1px solid rgba(255,255,255,.13);
+    top: 50%;
+    width: 210%;
+    height: 18%;
+    transform: translate(-50%, -50%);
     border-radius: 999px;
-    background: rgba(2, 6, 23, .42);
-    color: rgba(255,255,255,.75);
-    padding: .3rem .48rem;
-    font-size: .55rem;
-    letter-spacing: .13em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    opacity: 0;
-    backdrop-filter: blur(10px);
-    transition: opacity 180ms ease;
+    background: rgba(255,255,255,.74);
   }
-  .memory-star:hover .star-label,
-  .memory-star:focus-visible .star-label {
-    opacity: 1;
+  .star-core::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18%;
+    height: 210%;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: rgba(255,255,255,.74);
   }
+  .star-label { top: calc(100% + .42rem); }
   .ambient-star {
     z-index: 1;
-    width: 12px;
-    height: 12px;
-    opacity: .48;
+    opacity: .5;
+    animation: ambientTwinkle 6s ease-in-out infinite;
   }
-  .ambient-star-1 { left: 42%; top: 17%; width: 12px; height: 12px; animation-delay: -1.2s; }
-  .ambient-star-2 { left: 35%; top: 50%; width: 13px; height: 13px; animation-delay: -2s; }
-  .ambient-star-3 { left: 66%; top: 56%; width: 11px; height: 11px; animation-delay: -2.8s; }
-  .ambient-star-4 { left: 15%; top: 67%; width: 8px; height: 8px; animation-delay: -3.3s; }
-  .ambient-star-5 { left: 81%; top: 55%; width: 9px; height: 9px; animation-delay: -4.1s; }
   .home-copy {
     position: fixed;
     left: 50%;
-    top: 19%;
+    top: 18.5%;
     z-index: 44;
     width: min(640px, calc(100vw - 2rem));
     transform: translateX(-50%);
@@ -592,7 +647,7 @@ const shellStyles = `
   }
   .sky-whisper {
     margin: 0;
-    color: rgba(255,255,255,.86);
+    color: rgba(255,255,255,.9);
     font-size: clamp(1.05rem, 1.55vw, 1.42rem);
     line-height: 1.45;
     text-shadow: 0 2px 28px rgba(0,0,0,.9);
@@ -600,20 +655,20 @@ const shellStyles = `
   .product-line {
     margin: .55rem auto 0;
     max-width: 34rem;
-    color: rgba(226,242,255,.58);
+    color: rgba(226,242,255,.66);
     font-size: clamp(.76rem, 1vw, .95rem);
     line-height: 1.5;
     text-shadow: 0 2px 22px rgba(0,0,0,.72);
   }
   .life-map-cta {
     margin-top: .9rem;
-    border: 1px solid rgba(186,230,253,.36);
+    border: 1px solid rgba(186,230,253,.42);
     border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-    color: rgba(255,255,255,.9);
-    padding: .68rem 1.05rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.07));
+    color: rgba(255,255,255,.94);
+    padding: .72rem 1.1rem;
     font-size: .68rem;
-    font-weight: 650;
+    font-weight: 700;
     letter-spacing: .22em;
     text-transform: uppercase;
     box-shadow: 0 18px 64px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.22);
@@ -624,8 +679,8 @@ const shellStyles = `
   .life-map-cta:hover,
   .life-map-cta:focus-visible {
     transform: translateY(-2px);
-    border-color: rgba(125,211,252,.72);
-    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(125,211,252,.1));
+    border-color: rgba(125,211,252,.8);
+    background: linear-gradient(180deg, rgba(255,255,255,.24), rgba(125,211,252,.12));
   }
   .state-hud {
     position: fixed;
@@ -639,16 +694,16 @@ const shellStyles = `
     pointer-events: auto;
   }
   .state-chip {
-    border: 1px solid rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.12);
     border-radius: 1rem;
-    background: rgba(2, 6, 23, .34);
+    background: rgba(2, 6, 23, .48);
     padding: .7rem .78rem;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 20px 70px rgba(0,0,0,.18);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 70px rgba(0,0,0,.2);
   }
   .state-chip span {
     display: block;
-    color: rgba(226,242,255,.48);
+    color: rgba(226,242,255,.52);
     font-size: .58rem;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -656,9 +711,9 @@ const shellStyles = `
   .state-chip strong {
     display: block;
     margin-top: .22rem;
-    color: rgba(255,255,255,.86);
+    color: rgba(255,255,255,.9);
     font-size: .84rem;
-    font-weight: 620;
+    font-weight: 650;
   }
   .context-card {
     position: fixed;
@@ -666,38 +721,38 @@ const shellStyles = `
     bottom: 1rem;
     z-index: 56;
     width: min(360px, calc(100vw - 2rem));
-    border: 1px solid rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.16);
     border-radius: 1.4rem;
-    background: linear-gradient(180deg, rgba(15,23,42,.74), rgba(2,6,23,.62));
+    background: linear-gradient(180deg, rgba(15,23,42,.82), rgba(2,6,23,.72));
     padding: 1rem;
     box-shadow: 0 28px 96px rgba(0,0,0,.46);
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
     pointer-events: auto;
   }
   .context-eyebrow {
-    color: rgba(125,211,252,.74);
+    color: rgba(125,211,252,.78);
     font-size: .62rem;
     letter-spacing: .2em;
     text-transform: uppercase;
   }
   .context-card h2 {
     margin: .42rem 0 .35rem;
-    color: rgba(255,255,255,.92);
+    color: rgba(255,255,255,.94);
     font-size: 1.05rem;
     line-height: 1.25;
   }
   .context-card p {
     margin: 0;
-    color: rgba(226,242,255,.62);
+    color: rgba(226,242,255,.66);
     font-size: .86rem;
     line-height: 1.5;
   }
   .context-card button {
     margin-top: .8rem;
-    border: 1px solid rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.16);
     border-radius: 999px;
     background: rgba(255,255,255,.08);
-    color: rgba(255,255,255,.82);
+    color: rgba(255,255,255,.86);
     padding: .55rem .8rem;
     cursor: pointer;
   }
@@ -736,22 +791,27 @@ const shellStyles = `
     100% { transform: rotate(360deg) scaleX(1.04) scaleY(.94); }
   }
   @keyframes starFloat {
-    0%, 100% { opacity: .58; transform: translate(-50%, -50%) translateY(0) scale(.9); }
+    0%, 100% { opacity: .72; transform: translate(-50%, -50%) translateY(0) scale(.92); }
     50% { opacity: 1; transform: translate(-50%, -50%) translateY(-8px) scale(1.12); }
+  }
+  @keyframes ambientTwinkle {
+    0%, 100% { opacity: .34; transform: scale(.86); }
+    50% { opacity: .88; transform: scale(1.15); }
   }
   @keyframes auraDrift {
     0% { transform: translateX(-2vw) translateY(1vh) scale(1); }
     100% { transform: translateX(2vw) translateY(-1vh) scale(1.04); }
   }
   @keyframes horizonBreathe {
-    0%, 100% { opacity: .74; transform: translateX(-50%) scaleX(.98); }
-    50% { opacity: .98; transform: translateX(-50%) scaleX(1.03); }
+    0%, 100% { opacity: .78; transform: translateX(-50%) scaleX(.98); }
+    50% { opacity: 1; transform: translateX(-50%) scaleX(1.03); }
   }
   @media (max-width: 800px) {
     .silhouette-wrap {
       left: calc(50% - 112px);
-      width: 146px;
-      height: 400px;
+      width: 130px;
+      height: 350px;
+      bottom: 12vh;
     }
     .orb-button {
       top: 73%;
@@ -759,7 +819,7 @@ const shellStyles = `
       height: 142px;
     }
     .home-copy {
-      top: 13%;
+      top: 12%;
     }
     .product-line {
       font-size: .75rem;
@@ -789,11 +849,10 @@ const shellStyles = `
     .silhouette-wrap,
     .foreground-stars,
     .orb-fallback-glow,
-    .foreground-star,
     .memory-star,
     .ambient-star,
-    .atmosphere-drift,
-    .horizon-glow,
+    .aurora,
+    .terrain,
     .orb-ring {
       animation: none !important;
       transition-duration: .01ms !important;
