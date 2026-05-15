@@ -92,9 +92,9 @@ export default function LifeMapScene() {
   const focusStar = useCallback((star: MemoryStar) => {
     setActiveStarId(star.id);
     setActiveChapterId(star.chapterId);
-    setShowThreads(true);
+    setShowThreads(false);
     setMessage(star.narratorLine);
-    setClampedCamera({ x: star.x, y: star.y, zoom: 2.55 });
+    setClampedCamera({ x: star.x, y: star.y, zoom: 1.82 });
     dispatchNarratorEvent({ event: 'lifemap.star.focus', starId: star.id, chapterId: star.chapterId, emotion: star.emotion });
     dispatchTimelineSyncEvent({ phase: 'focus' as LifeMapPhase, activeStarId: star.id, activeChapterId: star.chapterId });
   }, [setClampedCamera]);
@@ -178,7 +178,7 @@ export default function LifeMapScene() {
         <span>{activeStar ? 'Memory opened' : 'Wheel inward · drag to drift · click a bright memory'}</span>
       </header>
 
-      <section className={`field ${showThreads || activeStar ? 'show-threads' : ''}`}>
+      <section className={`field ${showThreads ? 'show-threads' : ''}`}>
         <div className="camera" style={fieldStyle}>
           <svg className="threads" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
             {stars.flatMap((star) => star.connectedTo.map((to) => [star.id, to] as const)).filter(([a, b]) => a < b).map(([a, b]) => {
@@ -240,8 +240,9 @@ export default function LifeMapScene() {
           <button key={chapter.id} type="button" className={activeChapterId === chapter.id ? 'active' : ''} onClick={() => {
             setActiveStarId(null);
             setActiveChapterId(chapter.id);
+            setShowThreads(false);
             setMessage(CHAPTER_LINES[chapter.id]);
-            setClampedCamera({ x: chapter.x, y: chapter.y, zoom: 1.58 });
+            setClampedCamera({ x: chapter.x, y: chapter.y, zoom: 1.42 });
             dispatchNarratorEvent({ event: 'lifemap.cluster.focus', chapterId: chapter.id });
             dispatchTimelineSyncEvent({ phase: 'cluster' as LifeMapPhase, activeStarId: null, activeChapterId: chapter.id });
           }}>
@@ -257,9 +258,9 @@ export default function LifeMapScene() {
         .vignette, .core, .orbit { position: absolute; pointer-events: none; }
         .vignette { z-index: 2; inset: 0; background: radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(0,0,0,.12) 52%, rgba(0,0,0,.84) 100%), radial-gradient(circle at 50% 54%, rgba(125,211,252,.12), transparent 34%); }
         .core { z-index: 1; left: 50%; top: 52%; width: min(52vw, 660px); height: min(52vw, 660px); transform: translate(-50%, -50%); border-radius: 999px; background: radial-gradient(circle, rgba(255,255,255,.11), transparent 12%), radial-gradient(circle, rgba(125,211,252,.17), rgba(70,90,190,.06) 46%, transparent 72%); filter: blur(10px); opacity: .95; }
-        .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.08); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
+        .orbit { z-index: 3; left: 50%; top: 52%; border: 1px solid rgba(180,215,255,.045); border-radius: 999px; transform: translate(-50%, -50%) rotate(-14deg); }
         .orbit-one { width: min(46vw, 580px); height: min(21vw, 270px); }
-        .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .45; }
+        .orbit-two { width: min(62vw, 760px); height: min(31vw, 390px); transform: translate(-50%, -50%) rotate(18deg); opacity: .28; }
         .hud { position: absolute; z-index: 8; left: 50%; top: 1rem; transform: translateX(-50%); text-align: center; pointer-events: none; text-shadow: 0 2px 16px rgba(0,0,0,.85); }
         .hud p { margin: 0; font-size: .58rem; letter-spacing: .42em; text-transform: uppercase; color: rgba(255,255,255,.42); }
         .hud h1 { margin: .2rem 0 0; font-size: clamp(1rem, 2vw, 1.65rem); }
@@ -267,15 +268,16 @@ export default function LifeMapScene() {
         .field { position: absolute; z-index: 4; inset: 0; perspective: 1500px; transform-style: preserve-3d; }
         .camera { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: var(--x) var(--y); will-change: transform; transform: perspective(1500px) translate3d(calc(50% - var(--x)), calc(50% - var(--y)), 0) scale(var(--z)); transition: transform 500ms cubic-bezier(.19,1,.22,1); }
         .threads { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .4s ease; transform: translateZ(-150px); }
-        .show-threads .threads { opacity: .3; }
-        .thread { stroke: rgba(180,215,255,.15); stroke-width: .1; }
-        .thread.active { stroke: rgba(220,245,255,.5); stroke-width: .16; filter: drop-shadow(0 0 5px rgba(125,211,252,.45)); }
+        .show-threads .threads { opacity: .12; }
+        .thread { stroke: rgba(180,215,255,.1); stroke-width: .07; }
+        .thread.active { stroke: rgba(220,245,255,.22); stroke-width: .1; filter: none; }
         .node { position: absolute; transform: translate3d(-50%, -50%, var(--depth)) scale(var(--scale)); border: 0; border-radius: 999px; background: radial-gradient(circle at 38% 30%, #fff 0%, #eef7ff 18%, hsl(var(--hue) 82% 76%) 50%, rgba(116,151,255,.08) 100%); box-shadow: 0 0 10px rgba(255,255,255,.78), 0 0 32px hsl(var(--hue) 86% 68% / .42), 0 0 82px hsl(var(--hue) 92% 64% / .16); opacity: var(--alpha); cursor: pointer; transition: opacity .35s ease, transform .35s ease, filter .35s ease; transform-style: preserve-3d; }
         .node::before { content: ''; position: absolute; inset: -18px; border-radius: 999px; background: radial-gradient(circle, hsl(var(--hue) 90% 70% / .22), transparent 64%); opacity: .5; }
-        .node:hover, .node.active { opacity: 1; filter: brightness(1.24); transform: translate3d(-50%, -50%, calc(var(--depth) + 58px)) scale(calc(var(--scale) * 1.2)); }
-        .node.dim { opacity: .16; }
-        .node-label { position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
-        .node:hover .node-label, .node.active .node-label { opacity: .95; }
+        .node:hover { opacity: 1; filter: brightness(1.18); transform: translate3d(-50%, -50%, calc(var(--depth) + 30px)) scale(calc(var(--scale) * 1.08)); }
+        .node.active { opacity: 1; filter: brightness(1.12); transform: translate3d(-50%, -50%, calc(var(--depth) + 26px)) scale(calc(var(--scale) * 1.06)); }
+        .node.dim { opacity: .28; }
+        .node-label { display: none; position: absolute; left: 50%; top: calc(100% + .55rem); transform: translateX(-50%); white-space: nowrap; color: rgba(255,255,255,.84); font-size: .66rem; text-shadow: 0 2px 12px rgba(0,0,0,.95); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+        .node:hover .node-label { display: block; opacity: .9; }
         .companion { position: absolute; z-index: 8; right: 1rem; top: 1rem; width: min(280px, calc(100vw - 2rem)); border: 1px solid rgba(157,196,255,.2); border-radius: 16px; background: rgba(4,7,18,.46); backdrop-filter: blur(10px); padding: .75rem .85rem; color: rgba(255,255,255,.76); box-shadow: 0 20px 54px rgba(0,0,0,.22); }
         .companion strong { display: block; margin-bottom: .3rem; font-size: .64rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.46); }
         .companion span { font-size: .8rem; line-height: 1.45; }
