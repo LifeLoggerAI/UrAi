@@ -3,58 +3,161 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
-import { ResolvedVisual } from "@/components/urai/ResolvedVisual";
-import { resolveUraiAssets } from "@/lib/urai-assets";
-import { useUraiHomeState, type UraiLifeMapNode } from "@/lib/use-urai-home-state";
-import { useUraiRemoteAssets } from "@/lib/use-urai-remote-assets";
+import { useUraiHomeState, type UraiHomeViewModel, type UraiLifeMapNode } from "@/lib/use-urai-home-state";
 
 type Mode = "home" | "transitioning" | "lifemap";
-type HomePanel = "companion" | "self" | "biome" | null;
+type HomeSheet = "body" | "mood" | "insight" | "companion" | null;
 
-const HOME_SLOTS = [
-  "home.sky.background",
-  "home.sky.clouds",
-  "home.ground.base",
-  "home.orb.core",
-  "home.silhouette.body",
-  "spatial.star.default",
-] as const;
+type HomeVisuals = {
+  skyTop: string;
+  skyMid: string;
+  skyBottom: string;
+  aura: string;
+  auraSoft: string;
+  horizon: string;
+  particleOpacity: number;
+  auraPulseSeconds: number;
+  fogOpacity: number;
+  constellationOpacity: number;
+  vignetteOpacity: number;
+  orbLabel: string;
+};
 
-const AMBIENT_STARS = [
-  ["12%", "64%", 4, "-0.2s"],
-  ["29%", "27%", 8, "-1.1s"],
-  ["42%", "18%", 4, "-2.1s"],
-  ["52%", "11%", 7, "-3.1s"],
-  ["72%", "40%", 6, "-4.1s"],
-  ["82%", "55%", 5, "-5.1s"],
-] as const;
+function deriveHomeVisuals(home: UraiHomeViewModel): HomeVisuals {
+  if (home.visualState === "threshold" || home.thresholdRisk > 0.7) {
+    return {
+      skyTop: "#030712",
+      skyMid: "#111827",
+      skyBottom: "#1e1b4b",
+      aura: "rgba(167,139,250,0.55)",
+      auraSoft: "rgba(59,130,246,0.18)",
+      horizon: "rgba(245,158,11,0.18)",
+      particleOpacity: 0.12,
+      auraPulseSeconds: 7.2,
+      fogOpacity: 0.48,
+      constellationOpacity: 0.1,
+      vignetteOpacity: 0.72,
+      orbLabel: "Protective",
+    };
+  }
 
-const RHYTHM_THEME = {
-  stable: { sky: 0.78, fog: 0.52, star: 0.72, speed: "7.8s", ground: 0.6 },
-  focused: { sky: 0.9, fog: 0.62, star: 0.86, speed: "6.4s", ground: 0.7 },
-  overstimulated: { sky: 1.08, fog: 0.82, star: 1, speed: "4.8s", ground: 0.52 },
-  offRhythm: { sky: 0.64, fog: 0.9, star: 0.52, speed: "8.8s", ground: 0.46 },
-  recovering: { sky: 0.86, fog: 0.7, star: 0.76, speed: "7.2s", ground: 0.86 },
-} as const;
+  if (home.visualState === "recovery" || home.bloomReady) {
+    return {
+      skyTop: "#07111f",
+      skyMid: "#123047",
+      skyBottom: "#0f172a",
+      aura: "rgba(45,212,191,0.58)",
+      auraSoft: "rgba(251,191,36,0.28)",
+      horizon: "rgba(251,191,36,0.38)",
+      particleOpacity: 0.32,
+      auraPulseSeconds: 5,
+      fogOpacity: 0.18,
+      constellationOpacity: 0.24,
+      vignetteOpacity: 0.34,
+      orbLabel: "Blooming",
+    };
+  }
+
+  if (home.visualState === "overstimulated" || home.rhythmState === "overstimulated") {
+    return {
+      skyTop: "#020617",
+      skyMid: "#1e1b4b",
+      skyBottom: "#0f172a",
+      aura: "rgba(56,189,248,0.68)",
+      auraSoft: "rgba(129,140,248,0.32)",
+      horizon: "rgba(56,189,248,0.32)",
+      particleOpacity: 0.44,
+      auraPulseSeconds: 3.1,
+      fogOpacity: 0.28,
+      constellationOpacity: 0.26,
+      vignetteOpacity: 0.42,
+      orbLabel: "Fast rhythm",
+    };
+  }
+
+  if (home.visualState === "offRhythm" || home.rhythmState === "offRhythm") {
+    return {
+      skyTop: "#050816",
+      skyMid: "#172554",
+      skyBottom: "#020617",
+      aura: "rgba(96,165,250,0.48)",
+      auraSoft: "rgba(148,163,184,0.2)",
+      horizon: "rgba(99,102,241,0.22)",
+      particleOpacity: 0.2,
+      auraPulseSeconds: 4.6,
+      fogOpacity: 0.38,
+      constellationOpacity: 0.14,
+      vignetteOpacity: 0.52,
+      orbLabel: "Recalibrating",
+    };
+  }
+
+  if (home.visualState === "socialHigh") {
+    return {
+      skyTop: "#020617",
+      skyMid: "#164e63",
+      skyBottom: "#0f172a",
+      aura: "rgba(103,232,249,0.58)",
+      auraSoft: "rgba(192,132,252,0.28)",
+      horizon: "rgba(125,211,252,0.32)",
+      particleOpacity: 0.34,
+      auraPulseSeconds: 5.2,
+      fogOpacity: 0.18,
+      constellationOpacity: 0.3,
+      vignetteOpacity: 0.36,
+      orbLabel: "Social field",
+    };
+  }
+
+  if (home.visualState === "socialSilence") {
+    return {
+      skyTop: "#020617",
+      skyMid: "#0b1b34",
+      skyBottom: "#030712",
+      aura: "rgba(147,197,253,0.44)",
+      auraSoft: "rgba(30,64,175,0.16)",
+      horizon: "rgba(96,165,250,0.16)",
+      particleOpacity: 0.12,
+      auraPulseSeconds: 6.8,
+      fogOpacity: 0.26,
+      constellationOpacity: 0.1,
+      vignetteOpacity: 0.55,
+      orbLabel: "Quiet field",
+    };
+  }
+
+  return {
+    skyTop: "#020617",
+    skyMid: "#0f2a4a",
+    skyBottom: "#020617",
+    aura: "rgba(103,232,249,0.56)",
+    auraSoft: "rgba(59,130,246,0.24)",
+    horizon: "rgba(125,211,252,0.28)",
+    particleOpacity: 0.22,
+    auraPulseSeconds: 5.8,
+    fogOpacity: 0.22,
+    constellationOpacity: 0.18,
+    vignetteOpacity: 0.42,
+    orbLabel: home.companionMode === "listening" ? "Listening" : "Ambient",
+  };
+}
 
 function nodeSize(node: UraiLifeMapNode) {
-  return Math.round(12 + node.emotionalWeight * 18);
+  return Math.round(7 + node.emotionalWeight * 12);
 }
 
 function constellationPath(nodes: UraiLifeMapNode[]) {
   if (nodes.length < 2) return "";
-  return nodes.slice(0, 8).map((node, index) => `${index === 0 ? "M" : "L"} ${node.x} ${node.y}`).join(" ");
+  return nodes.slice(0, 7).map((node, index) => `${index === 0 ? "M" : "L"} ${node.x} ${node.y}`).join(" ");
 }
 
 export default function UraiResolvedHomeScene() {
   const [mode, setMode] = useState<Mode>("home");
-  const [activePanel, setActivePanel] = useState<HomePanel>(null);
+  const [activeSheet, setActiveSheet] = useState<HomeSheet>(null);
   const [activeNode, setActiveNode] = useState<UraiLifeMapNode | null>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const remoteAssets = useUraiRemoteAssets();
   const home = useUraiHomeState();
-  const assets = useMemo(() => resolveUraiAssets(HOME_SLOTS, remoteAssets.assets), [remoteAssets.assets]);
-  const theme = RHYTHM_THEME[home.rhythmState];
+  const visuals = useMemo(() => deriveHomeVisuals(home), [home]);
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
@@ -71,136 +174,188 @@ export default function UraiResolvedHomeScene() {
       setMode("lifemap");
       return undefined;
     }
-    const timer = window.setTimeout(() => setMode("lifemap"), 1100);
+    const timer = window.setTimeout(() => setMode("lifemap"), 900);
     return () => window.clearTimeout(timer);
   }, [mode, reduceMotion]);
 
   const openLifeMap = () => {
     if (mode !== "home") return;
-    setActivePanel(null);
+    setActiveSheet(null);
     setActiveNode(null);
     setMode(reduceMotion ? "lifemap" : "transitioning");
   };
 
   const returnHome = () => {
-    setActivePanel(null);
+    setActiveSheet(null);
     setActiveNode(null);
     setMode("home");
   };
 
-  const openPanel = (panel: Exclude<HomePanel, null>) => {
-    setActiveNode(null);
-    setActivePanel(panel);
-  };
-
   const sceneStyle = {
-    "--aura-color": home.auraColor,
-    "--sky-intensity": theme.sky,
-    "--fog-opacity": theme.fog,
-    "--star-intensity": theme.star,
-    "--orb-speed": theme.speed,
-    "--ground-glow": theme.ground,
+    "--sky-top": visuals.skyTop,
+    "--sky-mid": visuals.skyMid,
+    "--sky-bottom": visuals.skyBottom,
+    "--aura": visuals.aura,
+    "--aura-soft": visuals.auraSoft,
+    "--horizon": visuals.horizon,
+    "--aura-pulse": `${visuals.auraPulseSeconds}s`,
+    "--fog-opacity": visuals.fogOpacity,
+    "--particle-opacity": visuals.particleOpacity,
+    "--constellation-opacity": visuals.constellationOpacity,
+    "--vignette-opacity": visuals.vignetteOpacity,
   } as CSSProperties;
 
   if (mode === "lifemap") {
     return (
-      <main className="resolved-shell lifemap-shell">
-        <div className="lifemap-backdrop" aria-hidden="true" />
-        <div className="lifemap-layer"><LifeMapScene /></div>
+      <main className="urai-home-shell lifemap-shell">
+        <LifeMapScene />
         <button type="button" className="return-home" onClick={returnHome}>Return home</button>
-        <style jsx>{shellStyles}</style>
+        <style jsx>{styles}</style>
       </main>
     );
   }
 
-  const isTransitioning = mode === "transitioning";
-  const nodes = home.nodes.length ? home.nodes : [];
+  const transitioning = mode === "transitioning";
 
   return (
-    <main className={`resolved-shell rhythm-${home.rhythmState} ${isTransitioning ? "is-transitioning" : ""}`} style={sceneStyle} onClick={openLifeMap}>
-      <div className="cinematic-backdrop" aria-hidden="true">
-        <ResolvedVisual asset={assets["home.sky.background"]} className="asset-layer asset-sky" />
-        <ResolvedVisual asset={assets["home.sky.clouds"]} className="asset-layer asset-clouds" />
-        <div className="sky-gradient" />
-        <div className="aurora aurora-one" />
-        <div className="aurora aurora-two" />
-        <div className="orb-bloom-field" />
-        <ResolvedVisual asset={assets["home.ground.base"]} className="asset-layer asset-ground" />
-        <div className="terrain" />
-        <div className="sky-vignette" />
-      </div>
-      <button type="button" className="sky-hitbox" onClick={openLifeMap} aria-label="Open URAI Life Map" />
+    <main className={`urai-home-shell ${transitioning ? "is-transitioning" : ""}`} style={sceneStyle}>
+      <button type="button" className="sky-layer" aria-label="Open your Symbolic Life Map" onClick={openLifeMap}>
+        <span className="sky-gradient" />
+        <span className="sky-fog sky-fog-one" />
+        <span className="sky-fog sky-fog-two" />
+        <span className="horizon-glow" />
+        <Constellation nodes={home.nodes} onNodeOpen={(node) => { setActiveSheet(null); setActiveNode(node); }} />
+        <span className="sky-vignette" />
+      </button>
 
-      <section className="home-stage" aria-label="URAI production emotional home scene">
-        <UraiConstellationLayer nodes={nodes} assets={assets} onNodeOpen={setActiveNode} />
-
-        <button type="button" className="biome-hitbox" onClick={(event) => { event.stopPropagation(); openPanel("biome"); }} aria-label="Open Emotional Biome">
-          Emotional Biome
-        </button>
-
-        <button type="button" className="silhouette-wrap" onClick={(event) => { event.stopPropagation(); openPanel("self"); }} aria-label="Open Self State">
-          <ResolvedVisual asset={assets["home.silhouette.body"]} className="silhouette-asset" />
-          <span className="body-aura" />
-          <span className="hotspot-label silhouette-label">Self State</span>
-        </button>
-
-        <button type="button" className={`orb-button companion-${home.companionMode}`} onClick={(event) => { event.stopPropagation(); openPanel("companion"); }} onDoubleClick={(event) => { event.stopPropagation(); openLifeMap(); }} aria-label="Open URAI companion">
-          <span className="orb-fallback-glow" />
-          <span className="orb-ring orb-ring-one" />
-          <span className="orb-ring orb-ring-two" />
-          <ResolvedVisual asset={assets["home.orb.core"]} className="orb-asset" />
-          <span className="hotspot-label orb-label">{home.companionMode}</span>
-        </button>
-
-        <div className="home-copy">
-          <p className="sky-whisper" aria-live="polite">{home.narratorWhisper}</p>
-          <p className="product-line">URAI is reading the quiet shape of your day.</p>
-          <button type="button" className="life-map-cta" onClick={(event) => { event.stopPropagation(); openLifeMap(); }}>Enter Life Map</button>
+      <header className="home-header">
+        <div>
+          <p className="brand-mark">URAI</p>
+          <h1>{home.insight.title}</h1>
+          <p>{home.forecastMessage}</p>
         </div>
+        <button type="button" className="listening-pill" onClick={() => setActiveSheet("companion")}>
+          <span />{home.source === "firestore" ? "Live" : "Demo"}
+        </button>
+      </header>
 
-        <div className="state-hud" aria-label="Current URAI state">
-          <div className="state-chip"><span>Mood Weather</span><strong>{home.moodWeather}</strong></div>
-          <div className="state-chip"><span>Memory Nodes</span><strong>{home.memoryNodeCount}</strong></div>
-          <div className="state-chip"><span>Recovery</span><strong>{home.recoveryScore}%</strong></div>
-          <div className="state-chip"><span>Forecast</span><strong>{home.forecastSummary}</strong></div>
-        </div>
+      <section className="body-field" aria-label="URAI body, aura, and companion field">
+        <button type="button" className="silhouette-button" aria-label="Open body state" onClick={() => setActiveSheet("body")}>
+          <span className="body-halo" />
+          <span className="body-head" />
+          <span className="body-core" />
+          <span className="body-leg body-leg-left" />
+          <span className="body-leg body-leg-right" />
+        </button>
 
-        {(activePanel || activeNode) && (
-          <aside className="context-card" onClick={(event) => event.stopPropagation()} aria-live="polite">
-            {activeNode ? <><span className="context-eyebrow">{activeNode.type} node</span><h2>{activeNode.title}</h2><p>{activeNode.subtitle}</p><button type="button" onClick={openLifeMap}>Open Memory Field</button></> : null}
-            {activePanel === "companion" ? <><span className="context-eyebrow">Companion</span><h2>The orb is {home.companionMode}.</h2><p>{home.narratorWhisper}</p><button type="button" onClick={openLifeMap}>Enter Life Map</button></> : null}
-            {activePanel === "self" ? <><span className="context-eyebrow">Self State</span><h2>{home.moodWeather}</h2><p>Rhythm state: {home.rhythmState}. Aura and body visuals now react to the current home state.</p><button type="button" onClick={() => setActivePanel(null)}>Hold Here</button></> : null}
-            {activePanel === "biome" ? <><span className="context-eyebrow">Emotional Biome</span><h2>{home.forecastSummary}</h2><p>The ground, fog, and horizon are driven by rhythm state, recovery, and visual asset slots.</p><button type="button" onClick={() => setActivePanel(null)}>Close Biome</button></> : null}
-          </aside>
-        )}
+        <button type="button" className="aura-orb-button" aria-label="Open mood weather" onClick={() => setActiveSheet("mood")}>
+          <span className="aura-field" />
+          <span className="aura-ring aura-ring-one" />
+          <span className="aura-ring aura-ring-two" />
+          <span className="orb-core" />
+          <span className="orb-shadow" />
+          <span className="orb-status">{visuals.orbLabel}</span>
+        </button>
+
+        <button type="button" className="companion-dot" aria-label="Open companion" onClick={() => setActiveSheet("companion")} />
       </section>
 
-      <style jsx>{shellStyles}</style>
+      <section className="insight-dock">
+        <button type="button" className="insight-card" onClick={() => setActiveSheet("insight")}>
+          <span>{home.moodWeather} · {home.forecastSummary}</span>
+          <strong>{home.insight.title}</strong>
+          <p>{home.insight.body}</p>
+        </button>
+      </section>
+
+      <nav className="home-nav" aria-label="URAI primary navigation">
+        <button type="button" className="active">Home</button>
+        <button type="button" onClick={() => setActiveSheet("body")}>Mirror</button>
+        <button type="button" onClick={openLifeMap}>Map</button>
+        <button type="button" onClick={() => setActiveSheet("insight")}>Replay</button>
+      </nav>
+
+      {(activeSheet || activeNode) && (
+        <div className="sheet-backdrop" onClick={() => { setActiveSheet(null); setActiveNode(null); }}>
+          <aside className="home-sheet" onClick={(event) => event.stopPropagation()}>
+            <span className="sheet-handle" />
+            {activeNode ? (
+              <>
+                <span className="sheet-eyebrow">{activeNode.type} node</span>
+                <h2>{activeNode.title}</h2>
+                <p>{activeNode.subtitle}</p>
+                <button type="button" onClick={openLifeMap}>Open Life Map</button>
+              </>
+            ) : null}
+            {activeSheet === "body" ? (
+              <>
+                <span className="sheet-eyebrow">Body field</span>
+                <h2>{home.rhythmState === "offRhythm" ? "Your rhythm is recalibrating." : "Your body field is being read gently."}</h2>
+                <p>Rhythm: {home.rhythmState}. Recovery: {Math.round(home.recoveryScore)}%. Shadow load: {Math.round(home.shadowLoad * 100)}%. Cognitive load: {Math.round(home.cognitiveLoad * 100)}%.</p>
+                <button type="button" onClick={() => setActiveSheet(null)}>Hold here</button>
+              </>
+            ) : null}
+            {activeSheet === "mood" ? (
+              <>
+                <span className="sheet-eyebrow">Mood weather</span>
+                <h2>{home.moodWeather}</h2>
+                <p>Confidence: {Math.round(home.moodConfidence * 100)}%. Forecast: {home.forecastMessage}</p>
+                <button type="button" onClick={() => setActiveSheet(null)}>Close weather</button>
+              </>
+            ) : null}
+            {activeSheet === "insight" ? (
+              <>
+                <span className="sheet-eyebrow">Passive insight</span>
+                <h2>{home.insight.title}</h2>
+                <p>{home.insight.body}</p>
+                <p className="why-copy">Why this appears: mood weather, rhythm, recovery, memory stars, and companion state are being summarized from your Home state.</p>
+                <button type="button" onClick={() => setActiveSheet(null)}>Save for later</button>
+              </>
+            ) : null}
+            {activeSheet === "companion" ? (
+              <>
+                <span className="sheet-eyebrow">Companion</span>
+                <h2>The companion is {home.companionMode}.</h2>
+                <p>{home.narratorWhisper}</p>
+                <button type="button" onClick={() => setActiveSheet(null)}>Stay quiet</button>
+              </>
+            ) : null}
+          </aside>
+        </div>
+      )}
+
+      <style jsx>{styles}</style>
     </main>
   );
 }
 
-function UraiConstellationLayer({ nodes, assets, onNodeOpen }: { nodes: UraiLifeMapNode[]; assets: ReturnType<typeof resolveUraiAssets>; onNodeOpen: (node: UraiLifeMapNode) => void; }) {
-  const path = constellationPath(nodes);
+function Constellation({ nodes, onNodeOpen }: { nodes: UraiLifeMapNode[]; onNodeOpen: (node: UraiLifeMapNode) => void }) {
+  const visibleNodes = nodes.slice(0, 8);
+  const path = constellationPath(visibleNodes);
   return (
-    <div className="foreground-stars" aria-label="Memory constellation">
-      <svg className="constellation-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <span className="constellation-layer" aria-label="Memory constellation">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         {path ? <path d={path} /> : null}
       </svg>
-      {nodes.map((node) => (
-        <button key={node.id} type="button" className={`memory-star node-${node.type}`} style={{ left: `${node.x}%`, top: `${node.y}%`, width: nodeSize(node), height: nodeSize(node), "--node-color": node.auraColor } as CSSProperties} onClick={(event) => { event.stopPropagation(); onNodeOpen(node); }} aria-label={`Open ${node.title}`}>
-          <ResolvedVisual asset={assets["spatial.star.default"]} className="memory-star-asset" />
-          <span className="node-glow" />
-          <span className="star-label">{node.title}</span>
+      {visibleNodes.map((node) => (
+        <button
+          key={node.id}
+          type="button"
+          className="memory-star"
+          style={{ left: `${node.x}%`, top: `${node.y}%`, width: nodeSize(node), height: nodeSize(node), "--node-color": node.auraColor } as CSSProperties}
+          onClick={(event) => { event.stopPropagation(); onNodeOpen(node); }}
+          aria-label={`Open ${node.title}`}
+        >
+          <span />
         </button>
       ))}
-      {AMBIENT_STARS.map(([left, top, size, delay], index) => (
-        <span key={`${left}-${top}-${index}`} className="ambient-star" style={{ left, top, width: size, height: size, animationDelay: delay }} />
-      ))}
-    </div>
+      <i className="ambient-star a1" />
+      <i className="ambient-star a2" />
+      <i className="ambient-star a3" />
+    </span>
   );
 }
 
-const shellStyles = `
-  .resolved-shell{position:fixed;inset:0;z-index:2147483647;height:100dvh;width:100vw;overflow:hidden;isolation:isolate;background:#020617;color:white;cursor:zoom-in;user-select:none;contain:paint}.lifemap-shell{cursor:default}.lifemap-backdrop,.cinematic-backdrop{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(180deg,#020718 0%,#07163a 42%,#0d2551 69%,#030816 100%)}.asset-layer{position:fixed;inset:0;z-index:1;pointer-events:none}.asset-layer :global(img),.asset-layer :global(svg){width:100%;height:100%;object-fit:cover}.asset-sky{opacity:calc(.56 * var(--sky-intensity));filter:saturate(1.08) contrast(1.05) brightness(.78)}.asset-clouds{opacity:calc(.18 * var(--fog-opacity));filter:blur(1.5px) brightness(.9);mix-blend-mode:screen}.asset-ground{top:auto;bottom:0;height:42vh;opacity:calc(.24 * var(--ground-glow));filter:saturate(.92) brightness(.76);mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.65) 24%,#000 100%)}.sky-gradient{position:fixed;inset:0;z-index:2;background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--aura-color) 35%,transparent),transparent 34%),radial-gradient(ellipse at 50% 76%,rgba(125,211,252,.18),transparent 24%),radial-gradient(ellipse at 28% 31%,rgba(96,165,250,.14),transparent 26%)}.sky-vignette{position:fixed;inset:0;z-index:10;background:radial-gradient(ellipse at 50% 48%,transparent 0%,transparent 46%,rgba(0,0,0,.28) 78%,rgba(0,0,0,.72) 100%),linear-gradient(180deg,rgba(0,0,0,.28) 0%,transparent 38%,rgba(0,0,0,.34) 100%)}.aurora{position:fixed;z-index:3;border-radius:999px;filter:blur(58px);opacity:calc(.5 * var(--fog-opacity));animation:auraDrift 15s ease-in-out infinite alternate}.aurora-one{left:14vw;top:27vh;width:46vw;height:36vh;background:radial-gradient(circle,color-mix(in srgb,var(--aura-color) 38%,transparent),transparent 70%)}.aurora-two{right:8vw;top:32vh;width:42vw;height:42vh;background:radial-gradient(circle,rgba(167,139,250,.16),transparent 72%);animation-delay:-4s}.orb-bloom-field{position:fixed;left:50%;top:64%;z-index:4;width:min(720px,56vw);height:min(460px,44vh);transform:translate(-50%,-50%);border-radius:999px;background:radial-gradient(circle,color-mix(in srgb,var(--aura-color) 32%,transparent),rgba(125,211,252,.16) 31%,rgba(59,130,246,.07) 58%,transparent 74%);filter:blur(30px);opacity:.95;mix-blend-mode:screen}.terrain{position:fixed;left:50%;bottom:-17vh;z-index:6;width:min(1280px,96vw);height:38vh;transform:translateX(-50%);border-radius:50% 50% 0 0;background:radial-gradient(ellipse at 50% 6%,rgba(219,245,255,calc(.16 * var(--ground-glow))),rgba(125,211,252,.1) 28%,transparent 58%),linear-gradient(180deg,rgba(153,214,244,.08) 0%,rgba(9,31,63,.3) 36%,rgba(2,6,23,.96) 78%);box-shadow:0 -22px 100px color-mix(in srgb,var(--aura-color) 18%,transparent);animation:horizonBreathe 8s ease-in-out infinite}.terrain:before{content:"";position:absolute;left:-6%;right:-6%;top:-6%;height:42%;border-radius:50%;background:radial-gradient(ellipse at 50% 50%,rgba(232,249,255,.2),rgba(125,211,252,.07) 40%,transparent 72%);filter:blur(12px)}.terrain:after{content:"";position:absolute;left:10%;right:10%;top:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(226,242,255,.32),transparent);filter:blur(.5px)}.lifemap-layer{position:relative;z-index:5;min-height:100dvh}.return-home{position:fixed;left:1rem;top:1rem;z-index:60;border:1px solid rgba(255,255,255,.24);border-radius:999px;background:rgba(0,0,0,.42);color:rgba(255,255,255,.88);padding:.55rem .9rem;font-size:.85rem;backdrop-filter:blur(12px)}.sky-hitbox{position:fixed;inset:0 0 40% 0;z-index:12;border:0;background:transparent;cursor:zoom-in}.home-stage{position:relative;z-index:20;min-height:100dvh;display:grid;place-items:center;pointer-events:none}.biome-hitbox{position:fixed;left:50%;bottom:5.5vh;z-index:42;transform:translateX(-50%);border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(15,23,42,.42);color:rgba(255,255,255,.62);padding:.5rem .85rem;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;backdrop-filter:blur(14px);cursor:pointer;pointer-events:auto}.biome-hitbox:hover{color:white;border-color:rgba(125,211,252,.56);transform:translateX(-50%) translateY(-2px)}.silhouette-wrap{position:fixed;left:calc(50% - min(15vw,210px));bottom:12vh;z-index:25;width:clamp(108px,9vw,154px);height:clamp(285px,42vh,450px);border:0;padding:0;background:transparent;cursor:pointer;pointer-events:auto;opacity:.72;filter:drop-shadow(0 0 40px color-mix(in srgb,var(--aura-color) 28%,transparent))}.silhouette-wrap :global(img),.silhouette-wrap :global(svg){width:100%;height:100%;object-fit:contain}.body-aura{position:absolute;inset:8% -25% 0;border-radius:50%;background:radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--aura-color) 16%,transparent),transparent 65%);filter:blur(18px);z-index:-1}.silhouette-wrap:hover{opacity:.96;transform:translateY(-4px)}.orb-button{position:fixed;left:50%;top:64%;z-index:34;width:clamp(210px,16vw,282px);height:clamp(210px,16vw,282px);transform:translate(-50%,-50%);border:0;border-radius:999px;background:transparent;cursor:pointer;pointer-events:auto;animation:orbBreath var(--orb-speed) ease-in-out infinite}.orb-button:hover{transform:translate(-50%,-50%) scale(1.06);filter:drop-shadow(0 0 72px color-mix(in srgb,var(--aura-color) 68%,transparent))}.orb-asset{position:absolute;inset:24%;z-index:3;border-radius:999px}.orb-asset :global(img),.orb-asset :global(svg){width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 28px rgba(255,255,255,.72)) drop-shadow(0 0 88px color-mix(in srgb,var(--aura-color) 66%,transparent))}.orb-fallback-glow{position:absolute;inset:-74%;z-index:1;border-radius:999px;background:radial-gradient(circle,rgba(255,255,255,.28),color-mix(in srgb,var(--aura-color) 28%,transparent) 30%,rgba(139,92,246,.1) 57%,transparent 76%);filter:blur(24px);animation:orbPulse var(--orb-speed) ease-in-out infinite}.orb-ring{position:absolute;inset:4%;z-index:2;border-radius:999px;border:1px solid rgba(255,255,255,.18);box-shadow:0 0 30px rgba(125,211,252,.16);animation:orbitRing 10s linear infinite}.orb-ring-two{inset:-7%;opacity:.36;animation-duration:16s;animation-direction:reverse}.hotspot-label,.star-label{position:absolute;left:50%;transform:translateX(-50%) translateY(8px);border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(2,6,23,.5);color:rgba(255,255,255,.72);padding:.35rem .55rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;opacity:0;backdrop-filter:blur(12px);transition:opacity 220ms ease,transform 220ms ease;pointer-events:none}.silhouette-label{top:38%}.orb-label{bottom:-8%;opacity:.72;transform:translateX(-50%) translateY(0)}.silhouette-wrap:hover .hotspot-label,.orb-button:hover .hotspot-label,.memory-star:hover .star-label{opacity:1;transform:translateX(-50%) translateY(0)}.foreground-stars{position:fixed;inset:0;z-index:30;pointer-events:none;opacity:calc(.82 * var(--star-intensity))}.constellation-lines{position:absolute;inset:0;width:100%;height:100%;opacity:.22}.constellation-lines path{fill:none;stroke:var(--aura-color);stroke-width:.12;stroke-dasharray:1 1.7;filter:drop-shadow(0 0 4px var(--aura-color))}.memory-star{position:absolute;z-index:2;border:0;padding:0;background:transparent;cursor:pointer;pointer-events:auto;transform:translate(-50%,-50%);animation:starFloat 7s ease-in-out infinite}.node-glow{position:absolute;inset:-60%;border-radius:999px;background:radial-gradient(circle,var(--node-color),transparent 68%);opacity:.22;filter:blur(8px)}.memory-star-asset,.ambient-star{position:absolute;inset:0;display:block}.memory-star-asset :global(img),.memory-star-asset :global(svg){width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(255,255,255,.68))}.star-label{top:calc(100% + .42rem)}.ambient-star{z-index:1;opacity:.42;border-radius:999px;background:radial-gradient(circle,white 0 14%,#b9e8ff 26%,rgba(138,108,255,.32) 58%,transparent 72%);filter:drop-shadow(0 0 14px rgba(255,255,255,.68));animation:ambientTwinkle 6s ease-in-out infinite}.home-copy{position:fixed;left:50%;top:18.5%;z-index:44;width:min(640px,calc(100vw - 2rem));transform:translateX(-50%);text-align:center;pointer-events:auto}.sky-whisper{margin:0;color:rgba(255,255,255,.92);font-size:clamp(1.05rem,1.55vw,1.42rem);line-height:1.45;text-shadow:0 2px 28px rgba(0,0,0,.9)}.product-line{margin:.55rem auto 0;max-width:34rem;color:rgba(226,242,255,.64);font-size:clamp(.76rem,1vw,.95rem);line-height:1.5;text-shadow:0 2px 22px rgba(0,0,0,.72)}.life-map-cta{margin-top:.9rem;border:1px solid rgba(186,230,253,.42);border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.07));color:rgba(255,255,255,.94);padding:.72rem 1.1rem;font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;box-shadow:0 18px 64px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.22);backdrop-filter:blur(16px);cursor:zoom-in}.state-hud{position:fixed;left:1rem;bottom:1rem;z-index:48;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;width:min(420px,calc(100vw - 2rem));pointer-events:auto}.state-chip{border:1px solid rgba(255,255,255,.12);border-radius:1rem;background:rgba(2,6,23,.5);padding:.7rem .78rem;backdrop-filter:blur(16px)}.state-chip span{display:block;color:rgba(226,242,255,.52);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase}.state-chip strong{display:block;margin-top:.22rem;color:rgba(255,255,255,.9);font-size:.84rem;font-weight:650}.context-card{position:fixed;right:1rem;bottom:1rem;z-index:56;width:min(360px,calc(100vw - 2rem));border:1px solid rgba(255,255,255,.16);border-radius:1.4rem;background:linear-gradient(180deg,rgba(15,23,42,.82),rgba(2,6,23,.72));padding:1rem;box-shadow:0 28px 96px rgba(0,0,0,.46);backdrop-filter:blur(20px);pointer-events:auto}.context-eyebrow{color:rgba(125,211,252,.78);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase}.context-card h2{margin:.42rem 0 .35rem;color:rgba(255,255,255,.94);font-size:1.05rem;line-height:1.25}.context-card p{margin:0;color:rgba(226,242,255,.66);font-size:.86rem;line-height:1.5}.context-card button{margin-top:.8rem;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.86);padding:.55rem .8rem;cursor:pointer}.is-transitioning .orb-button{transform:translate(-50%,-310%) scale(.68);opacity:.78;filter:drop-shadow(0 0 110px rgba(255,255,255,.72))}.is-transitioning .silhouette-wrap{transform:translateY(34vh) scale(.74);opacity:.14;filter:blur(3px)}.is-transitioning .foreground-stars{transform:scale(2.25) translateY(-8vh);opacity:1}.is-transitioning .state-hud,.is-transitioning .context-card,.is-transitioning .biome-hitbox,.is-transitioning .product-line,.is-transitioning .life-map-cta{opacity:0;pointer-events:none}@keyframes orbPulse{0%,100%{opacity:.68;transform:scale(.94)}50%{opacity:1;transform:scale(1.08)}}@keyframes orbBreath{0%,100%{filter:drop-shadow(0 0 34px color-mix(in srgb,var(--aura-color) 34%,transparent))}50%{filter:drop-shadow(0 0 86px color-mix(in srgb,var(--aura-color) 72%,transparent))}}@keyframes orbitRing{0%{transform:rotate(0deg) scaleX(1.04) scaleY(.94)}100%{transform:rotate(360deg) scaleX(1.04) scaleY(.94)}}@keyframes starFloat{0%,100%{opacity:.68;transform:translate(-50%,-50%) translateY(0) scale(.92)}50%{opacity:1;transform:translate(-50%,-50%) translateY(-8px) scale(1.1)}}@keyframes ambientTwinkle{0%,100%{opacity:.3;transform:scale(.86)}50%{opacity:.82;transform:scale(1.15)}}@keyframes auraDrift{0%{transform:translateX(-2vw) translateY(1vh) scale(1)}100%{transform:translateX(2vw) translateY(-1vh) scale(1.04)}}@keyframes horizonBreathe{0%,100%{opacity:.76;transform:translateX(-50%) scaleX(.98)}50%{opacity:.95;transform:translateX(-50%) scaleX(1.03)}}@media(max-width:800px){.orb-bloom-field{width:84vw}.silhouette-wrap{left:calc(50% - 112px);width:118px;height:330px;bottom:14vh}.orb-button{top:64%;width:174px;height:174px}.home-copy{top:12%}.state-hud{grid-template-columns:1fr 1fr;bottom:.75rem;left:.75rem;width:calc(100vw - 1.5rem)}.context-card{right:.75rem;bottom:7.6rem}.biome-hitbox{bottom:14vh}.constellation-lines{display:none}}@media(prefers-reduced-motion:reduce){.orb-button,.silhouette-wrap,.foreground-stars,.orb-fallback-glow,.memory-star,.ambient-star,.aurora,.terrain,.orb-ring{animation:none!important;transition-duration:.01ms!important}}
+const styles = `
+  .urai-home-shell{position:fixed;inset:0;z-index:2147483647;min-height:100dvh;width:100vw;overflow:hidden;background:#020617;color:white;isolation:isolate;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.lifemap-shell{background:#020617}.return-home{position:fixed;left:calc(env(safe-area-inset-left) + 1rem);top:calc(env(safe-area-inset-top) + 1rem);z-index:70;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(2,6,23,.62);color:rgba(255,255,255,.86);padding:.62rem .9rem;font-size:.8rem;backdrop-filter:blur(18px)}.sky-layer{position:absolute;inset:0;z-index:0;border:0;padding:0;text-align:left;background:transparent;cursor:zoom-in;overflow:hidden}.sky-gradient{position:absolute;inset:0;background:linear-gradient(180deg,var(--sky-top),var(--sky-mid) 48%,var(--sky-bottom))}.sky-fog{position:absolute;border-radius:999px;filter:blur(54px);opacity:var(--fog-opacity);mix-blend-mode:screen}.sky-fog-one{left:16%;top:28%;width:44vw;height:35vh;background:radial-gradient(circle,rgba(125,211,252,.24),transparent 68%);animation:fogDrift 16s ease-in-out infinite alternate}.sky-fog-two{right:8%;top:24%;width:38vw;height:36vh;background:radial-gradient(circle,rgba(167,139,250,.18),transparent 72%);animation:fogDrift 20s ease-in-out infinite alternate-reverse}.horizon-glow{position:absolute;left:50%;bottom:7%;width:min(980px,92vw);height:34vh;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 30%,var(--horizon),rgba(125,211,252,.08) 34%,transparent 70%);filter:blur(18px)}.sky-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 52%,transparent 0%,transparent 44%,rgba(0,0,0,.28) 72%,rgba(0,0,0,var(--vignette-opacity)) 100%),linear-gradient(180deg,rgba(0,0,0,.32),transparent 38%,rgba(0,0,0,.42));pointer-events:none}.constellation-layer{position:absolute;inset:0;opacity:var(--constellation-opacity);pointer-events:none;transition:opacity .4s ease}.constellation-layer svg{position:absolute;inset:4% 4% auto 4%;height:42%;width:92%;overflow:visible}.constellation-layer path{fill:none;stroke:rgba(186,230,253,.7);stroke-width:.14;stroke-dasharray:1.4 2.2;filter:drop-shadow(0 0 5px rgba(186,230,253,.75))}.memory-star{position:absolute;z-index:3;transform:translate(-50%,-50%);border:0;border-radius:999px;background:transparent;pointer-events:auto;cursor:pointer;animation:starFloat 7s ease-in-out infinite}.memory-star span{position:absolute;inset:-60%;border-radius:999px;background:radial-gradient(circle,#fff 0 7%,var(--node-color) 16%,rgba(186,230,253,.3) 38%,transparent 70%);filter:drop-shadow(0 0 14px rgba(255,255,255,.65))}.ambient-star{position:absolute;display:block;width:5px;height:5px;border-radius:999px;background:white;filter:drop-shadow(0 0 14px rgba(255,255,255,.72));opacity:.46;animation:twinkle 5.5s ease-in-out infinite}.a1{left:12%;top:64%}.a2{right:18%;top:52%;animation-delay:-2s}.a3{left:52%;top:78%;animation-delay:-4s}.home-header{position:relative;z-index:20;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:calc(env(safe-area-inset-top) + 1.1rem) max(1.25rem,env(safe-area-inset-left)) 0 max(1.25rem,env(safe-area-inset-right));pointer-events:none}.brand-mark{margin:0 0 .7rem;color:rgba(255,255,255,.52);font-size:.68rem;font-weight:700;letter-spacing:.28em}.home-header h1{margin:0;max-width:36rem;color:rgba(255,255,255,.92);font-size:clamp(1.25rem,2.4vw,1.85rem);line-height:1.18;letter-spacing:-.03em;text-shadow:0 2px 30px rgba(0,0,0,.74)}.home-header p:last-child{margin:.55rem 0 0;max-width:32rem;color:rgba(226,242,255,.64);font-size:.92rem;line-height:1.5}.listening-pill{pointer-events:auto;display:flex;align-items:center;gap:.42rem;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.68);padding:.45rem .68rem;font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;backdrop-filter:blur(18px)}.listening-pill span{width:.42rem;height:.42rem;border-radius:999px;background:#67e8f9;box-shadow:0 0 18px #67e8f9}.body-field{position:absolute;inset:0;z-index:18;pointer-events:none}.silhouette-button{position:absolute;left:calc(50% - min(14vw,190px));top:50%;z-index:20;width:118px;height:330px;transform:translate(-50%,-22%);border:0;background:transparent;pointer-events:auto;cursor:pointer;opacity:.78;filter:drop-shadow(0 0 34px rgba(103,232,249,.18))}.body-halo{position:absolute;inset:4% -30%;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,rgba(186,230,253,.18),transparent 65%);filter:blur(16px)}.body-head{position:absolute;left:50%;top:2%;width:44px;height:62px;transform:translateX(-50%);border-radius:999px;background:rgba(125,211,252,.18);filter:blur(.4px)}.body-core{position:absolute;left:50%;top:22%;width:54px;height:178px;transform:translateX(-50%);border-radius:50% 50% 42% 42%;background:linear-gradient(180deg,rgba(2,6,23,.16),rgba(2,6,23,.82));box-shadow:inset 10px 0 18px rgba(125,211,252,.16),0 0 36px rgba(2,6,23,.74)}.body-leg{position:absolute;bottom:0;width:18px;height:146px;border-radius:999px;background:rgba(2,6,23,.76);box-shadow:0 0 22px rgba(2,6,23,.8)}.body-leg-left{left:37%}.body-leg-right{right:37%}.aura-orb-button{position:absolute;left:50%;top:55%;z-index:24;width:280px;height:280px;transform:translate(-50%,-36%);border:0;border-radius:999px;background:transparent;pointer-events:auto;cursor:pointer}.aura-field{position:absolute;inset:-26%;border-radius:999px;background:radial-gradient(circle,var(--aura),var(--aura-soft) 35%,transparent 70%);filter:blur(28px);animation:auraPulse var(--aura-pulse) ease-in-out infinite}.aura-ring{position:absolute;inset:16%;border-radius:999px;border:1px solid rgba(255,255,255,.16);box-shadow:0 0 34px rgba(125,211,252,.12);animation:ringRotate 14s linear infinite}.aura-ring-two{inset:7%;opacity:.36;animation-duration:20s;animation-direction:reverse}.orb-core{position:absolute;left:50%;top:50%;width:92px;height:92px;transform:translate(-50%,-50%);border-radius:999px;background:radial-gradient(circle at 34% 26%,#fff 0 8%,#a5f3fc 24%,#0891b2 55%,#082f49 80%);box-shadow:inset 0 -15px 22px rgba(2,6,23,.55),0 0 36px rgba(103,232,249,.62),0 0 110px rgba(103,232,249,.38)}.orb-shadow{position:absolute;left:50%;top:59%;width:64px;height:18px;transform:translateX(-50%);border-radius:50%;background:rgba(2,6,23,.38);filter:blur(3px)}.orb-status{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.08);color:rgba(226,242,255,.62);padding:.32rem .55rem;font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(12px)}.companion-dot{position:absolute;right:calc(50% - 104px);top:61%;z-index:30;width:44px;height:44px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:radial-gradient(circle,#e0f2fe,rgba(103,232,249,.26),rgba(255,255,255,.04));box-shadow:0 0 36px rgba(103,232,249,.34);pointer-events:auto;cursor:pointer;animation:companionBreath 5.6s ease-in-out infinite}.insight-dock{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 5.4rem);z-index:40;padding:0 1rem;pointer-events:none}.insight-card{pointer-events:auto;display:block;width:min(430px,100%);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:1.55rem;background:rgba(2,6,23,.46);padding:1rem 1.05rem;text-align:left;box-shadow:0 22px 80px rgba(0,0,0,.34);backdrop-filter:blur(22px);cursor:pointer}.insight-card span{display:block;color:rgba(186,230,253,.52);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}.insight-card strong{display:block;margin:.48rem 0 .22rem;color:rgba(255,255,255,.92);font-size:1rem;line-height:1.25}.insight-card p{margin:0;color:rgba(226,242,255,.64);font-size:.86rem;line-height:1.45}.home-nav{position:absolute;left:50%;bottom:0;z-index:48;display:flex;width:min(430px,100%);transform:translateX(-50%);justify-content:space-around;border-top:1px solid rgba(255,255,255,.1);background:rgba(2,6,23,.68);padding:.78rem 1rem calc(env(safe-area-inset-bottom) + .72rem);backdrop-filter:blur(24px)}.home-nav button{border:0;background:transparent;color:rgba(255,255,255,.55);font-size:.72rem;font-weight:650;cursor:pointer}.home-nav .active{color:rgba(186,230,253,.96)}.home-nav .active:after{content:"";display:block;width:4px;height:4px;margin:.28rem auto 0;border-radius:999px;background:#bae6fd}.sheet-backdrop{position:absolute;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42);padding:1rem;backdrop-filter:blur(2px)}.home-sheet{width:min(430px,100%);border:1px solid rgba(255,255,255,.12);border-radius:2rem;background:rgba(2,6,23,.92);padding:1.05rem;box-shadow:0 30px 100px rgba(0,0,0,.55);backdrop-filter:blur(24px)}.sheet-handle{display:block;width:42px;height:4px;margin:0 auto .9rem;border-radius:999px;background:rgba(255,255,255,.18)}.sheet-eyebrow{color:rgba(125,211,252,.72);font-size:.62rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase}.home-sheet h2{margin:.45rem 0 .45rem;color:rgba(255,255,255,.94);font-size:1.12rem;line-height:1.25}.home-sheet p{margin:.45rem 0 0;color:rgba(226,242,255,.66);font-size:.9rem;line-height:1.55}.why-copy{font-size:.8rem!important;color:rgba(226,242,255,.48)!important}.home-sheet button{margin-top:.9rem;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.88);padding:.62rem .86rem;font-size:.84rem;font-weight:700}.is-transitioning .sky-layer{transform:scale(1.12);opacity:.42;transition:transform .9s cubic-bezier(.22,1,.36,1),opacity .9s ease}.is-transitioning .home-header,.is-transitioning .insight-dock,.is-transitioning .home-nav,.is-transitioning .silhouette-button,.is-transitioning .companion-dot{opacity:0;transition:opacity .35s ease}.is-transitioning .aura-orb-button{transform:translate(-50%,-190%) scale(.72);transition:transform .9s cubic-bezier(.22,1,.36,1)}.is-transitioning .constellation-layer{opacity:.78;transform:scale(2) translateY(-6vh);transition:transform .9s cubic-bezier(.22,1,.36,1),opacity .9s ease}@keyframes auraPulse{0%,100%{transform:scale(.96);opacity:.6}50%{transform:scale(1.06);opacity:.92}}@keyframes ringRotate{0%{transform:rotate(0deg) scaleX(1.06) scaleY(.94)}100%{transform:rotate(360deg) scaleX(1.06) scaleY(.94)}}@keyframes companionBreath{0%,100%{transform:scale(.94);opacity:.64}50%{transform:scale(1.06);opacity:1}}@keyframes fogDrift{0%{transform:translate(-2vw,1vh) scale(1)}100%{transform:translate(2vw,-1vh) scale(1.06)}}@keyframes starFloat{0%,100%{opacity:.62;transform:translate(-50%,-50%) translateY(0) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) translateY(-7px) scale(1.08)}}@keyframes twinkle{0%,100%{opacity:.24;transform:scale(.84)}50%{opacity:.72;transform:scale(1.2)}}@media(min-width:760px){.urai-home-shell:after{content:"";position:absolute;left:50%;top:0;bottom:0;width:min(430px,100%);transform:translateX(-50%);border-left:1px solid rgba(255,255,255,.04);border-right:1px solid rgba(255,255,255,.04);pointer-events:none}.home-header{left:50%;width:min(430px,100%);transform:translateX(-50%);padding-left:1.25rem;padding-right:1.25rem}.silhouette-button{left:calc(50% - 88px)}.insight-dock{left:50%;right:auto;width:min(430px,100%);transform:translateX(-50%)}}@media(max-width:520px){.home-header h1{font-size:1.22rem}.home-header p:last-child{font-size:.82rem}.silhouette-button{left:calc(50% - 78px);top:49%;width:94px;height:276px}.aura-orb-button{top:55%;width:224px;height:224px}.orb-core{width:82px;height:82px}.orb-status{bottom:22px}.companion-dot{right:calc(50% - 86px);top:60%}.insight-dock{bottom:calc(env(safe-area-inset-bottom) + 5rem)}.insight-card{padding:.9rem}.sheet-backdrop{padding:.75rem}.constellation-layer svg{height:39%}}@media(prefers-reduced-motion:reduce){.sky-fog,.memory-star,.ambient-star,.aura-field,.aura-ring,.companion-dot{animation:none!important}.is-transitioning .sky-layer,.is-transitioning .aura-orb-button,.is-transitioning .constellation-layer{transition-duration:.01ms!important}}
 `;
