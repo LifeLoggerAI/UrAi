@@ -1,11 +1,10 @@
-import FullLifeMapScene from "@/components/lifemap/FullLifeMapScene";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export const metadata = {
-  title: "URAI Life Map",
-  description:
-    "The full URAI Life Map: passive memory stars, symbolic constellations, narrator insights, rituals, recovery arcs, relationship orbits, and scroll exports.",
+  title: "URAI Life Map | Memory Galaxy",
+  description: "A passive emotional planetarium for URAI memory stars, constellations, recovery paths, and narrator insights.",
 };
 
 export default function LifeMapPage() {
-  return <FullLifeMapScene />;
+  return <LifeMapUniverse />;
 }
