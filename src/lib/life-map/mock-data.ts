@@ -1,4 +1,16 @@
-import type { LifeMapCollections, MemoryStar, RecoveryPath, RelationshipBody, SpatialARVRScaffold } from "./types";
+import type {
+  DreamSymbol,
+  LegacyThread,
+  LifeConstellation,
+  LifeMapCollections,
+  MemoryStar,
+  NebulaRegion,
+  RecoveryPath,
+  RelationshipBody,
+  ReplaySequence,
+  ShadowThread,
+  SpatialARVRScaffold,
+} from "./types";
 import { defaultCameraPathRecords } from "./camera-paths";
 import { mapRecoveryToPathState, mapRelationshipStrengthToOrbit } from "./visual-mapping";
 
@@ -27,7 +39,20 @@ export const selectedBlueFogMemory: MemoryStar = {
   updatedAt: new Date().toISOString(),
 };
 
-const star = (id: string, type: MemoryStar["type"], title: string, subtitle: string, x: number, y: number, z: number, tags: string[], symbols: string[], color: string, constellationId: string, narratorText?: string): MemoryStar => ({
+const star = (
+  id: string,
+  type: MemoryStar["type"],
+  title: string,
+  subtitle: string,
+  x: number,
+  y: number,
+  z: number,
+  tags: string[],
+  symbols: string[],
+  color: string,
+  constellationId: string,
+  narratorText?: string,
+): MemoryStar => ({
   id,
   userId: "demo-user",
   type,
@@ -50,6 +75,11 @@ const star = (id: string, type: MemoryStar["type"], title: string, subtitle: str
   updatedAt: now(),
 });
 
+const fromStarBase = (base: MemoryStar, overrideType: string) => ({
+  ...base,
+  type: overrideType,
+});
+
 export const memoryStars: MemoryStar[] = [
   selectedBlueFogMemory,
   star("soft-return", "recovery", "Soft Return", "first green-gold recovery thread", -1.4, 0.2, -0.4, ["recovery", "relief"], ["green path"], "#86efac", "recovery-thread", "A recovery path is forming near this cluster."),
@@ -69,7 +99,7 @@ export const memoryStars: MemoryStar[] = [
 ];
 
 export const relationshipBodies: RelationshipBody[] = ["Friend Orbit", "Family Moon", "Creative Partner", "Past Echo"].map((title, index) => {
-  const strength = [0.88, 0.72, 0.65, 0.34][index];
+  const strength = [0.88, 0.72, 0.65, 0.34][index] ?? 0.5;
   return {
     id: `relationship-body-${index + 1}`,
     userId: "demo-user",
@@ -81,7 +111,7 @@ export const relationshipBodies: RelationshipBody[] = ["Friend Orbit", "Family M
     symbolicTags: ["orbit"],
     position3D: { x: 0, y: index * 0.15 - 0.25, z: 0 },
     scale: 1,
-    color: ["#f9a8d4", "#fde68a", "#93c5fd", "#94a3b8"][index],
+    color: ["#f9a8d4", "#fde68a", "#93c5fd", "#94a3b8"][index] ?? "#f9a8d4",
     glow: strength,
     intensity: strength,
     relatedIds: [],
@@ -101,7 +131,7 @@ export const recoveryPaths: RecoveryPath[] = [0.28, 0.64, 0.91].map((score, inde
   id: `recovery-path-${index + 1}`,
   userId: "demo-user",
   type: "recoveryPath",
-  title: ["Recovery Forming", "Recovery Active", "Recovery Stabilized"][index],
+  title: ["Recovery Forming", "Recovery Active", "Recovery Stabilized"][index] ?? "Recovery Path",
   subtitle: "green-gold healing pathway",
   timestamp: now(),
   emotionalTags: ["recovery"],
@@ -133,28 +163,101 @@ export const spatialARVRScaffold: SpatialARVRScaffold = {
   standingInsideNebulaFields: "Future mode for standing inside emotional season fog.",
 };
 
+const lifeConstellations: LifeConstellation[] = [
+  { id: "grief-thread", theme: "Grief", starIds: ["blue-fog-memory", "winter-thread", "soft-return"], lineColor: "#bfe9ff" },
+  { id: "recovery-thread", theme: "Recovery", starIds: ["quiet-ritual", "soft-return", "blue-fog-memory"], lineColor: "#86efac" },
+  { id: "relationship-thread", theme: "Relationships", starIds: ["orbit-close", "companion-watch"], lineColor: "#f9a8d4" },
+  { id: "dream-thread", theme: "Dream Field", starIds: ["dream-orchid", "mirror-self"], lineColor: "#c084fc" },
+  { id: "mirror-thread", theme: "Mirror", starIds: ["mirror-self", "purpose-north"], lineColor: "#f8fafc" },
+  { id: "shadow-thread", theme: "Shadow", starIds: ["shadow-loop", "work-flare", "threshold-door"], lineColor: "#64748b" },
+  { id: "legacy-thread", theme: "Legacy", starIds: ["legacy-gold", "purpose-north"], lineColor: "#facc15" },
+  { id: "rebirth-thread", theme: "Rebirth", starIds: ["threshold-door", "rebirth-bloom", "joy-spark"], lineColor: "#fb7185" },
+].map((thread) => ({
+  ...thread,
+  userId: "demo-user",
+  title: thread.theme,
+  lineOpacity: 0.36,
+  narratorText: "This thread appears often before recovery begins.",
+  patternFrequency: 0.7,
+  privacyLevel: "private",
+  createdAt: now(),
+  updatedAt: now(),
+}));
+
+const nebulaRegions: NebulaRegion[] = ["Grief Fog", "Stress Shimmer", "Dream Cloud", "Mirror Field", "Legacy Gold", "Recovery Glow"].map((title, i) => ({
+  id: `nebula-${i + 1}`,
+  userId: "demo-user",
+  type: "emotionalSeason",
+  title,
+  timestamp: now(),
+  emotionalTags: [title.toLowerCase()],
+  symbolicTags: ["nebula"],
+  position3D: { x: -3 + i * 1.2, y: i % 2 ? 0.7 : -0.3, z: -2.3 },
+  scale: 1,
+  color: ["#3b82f6", "#fb923c", "#a855f7", "#f8fafc", "#facc15", "#22c55e"][i] ?? "#3b82f6",
+  glow: 0.5,
+  intensity: 0.5,
+  relatedIds: [],
+  privacyLevel: "private",
+  sourceSignals: ["mood"],
+  createdAt: now(),
+  updatedAt: now(),
+  radius: 1.1 + i * 0.15,
+  seasonLabel: title,
+}));
+
+const dreamSymbols: DreamSymbol[] = ["Orchid", "Violet Door", "Moon Water"].map((title, i) => ({
+  ...fromStarBase(star(`dream-symbol-${i + 1}`, "dream", title, "dream symbolic cloud", -1 + i, 2, -1.8, ["dream"], [title], "#c084fc", "dream-thread"), "dreamSymbol"),
+  symbolKind: title,
+}));
+
+const shadowThreads: ShadowThread[] = ["Shame Loop", "Conflict Echo"].map((title, i) => ({
+  ...fromStarBase(star(`shadow-thread-${i + 1}`, "shadow", title, "dim unresolved cluster", -2 + i, -1.5, -1.4, ["stress"], ["shadow"], "#64748b", "shadow-thread"), "shadowThread"),
+  unresolvedLoopScore: 0.6 + i * 0.2,
+}));
+
+const legacyThreads: LegacyThread[] = ["Ancestor Gold", "Future Letter"].map((title, i) => ({
+  ...fromStarBase(star(`legacy-thread-${i + 1}`, "legacy", title, "gold ancestral thread", 3 + i, 1.4, -1, ["legacy"], ["gold thread"], "#facc15", "legacy-thread"), "legacyThread"),
+  ancestralTone: "gold",
+}));
+
+const replaySequences: ReplaySequence[] = [
+  {
+    ...fromStarBase(star("replay-blue-thread", "memory", "Blue Thread Replay", "camera path through grief and recovery", 0, 0, 0, ["replay"], ["camera path"], "#bfe9ff", "grief-thread"), "replaySequence"),
+    starIds: ["blue-fog-memory", "soft-return", "quiet-ritual"],
+    cameraPathId: "replay",
+    durationMs: 3600,
+  },
+];
+
 export const lifeMapMockData: LifeMapCollections = {
   memoryStars,
-  lifeConstellations: [
-    ["grief-thread", "Grief", ["blue-fog-memory", "winter-thread", "soft-return"], "#bfe9ff"],
-    ["recovery-thread", "Recovery", ["quiet-ritual", "soft-return", "blue-fog-memory"], "#86efac"],
-    ["relationship-thread", "Relationships", ["orbit-close", "companion-watch"], "#f9a8d4"],
-    ["dream-thread", "Dream Field", ["dream-orchid", "mirror-self"], "#c084fc"],
-    ["mirror-thread", "Mirror", ["mirror-self", "purpose-north"], "#f8fafc"],
-    ["shadow-thread", "Shadow", ["shadow-loop", "work-flare", "threshold-door"], "#64748b"],
-    ["legacy-thread", "Legacy", ["legacy-gold", "purpose-north"], "#facc15"],
-    ["rebirth-thread", "Rebirth", ["threshold-door", "rebirth-bloom", "joy-spark"], "#fb7185"],
-  ].map(([id, theme, starIds, lineColor]) => ({ id: id as string, userId: "demo-user", title: theme as string, theme: theme as any, starIds: starIds as string[], lineColor: lineColor as string, lineOpacity: 0.36, narratorText: "This thread appears often before recovery begins.", patternFrequency: 0.7, privacyLevel: "private", createdAt: now(), updatedAt: now() })),
-  nebulaRegions: ["Grief Fog", "Stress Shimmer", "Dream Cloud", "Mirror Field", "Legacy Gold", "Recovery Glow"].map((title, i) => ({ id: `nebula-${i + 1}`, userId: "demo-user", type: "emotionalSeason", title, timestamp: now(), emotionalTags: [title.toLowerCase()], symbolicTags: ["nebula"], position3D: { x: -3 + i * 1.2, y: i % 2 ? 0.7 : -0.3, z: -2.3 }, scale: 1, color: ["#3b82f6", "#fb923c", "#a855f7", "#f8fafc", "#facc15", "#22c55e"][i], glow: 0.5, intensity: 0.5, relatedIds: [], privacyLevel: "private", sourceSignals: ["mood"], createdAt: now(), updatedAt: now(), radius: 1.1 + i * 0.15, seasonLabel: title })),
+  lifeConstellations,
+  nebulaRegions,
   emotionalGalaxies: [],
   relationshipBodies,
-  dreamSymbols: ["Orchid", "Violet Door", "Moon Water"].map((title, i) => star(`dream-symbol-${i + 1}`, "dream", title, "dream symbolic cloud", -1 + i, 2, -1.8, ["dream"], [title], "#c084fc", "dream-thread") as any),
-  shadowThreads: ["Shame Loop", "Conflict Echo"].map((title, i) => ({ ...(star(`shadow-thread-${i + 1}`, "shadow", title, "dim unresolved cluster", -2 + i, -1.5, -1.4, ["stress"], ["shadow"], "#64748b", "shadow-thread") as any), type: "shadowThread", unresolvedLoopScore: 0.6 + i * 0.2 })),
+  dreamSymbols,
+  shadowThreads,
   recoveryPaths,
-  legacyThreads: ["Ancestor Gold", "Future Letter"].map((title, i) => ({ ...(star(`legacy-thread-${i + 1}`, "legacy", title, "gold ancestral thread", 3 + i, 1.4, -1, ["legacy"], ["gold thread"], "#facc15", "legacy-thread") as any), type: "legacyThread", ancestralTone: "gold" })),
+  legacyThreads,
   narratorInsights: [],
-  replaySequences: [{ ...(star("replay-blue-thread", "memory", "Blue Thread Replay", "camera path through grief and recovery", 0, 0, 0, ["replay"], ["camera path"], "#bfe9ff", "grief-thread") as any), type: "replaySequence", starIds: ["blue-fog-memory", "soft-return", "quiet-ritual"], cameraPathId: "replay", durationMs: 3600 }],
+  replaySequences,
   spatialCameraPaths: defaultCameraPathRecords,
-  userLifeMapSettings: { id: "settings-demo-user", userId: "demo-user", defaultMode: "memoryGalaxy", qualityMode: "high", reducedMotion: false, textOnlyFallback: false, emotionalSafetyMode: false, highContrast: false, localOnlyMode: false, hiddenStarIds: [], blurredStarIds: [], removedRelationshipIds: [], createdAt: now(), updatedAt: now() },
+  userLifeMapSettings: {
+    id: "settings-demo-user",
+    userId: "demo-user",
+    defaultMode: "memoryGalaxy",
+    qualityMode: "high",
+    reducedMotion: false,
+    textOnlyFallback: false,
+    emotionalSafetyMode: false,
+    highContrast: false,
+    localOnlyMode: false,
+    hiddenStarIds: [],
+    blurredStarIds: [],
+    removedRelationshipIds: [],
+    createdAt: now(),
+    updatedAt: now(),
+  },
   exportedScrolls: [],
 };
