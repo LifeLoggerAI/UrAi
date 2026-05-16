@@ -218,6 +218,115 @@ body {
   transform: translate(-50%, -560%) scale(0.58) !important;
 }
 
+/* Production visual tuning for the visual-first URAI home field. */
+.urai-home-shell .horizon-glow {
+  bottom: 16% !important;
+  width: min(1120px, 90vw) !important;
+  height: 31vh !important;
+  opacity: 0.82 !important;
+}
+
+.urai-home-shell .aura-orb-button {
+  top: 54.5% !important;
+  width: min(410px, 34vw) !important;
+  height: min(410px, 34vw) !important;
+}
+
+.urai-home-shell .orb-core {
+  width: clamp(132px, 11vw, 154px) !important;
+  height: clamp(132px, 11vw, 154px) !important;
+}
+
+.urai-home-shell .orb-shadow {
+  top: 66% !important;
+  opacity: 0.5 !important;
+}
+
+.urai-home-shell .companion-dot {
+  top: 58% !important;
+  right: calc(50% - 132px) !important;
+}
+
+.urai-home-shell .silhouette-button {
+  top: 56.5% !important;
+  opacity: 0.36 !important;
+}
+
+.urai-home-shell .emotional-biome {
+  bottom: -3.5vh !important;
+  height: 47vh !important;
+  width: min(1360px, 98vw) !important;
+  filter: saturate(1.08) contrast(1.06) !important;
+}
+
+.urai-home-shell .biome-atmosphere {
+  top: -35% !important;
+  height: 44% !important;
+  opacity: 0.72 !important;
+}
+
+.urai-home-shell .biome-terrain {
+  inset: 8% -1% 0 !important;
+  border-radius: 39% 39% 0 0 !important;
+  clip-path: polygon(0 47%, 6% 39%, 12% 43%, 20% 31%, 29% 36%, 39% 20%, 48% 31%, 57% 21%, 67% 34%, 77% 24%, 88% 40%, 100% 34%, 100% 100%, 0 100%) !important;
+  box-shadow: 0 -46px 130px rgba(125, 211, 252, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.urai-home-shell .biome-back-ridge {
+  bottom: 31% !important;
+  height: 30% !important;
+  opacity: 0.62 !important;
+}
+
+.urai-home-shell .biome-mid-ridge {
+  bottom: 20% !important;
+  height: 33% !important;
+  opacity: 0.74 !important;
+}
+
+.urai-home-shell .biome-front-ridge {
+  bottom: 2% !important;
+  height: 34% !important;
+  opacity: 0.92 !important;
+}
+
+.urai-home-shell .biome-rim {
+  top: 22% !important;
+  opacity: 0.86 !important;
+}
+
+.urai-home-shell .biome-horizon {
+  top: 31% !important;
+  opacity: 0.75 !important;
+}
+
+.urai-home-shell .biome-river {
+  top: 28% !important;
+  height: 62% !important;
+  filter: blur(7px) !important;
+}
+
+.urai-home-shell .biome-recovery {
+  top: 17% !important;
+  height: 38% !important;
+}
+
+.urai-home-shell .biome-shadow,
+.urai-home-shell .biome-memory {
+  top: 27% !important;
+  height: 38% !important;
+}
+
+.urai-home-shell .biome-signal {
+  top: 55% !important;
+  height: 31% !important;
+}
+
+.urai-home-shell .scene-pulse {
+  bottom: calc(env(safe-area-inset-bottom) + 0.85rem) !important;
+  opacity: 0.82 !important;
+}
+
 @keyframes uraiOrbCorePulse {
   0%, 100% {
     transform: scale(0.96);
@@ -251,6 +360,18 @@ body {
   .home-scene .avatar-figure {
     left: calc(50% - 116px) !important;
     top: 55.3% !important;
+  }
+
+  .urai-home-shell .aura-orb-button {
+    top: 52.5% !important;
+    width: 310px !important;
+    height: 310px !important;
+  }
+
+  .urai-home-shell .emotional-biome {
+    bottom: -2vh !important;
+    height: 43vh !important;
+    width: 120vw !important;
   }
 }
 
