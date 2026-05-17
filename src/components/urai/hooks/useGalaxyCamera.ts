@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent, type TouchEvent } from "react";
 import { GALAXY_ZOOM } from "@/components/urai/motion/galaxyMotion";
 
 export interface GalaxyCameraState {
@@ -13,10 +13,18 @@ export function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
+function getTouchDistance(event: TouchEvent<HTMLElement>) {
+  const first = event.touches[0];
+  const second = event.touches[1];
+  if (!first || !second) return 0;
+  return Math.hypot(first.clientX - second.clientX, first.clientY - second.clientY);
+}
+
 export function useGalaxyCamera(initial: GalaxyCameraState = { x: 0, y: 0, scale: 1 }) {
   const [camera, setCamera] = useState<GalaxyCameraState>(initial);
   const [dragging, setDragging] = useState(false);
   const dragRef = useRef({ x: 0, y: 0, cameraX: 0, cameraY: 0 });
+  const touchRef = useRef({ distance: 0, scale: initial.scale });
 
   const zoomByDelta = useCallback((deltaY: number) => {
     setCamera((current) => ({
@@ -52,7 +60,26 @@ export function useGalaxyCamera(initial: GalaxyCameraState = { x: 0, y: 0, scale
     }));
   }, [dragging]);
 
-  const stopDrag = useCallback(() => setDragging(false), []);
+  const onTouchStart = useCallback((event: TouchEvent<HTMLElement>) => {
+    if (event.touches.length === 2) {
+      touchRef.current = { distance: getTouchDistance(event), scale: camera.scale };
+    }
+  }, [camera.scale]);
+
+  const onTouchMove = useCallback((event: TouchEvent<HTMLElement>) => {
+    if (event.touches.length !== 2 || touchRef.current.distance <= 0) return;
+    const distance = getTouchDistance(event);
+    const ratio = distance / touchRef.current.distance;
+    setCamera((current) => ({
+      ...current,
+      scale: clamp(touchRef.current.scale * ratio, GALAXY_ZOOM.min, GALAXY_ZOOM.max),
+    }));
+  }, []);
+
+  const stopDrag = useCallback(() => {
+    setDragging(false);
+    touchRef.current = { distance: 0, scale: camera.scale };
+  }, [camera.scale]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -68,5 +95,5 @@ export function useGalaxyCamera(initial: GalaxyCameraState = { x: 0, y: 0, scale
     return () => window.removeEventListener("keydown", onKey);
   }, [recenter, zoomStep]);
 
-  return { camera, setCamera, dragging, zoomByDelta, zoomStep, recenter, focusCameraOn, onPointerDown, onPointerMove, stopDrag };
+  return { camera, setCamera, dragging, zoomByDelta, zoomStep, recenter, focusCameraOn, onPointerDown, onPointerMove, onTouchStart, onTouchMove, stopDrag };
 }
