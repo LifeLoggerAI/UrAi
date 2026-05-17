@@ -1,8 +1,9 @@
 export type AscentPhase = "idle" | "ignition" | "lift" | "portal" | "emergence" | "settle";
+export type CubicBezier = [number, number, number, number];
 
-export const cinematicEase: number[] = [0.16, 1, 0.3, 1];
-export const softEase: number[] = [0.22, 0.86, 0.18, 1];
-export const gravityEase: number[] = [0.12, 0.72, 0.18, 1];
+export const cinematicEase: CubicBezier = [0.16, 1, 0.3, 1];
+export const softEase: CubicBezier = [0.22, 0.86, 0.18, 1];
+export const gravityEase: CubicBezier = [0.12, 0.72, 0.18, 1];
 
 export const ASCENT_TIMING_MS = {
   ignition: 220,
