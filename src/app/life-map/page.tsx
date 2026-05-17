@@ -1,11 +1,10 @@
-import { LifeMapPage } from "@/components/urai/life-map/LifeMapPage";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export const metadata = {
   title: "URAI Memory Galaxy",
-  description:
-    "The cinematic URAI Memory Galaxy: zoomable life map, selected-star memory portals, replay, mirror, recenter, and narrator insight.",
+  description: "The unified production URAI Memory Galaxy with focus, replay, mirror, ritual, privacy, and recenter flows.",
 };
 
 export default function Page() {
-  return <LifeMapPage />;
+  return <LifeMapUniverse />;
 }
