@@ -6,6 +6,7 @@ import type { MemoryCategory } from "@/components/urai/data/emotionPalette";
 import { useGalaxyCamera } from "@/components/urai/hooks/useGalaxyCamera";
 import { useReducedMotionSafe } from "@/components/urai/hooks/useReducedMotionSafe";
 import { useStarSelection } from "@/components/urai/hooks/useStarSelection";
+import ImmersiveWorld3D from "@/components/urai/world/ImmersiveWorld3D";
 import { ConstellationThreadLayer } from "./ConstellationThreadLayer";
 import { GalaxyBackground } from "./GalaxyBackground";
 import { GalaxyCamera } from "./GalaxyCamera";
@@ -77,6 +78,11 @@ export function LifeMapPage() {
 
   return (
     <main className={`urai-screen urai-life-map-screen ${mode === "mirror" ? "is-mirror-mode" : ""} ${selected ? "has-selected-star" : ""}`}>
+      <ImmersiveWorld3D
+        mode="life-map"
+        activeLabel={activeCategory === "all" ? `All fields · ${mode}` : `${activeCategory} · ${mode}`}
+        selectedLabel={selected?.title}
+      />
       <GalaxyParticles />
       <GalaxyBackground />
       <header className="urai-life-title">
