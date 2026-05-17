@@ -1,6 +1,6 @@
 "use client";
 
-import type { PointerEventHandler, ReactNode, WheelEventHandler } from "react";
+import type { PointerEventHandler, ReactNode, TouchEventHandler, WheelEventHandler } from "react";
 
 export function GalaxyViewport({
   children,
@@ -8,12 +8,16 @@ export function GalaxyViewport({
   onPointerDown,
   onPointerMove,
   onPointerUp,
+  onTouchStart,
+  onTouchMove,
 }: {
   children: ReactNode;
   onWheel: WheelEventHandler<HTMLElement>;
   onPointerDown: PointerEventHandler<HTMLElement>;
   onPointerMove: PointerEventHandler<HTMLElement>;
   onPointerUp: PointerEventHandler<HTMLElement>;
+  onTouchStart?: TouchEventHandler<HTMLElement>;
+  onTouchMove?: TouchEventHandler<HTMLElement>;
 }) {
   return (
     <section
@@ -23,6 +27,9 @@ export function GalaxyViewport({
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onPointerUp as unknown as TouchEventHandler<HTMLElement>}
     >
       {children}
     </section>
