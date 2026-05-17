@@ -1,0 +1,388 @@
+/*
+  URAI FINAL VIEWPORT LOCK
+  Loaded last. This file force-corrects the current /home and /life-map screenshots:
+  - true app-viewport fill inside the browser window
+  - no centered stage/island
+  - stronger parallax layering
+  - full-width terrain and galaxy scale
+*/
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #000207;
+}
+
+body:has(.urai-hero-home),
+body:has(.urai-home-screen),
+body:has(.urai-life-map-screen) {
+  overflow: hidden !important;
+  background: #000207 !important;
+}
+
+body:has(.urai-hero-home) > *,
+body:has(.urai-home-screen) > *,
+body:has(.urai-life-map-screen) > * {
+  min-height: 100dvh;
+}
+
+.urai-hero-home,
+.urai-screen.urai-home-screen,
+.urai-screen.urai-life-map-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+/* ---------------- HOME: full-screen parallax correction ---------------- */
+.urai-hero-home,
+.urai-screen.urai-home-screen {
+  background:
+    radial-gradient(circle at 50% 34%, rgba(160, 250, 255, .18), transparent 11%),
+    radial-gradient(circle at 50% 45%, rgba(78, 232, 242, .12), transparent 28%),
+    radial-gradient(circle at 68% 58%, rgba(255, 229, 138, .08), transparent 24%),
+    radial-gradient(circle at 30% 58%, rgba(160, 116, 255, .08), transparent 26%),
+    linear-gradient(180deg, #000207 0%, #041426 44%, #020914 67%, #000103 100%) !important;
+}
+
+.urai-hero-sky,
+.urai-cosmic-sky,
+.urai-sky-gradient,
+.urai-home-camera,
+.urai-nebula-layer,
+.urai-avatar-wrap,
+.urai-memory-orb-wrap,
+.urai-hero-body,
+.urai-hero-orb-system {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  transform-origin: 50% 50% !important;
+}
+
+.urai-hero-sky,
+.urai-cosmic-sky {
+  transform: translate3d(0, -2.5vh, 0) scale(1.08) !important;
+}
+
+.urai-hero-stars,
+.urai-star-field,
+.urai-galaxy-particles {
+  inset: -8vh -6vw !important;
+}
+
+.urai-hero-aurora-cyan,
+.urai-nebula-cyan {
+  left: 12% !important;
+  top: 19% !important;
+  width: 76% !important;
+  height: 50% !important;
+  opacity: .9 !important;
+}
+
+.urai-hero-aurora-violet,
+.urai-nebula-violet {
+  right: -3% !important;
+  top: 25% !important;
+  width: 52% !important;
+  height: 46% !important;
+}
+
+.urai-hero-aurora-gold,
+.urai-nebula-gold {
+  right: 12% !important;
+  bottom: 9% !important;
+  width: 48% !important;
+  height: 42% !important;
+}
+
+/* Kill the old visible straight horizon. It was the main prototype tell. */
+.urai-horizon-mist::after,
+.urai-ground-system::before,
+.urai-ground-system::after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.urai-hero-terrain,
+.urai-ground-system {
+  position: absolute !important;
+  left: -10vw !important;
+  right: -10vw !important;
+  bottom: -5vh !important;
+  top: auto !important;
+  width: 120vw !important;
+  height: 62vh !important;
+  min-height: 470px !important;
+  overflow: visible !important;
+  transform: translate3d(0, 0, 0) scale(1.04) !important;
+  transform-origin: 50% 100% !important;
+  z-index: 12 !important;
+}
+
+.urai-hero-terrain-svg,
+.urai-terrain-svg {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 120vw !important;
+  height: 100% !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.urai-ground-back,
+.urai-ground-mid,
+.urai-ground-front {
+  display: none !important;
+}
+
+.urai-hero-horizon-glow,
+.urai-horizon-mist {
+  left: -8vw !important;
+  right: -8vw !important;
+  top: -24% !important;
+  height: 50vh !important;
+  min-height: 320px !important;
+  filter: blur(36px) !important;
+  opacity: .98 !important;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(235, 255, 255, .26), transparent 14%),
+    radial-gradient(ellipse at 50% 48%, rgba(78, 232, 242, .20), transparent 36%),
+    radial-gradient(ellipse at 66% 56%, rgba(255, 229, 138, .14), transparent 29%),
+    radial-gradient(ellipse at 34% 58%, rgba(199, 160, 255, .10), transparent 34%) !important;
+}
+
+.urai-ground-light-spill,
+.urai-foreground-fog,
+.urai-hero-foreground-fade {
+  left: -8vw !important;
+  right: -8vw !important;
+  width: 116vw !important;
+  opacity: .96 !important;
+}
+
+.urai-hero-body,
+.urai-avatar-wrap {
+  transform: translate3d(0, 2vh, 0) scale(1.04) !important;
+  z-index: 18 !important;
+}
+
+.urai-hero-body-svg,
+.urai-avatar-silhouette {
+  top: 65% !important;
+  width: clamp(185px, 18vw, 270px) !important;
+  opacity: .78 !important;
+}
+
+.urai-hero-body-aura,
+.urai-avatar-aura {
+  top: 63% !important;
+  width: clamp(330px, 34vw, 500px) !important;
+  height: clamp(440px, 58vh, 650px) !important;
+}
+
+.urai-hero-body-beam,
+.urai-hero-orb-beam,
+.urai-orb-beam {
+  top: 41% !important;
+  height: 52vh !important;
+  min-height: 380px !important;
+  opacity: .86 !important;
+}
+
+.urai-hero-orb-system,
+.urai-memory-orb-wrap {
+  transform-origin: 50% 40% !important;
+  z-index: 24 !important;
+}
+
+.urai-hero-orb,
+.urai-orb-core {
+  top: 40% !important;
+  width: clamp(130px, 11.5vw, 176px) !important;
+  height: clamp(130px, 11.5vw, 176px) !important;
+}
+
+.urai-hero-orb-halo,
+.urai-orb-halo {
+  top: 40% !important;
+  width: clamp(430px, 48vw, 720px) !important;
+  height: clamp(430px, 48vw, 720px) !important;
+  opacity: .9 !important;
+}
+
+.urai-hero-orb-ring,
+.urai-orb-ring {
+  top: 40% !important;
+  width: clamp(260px, 27vw, 390px) !important;
+  height: clamp(118px, 12vw, 172px) !important;
+}
+
+.urai-hero-copy,
+.urai-home-label {
+  display: none !important;
+}
+
+/* ---------------- LIFE MAP: full-screen observatory correction ---------------- */
+.urai-life-map-screen {
+  background:
+    radial-gradient(circle at 50% 43%, rgba(28, 73, 146, .9), transparent 34%),
+    radial-gradient(circle at 70% 40%, rgba(120, 78, 205, .32), transparent 42%),
+    radial-gradient(circle at 22% 62%, rgba(45, 150, 220, .20), transparent 38%),
+    linear-gradient(180deg, #000207 0%, #030716 55%, #000103 100%) !important;
+}
+
+.urai-life-map-screen .urai-galaxy-bg,
+.urai-life-map-screen .urai-galaxy-particles,
+.urai-life-map-screen .urai-galaxy-viewport,
+.urai-life-map-screen .urai-galaxy-camera {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+}
+
+.urai-galaxy-bg::before {
+  inset: -20vh -15vw !important;
+  opacity: .68 !important;
+}
+
+.urai-galaxy-core {
+  width: 125vw !important;
+  height: 78vh !important;
+  top: 50% !important;
+  opacity: 1 !important;
+  filter: blur(24px) !important;
+}
+
+.urai-galaxy-band {
+  width: 145vw !important;
+  height: 78vh !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) rotate(-10deg) scale(1.08) !important;
+  opacity: .9 !important;
+}
+
+.urai-galaxy-world {
+  width: 1900px !important;
+  height: 1160px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) scale(1.08) !important;
+  transform-origin: 50% 50% !important;
+}
+
+.urai-orbit-rings,
+.urai-thread-layer {
+  width: 1900px !important;
+  height: 1160px !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) scale(1.1) !important;
+}
+
+.urai-memory-star {
+  width: 76px !important;
+  height: 76px !important;
+  margin: -38px 0 0 -38px !important;
+}
+
+.urai-star-core {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.urai-star-halo {
+  width: 150px !important;
+  height: 150px !important;
+  filter: blur(10px) !important;
+}
+
+.urai-memory-star.is-selected .urai-star-core {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.urai-memory-star.is-selected .urai-star-halo {
+  width: 210px !important;
+  height: 210px !important;
+}
+
+.urai-life-title {
+  top: 1rem !important;
+  z-index: 120 !important;
+}
+
+.urai-life-title strong {
+  font-size: clamp(1.35rem, 2.2vw, 2.25rem) !important;
+}
+
+.urai-companion-card,
+.urai-galaxy-actions,
+.urai-category-dock,
+.urai-zoom-minimap {
+  z-index: 130 !important;
+}
+
+.urai-galaxy-actions {
+  bottom: 5.4rem !important;
+}
+
+.urai-category-dock {
+  bottom: 1.35rem !important;
+  max-width: min(920px, calc(100vw - 2rem)) !important;
+}
+
+.urai-memory-portal-anchor {
+  width: 360px !important;
+  height: 360px !important;
+}
+
+.urai-memory-detail {
+  width: min(460px, calc(100vw - 2rem)) !important;
+}
+
+@media (max-width: 900px) {
+  .urai-hero-terrain,
+  .urai-ground-system {
+    height: 64vh !important;
+    min-height: 420px !important;
+  }
+
+  .urai-hero-orb,
+  .urai-orb-core {
+    width: 116px !important;
+    height: 116px !important;
+  }
+
+  .urai-hero-orb-halo,
+  .urai-orb-halo {
+    width: 360px !important;
+    height: 360px !important;
+  }
+
+  .urai-galaxy-world {
+    transform: translate(-50%, -50%) scale(.82) !important;
+  }
+
+  .urai-memory-portal-anchor {
+    width: 230px !important;
+    height: 230px !important;
+  }
+}
