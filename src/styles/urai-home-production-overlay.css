@@ -1,0 +1,148 @@
+/* URAI production home overlay: visible status, companion, entry affordance, and premium scene finish. */
+
+.urai-hero-home {
+  cursor: pointer;
+}
+
+.urai-hero-home .urai-hero-hit::before {
+  content: "URAI\A Inner Sky Shrine\A stable · quiet sky · memory gateway ready";
+  white-space: pre-line;
+  position: fixed;
+  left: max(20px, env(safe-area-inset-left));
+  top: max(18px, env(safe-area-inset-top));
+  width: min(330px, calc(100vw - 40px));
+  padding: 18px 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(198, 239, 255, .18);
+  background:
+    radial-gradient(circle at 16% 10%, rgba(178, 246, 255, .12), transparent 35%),
+    linear-gradient(135deg, rgba(5, 11, 26, .76), rgba(8, 18, 38, .48));
+  box-shadow: 0 26px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  color: rgba(240, 253, 255, .92);
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: .01em;
+  text-transform: none;
+  pointer-events: none;
+  text-shadow: 0 0 18px rgba(155,231,255,.16);
+}
+
+.urai-hero-home .urai-hero-hit::after {
+  content: "COMPANION\A Your sky is quiet, but awake.\A Tap the orb or sky to open the Memory Galaxy.";
+  white-space: pre-line;
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  top: max(18px, env(safe-area-inset-top));
+  width: min(360px, calc(100vw - 40px));
+  padding: 18px 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(198, 239, 255, .18);
+  background:
+    radial-gradient(circle at 12% 16%, rgba(255,255,255,.12), transparent 32%),
+    linear-gradient(135deg, rgba(5, 11, 26, .78), rgba(14, 18, 42, .54));
+  box-shadow: 0 26px 80px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.07);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  color: rgba(240, 253, 255, .92);
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: .01em;
+  pointer-events: none;
+  text-shadow: 0 0 18px rgba(155,231,255,.16);
+}
+
+.urai-hero-copy {
+  bottom: max(24px, env(safe-area-inset-bottom)) !important;
+  width: min(560px, calc(100vw - 36px));
+  padding: 15px 20px 17px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 239, 255, .16);
+  background: rgba(2, 8, 20, .48);
+  box-shadow: 0 18px 70px rgba(0,0,0,.34), 0 0 42px rgba(78,232,242,.10);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.urai-hero-copy span {
+  color: rgba(191, 233, 255, .72) !important;
+  opacity: 1 !important;
+}
+
+.urai-hero-copy strong {
+  color: rgba(246, 253, 255, .96);
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem) !important;
+  letter-spacing: -.025em;
+}
+
+.urai-hero-copy em {
+  color: rgba(219, 245, 255, .72);
+  opacity: 1 !important;
+}
+
+.urai-hero-orb {
+  animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
+}
+
+.urai-hero-orb-satellite {
+  animation: uraiHomeSatellitePulse 4.2s ease-in-out infinite;
+}
+
+.urai-hero-orb-ring-a {
+  animation: uraiHomeRingA 16s linear infinite;
+}
+
+.urai-hero-orb-ring-b {
+  animation: uraiHomeRingB 21s linear infinite reverse;
+}
+
+@keyframes uraiHomeOrbLivingBreath {
+  0%, 100% { filter: brightness(1) saturate(1); }
+  50% { filter: brightness(1.13) saturate(1.08); }
+}
+
+@keyframes uraiHomeSatellitePulse {
+  0%, 100% { transform: scale(.92); opacity: .78; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+
+@keyframes uraiHomeRingA {
+  from { transform: translate(-50%, -50%) rotate(-15deg); }
+  to { transform: translate(-50%, -50%) rotate(345deg); }
+}
+
+@keyframes uraiHomeRingB {
+  from { transform: translate(-50%, -50%) rotate(19deg) scaleX(.78); }
+  to { transform: translate(-50%, -50%) rotate(379deg) scaleX(.78); }
+}
+
+@media (max-width: 760px) {
+  .urai-hero-home .urai-hero-hit::before {
+    left: 14px;
+    right: auto;
+    top: 14px;
+    width: calc(100vw - 28px);
+    padding: 14px 16px;
+  }
+
+  .urai-hero-home .urai-hero-hit::after {
+    display: none;
+  }
+
+  .urai-hero-copy {
+    bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    padding: 12px 14px 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .urai-hero-orb,
+  .urai-hero-orb-satellite,
+  .urai-hero-orb-ring-a,
+  .urai-hero-orb-ring-b {
+    animation: none !important;
+  }
+}
