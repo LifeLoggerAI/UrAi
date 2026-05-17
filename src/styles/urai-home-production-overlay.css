@@ -2,15 +2,15 @@
 
 .urai-hero-home {
   --orb-x: 43%;
-  --orb-y: 66%;
-  --avatar-x: 57%;
-  --avatar-y: 61%;
-  --horizon-y: 57%;
+  --orb-y: 61%;
+  --avatar-x: 59%;
+  --avatar-y: 58%;
+  --horizon-y: 54%;
   cursor: pointer;
   perspective: 1600px;
   background:
-    radial-gradient(ellipse at var(--orb-x) var(--orb-y), rgba(184, 255, 255, .23), transparent 13%),
-    radial-gradient(ellipse at 46% 48%, rgba(78, 232, 242, .14), transparent 35%),
+    radial-gradient(ellipse at var(--orb-x) var(--orb-y), rgba(184, 255, 255, .26), transparent 13%),
+    radial-gradient(ellipse at 46% 47%, rgba(78, 232, 242, .15), transparent 35%),
     radial-gradient(ellipse at 68% 58%, rgba(255, 229, 138, .08), transparent 29%),
     radial-gradient(ellipse at 28% 56%, rgba(138, 99, 255, .10), transparent 31%),
     linear-gradient(180deg, #00020a 0%, #071426 38%, #081827 58%, #020713 76%, #000106 100%) !important;
@@ -41,7 +41,7 @@
   pointer-events: none;
   text-shadow: 0 0 18px rgba(155,231,255,.14);
   transform: translateZ(70px);
-  opacity: .84;
+  opacity: .82;
 }
 
 .urai-home-panel-left { left: max(20px, env(safe-area-inset-left)); top: max(18px, env(safe-area-inset-top)); }
@@ -55,14 +55,13 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  opacity: .68;
+  opacity: .62;
   mix-blend-mode: screen;
   filter: drop-shadow(0 0 28px rgba(125, 211, 252, .13));
   animation: uraiHomeAtmosphereDrift 28s ease-in-out infinite alternate;
   transform: translateZ(-180px) scale(1.08);
 }
 .urai-sky-architecture svg { width: 100%; height: 100%; display: block; }
-
 .urai-hero-stars { opacity: .82 !important; transform: translateZ(-260px) scale(1.08); }
 
 .urai-hero-sky::before {
@@ -95,34 +94,31 @@
 .urai-hero-aurora-violet { right: 4% !important; top: 22% !important; opacity: .58; }
 .urai-hero-aurora-gold { right: 16% !important; bottom: 12% !important; opacity: .58; }
 
-/* Terrain: move horizon higher, create a believable plane under the orb. */
 .urai-hero-terrain {
-  height: 58vh !important;
-  min-height: 430px !important;
-  transform: translateY(6vh) rotateX(0deg);
+  height: 60vh !important;
+  min-height: 450px !important;
+  transform: translateY(4.2vh) rotateX(0deg);
   filter: saturate(1.10) contrast(1.05);
   z-index: 12 !important;
 }
-.urai-hero-horizon-glow { top: -22% !important; height: 34vh !important; min-height: 230px !important; opacity: .74 !important; filter: blur(42px) !important; }
-.urai-hero-terrain-svg { transform: translateY(2vh) scaleY(1.08); transform-origin: 50% 100%; opacity: .98; }
+.urai-hero-horizon-glow { top: -20% !important; height: 34vh !important; min-height: 230px !important; opacity: .72 !important; filter: blur(42px) !important; }
+.urai-hero-terrain-svg { transform: translateY(0.8vh) scaleY(1.12); transform-origin: 50% 100%; opacity: .98; }
 .urai-hero-foreground-fade { bottom: -8% !important; height: 70% !important; filter: blur(20px) !important; }
 .urai-ground-ritual-ring {
   position: absolute;
   left: var(--orb-x);
-  bottom: 11.8vh;
-  width: min(44vw, 620px);
+  bottom: 18vh;
+  width: min(42vw, 600px);
   height: 118px;
   transform: translateX(-50%) rotateX(55deg);
   border-radius: 999px;
-  background:
-    radial-gradient(ellipse, rgba(255, 245, 175, .18), rgba(103, 232, 249, .16) 24%, rgba(28, 80, 110, .08) 52%, transparent 73%);
-  box-shadow: 0 0 80px rgba(103, 232, 249, .16);
+  background: radial-gradient(ellipse, rgba(255, 245, 175, .20), rgba(103, 232, 249, .18) 24%, rgba(28, 80, 110, .08) 52%, transparent 73%);
+  box-shadow: 0 0 80px rgba(103, 232, 249, .18);
   filter: blur(7px);
   opacity: .96;
   z-index: 18;
 }
 
-/* Orb: no longer a sky object. It sits on the ground, off-center, with contact shadow and light spill. */
 .urai-hero-orb-system { transform-origin: var(--orb-x) var(--orb-y) !important; z-index: 28 !important; }
 .urai-hero-orb,
 .urai-hero-orb-halo,
@@ -131,29 +127,29 @@
   content: "";
   position: absolute;
   left: var(--orb-x);
-  top: calc(var(--orb-y) + 8.8vh);
+  top: calc(var(--orb-y) + 7.8vh);
   width: clamp(210px, 24vw, 360px);
-  height: clamp(52px, 7vh, 86px);
+  height: clamp(54px, 7vh, 88px);
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: radial-gradient(ellipse, rgba(0,0,0,.62), rgba(0,0,0,.22) 42%, transparent 72%);
+  background: radial-gradient(ellipse, rgba(0,0,0,.68), rgba(0,0,0,.28) 42%, transparent 72%);
   filter: blur(10px);
-  opacity: .82;
+  opacity: .86;
   z-index: 0;
 }
 .urai-hero-orb-system::after {
   content: "";
   position: absolute;
   left: var(--orb-x);
-  top: calc(var(--orb-y) + 4.5vh);
+  top: calc(var(--orb-y) + 4vh);
   width: clamp(280px, 34vw, 520px);
   height: clamp(95px, 13vh, 160px);
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: radial-gradient(ellipse, rgba(255,232,170,.18), rgba(103,232,249,.18) 30%, rgba(103,232,249,.06) 58%, transparent 76%);
+  background: radial-gradient(ellipse, rgba(255,232,170,.20), rgba(103,232,249,.20) 30%, rgba(103,232,249,.07) 58%, transparent 76%);
   filter: blur(18px);
   mix-blend-mode: screen;
-  opacity: .92;
+  opacity: .94;
   z-index: 1;
 }
 .urai-hero-orb {
@@ -168,44 +164,34 @@
     0 0 260px rgba(255,229,138,.18) !important;
   animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
 }
-.urai-hero-orb-halo { width: clamp(360px, 38vw, 600px) !important; height: clamp(360px, 38vw, 600px) !important; opacity: .62; z-index: 2 !important; }
-.urai-hero-orb-ring { width: clamp(210px, 22vw, 320px) !important; height: clamp(80px, 9vw, 130px) !important; opacity: .72; z-index: 5 !important; }
-.urai-hero-orb-beam {
-  left: var(--orb-x) !important;
-  top: calc(var(--orb-y) - 7vh) !important;
-  height: 24vh !important;
-  min-height: 170px !important;
-  width: clamp(118px, 9vw, 160px) !important;
-  opacity: .38 !important;
-  filter: blur(14px) !important;
-  z-index: 2 !important;
-}
+.urai-hero-orb-halo { width: clamp(360px, 38vw, 600px) !important; height: clamp(360px, 38vw, 600px) !important; opacity: .56; z-index: 2 !important; }
+.urai-hero-orb-ring { width: clamp(210px, 22vw, 320px) !important; height: clamp(80px, 9vw, 130px) !important; opacity: .58; z-index: 5 !important; }
+.urai-hero-orb-beam { display: none !important; }
 .urai-hero-orb-satellite { top: calc(var(--orb-y) - 6px) !important; left: calc(var(--orb-x) + clamp(58px, 5.3vw, 84px)) !important; animation: uraiHomeSatellitePulse 4.2s ease-in-out infinite; z-index: 6 !important; }
 
-/* Avatar: side/back view, slightly behind and beside the orb. */
-.urai-hero-body { z-index: 22 !important; }
-.urai-hero-body-aura { left: var(--avatar-x) !important; top: var(--avatar-y) !important; width: clamp(240px, 26vw, 410px) !important; height: clamp(360px, 50vh, 570px) !important; opacity: .42; }
-.urai-hero-body-beam { left: var(--avatar-x) !important; top: 45% !important; height: 42vh !important; min-height: 290px !important; width: clamp(90px, 7vw, 128px) !important; opacity: .32 !important; animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite; }
+.urai-hero-body { z-index: 25 !important; }
+.urai-hero-body-aura { left: var(--avatar-x) !important; top: var(--avatar-y) !important; width: clamp(240px, 26vw, 410px) !important; height: clamp(360px, 50vh, 570px) !important; opacity: .54; }
+.urai-hero-body-beam { display: none !important; }
 .urai-hero-body-svg { display: none !important; }
 
 .urai-avatar-presence {
   position: absolute;
   left: var(--avatar-x);
   top: var(--avatar-y);
-  width: 230px;
-  height: 430px;
+  width: 240px;
+  height: 440px;
   transform: translate(-50%, -50%) rotateY(-24deg) rotateZ(2deg);
   transform-style: preserve-3d;
-  filter: drop-shadow(0 0 34px rgba(120,232,255,.18));
+  filter: drop-shadow(0 0 36px rgba(120,232,255,.22));
   animation: uraiHomeAvatarFloat 8s ease-in-out infinite;
-  opacity: .72;
+  opacity: .88;
 }
-.urai-avatar-shadow { position: absolute; left: 50%; bottom: 12px; width: 185px; height: 44px; transform: translateX(-50%); border-radius: 999px; background: radial-gradient(ellipse, rgba(0,0,0,.56), transparent 72%); filter: blur(8px); }
-.urai-avatar-head { position: absolute; left: 53%; top: 40px; width: 44px; height: 58px; transform: translateX(-50%) rotate(-6deg); border-radius: 48% 42% 50% 46%; background: linear-gradient(160deg, rgba(202,255,255,.26), rgba(89,220,235,.08) 58%, rgba(8,20,40,.02)); box-shadow: -10px 0 34px rgba(180,250,255,.12), 10px 0 30px rgba(255,232,170,.10); }
-.urai-avatar-shoulders { position: absolute; left: 50%; top: 112px; width: 150px; height: 88px; transform: translateX(-50%) skewX(-5deg); border-radius: 58% 48% 44% 42%; background: radial-gradient(ellipse at 45% 0%, rgba(205,255,255,.18), rgba(82,220,240,.08) 40%, transparent 74%); }
-.urai-avatar-torso { position: absolute; left: 50%; top: 154px; width: 96px; height: 218px; transform: translateX(-50%) skewX(-4deg); clip-path: polygon(36% 0, 62% 0, 86% 100%, 22% 100%); background: linear-gradient(170deg, rgba(210,255,255,.16), rgba(70,220,240,.09) 45%, rgba(70,180,230,.03) 78%, transparent); filter: blur(.35px); }
-.urai-avatar-spine { position: absolute; left: 52%; top: 94px; width: 2px; height: 260px; transform: translateX(-50%) rotate(1deg); background: linear-gradient(180deg, rgba(255,255,255,.44), rgba(105,230,245,.20), transparent); box-shadow: 0 0 22px rgba(170,245,255,.22); }
-.urai-avatar-root { position: absolute; left: 50%; bottom: 22px; width: 96px; height: 126px; transform: translateX(-50%); clip-path: polygon(44% 0, 56% 0, 74% 100%, 26% 100%); background: linear-gradient(180deg, rgba(75,230,240,.07), rgba(75,230,240,.018), transparent); filter: blur(3px); }
+.urai-avatar-shadow { position: absolute; left: 50%; bottom: 18px; width: 190px; height: 46px; transform: translateX(-50%); border-radius: 999px; background: radial-gradient(ellipse, rgba(0,0,0,.62), transparent 72%); filter: blur(8px); }
+.urai-avatar-head { position: absolute; left: 53%; top: 40px; width: 48px; height: 62px; transform: translateX(-50%) rotate(-6deg); border-radius: 48% 42% 50% 46%; background: linear-gradient(160deg, rgba(202,255,255,.35), rgba(89,220,235,.13) 58%, rgba(8,20,40,.04)); box-shadow: -10px 0 34px rgba(180,250,255,.18), 10px 0 30px rgba(255,232,170,.14); }
+.urai-avatar-shoulders { position: absolute; left: 50%; top: 112px; width: 158px; height: 92px; transform: translateX(-50%) skewX(-5deg); border-radius: 58% 48% 44% 42%; background: radial-gradient(ellipse at 45% 0%, rgba(205,255,255,.26), rgba(82,220,240,.13) 40%, transparent 74%); }
+.urai-avatar-torso { position: absolute; left: 50%; top: 154px; width: 104px; height: 226px; transform: translateX(-50%) skewX(-4deg); clip-path: polygon(36% 0, 62% 0, 86% 100%, 22% 100%); background: linear-gradient(170deg, rgba(210,255,255,.22), rgba(70,220,240,.13) 45%, rgba(70,180,230,.04) 78%, transparent); filter: blur(.35px); }
+.urai-avatar-spine { position: absolute; left: 52%; top: 94px; width: 2px; height: 260px; transform: translateX(-50%) rotate(1deg); background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(105,230,245,.25), transparent); box-shadow: 0 0 22px rgba(170,245,255,.28); }
+.urai-avatar-root { position: absolute; left: 50%; bottom: 26px; width: 100px; height: 132px; transform: translateX(-50%); clip-path: polygon(44% 0, 56% 0, 74% 100%, 26% 100%); background: linear-gradient(180deg, rgba(75,230,240,.09), rgba(75,230,240,.025), transparent); filter: blur(3px); }
 
 .urai-hero-copy { bottom: max(24px, env(safe-area-inset-bottom)) !important; width: min(560px, calc(100vw - 36px)); padding: 15px 20px 17px; border-radius: 999px; border: 1px solid rgba(198, 239, 255, .13); background: rgba(2, 8, 20, .38); box-shadow: 0 18px 70px rgba(0,0,0,.28), 0 0 42px rgba(78,232,242,.08); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); opacity: .9; }
 .urai-hero-copy span { color: rgba(191, 233, 255, .66) !important; opacity: 1 !important; }
@@ -217,9 +203,9 @@
 .urai-hero-terrain { animation: uraiHomeTerrainBreath 9s ease-in-out infinite; }
 
 @keyframes uraiHomeAtmosphereDrift { from { transform: translate3d(-1.5%, -1%, 0) scale(1); opacity: .68; } to { transform: translate3d(1.5%, 1%, 0) scale(1.025); opacity: .92; } }
-@keyframes uraiHomeTerrainBreath { 0%, 100% { transform: translateY(6vh); filter: saturate(1.10) contrast(1.05); } 50% { transform: translateY(4.8vh); filter: saturate(1.16) contrast(1.07); } }
+@keyframes uraiHomeTerrainBreath { 0%, 100% { transform: translateY(4.2vh); filter: saturate(1.10) contrast(1.05); } 50% { transform: translateY(3.1vh); filter: saturate(1.16) contrast(1.07); } }
 @keyframes uraiHomeOrbLivingBreath { 0%, 100% { filter: brightness(1) saturate(1); } 50% { filter: brightness(1.12) saturate(1.08); } }
-@keyframes uraiHomeAvatarFloat { 0%, 100% { transform: translate(-50%, -50%) rotateY(-24deg) rotateZ(2deg); opacity: .70; } 50% { transform: translate(-50%, -51.2%) rotateY(-24deg) rotateZ(1deg); opacity: .82; } }
+@keyframes uraiHomeAvatarFloat { 0%, 100% { transform: translate(-50%, -50%) rotateY(-24deg) rotateZ(2deg); opacity: .86; } 50% { transform: translate(-50%, -51.2%) rotateY(-24deg) rotateZ(1deg); opacity: .94; } }
 @keyframes uraiHomeSatellitePulse { 0%, 100% { transform: scale(.92); opacity: .72; } 50% { transform: scale(1.18); opacity: 1; } }
 @keyframes uraiHomeRingA { from { transform: translate(-50%, -50%) rotate(-15deg); } to { transform: translate(-50%, -50%) rotate(345deg); } }
 @keyframes uraiHomeRingB { from { transform: translate(-50%, -50%) rotate(19deg) scaleX(.78); } to { transform: translate(-50%, -50%) rotate(379deg) scaleX(.78); } }
@@ -232,7 +218,7 @@
   .urai-hero-terrain { height: 57vh !important; min-height: 380px !important; }
   .urai-hero-orb { width: 128px !important; height: 128px !important; }
   .urai-hero-orb-halo { width: 330px !important; height: 330px !important; }
-  .urai-avatar-presence { width: 190px; height: 380px; opacity: .58; }
+  .urai-avatar-presence { width: 190px; height: 380px; opacity: .72; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -240,7 +226,6 @@
   .urai-sky-architecture,
   .urai-hero-orb,
   .urai-avatar-presence,
-  .urai-hero-body-beam,
   .urai-hero-orb-satellite,
   .urai-hero-orb-ring-a,
   .urai-hero-orb-ring-b,
