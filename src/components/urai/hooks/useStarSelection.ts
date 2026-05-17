@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { MemoryStar } from "@/components/urai/data/memoryStars";
 
 export function useStarSelection(stars: MemoryStar[], initialId: string | null = null) {
@@ -17,6 +17,14 @@ export function useStarSelection(stars: MemoryStar[], initialId: string | null =
     });
     return ids;
   }, [selected, stars]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedId(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return {
     selectedId,
