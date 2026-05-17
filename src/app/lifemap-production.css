@@ -1,0 +1,21 @@
+:root {
+  --urai-safe-x: clamp(20px, 4vw, 56px);
+  --urai-safe-y: clamp(20px, 4vh, 48px);
+  --urai-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --urai-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --urai-ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes uraiStarDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-80px, -80px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
