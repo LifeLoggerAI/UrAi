@@ -55,6 +55,6 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Badge({ children }: { children: React.ReactNode }) {
+function Badge({ children }: { children?: React.ReactNode }) {
   return <span className="rounded-full bg-white/10 px-3 py-1 text-xs capitalize text-white/70">{children}</span>;
 }

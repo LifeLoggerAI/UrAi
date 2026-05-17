@@ -7,3 +7,377 @@ body {
   color: #fff;
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
+
+.home-webgl-sky,
+.webgl-life-map-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.home-webgl-sky {
+  opacity: 0.74;
+  filter: contrast(1.28) brightness(1.16) saturate(1.1);
+}
+
+.webgl-life-map-field {
+  opacity: 0.7;
+}
+
+.starfield,
+.connections,
+.memory-star {
+  z-index: 1;
+}
+
+.companion-orb .orb-core {
+  animation: uraiOrbCorePulse 5.5s ease-in-out infinite !important;
+}
+
+.avatar-heart {
+  animation: uraiAvatarHeartPulse 4.8s ease-in-out infinite !important;
+}
+
+/* /home cinematic composition overrides. */
+.home-scene::before,
+.home-scene::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.home-scene::before {
+  z-index: 14;
+  opacity: 0.72;
+  background-image:
+    radial-gradient(circle at 7% 18%, rgba(222, 244, 255, 0.55) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 10% 48%, rgba(222, 244, 255, 0.72) 0 1.3px, transparent 2.8px),
+    radial-gradient(circle at 18% 43%, rgba(190, 232, 255, 0.58) 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 62%, rgba(175, 217, 255, 0.48) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 31% 17%, rgba(240, 249, 255, 0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 39% 36%, rgba(181, 221, 255, 0.5) 0 1px, transparent 2.1px),
+    radial-gradient(circle at 46% 57%, rgba(240, 249, 255, 0.42) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 58% 28%, rgba(240, 249, 255, 0.64) 0 1.2px, transparent 2.5px),
+    radial-gradient(circle at 62% 44%, rgba(183, 222, 255, 0.42) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 69% 40%, rgba(183, 222, 255, 0.55) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 75% 64%, rgba(175, 217, 255, 0.48) 0 1px, transparent 2.5px),
+    radial-gradient(circle at 82% 20%, rgba(230, 246, 255, 0.56) 0 1px, transparent 2.2px),
+    radial-gradient(circle at 92% 49%, rgba(175, 217, 255, 0.52) 0 1px, transparent 2.4px),
+    radial-gradient(circle at 95% 24%, rgba(240, 249, 255, 0.42) 0 1px, transparent 2.2px);
+  background-size: 100% 100%;
+  filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.34));
+}
+
+.home-scene::after {
+  z-index: 9;
+  background:
+    radial-gradient(ellipse at 53.7% 72%, rgba(125, 211, 252, 0.16), transparent 11%),
+    radial-gradient(ellipse at 48% 84%, rgba(96, 190, 158, 0.12), transparent 17%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.95), transparent 38%),
+    linear-gradient(180deg, transparent 0%, transparent 56%, rgba(0, 0, 0, 0.2) 73%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.home-scene .home-webgl-sky {
+  position: fixed !important;
+  z-index: 13 !important;
+  opacity: 0.96 !important;
+  filter: contrast(1.55) brightness(1.7) saturate(1.16) drop-shadow(0 0 6px rgba(125, 211, 252, 0.28)) !important;
+  mix-blend-mode: screen !important;
+}
+
+.home-scene .asset-sky {
+  opacity: 0.26 !important;
+  filter: saturate(1.06) contrast(1.24) brightness(0.46) !important;
+}
+
+.home-scene .sky-base {
+  background:
+    radial-gradient(circle at 50% 17%, rgba(87, 105, 186, 0.14), transparent 20%),
+    radial-gradient(ellipse at 50% 50%, rgba(29, 61, 112, 0.1), transparent 43%),
+    radial-gradient(ellipse at 50% 78%, rgba(7, 35, 27, 0.16), transparent 25%),
+    linear-gradient(180deg, #01030b 0%, #041023 45%, #020d0a 75%, #000 100%) !important;
+}
+
+.home-scene .asset-clouds {
+  opacity: 0.08 !important;
+  filter: blur(0.7px) brightness(0.48) !important;
+}
+
+.home-scene .sky-depth {
+  opacity: 0.38 !important;
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(205, 227, 255, 0.025), transparent 16%),
+    radial-gradient(ellipse at 50% 52%, rgba(62, 104, 175, 0.035), transparent 25%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 58%, rgba(0, 0, 0, 0.9) 100%) !important;
+}
+
+.home-scene .sky-portal {
+  opacity: 0.32 !important;
+  transform: translateY(-35vh) scale(0.9) !important;
+}
+
+.home-scene .sky-whisper {
+  top: 18.5% !important;
+  opacity: 0.66 !important;
+}
+
+.home-scene .ascend-hint {
+  opacity: 0.045 !important;
+}
+
+.home-scene .asset-ground {
+  height: 28% !important;
+  opacity: 0.12 !important;
+  mix-blend-mode: screen !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.26) 50%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 28%, rgba(0, 0, 0, 0.26) 50%, #000 100%) !important;
+}
+
+.home-scene .terrain-world {
+  height: 25% !important;
+  filter: saturate(0.78) brightness(0.46) blur(0.25px) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0, 0, 0, 0.38) 54%, #000 80%, #000 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 30%, rgba(0, 0, 0, 0.38) 54%, #000 80%, #000 100%) !important;
+}
+
+.home-scene .terrain-world::before {
+  inset: -82% -18% 0 !important;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(110, 231, 183, 0.026), transparent 31%),
+    radial-gradient(ellipse at 50% 42%, rgba(125, 211, 252, 0.02), transparent 45%),
+    linear-gradient(180deg, transparent 0%, rgba(2, 18, 12, 0.045) 48%, rgba(0, 0, 0, 0.98) 100%) !important;
+}
+
+.home-scene .terrain-mist {
+  opacity: 0.1 !important;
+  top: -70% !important;
+}
+
+.home-scene .hill-back {
+  opacity: 0.06 !important;
+  bottom: 66% !important;
+}
+
+.home-scene .hill-front {
+  opacity: 0.48 !important;
+  bottom: -62% !important;
+}
+
+.home-scene .orb-wash {
+  opacity: 0.34 !important;
+  background-image:
+    radial-gradient(circle at 54% 67%, rgba(210, 238, 255, 0.1), rgba(125, 211, 252, 0.06) 7%, transparent 18%),
+    radial-gradient(circle at 42% 66%, rgba(180, 226, 255, 0.045), transparent 13%) !important;
+}
+
+.home-scene .avatar-figure {
+  left: calc(50% - min(12.5vw, 172px)) !important;
+  top: 55.3% !important;
+  width: clamp(198px, 13vw, 244px) !important;
+  filter: contrast(1.22) brightness(1.12) !important;
+}
+
+.home-scene .asset-avatar {
+  opacity: 0.14 !important;
+}
+
+.home-scene .companion-orb {
+  left: 53.7% !important;
+  top: 68.4% !important;
+  width: clamp(148px, 10.2vw, 190px) !important;
+  height: clamp(148px, 10.2vw, 190px) !important;
+}
+
+.home-scene .orb-glow {
+  opacity: 0.48 !important;
+  filter: blur(22px) !important;
+}
+
+.home-scene .asset-orb {
+  opacity: 0.4 !important;
+}
+
+.home-scene .orb-core {
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.74),
+    0 0 48px rgba(125, 211, 252, 0.38),
+    0 0 92px rgba(196, 181, 253, 0.1) !important;
+}
+
+.home-scene .orb-shadow {
+  opacity: 0.56 !important;
+  top: 96% !important;
+}
+
+.home-scene.is-transitioning .companion-orb {
+  transform: translate(-50%, -560%) scale(0.58) !important;
+}
+
+/* Production visual tuning for the visual-first URAI home field. */
+.urai-home-shell .horizon-glow {
+  bottom: 16% !important;
+  width: min(1120px, 90vw) !important;
+  height: 31vh !important;
+  opacity: 0.82 !important;
+}
+
+.urai-home-shell .aura-orb-button {
+  top: 54.5% !important;
+  width: min(410px, 34vw) !important;
+  height: min(410px, 34vw) !important;
+}
+
+.urai-home-shell .orb-core {
+  width: clamp(132px, 11vw, 154px) !important;
+  height: clamp(132px, 11vw, 154px) !important;
+}
+
+.urai-home-shell .orb-shadow {
+  top: 66% !important;
+  opacity: 0.5 !important;
+}
+
+.urai-home-shell .companion-dot {
+  top: 58% !important;
+  right: calc(50% - 132px) !important;
+}
+
+.urai-home-shell .silhouette-button {
+  top: 56.5% !important;
+  opacity: 0.36 !important;
+}
+
+.urai-home-shell .emotional-biome {
+  bottom: -3.5vh !important;
+  height: 47vh !important;
+  width: min(1360px, 98vw) !important;
+  filter: saturate(1.08) contrast(1.06) !important;
+}
+
+.urai-home-shell .biome-atmosphere {
+  top: -35% !important;
+  height: 44% !important;
+  opacity: 0.72 !important;
+}
+
+.urai-home-shell .biome-terrain {
+  inset: 8% -1% 0 !important;
+  border-radius: 39% 39% 0 0 !important;
+  clip-path: polygon(0 47%, 6% 39%, 12% 43%, 20% 31%, 29% 36%, 39% 20%, 48% 31%, 57% 21%, 67% 34%, 77% 24%, 88% 40%, 100% 34%, 100% 100%, 0 100%) !important;
+  box-shadow: 0 -46px 130px rgba(125, 211, 252, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+}
+
+.urai-home-shell .biome-back-ridge {
+  bottom: 31% !important;
+  height: 30% !important;
+  opacity: 0.62 !important;
+}
+
+.urai-home-shell .biome-mid-ridge {
+  bottom: 20% !important;
+  height: 33% !important;
+  opacity: 0.74 !important;
+}
+
+.urai-home-shell .biome-front-ridge {
+  bottom: 2% !important;
+  height: 34% !important;
+  opacity: 0.92 !important;
+}
+
+.urai-home-shell .biome-rim {
+  top: 22% !important;
+  opacity: 0.86 !important;
+}
+
+.urai-home-shell .biome-horizon {
+  top: 31% !important;
+  opacity: 0.75 !important;
+}
+
+.urai-home-shell .biome-river {
+  top: 28% !important;
+  height: 62% !important;
+  filter: blur(7px) !important;
+}
+
+.urai-home-shell .biome-recovery {
+  top: 17% !important;
+  height: 38% !important;
+}
+
+.urai-home-shell .biome-shadow,
+.urai-home-shell .biome-memory {
+  top: 27% !important;
+  height: 38% !important;
+}
+
+.urai-home-shell .biome-signal {
+  top: 55% !important;
+  height: 31% !important;
+}
+
+.urai-home-shell .scene-pulse {
+  bottom: calc(env(safe-area-inset-bottom) + 0.85rem) !important;
+  opacity: 0.82 !important;
+}
+
+@keyframes uraiOrbCorePulse {
+  0%, 100% {
+    transform: scale(0.96);
+    opacity: 0.82;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes uraiAvatarHeartPulse {
+  0%, 100% {
+    transform: translateX(-50%) scale(0.96);
+    opacity: 0.78;
+  }
+  50% {
+    transform: translateX(-50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  .home-scene .companion-orb {
+    left: 54.5% !important;
+    top: 68.2% !important;
+    width: 138px !important;
+    height: 138px !important;
+  }
+
+  .home-scene .avatar-figure {
+    left: calc(50% - 116px) !important;
+    top: 55.3% !important;
+  }
+
+  .urai-home-shell .aura-orb-button {
+    top: 52.5% !important;
+    width: 310px !important;
+    height: 310px !important;
+  }
+
+  .urai-home-shell .emotional-biome {
+    bottom: -2vh !important;
+    height: 43vh !important;
+    width: 120vw !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .companion-orb .orb-core,
+  .avatar-heart {
+    animation: none !important;
+  }
+}

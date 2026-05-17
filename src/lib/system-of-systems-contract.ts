@@ -1,37 +1,166 @@
 export const FIRESTORE_DOMAINS = [
   "users",
-  "events",
-  "eventEnrichments",
+  "adminUsers",
+  "profiles",
+  "consents",
+  "narratorMemory",
   "memoryShards",
   "insights",
-  "forecasts",
+  "rituals",
+  "journeys",
+  "journeyChapters",
+  "stars",
   "moodWeather",
+  "emotionalForecasts",
+  "weeklyRecaps",
+  "storyProjects",
+  "storyAssets",
+  "exports",
+  "marketplaceItems",
+  "marketplacePurchases",
+  "creatorSubmissions",
+  "referrals",
+  "jobs",
+  "jobApplications",
+  "adminAuditLogs",
+  "telemetryEvents",
+  "safetyEvents",
+  "notifications",
+  "featureFlags",
+  "waitlistEntries",
+  "contactMessages",
+  "dataExportRequests",
+  "accountDeletionRequests",
+  "events",
+  "eventEnrichments",
   "lifeMapEvents",
   "constellations",
-  "rituals",
   "scrolls",
   "storyScripts",
-  "exports",
   "relationships",
   "socialGraph",
   "shadowMetrics",
   "obscuraSignals",
+  "obscuraPatterns",
   "mentalLoadScores",
+  "cognitiveStress",
   "councilSessions",
   "narratorMessages",
-  "marketplaceItems",
   "entitlements",
   "transactions",
   "auditLogs",
   "systemStatus",
   "incidents",
-  "consents",
   "dataRequests",
-  "featureFlags",
-  "adminUsers",
+  "dreams",
+  "timelineEvents",
+  "personaEvolutions",
+  "soulThreads",
+  "socialArchetypes",
+  "weeklyScrolls",
+  "weeklyReflections",
+  "moods",
+  "moodForecasts",
+  "recoveryBlooms",
+  "memoryBlooms",
+  "relationshipConstellations",
+  "relationshipSignals",
+  "voiceEvents",
+  "dreamConstellations",
+  "badges",
+  "journalEntries",
+  "insightMarket",
+  "chronoMirrorSnapshots",
+  "chrono_validation_events",
+  "ancientSignals",
+  "companionMessages",
+  "narratorInsights",
+  "passiveSignals",
+  "symbolicStates",
 ] as const;
 
 export type FirestoreDomain = (typeof FIRESTORE_DOMAINS)[number];
+
+export const OWNER_SCOPED_COLLECTIONS = [
+  "profiles",
+  "consents",
+  "narratorMemory",
+  "memoryShards",
+  "insights",
+  "rituals",
+  "journeys",
+  "journeyChapters",
+  "stars",
+  "moodWeather",
+  "emotionalForecasts",
+  "weeklyRecaps",
+  "storyProjects",
+  "storyAssets",
+  "exports",
+  "marketplacePurchases",
+  "referrals",
+  "jobApplications",
+  "telemetryEvents",
+  "safetyEvents",
+  "notifications",
+  "dataExportRequests",
+  "accountDeletionRequests",
+  "events",
+  "eventEnrichments",
+  "lifeMapEvents",
+  "constellations",
+  "scrolls",
+  "storyScripts",
+  "relationships",
+  "socialGraph",
+  "shadowMetrics",
+  "obscuraSignals",
+  "obscuraPatterns",
+  "mentalLoadScores",
+  "cognitiveStress",
+  "councilSessions",
+  "narratorMessages",
+  "entitlements",
+  "transactions",
+  "dataRequests",
+  "dreams",
+  "timelineEvents",
+  "personaEvolutions",
+  "soulThreads",
+  "socialArchetypes",
+  "weeklyScrolls",
+  "weeklyReflections",
+  "moods",
+  "moodForecasts",
+  "recoveryBlooms",
+  "memoryBlooms",
+  "relationshipConstellations",
+  "relationshipSignals",
+  "voiceEvents",
+  "dreamConstellations",
+  "badges",
+  "journalEntries",
+  "insightMarket",
+  "chronoMirrorSnapshots",
+  "chrono_validation_events",
+  "ancientSignals",
+  "companionMessages",
+  "narratorInsights",
+  "passiveSignals",
+  "symbolicStates",
+] as const satisfies readonly FirestoreDomain[];
+
+export const PUBLIC_READ_COLLECTIONS = ["marketplaceItems", "jobs", "featureFlags", "systemStatus"] as const satisfies readonly FirestoreDomain[];
+export const SERVER_ONLY_COLLECTIONS = ["adminUsers", "waitlistEntries", "contactMessages", "creatorSubmissions", "adminAuditLogs", "auditLogs", "incidents"] as const satisfies readonly FirestoreDomain[];
+
+export type OwnerScopedCollection = (typeof OWNER_SCOPED_COLLECTIONS)[number];
+export type PublicReadCollection = (typeof PUBLIC_READ_COLLECTIONS)[number];
+export type ServerOnlyCollection = (typeof SERVER_ONLY_COLLECTIONS)[number];
+
+export type UraiTier = "free" | "pro" | "creator" | "enterprise" | "admin";
+export type UraiRole = "user" | "creator" | "enterprise_admin" | "support" | "admin";
+export type RetentionClass = "user_lifetime" | "user_controlled" | "export_temporary" | "safety_audit" | "aggregate_only";
+export type SafetyLevel = "normal" | "sensitive" | "crisis" | "admin_only";
 
 export type OwnerScopedDocument = {
   id: string;
@@ -40,17 +169,32 @@ export type OwnerScopedDocument = {
   updatedAt: string;
 };
 
+export type AdminUserDocument = {
+  id: string;
+  uid: string;
+  email: string;
+  roles: UraiRole[];
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  disabled?: boolean;
+  lastReviewedAt?: string;
+};
+
 export type UraiSystemDocument = OwnerScopedDocument & {
   domain: FirestoreDomain;
   status: "seeded" | "active" | "archived";
   title: string;
   summary: string;
   source: "demo" | "user" | "service" | "admin";
+  schemaVersion: number;
+  retentionClass: RetentionClass;
+  safetyLevel: SafetyLevel;
 };
 
 export const UraiSystemDocumentSchema = {
   name: "UraiSystemDocumentSchema",
-  required: ["id", "ownerUid", "createdAt", "updatedAt", "domain", "status", "title", "summary", "source"],
+  required: ["id", "ownerUid", "createdAt", "updatedAt", "domain", "status", "title", "summary", "source", "schemaVersion", "retentionClass", "safetyLevel"],
   validate(value: Partial<UraiSystemDocument>): value is UraiSystemDocument {
     return Boolean(
       value.id &&
@@ -62,7 +206,27 @@ export const UraiSystemDocumentSchema = {
         value.status &&
         value.title &&
         value.summary &&
-        value.source,
+        value.source &&
+        typeof value.schemaVersion === "number" &&
+        value.retentionClass &&
+        value.safetyLevel,
+    );
+  },
+};
+
+export const AdminUserDocumentSchema = {
+  name: "AdminUserDocumentSchema",
+  required: ["id", "uid", "email", "roles", "createdAt", "updatedAt", "createdBy"],
+  validate(value: Partial<AdminUserDocument>): value is AdminUserDocument {
+    return Boolean(
+      value.id &&
+        value.uid &&
+        value.email &&
+        Array.isArray(value.roles) &&
+        value.roles.every((role) => ["user", "creator", "enterprise_admin", "support", "admin"].includes(role)) &&
+        value.createdAt &&
+        value.updatedAt &&
+        value.createdBy,
     );
   },
 };
@@ -77,9 +241,33 @@ export const firestorePath = {
   user(uid: string) {
     return `users/${uid}`;
   },
+  adminUser(uid: string) {
+    return `adminUsers/${uid}`;
+  },
 };
 
 export const FIREBASE_FUNCTIONS = [
+  "dailyGenerateInsights",
+  "weeklyRecap",
+  "rollupDaily",
+  "requestExport",
+  "exportWorker",
+  "exportGC",
+  "storyOutline",
+  "storyAssemble",
+  "ttsRender",
+  "purchaseWebhook",
+  "marketplaceUnlock",
+  "referralTrack",
+  "notificationDispatch",
+  "jobApplicationSubmit",
+  "contactSubmit",
+  "waitlistSubmit",
+  "dataExportRequest",
+  "accountDeletionRequest",
+  "adminAuditLog",
+  "safetyEventCreate",
+  "healthCheck",
   "health",
   "ingestEvent",
   "enrichEvent",
@@ -90,11 +278,7 @@ export const FIREBASE_FUNCTIONS = [
   "generateConstellation",
   "generateRitualSuggestion",
   "completeRitual",
-  "requestExport",
   "processExportJob",
-  "storyAssemble",
-  "ttsRender",
-  "purchaseWebhook",
   "syncEntitlements",
   "deleteUserData",
   "exportUserData",
@@ -104,6 +288,58 @@ export const FIREBASE_FUNCTIONS = [
 ] as const;
 
 export type FirebaseFunctionName = (typeof FIREBASE_FUNCTIONS)[number];
+
+export const REQUIRED_PRODUCT_ROUTES = [
+  "/",
+  "/signin",
+  "/signup",
+  "/app",
+  "/demo",
+  "/u/[handle]",
+  "/journey",
+  "/stars/[id]",
+  "/mirror",
+  "/mood-weather",
+  "/timeline",
+  "/narrator",
+  "/weekly-recap",
+  "/story-mode",
+  "/exports",
+  "/marketplace",
+  "/rituals",
+  "/pro",
+  "/settings",
+  "/privacy-center",
+  "/data-export",
+  "/delete-account",
+  "/admin",
+  "/careers",
+  "/careers/[id]",
+  "/pricing",
+  "/contact",
+  "/terms",
+  "/privacy",
+  "/status",
+  "/support",
+  "/404",
+] as const;
+
+export type RequiredProductRoute = (typeof REQUIRED_PRODUCT_ROUTES)[number];
+
+export const ENTITLEMENT_LIMITS: Record<UraiTier, {
+  label: string;
+  narratorMessagesPerDay: number;
+  exportsPerMonth: number;
+  marketplacePurchases: boolean;
+  creatorPublishing: boolean;
+  adminSurfaces: boolean;
+}> = {
+  free: { label: "Free", narratorMessagesPerDay: 5, exportsPerMonth: 1, marketplacePurchases: false, creatorPublishing: false, adminSurfaces: false },
+  pro: { label: "Pro", narratorMessagesPerDay: 50, exportsPerMonth: 20, marketplacePurchases: true, creatorPublishing: false, adminSurfaces: false },
+  creator: { label: "Creator / Marketplace", narratorMessagesPerDay: 100, exportsPerMonth: 100, marketplacePurchases: true, creatorPublishing: true, adminSurfaces: false },
+  enterprise: { label: "Enterprise / B2B", narratorMessagesPerDay: 250, exportsPerMonth: 500, marketplacePurchases: true, creatorPublishing: true, adminSurfaces: false },
+  admin: { label: "Admin / Internal", narratorMessagesPerDay: 1000, exportsPerMonth: 1000, marketplacePurchases: true, creatorPublishing: true, adminSurfaces: true },
+};
 
 export const FEATURE_FLAGS = {
   "lifeMap.enabled": true,
@@ -118,6 +354,15 @@ export const FEATURE_FLAGS = {
   "xr.enabled": false,
   "proDashboard.enabled": true,
   "demoMode.enabled": true,
+  "jobs.enabled": true,
+  "admin.enabled": true,
+  "privacyCenter.enabled": true,
+  "dataExport.enabled": true,
+  "accountDeletion.enabled": true,
+  "explainability.enabled": true,
+  "accessibilityAdaptation.enabled": true,
+  "marketplacePurchases.enabled": false,
+  "creatorCms.enabled": false,
 } as const;
 
 export type FeatureFlagName = keyof typeof FEATURE_FLAGS;
@@ -132,6 +377,9 @@ export const CONSENT_GATES = {
   anonymizedPatternLicensing: "Controls anonymized pattern licensing eligibility.",
   pushNotifications: "Controls push notification delivery.",
   emailRecaps: "Controls email digest and recap delivery.",
+  jobsRecruitingConsent: "Controls storage and review of job application data.",
+  telemetry: "Controls product telemetry used for reliability and product quality.",
+  crisisSupportResources: "Controls whether safety events can surface crisis-support resources.",
 } as const;
 
 export type ConsentGateName = keyof typeof CONSENT_GATES;
@@ -142,4 +390,13 @@ export function hasConsent(consents: Partial<Record<ConsentGateName, boolean>>, 
 
 export function isFeatureEnabled(flags: Partial<Record<FeatureFlagName, boolean>>, flag: FeatureFlagName) {
   return flags[flag] ?? FEATURE_FLAGS[flag];
+}
+
+export function canAccessTier(userTier: UraiTier, requiredTier: UraiTier) {
+  const order: UraiTier[] = ["free", "pro", "creator", "enterprise", "admin"];
+  return order.indexOf(userTier) >= order.indexOf(requiredTier);
+}
+
+export function routeNeedsAuth(route: RequiredProductRoute) {
+  return !["/", "/demo", "/u/[handle]", "/careers", "/careers/[id]", "/pricing", "/contact", "/terms", "/privacy", "/status", "/support", "/404", "/signin", "/signup"].includes(route);
 }
