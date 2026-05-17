@@ -1,5 +1,6 @@
 import './globals.css';
 import './lifemap-polish.css';
+import './lifemap-production.css';
 import '../styles/urai-cinematic.css';
 import '../styles/urai-home-final.css';
 import '../styles/urai-fullscreen-final-lock.css';
