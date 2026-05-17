@@ -1,3 +1,68 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function validConsentSource(source) {
+      return source in [
+        "profile",
+        "timeline_events",
+        "memory_blooms",
+        "mood_inference",
+        "relationship_signals",
+        "rituals",
+        "offline_cache"
+      ];
+    }
+
+    function canCreateOwnedDoc() {
+      return request.auth != null && request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    function canReadOwnedDoc() {
+      return request.auth != null && resource.data.ownerUid == request.auth.uid;
+    }
+
+    function canUpdateOwnedDoc() {
+      return canReadOwnedDoc() && request.resource.data.ownerUid == resource.data.ownerUid;
+    }
+
+    function hasNoProtectedUserFields() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        "entitlementTier",
+        "roles",
+        "admin",
+        "founder",
+        "internal",
+        "internalOverride",
+        "isAdmin",
+        "isFounder"
+      ]);
+    }
+
+    function canCreateConsent(uid, source) {
+      return isOwner(uid)
+        && validConsentSource(source)
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
+    }
+
+    function canUpdateConsent(uid, source) {
+      return isOwner(uid)
+        && validConsentSource(source)
+        && resource.data.ownerUid == uid
+        && resource.data.source == source
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
+    }
+
     match /users/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
@@ -19,6 +84,32 @@
       }
     }
 
+    match /dreams/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /rituals/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /timelineEvents/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /personaEvolutions/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /soulThreads/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /socialArchetypes/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /weeklyScrolls/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /moods/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /shadowMetrics/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /obscuraPatterns/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /cognitiveStress/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /recoveryBlooms/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /relationshipConstellations/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /voiceEvents/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /dreamConstellations/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /memoryBlooms/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /badges/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /notifications/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /journalEntries/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /events/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /insightMarket/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+
+    match /waitlistSignups/{id} {
+      allow read, write: if false;
+    }
+
     match /features/{flagId} {
       allow read, write: if false;
     }
@@ -26,3 +117,13 @@
     match /entitlements/{uid} {
       allow read, write: if false;
     }
+
+    match /auditLogs/{id} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
