@@ -2,39 +2,42 @@ export type Category = "winter" | "spring" | "summer" | "autumn";
 
 export type OrbMessageMode = "text" | "voice";
 
-export interface OrbChatContext {
-  todayMoodState?: string;
-  mentalLoadScore?: number;
-  rhythmState?: string;
-  lastNarratorInsight?: string;
-  recentTimelineEvents?: string[];
-  relationshipSignals?: string[];
-  userTonePreference?: string;
-}
+export type OrbMessageRole = "user" | "assistant" | "system";
 
-export interface OrbMessage {
+export type OrbMessage = {
   id: string;
-  role: "user" | "assistant";
+  role: OrbMessageRole;
   content: string;
   mode: OrbMessageMode;
   emotionTags: string[];
   createdAt: string;
-}
+};
 
-export interface OrbChat {
+export type OrbChatContext = {
+  todayMoodState?: string;
+  mentalLoadScore?: number;
+  rhythmState?: string;
+  lastNarratorInsight?: string;
+  userTonePreference?: string;
+  recentTimelineEvents?: string[];
+  relationshipSignals?: string[];
+};
+
+export type OrbChat = {
   id: string;
   userId: string;
   title: string;
   createdAt: string;
   updatedAt: string;
   lastMessagePreview?: string;
-}
+};
 
-export interface ConversationInsight {
+export type ConversationInsight = {
   id: string;
   userId: string;
+  chatId?: string;
   insight: string;
   emotionTags: string[];
   memoryImportanceScore: number;
   createdAt: string;
-}
+};

@@ -3,6 +3,7 @@ import type {
   LegacyThread,
   LifeConstellation,
   LifeMapCollections,
+  LifeMapFilter,
   MemoryStar,
   NebulaRegion,
   RecoveryPath,
@@ -73,6 +74,11 @@ const star = (
   narratorText,
   createdAt: now(),
   updatedAt: now(),
+});
+
+const fromStarBase = <TType extends string>(base: MemoryStar, overrideType: TType) => ({
+  ...base,
+  type: overrideType,
 });
 
 export const memoryStars: MemoryStar[] = [
@@ -158,7 +164,7 @@ export const spatialARVRScaffold: SpatialARVRScaffold = {
   standingInsideNebulaFields: "Future mode for standing inside emotional season fog.",
 };
 
-const lifeConstellationSeeds: Pick<LifeConstellation, "id" | "theme" | "starIds" | "lineColor">[] = [
+const constellationSeeds: Array<{ id: string; theme: LifeMapFilter; starIds: string[]; lineColor: string }> = [
   { id: "grief-thread", theme: "Grief", starIds: ["blue-fog-memory", "winter-thread", "soft-return"], lineColor: "#bfe9ff" },
   { id: "recovery-thread", theme: "Recovery", starIds: ["quiet-ritual", "soft-return", "blue-fog-memory"], lineColor: "#86efac" },
   { id: "relationship-thread", theme: "Relationships", starIds: ["orbit-close", "companion-watch"], lineColor: "#f9a8d4" },
@@ -169,7 +175,7 @@ const lifeConstellationSeeds: Pick<LifeConstellation, "id" | "theme" | "starIds"
   { id: "rebirth-thread", theme: "Rebirth", starIds: ["threshold-door", "rebirth-bloom", "joy-spark"], lineColor: "#fb7185" },
 ];
 
-const lifeConstellations: LifeConstellation[] = lifeConstellationSeeds.map((thread) => ({
+const lifeConstellations: LifeConstellation[] = constellationSeeds.map((thread) => ({
   ...thread,
   userId: "demo-user",
   title: thread.theme,
@@ -204,27 +210,23 @@ const nebulaRegions: NebulaRegion[] = ["Grief Fog", "Stress Shimmer", "Dream Clo
 }));
 
 const dreamSymbols: DreamSymbol[] = ["Orchid", "Violet Door", "Moon Water"].map((title, i) => ({
-  ...star(`dream-symbol-${i + 1}`, "dream", title, "dream symbolic cloud", -1 + i, 2, -1.8, ["dream"], [title], "#c084fc", "dream-thread"),
-  type: "dreamSymbol",
+  ...fromStarBase(star(`dream-symbol-${i + 1}`, "dream", title, "dream symbolic cloud", -1 + i, 2, -1.8, ["dream"], [title], "#c084fc", "dream-thread"), "dreamSymbol"),
   symbolKind: title,
 }));
 
 const shadowThreads: ShadowThread[] = ["Shame Loop", "Conflict Echo"].map((title, i) => ({
-  ...star(`shadow-thread-${i + 1}`, "shadow", title, "dim unresolved cluster", -2 + i, -1.5, -1.4, ["stress"], ["shadow"], "#64748b", "shadow-thread"),
-  type: "shadowThread",
+  ...fromStarBase(star(`shadow-thread-${i + 1}`, "shadow", title, "dim unresolved cluster", -2 + i, -1.5, -1.4, ["stress"], ["shadow"], "#64748b", "shadow-thread"), "shadowThread"),
   unresolvedLoopScore: 0.6 + i * 0.2,
 }));
 
 const legacyThreads: LegacyThread[] = ["Ancestor Gold", "Future Letter"].map((title, i) => ({
-  ...star(`legacy-thread-${i + 1}`, "legacy", title, "gold ancestral thread", 3 + i, 1.4, -1, ["legacy"], ["gold thread"], "#facc15", "legacy-thread"),
-  type: "legacyThread",
+  ...fromStarBase(star(`legacy-thread-${i + 1}`, "legacy", title, "gold ancestral thread", 3 + i, 1.4, -1, ["legacy"], ["gold thread"], "#facc15", "legacy-thread"), "legacyThread"),
   ancestralTone: "gold",
 }));
 
 const replaySequences: ReplaySequence[] = [
   {
-    ...star("replay-blue-thread", "memory", "Blue Thread Replay", "camera path through grief and recovery", 0, 0, 0, ["replay"], ["camera path"], "#bfe9ff", "grief-thread"),
-    type: "replaySequence",
+    ...fromStarBase(star("replay-blue-thread", "memory", "Blue Thread Replay", "camera path through grief and recovery", 0, 0, 0, ["replay"], ["camera path"], "#bfe9ff", "grief-thread"), "replaySequence"),
     starIds: ["blue-fog-memory", "soft-return", "quiet-ritual"],
     cameraPathId: "replay",
     durationMs: 3600,
