@@ -31,6 +31,11 @@ type CameraCommand = "idle" | "replay" | "mirror" | "recenter" | "focus" | "home
 type OverlayKind = "privacy" | "ritual" | "mirror" | "error" | "empty" | "loading" | null;
 type LifeMapView = "galaxy" | "focus" | "replay";
 
+interface LifeMapUniverseProps {
+  initialView?: LifeMapView;
+  initialOverlay?: Exclude<OverlayKind, null>;
+}
+
 const modeLabels: Record<LifeMapMode, string> = {
   memoryGalaxy: "Memory Galaxy",
   fullLifeUniverse: "Full Life Universe",
@@ -43,10 +48,10 @@ const modeLabels: Record<LifeMapMode, string> = {
   spatialARVR: "Spatial AR/VR",
 };
 
-export default function LifeMapUniverse() {
-  const [mode, setMode] = useState<LifeMapMode>("memoryGalaxy");
-  const [view, setView] = useState<LifeMapView>("galaxy");
-  const [overlay, setOverlay] = useState<OverlayKind>(null);
+export default function LifeMapUniverse({ initialView = "galaxy", initialOverlay = null }: LifeMapUniverseProps) {
+  const [mode, setMode] = useState<LifeMapMode>(initialOverlay === "mirror" ? "mirrorOfBecoming" : "memoryGalaxy");
+  const [view, setView] = useState<LifeMapView>(initialView);
+  const [overlay, setOverlay] = useState<OverlayKind>(initialOverlay);
   const [selectedStarId, setSelectedStarId] = useState(selectedBlueFogMemory.id);
   const [openCardStar, setOpenCardStar] = useState<MemoryStar | undefined>();
   const [activeFilter, setActiveFilter] = useState<LifeMapFilter>("All");
@@ -58,8 +63,8 @@ export default function LifeMapUniverse() {
   const [localOnlyMode, setLocalOnlyMode] = useState(lifeMapMockData.userLifeMapSettings.localOnlyMode);
   const [hiddenStarIds, setHiddenStarIds] = useState<string[]>(lifeMapMockData.userLifeMapSettings.hiddenStarIds);
   const [blurredStarIds, setBlurredStarIds] = useState<string[]>(lifeMapMockData.userLifeMapSettings.blurredStarIds);
-  const [cameraCommand, setCameraCommand] = useState<CameraCommand>("idle");
-  const [isReplaying, setIsReplaying] = useState(false);
+  const [cameraCommand, setCameraCommand] = useState<CameraCommand>(initialView === "replay" ? "replay" : initialView === "focus" ? "focus" : "idle");
+  const [isReplaying, setIsReplaying] = useState(initialView === "replay");
   const [exportOpen, setExportOpen] = useState(false);
   const [showDemoHint, setShowDemoHint] = useState(true);
 
