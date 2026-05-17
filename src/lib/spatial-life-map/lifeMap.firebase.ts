@@ -1,9 +1,29 @@
-import { collection, doc, getDocs, setDoc, type FirestoreDataConverter, type QueryDocumentSnapshot, type SnapshotOptions } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  type CollectionReference,
+  type DocumentData,
+  type FirestoreDataConverter,
+  type QueryDocumentSnapshot,
+  type SnapshotOptions,
+} from "firebase/firestore";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
-import type { LifeMapChapter, LifeMapConstellation, LifeMapLayer, LifeMapStar, MemoryBloom, RelationshipThread, RitualThread, SpatialSettings } from "./lifeMap.types";
+import type {
+  LifeMapChapter,
+  LifeMapConstellation,
+  LifeMapDataset,
+  LifeMapLayer,
+  LifeMapStar,
+  MemoryBloom,
+  RelationshipThread,
+  RitualThread,
+  SpatialSettings,
+} from "./lifeMap.types";
 import { spatialLifeMapMockData } from "./lifeMap.mockData";
 
-const passThroughConverter = <T extends { id?: string }>(): FirestoreDataConverter<T> => ({
+const passThroughConverter = <T extends DocumentData>(): FirestoreDataConverter<T> => ({
   toFirestore(value: T) {
     return value;
   },
@@ -23,12 +43,12 @@ const paths = {
   settings: (userId: string) => doc(db(), "users", userId, "spatialSettings", "default").withConverter(passThroughConverter<SpatialSettings>()),
 };
 
-async function readCollection<T>(ref: ReturnType<typeof collection<T>>) {
+async function readCollection<T extends DocumentData>(ref: CollectionReference<T>) {
   const snapshot = await getDocs(ref);
   return snapshot.docs.map((item) => item.data());
 }
 
-export async function loadSpatialLifeMap(userId: string) {
+export async function loadSpatialLifeMap(userId: string): Promise<LifeMapDataset> {
   if (!isFirebaseConfigured()) return spatialLifeMapMockData;
   try {
     const [stars, constellations, layers, chapters, memoryBlooms, relationshipThreads, ritualThreads] = await Promise.all([
