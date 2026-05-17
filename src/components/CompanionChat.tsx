@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import type { CompanionChatOutput } from "@/lib/urai-v1-schemas";
+import type { CompanionChatOutput } from "@/ai/schemas/chat";
 
 const suggestedPrompts = [
   "Explain this mood",
   "What should I protect?",
-  "What pattern is repeating?"
+  "What pattern is repeating?",
 ];
 
 export default function CompanionChat() {
@@ -33,7 +33,7 @@ export default function CompanionChat() {
       const response = await fetch("/api/companion", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: [], message: trimmedMessage })
+        body: JSON.stringify({ history: [], message: trimmedMessage }),
       });
 
       if (!response.ok) {
@@ -113,7 +113,14 @@ export default function CompanionChat() {
       {reply && (
         <div id="companion-reply" className="mt-4 rounded-2xl border border-white/10 bg-white/[0.07] p-3" aria-live="polite">
           <p className="text-sm leading-6 text-white/90">{reply.reply}</p>
-          <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/50">Mood tag · {reply.moodTag}</p>
+          {reply.moodTag && <p className="mt-2 text-xs uppercase tracking-[0.2em] text-white/50">Mood tag · {reply.moodTag}</p>}
+          {reply.insights?.length ? (
+            <ul className="mt-3 space-y-1 text-xs text-white/60">
+              {reply.insights.map((insight) => (
+                <li key={insight}>• {insight}</li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       )}
     </section>
