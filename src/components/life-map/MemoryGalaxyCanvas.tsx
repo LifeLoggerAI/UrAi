@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData } from "@/lib/life-map/mock-data";
 
@@ -54,9 +54,9 @@ export default function MemoryGalaxyCanvas(props: MemoryGalaxyCanvasProps) {
     });
   }, [props.activeFilter, props.hiddenStarIds]);
 
-  useMemo(() => {
+  useEffect(() => {
     if (props.cameraCommand !== "idle") props.onCameraCommandComplete();
-  }, [props]);
+  }, [props.cameraCommand, props.onCameraCommandComplete]);
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-[radial-gradient(circle_at_48%_42%,rgba(14,165,233,0.18),transparent_30%),radial-gradient(circle_at_68%_22%,rgba(168,85,247,0.14),transparent_26%),linear-gradient(180deg,#020617,#030712_62%,#07111f)]">
