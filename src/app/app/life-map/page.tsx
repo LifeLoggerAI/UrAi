@@ -1,5 +1,5 @@
-import FullLifeMapScene from "@/components/lifemap/FullLifeMapScene";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export default function AppLifeMapPage() {
-  return <FullLifeMapScene />;
+  return <LifeMapUniverse />;
 }
