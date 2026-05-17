@@ -3,6 +3,7 @@ import type {
   LegacyThread,
   LifeConstellation,
   LifeMapCollections,
+  LifeMapFilter,
   MemoryStar,
   NebulaRegion,
   RecoveryPath,
@@ -75,7 +76,7 @@ const star = (
   updatedAt: now(),
 });
 
-const fromStarBase = (base: MemoryStar, overrideType: string) => ({
+const fromStarBase = <TType extends string>(base: MemoryStar, overrideType: TType) => ({
   ...base,
   type: overrideType,
 });
@@ -163,7 +164,7 @@ export const spatialARVRScaffold: SpatialARVRScaffold = {
   standingInsideNebulaFields: "Future mode for standing inside emotional season fog.",
 };
 
-const lifeConstellations: LifeConstellation[] = [
+const constellationSeeds: Array<{ id: string; theme: LifeMapFilter; starIds: string[]; lineColor: string }> = [
   { id: "grief-thread", theme: "Grief", starIds: ["blue-fog-memory", "winter-thread", "soft-return"], lineColor: "#bfe9ff" },
   { id: "recovery-thread", theme: "Recovery", starIds: ["quiet-ritual", "soft-return", "blue-fog-memory"], lineColor: "#86efac" },
   { id: "relationship-thread", theme: "Relationships", starIds: ["orbit-close", "companion-watch"], lineColor: "#f9a8d4" },
@@ -172,7 +173,9 @@ const lifeConstellations: LifeConstellation[] = [
   { id: "shadow-thread", theme: "Shadow", starIds: ["shadow-loop", "work-flare", "threshold-door"], lineColor: "#64748b" },
   { id: "legacy-thread", theme: "Legacy", starIds: ["legacy-gold", "purpose-north"], lineColor: "#facc15" },
   { id: "rebirth-thread", theme: "Rebirth", starIds: ["threshold-door", "rebirth-bloom", "joy-spark"], lineColor: "#fb7185" },
-].map((thread) => ({
+];
+
+const lifeConstellations: LifeConstellation[] = constellationSeeds.map((thread) => ({
   ...thread,
   userId: "demo-user",
   title: thread.theme,
