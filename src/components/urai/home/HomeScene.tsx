@@ -7,7 +7,7 @@ import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition
 function HeroStars() {
   return (
     <div className="urai-hero-stars" aria-hidden>
-      {Array.from({ length: 120 }, (_, index) => (
+      {Array.from({ length: 140 }, (_, index) => (
         <span
           key={index}
           style={{
@@ -24,6 +24,29 @@ function HeroStars() {
   );
 }
 
+function SkyArchitecture() {
+  return (
+    <div className="urai-sky-architecture" aria-hidden>
+      <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="skyLineGlow" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="rgba(190,245,255,.05)" />
+            <stop offset=".5" stopColor="rgba(220,255,255,.23)" />
+            <stop offset="1" stopColor="rgba(190,180,255,.08)" />
+          </linearGradient>
+          <filter id="skyLineBlur"><feGaussianBlur stdDeviation="1.4" /></filter>
+        </defs>
+        <path d="M120 330 C325 190 510 250 705 135 C905 15 1120 92 1472 18" stroke="url(#skyLineGlow)" strokeWidth="2" fill="none" filter="url(#skyLineBlur)" />
+        <path d="M70 560 C350 378 520 508 740 328 C963 145 1112 232 1540 182" stroke="rgba(122,220,255,.12)" strokeWidth="2" fill="none" />
+        <path d="M260 210 C520 300 705 205 910 300 C1128 402 1280 345 1510 435" stroke="rgba(255,232,180,.09)" strokeWidth="1.5" fill="none" />
+        <circle cx="708" cy="136" r="5" fill="rgba(220,255,255,.66)" />
+        <circle cx="910" cy="300" r="4" fill="rgba(255,232,180,.44)" />
+        <circle cx="1120" cy="92" r="3" fill="rgba(210,190,255,.5)" />
+      </svg>
+    </div>
+  );
+}
+
 function FinalTerrain() {
   return (
     <div className="urai-hero-terrain" aria-hidden>
@@ -31,19 +54,23 @@ function FinalTerrain() {
       <svg className="urai-hero-terrain-svg" viewBox="0 0 1600 720" preserveAspectRatio="none">
         <defs>
           <linearGradient id="heroRidgeA" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stopColor="rgba(61,108,186,.52)" />
-            <stop offset=".45" stopColor="rgba(12,33,76,.82)" />
+            <stop offset="0" stopColor="rgba(101,154,230,.42)" />
+            <stop offset=".35" stopColor="rgba(23,62,118,.76)" />
             <stop offset="1" stopColor="rgba(0,2,10,1)" />
           </linearGradient>
           <linearGradient id="heroRidgeB" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stopColor="rgba(60,226,238,.24)" />
-            <stop offset=".25" stopColor="rgba(18,49,101,.82)" />
+            <stop offset="0" stopColor="rgba(72,235,245,.26)" />
+            <stop offset=".3" stopColor="rgba(13,62,108,.78)" />
             <stop offset="1" stopColor="rgba(0,1,7,1)" />
           </linearGradient>
-          <radialGradient id="heroGroundBloom" cx="50%" cy="12%" r="58%">
-            <stop offset="0" stopColor="rgba(223,255,255,.42)" />
-            <stop offset=".22" stopColor="rgba(77,232,242,.21)" />
-            <stop offset=".54" stopColor="rgba(255,229,138,.10)" />
+          <linearGradient id="heroRidgeC" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stopColor="rgba(16,38,75,.96)" />
+            <stop offset="1" stopColor="rgba(0,0,4,1)" />
+          </linearGradient>
+          <radialGradient id="heroGroundBloom" cx="50%" cy="20%" r="62%">
+            <stop offset="0" stopColor="rgba(223,255,255,.46)" />
+            <stop offset=".24" stopColor="rgba(77,232,242,.24)" />
+            <stop offset=".56" stopColor="rgba(255,229,138,.09)" />
             <stop offset="1" stopColor="rgba(0,0,0,0)" />
           </radialGradient>
           <filter id="heroTerrainBlur" x="-20%" y="-25%" width="140%" height="150%">
@@ -51,14 +78,28 @@ function FinalTerrain() {
             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
-        <path d="M0 250 C105 214 184 237 278 190 C394 132 487 182 590 150 C706 112 790 168 902 125 C1028 77 1145 144 1240 122 C1350 96 1452 156 1600 128 L1600 720 L0 720 Z" fill="url(#heroRidgeA)" opacity=".75" />
-        <path d="M0 354 C146 286 232 326 342 275 C462 219 560 270 682 224 C782 186 884 243 990 199 C1128 142 1237 231 1360 184 C1450 150 1520 172 1600 148 L1600 720 L0 720 Z" fill="url(#heroRidgeB)" opacity=".96" />
-        <ellipse cx="800" cy="278" rx="520" ry="128" fill="url(#heroGroundBloom)" filter="url(#heroTerrainBlur)" />
-        <path d="M0 430 C180 374 272 432 416 392 C552 354 670 427 812 382 C994 324 1120 435 1280 388 C1425 346 1506 382 1600 360 L1600 720 L0 720 Z" fill="rgba(0,6,18,.86)" />
-        <ellipse cx="800" cy="485" rx="310" ry="80" fill="rgba(68,209,242,.20)" filter="url(#heroTerrainBlur)" opacity=".82" />
-        <path d="M0 590 C220 528 390 618 590 560 C770 508 930 628 1134 556 C1338 484 1450 592 1600 532 L1600 720 L0 720 Z" fill="rgba(0,1,5,.94)" />
+        <path d="M0 210 C142 182 210 214 318 172 C430 128 540 180 650 140 C794 86 898 164 1048 122 C1218 74 1342 132 1600 92 L1600 720 L0 720 Z" fill="url(#heroRidgeA)" opacity=".62" />
+        <path d="M0 310 C122 265 230 292 352 245 C488 192 596 250 724 204 C858 158 982 224 1118 185 C1304 132 1428 188 1600 162 L1600 720 L0 720 Z" fill="url(#heroRidgeB)" opacity=".94" />
+        <ellipse cx="800" cy="318" rx="575" ry="140" fill="url(#heroGroundBloom)" filter="url(#heroTerrainBlur)" opacity=".9" />
+        <path d="M0 435 C160 384 282 430 436 394 C574 362 692 416 840 382 C1004 344 1132 414 1292 376 C1425 344 1510 370 1600 346 L1600 720 L0 720 Z" fill="url(#heroRidgeC)" />
+        <ellipse cx="800" cy="514" rx="390" ry="96" fill="rgba(68,209,242,.18)" filter="url(#heroTerrainBlur)" opacity=".84" />
+        <path d="M0 620 C188 560 388 620 590 576 C790 532 930 632 1140 568 C1338 508 1462 592 1600 538 L1600 720 L0 720 Z" fill="rgba(0,1,5,.95)" />
       </svg>
+      <div className="urai-ground-ritual-ring" />
       <div className="urai-hero-foreground-fade" />
+    </div>
+  );
+}
+
+function AvatarPresence() {
+  return (
+    <div className="urai-avatar-presence" aria-hidden>
+      <div className="urai-avatar-shadow" />
+      <div className="urai-avatar-spine" />
+      <div className="urai-avatar-head" />
+      <div className="urai-avatar-shoulders" />
+      <div className="urai-avatar-torso" />
+      <div className="urai-avatar-root" />
     </div>
   );
 }
@@ -71,6 +112,7 @@ export function HomeScene() {
       <button className="urai-hero-hit" type="button" aria-label="Enter Memory Galaxy" disabled={isTransitioning} />
       <div className="urai-hero-sky" aria-hidden>
         <HeroStars />
+        <SkyArchitecture />
         <div className="urai-hero-aurora urai-hero-aurora-cyan" />
         <div className="urai-hero-aurora urai-hero-aurora-violet" />
         <div className="urai-hero-aurora urai-hero-aurora-gold" />
@@ -84,17 +126,7 @@ export function HomeScene() {
       >
         <div className="urai-hero-body-aura" />
         <div className="urai-hero-body-beam" />
-        <svg className="urai-hero-body-svg" viewBox="0 0 260 520" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="heroBodyFill" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stopColor="rgba(220,255,255,.34)" />
-              <stop offset=".44" stopColor="rgba(61,232,242,.18)" />
-              <stop offset="1" stopColor="rgba(61,120,210,0)" />
-            </linearGradient>
-          </defs>
-          <path d="M130 18 C82 82 76 151 96 224 C107 264 127 288 108 354 C91 413 99 474 130 512 C161 474 169 413 152 354 C133 288 153 264 164 224 C184 151 178 82 130 18Z" fill="url(#heroBodyFill)" />
-          <path d="M130 56 C111 100 108 160 120 222 C128 260 138 290 128 344" fill="none" stroke="rgba(225,255,255,.22)" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
+        <AvatarPresence />
       </motion.div>
       <motion.div
         className="urai-hero-orb-system"
