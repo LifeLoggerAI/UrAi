@@ -4,6 +4,7 @@ import './lifemap-production.css';
 import '../styles/urai-cinematic.css';
 import '../styles/urai-home-final.css';
 import '../styles/urai-home-production-overlay.css';
+import '../styles/spatial-life-map.css';
 import '../styles/urai-fullscreen-final-lock.css';
 import React from 'react';
 import AppProviders from './providers';
