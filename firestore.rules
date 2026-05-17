@@ -1,3 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function validConsentSource(source) {
+      return source in [
+        "profile",
+        "timeline_events",
+        "memory_blooms",
+        "mood_inference",
+        "relationship_signals",
+        "rituals",
+        "offline_cache"
+      ];
+    }
+
+    function hasNoProtectedUserFields() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        "entitlementTier",
+        "roles",
+        "admin",
+        "founder",
+        "internal",
+        "internalOverride",
+        "isAdmin",
+        "isFounder"
+      ]);
+    }
+
+    function canCreateConsent(uid, source) {
+      return isOwner(uid)
+        && validConsentSource(source)
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
+    }
+
+    function canUpdateConsent(uid, source) {
+      return isOwner(uid)
+        && validConsentSource(source)
+        && resource.data.ownerUid == uid
+        && resource.data.source == source
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
+    }
+
     match /users/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
@@ -19,6 +72,10 @@
       }
     }
 
+    match /waitlistSignups/{id} {
+      allow read, write: if false;
+    }
+
     match /features/{flagId} {
       allow read, write: if false;
     }
@@ -26,3 +83,13 @@
     match /entitlements/{uid} {
       allow read, write: if false;
     }
+
+    match /auditLogs/{id} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
