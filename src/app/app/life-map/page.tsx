@@ -1,5 +1,5 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export default function AppLifeMapPage() {
-  return <LifeMapUniverse />;
+  return <SpatialLifeMap />;
 }
