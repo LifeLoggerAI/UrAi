@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { GALAXY_ZOOM } from "@/components/urai/motion/galaxyMotion";
 
 export interface GalaxyCameraState {
@@ -38,12 +38,12 @@ export function useGalaxyCamera(initial: GalaxyCameraState = { x: 0, y: 0, scale
     setCamera({ x: -point.x * 0.22, y: -point.y * 0.22, scale: clamp(scale, GALAXY_ZOOM.min, GALAXY_ZOOM.max) });
   }, []);
 
-  const onPointerDown = useCallback((event: React.PointerEvent<HTMLElement>) => {
+  const onPointerDown = useCallback((event: PointerEvent<HTMLElement>) => {
     setDragging(true);
     dragRef.current = { x: event.clientX, y: event.clientY, cameraX: camera.x, cameraY: camera.y };
   }, [camera.x, camera.y]);
 
-  const onPointerMove = useCallback((event: React.PointerEvent<HTMLElement>) => {
+  const onPointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
     if (!dragging) return;
     setCamera((current) => ({
       ...current,
