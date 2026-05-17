@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData, selectedBlueFogMemory, spatialARVRScaffold } from "@/lib/life-map/mock-data";
 import CompanionNarratorPanel from "./CompanionNarratorPanel";
@@ -49,16 +50,42 @@ export default function LifeMapUniverse() {
 
   const selectedStar = useMemo(() => lifeMapMockData.memoryStars.find((star) => star.id === selectedStarId) ?? selectedBlueFogMemory, [selectedStarId]);
 
-  function selectStar(star: MemoryStar) {
+  const selectStar = useCallback((star: MemoryStar) => {
     setSelectedStarId(star.id);
     setCameraCommand("focus");
-  }
+  }, []);
 
-  function selectStarByOffset(offset: number) {
+  const selectStarByOffset = useCallback((offset: number) => {
     const visibleStars = lifeMapMockData.memoryStars.filter((star) => !hiddenStarIds.includes(star.id));
     const currentIndex = Math.max(0, visibleStars.findIndex((star) => star.id === selectedStarId));
     const nextStar = visibleStars[(currentIndex + offset + visibleStars.length) % visibleStars.length];
     if (nextStar) selectStar(nextStar);
+  }, [hiddenStarIds, selectStar, selectedStarId]);
+
+  function hideSelectedThread() {
+    const threadId = selectedStar.constellationId;
+    const constellation = lifeMapMockData.lifeConstellations.find((thread) => thread.id === threadId);
+    if (!constellation) return setHiddenStarIds((ids) => Array.from(new Set([...ids, selectedStar.id])));
+    setHiddenStarIds((ids) => Array.from(new Set([...ids, ...constellation.starIds])));
+  }
+
+  function startReplay() {
+    setIsReplaying(true);
+    setCameraCommand("replay");
+  }
+
+  function startMirror() {
+    setMode("mirrorOfBecoming");
+    setCameraCommand("mirror");
+  }
+
+  function recenter() {
+    setMode("memoryGalaxy");
+    setCameraCommand("recenter");
+  }
+
+  function openScrollExport() {
+    setExportOpen(true);
   }
 
   useEffect(() => {
@@ -87,33 +114,7 @@ export default function LifeMapUniverse() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [hiddenStarIds, selectedStar, selectedStarId]);
-
-  function hideSelectedThread() {
-    const threadId = selectedStar.constellationId;
-    const constellation = lifeMapMockData.lifeConstellations.find((thread) => thread.id === threadId);
-    if (!constellation) return setHiddenStarIds((ids) => Array.from(new Set([...ids, selectedStar.id])));
-    setHiddenStarIds((ids) => Array.from(new Set([...ids, ...constellation.starIds])));
-  }
-
-  function startReplay() {
-    setIsReplaying(true);
-    setCameraCommand("replay");
-  }
-
-  function startMirror() {
-    setMode("mirrorOfBecoming");
-    setCameraCommand("mirror");
-  }
-
-  function recenter() {
-    setMode("memoryGalaxy");
-    setCameraCommand("recenter");
-  }
-
-  function openScrollExport() {
-    setExportOpen(true);
-  }
+  }, [selectStarByOffset, selectedStar]);
 
   function textOnlyStars() {
     return (
@@ -143,7 +144,7 @@ export default function LifeMapUniverse() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(191,233,255,0.12),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.3),#020617)]" />
 
       <header className="pointer-events-none fixed left-0 right-0 top-0 z-20 flex items-start justify-center px-4 pt-5">
-        <a href="/" className="pointer-events-auto fixed left-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-cyan-100/15 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10" aria-label="Back to URAI home">←</a>
+        <Link href="/" className="pointer-events-auto fixed left-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-cyan-100/15 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10" aria-label="Back to URAI home">←</Link>
         <div className="rounded-3xl border border-cyan-100/10 bg-slate-950/55 px-6 py-3 text-center shadow-[0_0_42px_rgba(2,132,199,0.16)] backdrop-blur-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-100/60">URAI LIFE MAP</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{modeLabels[mode]}</h1>
