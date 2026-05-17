@@ -28,7 +28,7 @@ const passThroughConverter = <T extends DocumentData>(): FirestoreDataConverter<
     return value;
   },
   fromFirestore(snapshot: QueryDocumentSnapshot, options: SnapshotOptions) {
-    return { id: snapshot.id, ...snapshot.data(options) } as T;
+    return { id: snapshot.id, ...snapshot.data(options) } as unknown as T;
   },
 });
 
