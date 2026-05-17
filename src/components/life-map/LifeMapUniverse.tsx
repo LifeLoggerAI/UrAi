@@ -191,32 +191,42 @@ export default function LifeMapUniverse() {
       <CompanionNarratorPanel selectedStar={selectedStar} emotionalSafetyMode={emotionalSafetyMode} />
       <LifeMapFilterBar activeFilter={activeFilter} onChange={setActiveFilter} />
       <LifeMapControls
-        selectedStar={selectedStar}
-        mode={mode}
         onRecenter={recenter}
         onReplay={startReplay}
         onMirror={startMirror}
-        onOpenCard={() => setOpenCardStar(selectedStar)}
+        onCreateScroll={openScrollExport}
         onHideThread={hideSelectedThread}
-        onExport={openScrollExport}
-        isReplaying={isReplaying}
       />
       <QualitySettingsPanel
         qualityMode={qualityMode}
-        setQualityMode={setQualityMode}
         reducedMotion={reducedMotion}
-        setReducedMotion={setReducedMotion}
         textOnlyFallback={textOnlyFallback}
-        setTextOnlyFallback={setTextOnlyFallback}
         highContrast={highContrast}
-        setHighContrast={setHighContrast}
         emotionalSafetyMode={emotionalSafetyMode}
-        setEmotionalSafetyMode={setEmotionalSafetyMode}
         localOnlyMode={localOnlyMode}
-        setLocalOnlyMode={setLocalOnlyMode}
+        onQualityChange={setQualityMode}
+        onToggleReducedMotion={() => setReducedMotion((value) => !value)}
+        onToggleTextOnly={() => setTextOnlyFallback((value) => !value)}
+        onToggleHighContrast={() => setHighContrast((value) => !value)}
+        onToggleEmotionalSafety={() => setEmotionalSafetyMode((value) => !value)}
+        onToggleLocalOnly={() => setLocalOnlyMode((value) => !value)}
       />
-      <ReplayControls isReplaying={isReplaying} onReplay={startReplay} onStop={() => setIsReplaying(false)} />
-      <SpatialMemoryCard star={openCardStar} onClose={() => setOpenCardStar(undefined)} onBlur={() => setBlurredStarIds((ids) => Array.from(new Set([...ids, openCardStar?.id ?? ""])).filter(Boolean))} />
+      <ReplayControls isReplaying={isReplaying} onStop={() => setIsReplaying(false)} />
+      <SpatialMemoryCard
+        star={openCardStar}
+        onClose={() => setOpenCardStar(undefined)}
+        onBlur={() => setBlurredStarIds((ids) => Array.from(new Set([...ids, openCardStar?.id ?? ""])).filter(Boolean))}
+        onHide={() => {
+          if (!openCardStar) return;
+          setHiddenStarIds((ids) => Array.from(new Set([...ids, openCardStar.id])));
+          setOpenCardStar(undefined);
+        }}
+        onDelete={() => {
+          if (!openCardStar) return;
+          setHiddenStarIds((ids) => Array.from(new Set([...ids, openCardStar.id])));
+          setOpenCardStar(undefined);
+        }}
+      />
 
       {mode === "spatialARVR" && (
         <section className="pointer-events-auto fixed bottom-5 left-1/2 z-30 w-[min(92vw,760px)] -translate-x-1/2 rounded-3xl border border-cyan-100/15 bg-slate-950/80 p-5 text-sm text-cyan-50 shadow-2xl backdrop-blur-2xl">
