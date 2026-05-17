@@ -1,8 +1,14 @@
-/* URAI production home overlay: status, companion, living 3D depth, and entry affordance. */
+/* URAI production home overlay: status, companion, living 3D depth, and corrected world composition. */
 
 .urai-hero-home {
   cursor: pointer;
   perspective: 1200px;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(185, 255, 255, .18), transparent 10%),
+    radial-gradient(ellipse at 50% 46%, rgba(78, 232, 242, .13), transparent 32%),
+    radial-gradient(ellipse at 70% 57%, rgba(255, 229, 138, .08), transparent 28%),
+    radial-gradient(ellipse at 31% 57%, rgba(138, 99, 255, .08), transparent 29%),
+    linear-gradient(180deg, #00030a 0%, #06192d 43%, #061523 61%, #000106 100%) !important;
 }
 
 .urai-hero-home .urai-hero-hit::before,
@@ -43,9 +49,7 @@
 
 .urai-home-panel span,
 .urai-home-panel strong,
-.urai-home-panel em {
-  display: block;
-}
+.urai-home-panel em { display: block; }
 
 .urai-home-panel span {
   font-size: 11px;
@@ -70,32 +74,95 @@
   color: rgba(224, 245, 255, .80);
 }
 
-.urai-hero-copy {
-  bottom: max(24px, env(safe-area-inset-bottom)) !important;
-  width: min(560px, calc(100vw - 36px));
-  padding: 15px 20px 17px;
-  border-radius: 999px;
-  border: 1px solid rgba(198, 239, 255, .16);
-  background: rgba(2, 8, 20, .48);
-  box-shadow: 0 18px 70px rgba(0,0,0,.34), 0 0 42px rgba(78,232,242,.10);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+.urai-hero-terrain {
+  height: 49vh !important;
+  min-height: 360px !important;
+  transform: translateY(2.5vh);
+  filter: saturate(1.06) contrast(1.03);
 }
 
-.urai-hero-copy span {
-  color: rgba(191, 233, 255, .72) !important;
-  opacity: 1 !important;
+.urai-hero-horizon-glow {
+  top: -28% !important;
+  height: 34vh !important;
+  min-height: 230px !important;
+  opacity: .82 !important;
+  filter: blur(34px) !important;
 }
 
-.urai-hero-copy strong {
-  color: rgba(246, 253, 255, .96);
-  font-size: clamp(1.05rem, 2.2vw, 1.45rem) !important;
-  letter-spacing: -.025em;
+.urai-hero-terrain-svg {
+  transform: translateY(4.5vh) scaleY(.94);
+  transform-origin: 50% 100%;
+  opacity: .98;
 }
 
-.urai-hero-copy em {
-  color: rgba(219, 245, 255, .72);
-  opacity: 1 !important;
+.urai-hero-foreground-fade {
+  bottom: -9% !important;
+  height: 72% !important;
+  filter: blur(20px) !important;
+}
+
+.urai-hero-orb-system { transform-origin: 50% 37.5% !important; }
+
+.urai-hero-orb,
+.urai-hero-orb-halo,
+.urai-hero-orb-ring { top: 37.5% !important; }
+
+.urai-hero-orb {
+  width: clamp(132px, 12vw, 178px) !important;
+  height: clamp(132px, 12vw, 178px) !important;
+  box-shadow:
+    inset -24px -28px 46px rgba(0,10,30,.62),
+    inset 14px 12px 32px rgba(255,255,255,.28),
+    0 0 52px rgba(212,255,255,.82),
+    0 0 175px rgba(78,232,242,.38),
+    0 0 310px rgba(255,229,138,.18) !important;
+  animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
+}
+
+.urai-hero-orb-halo {
+  width: clamp(390px, 45vw, 690px) !important;
+  height: clamp(390px, 45vw, 690px) !important;
+  opacity: .84;
+}
+
+.urai-hero-orb-beam {
+  top: 39.2% !important;
+  height: 53vh !important;
+  min-height: 390px !important;
+  width: clamp(126px, 10vw, 170px) !important;
+  opacity: .64 !important;
+  filter: blur(11px) !important;
+}
+
+.urai-hero-orb-satellite {
+  top: calc(37.5% + 12px) !important;
+  left: calc(50% + clamp(52px, 5vw, 74px)) !important;
+  animation: uraiHomeSatellitePulse 4.2s ease-in-out infinite;
+}
+
+.urai-hero-body-aura {
+  top: 61.5% !important;
+  width: clamp(320px, 33vw, 500px) !important;
+  height: clamp(430px, 58vh, 660px) !important;
+  opacity: .86;
+}
+
+.urai-hero-body-beam {
+  top: 43.5% !important;
+  height: 55vh !important;
+  min-height: 410px !important;
+  width: clamp(120px, 9.2vw, 160px) !important;
+  opacity: .9 !important;
+  animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
+}
+
+.urai-hero-body-svg {
+  top: 65.5% !important;
+  width: clamp(190px, 18vw, 280px) !important;
+  height: clamp(390px, 54vh, 590px) !important;
+  opacity: .83 !important;
+  filter: drop-shadow(0 0 34px rgba(155,231,255,.22)) !important;
+  animation: uraiHomeAvatarBreath 7.2s ease-in-out infinite;
 }
 
 .urai-hero-sky::before {
@@ -103,7 +170,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 46% 24%, rgba(190,246,255,.08), transparent 18%),
+    radial-gradient(ellipse at 46% 23%, rgba(190,246,255,.08), transparent 18%),
     radial-gradient(ellipse at 63% 18%, rgba(200,180,255,.065), transparent 18%),
     linear-gradient(115deg, transparent 24%, rgba(145,220,255,.06) 25%, transparent 27%, transparent 50%, rgba(255,232,160,.04) 51%, transparent 53%);
   opacity: .9;
@@ -116,33 +183,31 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 43%, rgba(255,255,255,.12), transparent 9%),
+    radial-gradient(circle at 50% 37.5%, rgba(255,255,255,.12), transparent 9%),
     radial-gradient(ellipse at 50% 62%, rgba(90,220,240,.10), transparent 28%);
   mix-blend-mode: screen;
   opacity: .78;
 }
 
-.urai-hero-orb,
-.urai-hero-body-svg,
-.urai-hero-body-beam {
-  animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
+.urai-hero-copy {
+  bottom: max(24px, env(safe-area-inset-bottom)) !important;
+  width: min(560px, calc(100vw - 36px));
+  padding: 15px 20px 17px;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 239, 255, .16);
+  background: rgba(2, 8, 20, .48);
+  box-shadow: 0 18px 70px rgba(0,0,0,.34), 0 0 42px rgba(78,232,242,.10);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
-.urai-hero-orb-satellite {
-  animation: uraiHomeSatellitePulse 4.2s ease-in-out infinite;
-}
+.urai-hero-copy span { color: rgba(191, 233, 255, .72) !important; opacity: 1 !important; }
+.urai-hero-copy strong { color: rgba(246, 253, 255, .96); font-size: clamp(1.05rem, 2.2vw, 1.45rem) !important; letter-spacing: -.025em; }
+.urai-hero-copy em { color: rgba(219, 245, 255, .72); opacity: 1 !important; }
 
-.urai-hero-orb-ring-a {
-  animation: uraiHomeRingA 16s linear infinite;
-}
-
-.urai-hero-orb-ring-b {
-  animation: uraiHomeRingB 21s linear infinite reverse;
-}
-
-.urai-hero-terrain {
-  animation: uraiHomeTerrainBreath 9s ease-in-out infinite;
-}
+.urai-hero-orb-ring-a { animation: uraiHomeRingA 16s linear infinite; }
+.urai-hero-orb-ring-b { animation: uraiHomeRingB 21s linear infinite reverse; }
+.urai-hero-terrain { animation: uraiHomeTerrainBreath 9s ease-in-out infinite; }
 
 @keyframes uraiHomeAtmosphereDrift {
   from { transform: translate3d(-1.5%, -1%, 0) scale(1); opacity: .72; }
@@ -150,13 +215,18 @@
 }
 
 @keyframes uraiHomeTerrainBreath {
-  0%, 100% { transform: translateY(0); filter: saturate(1); }
-  50% { transform: translateY(-8px); filter: saturate(1.08); }
+  0%, 100% { transform: translateY(2.5vh); filter: saturate(1.06) contrast(1.03); }
+  50% { transform: translateY(1.2vh); filter: saturate(1.12) contrast(1.05); }
 }
 
 @keyframes uraiHomeOrbLivingBreath {
   0%, 100% { filter: brightness(1) saturate(1); }
   50% { filter: brightness(1.13) saturate(1.08); }
+}
+
+@keyframes uraiHomeAvatarBreath {
+  0%, 100% { transform: translate(-50%, -50%) scaleY(1); opacity: .78; }
+  50% { transform: translate(-50%, -50%) scaleY(1.018); opacity: .9; }
 }
 
 @keyframes uraiHomeSatellitePulse {
@@ -175,22 +245,16 @@
 }
 
 @media (max-width: 760px) {
-  .urai-home-panel-left {
-    left: 14px;
-    right: 14px;
-    top: 14px;
-    width: auto;
-    padding: 14px 16px;
-  }
-
-  .urai-home-panel-right {
-    display: none;
-  }
-
-  .urai-hero-copy {
-    bottom: max(16px, env(safe-area-inset-bottom)) !important;
-    padding: 12px 14px 13px;
-  }
+  .urai-home-panel-left { left: 14px; right: 14px; top: 14px; width: auto; padding: 14px 16px; }
+  .urai-home-panel-right { display: none; }
+  .urai-hero-copy { bottom: max(16px, env(safe-area-inset-bottom)) !important; padding: 12px 14px 13px; }
+  .urai-hero-terrain { height: 52vh !important; min-height: 360px !important; }
+  .urai-hero-orb,
+  .urai-hero-orb-halo,
+  .urai-hero-orb-ring { top: 39% !important; }
+  .urai-hero-orb { width: 116px !important; height: 116px !important; }
+  .urai-hero-orb-halo { width: 340px !important; height: 340px !important; }
+  .urai-hero-body-svg { top: 65% !important; width: 180px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
