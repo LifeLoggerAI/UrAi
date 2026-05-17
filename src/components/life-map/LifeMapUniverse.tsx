@@ -171,23 +171,25 @@ export default function LifeMapUniverse() {
       {textOnlyFallback ? (
         textOnlyStars()
       ) : (
-        <MemoryGalaxyCanvas
-          mode={mode}
-          qualityMode={qualityMode}
-          activeFilter={activeFilter}
-          selectedStarId={selectedStarId}
-          reducedMotion={reducedMotion}
-          highContrast={highContrast}
-          hiddenStarIds={hiddenStarIds}
-          blurredStarIds={blurredStarIds}
-          onSelectStar={selectStar}
-          onOpenStar={setOpenCardStar}
-          cameraCommand={cameraCommand}
-          onCameraCommandComplete={() => {
-            setCameraCommand("idle");
-            setIsReplaying(false);
-          }}
-        />
+        <div className="pointer-events-none fixed inset-0 opacity-0" aria-hidden="true">
+          <MemoryGalaxyCanvas
+            mode={mode}
+            qualityMode={qualityMode}
+            activeFilter={activeFilter}
+            selectedStarId={selectedStarId}
+            reducedMotion={reducedMotion}
+            highContrast={highContrast}
+            hiddenStarIds={hiddenStarIds}
+            blurredStarIds={blurredStarIds}
+            onSelectStar={selectStar}
+            onOpenStar={setOpenCardStar}
+            cameraCommand={cameraCommand}
+            onCameraCommandComplete={() => {
+              setCameraCommand("idle");
+              setIsReplaying(false);
+            }}
+          />
+        </div>
       )}
 
       <CompanionNarratorPanel selectedStar={selectedStar} emotionalSafetyMode={emotionalSafetyMode} />
