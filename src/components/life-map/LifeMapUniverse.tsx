@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import ImmersiveWorld3D from "@/components/urai/world/ImmersiveWorld3D";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData, selectedBlueFogMemory, spatialARVRScaffold } from "@/lib/life-map/mock-data";
 import CompanionNarratorPanel from "./CompanionNarratorPanel";
@@ -142,13 +143,14 @@ export default function LifeMapUniverse() {
   return (
     <main className={`relative min-h-screen overflow-hidden bg-slate-950 text-cyan-50 ${highContrast ? "contrast-125" : ""}`} aria-label="URAI Life Map emotional planetarium">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(191,233,255,0.12),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.3),#020617)]" />
+      {!textOnlyFallback && <ImmersiveWorld3D mode="life-map" activeLabel={`${modeLabels[mode]} • ${activeFilter}`} selectedLabel={selectedStar.title} />}
 
       <header className="pointer-events-none fixed left-0 right-0 top-0 z-20 flex items-start justify-center px-4 pt-5">
         <Link href="/" className="pointer-events-auto fixed left-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-cyan-100/15 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10" aria-label="Back to URAI home">←</Link>
         <div className="rounded-3xl border border-cyan-100/10 bg-slate-950/55 px-6 py-3 text-center shadow-[0_0_42px_rgba(2,132,199,0.16)] backdrop-blur-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-100/60">URAI LIFE MAP</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{modeLabels[mode]}</h1>
-          <p className="mt-1 text-xs text-cyan-100/50">15 Memory Stars • 8 Timeline Constellations • map</p>
+          <p className="mt-1 text-xs text-cyan-100/50">15 Memory Stars • 8 Timeline Constellations • spatial world</p>
         </div>
       </header>
 
