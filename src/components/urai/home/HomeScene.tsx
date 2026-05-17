@@ -1,28 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-
-type AscentPhase = "idle" | "ignition" | "lift" | "portal" | "emergence" | "settle";
-
-const cinematicEase = [0.16, 1, 0.3, 1] as const;
-const softEase = [0.22, 0.86, 0.18, 1] as const;
-
-function useReducedMotionSafe() {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  return reduced;
-}
+import { ASCENT_TIMING_MS, cinematicEase, softEase, type AscentPhase } from "@/components/urai/motion/ascentMotion";
+import { useReducedMotionSafe } from "@/components/urai/hooks/useReducedMotionSafe";
 
 function StarParticleField({ density = 1, className = "" }: { density?: number; className?: string }) {
   const reduced = useReducedMotionSafe();
@@ -154,11 +136,11 @@ export function HomeScene() {
       return;
     }
     setPhase("ignition");
-    window.setTimeout(() => setPhase("lift"), 220);
-    window.setTimeout(() => setPhase("portal"), 620);
-    window.setTimeout(() => setPhase("emergence"), 1120);
-    window.setTimeout(() => setPhase("settle"), 1650);
-    window.setTimeout(() => router.push("/life-map"), 2100);
+    window.setTimeout(() => setPhase("lift"), ASCENT_TIMING_MS.ignition);
+    window.setTimeout(() => setPhase("portal"), ASCENT_TIMING_MS.lift);
+    window.setTimeout(() => setPhase("emergence"), ASCENT_TIMING_MS.portal);
+    window.setTimeout(() => setPhase("settle"), ASCENT_TIMING_MS.emergence);
+    window.setTimeout(() => router.push("/life-map"), ASCENT_TIMING_MS.settle);
   };
 
   const inTransition = phase !== "idle";
