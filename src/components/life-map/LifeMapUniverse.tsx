@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData, selectedBlueFogMemory, spatialARVRScaffold } from "@/lib/life-map/mock-data";
@@ -143,7 +144,7 @@ export default function LifeMapUniverse() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(191,233,255,0.12),transparent_28%),linear-gradient(180deg,rgba(2,6,23,0.3),#020617)]" />
 
       <header className="pointer-events-none fixed left-0 right-0 top-0 z-20 flex items-start justify-center px-4 pt-5">
-        <a href="/" className="pointer-events-auto fixed left-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-cyan-100/15 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10" aria-label="Back to URAI home">←</a>
+        <Link href="/" className="pointer-events-auto fixed left-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-cyan-100/15 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10" aria-label="Back to URAI home">←</Link>
         <div className="rounded-3xl border border-cyan-100/10 bg-slate-950/55 px-6 py-3 text-center shadow-[0_0_42px_rgba(2,132,199,0.16)] backdrop-blur-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-100/60">URAI LIFE MAP</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{modeLabels[mode]}</h1>
@@ -188,41 +189,50 @@ export default function LifeMapUniverse() {
       )}
 
       <CompanionNarratorPanel selectedStar={selectedStar} emotionalSafetyMode={emotionalSafetyMode} />
+      <LifeMapFilterBar activeFilter={activeFilter} onChange={setActiveFilter} />
+      <LifeMapControls
+        selectedStar={selectedStar}
+        mode={mode}
+        onRecenter={recenter}
+        onReplay={startReplay}
+        onMirror={startMirror}
+        onOpenCard={() => setOpenCardStar(selectedStar)}
+        onHideThread={hideSelectedThread}
+        onExport={openScrollExport}
+        isReplaying={isReplaying}
+      />
       <QualitySettingsPanel
         qualityMode={qualityMode}
+        setQualityMode={setQualityMode}
         reducedMotion={reducedMotion}
-        highContrast={highContrast}
+        setReducedMotion={setReducedMotion}
         textOnlyFallback={textOnlyFallback}
+        setTextOnlyFallback={setTextOnlyFallback}
+        highContrast={highContrast}
+        setHighContrast={setHighContrast}
         emotionalSafetyMode={emotionalSafetyMode}
+        setEmotionalSafetyMode={setEmotionalSafetyMode}
         localOnlyMode={localOnlyMode}
-        onQualityChange={setQualityMode}
-        onToggleReducedMotion={() => setReducedMotion((value) => !value)}
-        onToggleHighContrast={() => setHighContrast((value) => !value)}
-        onToggleTextOnly={() => setTextOnlyFallback((value) => !value)}
-        onToggleEmotionalSafety={() => setEmotionalSafetyMode((value) => !value)}
-        onToggleLocalOnly={() => setLocalOnlyMode((value) => !value)}
+        setLocalOnlyMode={setLocalOnlyMode}
       />
-      <ReplayControls isReplaying={isReplaying} onStop={() => { setIsReplaying(false); setCameraCommand("idle"); }} />
-      <LifeMapControls onHideThread={hideSelectedThread} onReplay={startReplay} onCreateScroll={openScrollExport} onMirror={startMirror} onRecenter={recenter} />
-      <LifeMapFilterBar activeFilter={activeFilter} onChange={setActiveFilter} />
-      <SpatialMemoryCard star={openCardStar} onClose={() => setOpenCardStar(undefined)} onBlur={() => setBlurredStarIds((ids) => Array.from(new Set([...ids, selectedStar.id])))} onHide={() => setHiddenStarIds((ids) => Array.from(new Set([...ids, selectedStar.id])))} onDelete={() => { setHiddenStarIds((ids) => Array.from(new Set([...ids, selectedStar.id]))); setOpenCardStar(undefined); }} />
+      <ReplayControls isReplaying={isReplaying} onReplay={startReplay} onStop={() => setIsReplaying(false)} />
+      <SpatialMemoryCard star={openCardStar} onClose={() => setOpenCardStar(undefined)} onBlur={() => setBlurredStarIds((ids) => Array.from(new Set([...ids, openCardStar?.id ?? ""])).filter(Boolean))} />
+
+      {mode === "spatialARVR" && (
+        <section className="pointer-events-auto fixed bottom-5 left-1/2 z-30 w-[min(92vw,760px)] -translate-x-1/2 rounded-3xl border border-cyan-100/15 bg-slate-950/80 p-5 text-sm text-cyan-50 shadow-2xl backdrop-blur-2xl">
+          <div className="text-xs uppercase tracking-[0.28em] text-cyan-100/45">Spatial AR/VR scaffold</div>
+          <p className="mt-2 text-cyan-100/75">{spatialARVRScaffold.webXR}</p>
+          <p className="mt-1 text-cyan-100/55">{spatialARVRScaffold.mobileAR}</p>
+        </section>
+      )}
 
       {exportOpen && (
-        <div className="pointer-events-auto fixed inset-0 z-50 grid place-items-center bg-slate-950/70 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Create Life Map scroll export">
-          <section className="w-[min(480px,100%)] rounded-3xl border border-cyan-100/15 bg-slate-950 p-6 text-cyan-50 shadow-[0_0_70px_rgba(14,165,233,0.22)]">
-            <p className="text-xs uppercase tracking-[0.28em] text-cyan-100/50">Create scroll</p>
-            <h2 className="mt-2 text-2xl font-semibold">Life Map Scroll Export</h2>
-            <p className="mt-3 text-sm leading-6 text-cyan-100/70">Export scaffold is ready. It will anonymize shareable constellation moments by default and keep private/local-only stars protected.</p>
-            <div className="mt-5 rounded-2xl bg-white/[0.04] p-4 text-xs text-cyan-100/65">
-              <p>Source: {selectedStar.title}</p>
-              <p>Privacy: anonymized export</p>
-              <p>AR/VR future: {spatialARVRScaffold.spatialPortals}</p>
-            </div>
-            <div className="mt-5 flex justify-end gap-2">
-              <button onClick={() => setExportOpen(false)} className="rounded-full border border-cyan-100/15 px-4 py-2 text-sm hover:bg-white/10">Close</button>
-              <button onClick={() => setExportOpen(false)} className="rounded-full bg-cyan-100 px-4 py-2 text-sm font-medium text-slate-950">Save draft</button>
-            </div>
-          </section>
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-5 backdrop-blur-xl">
+          <div className="max-w-lg rounded-3xl border border-cyan-100/15 bg-slate-950 p-6 text-cyan-50 shadow-2xl">
+            <h2 className="text-xl font-semibold">Create symbolic scroll</h2>
+            <p className="mt-2 text-sm text-cyan-100/65">URAI will eventually export an anonymized mythic PDF or video scroll. For now, this is a local-only preview gate.</p>
+            <button className="mt-5 rounded-full bg-cyan-100 px-5 py-2 text-sm font-semibold text-slate-950" onClick={() => setExportOpen(false)}>Close</button>
+          </div>
         </div>
       )}
     </main>
