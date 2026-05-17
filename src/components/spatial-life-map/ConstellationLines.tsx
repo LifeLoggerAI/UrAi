@@ -15,15 +15,31 @@ export default function ConstellationLines({ stars, constellations, selectedCons
   const groupRef = useRef<THREE.Group>(null);
   const starMap = useMemo(() => new Map(stars.map((star) => [star.id, star])), [stars]);
 
-  const lines = useMemo(() => {
+  const lineObjects = useMemo(() => {
     return constellations.flatMap((constellation) => {
       const points = constellation.stars.map((id) => starMap.get(id)).filter(Boolean) as LifeMapStar[];
       return points.slice(1).map((star, index) => {
         const previous = points[index];
-        return { id: `${constellation.id}-${previous.id}-${star.id}`, constellation, from: previous.position3D, to: star.position3D };
+        const active = selectedConstellationId === constellation.id;
+        const geometry = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(previous.position3D.x, previous.position3D.y, previous.position3D.z),
+          new THREE.Vector3(star.position3D.x, star.position3D.y, star.position3D.z),
+        ]);
+        const material = new THREE.LineBasicMaterial({
+          color: constellation.color,
+          transparent: true,
+          opacity: active ? 0.52 : 0.22,
+          linewidth: active ? 2 : 1,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+        });
+        return {
+          id: `${constellation.id}-${previous.id}-${star.id}`,
+          object: new THREE.Line(geometry, material),
+        };
       });
     });
-  }, [constellations, starMap]);
+  }, [constellations, selectedConstellationId, starMap]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -35,18 +51,9 @@ export default function ConstellationLines({ stars, constellations, selectedCons
 
   return (
     <group ref={groupRef}>
-      {lines.map((line) => {
-        const geometry = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(line.from.x, line.from.y, line.from.z),
-          new THREE.Vector3(line.to.x, line.to.y, line.to.z),
-        ]);
-        const active = selectedConstellationId === line.constellation.id;
-        return (
-          <line key={line.id} geometry={geometry}>
-            <lineBasicMaterial color={line.constellation.color} transparent opacity={active ? 0.52 : 0.22} linewidth={active ? 2 : 1} blending={THREE.AdditiveBlending} depthWrite={false} />
-          </line>
-        );
-      })}
+      {lineObjects.map((line) => (
+        <primitive key={line.id} object={line.object} />
+      ))}
     </group>
   );
 }
