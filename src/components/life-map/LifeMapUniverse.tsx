@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData, selectedBlueFogMemory, spatialARVRScaffold } from "@/lib/life-map/mock-data";
 import { formatMemoryConfidence } from "@/lib/life-map/formatters";
@@ -33,7 +33,7 @@ type LifeMapView = "galaxy" | "focus" | "replay";
 
 interface LifeMapUniverseProps {
   initialView?: LifeMapView;
-  initialOverlay?: Exclude<OverlayKind, null>;
+  initialOverlay?: OverlayKind;
 }
 
 const modeLabels: Record<LifeMapMode, string> = {
@@ -76,48 +76,18 @@ export default function LifeMapUniverse({ initialView = "galaxy", initialOverlay
     return () => window.clearTimeout(timer);
   }, []);
 
-  function selectStar(star: MemoryStar) {
+  const selectStar = useCallback((star: MemoryStar) => {
     setSelectedStarId(star.id);
     setOpenCardStar(undefined);
     setView("focus");
     setCameraCommand("focus");
-  }
+  }, []);
 
-  function selectStarByOffset(offset: number) {
+  const selectStarByOffset = useCallback((offset: number) => {
     const currentIndex = Math.max(0, visibleStars.findIndex((star) => star.id === selectedStarId));
     const nextStar = visibleStars[(currentIndex + offset + visibleStars.length) % visibleStars.length];
     if (nextStar) selectStar(nextStar);
-  }
-
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        event.preventDefault();
-        selectStarByOffset(1);
-      }
-      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        event.preventDefault();
-        selectStarByOffset(-1);
-      }
-      if (event.key === "Enter") {
-        event.preventDefault();
-        setOpenCardStar(selectedStar);
-      }
-      if (event.key.toLowerCase() === "r") startReplay();
-      if (event.key.toLowerCase() === "m") startMirror();
-      if (event.key.toLowerCase() === "c") openScrollExport();
-      if (event.key === "Escape") {
-        setOpenCardStar(undefined);
-        setExportOpen(false);
-        setOverlay(null);
-        if (view !== "galaxy") returnToGalaxy();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedStar, selectedStarId, view, visibleStars]);
+  }, [selectedStarId, selectStar, visibleStars]);
 
   function hideSelectedThread() {
     const threadId = selectedStar.constellationId;
@@ -171,6 +141,36 @@ export default function LifeMapUniverse({ initialView = "galaxy", initialOverlay
   function openScrollExport() {
     setExportOpen(true);
   }
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLSelectElement) return;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        event.preventDefault();
+        selectStarByOffset(1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        event.preventDefault();
+        selectStarByOffset(-1);
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        setOpenCardStar(selectedStar);
+      }
+      if (event.key.toLowerCase() === "r") startReplay();
+      if (event.key.toLowerCase() === "m") startMirror();
+      if (event.key.toLowerCase() === "c") openScrollExport();
+      if (event.key === "Escape") {
+        setOpenCardStar(undefined);
+        setExportOpen(false);
+        setOverlay(null);
+        if (view !== "galaxy") returnToGalaxy();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectStarByOffset, selectedStar, view]);
 
   function textOnlyStars() {
     return (
