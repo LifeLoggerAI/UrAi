@@ -1,9 +1,10 @@
-import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
+import { HomeScene } from "@/components/urai/home/HomeScene";
 
 export default function Page() {
-  return <UraiResolvedHomeScene />;
+  return <HomeScene />;
 }
 
 export const metadata = {
-  description: "URAI companion shell for early access, narrator, aura, and Life Map previews.",
+  title: "URAI Inner Sky Shrine",
+  description: "URAI cinematic home shrine with orb, sky, ground, and Memory Galaxy gateway.",
 };

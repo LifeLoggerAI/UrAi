@@ -1,11 +1,5 @@
-import SystemRoutePage from "@/components/SystemRoutePage";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export default function ReplayPage() {
-  return (
-    <SystemRoutePage
-      title="URAI Replay"
-      description="Replay is the URAI felt-time review shell for revisiting meaningful moments, narrator reflections, and recovery loops."
-      status="demo"
-    />
-  );
+  return <LifeMapUniverse initialView="replay" />;
 }
