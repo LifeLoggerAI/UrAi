@@ -1,48 +1,37 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
-
-type WaitlistRequest = {
-  email?: unknown;
-  source?: unknown;
-  handle?: unknown;
-  intent?: unknown;
-};
-
-function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function cleanOptionalText(value: unknown, maxLength: number): string | undefined {
-  if (typeof value !== "string") return undefined;
-  const cleaned = value.trim().slice(0, maxLength);
-  return cleaned || undefined;
-}
-
-function waitlistIdForEmail(email: string): string {
-  return email.replace(/[^a-z0-9._-]/g, "_").slice(0, 180);
-}
+import { COLLECTIONS } from "@/lib/shared/urai-contracts";
+import {
+  checkWaitlistRateLimit,
+  normalizeWaitlistSignup,
+  rateLimitKeyForRequest,
+  waitlistIdForEmail,
+  type WaitlistRequest
+} from "@/lib/waitlist";
 
 export async function POST(req: Request) {
   try {
-    const body = (await req.json()) as WaitlistRequest;
-    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
-    const source = cleanOptionalText(body.source, 120) ?? "unknown";
-    const handle = cleanOptionalText(body.handle, 80);
-    const intent = cleanOptionalText(body.intent, 120);
+    const limit = checkWaitlistRateLimit(rateLimitKeyForRequest(req));
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Too many waitlist attempts. Please try again soon." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
+      );
+    }
 
-    if (!isValidEmail(email)) {
+    const body = (await req.json()) as WaitlistRequest;
+    const normalized = normalizeWaitlistSignup(body);
+
+    if (!normalized) {
       return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
     }
 
     const now = new Date().toISOString();
     const signup = {
-      email,
-      source,
-      handle,
-      intent,
+      ...normalized,
       createdAt: now,
       updatedAt: now,
-      status: "joined"
+      status: "joined" as const
     };
 
     const db = getAdminDb();
@@ -50,18 +39,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, mode: "dry-run", signup });
     }
 
-    const docId = waitlistIdForEmail(email);
-    const docRef = db.collection("waitlistSignups").doc(docId);
+    const docId = waitlistIdForEmail(normalized.email);
+    const docRef = db.collection(COLLECTIONS.waitlistSignups).doc(docId);
     const existing = await docRef.get();
 
     if (existing.exists) {
       await docRef.set(
         {
-          email,
+          email: normalized.email,
           updatedAt: now,
-          lastSource: source,
-          lastHandle: handle,
-          lastIntent: intent,
+          lastSource: normalized.source,
+          lastHandle: normalized.handle,
+          lastIntent: normalized.intent,
           status: "joined"
         },
         { merge: true }

@@ -1,12 +1,14 @@
 # URAI
 
-URAI is a passive emotional operating system prototype: a symbolic life mirror, mood forecast layer, memory constellation, and companion narrator experience.
+URAI V1 is a public demo spine for a future passive emotional operating system: a symbolic life mirror, mood forecast layer, memory constellation, and companion narrator experience.
+
+This repository is launch-focused and intentionally conservative. Full passive sensing, therapy/diagnosis, marketplace, AR/VR, B2B, and studio/export systems are **not live in V1** unless they are explicitly implemented, consent-gated, tested, and documented.
 
 The current V1 repo focus is the **demo spine**:
 
 - `/` cinematic home scene
 - `/u/adamclamp` public constellation demo
-- `/api/companion` companion narrator endpoint
+- `/api/companion` deterministic mocked companion narrator endpoint with safety boundaries
 - `/api/waitlist` early-access capture endpoint
 - seeded demo data for memory blooms, timeline stars, mood forecast, and weekly reflection
 - Firebase rules/index scaffolding for V1 launch collections
@@ -35,6 +37,7 @@ Run the V1 validation path before deploying or sharing the demo:
 
 ```bash
 npm run check:v1
+npm run check:firestore-contract
 npm run seed:demo
 npm run test:unit
 npm run check:types
@@ -58,12 +61,13 @@ npm run test:e2e
 | Command | Purpose |
 | --- | --- |
 | `npm run check:v1` | Verifies the required V1 files, scripts, dependencies, and Firebase config exist |
+| `npm run check:firestore-contract` | Verifies required Firestore rule matches and server-only waitlist posture; warns on remaining `userId` index drift |
 | `npm run seed:demo` | Writes `tmp/urai-demo-seed.json` |
 | `npm run seed:firestore` | Writes demo seed data to Firestore when Firebase Admin env vars are configured |
 | `npm run waitlist:export` | Exports `waitlistSignups` to `tmp/waitlist-export.csv` or a dry-run sample row locally |
 | `npm run test:smoke` | Runs launch-critical Playwright smoke tests |
 | `npm run test:e2e` | Runs the full Playwright suite across configured desktop and mobile projects |
-| `npm run preflight` | Runs V1 sanity check, typecheck, lint, unit tests, and build |
+| `npm run preflight` | Runs V1 sanity check, Firestore contract audit, typecheck, lint, unit tests, and build |
 
 ## Important lockfile note
 
@@ -114,7 +118,7 @@ The waitlist route works in local dry-run mode without Admin credentials. With A
 | --- | --- |
 | `/` | Home demo spine with symbolic ground, mood forecast, reflection, companion chat, and waitlist form |
 | `/u/adamclamp` | Public constellation demo with blooms, timeline stars, forecast, reflection, and waitlist CTA |
-| `/api/companion` | POST endpoint for mocked companion narrator responses |
+| `/api/companion` | POST endpoint for deterministic mocked companion narrator responses with safety boundaries |
 | `/api/waitlist` | POST endpoint for early-access signups |
 
 ## Firebase deploy
@@ -128,6 +132,12 @@ firebase deploy --only firestore:rules,firestore:indexes
 See:
 
 - `docs/API_V1.md`
+- `docs/REPO_SYSTEM_MAP.md`
+- `docs/ENV_REGISTRY.md`
+- `docs/FEATURE_STATUS_MATRIX.md`
+- `docs/LAUNCH_CHECKLIST.md`
+- `docs/PRIORITY_BACKLOG.md`
+- `docs/PRIVACY_SECURITY_CHECKLIST.md`
 - `docs/V1_DEPLOY_CHECKLIST.md`
 - `docs/V1_QA_CHECKLIST.md`
 - `docs/V1_MANUAL_TESTS.md`

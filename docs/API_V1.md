@@ -1,10 +1,12 @@
 # URAI V1 API
 
-These endpoints support the V1 demo spine.
+These endpoints support the V1 public demo spine. They do not represent the full future passive-sensing product.
 
 ## POST /api/companion
 
-Returns a mocked companion narrator response.
+Returns a deterministic mocked companion narrator response with safety boundaries.
+
+The companion is not a therapist, doctor, lawyer, crisis service, or diagnostic system. It should stay reflective and implementation-focused until a live model integration has safety tests, rate limiting, consent-aware data access, and review.
 
 ### Request
 
@@ -28,12 +30,29 @@ Returns a mocked companion narrator response.
 }
 ```
 
+### Safety response example
+
+Diagnosis, prescription, legal, medical, or crisis-like phrasing returns a boundary response rather than advice.
+
+```json
+{
+  "reply": "URAI Companion is a reflective demo guide, not a therapist...",
+  "moodTag": "threshold",
+  "insights": [
+    "Keep companion output reflective, not clinical.",
+    "Use URAI as a pattern journal, not a diagnostic authority."
+  ]
+}
+```
+
 ### Behavior
 
 - Empty message returns `400`.
 - Build/ship/deploy language returns `focused`.
 - Stuck/overwhelmed language returns `tender`.
 - Vision/investor/roadmap language returns `threshold`.
+- Diagnosis/clinical/legal/medical authority requests return a safety boundary.
+- Crisis/self-harm language returns crisis-safe fallback copy.
 - Default response returns `calm`.
 
 ## POST /api/waitlist
@@ -103,10 +122,25 @@ Repeated signups update the existing document and return:
 }
 ```
 
+### Rate-limit response
+
+Repeated attempts from the same request key may return:
+
+```json
+{
+  "error": "Too many waitlist attempts. Please try again soon."
+}
+```
+
+Status: `429`
+
+Header: `Retry-After: <seconds>`
+
 ### Behavior
 
 - Invalid email returns `400`.
 - Email is normalized to lowercase.
 - Optional text fields are trimmed and length-limited.
 - Firestore document ID is derived from normalized email.
+- Duplicate signups update `updatedAt`, `lastSource`, `lastHandle`, `lastIntent`, and `status`.
 - Client Firestore rules deny direct reads/writes to `waitlistSignups`; writes happen through the server route.
