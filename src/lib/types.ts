@@ -35,6 +35,6 @@ export interface ConversationInsight {
   userId: string;
   insight: string;
   emotionTags: string[];
-  score: number;
+  memoryImportanceScore: number;
   createdAt: string;
 }
