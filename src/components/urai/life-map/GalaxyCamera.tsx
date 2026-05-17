@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 import { cinematicEase } from "@/components/urai/motion/ascentMotion";
 import type { GalaxyCameraState } from "@/components/urai/hooks/useGalaxyCamera";
 
-export function GalaxyCamera({ camera, dragging, children }: { camera: GalaxyCameraState; dragging?: boolean; children: React.ReactNode }) {
+export function GalaxyCamera({ camera, dragging, children }: { camera: GalaxyCameraState; dragging?: boolean; children: ReactNode }) {
   return (
     <motion.div
       className="urai-galaxy-camera"
