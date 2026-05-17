@@ -1,7 +1,9 @@
-import HomeScene from "@/components/HomeScene";
+import { HomeScene } from "@/components/urai/home/HomeScene";
 
 export const metadata = {
-  description: "URAI companion shell with WebGL sky, narrator, aura, early access, and Life Map preview.",
+  title: "URAI Inner Sky Shrine",
+  description:
+    "The cinematic URAI home shrine: orb, avatar, symbolic ground, ascent transition, and Memory Galaxy gateway.",
 };
 
 export default function HomePage() {
