@@ -22,6 +22,18 @@ service cloud.firestore {
       ];
     }
 
+    function canCreateOwnedDoc() {
+      return request.auth != null && request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    function canReadOwnedDoc() {
+      return request.auth != null && resource.data.ownerUid == request.auth.uid;
+    }
+
+    function canUpdateOwnedDoc() {
+      return canReadOwnedDoc() && request.resource.data.ownerUid == resource.data.ownerUid;
+    }
+
     function hasNoProtectedUserFields() {
       return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
         "entitlementTier",
@@ -73,9 +85,23 @@ service cloud.firestore {
     }
 
     match /dreams/{id} {
-      allow create: if request.auth != null && request.resource.data.ownerUid == request.auth.uid;
-      allow read: if request.auth != null && resource.data.ownerUid == request.auth.uid;
-      allow update: if request.auth != null && resource.data.ownerUid == request.auth.uid && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow create: if canCreateOwnedDoc();
+      allow read: if canReadOwnedDoc();
+      allow update: if canUpdateOwnedDoc();
+      allow delete: if false;
+    }
+
+    match /rituals/{id} {
+      allow create: if canCreateOwnedDoc();
+      allow read: if canReadOwnedDoc();
+      allow update: if canUpdateOwnedDoc();
+      allow delete: if false;
+    }
+
+    match /timelineEvents/{id} {
+      allow create: if canCreateOwnedDoc();
+      allow read: if canReadOwnedDoc();
+      allow update: if canUpdateOwnedDoc();
       allow delete: if false;
     }
 
