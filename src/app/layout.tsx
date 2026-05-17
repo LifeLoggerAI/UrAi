@@ -1,5 +1,6 @@
 import './globals.css';
 import './lifemap-polish.css';
+import '../styles/urai-cinematic.css';
 import React from 'react';
 import AppProviders from './providers';
 import type { Metadata } from 'next';
