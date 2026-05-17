@@ -7,7 +7,7 @@ import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition
 function HeroStars() {
   return (
     <div className="urai-hero-stars" aria-hidden>
-      {Array.from({ length: 90 }, (_, index) => (
+      {Array.from({ length: 120 }, (_, index) => (
         <span
           key={index}
           style={{
@@ -110,10 +110,20 @@ export function HomeScene() {
         <div className="urai-hero-orb-satellite" />
       </motion.div>
       <motion.div className="urai-hero-bloom" animate={{ opacity: phase === "portal" ? 0.9 : phase === "emergence" ? 0.35 : 0 }} transition={{ duration: 0.5, ease: cinematicEase }} aria-hidden />
+      <div className="urai-home-panel urai-home-panel-left" aria-hidden="true">
+        <span>URAI</span>
+        <strong>Inner Sky Shrine</strong>
+        <em>stable · quiet sky · memory gateway ready</em>
+      </div>
+      <div className="urai-home-panel urai-home-panel-right" aria-hidden="true">
+        <span>Companion</span>
+        <strong>Your sky is quiet, but awake.</strong>
+        <em>Tap the orb or sky to open the Memory Galaxy.</em>
+      </div>
       <div className="urai-hero-copy" aria-hidden>
         <span>URAI</span>
         <strong>Inner Sky Shrine</strong>
-        <em>Tap to enter memory</em>
+        <em>Tap the sky to enter memory</em>
       </div>
     </main>
   );
