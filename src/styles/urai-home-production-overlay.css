@@ -1,58 +1,73 @@
-/* URAI production home overlay: visible status, companion, entry affordance, and premium scene finish. */
+/* URAI production home overlay: status, companion, living 3D depth, and entry affordance. */
 
 .urai-hero-home {
   cursor: pointer;
+  perspective: 1200px;
 }
 
-.urai-hero-home .urai-hero-hit::before {
-  content: "URAI\A Inner Sky Shrine\A stable · quiet sky · memory gateway ready";
-  white-space: pre-line;
-  position: fixed;
-  left: max(20px, env(safe-area-inset-left));
-  top: max(18px, env(safe-area-inset-top));
-  width: min(330px, calc(100vw - 40px));
-  padding: 18px 20px;
-  border-radius: 28px;
-  border: 1px solid rgba(198, 239, 255, .18);
-  background:
-    radial-gradient(circle at 16% 10%, rgba(178, 246, 255, .12), transparent 35%),
-    linear-gradient(135deg, rgba(5, 11, 26, .76), rgba(8, 18, 38, .48));
-  box-shadow: 0 26px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.07);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  color: rgba(240, 253, 255, .92);
-  text-align: left;
-  font-size: 13px;
-  line-height: 1.55;
-  letter-spacing: .01em;
-  text-transform: none;
-  pointer-events: none;
-  text-shadow: 0 0 18px rgba(155,231,255,.16);
-}
-
+.urai-hero-home .urai-hero-hit::before,
 .urai-hero-home .urai-hero-hit::after {
-  content: "COMPANION\A Your sky is quiet, but awake.\A Tap the orb or sky to open the Memory Galaxy.";
-  white-space: pre-line;
+  content: none !important;
+  display: none !important;
+}
+
+.urai-home-panel {
   position: fixed;
-  right: max(20px, env(safe-area-inset-right));
-  top: max(18px, env(safe-area-inset-top));
+  z-index: 92;
   width: min(360px, calc(100vw - 40px));
   padding: 18px 20px;
   border-radius: 28px;
   border: 1px solid rgba(198, 239, 255, .18);
   background:
-    radial-gradient(circle at 12% 16%, rgba(255,255,255,.12), transparent 32%),
-    linear-gradient(135deg, rgba(5, 11, 26, .78), rgba(14, 18, 42, .54));
+    radial-gradient(circle at 16% 10%, rgba(178, 246, 255, .12), transparent 35%),
+    linear-gradient(135deg, rgba(5, 11, 26, .78), rgba(8, 18, 38, .50));
   box-shadow: 0 26px 80px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.07);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   color: rgba(240, 253, 255, .92);
   text-align: left;
-  font-size: 13px;
-  line-height: 1.55;
-  letter-spacing: .01em;
   pointer-events: none;
   text-shadow: 0 0 18px rgba(155,231,255,.16);
+  transform: translateZ(60px);
+}
+
+.urai-home-panel-left {
+  left: max(20px, env(safe-area-inset-left));
+  top: max(18px, env(safe-area-inset-top));
+}
+
+.urai-home-panel-right {
+  right: max(20px, env(safe-area-inset-right));
+  top: max(18px, env(safe-area-inset-top));
+}
+
+.urai-home-panel span,
+.urai-home-panel strong,
+.urai-home-panel em {
+  display: block;
+}
+
+.urai-home-panel span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(191, 233, 255, .72);
+}
+
+.urai-home-panel strong {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.25;
+  color: rgba(247, 253, 255, .98);
+}
+
+.urai-home-panel em {
+  margin-top: 6px;
+  font-style: normal;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(224, 245, 255, .80);
 }
 
 .urai-hero-copy {
@@ -83,7 +98,33 @@
   opacity: 1 !important;
 }
 
-.urai-hero-orb {
+.urai-hero-sky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 46% 24%, rgba(190,246,255,.08), transparent 18%),
+    radial-gradient(ellipse at 63% 18%, rgba(200,180,255,.065), transparent 18%),
+    linear-gradient(115deg, transparent 24%, rgba(145,220,255,.06) 25%, transparent 27%, transparent 50%, rgba(255,232,160,.04) 51%, transparent 53%);
+  opacity: .9;
+  mix-blend-mode: screen;
+  animation: uraiHomeAtmosphereDrift 18s ease-in-out infinite alternate;
+}
+
+.urai-hero-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(255,255,255,.12), transparent 9%),
+    radial-gradient(ellipse at 50% 62%, rgba(90,220,240,.10), transparent 28%);
+  mix-blend-mode: screen;
+  opacity: .78;
+}
+
+.urai-hero-orb,
+.urai-hero-body-svg,
+.urai-hero-body-beam {
   animation: uraiHomeOrbLivingBreath 5.8s ease-in-out infinite;
 }
 
@@ -97,6 +138,20 @@
 
 .urai-hero-orb-ring-b {
   animation: uraiHomeRingB 21s linear infinite reverse;
+}
+
+.urai-hero-terrain {
+  animation: uraiHomeTerrainBreath 9s ease-in-out infinite;
+}
+
+@keyframes uraiHomeAtmosphereDrift {
+  from { transform: translate3d(-1.5%, -1%, 0) scale(1); opacity: .72; }
+  to { transform: translate3d(1.5%, 1%, 0) scale(1.025); opacity: .96; }
+}
+
+@keyframes uraiHomeTerrainBreath {
+  0%, 100% { transform: translateY(0); filter: saturate(1); }
+  50% { transform: translateY(-8px); filter: saturate(1.08); }
 }
 
 @keyframes uraiHomeOrbLivingBreath {
@@ -120,15 +175,15 @@
 }
 
 @media (max-width: 760px) {
-  .urai-hero-home .urai-hero-hit::before {
+  .urai-home-panel-left {
     left: 14px;
-    right: auto;
+    right: 14px;
     top: 14px;
-    width: calc(100vw - 28px);
+    width: auto;
     padding: 14px 16px;
   }
 
-  .urai-hero-home .urai-hero-hit::after {
+  .urai-home-panel-right {
     display: none;
   }
 
@@ -139,10 +194,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .urai-hero-sky::before,
   .urai-hero-orb,
+  .urai-hero-body-svg,
+  .urai-hero-body-beam,
   .urai-hero-orb-satellite,
   .urai-hero-orb-ring-a,
-  .urai-hero-orb-ring-b {
+  .urai-hero-orb-ring-b,
+  .urai-hero-terrain {
     animation: none !important;
   }
 }
