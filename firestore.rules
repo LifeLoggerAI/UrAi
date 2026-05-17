@@ -84,26 +84,27 @@ service cloud.firestore {
       }
     }
 
-    match /dreams/{id} {
-      allow create: if canCreateOwnedDoc();
-      allow read: if canReadOwnedDoc();
-      allow update: if canUpdateOwnedDoc();
-      allow delete: if false;
-    }
-
-    match /rituals/{id} {
-      allow create: if canCreateOwnedDoc();
-      allow read: if canReadOwnedDoc();
-      allow update: if canUpdateOwnedDoc();
-      allow delete: if false;
-    }
-
-    match /timelineEvents/{id} {
-      allow create: if canCreateOwnedDoc();
-      allow read: if canReadOwnedDoc();
-      allow update: if canUpdateOwnedDoc();
-      allow delete: if false;
-    }
+    match /dreams/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /rituals/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /timelineEvents/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /personaEvolutions/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /soulThreads/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /socialArchetypes/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /weeklyScrolls/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /moods/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /shadowMetrics/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /obscuraPatterns/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /cognitiveStress/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /recoveryBlooms/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /relationshipConstellations/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /voiceEvents/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /dreamConstellations/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /memoryBlooms/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /badges/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /notifications/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /journalEntries/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /events/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
+    match /insightMarket/{id} { allow create: if canCreateOwnedDoc(); allow read: if canReadOwnedDoc(); allow update: if canUpdateOwnedDoc(); allow delete: if false; }
 
     match /waitlistSignups/{id} {
       allow read, write: if false;
