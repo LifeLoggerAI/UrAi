@@ -1,0 +1,295 @@
+/*
+  URAI /home final art lock.
+  This file intentionally loads after urai-cinematic.css and overrides the early prototype composition.
+*/
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: #00040b;
+  overflow-x: hidden;
+}
+
+body:has(.urai-home-screen) {
+  overflow: hidden;
+}
+
+.urai-home-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  max-width: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(70, 210, 235, .16), transparent 20%),
+    radial-gradient(circle at 65% 47%, rgba(255, 229, 138, .08), transparent 25%),
+    linear-gradient(180deg, #00030a 0%, #041020 44%, #020713 72%, #000105 100%);
+}
+
+.urai-home-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(155, 231, 255, .10), transparent 28%),
+    radial-gradient(ellipse at 50% 72%, rgba(4, 13, 26, .14), transparent 40%);
+  mix-blend-mode: screen;
+}
+
+.urai-home-screen::after {
+  z-index: 100;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 33%, rgba(0, 0, 0, .16) 66%, rgba(0, 0, 0, .72) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.18), transparent 22%, transparent 76%, rgba(0,0,0,.66));
+}
+
+.urai-home-camera,
+.urai-cosmic-sky,
+.urai-sky-gradient,
+.urai-nebula-layer,
+.urai-avatar-wrap,
+.urai-memory-orb-wrap {
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+}
+
+.urai-sky-gradient {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(160, 250, 255, .19), transparent 10%),
+    radial-gradient(circle at 49% 50%, rgba(78, 232, 242, .10), transparent 26%),
+    radial-gradient(circle at 33% 47%, rgba(77, 155, 255, .11), transparent 26%),
+    radial-gradient(circle at 70% 50%, rgba(255, 229, 138, .075), transparent 28%),
+    linear-gradient(180deg, #00040c 0%, #06182b 47%, #04101f 67%, #000208 100%);
+}
+
+.urai-sky-gradient::before {
+  inset: -18% -10%;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(155, 231, 255, .13), transparent 30%),
+    radial-gradient(ellipse at 50% 62%, rgba(255, 229, 138, .05), transparent 36%);
+  filter: blur(30px);
+}
+
+.urai-sky-vignette {
+  background:
+    radial-gradient(ellipse at 50% 41%, transparent 17%, rgba(0, 9, 23, .24) 54%, rgba(0,0,0,.84) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.24), transparent 20%, transparent 60%, rgba(0,0,0,.74));
+}
+
+.urai-nebula-layer {
+  opacity: .75 !important;
+}
+
+.urai-nebula-cyan {
+  left: 21%;
+  top: 30%;
+  width: 58%;
+  height: 36%;
+  background: rgba(78, 232, 242, .145);
+}
+
+.urai-nebula-violet {
+  right: 10%;
+  top: 28%;
+  width: 42%;
+  height: 38%;
+  background: rgba(199, 160, 255, .09);
+}
+
+.urai-nebula-gold {
+  right: 18%;
+  bottom: 18%;
+  width: 38%;
+  height: 31%;
+  background: rgba(255, 229, 138, .14);
+}
+
+/* Full-screen terrain: no centered polygon island, no hard horizon rule. */
+.urai-ground-system.urai-ground-final,
+.urai-ground-system {
+  position: absolute;
+  inset: auto 0 0 0 !important;
+  top: auto !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: 58vh !important;
+  min-height: 430px;
+  width: 100vw !important;
+  z-index: 12;
+  overflow: visible;
+  transform-origin: 50% 90%;
+}
+
+.urai-terrain-svg {
+  position: absolute;
+  inset: 0 -1px 0 -1px;
+  width: calc(100vw + 2px);
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 -30px 70px rgba(60, 216, 238, .055));
+}
+
+.urai-horizon-mist {
+  left: 0 !important;
+  right: 0 !important;
+  top: -16% !important;
+  height: 42vh !important;
+  min-height: 260px;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(230, 255, 255, .20), transparent 16%),
+    radial-gradient(ellipse at 50% 48%, rgba(80, 232, 242, .15), transparent 36%),
+    radial-gradient(ellipse at 65% 52%, rgba(255, 229, 138, .11), transparent 28%),
+    radial-gradient(ellipse at 35% 58%, rgba(199, 160, 255, .08), transparent 34%) !important;
+  filter: blur(26px) !important;
+  opacity: .92 !important;
+}
+
+.urai-horizon-mist::before {
+  left: 22% !important;
+  right: 22% !important;
+  top: 42% !important;
+  height: 92px !important;
+  background: radial-gradient(ellipse at center, rgba(220,255,255,.20), rgba(110,230,255,.08) 42%, transparent 72%) !important;
+  transform: perspective(520px) rotateX(64deg) !important;
+}
+
+.urai-horizon-mist::after {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+.urai-ground-back,
+.urai-ground-mid,
+.urai-ground-front {
+  display: none !important;
+}
+
+.urai-ground-light-spill {
+  position: absolute;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 6% !important;
+  height: 72% !important;
+  background:
+    radial-gradient(ellipse at 50% 5%, rgba(215,255,255,.30), transparent 17%),
+    radial-gradient(ellipse at 50% 22%, rgba(78,232,242,.18), transparent 35%),
+    radial-gradient(ellipse at 65% 34%, rgba(255,229,138,.14), transparent 26%),
+    radial-gradient(ellipse at 36% 34%, rgba(199,160,255,.11), transparent 31%) !important;
+  filter: blur(24px) !important;
+  opacity: .88 !important;
+  mix-blend-mode: screen;
+}
+
+.urai-foreground-fog {
+  position: absolute;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: -4% !important;
+  height: 70% !important;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(155,231,255,.11), transparent 34%),
+    radial-gradient(ellipse at 35% 58%, rgba(199,160,255,.075), transparent 30%),
+    radial-gradient(ellipse at 65% 56%, rgba(255,229,138,.07), transparent 28%),
+    linear-gradient(180deg, transparent, rgba(0,0,0,.58) 72%, #000 100%) !important;
+  filter: blur(22px) !important;
+  opacity: .94 !important;
+}
+
+/* Make the avatar/orb feel seated into the landscape, not floating over a line. */
+.urai-avatar-wrap {
+  z-index: 18;
+}
+
+.urai-avatar-wrap::before {
+  top: 58% !important;
+  width: clamp(180px, 18vw, 270px) !important;
+  height: clamp(360px, 48vh, 520px) !important;
+  background:
+    radial-gradient(ellipse at 50% 4%, rgba(235,255,255,.25), transparent 18%),
+    linear-gradient(180deg, rgba(155,231,255,.24), rgba(78,232,242,.10) 45%, rgba(78,232,242,.035) 70%, transparent) !important;
+  opacity: .92 !important;
+}
+
+.urai-avatar-aura {
+  top: 62% !important;
+  width: clamp(260px, 28vw, 420px) !important;
+  height: clamp(380px, 54vh, 560px) !important;
+}
+
+.urai-avatar-silhouette {
+  top: 63% !important;
+  width: clamp(160px, 17vw, 245px) !important;
+  opacity: .72 !important;
+}
+
+.urai-memory-orb-wrap {
+  z-index: 24;
+}
+
+.urai-orb-core {
+  top: 41.5% !important;
+  width: clamp(118px, 11vw, 164px) !important;
+  height: clamp(118px, 11vw, 164px) !important;
+}
+
+.urai-orb-halo {
+  top: 41.5% !important;
+  width: clamp(340px, 42vw, 610px) !important;
+  height: clamp(340px, 42vw, 610px) !important;
+  opacity: .82;
+}
+
+.urai-orb-ring {
+  top: 41.5% !important;
+  width: clamp(210px, 23vw, 320px) !important;
+  height: clamp(96px, 11vw, 146px) !important;
+}
+
+.urai-orb-beam {
+  top: 42.5% !important;
+  height: 46vh !important;
+  min-height: 340px;
+  opacity: .76 !important;
+}
+
+.urai-orb-spark {
+  top: calc(41.5% + 12px) !important;
+}
+
+.urai-home-label {
+  bottom: max(1.2rem, env(safe-area-inset-bottom)) !important;
+  z-index: 120;
+}
+
+@media (max-width: 760px) {
+  .urai-ground-system.urai-ground-final,
+  .urai-ground-system {
+    height: 60vh !important;
+    min-height: 390px;
+  }
+
+  .urai-orb-core {
+    top: 40% !important;
+    width: 108px !important;
+    height: 108px !important;
+  }
+
+  .urai-orb-halo {
+    top: 40% !important;
+    width: 330px !important;
+    height: 330px !important;
+  }
+
+  .urai-avatar-silhouette {
+    top: 62% !important;
+    width: 168px !important;
+  }
+}
