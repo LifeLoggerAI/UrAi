@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { LifeMapFilter, LifeMapMode, MemoryStar, QualityMode } from "@/lib/life-map/types";
 import { lifeMapMockData, selectedBlueFogMemory, spatialARVRScaffold } from "@/lib/life-map/mock-data";
@@ -197,7 +198,7 @@ export default function LifeMapUniverse() {
 
       <header className="pointer-events-none fixed left-0 right-0 top-0 z-20 flex items-start justify-center px-4 pt-5">
         <div className="pointer-events-auto fixed left-4 top-4 z-50 h-[72px] w-[72px]">
-          <a href="/" className="grid h-11 w-11 place-items-center rounded-full border border-cyan-100/20 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10 focus:outline-none focus:ring-2 focus:ring-cyan-100/70" aria-label="Return to URAI home">←</a>
+          <Link href="/" className="grid h-11 w-11 place-items-center rounded-full border border-cyan-100/20 bg-slate-950/70 text-cyan-50 shadow-[0_0_28px_rgba(191,233,255,0.12)] backdrop-blur-xl hover:bg-cyan-100/10 focus:outline-none focus:ring-2 focus:ring-cyan-100/70" aria-label="Return to URAI home">←</Link>
         </div>
         <div className="rounded-3xl border border-cyan-100/10 bg-slate-950/55 px-6 py-3 text-center shadow-[0_0_42px_rgba(2,132,199,0.16)] backdrop-blur-2xl max-md:max-w-[68vw]">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-100/60">URAI LIFE MAP</p>
