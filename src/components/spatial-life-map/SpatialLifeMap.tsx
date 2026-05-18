@@ -13,9 +13,47 @@ import StarPreviewCard from "./StarPreviewCard";
 import MemoryBloomPanel from "./MemoryBloomPanel";
 import ChapterRail from "./ChapterRail";
 import SpatialControls from "./SpatialControls";
+import type { LifeMapStar, MemoryBloom } from "@/lib/spatial-life-map/lifeMap.types";
 
 type LifeMapInteractionMode = "galaxy" | "focus" | "replay" | "bloom";
 type ReturnPhase = "idle" | "returning";
+
+function FocusChamber({
+  star,
+  bloom,
+  onReplay,
+  onBloom,
+  onClose,
+}: {
+  star: LifeMapStar;
+  bloom: MemoryBloom | null;
+  onReplay: () => void;
+  onBloom: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <section className="spatial-focus-chamber" role="dialog" aria-modal="false" aria-label={`${star.title} memory focus`}>
+      <div className="spatial-focus-orb" style={{ background: star.auraColor, boxShadow: `0 0 120px ${star.auraColor}88, 0 0 240px ${star.auraColor}22` }} />
+      <div className="spatial-focus-weather" aria-hidden />
+      <button type="button" className="spatial-focus-close" onClick={onClose} aria-label="Return to full galaxy">×</button>
+      <div className="spatial-focus-copy">
+        <p>{star.type.replace(/([A-Z])/g, " $1").trim()} · {star.archetype}</p>
+        <h2>{star.title}</h2>
+        <span>{bloom?.whyThisMatters ?? star.narratorReflection}</span>
+        <div className="spatial-focus-signals">
+          <small>{star.emotionalTone}</small>
+          <small>{star.sourceSignals.length} source signals</small>
+          <small>{star.privacyLevel}</small>
+        </div>
+        <div className="spatial-focus-actions">
+          <button type="button" onClick={onReplay}>Open replay</button>
+          <button type="button" onClick={onBloom}>Open bloom</button>
+          <button type="button" onClick={onClose}>Back to galaxy</button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: string }) {
   const router = useRouter();
@@ -29,7 +67,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   const selection = useStarSelection(visibleStars);
   const camera = useGalaxyCamera(data.spatialSettings.cameraTarget, data.spatialSettings.zoom);
   const selectedStar = selection.selectedStar;
-  const previewStar = selection.hoveredStar ?? selectedStar;
+  const previewStar = selection.hoveredStar ?? (mode === "galaxy" ? selectedStar : null);
   const bloomPanelData = data.memoryBlooms.find((bloom) => bloom.starId === selection.bloomStarId) ?? null;
   const selectedReplayBloom = selectedStar ? data.memoryBlooms.find((bloom) => bloom.starId === selectedStar.id) ?? null : null;
 
@@ -64,7 +102,17 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
     setMode(selectedStar ? "focus" : "galaxy");
   }
 
+  function returnToGalaxy() {
+    selection.closeBloom();
+    selection.setHoveredStarId(null);
+    selection.setSelectedStarId(null);
+    setMode("galaxy");
+    camera.resetCamera();
+  }
+
   function unwind() {
+    if (returnPhase === "returning") return;
+
     if (mode === "replay") {
       setMode(selectedStar ? "focus" : "galaxy");
       return;
@@ -76,14 +124,11 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
     }
 
     if (selectedStar || mode === "focus") {
-      selection.setHoveredStarId(null);
-      selection.setSelectedStarId(null);
-      setMode("galaxy");
-      camera.resetCamera();
+      returnToGalaxy();
       return;
     }
 
-    camera.resetCamera();
+    returnHome();
   }
 
   function returnHome() {
@@ -145,7 +190,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       <header className="spatial-title-card">
         <p>{mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode === "focus" ? "MEMORY STAR FOCUS" : mode === "bloom" ? "MEMORY BLOOM" : "REPLAY THREAD"}</p>
         <h1>{mode === "replay" ? "Replay Thread" : selectedStar ? selectedStar.title : "Memory Galaxy"}</h1>
-        <span>{mode === "galaxy" ? "Drag space · scroll to zoom · click a star · Esc unwinds" : mode === "focus" ? "Focus held · replay or open bloom · Esc returns to galaxy" : mode === "bloom" ? "Symbolic bloom open · Esc returns to focus" : "Spatial replay active · Esc returns to focus"}</span>
+        <span>{mode === "galaxy" ? "Drag space · scroll to zoom · click a star · Esc returns home" : mode === "focus" ? "Focus held · replay or open bloom · Esc returns to galaxy" : mode === "bloom" ? "Symbolic bloom open · Esc returns to focus" : "Spatial replay active · Esc returns to focus"}</span>
       </header>
 
       {loading && <div className="spatial-loading">URAI is arranging your living galaxy...</div>}
@@ -154,12 +199,22 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       <LayerWheel layers={activeLayers} activeLayerIds={activeLayerIds} onToggle={toggleLayer} onEnableAll={enableAll} />
       <ZoomLevelHUD zoomLevel={camera.cameraState.zoomLevel} zoom={camera.cameraState.zoom} />
 
-      {mode !== "replay" && mode !== "bloom" && (
+      {mode === "galaxy" && (
         <StarPreviewCard
           star={previewStar}
           mode={selection.hoveredStar ? "hover" : "selected"}
-          onActivate={!selection.hoveredStar && mode === "focus" && selectedStar ? openReplay : undefined}
+          onActivate={!selection.hoveredStar && selectedStar ? openReplay : undefined}
           actionLabel="Open replay"
+        />
+      )}
+
+      {mode === "focus" && selectedStar && (
+        <FocusChamber
+          star={selectedStar}
+          bloom={selectedReplayBloom}
+          onReplay={openReplay}
+          onBloom={() => openBloom(selectedStar)}
+          onClose={returnToGalaxy}
         />
       )}
 
@@ -190,7 +245,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
             </div>
             <div className="spatial-replay-actions">
               <button type="button" onClick={unwind}>Back to focus</button>
-              <button type="button" onClick={() => { selection.setSelectedStarId(null); setMode("galaxy"); camera.resetCamera(); }}>Back to galaxy</button>
+              <button type="button" onClick={returnToGalaxy}>Back to galaxy</button>
             </div>
           </div>
         </section>
