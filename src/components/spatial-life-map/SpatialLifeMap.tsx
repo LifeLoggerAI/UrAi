@@ -13,50 +13,72 @@ import MemoryBloomPanel from "./MemoryBloomPanel";
 import ChapterRail from "./ChapterRail";
 import SpatialControls from "./SpatialControls";
 
+type LifeMapInteractionMode = "galaxy" | "focus" | "replay" | "bloom";
+
 export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: string }) {
   const [mounted, setMounted] = useState(false);
-  const [replaying, setReplaying] = useState(false);
+  const [mode, setMode] = useState<LifeMapInteractionMode>("galaxy");
 
   const { data, loading, error } = useLifeMapData(userId);
   const { activeLayerIds, activeLayers, toggleLayer, enableAll } = useLayerWheel(data.layers);
   const visibleStars = useMemo(() => data.stars.filter((star) => activeLayerIds.includes(star.layer)), [activeLayerIds, data.stars]);
   const selection = useStarSelection(visibleStars);
   const camera = useGalaxyCamera(data.spatialSettings.cameraTarget, data.spatialSettings.zoom);
-  const selectedBloom = data.memoryBlooms.find((bloom) => bloom.starId === selection.bloomStarId) ?? null;
   const selectedStar = selection.selectedStar;
   const previewStar = selection.hoveredStar ?? selectedStar;
+  const bloomPanelData = data.memoryBlooms.find((bloom) => bloom.starId === selection.bloomStarId) ?? null;
+  const selectedReplayBloom = selectedStar ? data.memoryBlooms.find((bloom) => bloom.starId === selectedStar.id) ?? null : null;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  function selectStar(star: typeof data.stars[number]) {
-    setReplaying(false);
+  function focusStar(star: typeof data.stars[number]) {
     selection.closeBloom();
     selection.selectStar(star);
-    camera.focusPosition(star.position3D, 3.8);
+    setMode("focus");
+    camera.focusPosition(star.position3D, 3.55);
   }
 
   function openReplay() {
-    if (!selectedStar) return;
+    if (!selectedStar || mode === "replay") return;
     selection.closeBloom();
-    setReplaying(true);
-    camera.focusPosition(selectedStar.position3D, 2.65);
+    setMode("replay");
+    camera.focusPosition(selectedStar.position3D, 2.55);
+  }
+
+  function openBloom(star?: typeof data.stars[number] | null) {
+    const targetStar = star ?? selectedStar;
+    if (!targetStar) return;
+    selection.openBloom(targetStar);
+    setMode("bloom");
+    camera.focusPosition(targetStar.position3D, 3.05);
+  }
+
+  function closeBloom() {
+    selection.closeBloom();
+    setMode(selectedStar ? "focus" : "galaxy");
   }
 
   function unwind() {
-    if (replaying) {
-      setReplaying(false);
+    if (mode === "replay") {
+      setMode(selectedStar ? "focus" : "galaxy");
       return;
     }
 
-    if (selection.bloomStarId) {
-      selection.closeBloom();
+    if (mode === "bloom" || selection.bloomStarId) {
+      closeBloom();
       return;
     }
 
-    selection.setHoveredStarId(null);
-    selection.setSelectedStarId(null);
+    if (selectedStar || mode === "focus") {
+      selection.setHoveredStarId(null);
+      selection.setSelectedStarId(null);
+      setMode("galaxy");
+      camera.resetCamera();
+      return;
+    }
+
     camera.resetCamera();
   }
 
@@ -83,7 +105,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }
 
   return (
-    <main className={`spatial-life-map ${selectedStar ? "is-focused" : ""} ${replaying ? "is-replaying" : ""}`} aria-label="URAI Spatial Life Map Galaxy">
+    <main className={`spatial-life-map is-${mode}`} aria-label="URAI Spatial Life Map Galaxy">
       <div className="spatial-atmosphere" aria-hidden />
       <section className="spatial-stage" {...camera.bind}>
         <LifeGalaxyScene
@@ -95,14 +117,14 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
           hoveredStarId={selection.hoveredStarId}
           reducedMotion={data.spatialSettings.reducedMotion}
           onHoverStar={selection.setHoveredStarId}
-          onSelectStar={selectStar}
-          onOpenStar={selection.openBloom}
+          onSelectStar={focusStar}
+          onOpenStar={openBloom}
         />
       </section>
 
       <header className="spatial-title-card">
-        <p>URAI SPATIAL LIFE MAP</p>
-        <h1>{replaying ? "Replay Thread" : selectedStar ? selectedStar.title : "Memory Galaxy"}</h1>
+        <p>{mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode.toUpperCase()}</p>
+        <h1>{mode === "replay" ? "Replay Thread" : selectedStar ? selectedStar.title : "Memory Galaxy"}</h1>
         <span>{visibleStars.length} active stars · {data.constellations.length} constellations · click star · click focus · Esc unwind</span>
       </header>
 
@@ -112,11 +134,11 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       <LayerWheel layers={activeLayers} activeLayerIds={activeLayerIds} onToggle={toggleLayer} onEnableAll={enableAll} />
       <ZoomLevelHUD zoomLevel={camera.cameraState.zoomLevel} zoom={camera.cameraState.zoom} />
 
-      {!replaying && (
+      {mode !== "replay" && mode !== "bloom" && (
         <StarPreviewCard
           star={previewStar}
           mode={selection.hoveredStar ? "hover" : "selected"}
-          onActivate={!selection.hoveredStar && selectedStar ? openReplay : undefined}
+          onActivate={!selection.hoveredStar && mode === "focus" && selectedStar ? openReplay : undefined}
           actionLabel="Open replay"
         />
       )}
@@ -125,22 +147,23 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
 
       <SpatialControls
         selectedStar={selectedStar}
+        mode={mode}
         onReset={unwind}
         onZoomIn={() => camera.setZoom(camera.cameraState.zoom - 1.1)}
         onZoomOut={() => camera.setZoom(camera.cameraState.zoom + 1.1)}
-        onBloom={() => selection.openBloom(selectedStar)}
+        onBloom={() => openBloom(selectedStar)}
         onReplay={openReplay}
-        replayDisabled={!selectedStar}
+        replayDisabled={mode !== "focus" || !selectedStar}
       />
 
-      <MemoryBloomPanel star={selection.bloomStar} bloom={selectedBloom} onClose={selection.closeBloom} />
+      <MemoryBloomPanel star={selection.bloomStar} bloom={bloomPanelData} onClose={closeBloom} />
 
-      {replaying && selectedStar && (
+      {mode === "replay" && selectedStar && (
         <section className="spatial-replay-overlay" role="dialog" aria-modal="true" aria-label={`${selectedStar.title} replay`}>
-          <div className="spatial-replay-orb" style={{ background: selectedStar.auraColor, boxShadow: `0 0 120px ${selectedStar.auraColor}88` }} />
+          <div className="spatial-replay-orb" style={{ background: selectedStar.auraColor, boxShadow: `0 0 140px ${selectedStar.auraColor}99` }} />
           <p>REPLAY THREAD · SPATIALLY ANCHORED</p>
           <h2>{selectedStar.title}</h2>
-          <span>{selectedBloom?.narratorScript ?? selectedStar.narratorReflection}</span>
+          <span>{selectedReplayBloom?.narratorScript ?? selectedStar.narratorReflection}</span>
           <div className="spatial-replay-path" aria-hidden>
             <i />
           </div>
