@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "site": "urai-staging",
+    "source": "."
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
