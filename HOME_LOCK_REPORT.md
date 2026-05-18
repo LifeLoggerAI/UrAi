@@ -1,20 +1,23 @@
 # HOME LOCK REPORT
 
 Date: 2026-05-18
-Branch: `final/home-lock-execution`
+Branch: `fix/home-lock-ci-p0-gates`
 Final status: PARTIALLY LOCKED / NOT LOCKED
 
 ## Summary
 
-This execution pass performed the repository-facing portion of the URAI FINAL HOME LOCK. The active `/home` route now mounts the Firestore-backed resolved home scene, and static final-lock scripts and required contract/audit documents were added.
+This follow-up pass makes the merged URAI `/home` final-lock work harder to regress by wiring the new home lock gates into CI and P0 launch reporting.
 
-The final release status is not LOCKED because runtime commands, Firebase emulator/rules proof, browser smoke tests, deployment proof, production companion endpoint proof, and voice/TTS verification were not executable through this connector-only environment.
+The active `/home` route was already moved to the Firestore-backed resolved home scene in PR #247. This pass adds the next repo-level lock step: CI now runs `npm run check:home` and `npm run check:ascent`, and the P0 launch gate now tracks those checks, `/home` contract docs, and `/home` manual evidence variables.
+
+The final release status remains not LOCKED because full runtime command output, Firebase emulator/rules proof, browser smoke tests, deployment proof, production companion endpoint proof, telemetry proof, admin/debug proof, and voice/TTS verification still need to be produced from CI/local/runtime evidence.
 
 ## Baseline findings
 
 - Main repo: `LifeLoggerAI/UrAi`
 - Default branch: `main`
-- Working branch: `final/home-lock-execution`
+- Prior merged PR: #247, `Final /home lock execution pass`
+- Current follow-up branch: `fix/home-lock-ci-p0-gates`
 - Framework: Next.js
 - Firebase dependencies are present in `package.json`.
 - Three/Fiber, Three.js, and Framer Motion dependencies are present.
@@ -41,7 +44,7 @@ Expected home-connected routes/surfaces:
 - `/homeview` if retained as legacy/cinematic route
 - memory star focus/bloom/replay route if implemented
 
-## Files changed
+## Files changed in PR #247
 
 - `src/app/home/page.tsx`
 - `package.json`
@@ -52,11 +55,17 @@ Expected home-connected routes/surfaces:
 - `HOME_E2E_AUDIT.md`
 - `HOME_LOCK_REPORT.md`
 
+## Files changed in this follow-up branch
+
+- `.github/workflows/ci.yml`
+- `scripts/p0-launch-gate.mjs`
+- `HOME_LOCK_REPORT.md`
+
 ## Features implemented
 
 ### `/home` canonical route wiring
 
-`/home` now imports and renders `UraiResolvedHomeScene`, which is the Firestore-backed resolved scene with:
+`/home` imports and renders `UraiResolvedHomeScene`, which is the Firestore-backed resolved scene with:
 
 - home/transition/lifemap state model
 - live home state hook
@@ -68,12 +77,42 @@ Expected home-connected routes/surfaces:
 
 ### Static verification gates
 
-Added:
+Added in PR #247:
 
 - `npm run check:home`
 - `npm run check:ascent`
 
-These scripts statically verify key final-lock requirements are present in the repository.
+This follow-up adds those checks to CI and P0 reporting.
+
+### CI gate integration
+
+`.github/workflows/ci.yml` now runs:
+
+- `npm run check:home`
+- `npm run check:ascent`
+
+These run after V1 wiring and before P0/P1 release gates, seed data, unit tests, rules tests, typecheck, lint, and build.
+
+### P0 launch gate integration
+
+`scripts/p0-launch-gate.mjs` now tracks:
+
+- `scripts/check-home-lock.mjs`
+- `scripts/check-ascent-lock.mjs`
+- `src/app/home/page.tsx`
+- `src/components/urai/UraiResolvedHomeScene.tsx`
+- `src/lib/use-urai-home-state.ts`
+- `HOME_LOCK_REPORT.md`
+- `HOME_E2E_AUDIT.md`
+- `HOME_DATA_CONTRACT.md`
+- `HOME_COMPANION_CONTRACT.md`
+- `npm run check:home`
+- `npm run check:ascent`
+- `CI includes npm run check:home`
+- `CI includes npm run check:ascent`
+- `/home` desktop/mobile/reduced-motion/emulator/companion fallback evidence env vars
+
+Passed checks now report: `No action required; this item is already covered by the listed evidence.`
 
 ## Data wiring completed
 
@@ -100,10 +139,11 @@ Status: PARTIALLY VERIFIED
 
 Completed:
 
-- Confirmed Firebase client dependency exists.
-- Confirmed auth state binding exists in the live hook.
-- Confirmed Firestore reads are user-scoped in the hook.
-- Documented expected rules and emulator proof requirements.
+- Firebase client dependency exists.
+- Auth state binding exists in the live hook.
+- Firestore reads are user-scoped in the hook.
+- Expected rules and emulator proof requirements are documented.
+- P0 now tracks `/home` emulator proof as an explicit manual evidence variable.
 
 Not completed in this environment:
 
@@ -123,6 +163,7 @@ Required before LOCKED:
 - Prove cross-user reads fail.
 - Prove unauthenticated reads fail.
 - Prove telemetry/trust/companion/admin scopes.
+- Set `URAI_HOME_FIREBASE_EMULATOR_VERIFIED=1` only after real proof exists.
 
 ## Emulator proof status
 
@@ -136,10 +177,11 @@ Status: PARTIALLY VERIFIED
 
 Completed:
 
-- `/home` now routes to the resolved scene with physical aura orb behavior.
+- `/home` routes to the resolved scene with physical aura orb behavior.
 - Resolved scene has companion focus surface.
 - Home view model includes companion mode and narrator whisper.
-- Companion contract produced.
+- Companion contract exists.
+- P0 now tracks `/home` companion fallback evidence.
 
 Not completed:
 
@@ -197,6 +239,7 @@ Still required:
 - Runtime browser visual smoke.
 - Reduced-motion browser smoke.
 - Mobile viewport smoke.
+- Set `URAI_HOME_DESKTOP_VERIFIED=1`, `URAI_HOME_MOBILE_VERIFIED=1`, and `URAI_HOME_REDUCED_MOTION_VERIFIED=1` only after real proof exists.
 
 ## Route continuity status
 
@@ -206,6 +249,7 @@ Completed:
 
 - `/home` routes to resolved scene.
 - Resolved scene can enter embedded lifemap mode and return home.
+- `npm run check:ascent` exists and is now in CI.
 
 Still required:
 
@@ -258,10 +302,16 @@ Still required:
 
 ## Tests added/updated
 
-Added static gate scripts:
+Added static gate scripts in PR #247:
 
 - `scripts/check-home-lock.mjs`
 - `scripts/check-ascent-lock.mjs`
+
+Added gate integration in this follow-up branch:
+
+- CI runs `npm run check:home`.
+- CI runs `npm run check:ascent`.
+- P0 report tracks both scripts and both commands.
 
 No Jest/Playwright tests were added in this pass because runtime verification could not be executed here.
 
@@ -271,18 +321,34 @@ Commands were not run in this connector-only environment. The following commands
 
 ```bash
 npm install
+npm run check:home
+npm run check:ascent
 npm run typecheck
 npm run lint
 npm run test
 npm run build
-npm run check:home
-npm run check:ascent
 npm run test:rules
 npm run test:smoke
 npm run launch:p0
 ```
 
-If using pnpm in your environment, run the pnpm equivalents.
+Full P0 evidence gate:
+
+```bash
+URAI_P0_RUN_COMMANDS=1 \
+URAI_P0_DESKTOP_VERIFIED=1 \
+URAI_P0_MOBILE_VERIFIED=1 \
+URAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \
+URAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \
+URAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \
+URAI_HOME_DESKTOP_VERIFIED=1 \
+URAI_HOME_MOBILE_VERIFIED=1 \
+URAI_HOME_REDUCED_MOTION_VERIFIED=1 \
+URAI_HOME_FIREBASE_EMULATOR_VERIFIED=1 \
+URAI_HOME_COMPANION_FALLBACK_VERIFIED=1 \
+URAI_P0_DEMO_RECORDING_URL="https://example.com/demo.mp4" \
+npm run launch:p0
+```
 
 ## Command results
 
@@ -321,6 +387,8 @@ Complete:
 
 - Route wiring commit exists.
 - Static gate scripts exist.
+- CI includes `check:home` and `check:ascent` in this follow-up branch.
+- P0 tracks `check:home` and `check:ascent` in this follow-up branch.
 - Data contract exists.
 - Companion contract exists.
 - E2E audit exists.
@@ -345,7 +413,7 @@ No. `/home` cannot be marked LOCKED until all required runtime, emulator, smoke,
 
 ## Exact next actions
 
-1. Pull branch `final/home-lock-execution`.
+1. Merge this follow-up branch after CI passes.
 2. Run `npm install`.
 3. Run `npm run check:home`.
 4. Run `npm run check:ascent`.
@@ -355,5 +423,6 @@ No. `/home` cannot be marked LOCKED until all required runtime, emulator, smoke,
 8. Run `npm run build`.
 9. Run `npm run test:rules`.
 10. Run smoke tests for `/home`, `/life-map`, `/forecast`, `/cognitive-mirror`, `/narrator`, `/homeview` if retained.
-11. Attach outputs to this report.
-12. Only then update release/status docs to LOCKED if all criteria pass.
+11. Run the full P0 evidence gate with the new `/home` evidence env vars.
+12. Attach outputs to this report.
+13. Only then update release/status docs to LOCKED if all criteria pass.
