@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check merge conflict markers
+        run: npm run check:conflicts
+
       - name: Validate Firebase target
         run: npm run check:firebase
 
