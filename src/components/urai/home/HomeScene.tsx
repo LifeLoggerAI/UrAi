@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cinematicEase } from "@/components/urai/motion/ascentMotion";
 import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition";
+
+type HomeOverlay = "companion" | "ground" | null;
 
 function HeroStars() {
   return (
@@ -106,10 +109,50 @@ function AvatarPresence() {
 
 export function HomeScene() {
   const { phase, beginAscent, isTransitioning } = useAscentTransition("/life-map");
+  const [overlay, setOverlay] = useState<HomeOverlay>(null);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (overlay) {
+        event.preventDefault();
+        setOverlay(null);
+      }
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [overlay]);
+
+  const openSky = () => {
+    if (isTransitioning || overlay) return;
+    beginAscent();
+  };
 
   return (
-    <main className={`urai-hero-home phase-${phase}`} onClick={beginAscent}>
-      <button className="urai-hero-hit" type="button" aria-label="Enter Memory Galaxy" disabled={isTransitioning} />
+    <main className={`urai-hero-home phase-${phase} ${overlay ? `home-overlay-${overlay}` : ""}`}>
+      <button
+        className="urai-hero-hit"
+        type="button"
+        aria-label="Ascend through the sky into Memory Galaxy"
+        disabled={isTransitioning || Boolean(overlay)}
+        onClick={openSky}
+        style={{ position: "absolute", inset: "0 0 45% 0", zIndex: 55, background: "transparent", border: 0, cursor: "zoom-in" }}
+      />
+      <button
+        type="button"
+        aria-label="Open URAI companion chat"
+        disabled={isTransitioning}
+        onClick={(event) => { event.stopPropagation(); setOverlay("companion"); }}
+        style={{ position: "absolute", left: "35%", top: "26%", width: "30%", height: "33%", zIndex: 70, border: 0, background: "transparent", borderRadius: 999, cursor: "pointer" }}
+      />
+      <button
+        type="button"
+        aria-label="Open ground foundation layer"
+        disabled={isTransitioning}
+        onClick={(event) => { event.stopPropagation(); setOverlay("ground"); }}
+        style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "34%", zIndex: 64, border: 0, background: "transparent", cursor: "zoom-in" }}
+      />
+
       <div className="urai-hero-sky" aria-hidden>
         <HeroStars />
         <SkyArchitecture />
@@ -120,7 +163,7 @@ export function HomeScene() {
       <FinalTerrain />
       <motion.div
         className="urai-hero-body"
-        animate={phase === "portal" ? { y: "22vh", opacity: 0.08, filter: "blur(10px)" } : phase === "lift" ? { y: "7vh", opacity: 0.58 } : { y: 0, opacity: 1 }}
+        animate={phase === "portal" ? { y: "22vh", opacity: 0.08, filter: "blur(10px)" } : phase === "lift" ? { y: "7vh", opacity: 0.58 } : overlay === "ground" ? { y: "-8vh", scale: 1.08, opacity: 0.68 } : { y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: cinematicEase }}
         aria-hidden
       >
@@ -130,7 +173,7 @@ export function HomeScene() {
       </motion.div>
       <motion.div
         className="urai-hero-orb-system"
-        animate={phase === "portal" ? { scale: 8.5, y: "-3vh", opacity: 0.95 } : phase === "lift" ? { scale: 1.14, y: "-3vh" } : phase === "ignition" ? { scale: 1.06 } : { scale: 1 }}
+        animate={phase === "portal" ? { scale: 8.5, y: "-3vh", opacity: 0.95 } : phase === "lift" ? { scale: 1.14, y: "-3vh" } : overlay === "companion" ? { scale: 2.15, y: "-4vh", opacity: 0.42 } : phase === "ignition" ? { scale: 1.06 } : { scale: 1 }}
         transition={{ duration: phase === "portal" ? 0.52 : 0.42, ease: cinematicEase }}
         aria-hidden
       >
@@ -141,7 +184,7 @@ export function HomeScene() {
         <div className="urai-hero-orb"><span /><i /></div>
         <div className="urai-hero-orb-satellite" />
       </motion.div>
-      <motion.div className="urai-hero-bloom" animate={{ opacity: phase === "portal" ? 0.9 : phase === "emergence" ? 0.35 : 0 }} transition={{ duration: 0.5, ease: cinematicEase }} aria-hidden />
+      <motion.div className="urai-hero-bloom" animate={{ opacity: phase === "portal" ? 0.9 : phase === "emergence" ? 0.35 : overlay ? 0.5 : 0 }} transition={{ duration: 0.5, ease: cinematicEase }} aria-hidden />
       <div className="urai-home-panel urai-home-panel-left" aria-hidden="true">
         <span>URAI</span>
         <strong>Inner Sky Shrine</strong>
@@ -150,13 +193,34 @@ export function HomeScene() {
       <div className="urai-home-panel urai-home-panel-right" aria-hidden="true">
         <span>Companion</span>
         <strong>Your sky is quiet, but awake.</strong>
-        <em>Tap the orb or sky to open the Memory Galaxy.</em>
+        <em>Tap the orb for companion. Tap sky for Memory Galaxy.</em>
       </div>
       <div className="urai-hero-copy" aria-hidden>
         <span>URAI</span>
         <strong>Inner Sky Shrine</strong>
-        <em>Tap the sky to enter memory</em>
+        <em>Tap sky, orb, or ground</em>
       </div>
+
+      {overlay === "companion" && (
+        <section className="home-companion-overlay" role="dialog" aria-modal="true" aria-label="URAI companion chat" style={{ position: "fixed", zIndex: 120, left: "50%", top: "50%", transform: "translate(-50%,-50%)", width: "min(620px, calc(100vw - 32px))", border: "1px solid rgba(190,215,255,.22)", borderRadius: 34, padding: 32, background: "linear-gradient(135deg, rgba(3,7,18,.78), rgba(8,20,34,.62))", backdropFilter: "blur(24px)", boxShadow: "0 30px 120px rgba(0,0,0,.5)", color: "#eef8ff" }}>
+          <button type="button" onClick={() => setOverlay(null)} aria-label="Close companion chat" style={{ position: "absolute", right: 16, top: 16, width: 38, height: 38, borderRadius: 999, border: "1px solid rgba(255,255,255,.2)", background: "rgba(255,255,255,.08)", color: "white" }}>×</button>
+          <div style={{ width: 118, height: 118, borderRadius: 999, background: "radial-gradient(circle at 30% 24%, #fff, #baf6ff 22%, #0b5d72 62%, #020617 100%)", boxShadow: "0 0 120px rgba(125,211,252,.58)", marginBottom: 22 }} />
+          <p style={{ margin: 0, color: "rgba(191,233,255,.62)", fontWeight: 900, letterSpacing: ".24em", textTransform: "uppercase", fontSize: 11 }}>URAI Companion</p>
+          <h2 style={{ margin: "10px 0 14px", fontSize: "clamp(2rem, 5vw, 4rem)", lineHeight: .95 }}>I am listening from the center of the sky.</h2>
+          <p style={{ color: "rgba(238,248,255,.78)", lineHeight: 1.65 }}>This is the companion chamber. The live chat endpoint can attach here, but the orb interaction now opens separately from sky ascent.</p>
+          <textarea placeholder="Speak into the orb…" style={{ width: "100%", minHeight: 110, marginTop: 18, borderRadius: 20, border: "1px solid rgba(190,215,255,.18)", background: "rgba(2,6,23,.64)", color: "white", padding: 16 }} />
+        </section>
+      )}
+
+      {overlay === "ground" && (
+        <section className="home-ground-overlay" role="dialog" aria-modal="true" aria-label="URAI ground foundation" style={{ position: "fixed", zIndex: 120, left: "50%", bottom: 28, transform: "translateX(-50%)", width: "min(760px, calc(100vw - 32px))", border: "1px solid rgba(190,215,255,.2)", borderRadius: 34, padding: 30, background: "linear-gradient(180deg, rgba(5,20,28,.74), rgba(0,5,10,.88))", backdropFilter: "blur(24px)", boxShadow: "0 -20px 120px rgba(34,211,238,.18)", color: "#eef8ff" }}>
+          <button type="button" onClick={() => setOverlay(null)} aria-label="Close ground foundation" style={{ position: "absolute", right: 16, top: 16, width: 38, height: 38, borderRadius: 999, border: "1px solid rgba(255,255,255,.2)", background: "rgba(255,255,255,.08)", color: "white" }}>×</button>
+          <p style={{ margin: 0, color: "rgba(191,233,255,.62)", fontWeight: 900, letterSpacing: ".24em", textTransform: "uppercase", fontSize: 11 }}>Foundation Layer</p>
+          <h2 style={{ margin: "10px 0 14px", fontSize: "clamp(2rem, 5vw, 4rem)", lineHeight: .95 }}>Roots, recovery, and body-memory signals.</h2>
+          <div style={{ height: 150, borderRadius: 28, background: "radial-gradient(ellipse at 50% 0%, rgba(125,211,252,.22), transparent 70%), linear-gradient(180deg, rgba(15,23,42,.2), rgba(0,0,0,.46))", margin: "18px 0" }} />
+          <p style={{ color: "rgba(238,248,255,.76)", lineHeight: 1.6 }}>Ground zoom now opens the foundation layer instead of triggering sky ascent. Escape closes this layer back to Home.</p>
+        </section>
+      )}
     </main>
   );
 }
