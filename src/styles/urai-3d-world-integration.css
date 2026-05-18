@@ -1,0 +1,405 @@
+/* URAI 3D world integration hardening for /, /home, and /life-map. */
+
+.urai-home-world-canvas,
+.urai-home-world-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: .72;
+  filter: saturate(1.08) contrast(1.08) brightness(.9);
+}
+
+.urai-home-world-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.urai-home-world-fallback {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(191, 233, 255, .14), transparent 22%),
+    radial-gradient(ellipse at 50% 76%, rgba(125, 211, 252, .16), transparent 34%),
+    linear-gradient(180deg, rgba(2, 6, 23, .2), rgba(0, 0, 0, .64));
+}
+
+.urai-home-world-fallback-orb,
+.urai-home-world-fallback-ring {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+.urai-home-world-fallback-orb {
+  width: clamp(120px, 13vw, 190px);
+  height: clamp(120px, 13vw, 190px);
+  background: radial-gradient(circle at 42% 35%, #fff, #9be7ff 24%, rgba(96, 165, 250, .38) 48%, transparent 72%);
+  box-shadow: 0 0 70px rgba(125, 211, 252, .34), 0 0 160px rgba(196, 181, 253, .18);
+}
+
+.urai-home-world-fallback-ring {
+  width: clamp(220px, 24vw, 380px);
+  height: clamp(220px, 24vw, 380px);
+  border: 1px solid rgba(219, 245, 255, .16);
+  box-shadow: inset 0 0 44px rgba(125, 211, 252, .08), 0 0 64px rgba(125, 211, 252, .08);
+}
+
+.urai-hero-sky,
+.urai-hero-terrain,
+.urai-hero-body,
+.urai-hero-orb-system,
+.urai-hero-bloom,
+.urai-home-panel,
+.urai-zone-runes,
+.urai-hero-copy,
+.urai-orb-chat-layer,
+.urai-ground-layer {
+  position: relative;
+}
+
+.spatial-life-map.urai-life-map-screen {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(125, 211, 252, .2), transparent 23%),
+    radial-gradient(circle at 68% 30%, rgba(196, 181, 253, .13), transparent 24%),
+    radial-gradient(ellipse at 50% 104%, rgba(255, 239, 184, .08), transparent 38%),
+    linear-gradient(180deg, #00030b 0%, #031126 52%, #01030a 100%);
+}
+
+body:has(.urai-life-map-screen) {
+  overflow: hidden;
+}
+
+.spatial-life-map .spatial-stage {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.spatial-life-map .spatial-stage canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.spatial-cinematic-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 44%, transparent 28%, rgba(0, 0, 0, .18) 64%, rgba(0, 0, 0, .76) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, .35), transparent 26%, transparent 68%, rgba(0, 0, 0, .8));
+}
+
+.spatial-home-gate {
+  position: fixed;
+  left: max(18px, env(safe-area-inset-left));
+  top: max(18px, env(safe-area-inset-top));
+  z-index: 38;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  border: 1px solid rgba(190, 215, 255, .18);
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: linear-gradient(135deg, rgba(3, 7, 18, .78), rgba(15, 23, 42, .52));
+  color: rgba(240, 253, 255, .94);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  cursor: pointer;
+}
+
+.spatial-home-gate span {
+  font-size: 17px;
+  line-height: 1;
+  color: rgba(191, 233, 255, .84);
+}
+
+.spatial-home-gate strong {
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.spatial-home-gate:hover,
+.spatial-home-gate:focus-visible {
+  border-color: rgba(219, 245, 255, .34);
+  background: linear-gradient(135deg, rgba(8, 13, 28, .9), rgba(30, 41, 59, .62));
+  outline: none;
+}
+
+.spatial-focus-chamber {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.spatial-focus-chamber > * {
+  pointer-events: auto;
+}
+
+.spatial-focus-orb {
+  position: absolute;
+  width: min(34vw, 320px);
+  height: min(34vw, 320px);
+  min-width: 170px;
+  min-height: 170px;
+  border-radius: 999px;
+  opacity: .42;
+  filter: blur(.2px);
+  animation: spatialFocusOrbPulse 4.4s ease-in-out infinite;
+}
+
+.spatial-focus-weather {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, .12), transparent 18%),
+    radial-gradient(circle at 44% 58%, rgba(125, 211, 252, .11), transparent 30%),
+    radial-gradient(circle at 62% 34%, rgba(196, 181, 253, .1), transparent 32%);
+  mix-blend-mode: screen;
+}
+
+.spatial-focus-close {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  top: max(18px, env(safe-area-inset-top));
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(190, 215, 255, .2);
+  border-radius: 999px;
+  background: rgba(3, 7, 18, .72);
+  color: rgba(240, 253, 255, .92);
+  font-size: 24px;
+}
+
+.spatial-focus-copy {
+  position: relative;
+  width: min(620px, calc(100vw - 36px));
+  border: 1px solid rgba(190, 215, 255, .16);
+  border-radius: 36px;
+  padding: clamp(24px, 5vw, 44px);
+  background: linear-gradient(135deg, rgba(3, 7, 18, .68), rgba(8, 13, 28, .42));
+  box-shadow: 0 28px 110px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.spatial-focus-copy p {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(191, 233, 255, .62);
+}
+
+.spatial-focus-copy h2 {
+  margin: 10px 0 0;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: .95;
+  letter-spacing: -.07em;
+}
+
+.spatial-focus-copy > span {
+  display: block;
+  margin: 16px auto 0;
+  max-width: 540px;
+  color: rgba(240, 253, 255, .78);
+  line-height: 1.65;
+}
+
+.spatial-focus-signals,
+.spatial-focus-actions,
+.spatial-replay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.spatial-focus-signals small {
+  border: 1px solid rgba(190, 215, 255, .12);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: rgba(219, 245, 255, .62);
+  background: rgba(255, 255, 255, .045);
+}
+
+.spatial-focus-actions button,
+.spatial-replay-actions button {
+  border: 1px solid rgba(190, 215, 255, .18);
+  border-radius: 999px;
+  padding: 11px 15px;
+  background: rgba(15, 23, 42, .72);
+  color: rgba(240, 253, 255, .92);
+}
+
+.spatial-return-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(191, 233, 255, .22), transparent 24%),
+    radial-gradient(circle at 50% 56%, rgba(196, 181, 253, .14), transparent 34%),
+    rgba(0, 3, 11, .82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.spatial-return-orb {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 40% 35%, #fff, #9be7ff 28%, rgba(96, 165, 250, .24) 62%, transparent 78%);
+  box-shadow: 0 0 80px rgba(125, 211, 252, .38), 0 0 160px rgba(196, 181, 253, .2);
+  animation: spatialReturnOrb 980ms ease-in-out infinite alternate;
+}
+
+.spatial-return-veil span {
+  margin-top: 150px;
+  position: absolute;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: rgba(219, 245, 255, .72);
+}
+
+.spatial-scene-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(191, 233, 255, .14), transparent 28%),
+    radial-gradient(circle at 50% 62%, rgba(196, 181, 253, .1), transparent 36%),
+    linear-gradient(180deg, rgba(0, 3, 11, .18), rgba(0, 0, 0, .58));
+}
+
+.spatial-scene-fallback p,
+.spatial-scene-fallback h2,
+.spatial-scene-fallback span {
+  position: relative;
+  z-index: 2;
+}
+
+.spatial-scene-fallback p {
+  margin: 170px 0 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(191, 233, 255, .62);
+}
+
+.spatial-scene-fallback h2 {
+  margin: 8px 0 0;
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  letter-spacing: -.06em;
+}
+
+.spatial-scene-fallback span {
+  display: block;
+  max-width: 520px;
+  margin-top: 10px;
+  color: rgba(219, 245, 255, .7);
+  line-height: 1.6;
+}
+
+.spatial-fallback-orb,
+.spatial-fallback-ring {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+
+.spatial-fallback-orb {
+  width: 148px;
+  height: 148px;
+  background: radial-gradient(circle at 38% 34%, #fff, #9be7ff 28%, rgba(96, 165, 250, .22) 62%, transparent 78%);
+  box-shadow: 0 0 70px rgba(125, 211, 252, .35), 0 0 140px rgba(196, 181, 253, .18);
+}
+
+.spatial-fallback-ring-a {
+  width: 260px;
+  height: 260px;
+  border: 1px solid rgba(191, 233, 255, .14);
+}
+
+.spatial-fallback-ring-b {
+  width: 390px;
+  height: 390px;
+  border: 1px solid rgba(196, 181, 253, .08);
+}
+
+@keyframes spatialFocusOrbPulse {
+  0%, 100% { transform: scale(.96); opacity: .34; }
+  50% { transform: scale(1.04); opacity: .48; }
+}
+
+@keyframes spatialReturnOrb {
+  from { transform: scale(.92); opacity: .72; }
+  to { transform: scale(1.08); opacity: 1; }
+}
+
+@media (max-width: 860px) {
+  .spatial-home-gate {
+    top: 14px;
+    left: 12px;
+    min-height: 38px;
+    padding: 8px 11px;
+  }
+
+  .spatial-focus-chamber {
+    padding: 14px;
+    align-items: end;
+    padding-bottom: 92px;
+  }
+
+  .spatial-focus-copy {
+    border-radius: 28px;
+    padding: 22px;
+  }
+
+  .spatial-focus-orb {
+    top: 38%;
+  }
+
+  .spatial-scene-fallback p {
+    margin-top: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-focus-orb,
+  .spatial-return-orb {
+    animation: none !important;
+  }
+}
