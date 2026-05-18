@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Component, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { useLifeMapData } from "./useLifeMapData";
 import { useGalaxyCamera } from "./useGalaxyCamera";
@@ -17,6 +17,63 @@ import type { LifeMapStar, MemoryBloom } from "@/lib/spatial-life-map/lifeMap.ty
 
 type LifeMapInteractionMode = "galaxy" | "focus" | "replay" | "bloom";
 type ReturnPhase = "idle" | "returning";
+
+export type SpatialLifeMapProps = {
+  userId?: string;
+  initialMode?: LifeMapInteractionMode | string;
+  initialOverlay?: "mirror" | string;
+};
+
+type SceneErrorBoundaryProps = {
+  children: ReactNode;
+  fallback: ReactNode;
+  resetKey: string;
+};
+
+type SceneErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class SceneErrorBoundary extends Component<SceneErrorBoundaryProps, SceneErrorBoundaryState> {
+  state: SceneErrorBoundaryState = { hasError: false };
+
+  static getDerivedStateFromError(): SceneErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidUpdate(previousProps: SceneErrorBoundaryProps) {
+    if (previousProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("URAI Spatial Life Map scene failed to render", error);
+  }
+
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
+function normalizeInitialMode(initialMode?: SpatialLifeMapProps["initialMode"]): LifeMapInteractionMode {
+  if (initialMode === "focus" || initialMode === "replay" || initialMode === "bloom") return initialMode;
+  return "galaxy";
+}
+
+function SpatialSceneFallback({ message = "URAI loaded the safe spatial fallback. The memory galaxy data remains available while the 3D renderer recovers." }: { message?: string }) {
+  return (
+    <div className="spatial-scene-fallback" role="status" aria-live="polite">
+      <div className="spatial-fallback-orb" aria-hidden />
+      <div className="spatial-fallback-ring spatial-fallback-ring-a" aria-hidden />
+      <div className="spatial-fallback-ring spatial-fallback-ring-b" aria-hidden />
+      <p>3D renderer fallback</p>
+      <h2>Memory Galaxy is still online.</h2>
+      <span>{message}</span>
+    </div>
+  );
+}
 
 function FocusChamber({
   star,
@@ -55,11 +112,12 @@ function FocusChamber({
   );
 }
 
-export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: string }) {
+export default function SpatialLifeMap({ userId = "demo-user", initialMode, initialOverlay }: SpatialLifeMapProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [mode, setMode] = useState<LifeMapInteractionMode>("galaxy");
+  const [mode, setMode] = useState<LifeMapInteractionMode>(() => normalizeInitialMode(initialMode));
   const [returnPhase, setReturnPhase] = useState<ReturnPhase>("idle");
+  const initialSelectionApplied = useRef(false);
 
   const { data, loading, error } = useLifeMapData(userId);
   const { activeLayerIds, activeLayers, toggleLayer, enableAll } = useLayerWheel(data.layers);
@@ -70,10 +128,31 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   const previewStar = selection.hoveredStar ?? (mode === "galaxy" ? selectedStar : null);
   const bloomPanelData = data.memoryBlooms.find((bloom) => bloom.starId === selection.bloomStarId) ?? null;
   const selectedReplayBloom = selectedStar ? data.memoryBlooms.find((bloom) => bloom.starId === selectedStar.id) ?? null : null;
+  const sceneResetKey = `${data.spatialSettings.userId}:${data.stars.length}:${activeLayerIds.join("|")}`;
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (initialSelectionApplied.current || visibleStars.length === 0) return;
+
+    const normalizedInitialMode = normalizeInitialMode(initialMode);
+    const shouldOpenInitialView = normalizedInitialMode !== "galaxy" || initialOverlay === "mirror";
+    if (!shouldOpenInitialView) return;
+
+    const targetStar =
+      initialOverlay === "mirror"
+        ? visibleStars.find((star) => star.isShadowMoment || star.type === "shadow") ?? visibleStars[0]
+        : visibleStars[0];
+
+    initialSelectionApplied.current = true;
+    selection.selectStar(targetStar);
+    camera.focusPosition(targetStar.position3D, normalizedInitialMode === "replay" ? 2.55 : normalizedInitialMode === "bloom" ? 3.05 : 3.55);
+
+    if (normalizedInitialMode === "bloom") selection.openBloom(targetStar);
+    setMode(normalizedInitialMode === "galaxy" ? "focus" : normalizedInitialMode);
+  }, [camera, initialMode, initialOverlay, selection, visibleStars]);
 
   function focusStar(star: typeof data.stars[number]) {
     selection.closeBloom();
@@ -155,7 +234,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
 
   if (!mounted) {
     return (
-      <main className="spatial-life-map" aria-label="URAI Spatial Life Map Galaxy">
+      <main className="spatial-life-map urai-life-map-screen" aria-label="URAI Spatial Life Map Galaxy">
         <div className="spatial-atmosphere" aria-hidden />
         <section className="spatial-stage">
           <div className="spatial-canvas-placeholder" aria-hidden />
@@ -165,7 +244,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }
 
   return (
-    <main className={`spatial-life-map is-${mode} return-${returnPhase}`} aria-label="URAI Spatial Life Map Galaxy">
+    <main className={`spatial-life-map urai-life-map-screen is-${mode} return-${returnPhase}`} aria-label="URAI Spatial Life Map Galaxy">
       <div className="spatial-atmosphere" aria-hidden />
       <div className="spatial-cinematic-vignette" aria-hidden />
       <button type="button" className="spatial-home-gate" onClick={returnHome} aria-label="Return to the Inner Sky Shrine">
@@ -173,18 +252,20 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       </button>
 
       <section className="spatial-stage" {...camera.bind}>
-        <LifeGalaxyScene
-          stars={data.stars}
-          constellations={data.constellations}
-          activeLayerIds={activeLayerIds}
-          cameraState={camera.cameraState}
-          selectedStarId={selection.selectedStarId}
-          hoveredStarId={selection.hoveredStarId}
-          reducedMotion={data.spatialSettings.reducedMotion}
-          onHoverStar={selection.setHoveredStarId}
-          onSelectStar={focusStar}
-          onOpenStar={openBloom}
-        />
+        <SceneErrorBoundary resetKey={sceneResetKey} fallback={<SpatialSceneFallback />}>
+          <LifeGalaxyScene
+            stars={data.stars}
+            constellations={data.constellations}
+            activeLayerIds={activeLayerIds}
+            cameraState={camera.cameraState}
+            selectedStarId={selection.selectedStarId}
+            hoveredStarId={selection.hoveredStarId}
+            reducedMotion={data.spatialSettings.reducedMotion}
+            onHoverStar={selection.setHoveredStarId}
+            onSelectStar={focusStar}
+            onOpenStar={openBloom}
+          />
+        </SceneErrorBoundary>
       </section>
 
       <header className="spatial-title-card">
