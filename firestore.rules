@@ -1,8 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
+    function isSignedIn() {
       return request.auth != null;
+    }
+
+    function signedIn() {
+      return isSignedIn();
     }
 
     function isSelf(uid) {
@@ -38,7 +42,7 @@ service cloud.firestore {
         "internal",
         "internalOverride",
         "isAdmin",
-        "isFounder",
+        "isFounder"
       ]);
     }
 
@@ -50,7 +54,7 @@ service cloud.firestore {
         "mood_inference",
         "relationship_signals",
         "rituals",
-        "offline_cache",
+        "offline_cache"
       ];
     }
 
@@ -70,6 +74,7 @@ service cloud.firestore {
         && request.resource.data.source == source;
     }
 
+    // Top-level collections
     match /users/{uid} {
       allow read: if isSelf(uid);
       allow create: if isSelf(uid);
@@ -132,6 +137,12 @@ service cloud.firestore {
         allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
         allow delete: if isSelf(uid) && resource.data.uid == uid;
       }
+    }
+
+    match /dreams/{docId} {
+      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
     }
 
     match /timelineEvents/{docId} {
