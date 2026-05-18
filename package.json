@@ -43,6 +43,7 @@
     "test:e2e": "playwright test",
     "test:smoke": "playwright test tests/e2e --grep @smoke",
     "test:smoke:staging": "PLAYWRIGHT_BASE_URL=https://urai-staging.web.app playwright test tests/e2e --grep @smoke",
+    "playwright:install": "npx playwright install",
     "verify:release": "node scripts/independent-release-verifier.mjs",
     "verify:release:full": "URAI_VERIFIER_RUN_COMMANDS=1 node scripts/independent-release-verifier.mjs",
     "urai:tier1:lock": "node scripts/tier-lock/tier1-launch-lock.mjs",
