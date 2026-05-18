@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLifeMapData } from "./useLifeMapData";
 import { useGalaxyCamera } from "./useGalaxyCamera";
 import { useLayerWheel } from "./useLayerWheel";
@@ -15,9 +16,13 @@ import SpatialControls from "./SpatialControls";
 
 type LifeMapInteractionMode = "galaxy" | "focus" | "replay" | "bloom";
 
+const HOME_UNWIND_MS = 720;
+
 export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: string }) {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<LifeMapInteractionMode>("galaxy");
+  const [isReturningHome, setIsReturningHome] = useState(false);
 
   const { data, loading, error } = useLifeMapData(userId);
   const { activeLayerIds, activeLayers, toggleLayer, enableAll } = useLayerWheel(data.layers);
@@ -34,6 +39,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }, []);
 
   function focusStar(star: typeof data.stars[number]) {
+    if (isReturningHome) return;
     selection.closeBloom();
     selection.selectStar(star);
     setMode("focus");
@@ -41,13 +47,14 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }
 
   function openReplay() {
-    if (!selectedStar || mode === "replay") return;
+    if (!selectedStar || mode === "replay" || isReturningHome) return;
     selection.closeBloom();
     setMode("replay");
     camera.focusPosition(selectedStar.position3D, 2.55);
   }
 
   function openBloom(star?: typeof data.stars[number] | null) {
+    if (isReturningHome) return;
     const targetStar = star ?? selectedStar;
     if (!targetStar) return;
     selection.openBloom(targetStar);
@@ -60,7 +67,22 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
     setMode(selectedStar ? "focus" : "galaxy");
   }
 
+  function returnToHome() {
+    if (isReturningHome) return;
+    selection.closeBloom();
+    selection.setHoveredStarId(null);
+    selection.setSelectedStarId(null);
+    camera.resetCamera();
+    setMode("galaxy");
+    setIsReturningHome(true);
+    window.setTimeout(() => {
+      router.push("/");
+    }, HOME_UNWIND_MS);
+  }
+
   function unwind() {
+    if (isReturningHome) return;
+
     if (mode === "replay") {
       setMode(selectedStar ? "focus" : "galaxy");
       return;
@@ -79,7 +101,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       return;
     }
 
-    camera.resetCamera();
+    returnToHome();
   }
 
   useEffect(() => {
@@ -105,7 +127,7 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }
 
   return (
-    <main className={`spatial-life-map is-${mode}`} aria-label="URAI Spatial Life Map Galaxy">
+    <main className={`spatial-life-map is-${mode} ${isReturningHome ? "is-returning-home" : ""}`} aria-label="URAI Spatial Life Map Galaxy">
       <div className="spatial-atmosphere" aria-hidden />
       <section className="spatial-stage" {...camera.bind}>
         <LifeGalaxyScene
@@ -122,10 +144,15 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
         />
       </section>
 
+      <button type="button" className="spatial-home-unwind-button" onClick={returnToHome} aria-label="Return to Inner Sky Shrine">
+        <span>↶</span>
+        <strong>Home</strong>
+      </button>
+
       <header className="spatial-title-card">
-        <p>{mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode.toUpperCase()}</p>
+        <p>{isReturningHome ? "UNWINDING TO INNER SKY" : mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode.toUpperCase()}</p>
         <h1>{mode === "replay" ? "Replay Thread" : selectedStar ? selectedStar.title : "Memory Galaxy"}</h1>
-        <span>{visibleStars.length} active stars · {data.constellations.length} constellations · click star · click focus · Esc unwind</span>
+        <span>{visibleStars.length} active stars · {data.constellations.length} constellations · click star · click focus · Esc returns home</span>
       </header>
 
       {loading && <div className="spatial-loading">URAI is arranging your living galaxy...</div>}
@@ -157,6 +184,13 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       />
 
       <MemoryBloomPanel star={selection.bloomStar} bloom={bloomPanelData} onClose={closeBloom} />
+
+      {isReturningHome && (
+        <div className="spatial-home-return-overlay" aria-live="assertive">
+          <div className="spatial-home-return-orb" />
+          <p>Returning to the Inner Sky Shrine</p>
+        </div>
+      )}
 
       {mode === "replay" && selectedStar && (
         <section className="spatial-replay-overlay" role="dialog" aria-modal="true" aria-label={`${selectedStar.title} replay`}>
