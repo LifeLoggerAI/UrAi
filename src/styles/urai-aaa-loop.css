@@ -1,0 +1,548 @@
+/* URAI AAA+++ whole-loop polish: /home + /life-map + focus + replay + return. */
+
+:root {
+  --urai-aaa-glass: rgba(4, 10, 24, .66);
+  --urai-aaa-border: rgba(217, 245, 255, .18);
+  --urai-aaa-text: rgba(240, 253, 255, .96);
+  --urai-aaa-muted: rgba(220, 244, 255, .58);
+  --urai-aaa-cyan: rgba(125, 234, 249, .92);
+  --urai-aaa-violet: rgba(189, 166, 255, .72);
+  --urai-aaa-gold: rgba(255, 229, 138, .78);
+  --urai-aaa-ease: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* SHARED PREMIUM GLASS */
+.urai-home-panel,
+.spatial-title-card,
+.spatial-zoom-hud,
+.spatial-star-preview,
+.spatial-layer-core,
+.spatial-controls,
+.spatial-chapter-rail,
+.spatial-memory-bloom,
+.spatial-replay-card,
+.urai-orb-chat,
+.urai-ground-sanctum {
+  border-color: var(--urai-aaa-border) !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(186, 236, 255, .12), transparent 34%),
+    radial-gradient(circle at 92% 12%, rgba(189, 166, 255, .08), transparent 34%),
+    linear-gradient(180deg, rgba(8, 17, 38, .74), rgba(1, 5, 16, .62)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    inset 0 -1px 0 rgba(255, 255, 255, .025),
+    0 32px 110px rgba(0, 0, 0, .5),
+    0 0 90px rgba(125, 234, 249, .08) !important;
+  backdrop-filter: blur(26px) saturate(1.2) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(1.2) !important;
+}
+
+/* HOME: make the shrine feel authored, deep, and expensive. */
+.urai-hero-home {
+  background:
+    radial-gradient(circle at 50% 27%, rgba(247, 253, 255, .105), transparent 10%),
+    radial-gradient(circle at 50% 42%, rgba(94, 241, 248, .2), transparent 20%),
+    radial-gradient(circle at 30% 49%, rgba(84, 141, 255, .12), transparent 31%),
+    radial-gradient(circle at 72% 51%, rgba(189, 166, 255, .1), transparent 33%),
+    radial-gradient(circle at 54% 76%, rgba(255, 229, 138, .045), transparent 25%),
+    linear-gradient(180deg, #00030a 0%, #071426 31%, #06223a 53%, #03111f 70%, #000105 100%) !important;
+}
+
+.urai-hero-home::before {
+  background:
+    radial-gradient(ellipse at 50% 43%, transparent 22%, rgba(0,0,0,.12) 50%, rgba(0,0,0,.76) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.42), transparent 22%, transparent 64%, rgba(0,0,0,.86)),
+    linear-gradient(90deg, rgba(0,0,0,.66), transparent 22%, transparent 76%, rgba(0,0,0,.66)) !important;
+}
+
+.urai-hero-home::after {
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(218, 252, 255, .14), transparent 29%),
+    radial-gradient(ellipse at 50% 84%, rgba(91, 228, 247, .095), transparent 36%),
+    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.28), transparent 44%) !important;
+}
+
+.urai-moon-crescent {
+  top: 9vh !important;
+  right: 10vw !important;
+  opacity: .5 !important;
+}
+
+.urai-atmosphere-band-a { opacity: .86 !important; }
+.urai-atmosphere-band-b { opacity: .9 !important; }
+.urai-atmosphere-band-c { opacity: .62 !important; }
+
+.urai-hero-orb-system {
+  transform-origin: 50% 41.5% !important;
+  filter: drop-shadow(0 0 34px rgba(190, 248, 255, .2)) !important;
+}
+
+.urai-hero-orb-halo {
+  width: clamp(410px, 48vw, 720px) !important;
+  height: clamp(410px, 48vw, 720px) !important;
+  opacity: .94 !important;
+  filter: blur(22px) !important;
+}
+
+.urai-hero-orb {
+  width: clamp(126px, 11.5vw, 174px) !important;
+  height: clamp(126px, 11.5vw, 174px) !important;
+}
+
+.urai-hero-orb-ring {
+  border-color: rgba(232, 253, 255, .26) !important;
+}
+
+.urai-reflection-floor {
+  opacity: .86 !important;
+  bottom: 7vh !important;
+  background:
+    radial-gradient(ellipse at 50% 38%, rgba(221, 255, 255, .22), rgba(78, 232, 242, .1) 35%, transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.065), rgba(0,0,0,0)) !important;
+}
+
+.urai-ground-ritual-ring {
+  border-color: rgba(224, 253, 255, .11) !important;
+  opacity: .84 !important;
+}
+
+.urai-foundation-glow-lines {
+  opacity: .72 !important;
+}
+
+.urai-zone-runes {
+  bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+  opacity: .7;
+}
+
+.urai-zone-runes span {
+  background: rgba(0, 8, 20, .38) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: rgba(239, 250, 255, .44) !important;
+}
+
+.urai-sky-zone:hover span,
+.urai-sky-zone:focus-visible span {
+  opacity: 1 !important;
+  color: rgba(239, 250, 255, .78) !important;
+}
+
+.urai-orb-chat,
+.urai-ground-sanctum {
+  width: min(760px, calc(100vw - 2rem)) !important;
+  min-height: min(560px, 76vh);
+  display: grid;
+  align-content: end;
+  padding: clamp(1.2rem, 3vw, 2rem) !important;
+}
+
+.urai-orb-chat h1,
+.urai-ground-sanctum h1 {
+  max-width: 720px;
+  font-size: clamp(3rem, 7vw, 5.7rem) !important;
+  letter-spacing: -.075em !important;
+}
+
+.urai-orb-chat p,
+.urai-ground-sanctum p {
+  color: rgba(213, 241, 255, .52) !important;
+}
+
+.urai-chat-message {
+  border-color: rgba(220,246,255,.16) !important;
+  background: rgba(255,255,255,.055) !important;
+}
+
+.urai-chat-message.urai {
+  background: linear-gradient(90deg, rgba(78,232,242,.13), rgba(255,255,255,.055)) !important;
+}
+
+.urai-chat-form input,
+.urai-chat-form button,
+.urai-layer-close,
+.urai-foundation-signals span {
+  border-color: rgba(220,246,255,.18) !important;
+  background: rgba(6, 13, 28, .56) !important;
+}
+
+.urai-chat-form input:focus {
+  border-color: rgba(155,231,255,.42) !important;
+  box-shadow: 0 0 0 3px rgba(125,211,252,.08), 0 0 40px rgba(125,211,252,.08);
+}
+
+/* LIFE MAP: darker, cleaner, more dimensional, less dashboard. */
+.spatial-life-map {
+  min-height: 100dvh !important;
+  background:
+    radial-gradient(circle at 50% 37%, rgba(125, 211, 252, .16), transparent 23%),
+    radial-gradient(circle at 32% 59%, rgba(104, 142, 210, .18), transparent 36%),
+    radial-gradient(circle at 78% 58%, rgba(189, 166, 255, .12), transparent 33%),
+    linear-gradient(180deg, #00030b 0%, #030814 58%, #000106 100%) !important;
+}
+
+.spatial-cinematic-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 18;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 46%, transparent 36%, rgba(0,0,0,.2) 62%, rgba(0,0,0,.82) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.44), transparent 24%, transparent 76%, rgba(0,0,0,.44));
+}
+
+.spatial-atmosphere {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(191, 233, 255, .2), transparent 24%),
+    radial-gradient(ellipse at 37% 62%, rgba(34, 211, 238, .1), transparent 30%),
+    radial-gradient(ellipse at 72% 62%, rgba(189, 166, 255, .08), transparent 34%),
+    linear-gradient(115deg, transparent 24%, rgba(147,197,253,.055) 25%, transparent 28%, transparent 55%, rgba(250,204,21,.04) 56%, transparent 59%) !important;
+}
+
+.spatial-stage {
+  z-index: 8 !important;
+}
+
+.spatial-life-map.is-focus .spatial-stage {
+  filter: saturate(1.08) brightness(.92) !important;
+}
+
+.spatial-life-map.is-replay .spatial-stage {
+  filter: saturate(.82) brightness(.55) blur(2px) !important;
+}
+
+.spatial-life-map.is-bloom .spatial-stage {
+  filter: saturate(.92) brightness(.64) blur(.8px) !important;
+}
+
+.spatial-title-card {
+  z-index: 45 !important;
+  min-width: min(430px, calc(100vw - 160px)) !important;
+  padding: 18px 28px 20px !important;
+  border-radius: 30px !important;
+}
+
+.spatial-title-card p {
+  letter-spacing: .34em !important;
+  color: rgba(191, 233, 255, .6) !important;
+}
+
+.spatial-title-card h1 {
+  font-size: clamp(2.25rem, 5vw, 4.25rem) !important;
+  line-height: .86 !important;
+  letter-spacing: -.07em !important;
+  font-weight: 520 !important;
+  text-shadow: 0 0 36px rgba(155,231,255,.18);
+}
+
+.spatial-title-card span {
+  color: rgba(219,245,255,.62) !important;
+}
+
+.spatial-home-gate {
+  position: fixed;
+  left: max(18px, env(safe-area-inset-left));
+  top: max(18px, env(safe-area-inset-top));
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border: 1px solid rgba(220, 246, 255, .18);
+  border-radius: 999px;
+  padding: .74rem 1rem;
+  color: var(--urai-aaa-text);
+  background: rgba(4, 10, 24, .68);
+  box-shadow: 0 22px 80px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(22px) saturate(1.2);
+  cursor: pointer;
+  transition: transform .2s var(--urai-aaa-ease), border-color .2s ease, background .2s ease;
+}
+
+.spatial-home-gate:hover,
+.spatial-home-gate:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(220,246,255,.34);
+  background: rgba(10, 18, 40, .72);
+  outline: none;
+}
+
+.spatial-home-gate span {
+  opacity: .78;
+}
+
+.spatial-home-gate strong {
+  font-size: .95rem;
+}
+
+.spatial-star-preview {
+  z-index: 46 !important;
+  top: max(106px, calc(env(safe-area-inset-top) + 106px)) !important;
+  width: min(370px, calc(100vw - 36px)) !important;
+}
+
+.spatial-preview-orb,
+.spatial-bloom-orb,
+.spatial-replay-orb {
+  box-shadow: 0 0 54px currentColor, 0 0 120px rgba(155,231,255,.12) !important;
+}
+
+.spatial-star-preview h2 {
+  font-size: 1.55rem !important;
+  line-height: 1.05;
+}
+
+.spatial-star-preview small {
+  color: rgba(191, 233, 255, .52) !important;
+}
+
+.spatial-controls {
+  z-index: 72 !important;
+  bottom: max(24px, calc(env(safe-area-inset-bottom) + 22px)) !important;
+  padding: 10px !important;
+  gap: 9px !important;
+}
+
+.spatial-controls button,
+.spatial-chapter-rail button,
+.spatial-replay-actions button,
+.spatial-replay-overlay button,
+.spatial-bloom-close {
+  border-color: rgba(220,246,255,.18) !important;
+  background: rgba(6, 13, 28, .68) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+  cursor: pointer;
+}
+
+.spatial-controls button:not(:disabled):hover,
+.spatial-chapter-rail button:hover,
+.spatial-replay-actions button:hover,
+.spatial-bloom-close:hover {
+  transform: translateY(-1px);
+  border-color: rgba(220,246,255,.36) !important;
+  background: rgba(18, 30, 58, .76) !important;
+}
+
+.spatial-chapter-rail {
+  z-index: 58 !important;
+  bottom: max(86px, calc(env(safe-area-inset-bottom) + 84px)) !important;
+  opacity: .14;
+  transform: translateX(-50%) translateY(18px) scale(.98) !important;
+  transition: opacity .28s ease, transform .28s var(--urai-aaa-ease) !important;
+}
+
+.spatial-chapter-rail:hover,
+.spatial-chapter-rail:focus-within {
+  opacity: .98;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+.spatial-layer-wheel,
+.spatial-zoom-hud {
+  opacity: .24;
+  transition: opacity .25s ease, transform .25s var(--urai-aaa-ease);
+}
+
+.spatial-layer-wheel:hover,
+.spatial-layer-wheel:focus-within,
+.spatial-zoom-hud:hover,
+.spatial-zoom-hud:focus-within {
+  opacity: 1;
+}
+
+.spatial-memory-bloom {
+  z-index: 82 !important;
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(720px, calc(100vw - 2rem)) !important;
+  min-height: min(520px, 78vh);
+  display: grid;
+  align-content: end;
+  padding: clamp(1.6rem, 4vw, 2.6rem) !important;
+}
+
+.spatial-memory-bloom h2 {
+  font-size: clamp(3rem, 7vw, 5.8rem) !important;
+  letter-spacing: -.08em !important;
+  max-width: 680px;
+}
+
+.spatial-memory-bloom blockquote {
+  font-size: clamp(1rem, 1.5vw, 1.22rem) !important;
+  max-width: 640px;
+}
+
+.spatial-replay-overlay {
+  z-index: 86 !important;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(191, 233, 255, .16), transparent 20%),
+    radial-gradient(circle at 50% 60%, rgba(168,85,247,.13), transparent 34%),
+    rgba(0, 3, 10, .72) !important;
+  backdrop-filter: blur(8px) saturate(1.05) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.05) !important;
+}
+
+.spatial-replay-card {
+  width: min(720px, calc(100vw - 2rem));
+  min-height: min(540px, 82vh);
+  border-radius: 34px;
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+  text-align: left;
+  display: grid;
+  align-content: end;
+}
+
+.spatial-replay-card p {
+  margin: 0 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .34em !important;
+  color: rgba(191,233,255,.66) !important;
+}
+
+.spatial-replay-card h2 {
+  margin: .55rem 0 0 !important;
+  font-size: clamp(3.1rem, 7.6vw, 6.2rem) !important;
+  line-height: .9 !important;
+  letter-spacing: -.08em !important;
+}
+
+.spatial-replay-card span {
+  max-width: 620px !important;
+  margin-top: 1rem !important;
+  color: rgba(240,253,255,.82) !important;
+  line-height: 1.62 !important;
+}
+
+.spatial-replay-actions {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+}
+
+.spatial-replay-orb {
+  width: clamp(106px, 15vw, 170px) !important;
+  height: clamp(106px, 15vw, 170px) !important;
+  margin-bottom: auto;
+}
+
+.spatial-replay-path {
+  margin-top: 1.4rem !important;
+  width: 100% !important;
+  max-width: 560px;
+  background: rgba(255,255,255,.08) !important;
+}
+
+.spatial-return-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(125, 234, 249, .18), transparent 22%),
+    rgba(0, 3, 10, .72);
+  backdrop-filter: blur(10px) saturate(.9);
+  -webkit-backdrop-filter: blur(10px) saturate(.9);
+  color: var(--urai-aaa-text);
+  pointer-events: none;
+  animation: uraiReturnVeilIn .38s var(--urai-aaa-ease) both;
+}
+
+.spatial-return-orb {
+  width: clamp(150px, 19vw, 240px);
+  height: clamp(150px, 19vw, 240px);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(125,234,249,.62) 33%, rgba(0,18,34,.95) 72%);
+  box-shadow: 0 0 80px rgba(190,248,255,.48), 0 0 180px rgba(125,234,249,.18);
+  animation: uraiReturnOrb .95s var(--urai-aaa-ease) both;
+}
+
+.spatial-return-veil span {
+  position: absolute;
+  left: 50%;
+  top: 68%;
+  transform: translateX(-50%);
+  color: rgba(240,253,255,.84);
+  text-shadow: 0 0 28px rgba(155,231,255,.22);
+}
+
+.spatial-life-map.return-returning .spatial-stage,
+.spatial-life-map.return-returning .spatial-title-card,
+.spatial-life-map.return-returning .spatial-star-preview,
+.spatial-life-map.return-returning .spatial-controls,
+.spatial-life-map.return-returning .spatial-chapter-rail,
+.spatial-life-map.return-returning .spatial-home-gate {
+  opacity: .26 !important;
+  filter: blur(2px) brightness(.62) !important;
+}
+
+/* Keep the current screenshots' successful core chain while making labels intentional. */
+.spatial-controls button:nth-child(2)::after {
+  content: "";
+}
+
+@keyframes uraiReturnVeilIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes uraiReturnOrb {
+  0% { transform: scale(.52); opacity: .22; filter: blur(8px); }
+  55% { transform: scale(1.08); opacity: .94; filter: blur(0); }
+  100% { transform: scale(.78); opacity: .76; }
+}
+
+@media (max-width: 860px) {
+  .spatial-title-card {
+    width: calc(100vw - 132px) !important;
+    min-width: auto !important;
+    padding: 12px 14px 14px !important;
+  }
+
+  .spatial-title-card h1 {
+    font-size: clamp(1.6rem, 8vw, 2.4rem) !important;
+  }
+
+  .spatial-star-preview {
+    top: auto !important;
+    bottom: 8.8rem !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+  }
+
+  .spatial-chapter-rail {
+    bottom: 5.75rem !important;
+    width: calc(100vw - 1rem) !important;
+  }
+
+  .spatial-controls {
+    bottom: .8rem !important;
+    width: calc(100vw - 1rem) !important;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .spatial-memory-bloom,
+  .spatial-replay-card {
+    width: calc(100vw - 1rem) !important;
+    min-height: min(620px, 88vh);
+    border-radius: 28px !important;
+  }
+
+  .urai-orb-chat,
+  .urai-ground-sanctum {
+    min-height: 74vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-return-veil,
+  .spatial-return-orb,
+  .urai-hero-orb::after {
+    animation: none !important;
+  }
+}

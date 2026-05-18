@@ -17,38 +17,54 @@ interface LifeStarProps {
 
 export default function LifeStar({ star, selected, hovered, dimmed = false, onHover, onSelect, onOpen }: LifeStarProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const haloRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
+  const verticalRingRef = useRef<THREE.Mesh>(null);
   const color = new THREE.Color(star.auraColor);
   const isLockedOrPrivate = star.privacyLevel === "private" || star.privacyLevel === "localOnly";
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    const pulse = 1 + Math.sin(t * star.twinkleSpeed + star.position3D.x) * 0.08;
-    const focus = selected ? 1.72 : hovered ? 1.36 : 1;
+    const pulse = 1 + Math.sin(t * star.twinkleSpeed + star.position3D.x) * 0.055;
+    const focus = selected ? 1.42 : hovered ? 1.2 : 1;
 
     if (groupRef.current) {
       groupRef.current.scale.setScalar(star.size * pulse * focus);
-      groupRef.current.rotation.z = t * 0.04 + star.position3D.z * 0.02;
+      groupRef.current.rotation.y = Math.sin(t * 0.2 + star.position3D.x) * 0.22;
+      groupRef.current.rotation.z = t * 0.05 + star.position3D.z * 0.025;
     }
 
-    if (haloRef.current) {
-      const material = haloRef.current.material as THREE.MeshBasicMaterial;
-      material.opacity = (selected ? 0.34 : hovered ? 0.23 : 0.105) * (dimmed ? 0.28 : 1);
-      haloRef.current.scale.setScalar((selected ? 3.15 : 2.55) + Math.sin(t * 0.9) * 0.12);
+    if (glowRef.current) {
+      const material = glowRef.current.material as THREE.MeshBasicMaterial;
+      material.opacity = (selected ? 0.34 : hovered ? 0.22 : 0.11) * (dimmed ? 0.22 : 1);
+      glowRef.current.scale.setScalar((selected ? 1.12 : hovered ? 0.96 : 0.78) + Math.sin(t * 0.9) * 0.025);
+    }
+
+    if (coreRef.current) {
+      const material = coreRef.current.material as THREE.MeshStandardMaterial;
+      material.emissiveIntensity = selected ? 5.2 : hovered ? 3.2 : 2.05;
+      material.opacity = dimmed ? 0.38 : 1;
     }
 
     if (innerRingRef.current) {
-      innerRingRef.current.rotation.z = -t * 0.18;
+      innerRingRef.current.rotation.z = -t * 0.24;
       const material = innerRingRef.current.material as THREE.MeshBasicMaterial;
-      material.opacity = (selected ? 0.64 : hovered ? 0.36 : 0.18) * (dimmed ? 0.32 : 1);
+      material.opacity = (selected ? 0.76 : hovered ? 0.46 : 0.24) * (dimmed ? 0.3 : 1);
     }
 
     if (outerRingRef.current) {
-      outerRingRef.current.rotation.z = t * 0.11;
+      outerRingRef.current.rotation.z = t * 0.16;
       const material = outerRingRef.current.material as THREE.MeshBasicMaterial;
-      material.opacity = (selected ? 0.44 : hovered ? 0.25 : isLockedOrPrivate ? 0.16 : 0.1) * (dimmed ? 0.3 : 1);
+      material.opacity = (selected ? 0.5 : hovered ? 0.32 : isLockedOrPrivate ? 0.18 : 0.13) * (dimmed ? 0.3 : 1);
+    }
+
+    if (verticalRingRef.current) {
+      verticalRingRef.current.rotation.x = t * 0.1;
+      verticalRingRef.current.rotation.y = Math.PI / 2.1 + Math.sin(t * 0.24) * 0.12;
+      const material = verticalRingRef.current.material as THREE.MeshBasicMaterial;
+      material.opacity = (selected ? 0.42 : hovered ? 0.27 : 0.12) * (dimmed ? 0.25 : 1);
     }
   });
 
@@ -73,29 +89,34 @@ export default function LifeStar({ star, selected, hovered, dimmed = false, onHo
         onOpen(star);
       }}
     >
-      <mesh ref={haloRef} renderOrder={1}>
-        <sphereGeometry args={[0.24, 32, 32]} />
+      <mesh ref={glowRef} renderOrder={1}>
+        <sphereGeometry args={[0.18, 24, 24]} />
         <meshBasicMaterial color={color} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
 
       <mesh ref={outerRingRef} renderOrder={2} rotation={[Math.PI / 2.55, 0.15, 0]}>
-        <torusGeometry args={[0.19, isLockedOrPrivate ? 0.0045 : 0.003, 8, 96]} />
-        <meshBasicMaterial color={isLockedOrPrivate ? "#f8fbff" : color} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <torusGeometry args={[0.22, isLockedOrPrivate ? 0.0048 : 0.0032, 10, 128]} />
+        <meshBasicMaterial color={isLockedOrPrivate ? "#f8fbff" : color} transparent opacity={0.14} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
 
       <mesh ref={innerRingRef} renderOrder={3} rotation={[Math.PI / 2.15, -0.2, 0]}>
-        <torusGeometry args={[0.13, 0.0035, 8, 96]} />
-        <meshBasicMaterial color={color} transparent opacity={0.18} depthWrite={false} blending={THREE.AdditiveBlending} />
+        <torusGeometry args={[0.14, 0.0038, 10, 128]} />
+        <meshBasicMaterial color={color} transparent opacity={0.24} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      <mesh renderOrder={4}>
-        <sphereGeometry args={[0.075, 32, 32]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={selected ? 3.1 : hovered ? 2 : 1.25} roughness={0.26} metalness={0.16} transparent opacity={dimmed ? 0.38 : 1} />
+      <mesh ref={verticalRingRef} renderOrder={3} rotation={[0.25, Math.PI / 2.1, 0.4]}>
+        <torusGeometry args={[0.18, 0.0028, 8, 96]} />
+        <meshBasicMaterial color="#e9fbff" transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      <mesh renderOrder={5} position={[0.045, 0.035, 0.035]}>
-        <sphereGeometry args={[0.022, 16, 16]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={dimmed ? 0.35 : 0.92} />
+      <mesh ref={coreRef} renderOrder={4}>
+        <sphereGeometry args={[0.078, 44, 44]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={2.05} roughness={0.13} metalness={0.34} transparent opacity={dimmed ? 0.38 : 1} toneMapped={false} />
+      </mesh>
+
+      <mesh renderOrder={5} position={[0.048, 0.036, 0.04]}>
+        <sphereGeometry args={[0.023, 18, 18]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={dimmed ? 0.35 : 0.95} />
       </mesh>
     </group>
   );
