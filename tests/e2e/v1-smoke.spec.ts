@@ -19,6 +19,33 @@ test.describe("URAI V1 smoke", () => {
     await expectBodyText(page, /^Early Access$/);
   });
 
+  test("final /home field exposes sky, orb, ground, companion, and return-home surfaces @smoke", async ({ page }) => {
+    await page.goto("/home", { waitUntil: "domcontentloaded" });
+
+    await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Charge orb" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Wake companion" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Tune body field" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Wake companion" }).click();
+    await expect(page.locator("aside").filter({ hasText: /quiet|listening|reflecting|forecasting|ritual|protective/i })).toBeVisible();
+
+    await page.getByRole("button", { name: "Open life map" }).click();
+    await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
+  });
+
+  test("final /home reduced-motion path can enter and return from life map @smoke", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/home", { waitUntil: "domcontentloaded" });
+
+    await page.getByRole("button", { name: "Open symbolic life map" }).click();
+    await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Return home" }).click();
+    await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
+  });
+
   test("public constellation route renders demo content @smoke", async ({ page }) => {
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
