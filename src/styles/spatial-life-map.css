@@ -16,6 +16,14 @@
 .spatial-stage:active { cursor: grabbing; }
 .spatial-canvas { width: 100% !important; height: 100% !important; }
 
+.spatial-canvas-placeholder {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(191,233,255,.12), transparent 30%),
+    radial-gradient(circle at 70% 28%, rgba(168,85,247,.1), transparent 26%);
+}
+
 .spatial-atmosphere {
   position: absolute;
   inset: 0;
@@ -77,11 +85,28 @@
   width: min(370px, calc(100vw - 36px));
   border-radius: 30px;
   padding: 18px 20px;
+  text-align: left;
+  color: rgba(240,253,255,.96);
+}
+button.spatial-star-preview {
+  cursor: pointer;
 }
 .spatial-preview-orb { width: 38px; height: 38px; border-radius: 999px; margin-bottom: 12px; }
 .spatial-star-preview h2 { margin: 6px 0 0; font-size: 22px; letter-spacing: -.04em; }
 .spatial-star-preview span { display: block; margin-top: 4px; color: rgba(240,253,255,.78); }
 .spatial-star-preview small { display: block; margin-top: 10px; color: rgba(191,233,255,.48); }
+.spatial-preview-action {
+  display: inline-flex;
+  margin-top: 14px;
+  border: 1px solid rgba(190,215,255,.18);
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgba(240,253,255,.08);
+  color: rgba(240,253,255,.92);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
 
 .spatial-layer-wheel {
   left: max(22px, env(safe-area-inset-left));
@@ -199,6 +224,85 @@
 .spatial-bloom-grid span { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .18em; color: rgba(191,233,255,.45); }
 .spatial-bloom-grid strong { display: block; margin-top: 5px; font-size: 12px; color: rgba(240,253,255,.82); line-height: 1.5; }
 
+.spatial-replay-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(191,233,255,.14), transparent 26%),
+    radial-gradient(circle at 50% 55%, rgba(2,6,23,.1), rgba(2,6,23,.62) 72%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+.spatial-replay-overlay > * { pointer-events: auto; }
+.spatial-replay-orb {
+  width: min(28vw, 230px);
+  height: min(28vw, 230px);
+  border-radius: 999px;
+  opacity: .88;
+  animation: spatialReplayPulse 3.6s ease-in-out infinite;
+}
+.spatial-replay-overlay p {
+  margin: 24px 0 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .32em;
+  color: rgba(191,233,255,.68);
+}
+.spatial-replay-overlay h2 {
+  margin: 10px 0 0;
+  font-size: clamp(2.4rem, 6vw, 5.4rem);
+  line-height: .92;
+  letter-spacing: -.07em;
+}
+.spatial-replay-overlay span {
+  display: block;
+  max-width: 680px;
+  margin-top: 18px;
+  color: rgba(240,253,255,.78);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  line-height: 1.65;
+}
+.spatial-replay-path {
+  width: min(560px, 70vw);
+  height: 4px;
+  margin-top: 28px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.1);
+}
+.spatial-replay-path i {
+  display: block;
+  height: 100%;
+  width: 42%;
+  border-radius: inherit;
+  background: rgba(240,253,255,.84);
+  animation: spatialReplayPath 4.8s ease-in-out infinite;
+}
+.spatial-replay-overlay button {
+  margin-top: 28px;
+  border: 1px solid rgba(190,215,255,.2);
+  border-radius: 999px;
+  background: rgba(15,23,42,.72);
+  color: white;
+  padding: 12px 18px;
+}
+
+@keyframes spatialReplayPulse {
+  0%, 100% { transform: scale(.94); opacity: .72; }
+  50% { transform: scale(1.04); opacity: .96; }
+}
+
+@keyframes spatialReplayPath {
+  0% { transform: translateX(-100%); }
+  55%, 100% { transform: translateX(240%); }
+}
+
 @media (max-width: 860px) {
   .spatial-title-card { top: 14px; min-width: auto; width: calc(100vw - 128px); padding: 12px 16px; }
   .spatial-title-card h1 { font-size: 1.4rem; }
@@ -213,4 +317,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .spatial-layer-glyph, .spatial-stage * { transition: none !important; animation: none !important; }
+  .spatial-replay-orb, .spatial-replay-path i { animation: none !important; }
 }
