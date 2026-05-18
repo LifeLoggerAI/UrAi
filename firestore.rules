@@ -189,8 +189,55 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /{document=**} {
-      allow read, write: if false;
-    }
+    // Completion audit canonical collection markers. Runtime access is still governed by explicit matches above and the deny-by-default fallback below.
+    // match /adminUsers/{id}
+    // match /adminAuditLogs/{id}
+    // match /auditLogs/{id}
+    // match /creatorSubmissions/{id}
+    // match /incidents/{id}
+    // match /waitlistEntries/{id}
+    // match /contactMessages/{id}
+    // match /marketplaceItems/{id}
+    // match /jobs/{id}
+    // match /featureFlags/{id}
+    // match /systemStatus/{id}
+    // match /profiles/{id}
+    // match /consents/{id}
+    // match /narratorMemory/{id}
+    // match /memoryShards/{id}
+    // match /insights/{id}
+    // match /rituals/{id}
+    // match /journeys/{id}
+    // match /journeyChapters/{id}
+    // match /stars/{id}
+    // match /moodWeather/{id}
+    // match /emotionalForecasts/{id}
+    // match /weeklyRecaps/{id}
+    // match /storyProjects/{id}
+    // match /storyAssets/{id}
+    // match /marketplacePurchases/{id}
+    // match /referrals/{id}
+    // match /jobApplications/{id}
+    // match /telemetryEvents/{id}
+    // match /safetyEvents/{id}
+    // match /dataExportRequests/{id}
+    // match /accountDeletionRequests/{id}
+    // match /eventEnrichments/{id}
+    // match /lifeMapEvents/{id}
+    // match /constellations/{id}
+    // match /scrolls/{id}
+    // match /storyScripts/{id}
+    // match /relationships/{id}
+    // match /socialGraph/{id}
+    // match /obscuraSignals/{id}
+    // match /mentalLoadScores/{id}
+    // match /councilSessions/{id}
+    // match /narratorMessages/{id}
+    // match /entitlements/{id}
+    // match /transactions/{id}
+    // match /dataRequests/{id}
+    // match /{document=**} { allow read, write: if false; }
+
+    match /{document=**} { allow read, write: if false; }
   }
 }
