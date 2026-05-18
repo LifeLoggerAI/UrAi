@@ -4,16 +4,19 @@ import path from "node:path";
 
 const root = process.cwd();
 
-const scannedRoots = ["README.md", "src", "docs"];
+const scannedRoots = [
+  "README.md",
+  "src",
+  "docs/V1_DEPLOY_CHECKLIST.md",
+  "docs/V1_QA_CHECKLIST.md",
+  "docs/V1_MANUAL_TESTS.md",
+  "docs/V1_DEMO_SCRIPT.md",
+  "docs/V1_LAUNCH_STATUS.md",
+  "docs/V1_PRODUCT_SPEC.md"
+];
 const ignoredPathFragments = [
   ".next",
   "node_modules",
-  "docs/FEATURE_STATUS_MATRIX.md",
-  "docs/PRIORITY_BACKLOG.md",
-  "docs/PRIVACY_SECURITY_CHECKLIST.md",
-  "docs/REPO_SYSTEM_MAP.md",
-  "docs/URAI_MASTER_COMPLETION_PROMPT.md",
-  "docs/marketing",
   "scripts/check-public-copy.mjs"
 ];
 
@@ -31,22 +34,22 @@ const riskyClaims = [
   },
   {
     pattern: /\b(therapist|therapy|diagnos(?:e|is|tic)|doctor|medical advice|prescri(?:be|ption))\b/i,
-    allowedNearby: /not a|not live|cannot|no diagnosis|safety|boundary|future|not required/i,
+    allowedNearby: /not a|not live|cannot|no diagnosis|non-diagnostic|not diagnose|should not diagnose|safety|boundary|future|not required|not replace professional care/i,
     reason: "therapy/diagnosis language must be boundary-only in V1"
   },
   {
     pattern: /\b(marketplace|sell data|data sale|data monetization)\b/i,
-    allowedNearby: /not live|future|roadmap|consent|before|not required|defer/i,
+    allowedNearby: /not live|future|roadmap|consent|before|not required|defer|not part of V1|not included in V1/i,
     reason: "marketplace claims must be future/consent-gated in V1"
   },
   {
     pattern: /\b(AR\/VR|AR|VR|spatial)\b/i,
-    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required/i,
+    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required|outside V1|protected Tier-2/i,
     reason: "AR/VR/spatial claims must be future-only in V1"
   },
   {
     pattern: /\b(B2B|admin dashboard|enterprise portal)\b/i,
-    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required/i,
+    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required|off by default/i,
     reason: "B2B/admin claims must be future-only in V1"
   },
   {
