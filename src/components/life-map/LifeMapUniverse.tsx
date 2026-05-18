@@ -4,9 +4,9 @@ import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 type LifeMapUniverseProps = {
   initialOverlay?: "mirror" | string;
-  initialView?: "focus" | "replay" | string;
+  initialView?: "focus" | "replay" | "bloom" | string;
 };
 
-export default function LifeMapUniverse(_props: LifeMapUniverseProps) {
-  return <SpatialLifeMap />;
+export default function LifeMapUniverse({ initialOverlay, initialView }: LifeMapUniverseProps) {
+  return <SpatialLifeMap initialOverlay={initialOverlay} initialMode={initialView} />;
 }
