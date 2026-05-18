@@ -11,11 +11,13 @@ case "$TARGET_ENV" in
   staging)
     EXPECTED_PROJECT="urai-staging"
     EXPECTED_SITE="urai-staging"
+    FIREBASE_CONFIG_FILE="firebase.staging.json"
     ;;
   production|prod)
     TARGET_ENV="production"
     EXPECTED_PROJECT="urai-4dc1d"
     EXPECTED_SITE="urai-4dc1d"
+    FIREBASE_CONFIG_FILE="firebase.json"
     if [[ "${URAI_PRODUCTION_DEPLOY_APPROVED:-0}" != "1" ]]; then
       echo "[urai-deploy] Refusing production deploy: set URAI_PRODUCTION_DEPLOY_APPROVED=1 after staging smoke signoff." >&2
       exit 1
@@ -30,33 +32,13 @@ esac
 export URAI_EXPECTED_FIREBASE_PROJECT="$EXPECTED_PROJECT"
 export URAI_EXPECTED_FIREBASE_SITE="$EXPECTED_SITE"
 
-TMP_FIREBASE_CONFIG="$(mktemp)"
-cleanup() {
-  rm -f "$TMP_FIREBASE_CONFIG"
-}
-trap cleanup EXIT
-
-node -e '
-const fs = require("fs");
-const input = process.argv[1];
-const output = process.argv[2];
-const site = process.env.URAI_EXPECTED_FIREBASE_SITE;
-if (!site) {
-  console.error("URAI_EXPECTED_FIREBASE_SITE is required before generating Firebase deploy config.");
-  process.exit(1);
-}
-const config = JSON.parse(fs.readFileSync(input, "utf8"));
-config.hosting = config.hosting || {};
-config.hosting.site = site;
-fs.writeFileSync(output, `${JSON.stringify(config, null, 2)}\n`);
-' firebase.json "$TMP_FIREBASE_CONFIG"
-
 echo "[urai-deploy] Target environment: ${TARGET_ENV}"
 echo "[urai-deploy] Firebase project/site: ${EXPECTED_PROJECT}/${EXPECTED_SITE}"
+echo "[urai-deploy] Firebase config: ${FIREBASE_CONFIG_FILE}"
 echo "[urai-deploy] Deploy scope: ${DEPLOY_ONLY}"
 
 echo "[urai-deploy] Verifying Firebase target lock for ${TARGET_ENV}..."
-node scripts/check-firebase-target.mjs --config "$TMP_FIREBASE_CONFIG"
+node scripts/check-firebase-target.mjs --config "$FIREBASE_CONFIG_FILE"
 
 if [[ "$RUN_LOCAL_CHECKS" == "1" ]]; then
   echo "[urai-deploy] Running local gates before deploy..."
@@ -72,7 +54,7 @@ fi
 echo "[urai-deploy] Deploying to ${EXPECTED_PROJECT}/${EXPECTED_SITE}..."
 NEXT_DISABLE_CACHE="${NEXT_DISABLE_CACHE:-1}" firebase deploy \
   --project "$EXPECTED_PROJECT" \
-  --config "$TMP_FIREBASE_CONFIG" \
+  --config "$FIREBASE_CONFIG_FILE" \
   --only "$DEPLOY_ONLY" \
   --force
 
