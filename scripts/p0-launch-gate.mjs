@@ -190,9 +190,14 @@ const verdict = failed.length === 0 && unverified.length === 0
     ? "P0 STRUCTURALLY READY - EVIDENCE STILL REQUIRED"
     : "P0 NOT READY";
 
+function nextActionFor(check) {
+  if (check.status === "pass") return "No action required; this item is already covered by the listed evidence.";
+  return check.remediation || "Review and resolve this check.";
+}
+
 function section(title, rows) {
   if (!rows.length) return `## ${title}\n\nNone.\n`;
-  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${check.remediation || "none"}`).join("\n")}\n`;
+  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${nextActionFor(check)}`).join("\n")}\n`;
 }
 
 const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
