@@ -117,6 +117,7 @@ export default function SpatialLifeMap({ userId = "demo-user", initialMode, init
   const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<LifeMapInteractionMode>(() => normalizeInitialMode(initialMode));
   const [returnPhase, setReturnPhase] = useState<ReturnPhase>("idle");
+  const [sceneReady, setSceneReady] = useState(false);
   const initialSelectionApplied = useRef(false);
 
   const { data, loading, error } = useLifeMapData(userId);
@@ -133,6 +134,10 @@ export default function SpatialLifeMap({ userId = "demo-user", initialMode, init
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setSceneReady(false);
+  }, [sceneResetKey]);
 
   useEffect(() => {
     if (initialSelectionApplied.current || visibleStars.length === 0) return;
@@ -244,7 +249,7 @@ export default function SpatialLifeMap({ userId = "demo-user", initialMode, init
   }
 
   return (
-    <main className={`spatial-life-map urai-life-map-screen is-${mode} return-${returnPhase}`} aria-label="URAI Spatial Life Map Galaxy">
+    <main className={`spatial-life-map urai-life-map-screen is-${mode} return-${returnPhase} ${sceneReady ? "scene-ready" : "scene-loading"}`} aria-label="URAI Spatial Life Map Galaxy">
       <div className="spatial-atmosphere" aria-hidden />
       <div className="spatial-cinematic-vignette" aria-hidden />
       <button type="button" className="spatial-home-gate" onClick={returnHome} aria-label="Return to the Inner Sky Shrine">
@@ -252,6 +257,7 @@ export default function SpatialLifeMap({ userId = "demo-user", initialMode, init
       </button>
 
       <section className="spatial-stage" {...camera.bind}>
+        {!sceneReady && <SpatialSceneFallback message="URAI is warming the moonlit memory galaxy." />}
         <SceneErrorBoundary resetKey={sceneResetKey} fallback={<SpatialSceneFallback />}>
           <LifeGalaxyScene
             stars={data.stars}
@@ -264,6 +270,7 @@ export default function SpatialLifeMap({ userId = "demo-user", initialMode, init
             onHoverStar={selection.setHoveredStarId}
             onSelectStar={focusStar}
             onOpenStar={openBloom}
+            onSceneReady={() => setSceneReady(true)}
           />
         </SceneErrorBoundary>
       </section>

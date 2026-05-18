@@ -1,6 +1,7 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 import * as THREE from "three";
 import type { GalaxyCameraState, LifeMapConstellation, LifeMapLayerId, LifeMapStar } from "@/lib/spatial-life-map/lifeMap.types";
 import GalaxyCameraController from "./GalaxyCameraController";
@@ -20,6 +21,19 @@ interface LifeGalaxySceneProps {
   onHoverStar: (starId: string | null) => void;
   onSelectStar: (star: LifeMapStar) => void;
   onOpenStar: (star: LifeMapStar) => void;
+  onSceneReady?: () => void;
+}
+
+function SceneReadyBeacon({ onReady }: { onReady?: () => void }) {
+  const didSignal = useRef(false);
+
+  useFrame(() => {
+    if (!onReady || didSignal.current) return;
+    didSignal.current = true;
+    onReady();
+  });
+
+  return null;
 }
 
 function EmotionalLightField({ selectedStar }: { selectedStar?: LifeMapStar }) {
@@ -55,7 +69,7 @@ function DepthReferencePlanes() {
   );
 }
 
-export default function LifeGalaxyScene({ stars, constellations, activeLayerIds, cameraState, selectedStarId, hoveredStarId, reducedMotion = false, onHoverStar, onSelectStar, onOpenStar }: LifeGalaxySceneProps) {
+export default function LifeGalaxyScene({ stars, constellations, activeLayerIds, cameraState, selectedStarId, hoveredStarId, reducedMotion = false, onHoverStar, onSelectStar, onOpenStar, onSceneReady }: LifeGalaxySceneProps) {
   const visibleStars = stars.filter((star) => activeLayerIds.includes(star.layer));
   const selectedStar = stars.find((star) => star.id === selectedStarId) ?? null;
 
@@ -66,6 +80,7 @@ export default function LifeGalaxyScene({ stars, constellations, activeLayerIds,
       camera={{ position: [0, 2.2, cameraState.zoom], fov: 47, near: 0.03, far: 120 }}
       className="spatial-canvas"
     >
+      <SceneReadyBeacon onReady={onSceneReady} />
       <color attach="background" args={["#00030b"]} />
       <fog attach="fog" args={["#030b18", 5.5, 38]} />
       <GalaxyCameraController cameraState={cameraState} reducedMotion={reducedMotion} />

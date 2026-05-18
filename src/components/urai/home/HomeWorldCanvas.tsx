@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Component, Suspense, useEffect, useMemo, useRef, type ReactNode } from "react";
+import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 
 type SceneBoundaryProps = {
@@ -30,13 +30,25 @@ class SceneBoundary extends Component<SceneBoundaryProps, SceneBoundaryState> {
   }
 }
 
-function HomeCanvasFallback() {
+function HomeCanvasFallback({ status = "loading" }: { status?: "loading" | "error" }) {
   return (
-    <div className="urai-home-world-fallback" aria-hidden>
+    <div className={`urai-home-world-fallback is-${status}`} aria-hidden>
       <div className="urai-home-world-fallback-orb" />
       <div className="urai-home-world-fallback-ring" />
     </div>
   );
+}
+
+function SceneReadyBeacon({ onReady }: { onReady: () => void }) {
+  const didSignal = useRef(false);
+
+  useFrame(() => {
+    if (didSignal.current) return;
+    didSignal.current = true;
+    onReady();
+  });
+
+  return null;
 }
 
 function MoonlitStars() {
@@ -170,9 +182,10 @@ function ReflectiveGround() {
   );
 }
 
-function MoonlitHomeWorld() {
+function MoonlitHomeWorld({ onReady }: { onReady: () => void }) {
   return (
     <>
+      <SceneReadyBeacon onReady={onReady} />
       <color attach="background" args={["#00030b"]} />
       <fog attach="fog" args={["#06162c", 5, 18]} />
       <ambientLight intensity={0.42} color="#dffaff" />
@@ -188,9 +201,12 @@ function MoonlitHomeWorld() {
 }
 
 export function HomeWorldCanvas() {
+  const [worldReady, setWorldReady] = useState(false);
+
   return (
-    <SceneBoundary fallback={<HomeCanvasFallback />}>
-      <div className="urai-home-world-canvas" aria-hidden>
+    <SceneBoundary fallback={<HomeCanvasFallback status="error" />}>
+      <div className={`urai-home-world-canvas ${worldReady ? "is-ready" : "is-loading"}`} aria-hidden>
+        {!worldReady && <HomeCanvasFallback status="loading" />}
         <Canvas
           dpr={[1, 1.65]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, outputColorSpace: THREE.SRGBColorSpace }}
@@ -198,7 +214,7 @@ export function HomeWorldCanvas() {
           shadows
         >
           <Suspense fallback={null}>
-            <MoonlitHomeWorld />
+            <MoonlitHomeWorld onReady={() => setWorldReady(true)} />
           </Suspense>
         </Canvas>
       </div>
