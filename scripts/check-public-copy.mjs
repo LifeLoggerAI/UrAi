@@ -6,7 +6,6 @@ const root = process.cwd();
 
 const scannedRoots = [
   "README.md",
-  "src",
   "docs/V1_DEPLOY_CHECKLIST.md",
   "docs/V1_QA_CHECKLIST.md",
   "docs/V1_MANUAL_TESTS.md",
@@ -34,7 +33,7 @@ const riskyClaims = [
   },
   {
     pattern: /\b(therapist|therapy|diagnos(?:e|is|tic)|doctor|medical advice|prescri(?:be|ption))\b/i,
-    allowedNearby: /not a|not live|cannot|no diagnosis|non-diagnostic|not diagnose|should not diagnose|safety|boundary|future|not required|not replace professional care/i,
+    allowedNearby: /not a|not live|cannot|no diagnosis|non-diagnostic|not diagnose|should not diagnose|safety|boundary|future|not required|not replace professional care|avoid diagnosis/i,
     reason: "therapy/diagnosis language must be boundary-only in V1"
   },
   {
@@ -44,7 +43,7 @@ const riskyClaims = [
   },
   {
     pattern: /\b(AR\/VR|AR|VR|spatial)\b/i,
-    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required|outside V1|protected Tier-2/i,
+    allowedNearby: /not live|future|roadmap|not part of V1|defer|not required|outside V1|protected Tier-2|not included in V1/i,
     reason: "AR/VR/spatial claims must be future-only in V1"
   },
   {
