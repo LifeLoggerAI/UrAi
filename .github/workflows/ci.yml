@@ -38,6 +38,12 @@ jobs:
       - name: Check V1 wiring
         run: npm run check:v1
 
+      - name: Check final home lock
+        run: npm run check:home
+
+      - name: Check final home ascent
+        run: npm run check:ascent
+
       - name: Check P0 launch gate
         run: npm run launch:p0
 
