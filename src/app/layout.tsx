@@ -6,6 +6,7 @@ import '../styles/urai-home-final.css';
 import '../styles/urai-home-production-overlay.css';
 import '../styles/urai-home-tier5.css';
 import '../styles/spatial-life-map.css';
+import '../styles/urai-3d-world-integration.css';
 import '../styles/urai-fullscreen-final-lock.css';
 import '../styles/urai-aaa-loop.css';
 import '../styles/urai-aaa-final-focus.css';
