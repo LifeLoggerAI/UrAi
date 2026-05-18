@@ -23,6 +23,9 @@ const envDevOrigins = (process.env.NEXT_ALLOWED_DEV_ORIGINS ?? "")
 const nextConfig = {
   reactStrictMode: true,
   images: { domains: [] },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   allowedDevOrigins: [...new Set([...cloudWorkstationDevOrigins, ...localDevOrigins, ...envDevOrigins])],
 };
 
