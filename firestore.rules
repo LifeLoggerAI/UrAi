@@ -30,21 +30,50 @@ service cloud.firestore {
     }
 
     function hasNoProtectedUserFields() {
-      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['tier', 'role', 'admin', 'createdAt']);
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        "entitlementTier",
+        "roles",
+        "admin",
+        "founder",
+        "internal",
+        "internalOverride",
+        "isAdmin",
+        "isFounder",
+      ]);
+    }
+
+    function isAllowedConsentSource(source) {
+      return source in [
+        "profile",
+        "timeline_events",
+        "memory_blooms",
+        "mood_inference",
+        "relationship_signals",
+        "rituals",
+        "offline_cache",
+      ];
     }
 
     function canCreateConsent(uid, source) {
-      return isSelf(uid) && request.resource.data.uid == uid;
+      return isSelf(uid)
+        && isAllowedConsentSource(source)
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
     }
 
     function canUpdateConsent(uid, source) {
-      return isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
+      return isSelf(uid)
+        && isAllowedConsentSource(source)
+        && resource.data.ownerUid == uid
+        && resource.data.source == source
+        && request.resource.data.ownerUid == uid
+        && request.resource.data.source == source;
     }
 
     match /users/{uid} {
       allow read: if isSelf(uid);
       allow create: if isSelf(uid);
-      allow update: if isSelf(uid) && hasNoProtectedUserFields();
+      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
       allow delete: if isSelf(uid);
 
       match /consents/{source} {
@@ -177,7 +206,7 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /auditLogs/{eventId} {
+    match /auditLogs/{id} {
       allow read, write: if false;
     }
 
