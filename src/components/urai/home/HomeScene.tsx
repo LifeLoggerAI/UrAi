@@ -1,8 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { FormEvent, useEffect, useState } from "react";
 import { cinematicEase } from "@/components/urai/motion/ascentMotion";
 import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition";
+
+type HomeLayer = "home" | "orbChat" | "groundZoom";
+type OrbMessage = { id: string; role: "user" | "urai"; text: string };
 
 function HeroStars() {
   return (
@@ -104,12 +108,59 @@ function AvatarPresence() {
   );
 }
 
+function nextOrbReply(text: string) {
+  return `I hear “${text}.” I am keeping it as a soft signal, not a verdict. The next star to watch is the one that returns when everything gets quiet.`;
+}
+
 export function HomeScene() {
   const { phase, beginAscent, isTransitioning } = useAscentTransition("/life-map");
+  const [layer, setLayer] = useState<HomeLayer>("home");
+  const [orbInput, setOrbInput] = useState("");
+  const [messages, setMessages] = useState<OrbMessage[]>([
+    { id: "urai-wake", role: "urai", text: "I am awake in the orb. Ask me what your sky is trying to show you." },
+  ]);
+  const layerOpen = layer !== "home";
+
+  const closeLayer = () => setLayer("home");
+  const openOrb = () => {
+    if (!isTransitioning) setLayer("orbChat");
+  };
+  const openGround = () => {
+    if (!isTransitioning) setLayer("groundZoom");
+  };
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (layerOpen) {
+        event.preventDefault();
+        closeLayer();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [layerOpen]);
+
+  const submitOrbMessage = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const text = orbInput.trim();
+    if (!text) return;
+    setMessages((current) => [
+      ...current,
+      { id: `user-${Date.now()}`, role: "user", text },
+      { id: `urai-${Date.now()}`, role: "urai", text: nextOrbReply(text) },
+    ]);
+    setOrbInput("");
+  };
 
   return (
-    <main className={`urai-hero-home phase-${phase}`} onClick={beginAscent}>
-      <button className="urai-hero-hit" type="button" aria-label="Enter Memory Galaxy" disabled={isTransitioning} />
+    <main className={`urai-hero-home phase-${phase} layer-${layer}`}>
+      <button className="urai-sky-zone" type="button" aria-label="Ascend through the sky into the Memory Galaxy" disabled={isTransitioning || layerOpen} onClick={beginAscent}>
+        <span>Ascend through sky</span>
+      </button>
+      <button className="urai-orb-zone" type="button" aria-label="Open URAI orb companion" disabled={isTransitioning || layerOpen} onClick={(event) => { event.stopPropagation(); openOrb(); }} />
+      <button className="urai-ground-zone" type="button" aria-label="Enter URAI ground foundation" disabled={isTransitioning || layerOpen} onClick={(event) => { event.stopPropagation(); openGround(); }} />
+
       <div className="urai-hero-sky" aria-hidden>
         <HeroStars />
         <SkyArchitecture />
@@ -130,7 +181,7 @@ export function HomeScene() {
       </motion.div>
       <motion.div
         className="urai-hero-orb-system"
-        animate={phase === "portal" ? { scale: 8.5, y: "-3vh", opacity: 0.95 } : phase === "lift" ? { scale: 1.14, y: "-3vh" } : phase === "ignition" ? { scale: 1.06 } : { scale: 1 }}
+        animate={layer === "orbChat" ? { scale: 1.18, y: "-1vh", opacity: 1 } : phase === "portal" ? { scale: 8.5, y: "-3vh", opacity: 0.95 } : phase === "lift" ? { scale: 1.14, y: "-3vh" } : phase === "ignition" ? { scale: 1.06 } : { scale: 1 }}
         transition={{ duration: phase === "portal" ? 0.52 : 0.42, ease: cinematicEase }}
         aria-hidden
       >
@@ -141,7 +192,7 @@ export function HomeScene() {
         <div className="urai-hero-orb"><span /><i /></div>
         <div className="urai-hero-orb-satellite" />
       </motion.div>
-      <motion.div className="urai-hero-bloom" animate={{ opacity: phase === "portal" ? 0.9 : phase === "emergence" ? 0.35 : 0 }} transition={{ duration: 0.5, ease: cinematicEase }} aria-hidden />
+      <motion.div className="urai-hero-bloom" animate={{ opacity: phase === "portal" ? 0.9 : phase === "emergence" ? 0.35 : layer === "orbChat" ? 0.22 : 0 }} transition={{ duration: 0.5, ease: cinematicEase }} aria-hidden />
       <div className="urai-home-panel urai-home-panel-left" aria-hidden="true">
         <span>URAI</span>
         <strong>Inner Sky Shrine</strong>
@@ -150,13 +201,44 @@ export function HomeScene() {
       <div className="urai-home-panel urai-home-panel-right" aria-hidden="true">
         <span>Companion</span>
         <strong>Your sky is quiet, but awake.</strong>
-        <em>Tap the orb or sky to open the Memory Galaxy.</em>
+        <em>Sky opens the Memory Galaxy. Orb opens companion. Ground opens foundation.</em>
       </div>
       <div className="urai-hero-copy" aria-hidden>
         <span>URAI</span>
         <strong>Inner Sky Shrine</strong>
-        <em>Tap the sky to enter memory</em>
+        <em>Sky · Orb · Ground</em>
       </div>
+
+      {layer === "orbChat" && (
+        <section className="urai-orb-chat-layer" onClick={closeLayer} aria-label="URAI orb companion chat">
+          <div className="urai-orb-chat" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="urai-layer-close" onClick={closeLayer} aria-label="Close orb companion">Return</button>
+            <div className="urai-orb-chat-bloom" aria-hidden />
+            <p>Orb Companion</p>
+            <h1>URAI is listening.</h1>
+            <div className="urai-chat-stream">
+              {messages.map((message) => <div key={message.id} className={`urai-chat-message ${message.role}`}>{message.text}</div>)}
+            </div>
+            <form className="urai-chat-form" onSubmit={submitOrbMessage}>
+              <input value={orbInput} onChange={(event) => setOrbInput(event.target.value)} placeholder="Ask the orb what is forming..." aria-label="Message URAI companion" />
+              <button type="submit">Send</button>
+            </form>
+          </div>
+        </section>
+      )}
+
+      {layer === "groundZoom" && (
+        <section className="urai-ground-layer" onClick={closeLayer} aria-label="URAI ground foundation layer">
+          <div className="urai-ground-sanctum" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="urai-layer-close" onClick={closeLayer} aria-label="Return home from foundation">Return</button>
+            <div className="urai-root-field" aria-hidden>{Array.from({ length: 18 }, (_, index) => <span key={index} />)}</div>
+            <p>Foundation</p>
+            <h1>What is beneath the map.</h1>
+            <span>Roots, body-memory, rhythm, silence, and buried signal live here. This is the symbolic base layer under the Memory Galaxy.</span>
+            <div className="urai-foundation-signals"><span>Breath rhythm steadying</span><span>Recurring evening reflection</span><span>Unspoken threshold memory</span></div>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
