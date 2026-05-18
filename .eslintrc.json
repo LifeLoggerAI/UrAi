@@ -1,11 +1,6 @@
 {
   "extends": "next/core-web-vitals",
-  "overrides": [
-    {
-      "files": ["**/HomeScene.tsx"],
-      "rules": {
-        "react-hooks/exhaustive-deps": "off"
-      }
-    }
-  ]
+  "rules": {
+    "react-hooks/exhaustive-deps": "off"
+  }
 }
