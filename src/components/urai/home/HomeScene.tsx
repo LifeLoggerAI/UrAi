@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { cinematicEase } from "@/components/urai/motion/ascentMotion";
 import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition";
 
