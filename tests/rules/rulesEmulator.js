@@ -16,8 +16,39 @@ function normalizeAuth(auth) {
   return { uid: auth.uid, token: auth.token || {} };
 }
 
+function createRulesData(data) {
+  const clone = data ? JSON.parse(JSON.stringify(data)) : {};
+  Object.defineProperty(clone, 'diff', {
+    enumerable: false,
+    value(previous = {}) {
+      const previousKeys = new Set(Object.keys(previous || {}));
+      const nextKeys = new Set(Object.keys(clone || {}));
+      const affected = new Set();
+
+      for (const key of new Set([...previousKeys, ...nextKeys])) {
+        if (JSON.stringify(previous?.[key]) !== JSON.stringify(clone?.[key])) {
+          affected.add(key);
+        }
+      }
+
+      return {
+        affectedKeys() {
+          return {
+            hasAny(keys) {
+              return keys.some((key) => affected.has(key));
+            },
+          };
+        },
+      };
+    },
+  });
+  return clone;
+}
+
 function convertRulesSyntax(source) {
-  return source.replace(/([A-Za-z0-9_.()]+)\s+is string/g, 'typeof ($1) === "string"');
+  return source
+    .replace(/([A-Za-z0-9_.()]+)\s+is string/g, 'typeof ($1) === "string"')
+    .replace(/(\w+)\s+in\s+\[([^\]]+)\]/g, '[$2].includes($1)');
 }
 
 function extractFunctionsBlock(rules) {
@@ -172,9 +203,9 @@ class DocumentReference {
     const allowed = this.env.evaluator.evaluate(this.collection, operation, {
       request: {
         auth: this.auth,
-        resource: { data: JSON.parse(JSON.stringify(nextData || {})) },
+        resource: { data: createRulesData(nextData || {}) },
       },
-      resource: { data: JSON.parse(JSON.stringify(existing || {})) },
+      resource: { data: createRulesData(existing || {}) },
     });
     if (!allowed) {
       throw new PermissionDeniedError();
