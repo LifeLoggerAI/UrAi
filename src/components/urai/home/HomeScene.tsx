@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState, type FormEvent } from "react";
 import { cinematicEase } from "@/components/urai/motion/ascentMotion";
 import { useAscentTransition } from "@/components/urai/hooks/useAscentTransition";
+import { HomeWorldCanvas } from "@/components/urai/home/HomeWorldCanvas";
 
 type HomeLayer = "home" | "orbChat" | "groundZoom";
 type OrbMessage = { id: string; role: "user" | "urai"; text: string };
@@ -172,6 +173,7 @@ export function HomeScene() {
 
   return (
     <main className={`urai-hero-home phase-${phase} layer-${layer}`}>
+      <HomeWorldCanvas />
       <button className="urai-sky-zone" type="button" aria-label="Ascend through the sky into the Memory Galaxy" disabled={isTransitioning || layerOpen} onClick={beginAscent}>
         <span>Ascend through sky</span>
       </button>
