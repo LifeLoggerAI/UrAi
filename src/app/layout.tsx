@@ -7,6 +7,7 @@ import '../styles/urai-home-production-overlay.css';
 import '../styles/urai-home-tier5.css';
 import '../styles/spatial-life-map.css';
 import '../styles/urai-fullscreen-final-lock.css';
+import '../styles/urai-aaa-loop.css';
 import React from 'react';
 import AppProviders from './providers';
 import type { Metadata } from 'next';
