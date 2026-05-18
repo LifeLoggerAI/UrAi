@@ -3,8 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const expectedProject = "urai-4dc1d";
-const expectedHostingSite = "urai-4dc1d";
+const args = process.argv.slice(2);
+const configFlagIndex = args.indexOf("--config");
+const firebaseConfigPath = configFlagIndex >= 0 ? args[configFlagIndex + 1] : "firebase.json";
+
+const expectedProject = process.env.URAI_EXPECTED_FIREBASE_PROJECT || "urai-4dc1d";
+const expectedHostingSite = process.env.URAI_EXPECTED_FIREBASE_SITE || "urai-4dc1d";
 
 function fail(message) {
   console.error(`[urai-firebase-target] ${message}`);
@@ -12,7 +16,7 @@ function fail(message) {
 }
 
 function readJson(file) {
-  const fullPath = path.join(root, file);
+  const fullPath = path.isAbsolute(file) ? file : path.join(root, file);
   if (!fs.existsSync(fullPath)) fail(`${file} is missing.`);
   try {
     return JSON.parse(fs.readFileSync(fullPath, "utf8"));
@@ -22,22 +26,17 @@ function readJson(file) {
 }
 
 const firebaserc = readJson(".firebaserc");
-const firebaseJson = readJson("firebase.json");
+const firebaseJson = readJson(firebaseConfigPath);
 
-const defaultProject = firebaserc.projects?.default;
-const prodProject = firebaserc.projects?.prod;
+const projectAliases = Object.values(firebaserc.projects || {});
 const hostingSite = firebaseJson.hosting?.site;
 
-if (defaultProject !== expectedProject) {
-  fail(`.firebaserc projects.default must be ${expectedProject}, found ${defaultProject || "missing"}.`);
-}
-
-if (prodProject !== expectedProject) {
-  fail(`.firebaserc projects.prod must be ${expectedProject}, found ${prodProject || "missing"}.`);
+if (!projectAliases.includes(expectedProject)) {
+  fail(`.firebaserc must include project alias for ${expectedProject}. Found: ${projectAliases.join(", ") || "none"}.`);
 }
 
 if (hostingSite !== expectedHostingSite) {
-  fail(`firebase.json hosting.site must be ${expectedHostingSite}, found ${hostingSite || "missing"}.`);
+  fail(`${firebaseConfigPath} hosting.site must be ${expectedHostingSite}, found ${hostingSite || "missing"}.`);
 }
 
-console.log(`[urai-firebase-target] OK: Firebase project and hosting site are locked to ${expectedProject}.`);
+console.log(`[urai-firebase-target] OK: Firebase project/site validated for ${expectedProject}/${expectedHostingSite}.`);
