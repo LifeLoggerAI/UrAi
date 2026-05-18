@@ -9,6 +9,7 @@ fs.mkdirSync(reportDir, { recursive: true });
 
 const runCommands = process.env.URAI_P0_RUN_COMMANDS === "1";
 const checks = [];
+const commandResults = [];
 
 function normalizeStatus(status) {
   if (["pass", "fail", "unverified"].includes(status)) return status;
@@ -162,6 +163,7 @@ const commands = [
 
 for (const command of commands) {
   if (!runCommands) {
+    commandResults.push({ command, status: "unverified", exitCode: "not executed" });
     add(`Command declared, not executed: ${command}`, "unverified", command, `Run URAI_P0_RUN_COMMANDS=1 npm run launch:p0 to execute ${command}.`);
     continue;
   }
@@ -169,7 +171,9 @@ for (const command of commands) {
   const [bin, ...args] = command.split(" ");
   const result = spawnSync(bin, args, { cwd: root, encoding: "utf8", stdio: "pipe" });
   const output = `${result.stdout || ""}\n${result.stderr || ""}`.trim().slice(-3000);
-  add(`Command passes: ${command}`, result.status === 0, output || `exit ${result.status}`, `Fix failing command: ${command}`);
+  const status = result.status === 0 ? "pass" : "fail";
+  commandResults.push({ command, status, exitCode: result.status ?? "unknown" });
+  add(`Command passes: ${command}`, status, output || `exit ${result.status}`, `Fix failing command: ${command}`);
 }
 
 const manualEvidence = [
@@ -205,7 +209,12 @@ function section(title, rows) {
   return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${nextActionFor(check)}`).join("\n")}\n`;
 }
 
-const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nInstall Playwright browsers before smoke tests:\n\n\`\`\`bash\nnpm run playwright:install\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_PLAYWRIGHT_BROWSERS_INSTALLED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
+function commandProofSection() {
+  if (!commandResults.length) return "## Required command proof\n\nCommands were not evaluated.\n";
+  return `## Required command proof\n\n${commandResults.map((result) => `- **${result.command}**: ${result.status} (exit: ${result.exitCode})`).join("\n")}\n`;
+}
+
+const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${commandProofSection()}\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nInstall Playwright browsers before smoke tests:\n\n\`\`\`bash\nnpm run playwright:install\n\`\`\`\n\nFull local gate with required command proof:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_PLAYWRIGHT_BROWSERS_INSTALLED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
 
 fs.writeFileSync(path.join(reportDir, "p0-launch-gate-report.md"), report);
 console.log(report);
