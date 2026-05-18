@@ -8,6 +8,7 @@ import '../styles/urai-home-tier5.css';
 import '../styles/spatial-life-map.css';
 import '../styles/urai-fullscreen-final-lock.css';
 import '../styles/urai-aaa-loop.css';
+import '../styles/urai-aaa-final-focus.css';
 import React from 'react';
 import AppProviders from './providers';
 import type { Metadata } from 'next';
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     template: '%s | URAI'
   },
   description:
-    'URAI is a passive emotional operating system prototype for memory, mood forecasting, symbolic reflection, and companion narration.',
+    'URAI is a passive emotional operating system prototype for memory, mood forecasting, emotional reflection, and companion narration.',
   applicationName: 'URAI',
   keywords: [
     'URAI',
