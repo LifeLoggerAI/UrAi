@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Mode = "galaxy" | "focus" | "returning";
+type Mode = "galaxy" | "focus" | "replay" | "returning";
 
 type Star = {
   id: string;
@@ -40,6 +40,16 @@ const paths = [
   ["recovery", "dream"],
 ];
 
+const softButtonStyle = {
+  border: "1px solid rgba(190,215,255,.22)",
+  borderRadius: 999,
+  background: "rgba(15,23,42,.68)",
+  color: "#eef8ff",
+  minHeight: 42,
+  padding: "0 16px",
+  cursor: "pointer",
+} as const;
+
 export default function CinematicLifeMapExperience() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("galaxy");
@@ -63,6 +73,23 @@ export default function CinematicLifeMapExperience() {
     window.history.pushState({ urai: "star", id: star.id }, "", `#${star.id}`);
   }
 
+  function openReplay() {
+    if (!selected) return;
+    setMode("replay");
+    setCamera({ x: (50 - selected.x) * 10, y: (46 - selected.y) * 8, scale: 1.82 });
+    window.history.pushState({ urai: "replay", id: selected.id }, "", `#replay-${selected.id}`);
+  }
+
+  function closeReplay() {
+    if (!selected) {
+      closeFocus();
+      return;
+    }
+    setMode("focus");
+    setCamera({ x: (50 - selected.x) * 8, y: (46 - selected.y) * 6, scale: 1.55 });
+    window.history.replaceState({ urai: "star", id: selected.id }, "", `#${selected.id}`);
+  }
+
   function closeFocus() {
     setSelectedId(null);
     setMode("galaxy");
@@ -71,6 +98,10 @@ export default function CinematicLifeMapExperience() {
   }
 
   function unwind() {
+    if (mode === "replay") {
+      closeReplay();
+      return;
+    }
     if (mode === "focus") {
       closeFocus();
       return;
@@ -168,7 +199,7 @@ export default function CinematicLifeMapExperience() {
       <header className="cinematic-title">
         <span>URAI SPATIAL LIFE MAP</span>
         <h1>{selected ? selected.title : "Memory Galaxy"}</h1>
-        <p>{mode === "focus" ? "Focused memory bloom · Esc returns to galaxy" : "Drag space · scroll to zoom · click a star · Esc returns home"}</p>
+        <p>{mode === "replay" ? "Replay thread · Esc returns to focus" : mode === "focus" ? "Focused memory bloom · open replay or Esc to galaxy" : "Drag space · scroll to zoom · click a star · Esc returns home"}</p>
       </header>
 
       <aside className="cinematic-witness">
@@ -183,16 +214,35 @@ export default function CinematicLifeMapExperience() {
         <button type="button" onClick={() => setCamera((c) => ({ ...c, scale: Math.max(.72, c.scale - .12) }))}>Zoom out</button>
         <button type="button" onClick={() => { setCamera({ x: 0, y: 0, scale: 1 }); setSelectedId(null); setMode("galaxy"); }}>Full galaxy</button>
         <button type="button" onClick={() => setCamera((c) => ({ ...c, scale: Math.min(1.9, c.scale + .12) }))}>Zoom in</button>
-        <button type="button" onClick={selected ? closeFocus : returnHome}>{selected ? "Close bloom" : "Unwind home"}</button>
+        <button type="button" onClick={mode === "replay" ? closeReplay : selected ? openReplay : returnHome}>{mode === "replay" ? "Back to focus" : selected ? "Open replay" : "Unwind home"}</button>
       </nav>
 
-      {selected && (
+      {selected && mode === "focus" && (
         <section className="cinematic-focus-card" role="dialog" aria-modal="true" aria-label={`${selected.title} focus`}>
           <button type="button" onClick={closeFocus} aria-label="Close memory focus">×</button>
           <div className="cinematic-focus-orb" style={{ background: selected.color, boxShadow: `0 0 130px ${selected.color}` }} />
           <span>{selected.archetype}</span>
           <h2>{selected.title}</h2>
           <p>{selected.reflection}</p>
+          <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
+            <button type="button" onClick={openReplay} style={{ ...softButtonStyle, position: "static", width: "auto" }}>Open replay</button>
+            <button type="button" onClick={closeFocus} style={{ ...softButtonStyle, position: "static", width: "auto" }}>Back to galaxy</button>
+          </div>
+        </section>
+      )}
+
+      {selected && mode === "replay" && (
+        <section className="cinematic-focus-card" role="dialog" aria-modal="true" aria-label={`${selected.title} replay`}>
+          <button type="button" onClick={closeReplay} aria-label="Return to memory focus">×</button>
+          <div className="cinematic-focus-orb" style={{ background: selected.color, boxShadow: `0 0 180px ${selected.color}` }} />
+          <span>Replay thread · spatially anchored</span>
+          <h2>{selected.title}</h2>
+          <p>{selected.reflection} The replay slows the field, follows the thread lines, and holds the emotional weather without forcing a conclusion.</p>
+          <div style={{ height: 5, marginTop: 24, borderRadius: 999, background: "linear-gradient(90deg, transparent, rgba(238,248,255,.88), transparent)" }} />
+          <div style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
+            <button type="button" onClick={closeReplay} style={{ ...softButtonStyle, position: "static", width: "auto" }}>Back to focus</button>
+            <button type="button" onClick={closeFocus} style={{ ...softButtonStyle, position: "static", width: "auto" }}>Back to galaxy</button>
+          </div>
         </section>
       )}
 
