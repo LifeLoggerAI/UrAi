@@ -56,6 +56,7 @@ export default function CinematicLifeMapExperience() {
   }
 
   function openStar(star: Star) {
+    setIsDragging(false);
     setSelectedId(star.id);
     setMode("focus");
     setCamera({ x: (50 - star.x) * 8, y: (46 - star.y) * 6, scale: 1.55 });
@@ -140,8 +141,20 @@ export default function CinematicLifeMapExperience() {
               key={star.id}
               type="button"
               className={`cinematic-star ${selectedId === star.id ? "selected" : ""}`}
-              style={{ left: `${star.x}%`, top: `${star.y}%`, "--star-color": star.color, "--star-size": star.size, "--star-z": star.z } as React.CSSProperties}
-              onClick={(event) => { event.stopPropagation(); openStar(star); }}
+              style={{ left: `${star.x}%`, top: `${star.y}%`, "--star-color": star.color, "--star-size": Math.max(1.8, star.size * 1.65), "--star-z": star.z } as React.CSSProperties}
+              onPointerDown={(event) => {
+                event.stopPropagation();
+                setIsDragging(false);
+              }}
+              onPointerUp={(event) => {
+                event.stopPropagation();
+                openStar(star);
+              }}
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                openStar(star);
+              }}
               aria-label={`Open ${star.title}`}
             >
               <span className="cinematic-star-glow" />
