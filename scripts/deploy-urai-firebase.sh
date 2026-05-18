@@ -27,6 +27,9 @@ case "$TARGET_ENV" in
     ;;
 esac
 
+export URAI_EXPECTED_FIREBASE_PROJECT="$EXPECTED_PROJECT"
+export URAI_EXPECTED_FIREBASE_SITE="$EXPECTED_SITE"
+
 TMP_FIREBASE_CONFIG="$(mktemp)"
 cleanup() {
   rm -f "$TMP_FIREBASE_CONFIG"
@@ -38,14 +41,15 @@ const fs = require("fs");
 const input = process.argv[1];
 const output = process.argv[2];
 const site = process.env.URAI_EXPECTED_FIREBASE_SITE;
+if (!site) {
+  console.error("URAI_EXPECTED_FIREBASE_SITE is required before generating Firebase deploy config.");
+  process.exit(1);
+}
 const config = JSON.parse(fs.readFileSync(input, "utf8"));
 config.hosting = config.hosting || {};
 config.hosting.site = site;
 fs.writeFileSync(output, `${JSON.stringify(config, null, 2)}\n`);
 ' firebase.json "$TMP_FIREBASE_CONFIG"
-
-export URAI_EXPECTED_FIREBASE_PROJECT="$EXPECTED_PROJECT"
-export URAI_EXPECTED_FIREBASE_SITE="$EXPECTED_SITE"
 
 echo "[urai-deploy] Target environment: ${TARGET_ENV}"
 echo "[urai-deploy] Firebase project/site: ${EXPECTED_PROJECT}/${EXPECTED_SITE}"
