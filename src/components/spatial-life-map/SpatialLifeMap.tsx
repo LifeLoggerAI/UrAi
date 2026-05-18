@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLifeMapData } from "./useLifeMapData";
 import { useGalaxyCamera } from "./useGalaxyCamera";
 import { useLayerWheel } from "./useLayerWheel";
@@ -14,10 +15,13 @@ import ChapterRail from "./ChapterRail";
 import SpatialControls from "./SpatialControls";
 
 type LifeMapInteractionMode = "galaxy" | "focus" | "replay" | "bloom";
+type ReturnPhase = "idle" | "returning";
 
 export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: string }) {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<LifeMapInteractionMode>("galaxy");
+  const [returnPhase, setReturnPhase] = useState<ReturnPhase>("idle");
 
   const { data, loading, error } = useLifeMapData(userId);
   const { activeLayerIds, activeLayers, toggleLayer, enableAll } = useLayerWheel(data.layers);
@@ -82,6 +86,17 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
     camera.resetCamera();
   }
 
+  function returnHome() {
+    if (returnPhase === "returning") return;
+    setReturnPhase("returning");
+    selection.closeBloom();
+    selection.setHoveredStarId(null);
+    selection.setSelectedStarId(null);
+    setMode("galaxy");
+    camera.resetCamera();
+    window.setTimeout(() => router.push("/"), 980);
+  }
+
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
@@ -105,8 +120,13 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
   }
 
   return (
-    <main className={`spatial-life-map is-${mode}`} aria-label="URAI Spatial Life Map Galaxy">
+    <main className={`spatial-life-map is-${mode} return-${returnPhase}`} aria-label="URAI Spatial Life Map Galaxy">
       <div className="spatial-atmosphere" aria-hidden />
+      <div className="spatial-cinematic-vignette" aria-hidden />
+      <button type="button" className="spatial-home-gate" onClick={returnHome} aria-label="Return to the Inner Sky Shrine">
+        <span>↩</span><strong>Home</strong>
+      </button>
+
       <section className="spatial-stage" {...camera.bind}>
         <LifeGalaxyScene
           stars={data.stars}
@@ -123,9 +143,9 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
       </section>
 
       <header className="spatial-title-card">
-        <p>{mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode.toUpperCase()}</p>
+        <p>{mode === "galaxy" ? "URAI SPATIAL LIFE MAP" : mode === "focus" ? "MEMORY STAR FOCUS" : mode === "bloom" ? "MEMORY BLOOM" : "REPLAY THREAD"}</p>
         <h1>{mode === "replay" ? "Replay Thread" : selectedStar ? selectedStar.title : "Memory Galaxy"}</h1>
-        <span>{visibleStars.length} active stars · {data.constellations.length} constellations · click star · click focus · Esc unwind</span>
+        <span>{mode === "galaxy" ? "Drag space · scroll to zoom · click a star · Esc unwinds" : mode === "focus" ? "Focus held · replay or open bloom · Esc returns to galaxy" : mode === "bloom" ? "Symbolic bloom open · Esc returns to focus" : "Spatial replay active · Esc returns to focus"}</span>
       </header>
 
       {loading && <div className="spatial-loading">URAI is arranging your living galaxy...</div>}
@@ -160,15 +180,27 @@ export default function SpatialLifeMap({ userId = "demo-user" }: { userId?: stri
 
       {mode === "replay" && selectedStar && (
         <section className="spatial-replay-overlay" role="dialog" aria-modal="true" aria-label={`${selectedStar.title} replay`}>
-          <div className="spatial-replay-orb" style={{ background: selectedStar.auraColor, boxShadow: `0 0 140px ${selectedStar.auraColor}99` }} />
-          <p>REPLAY THREAD · SPATIALLY ANCHORED</p>
-          <h2>{selectedStar.title}</h2>
-          <span>{selectedReplayBloom?.narratorScript ?? selectedStar.narratorReflection}</span>
-          <div className="spatial-replay-path" aria-hidden>
-            <i />
+          <div className="spatial-replay-card">
+            <div className="spatial-replay-orb" style={{ background: selectedStar.auraColor, boxShadow: `0 0 140px ${selectedStar.auraColor}99` }} />
+            <p>REPLAY THREAD · SPATIALLY ANCHORED</p>
+            <h2>{selectedStar.title}</h2>
+            <span>{selectedReplayBloom?.narratorScript ?? selectedStar.narratorReflection}</span>
+            <div className="spatial-replay-path" aria-hidden>
+              <i />
+            </div>
+            <div className="spatial-replay-actions">
+              <button type="button" onClick={unwind}>Back to focus</button>
+              <button type="button" onClick={() => { selection.setSelectedStarId(null); setMode("galaxy"); camera.resetCamera(); }}>Back to galaxy</button>
+            </div>
           </div>
-          <button type="button" onClick={unwind}>Esc / unwind to focus</button>
         </section>
+      )}
+
+      {returnPhase === "returning" && (
+        <div className="spatial-return-veil" aria-live="polite">
+          <div className="spatial-return-orb" />
+          <span>Returning to the Inner Sky Shrine</span>
+        </div>
       )}
     </main>
   );
