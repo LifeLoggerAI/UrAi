@@ -1,27 +1,12 @@
 # URAI V1 Demo Script
 
-Use this script when showing the V1 demo to collaborators, testers, supporters, or early investors.
+## Goal
 
-## Demo goal
+Show URAI as a public demo spine: a cinematic emotional OS concept with a working waitlist, public-safe seeded content, and a companion reflection loop.
 
-Make the viewer understand URAI in under three minutes:
+## Demo flow
 
-> URAI turns emotional life data into a symbolic memory mirror, mood forecast, and companion reflection layer.
-
-## 30-second version
-
-1. Open `/`.
-2. Say: “URAI is a passive emotional operating system. This demo shows the core loop: symbolic state, mood forecast, weekly reflection, companion, and waitlist.”
-3. Click “Open public constellation.”
-4. Show `/u/adamclamp`.
-5. Say: “This is what a shareable symbolic life snapshot can look like.”
-6. Submit a waitlist email or show the waitlist form.
-
-## 3-minute version
-
-### 1. Home scene
-
-Open:
+### 1. Home
 
 ```txt
 /
@@ -29,43 +14,27 @@ Open:
 
 Talk track:
 
-“URAI starts as a calm symbolic environment, not a dashboard. The goal is to make emotional patterns feel visible without overwhelming the user.”
+“This is the V1 demo spine. It is not live in V1 as a passive sensing product yet; it is a public demo that shows the emotional and symbolic direction of URAI.”
 
-Point out:
-
-- symbolic ground layer
-- mood forecast
-- weekly reflection
-- companion chat
-- waitlist form
-
-### 2. Mood forecast
+### 2. Mood Forecast
 
 Talk track:
 
-“The forecast gives a simple rhythm state and next best action. It avoids clinical claims and focuses on reflection and behavior.”
+“The forecast card shows how URAI can translate memory, mood, and reflection into a simple emotional weather report. In V1 this is demo data, not a diagnosis.”
 
-### 3. Weekly reflection
-
-Talk track:
-
-“The weekly reflection turns scattered progress into a narrative memory. This is the start of URAI’s life-story layer.”
-
-### 4. Companion
-
-Ask the companion:
-
-```txt
-help me ship the repo
-```
+### 3. Weekly Reflection
 
 Talk track:
 
-“The companion is intentionally grounded. It does not overclaim. It reflects the next useful step.”
+“Weekly reflection is the narrative layer: URAI turns patterns into language that feels personal, symbolic, and useful without pretending to be clinical care.”
 
-### 5. Public constellation
+### 4. Companion Demo
 
-Open:
+Talk track:
+
+“The companion loop shows the desired interaction model: reflective, grounded, and lightweight. V1 keeps it bounded to safe demo behavior.”
+
+### 5. Public Constellation
 
 ```txt
 /u/adamclamp
@@ -83,7 +52,7 @@ Talk track:
 
 ## Questions to expect
 
-### Is this a therapy app?
+### Is this a therapy app? Not a live clinical or therapy product in V1.
 
 No. URAI is an emotional reflection and memory intelligence product. It should not diagnose, treat, or replace professional care.
 
@@ -98,9 +67,3 @@ Long-term moat comes from personal memory continuity, symbolic personalization, 
 ### What is the first product milestone?
 
 A clean public demo, working waitlist, seedable Firestore demo data, and a stable companion reflection loop.
-
-## Demo close
-
-End with:
-
-“URAI’s first product is not another tracker. It is a symbolic mirror that helps people understand the emotional pattern of their life.”
