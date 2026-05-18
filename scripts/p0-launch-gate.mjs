@@ -60,6 +60,7 @@ const requiredFiles = [
   ["src/components/CompanionChat.tsx", "Render and exercise the companion flow."],
   ["src/components/WaitlistForm.tsx", "Render and exercise waitlist capture."],
   ["src/lib/firebase-admin.ts", "Support configured Firestore writes for waitlist persistence."],
+  ["scripts/check-conflicts.mjs", "Fail unresolved merge conflict markers before typecheck/build."],
   ["scripts/check-v1.mjs", "Verify required V1 wiring."],
   ["scripts/check-lockfile.mjs", "Fail stale lockfiles before launch."],
   ["scripts/seed-demo.mjs", "Generate deterministic demo seed data."],
@@ -76,6 +77,7 @@ let packageJson = null;
 if (exists("package.json")) {
   packageJson = readJson("package.json");
   for (const script of [
+    "check:conflicts",
     "check:v1",
     "check:lockfile",
     "seed:demo",
@@ -86,7 +88,8 @@ if (exists("package.json")) {
     "build",
     "preflight",
     "test:smoke",
-    "test:e2e"
+    "test:e2e",
+    "playwright:install"
   ]) {
     checkPackageScript(packageJson, script);
   }
@@ -145,6 +148,7 @@ if (exists(".github/workflows/ci.yml")) {
 }
 
 const commands = [
+  "npm run check:conflicts",
   "npm run check:lockfile",
   "npm run check:v1",
   "npm run seed:demo",
@@ -174,6 +178,7 @@ const manualEvidence = [
   ["Configured waitlist Firestore persistence verified", process.env.URAI_P0_WAITLIST_PERSISTENCE_VERIFIED],
   ["Firestore rules and indexes deployed", process.env.URAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED],
   ["Private data read safety verified", process.env.URAI_P0_PRIVATE_DATA_SAFETY_VERIFIED],
+  ["Playwright browsers installed", process.env.URAI_PLAYWRIGHT_BROWSERS_INSTALLED],
   ["30-60 second demo recording captured", process.env.URAI_P0_DEMO_RECORDING_URL]
 ];
 
@@ -190,12 +195,17 @@ const verdict = failed.length === 0 && unverified.length === 0
     ? "P0 STRUCTURALLY READY - EVIDENCE STILL REQUIRED"
     : "P0 NOT READY";
 
-function section(title, rows) {
-  if (!rows.length) return `## ${title}\n\nNone.\n`;
-  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${check.remediation || "none"}`).join("\n")}\n`;
+function nextActionFor(check) {
+  if (check.status === "pass") return "No action required; this item is already covered by the listed evidence.";
+  return check.remediation || "Review and resolve this check.";
 }
 
-const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
+function section(title, rows) {
+  if (!rows.length) return `## ${title}\n\nNone.\n`;
+  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${nextActionFor(check)}`).join("\n")}\n`;
+}
+
+const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nInstall Playwright browsers before smoke tests:\n\n\`\`\`bash\nnpm run playwright:install\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_PLAYWRIGHT_BROWSERS_INSTALLED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
 
 fs.writeFileSync(path.join(reportDir, "p0-launch-gate-report.md"), report);
 console.log(report);
