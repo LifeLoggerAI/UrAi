@@ -9,6 +9,7 @@ import '../styles/spatial-life-map.css';
 import '../styles/urai-fullscreen-final-lock.css';
 import '../styles/urai-aaa-loop.css';
 import '../styles/urai-aaa-final-focus.css';
+import '../styles/urai-home-world-composition.css';
 import React from 'react';
 import AppProviders from './providers';
 import type { Metadata } from 'next';
