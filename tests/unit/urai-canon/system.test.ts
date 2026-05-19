@@ -132,7 +132,9 @@ describe("URAI canonical system contracts", () => {
     expect(assertUraiFeatureFlagIntegrity(URAI_DEFAULT_FEATURE_FLAGS)).toEqual([]);
     expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier1).toBe(true);
     expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier2).toBe(true);
-    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier3).toBe(false);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier3).toBe(true);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier4).toBe(true);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier5).toBe(false);
     expect(URAI_FLAG_SAFE_FALLBACKS.advancedCinematics).toContain("static premium depth");
 
     const resolved = resolveUraiFeatureFlags({
