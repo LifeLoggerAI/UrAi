@@ -395,6 +395,81 @@ export const URAI_ROUTE_TRANSITIONS = {
   },
 } as const;
 
+export type UraiValidationResult = {
+  ok: boolean;
+  missing: string[];
+  unsafe: string[];
+};
+
+function hasOwnRecordKey(value: Record<string, unknown>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function missingRequiredFields(value: unknown, fields: readonly string[]): string[] {
+  if (!value || typeof value !== "object") return [...fields];
+  const record = value as Record<string, unknown>;
+  return fields.filter((field) => !hasOwnRecordKey(record, field));
+}
+
+export function validateCanonicalObject(value: unknown): UraiValidationResult {
+  const missing = missingRequiredFields(value, URAI_CANONICAL_OBJECT_FIELDS);
+  const unsafe: string[] = [];
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    const privacyState = record.privacyState;
+    if (typeof privacyState === "string" && privacyState in URAI_PERMISSION_MATRIX) {
+      if (privacyState === "deleted" && record.deletedAt == null) {
+        unsafe.push("deleted objects must include deletedAt");
+      }
+      if (privacyState === "archived" && record.archivedAt == null) {
+        unsafe.push("archived objects must include archivedAt");
+      }
+    } else if (!missing.includes("privacyState")) {
+      unsafe.push("privacyState must be a known URAI privacy state");
+    }
+  }
+  return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
+}
+
+export function validateAiOutput(value: unknown): UraiValidationResult {
+  const missing = missingRequiredFields(value, URAI_AI_OUTPUT_REQUIRED_FIELDS);
+  const unsafe: string[] = [];
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    if (record.prohibitedClaimsCheckPassed !== true) {
+      unsafe.push("AI output must pass prohibited claims check");
+    }
+    if (!Array.isArray(record.evidenceRefs)) {
+      unsafe.push("AI output evidenceRefs must be an array");
+    }
+    if (record.claimType === "fact" && Array.isArray(record.evidenceRefs) && record.evidenceRefs.length === 0) {
+      unsafe.push("AI fact claims require evidenceRefs");
+    }
+    if (typeof record.permissionScopeUsed === "string" && ["sensitive", "vaulted", "deleted"].includes(record.permissionScopeUsed)) {
+      unsafe.push("AI output cannot use sensitive, vaulted, or deleted permission scopes");
+    }
+  }
+  return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
+}
+
+export function validateAssetManifestEntry(value: unknown): UraiValidationResult {
+  const missing = missingRequiredFields(value, URAI_ASSET_MANIFEST_FIELDS);
+  const unsafe: string[] = [];
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    if (typeof record.fileSizeBudget === "number" && record.fileSizeBudget <= 0) {
+      unsafe.push("fileSizeBudget must be positive");
+    }
+    if (record.license === "unknown") {
+      unsafe.push("asset license cannot be unknown");
+    }
+    if (!record.fallbackVariant) {
+      unsafe.push("asset manifest entry must include fallbackVariant");
+    }
+  }
+  return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
+}
+
 export function getRouteContract(route: UraiRouteId): UraiRouteContract {
   return URAI_ROUTE_CONTRACTS[route];
 }
