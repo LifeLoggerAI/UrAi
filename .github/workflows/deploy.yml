@@ -63,18 +63,22 @@ jobs:
       - name: Run production build
         run: npm run build
 
+      - name: Write Firebase service account credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          credentials_file="$RUNNER_TEMP/firebase-service-account.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$credentials_file"
+          node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));" "$credentials_file"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$credentials_file" >> "$GITHUB_ENV"
+
       - name: Deploy production hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
         env:
           npm_config_cache: /tmp/urai-npm-cache
           NEXT_DISABLE_CACHE: "1"
           FIREBASE_CLI_EXPERIMENTS: webframeworks
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: urai-4dc1d
-          target: urai-4dc1d
+        run: npx firebase-tools@15.18.0 deploy --only hosting:urai-4dc1d --project urai-4dc1d --non-interactive
 
       - name: Verify production HTTP routes
         run: |
