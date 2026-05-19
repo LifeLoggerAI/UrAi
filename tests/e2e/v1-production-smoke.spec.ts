@@ -31,7 +31,7 @@ test.describe("URAI production smoke", () => {
     await page.goto("/life-map/star/starter-star", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='star-selected']")).toBeVisible();
     await expect(page.getByText("Selected star: starter-star")).toBeVisible();
-    await expect(page.getByText("Starter Star")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Starter Star" })).toBeVisible();
 
     await page.goto("/focus", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
