@@ -12,6 +12,8 @@ on:
       - "firebase.json"
       - "package.json"
       - "package-lock.json"
+      - "playwright.config.ts"
+      - "tests/e2e/**"
       - "scripts/deploy-urai-firebase.sh"
       - ".github/workflows/deploy.yml"
 
@@ -23,11 +25,14 @@ jobs:
   deploy:
     name: Deploy production Firebase
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       npm_config_cache: /tmp/urai-npm-cache
       NEXT_DISABLE_CACHE: "1"
       NPM_CONFIG_CACHE: /tmp/urai-npm-cache
+      PLAYWRIGHT_OUTPUT_DIR: test-results
+      PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
+      PRODUCTION_URL: https://urai-4dc1d.web.app
 
     steps:
       - uses: actions/checkout@v4
@@ -70,3 +75,27 @@ jobs:
           channelId: live
           projectId: urai-4dc1d
           target: urai-4dc1d
+
+      - name: Verify production HTTP routes
+        run: |
+          set -euo pipefail
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/" >/dev/null
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/home" >/dev/null
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/status" >/dev/null
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify production browser smoke
+        run: npm run test:smoke
+
+      - name: Upload production verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-verification-results
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
