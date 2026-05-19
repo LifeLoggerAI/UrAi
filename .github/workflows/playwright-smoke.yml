@@ -47,6 +47,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build app for smoke tests
+        env:
+          NEXT_DISABLE_CACHE: "1"
+        run: npm run build
+
       - name: Install Playwright Chromium and OS dependencies
         run: npx playwright install --with-deps chromium
 
@@ -54,6 +59,7 @@ jobs:
         env:
           PLAYWRIGHT_OUTPUT_DIR: test-results
           NEXT_CACHE_DIR: .next/cache
+          URAI_WAITLIST_DRY_RUN: "1"
         run: npm run test:smoke
 
       - name: Upload Playwright test results
