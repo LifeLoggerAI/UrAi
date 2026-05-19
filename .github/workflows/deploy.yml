@@ -81,7 +81,7 @@ jobs:
           set -euo pipefail
           curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/" >/dev/null
           curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/home" >/dev/null
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/status" >/dev/null
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/api/status" >/dev/null
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
