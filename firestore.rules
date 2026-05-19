@@ -1,20 +1,24 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
+    function isSignedIn() {
       return request.auth != null;
     }
 
+    function signedIn() {
+      return isSignedIn();
+    }
+
     function isSelf(uid) {
-      return signedIn() && request.auth.uid == uid;
+      return isSignedIn() && request.auth.uid == uid;
     }
 
     function isOwnerResource() {
-      return signedIn() && resource.data.ownerUid == request.auth.uid;
+      return isSignedIn() && resource.data.ownerUid == request.auth.uid;
     }
 
     function isOwnerRequest() {
-      return signedIn() && request.resource.data.ownerUid == request.auth.uid;
+      return isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
     }
 
     function canReadOwnerDoc() {
@@ -74,6 +78,203 @@ service cloud.firestore {
         && request.resource.data.ownerUid == uid
         && request.resource.data.uid == uid
         && request.resource.data.source == source;
+    }
+
+    // Top-level collections
+    match /dreams/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /rituals/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /timelineEvents/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /personaEvolutions/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /soulThreads/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /socialArchetypes/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /weeklyScrolls/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /moods/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /shadowMetrics/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /obscuraPatterns/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /cognitiveStress/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /recoveryBlooms/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /relationshipConstellations/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /voiceEvents/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /dreamConstellations/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /memoryBlooms/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /badges/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /notifications/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /journalEntries/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /events/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /insightMarket/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /moodForecasts/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /weeklyReflections/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /companionMessages/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /narratorInsights/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /relationshipSignals/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /passiveSignals/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /symbolicStates/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
     }
 
     match /users/{uid} {
@@ -137,66 +338,6 @@ service cloud.firestore {
         allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
         allow delete: if isSelf(uid) && resource.data.uid == uid;
       }
-    }
-
-    match /timelineEvents/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /memoryBlooms/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /moodForecasts/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /weeklyReflections/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /companionMessages/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /narratorInsights/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /rituals/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /relationshipSignals/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /passiveSignals/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /symbolicStates/{docId} {
-      allow read: if canReadOwnerDoc(); allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
     }
 
     match /waitlistSignups/{id} {
