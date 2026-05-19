@@ -87,7 +87,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Verify production browser smoke
-        run: npm run test:smoke
+        run: npm run test:smoke:production
 
       - name: Upload production verification artifacts
         if: always()
