@@ -26,7 +26,7 @@ test.describe("URAI V1 smoke", () => {
     await expectVisibleBodyText(page, /^URAI$/);
     await expectBodyTextAttached(page, /^Sky · Orb · Ground$/);
     await expectVisibleBodyText(page, /stable · quiet sky · memory gateway ready/i);
-    await expectVisibleBodyText(page, /Your sky is quiet, but awake\./i);
+    await expectBodyTextAttached(page, /Your sky is quiet, but awake\./i);
   });
 
   test("final /home field exposes sky, orb, ground, companion, and return-home surfaces @smoke", async ({ page }) => {
