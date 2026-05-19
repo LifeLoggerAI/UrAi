@@ -42,9 +42,13 @@ export default function ConstellationLines({ stars, constellations, selectedCons
         ]);
         const active = selectedConstellationId === line.constellation.id;
         return (
-          <line key={line.id} geometry={geometry}>
-            <lineBasicMaterial color={line.constellation.color} transparent opacity={active ? 0.52 : 0.22} linewidth={active ? 2 : 1} blending={THREE.AdditiveBlending} depthWrite={false} />
-          </line>
+          <primitive key={line.id} object={new THREE.Line(geometry, new THREE.LineBasicMaterial({
+            color: line.constellation.color,
+            transparent: true,
+            opacity: active ? 0.52 : 0.22,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          }))} />
         );
       })}
     </group>
