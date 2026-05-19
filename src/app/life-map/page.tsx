@@ -1,4 +1,4 @@
-import CinematicLifeMapExperience from "@/components/life-map/CinematicLifeMapExperience";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export const metadata = {
   title: "URAI Life Map",
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <CinematicLifeMapExperience />;
+  return <LifeMapUniverse initialView="lifeMap" />;
 }
