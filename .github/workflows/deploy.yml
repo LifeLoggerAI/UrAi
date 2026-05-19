@@ -15,6 +15,10 @@ on:
       - "scripts/deploy-urai-firebase.sh"
       - ".github/workflows/deploy.yml"
 
+concurrency:
+  group: firebase-production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     name: Deploy production Firebase
@@ -37,8 +41,11 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: Prepare writable npm cache
-        run: mkdir -p "$npm_config_cache"
+      - name: Prepare writable tool caches
+        run: |
+          mkdir -p "$npm_config_cache"
+          npm config set cache "$npm_config_cache" --global
+          npm config get cache
 
       - name: Install dependencies
         run: npm ci
