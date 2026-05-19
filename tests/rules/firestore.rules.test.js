@@ -10,9 +10,9 @@ const TEST_PROJECT = 'urai-security-rules-test';
 const OWNER_UID = 'owner-123';
 const OTHER_UID = 'other-456';
 const SAMPLE_COLLECTIONS = [
-  { name: 'dreams', sample: { title: 'Lucid exploration' } },
   { name: 'rituals', sample: { name: 'Morning pages' } },
   { name: 'timelineEvents', sample: { type: 'milestone' } },
+  { name: 'memoryBlooms', sample: { title: 'Memory bloom' } },
 ];
 
 describe('Firestore security rules', () => {

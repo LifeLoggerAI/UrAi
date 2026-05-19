@@ -1,0 +1,260 @@
+/* Final /home world composition: grounded orb + avatar foreground + walkable 3D shrine read. */
+
+.urai-hero-home {
+  background:
+    radial-gradient(circle at 46% 35%, rgba(226,248,255,.11), transparent 9%),
+    radial-gradient(circle at 48% 58%, rgba(95,234,246,.2), transparent 22%),
+    radial-gradient(circle at 28% 58%, rgba(115,92,255,.11), transparent 28%),
+    radial-gradient(circle at 73% 56%, rgba(255,229,156,.08), transparent 30%),
+    linear-gradient(180deg, #00030a 0%, #061426 30%, #07253d 54%, #020d18 72%, #000105 100%) !important;
+  perspective: 1100px;
+}
+
+.urai-hero-home::before {
+  background:
+    radial-gradient(ellipse at 48% 55%, transparent 20%, rgba(0,0,0,.1) 48%, rgba(0,0,0,.76) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.38), transparent 24%, transparent 63%, rgba(0,0,0,.88)),
+    linear-gradient(90deg, rgba(0,0,0,.66), transparent 21%, transparent 76%, rgba(0,0,0,.66)) !important;
+}
+
+.urai-atmosphere-band-a { top: 37vh !important; transform: rotate(-2deg) translateY(2vh) !important; }
+.urai-atmosphere-band-b { top: 48vh !important; transform: rotate(1.6deg) translateY(2vh) !important; }
+.urai-atmosphere-band-c { top: 58vh !important; opacity: .5 !important; }
+
+.urai-sky-vault-ring {
+  top: 50% !important;
+  opacity: .78;
+}
+
+.urai-hero-terrain {
+  height: 64vh !important;
+  min-height: 510px !important;
+  transform: translateY(2.5vh) scale(1.06);
+}
+
+.urai-hero-horizon-glow {
+  top: -18% !important;
+  opacity: .86;
+}
+
+.urai-reflection-floor {
+  left: 9vw !important;
+  right: 9vw !important;
+  bottom: 8.5vh !important;
+  height: 30vh !important;
+  opacity: .95 !important;
+  transform: perspective(760px) rotateX(66deg) translateY(1vh) !important;
+  background:
+    radial-gradient(ellipse at 48% 38%, rgba(228,255,255,.26), rgba(78,232,242,.12) 34%, rgba(0,0,0,0) 73%),
+    radial-gradient(ellipse at 39% 45%, rgba(199,160,255,.09), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(0,0,0,0)) !important;
+  box-shadow: inset 0 0 64px rgba(155,231,255,.08), 0 0 95px rgba(78,232,242,.08) !important;
+}
+
+.urai-ground-ritual-ring {
+  bottom: 12.5vh !important;
+  width: min(72vw, 980px) !important;
+  height: min(23vw, 315px) !important;
+  opacity: .95 !important;
+}
+
+.urai-ground-ritual-ring-b {
+  bottom: 14vh !important;
+  width: min(47vw, 660px) !important;
+}
+
+.urai-foundation-glow-lines {
+  bottom: 11vh !important;
+  height: 26vh !important;
+  opacity: .9 !important;
+}
+
+/* Lower the orb into the shrine world instead of floating high in the sky. */
+.urai-hero-orb-system {
+  transform-origin: 48% 52.5% !important;
+  z-index: 25 !important;
+}
+
+.urai-hero-orb,
+.urai-hero-orb-halo,
+.urai-hero-orb-ring,
+.urai-hero-orb-beam,
+.urai-hero-orb-satellite {
+  top: 52.5% !important;
+}
+
+.urai-hero-orb {
+  left: 48% !important;
+  width: clamp(136px, 12.2vw, 186px) !important;
+  height: clamp(136px, 12.2vw, 186px) !important;
+  box-shadow:
+    inset -24px -28px 46px rgba(0,9,30,.7),
+    inset 14px 10px 32px rgba(255,255,255,.34),
+    0 0 48px rgba(224,255,255,.82),
+    0 0 130px rgba(78,232,242,.44),
+    0 28px 95px rgba(0,0,0,.62) !important;
+}
+
+.urai-hero-orb-halo {
+  left: 48% !important;
+  width: clamp(390px, 43vw, 640px) !important;
+  height: clamp(390px, 43vw, 640px) !important;
+  opacity: .82 !important;
+  filter: blur(23px) !important;
+}
+
+.urai-hero-orb-ring {
+  left: 48% !important;
+  width: clamp(230px, 24vw, 350px) !important;
+  height: clamp(112px, 12vw, 168px) !important;
+}
+
+.urai-hero-orb-beam {
+  left: 48% !important;
+  top: 53% !important;
+  height: 31vh !important;
+  min-height: 230px !important;
+  opacity: .48 !important;
+  transform: translateX(-50%) perspective(900px) rotateX(12deg) !important;
+}
+
+.urai-hero-orb-satellite {
+  left: calc(48% + clamp(52px, 4.8vw, 74px)) !important;
+  top: calc(52.5% + 4px) !important;
+}
+
+/* Avatar: foreground, side/back toward the viewer, looking at the orb. */
+.urai-hero-body {
+  z-index: 32 !important;
+  transform-origin: 42% 76% !important;
+}
+
+.urai-hero-body-aura {
+  left: 37% !important;
+  top: 70% !important;
+  width: clamp(190px, 20vw, 310px) !important;
+  height: clamp(300px, 43vh, 480px) !important;
+  opacity: .7;
+}
+
+.urai-hero-body-beam {
+  left: 38% !important;
+  top: 56% !important;
+  width: clamp(70px, 6vw, 95px) !important;
+  height: 35vh !important;
+  min-height: 245px !important;
+  opacity: .42 !important;
+  transform: translateX(-50%) perspective(800px) rotateX(8deg) rotateZ(-4deg) !important;
+}
+
+.urai-avatar-presence {
+  left: 38% !important;
+  top: 70% !important;
+  width: clamp(118px, 10vw, 165px) !important;
+  height: clamp(260px, 36vh, 410px) !important;
+  opacity: .96 !important;
+  transform: translate(-50%, -50%) rotateY(-18deg) rotateZ(-3deg) !important;
+  filter: drop-shadow(0 18px 38px rgba(0,0,0,.45)) drop-shadow(0 0 24px rgba(155,231,255,.22));
+}
+
+.urai-avatar-head {
+  top: 8% !important;
+  width: 19% !important;
+  height: 12% !important;
+  background: radial-gradient(circle at 54% 24%, rgba(255,255,255,.72), rgba(120,205,235,.2) 46%, rgba(0,0,0,0) 78%) !important;
+}
+
+.urai-avatar-spine {
+  top: 21% !important;
+  width: 3px !important;
+  height: 62% !important;
+  background: linear-gradient(180deg, rgba(230,255,255,.72), rgba(125,211,252,.24), rgba(125,211,252,.03)) !important;
+}
+
+.urai-avatar-shoulders {
+  top: 25% !important;
+  width: 64% !important;
+  height: 16% !important;
+  transform: translateX(-50%) rotateZ(-5deg) !important;
+  background: radial-gradient(ellipse, rgba(220,255,255,.25), rgba(125,211,252,.1) 46%, transparent 78%) !important;
+}
+
+.urai-avatar-torso {
+  top: 34% !important;
+  width: 36% !important;
+  height: 47% !important;
+  clip-path: polygon(38% 0, 62% 0, 78% 100%, 24% 100%) !important;
+  background: linear-gradient(180deg, rgba(230,255,255,.34), rgba(125,211,252,.13) 46%, rgba(125,211,252,.025)) !important;
+}
+
+.urai-avatar-root {
+  bottom: 3% !important;
+  width: 24% !important;
+  height: 27% !important;
+}
+
+.urai-avatar-shadow {
+  bottom: -1% !important;
+  width: 96% !important;
+  height: 13% !important;
+  background: radial-gradient(ellipse, rgba(126,225,246,.28), rgba(0,0,0,.12) 44%, transparent 76%) !important;
+}
+
+/* Make the world feel deeper by letting UI step back visually. */
+.urai-home-panel {
+  opacity: .82;
+}
+
+.urai-zone-runes {
+  opacity: .58;
+  bottom: max(.85rem, env(safe-area-inset-bottom)) !important;
+}
+
+.urai-orb-zone {
+  left: 48% !important;
+  top: 52.5% !important;
+  width: clamp(170px, 15vw, 235px) !important;
+  height: clamp(170px, 15vw, 235px) !important;
+}
+
+.urai-ground-zone {
+  height: 41vh !important;
+}
+
+@media (max-width: 760px) {
+  .urai-hero-orb,
+  .urai-hero-orb-halo,
+  .urai-hero-orb-ring,
+  .urai-hero-orb-beam,
+  .urai-hero-orb-satellite,
+  .urai-orb-zone {
+    top: 50% !important;
+  }
+
+  .urai-hero-orb,
+  .urai-hero-orb-halo,
+  .urai-hero-orb-ring,
+  .urai-hero-orb-beam,
+  .urai-hero-orb-satellite,
+  .urai-orb-zone {
+    left: 52% !important;
+  }
+
+  .urai-avatar-presence,
+  .urai-hero-body-aura,
+  .urai-hero-body-beam {
+    left: 31% !important;
+  }
+
+  .urai-avatar-presence {
+    top: 72% !important;
+    width: 92px !important;
+    height: 265px !important;
+  }
+
+  .urai-reflection-floor {
+    left: -3vw !important;
+    right: -3vw !important;
+    bottom: 8vh !important;
+  }
+}

@@ -4,8 +4,16 @@ import './lifemap-production.css';
 import '../styles/urai-cinematic.css';
 import '../styles/urai-home-final.css';
 import '../styles/urai-home-production-overlay.css';
+import '../styles/urai-home-tier5.css';
 import '../styles/spatial-life-map.css';
+import '../styles/spatial-life-map-unwind.css';
+import '../styles/cinematic-life-map.css';
+import '../styles/urai-3d-world-integration.css';
 import '../styles/urai-fullscreen-final-lock.css';
+import '../styles/urai-aaa-loop.css';
+import '../styles/urai-aaa-final-focus.css';
+import '../styles/urai-home-world-composition.css';
+
 import React from 'react';
 import AppProviders from './providers';
 import type { Metadata } from 'next';
@@ -16,10 +24,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'URAI — Passive Emotional OS',
-    template: '%s | URAI'
+    template: '%s | URAI',
   },
   description:
-    'URAI is a passive emotional operating system prototype for memory, mood forecasting, symbolic reflection, and companion narration.',
+    'URAI is a passive emotional operating system prototype for memory, mood forecasting, emotional reflection, and companion narration.',
   applicationName: 'URAI',
   keywords: [
     'URAI',
@@ -27,7 +35,7 @@ export const metadata: Metadata = {
     'passive life logging',
     'memory constellation',
     'AI companion',
-    'mood forecasting'
+    'mood forecasting',
   ],
   authors: [{ name: 'URAI Labs' }],
   creator: 'URAI Labs',
@@ -38,14 +46,14 @@ export const metadata: Metadata = {
     siteName: 'URAI',
     title: 'URAI — Passive Emotional OS',
     description:
-      'A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.'
+      'A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'URAI — Passive Emotional OS',
     description:
-      'A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.'
-  }
+      'A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

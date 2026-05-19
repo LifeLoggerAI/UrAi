@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ReactNode, useCallback, useEffect, useRef } from "react";
 import { captureRouteError, trackInteraction, TelemetryMetadata } from "@/lib/telemetry";
 
@@ -65,13 +64,13 @@ export default function RouteErrorFallback({
             {retryLabel}
           </button>
           {secondaryAction ? (
-            <Link
+            <a
               href={secondaryAction.href}
               onClick={handleNavigate}
               className="inline-flex min-w-[160px] items-center justify-center rounded-full border border-white/30 px-6 py-2 text-sm font-semibold text-white transition hover:border-white/50"
             >
               {secondaryAction.label}
-            </Link>
+            </a>
           ) : null}
         </div>
       </div>

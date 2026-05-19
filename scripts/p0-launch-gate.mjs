@@ -53,16 +53,25 @@ const requiredFiles = [
   ["firestore.rules", "Protect private and server-only data."],
   ["firestore.indexes.json", "Deploy required Firestore indexes."],
   ["src/app/page.tsx", "Serve the public home demo spine at /."],
+  ["src/app/home/page.tsx", "Serve the final resolved /home field."],
   ["src/app/u/[handle]/page.tsx", "Serve the public Adam Clamp constellation route."],
   ["src/app/api/companion/route.ts", "Serve the companion narrator API."],
   ["src/app/api/waitlist/route.ts", "Serve the waitlist capture API."],
-  ["src/components/HomeScene.tsx", "Render the home demo scene."],
+  ["src/components/HomeScene.tsx", "Render the public home demo scene."],
+  ["src/components/urai/UraiResolvedHomeScene.tsx", "Render the final live-data /home field."],
+  ["src/lib/use-urai-home-state.ts", "Normalize and bind final /home state to Firebase/Auth/Firestore."],
   ["src/components/CompanionChat.tsx", "Render and exercise the companion flow."],
   ["src/components/WaitlistForm.tsx", "Render and exercise waitlist capture."],
   ["src/lib/firebase-admin.ts", "Support configured Firestore writes for waitlist persistence."],
   ["scripts/check-v1.mjs", "Verify required V1 wiring."],
   ["scripts/check-lockfile.mjs", "Fail stale lockfiles before launch."],
+  ["scripts/check-home-lock.mjs", "Verify final /home lock static requirements."],
+  ["scripts/check-ascent-lock.mjs", "Verify final /home ascent static requirements."],
   ["scripts/seed-demo.mjs", "Generate deterministic demo seed data."],
+  ["HOME_LOCK_REPORT.md", "Track final /home lock evidence and blockers."],
+  ["HOME_E2E_AUDIT.md", "Track final /home route, state, Firebase, motion, mobile, and audit evidence."],
+  ["HOME_DATA_CONTRACT.md", "Document final /home Firestore data contract."],
+  ["HOME_COMPANION_CONTRACT.md", "Document final /home companion contract."],
   ["docs/V1_DEPLOY_CHECKLIST.md", "Keep deploy readiness checklist in repo."],
   ["docs/V1_QA_CHECKLIST.md", "Keep QA checklist in repo."],
   ["docs/V1_MANUAL_TESTS.md", "Keep manual API/browser recipes in repo."],
@@ -78,6 +87,8 @@ if (exists("package.json")) {
   for (const script of [
     "check:v1",
     "check:lockfile",
+    "check:home",
+    "check:ascent",
     "seed:demo",
     "test:unit",
     "test:rules",
@@ -119,11 +130,15 @@ const routeChecks = [
   ["README documents waitlist API", "README.md", /\/api\/waitlist/],
   ["manual tests include companion curl", "docs/V1_MANUAL_TESTS.md", /curl -X POST http:\/\/localhost:3014\/api\/companion/],
   ["manual tests include waitlist curl", "docs/V1_MANUAL_TESTS.md", /curl -X POST http:\/\/localhost:3014\/api\/waitlist/],
-  ["QA checklist includes mobile and desktop coverage", "docs/V1_QA_CHECKLIST.md", /mobile and desktop/]
+  ["QA checklist includes mobile and desktop coverage", "docs/V1_QA_CHECKLIST.md", /mobile and desktop/],
+  ["home lock report carries not-locked decision", "HOME_LOCK_REPORT.md", /PARTIALLY LOCKED \/ NOT LOCKED/],
+  ["home e2e audit carries not-locked decision", "HOME_E2E_AUDIT.md", /Final release lock decision: NOT LOCKED/],
+  ["home data contract documents Firestore paths", "HOME_DATA_CONTRACT.md", /users\/\{uid\}\/homeState\/current/],
+  ["home companion contract documents orb states", "HOME_COMPANION_CONTRACT.md", /listening[\s\S]*thinking[\s\S]*speaking/]
 ];
 
 for (const [name, file, pattern] of routeChecks) {
-  add(name, hasText(file, pattern), file, `Update ${file} so this route or test is explicitly covered.`);
+  add(name, hasText(file, pattern), file, `Update ${file} so this route, test, or lock evidence is explicitly covered.`);
 }
 
 if (exists(".github/workflows/ci.yml")) {
@@ -131,6 +146,8 @@ if (exists(".github/workflows/ci.yml")) {
   for (const token of [
     "npm run check:lockfile",
     "npm run check:v1",
+    "npm run check:home",
+    "npm run check:ascent",
     "npm run launch:p0",
     "npm run seed:demo",
     "npm run test:unit",
@@ -147,6 +164,8 @@ if (exists(".github/workflows/ci.yml")) {
 const commands = [
   "npm run check:lockfile",
   "npm run check:v1",
+  "npm run check:home",
+  "npm run check:ascent",
   "npm run seed:demo",
   "npm run test:unit",
   "npm run test:rules",
@@ -174,6 +193,11 @@ const manualEvidence = [
   ["Configured waitlist Firestore persistence verified", process.env.URAI_P0_WAITLIST_PERSISTENCE_VERIFIED],
   ["Firestore rules and indexes deployed", process.env.URAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED],
   ["Private data read safety verified", process.env.URAI_P0_PRIVATE_DATA_SAFETY_VERIFIED],
+  ["/home desktop smoke verified", process.env.URAI_HOME_DESKTOP_VERIFIED],
+  ["/home mobile smoke verified", process.env.URAI_HOME_MOBILE_VERIFIED],
+  ["/home reduced-motion smoke verified", process.env.URAI_HOME_REDUCED_MOTION_VERIFIED],
+  ["/home Firebase emulator proof captured", process.env.URAI_HOME_FIREBASE_EMULATOR_VERIFIED],
+  ["/home companion fallback verified", process.env.URAI_HOME_COMPANION_FALLBACK_VERIFIED],
   ["30-60 second demo recording captured", process.env.URAI_P0_DEMO_RECORDING_URL]
 ];
 
@@ -190,12 +214,17 @@ const verdict = failed.length === 0 && unverified.length === 0
     ? "P0 STRUCTURALLY READY - EVIDENCE STILL REQUIRED"
     : "P0 NOT READY";
 
-function section(title, rows) {
-  if (!rows.length) return `## ${title}\n\nNone.\n`;
-  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${check.remediation || "none"}`).join("\n")}\n`;
+function nextActionFor(check) {
+  if (check.status === "pass") return "No action required; this item is already covered by the listed evidence.";
+  return check.remediation || "Review and resolve this check.";
 }
 
-const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
+function section(title, rows) {
+  if (!rows.length) return `## ${title}\n\nNone.\n`;
+  return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${nextActionFor(check)}`).join("\n")}\n`;
+}
+
+const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_HOME_DESKTOP_VERIFIED=1 \\\nURAI_HOME_MOBILE_VERIFIED=1 \\\nURAI_HOME_REDUCED_MOTION_VERIFIED=1 \\\nURAI_HOME_FIREBASE_EMULATOR_VERIFIED=1 \\\nURAI_HOME_COMPANION_FALLBACK_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
 
 fs.writeFileSync(path.join(reportDir, "p0-launch-gate-report.md"), report);
 console.log(report);

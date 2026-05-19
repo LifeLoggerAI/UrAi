@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import type { LifeMapLayer, LifeMapLayerId } from "@/lib/spatial-life-map/lifeMap.types";
 
 interface LayerWheelProps {
@@ -7,6 +8,10 @@ interface LayerWheelProps {
   activeLayerIds: LifeMapLayerId[];
   onToggle: (layerId: LifeMapLayerId) => void;
   onEnableAll: () => void;
+}
+
+function roundForHydration(value: number) {
+  return Number(value.toFixed(3));
 }
 
 export default function LayerWheel({ layers, activeLayerIds, onToggle, onEnableAll }: LayerWheelProps) {
@@ -21,8 +26,13 @@ export default function LayerWheel({ layers, activeLayerIds, onToggle, onEnableA
           const active = activeLayerIds.includes(layer.id);
           const angle = (index / layers.length) * Math.PI * 2 - Math.PI / 2;
           const radius = 112;
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
+          const x = roundForHydration(Math.cos(angle) * radius);
+          const y = roundForHydration(Math.sin(angle) * radius);
+          const style = {
+            transform: `translate3d(${x}px, ${y}px, 0)`,
+            "--layer-color": layer.color,
+          } as CSSProperties;
+
           return (
             <button
               key={layer.id}
@@ -30,11 +40,11 @@ export default function LayerWheel({ layers, activeLayerIds, onToggle, onEnableA
               className="spatial-layer-glyph"
               data-active={active}
               onClick={() => onToggle(layer.id)}
-              style={{ transform: `translate(${x}px, ${y}px)`, borderColor: active ? layer.color : undefined, boxShadow: active ? `0 0 22px ${layer.color}55` : undefined }}
+              style={style}
               aria-pressed={active}
               aria-label={`${active ? "Hide" : "Show"} ${layer.name}`}
             >
-              <span style={{ color: layer.color }}>{layer.icon}</span>
+              <span>{layer.icon}</span>
               <em>{layer.name}</em>
             </button>
           );
