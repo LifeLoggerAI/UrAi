@@ -28,7 +28,7 @@ jobs:
   p1:
     name: Strict P1 release gate
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     steps:
       - name: Checkout requested ref
@@ -44,6 +44,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Build app for command-backed P1 smoke
+        env:
+          NEXT_DISABLE_CACHE: "1"
+        run: npm run build
 
       - name: Install Playwright Chromium and OS dependencies
         run: npx playwright install --with-deps chromium
@@ -106,6 +111,7 @@ jobs:
           URAI_ROLLBACK_TARGET_SHA: ${{ github.event.inputs.rollback_target_sha }}
           URAI_STAGING_SMOKE_TESTED: "1"
           URAI_PRODUCTION_DEPLOY_APPROVED: "1"
+          URAI_WAITLIST_DRY_RUN: "1"
           PLAYWRIGHT_OUTPUT_DIR: test-results
           NEXT_CACHE_DIR: .next/cache
         run: npm run release:p1
