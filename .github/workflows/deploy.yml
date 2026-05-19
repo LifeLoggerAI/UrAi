@@ -83,9 +83,27 @@ jobs:
       - name: Verify production HTTP routes
         run: |
           set -euo pipefail
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/" >/dev/null
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/home" >/dev/null
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/api/status" >/dev/null
+          check_url() {
+            url="$1"
+            echo "Checking $url"
+            for attempt in $(seq 1 18); do
+              status="$(curl --silent --show-error --location --output /tmp/urai-http-check-body --write-out '%{http_code}' "$url" || true)"
+              if [ "$status" = "200" ]; then
+                echo "OK $url"
+                return 0
+              fi
+              echo "Attempt $attempt failed for $url with HTTP $status"
+              head -c 500 /tmp/urai-http-check-body || true
+              echo
+              sleep 10
+            done
+            echo "Production route did not become healthy: $url"
+            return 1
+          }
+
+          check_url "$PRODUCTION_URL/"
+          check_url "$PRODUCTION_URL/home"
+          check_url "$PRODUCTION_URL/api/status"
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
