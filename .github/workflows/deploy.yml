@@ -29,7 +29,6 @@ jobs:
     env:
       npm_config_cache: /tmp/urai-npm-cache
       NEXT_DISABLE_CACHE: "1"
-      NPM_CONFIG_CACHE: /tmp/urai-npm-cache
       PLAYWRIGHT_OUTPUT_DIR: test-results
       PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
       PRODUCTION_URL: https://urai-4dc1d.web.app
@@ -67,7 +66,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         env:
           npm_config_cache: /tmp/urai-npm-cache
-          NPM_CONFIG_CACHE: /tmp/urai-npm-cache
           NEXT_DISABLE_CACHE: "1"
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
