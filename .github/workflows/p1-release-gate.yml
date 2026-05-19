@@ -1,0 +1,81 @@
+name: P1 Release Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to verify"
+        required: false
+        default: "main"
+      staging_project_id:
+        description: "Verified staging Firebase/GCP project ID"
+        required: true
+      production_project_id:
+        description: "Verified production Firebase/GCP project ID"
+        required: true
+      rollback_target_sha:
+        description: "Known-good rollback commit SHA"
+        required: true
+      production_deploy_approved:
+        description: "Type APPROVE to confirm production promotion is approved"
+        required: true
+
+jobs:
+  p1:
+    name: Strict P1 release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout requested ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium and OS dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Resolve release candidate SHA
+        id: sha
+        run: echo "release_candidate_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Require explicit production approval
+        run: |
+          if [ "${{ github.event.inputs.production_deploy_approved }}" != "APPROVE" ]; then
+            echo "production_deploy_approved input must be APPROVE"
+            exit 1
+          fi
+
+      - name: Run strict P1 release gate
+        env:
+          URAI_P1_STRICT: "1"
+          URAI_P1_RUN_COMMANDS: "1"
+          URAI_STAGING_PROJECT_ID: ${{ github.event.inputs.staging_project_id }}
+          URAI_PRODUCTION_PROJECT_ID: ${{ github.event.inputs.production_project_id }}
+          URAI_RELEASE_CANDIDATE_SHA: ${{ steps.sha.outputs.release_candidate_sha }}
+          URAI_ROLLBACK_TARGET_SHA: ${{ github.event.inputs.rollback_target_sha }}
+          URAI_STAGING_SMOKE_TESTED: "1"
+          URAI_PRODUCTION_DEPLOY_APPROVED: "1"
+          PLAYWRIGHT_OUTPUT_DIR: test-results
+          NEXT_CACHE_DIR: .next/cache
+        run: npm run release:p1
+
+      - name: Upload P1 artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-release-gate-results
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
