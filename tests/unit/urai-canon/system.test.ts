@@ -1,4 +1,8 @@
 import {
+  URAI_SOURCE_OF_TRUTH_OWNERS,
+  assertUraiSourceOfTruthIntegrity,
+} from "@/lib/urai-canon/source-of-truth";
+import {
   URAI_ASSET_MANIFEST_FIELDS,
   URAI_CANONICAL_OBJECT_FIELDS,
   URAI_CANONICAL_SCHEMAS,
@@ -107,5 +111,13 @@ describe("URAI canonical system contracts", () => {
     expect(validateAssetManifestEntry(validAsset)).toEqual({ ok: true, missing: [], unsafe: [] });
     expect(validateAssetManifestEntry({ ...validAsset, license: "unknown" }).unsafe).toContain("asset license cannot be unknown");
     expect(validateAssetManifestEntry({ ...validAsset, fileSizeBudget: 0 }).unsafe).toContain("fileSizeBudget must be positive");
+  });
+
+  it("locks system-of-systems source of truth ownership", () => {
+    expect(assertUraiSourceOfTruthIntegrity()).toEqual([]);
+    expect(URAI_SOURCE_OF_TRUTH_OWNERS["route-state-machine"].owns).toContain("current route");
+    expect(URAI_SOURCE_OF_TRUTH_OWNERS["permission-layer"].owns).toContain("privacyState");
+    expect(URAI_SOURCE_OF_TRUTH_OWNERS["ai-evidence-layer"].mayNotMutate).toContain("user truth");
+    expect(URAI_SOURCE_OF_TRUTH_OWNERS["feature-flags"].acceptanceRule).toContain("No route may 404");
   });
 });
