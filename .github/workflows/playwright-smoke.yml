@@ -7,6 +7,15 @@ on:
         description: "Git ref to test"
         required: false
         default: "main"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/e2e/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/playwright-smoke.yml"
   pull_request:
     branches: [main]
     paths:
