@@ -1,4 +1,5 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     function isSignedIn() {
@@ -64,26 +65,26 @@ service cloud.firestore {
     function canCreateConsent(uid, source) {
       return isSelf(uid)
         && isAllowedConsentSource(source)
-        && request.resource.data.uid == uid
         && request.resource.data.ownerUid == uid
+        && request.resource.data.uid == uid
         && request.resource.data.source == source;
     }
 
     function canUpdateConsent(uid, source) {
       return isSelf(uid)
         && isAllowedConsentSource(source)
-        && resource.data.uid == uid
         && resource.data.ownerUid == uid
+        && resource.data.uid == uid
         && resource.data.source == source
-        && request.resource.data.uid == uid
         && request.resource.data.ownerUid == uid
+        && request.resource.data.uid == uid
         && request.resource.data.source == source;
     }
 
-    // Top-level collections
+    // User-scoped collections
     match /users/{uid} {
       allow read: if isSelf(uid);
-      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
+      allow create, update: if isSelf(uid) && hasNoProtectedUserFields();
       allow delete: if isSelf(uid);
 
       match /consents/{source} {
@@ -144,6 +145,21 @@ service cloud.firestore {
       }
     }
 
+    // Owner-scoped top-level collections
+    match /dreams/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /rituals/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
     match /timelineEvents/{docId} {
       allow read: if canReadOwnerDoc();
       allow create: if canCreateOwnerDoc();
@@ -151,7 +167,126 @@ service cloud.firestore {
       allow delete: if isOwnerResource();
     }
 
+    match /personaEvolutions/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /soulThreads/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /socialArchetypes/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /weeklyScrolls/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /moods/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /shadowMetrics/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /obscuraPatterns/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /cognitiveStress/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /recoveryBlooms/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /relationshipConstellations/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /voiceEvents/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /dreamConstellations/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
     match /memoryBlooms/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /badges/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /notifications/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /journalEntries/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /events/{docId} {
+      allow read: if canReadOwnerDoc();
+      allow create: if canCreateOwnerDoc();
+      allow update: if canUpdateOwnerDoc();
+      allow delete: if isOwnerResource();
+    }
+
+    match /insightMarket/{docId} {
       allow read: if canReadOwnerDoc();
       allow create: if canCreateOwnerDoc();
       allow update: if canUpdateOwnerDoc();
@@ -186,13 +321,6 @@ service cloud.firestore {
       allow delete: if isOwnerResource();
     }
 
-    match /rituals/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
     match /relationshipSignals/{docId} {
       allow read: if canReadOwnerDoc();
       allow create: if canCreateOwnerDoc();
@@ -214,6 +342,7 @@ service cloud.firestore {
       allow delete: if isOwnerResource();
     }
 
+    // System/private collections
     match /waitlistSignups/{id} {
       allow read, write: if false;
     }

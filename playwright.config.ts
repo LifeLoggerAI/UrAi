@@ -1,7 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const nextCacheDir = process.env.NEXT_CACHE_DIR ?? ".next/cache";
+const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ?? "test-results";
+
 export default defineConfig({
   testDir: "./tests/e2e",
+  outputDir,
   timeout: 30_000,
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
@@ -12,7 +16,7 @@ export default defineConfig({
     trace: "on-first-retry"
   },
   webServer: {
-    command: "npm run dev",
+    command: `NEXT_CACHE_DIR=${nextCacheDir} npm run dev`,
     url: "http://127.0.0.1:3014",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000
