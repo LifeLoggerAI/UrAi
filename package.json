@@ -24,6 +24,8 @@
     "check:home": "node scripts/check-home-lock.mjs",
     "check:ascent": "node scripts/check-ascent-lock.mjs",
     "check:tier2-access": "node scripts/tier-lock/tier2-access-check.mjs",
+    "check:tier-freeze": "node scripts/tier-lock/tier-freeze-ledger.mjs",
+    "check:tier-freeze:strict": "node scripts/tier-lock/tier-freeze-ledger.mjs --strict",
     "typecheck": "tsc --noEmit",
     "validate": "npm run validate:completion",
     "validate:completion": "node scripts/urai-completion-audit.mjs",
