@@ -22,11 +22,20 @@ test.describe("URAI production smoke", () => {
 
   test("required spatial routes expose canonical route state @production-smoke", async ({ page }) => {
     await page.goto("/life-map", { waitUntil: "domcontentloaded" });
-    await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
+    const lifeMap = page.locator("main[data-route-state='life-map']");
+    await expect(lifeMap).toBeVisible();
     await expect(page.locator("main[data-tier-one='true']")).toBeVisible();
+    await expect(page.locator("main[data-tier-two='true']")).toBeVisible();
+    await expect(page.locator("main[data-tier-three='true']")).toBeVisible();
+    await expect(page.locator("main[data-tier-four='true']")).toBeVisible();
     await expect(page.locator("[data-tier-two-panel='active']")).toBeVisible();
+    await expect(page.locator("[data-tier-three-layer='active']")).toBeVisible();
+    await expect(page.locator("[data-tier-four-layer='active']")).toBeVisible();
+    await expect(page.locator("[data-performance-budget='tier-3-4']")).toBeVisible();
     await expect(page.getByText("Star preview")).toBeVisible();
     await expect(page.getByText("Filters and privacy")).toBeVisible();
+    await expect(page.getByText("Constellation model")).toBeVisible();
+    await expect(page.getByText("Artifact unlock review")).toBeVisible();
 
     await page.goto("/life-map/star/starter-star", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='star-selected']")).toBeVisible();
@@ -50,6 +59,7 @@ test.describe("URAI production smoke", () => {
     await expect(replayDetail).toBeVisible();
     await expect(replayDetail.getByText("Replay: starter-replay").first()).toBeVisible();
     await expect(page.getByText("Replay state")).toBeVisible();
+    await expect(page.getByText("Starter Replay Arc")).toBeVisible();
   });
 
   test("public constellation route renders public-safe content @production-smoke", async ({ page }) => {
