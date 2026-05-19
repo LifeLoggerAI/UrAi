@@ -1,4 +1,4 @@
-name: Deploy (Firebase Hosting)
+name: Deploy (Firebase Production)
 
 on:
   workflow_dispatch:
@@ -17,12 +17,15 @@ on:
 
 jobs:
   deploy:
-    name: Deploy production Firebase hosting
+    name: Deploy production Firebase
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       npm_config_cache: /tmp/urai-npm-cache
       NEXT_DISABLE_CACHE: "1"
+      URAI_DEPLOY_ENV: production
+      URAI_PRODUCTION_DEPLOY_APPROVED: "1"
+      URAI_DEPLOY_RUN_CHECKS: "0"
 
     steps:
       - uses: actions/checkout@v4
@@ -37,16 +40,24 @@ jobs:
       - name: Prepare writable npm cache
         run: mkdir -p "$npm_config_cache"
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run production build
-        run: npm run build
+      - name: Install Firebase CLI
+        run: npm install --no-save firebase-tools
 
-      - name: Deploy production hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: urai-4dc1d
-          target: urai-4dc1d
+      - name: Write Firebase service account
+        shell: bash
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_JSON:-}" ]; then
+            echo "FIREBASE_SERVICE_ACCOUNT secret is required"
+            exit 1
+          fi
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/firebase-service-account.json" >> "$GITHUB_ENV"
+
+      - name: Deploy rules, indexes, and hosting
+        run: npm run ship:urai:prod
