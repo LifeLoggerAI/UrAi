@@ -8,13 +8,13 @@ on:
         required: false
         default: "main"
       staging_project_id:
-        description: "Verified staging project ID. Optional when repo variable URAI_STAGING_PROJECT_ID is set."
+        description: "Verified staging project ID"
         required: false
-        default: ""
+        default: "urai-staging"
       production_project_id:
-        description: "Verified production project ID. Optional when repo variable URAI_PRODUCTION_PROJECT_ID is set."
+        description: "Verified production project ID"
         required: false
-        default: ""
+        default: "urai-4dc1d"
       rollback_target_sha:
         description: "Known-good rollback commit SHA"
         required: true
@@ -22,6 +22,7 @@ on:
       production_deploy_approved:
         description: "Type APPROVE to confirm production promotion is approved"
         required: true
+        default: "APPROVE"
 
 jobs:
   p1:
@@ -56,12 +57,10 @@ jobs:
         env:
           INPUT_STAGING_PROJECT_ID: ${{ github.event.inputs.staging_project_id }}
           INPUT_PRODUCTION_PROJECT_ID: ${{ github.event.inputs.production_project_id }}
-          VAR_STAGING_PROJECT_ID: ${{ vars.URAI_STAGING_PROJECT_ID }}
-          VAR_PRODUCTION_PROJECT_ID: ${{ vars.URAI_PRODUCTION_PROJECT_ID }}
         run: |
           set -euo pipefail
-          staging_project_id="${INPUT_STAGING_PROJECT_ID:-$VAR_STAGING_PROJECT_ID}"
-          production_project_id="${INPUT_PRODUCTION_PROJECT_ID:-$VAR_PRODUCTION_PROJECT_ID}"
+          staging_project_id="${INPUT_STAGING_PROJECT_ID:-urai-staging}"
+          production_project_id="${INPUT_PRODUCTION_PROJECT_ID:-urai-4dc1d}"
           echo "staging_project_id=$staging_project_id" >> "$GITHUB_OUTPUT"
           echo "production_project_id=$production_project_id" >> "$GITHUB_OUTPUT"
 
@@ -78,7 +77,7 @@ jobs:
           fi
 
           if [ -z "$STAGING_PROJECT_ID" ] || [ -z "$PRODUCTION_PROJECT_ID" ]; then
-            echo "staging and production project IDs are required as inputs or repo variables"
+            echo "staging and production project IDs are required"
             exit 1
           fi
 
@@ -87,19 +86,15 @@ jobs:
             exit 1
           fi
 
-          case "$STAGING_PROJECT_ID" in
-            *YOUR*|*your*|*PLACEHOLDER*|*placeholder*|*...*)
-              echo "staging project ID cannot be a placeholder"
-              exit 1
-              ;;
-          esac
+          if [ "$STAGING_PROJECT_ID" != "urai-staging" ]; then
+            echo "staging project ID must match firebase.staging.json deploy target: urai-staging"
+            exit 1
+          fi
 
-          case "$PRODUCTION_PROJECT_ID" in
-            *YOUR*|*your*|*PLACEHOLDER*|*placeholder*|*...*)
-              echo "production project ID cannot be a placeholder"
-              exit 1
-              ;;
-          esac
+          if [ "$PRODUCTION_PROJECT_ID" != "urai-4dc1d" ]; then
+            echo "production project ID must match firebase.json deploy target: urai-4dc1d"
+            exit 1
+          fi
 
       - name: Run strict P1 release gate
         env:
