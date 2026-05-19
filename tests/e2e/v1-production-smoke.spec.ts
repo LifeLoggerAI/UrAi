@@ -46,8 +46,9 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("main[data-route-state='replay-library']")).toBeVisible();
 
     await page.goto("/replay/starter-replay", { waitUntil: "domcontentloaded" });
-    await expect(page.locator("main[data-route-state='replay-detail']")).toBeVisible();
-    await expect(page.getByText("Replay: starter-replay")).toBeVisible();
+    const replayDetail = page.locator("main[data-route-state='replay-detail']");
+    await expect(replayDetail).toBeVisible();
+    await expect(replayDetail.getByText("Replay: starter-replay").first()).toBeVisible();
     await expect(page.getByText("Replay state")).toBeVisible();
   });
 
