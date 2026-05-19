@@ -84,7 +84,7 @@ service cloud.firestore {
     // User-scoped collections
     match /users/{uid} {
       allow read: if isSelf(uid);
-      allow create, update: if isSelf(uid) && hasNoProtectedUserFields();
+      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
       allow delete: if isSelf(uid);
 
       match /consents/{source} {
