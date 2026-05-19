@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import TierTwoInteractionPanel from "@/components/life-map/TierTwoInteractionPanel";
 import { resolveUraiFeatureFlags } from "@/lib/urai-canon/feature-flags";
 import { reduceUraiRouteMachine, type UraiRouteMachineSnapshot } from "@/lib/urai-canon/state-machines";
 
@@ -85,6 +86,8 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
               ))}
             </div>
 
+            <TierTwoInteractionPanel selectedStarId={props.selectedStarId} sessionId={props.sessionId} replayId={props.replayId} view={requestedView} />
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/life-map/star/starter-star" className="rounded-full border border-cyan-100/30 bg-cyan-100/10 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50 transition hover:border-cyan-100/60 hover:bg-cyan-100/15">Select Starter Star</Link>
               <Link href="/focus/session/starter-session" className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200 transition hover:border-white/25 hover:text-white">Focus Session</Link>
@@ -102,7 +105,7 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
             <div className="relative z-10 flex h-full min-h-[24rem] items-end">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-5 backdrop-blur-xl">
                 <p className="text-xs uppercase tracking-[0.26em] text-cyan-200/70">Production posture</p>
-                <p className="mt-3 text-sm leading-6 text-slate-200">Direct routes, route context, feature flags, and shared shell continuity are wired into this launch-safe surface.</p>
+                <p className="mt-3 text-sm leading-6 text-slate-200">Direct routes, route context, feature flags, Tier 2 interaction panels, and shared shell continuity are wired into this launch-safe surface.</p>
               </div>
             </div>
           </section>
