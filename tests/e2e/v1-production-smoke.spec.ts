@@ -1,23 +1,31 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("URAI production smoke", () => {
-  test("home route renders production sanctuary shell @production-smoke", async ({ page }) => {
+  test("root and /home resolve to the same canonical sanctuary shell @production-smoke", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
     await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^URAI$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
+
+    await page.goto("/home", { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+    await expect(page.locator("body").getByText(/^URAI$/).first()).toBeVisible();
+    await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
+    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
-  test("/home exposes core interaction surfaces without mutation @production-smoke", async ({ page }) => {
+  test("/home exposes canonical core interaction surfaces after redirect @production-smoke", async ({ page }) => {
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Charge orb" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Wake companion" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Tune body field" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.getByText("Memory Galaxy")).toBeVisible();
+    await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
   test("required spatial routes expose canonical route state @production-smoke", async ({ page }) => {
@@ -60,6 +68,15 @@ test.describe("URAI production smoke", () => {
     await expect(replayDetail.getByText("Replay: starter-replay").first()).toBeVisible();
     await expect(page.getByText("Replay state")).toBeVisible();
     await expect(page.getByText("Starter Replay Arc")).toBeVisible();
+  });
+
+  test("route-machine ESC unwind returns to canonical root home @production-smoke", async ({ page }) => {
+    await page.goto("/life-map", { waitUntil: "domcontentloaded" });
+    await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
+    await page.keyboard.press("Escape");
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+    await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
   test("public constellation route renders public-safe content @production-smoke", async ({ page }) => {
