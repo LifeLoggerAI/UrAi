@@ -2,11 +2,17 @@ import { expect, test } from "@playwright/test";
 
 async function openHome(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator("body").getByText(/^Inner Sky Shrine$/)).toBeVisible();
+  await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
 }
 
 async function expectBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
-  await expect(page.locator("body").getByText(text)).toBeVisible();
+  await expect(page.locator("body").getByText(text).first()).toBeVisible();
+}
+
+async function clickButtonByLabel(page: import("@playwright/test").Page, label: string) {
+  await page.locator(`button[aria-label="${label}"]`).first().evaluate((node) => {
+    (node as HTMLButtonElement).click();
+  });
 }
 
 test.describe("URAI V1 smoke", () => {
@@ -28,10 +34,10 @@ test.describe("URAI V1 smoke", () => {
     await expect(page.getByRole("button", { name: "Tune body field" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Wake companion" }).click({ force: true });
+    await clickButtonByLabel(page, "Wake companion");
     await expect(page.locator("aside").filter({ hasText: /quiet|listening|reflecting|forecasting|ritual|protective/i })).toBeVisible();
 
-    await page.getByRole("button", { name: "Open life map" }).click({ force: true });
+    await clickButtonByLabel(page, "Open life map");
     await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
   });
 
@@ -39,10 +45,10 @@ test.describe("URAI V1 smoke", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await page.getByRole("button", { name: "Open symbolic life map" }).click({ force: true });
+    await clickButtonByLabel(page, "Open symbolic life map");
     await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Return home" }).click({ force: true });
+    await clickButtonByLabel(page, "Return home");
     await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
   });
 
