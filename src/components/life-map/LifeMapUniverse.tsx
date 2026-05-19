@@ -4,6 +4,15 @@ import Link from "next/link";
 import TierTwoInteractionPanel from "@/components/life-map/TierTwoInteractionPanel";
 import { resolveUraiFeatureFlags } from "@/lib/urai-canon/feature-flags";
 import { reduceUraiRouteMachine, type UraiRouteMachineSnapshot } from "@/lib/urai-canon/state-machines";
+import {
+  URAI_ARTIFACTS,
+  URAI_PROGRESSION_PATHS,
+  URAI_REPLAY_JOURNEYS,
+  URAI_TIER_3_4_PERFORMANCE_BUDGETS,
+  groupStarsByConstellation,
+  resolveDenseMapLod,
+  visibleConstellationStars,
+} from "@/lib/urai-canon/tier-three-four";
 
 type LifeMapUniverseProps = {
   initialOverlay?: string;
@@ -38,6 +47,75 @@ function routeSnapshotFor(props: LifeMapUniverseProps): UraiRouteMachineSnapshot
   return reduceUraiRouteMachine({ state: "home", route: "/home" }, { type: "OPEN_LIFE_MAP" });
 }
 
+function TierThreeConstellationLayer() {
+  const visibleStars = visibleConstellationStars();
+  const grouped = groupStarsByConstellation(visibleStars);
+  const lod = resolveDenseMapLod(visibleStars.length, "desktop");
+
+  return (
+    <section className="mt-6 rounded-[1.5rem] border border-cyan-100/10 bg-cyan-100/[0.035] p-4" data-tier-three-layer="active">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100/60">Tier 3 constellation layer</p>
+          <h2 className="mt-2 text-lg font-semibold text-white">Constellation model · progression paths · dense-map LOD</h2>
+        </div>
+        <span className="rounded-full border border-cyan-100/15 px-3 py-2 text-[0.68rem] uppercase tracking-[0.2em] text-cyan-100/70">LOD: {lod}</span>
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-3">
+        {grouped.map((constellation) => (
+          <article key={constellation.id} className="rounded-[1.25rem] border border-white/10 bg-black/20 p-4">
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-slate-400">{constellation.label}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-200">{constellation.description}</p>
+            <p className="mt-3 text-xs text-cyan-100/70">Visible stars: {constellation.stars.length}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-4 grid gap-3 lg:grid-cols-3">
+        {URAI_PROGRESSION_PATHS.map((path) => (
+          <article key={path.id} className="rounded-[1.25rem] border border-white/10 bg-white/[0.03] p-4">
+            <p className="text-[0.68rem] uppercase tracking-[0.2em] text-violet-100/60">Progression path</p>
+            <h3 className="mt-2 text-sm font-semibold text-white">{path.label}</h3>
+            <p className="mt-2 text-xs text-slate-300">{path.starIds.length} stars · {path.status}</p>
+          </article>
+        ))}
+      </div>
+
+      <p className="mt-4 text-sm leading-6 text-slate-300">Hidden and deleted stars are excluded before layout. Vaulted stars remain locked and only appear as protected metadata, never as replay evidence or AI truth.</p>
+    </section>
+  );
+}
+
+function TierFourJourneyLayer() {
+  return (
+    <section className="mt-6 rounded-[1.5rem] border border-violet-100/10 bg-violet-100/[0.035] p-4" data-tier-four-layer="active">
+      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-100/60">Tier 4 replay journey and artifact layer</p>
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        {URAI_REPLAY_JOURNEYS.map((journey) => (
+          <article key={journey.id} className="rounded-[1.25rem] border border-white/10 bg-black/20 p-4">
+            <h2 className="text-base font-semibold text-white">{journey.label}</h2>
+            <p className="mt-2 text-sm text-slate-300">Replay: {journey.replayId}</p>
+            <p className="mt-1 text-sm text-slate-300">Policy: {journey.evidencePolicy} · export {journey.exportPolicy}</p>
+            <ol className="mt-3 space-y-2 text-sm text-slate-200">
+              {journey.chapters.map((chapter) => <li key={chapter}>• {chapter}</li>)}
+            </ol>
+          </article>
+        ))}
+        <article className="rounded-[1.25rem] border border-amber-100/10 bg-amber-100/[0.035] p-4">
+          <h2 className="text-base font-semibold text-white">Artifact unlock review</h2>
+          <div className="mt-3 space-y-2 text-sm text-slate-200">
+            {URAI_ARTIFACTS.map((artifact) => (
+              <p key={artifact.id}>{artifact.label}: {artifact.unlockState} · redaction {artifact.redactionRequired ? "required" : "clear"}</p>
+            ))}
+          </div>
+        </article>
+      </div>
+      <p className="mt-4 text-sm leading-6 text-slate-300">Export/share stays opt-in and review-gated. Deletion must remove replay derivatives and artifact unlock state before any public surface can reference them.</p>
+    </section>
+  );
+}
+
 export default function LifeMapUniverse(props: LifeMapUniverseProps) {
   const flags = resolveUraiFeatureFlags();
   const routeSnapshot = routeSnapshotFor(props);
@@ -46,14 +124,14 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
   const restoredContext = contextLine(props);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#172554_0%,#020617_48%,#000_100%)] text-white" data-route-state={routeSnapshot.state} data-tier-one={String(flags.lifeMapTier1)} data-tier-two={String(flags.lifeMapTier2)}>
+    <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#172554_0%,#020617_48%,#000_100%)] text-white" data-route-state={routeSnapshot.state} data-tier-one={String(flags.lifeMapTier1)} data-tier-two={String(flags.lifeMapTier2)} data-tier-three={String(flags.lifeMapTier3)} data-tier-four={String(flags.lifeMapTier4)}>
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(125,211,252,.14),transparent_34%,rgba(168,85,247,.12)_70%,transparent)]" />
       <div className="pointer-events-none absolute left-1/2 top-[-16rem] h-[38rem] w-[38rem] -translate-x-1/2 rounded-full bg-cyan-300/10 blur-3xl" />
 
       <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <header className="mb-8 flex items-center justify-between rounded-[2rem] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-2xl">
           <Link href="/home" className="rounded-full border border-cyan-100/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-cyan-100">URAI Life Map</Link>
-          <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200">{flags.lifeMapTier2 ? "Tier 2 active" : "Tier 1 safe shell"}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200">{flags.lifeMapTier4 ? "Tier 4 active" : flags.lifeMapTier3 ? "Tier 3 active" : flags.lifeMapTier2 ? "Tier 2 active" : "Tier 1 safe shell"}</span>
         </header>
 
         <div className="grid flex-1 items-center gap-8 lg:grid-cols-[1.1fr_.9fr]">
@@ -87,6 +165,13 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
             </div>
 
             <TierTwoInteractionPanel selectedStarId={props.selectedStarId} sessionId={props.sessionId} replayId={props.replayId} view={requestedView} />
+            {flags.lifeMapTier3 ? <TierThreeConstellationLayer /> : null}
+            {flags.lifeMapTier4 ? <TierFourJourneyLayer /> : null}
+
+            <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-black/20 p-4 text-sm text-slate-300" data-performance-budget="tier-3-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-cyan-100/60">Performance budgets</p>
+              <p className="mt-2">Dense map {URAI_TIER_3_4_PERFORMANCE_BUDGETS.denseMapRenderMs}ms · constellation {URAI_TIER_3_4_PERFORMANCE_BUDGETS.constellationLayerRenderMs}ms · replay transition {URAI_TIER_3_4_PERFORMANCE_BUDGETS.replayJourneyTransitionMs}ms · mobile memory {URAI_TIER_3_4_PERFORMANCE_BUDGETS.mobileMemoryMb}MB.</p>
+            </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/life-map/star/starter-star" className="rounded-full border border-cyan-100/30 bg-cyan-100/10 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50 transition hover:border-cyan-100/60 hover:bg-cyan-100/15">Select Starter Star</Link>
@@ -105,7 +190,7 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
             <div className="relative z-10 flex h-full min-h-[24rem] items-end">
               <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-5 backdrop-blur-xl">
                 <p className="text-xs uppercase tracking-[0.26em] text-cyan-200/70">Production posture</p>
-                <p className="mt-3 text-sm leading-6 text-slate-200">Direct routes, route context, feature flags, Tier 2 interaction panels, and shared shell continuity are wired into this launch-safe surface.</p>
+                <p className="mt-3 text-sm leading-6 text-slate-200">Direct routes, route context, feature flags, Tier 2 interaction panels, Tier 3 constellations, and Tier 4 replay artifacts are wired into this launch-safe surface.</p>
               </div>
             </div>
           </section>
