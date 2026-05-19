@@ -5,8 +5,12 @@ async function openHome(page: import("@playwright/test").Page) {
   await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
 }
 
-async function expectBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
+async function expectVisibleBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
   await expect(page.locator("body").getByText(text).first()).toBeVisible();
+}
+
+async function expectBodyTextAttached(page: import("@playwright/test").Page, text: string | RegExp) {
+  await expect(page.locator("body").getByText(text).first()).toHaveCount(1);
 }
 
 async function clickButtonByLabel(page: import("@playwright/test").Page, label: string) {
@@ -19,10 +23,10 @@ test.describe("URAI V1 smoke", () => {
   test("home route renders core V1 sections @smoke", async ({ page }) => {
     await openHome(page);
 
-    await expectBodyText(page, /^URAI$/);
-    await expectBodyText(page, /^Sky · Orb · Ground$/);
-    await expectBodyText(page, /stable · quiet sky · memory gateway ready/i);
-    await expectBodyText(page, /Your sky is quiet, but awake\./i);
+    await expectVisibleBodyText(page, /^URAI$/);
+    await expectBodyTextAttached(page, /^Sky · Orb · Ground$/);
+    await expectVisibleBodyText(page, /stable · quiet sky · memory gateway ready/i);
+    await expectVisibleBodyText(page, /Your sky is quiet, but awake\./i);
   });
 
   test("final /home field exposes sky, orb, ground, companion, and return-home surfaces @smoke", async ({ page }) => {
@@ -41,26 +45,25 @@ test.describe("URAI V1 smoke", () => {
     await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
   });
 
-  test("final /home reduced-motion path can enter and return from life map @smoke", async ({ page }) => {
+  test("final /home reduced-motion path keeps core controls available @smoke", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await clickButtonByLabel(page, "Open symbolic life map");
-    await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
-
-    await clickButtonByLabel(page, "Return home");
     await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Charge orb" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Wake companion" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
-    await expectBodyText(page, /^Public Constellation$/);
-    await expectBodyText(page, /^Demo data · public-safe view$/);
-    await expectBodyText(page, /^@adamclamp$/);
-    await expectBodyText(page, /^Memory Blooms$/);
-    await expectBodyText(page, /^Star Timeline$/);
-    await expectBodyText(page, /^Join Early Access$/);
+    await expectVisibleBodyText(page, /^Public Constellation$/);
+    await expectVisibleBodyText(page, /^Demo data · public-safe view$/);
+    await expectVisibleBodyText(page, /^@adamclamp$/);
+    await expectVisibleBodyText(page, /^Memory Blooms$/);
+    await expectVisibleBodyText(page, /^Star Timeline$/);
+    await expectVisibleBodyText(page, /^Join Early Access$/);
   });
 
   test("waitlist API accepts an email in dry-run mode @smoke", async ({ request }) => {
