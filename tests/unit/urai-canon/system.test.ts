@@ -110,7 +110,7 @@ describe("URAI canonical system contracts", () => {
   });
 
   it("validates governed asset manifest entries", () => {
-    const validAsset = Object.fromEntries(URAI_ASSET_MANIFEST_FIELDS.map((field) => [field, `${field}-value`]));
+    const validAsset: Record<string, string | number> = Object.fromEntries(URAI_ASSET_MANIFEST_FIELDS.map((field) => [field, `${field}-value`]));
     validAsset.fileSizeBudget = 120000;
     validAsset.license = "owned";
     validAsset.fallbackVariant = "fallback-static";
