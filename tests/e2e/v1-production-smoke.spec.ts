@@ -24,10 +24,14 @@ test.describe("URAI production smoke", () => {
     await page.goto("/life-map", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
     await expect(page.locator("main[data-tier-one='true']")).toBeVisible();
+    await expect(page.locator("[data-tier-two-panel='active']")).toBeVisible();
+    await expect(page.getByText("Star preview")).toBeVisible();
+    await expect(page.getByText("Filters and privacy")).toBeVisible();
 
     await page.goto("/life-map/star/starter-star", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='star-selected']")).toBeVisible();
     await expect(page.getByText("Selected star: starter-star")).toBeVisible();
+    await expect(page.getByText("Starter Star")).toBeVisible();
 
     await page.goto("/focus", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
@@ -36,6 +40,7 @@ test.describe("URAI production smoke", () => {
     await page.goto("/focus/session/starter-session", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='focus-session']")).toBeVisible();
     await expect(page.getByText("Focus session: starter-session")).toBeVisible();
+    await expect(page.getByText("Focus state")).toBeVisible();
 
     await page.goto("/replay", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='replay-library']")).toBeVisible();
@@ -43,6 +48,7 @@ test.describe("URAI production smoke", () => {
     await page.goto("/replay/starter-replay", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='replay-detail']")).toBeVisible();
     await expect(page.getByText("Replay: starter-replay")).toBeVisible();
+    await expect(page.getByText("Replay state")).toBeVisible();
   });
 
   test("public constellation route renders public-safe content @production-smoke", async ({ page }) => {
