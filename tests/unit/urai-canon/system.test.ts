@@ -1,4 +1,11 @@
 import {
+  URAI_DEFAULT_FEATURE_FLAGS,
+  URAI_FLAG_SAFE_FALLBACKS,
+  assertUraiFeatureFlagIntegrity,
+  getDisabledFlagFallbacks,
+  resolveUraiFeatureFlags,
+} from "@/lib/urai-canon/feature-flags";
+import {
   URAI_SOURCE_OF_TRUTH_OWNERS,
   assertUraiSourceOfTruthIntegrity,
 } from "@/lib/urai-canon/source-of-truth";
@@ -119,5 +126,24 @@ describe("URAI canonical system contracts", () => {
     expect(URAI_SOURCE_OF_TRUTH_OWNERS["permission-layer"].owns).toContain("privacyState");
     expect(URAI_SOURCE_OF_TRUTH_OWNERS["ai-evidence-layer"].mayNotMutate).toContain("user truth");
     expect(URAI_SOURCE_OF_TRUTH_OWNERS["feature-flags"].acceptanceRule).toContain("No route may 404");
+  });
+
+  it("locks feature-flag tier order and safe fallbacks", () => {
+    expect(assertUraiFeatureFlagIntegrity(URAI_DEFAULT_FEATURE_FLAGS)).toEqual([]);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier1).toBe(true);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier2).toBe(true);
+    expect(URAI_DEFAULT_FEATURE_FLAGS.lifeMapTier3).toBe(false);
+    expect(URAI_FLAG_SAFE_FALLBACKS.advancedCinematics).toContain("static premium depth");
+
+    const resolved = resolveUraiFeatureFlags({
+      NEXT_PUBLIC_URAI_FLAG_LIFE_MAP_TIER_1: "false",
+      NEXT_PUBLIC_URAI_FLAG_LIFE_MAP_TIER_2: "true",
+      NEXT_PUBLIC_URAI_FLAG_LIFE_MAP_TIER_3: "true",
+    });
+
+    expect(resolved.lifeMapTier1).toBe(false);
+    expect(resolved.lifeMapTier2).toBe(false);
+    expect(resolved.lifeMapTier3).toBe(false);
+    expect(getDisabledFlagFallbacks(resolved).some((fallback) => fallback.startsWith("lifeMapTier2:"))).toBe(true);
   });
 });
