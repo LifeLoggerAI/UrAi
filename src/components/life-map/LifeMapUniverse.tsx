@@ -130,7 +130,7 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
 
       <section className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-6 sm:px-8 lg:px-10">
         <header className="mb-8 flex items-center justify-between rounded-[2rem] border border-white/10 bg-white/[0.04] p-3 backdrop-blur-2xl">
-          <Link href="/home" className="rounded-full border border-cyan-100/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-cyan-100">URAI Life Map</Link>
+          <Link href="/" className="rounded-full border border-cyan-100/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-cyan-100">URAI Life Map</Link>
           <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-200">{flags.lifeMapTier4 ? "Tier 4 active" : flags.lifeMapTier3 ? "Tier 3 active" : flags.lifeMapTier2 ? "Tier 2 active" : "Tier 1 safe shell"}</span>
         </header>
 
