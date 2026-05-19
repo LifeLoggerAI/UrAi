@@ -4,6 +4,7 @@ import Link from "next/link";
 
 type LifeMapUniverseProps = {
   initialOverlay?: string;
+  initialView?: string;
 };
 
 const overlayCopy: Record<string, { title: string; eyebrow: string; body: string }> = {
@@ -29,8 +30,9 @@ const overlayCopy: Record<string, { title: string; eyebrow: string; body: string
   },
 };
 
-export default function LifeMapUniverse({ initialOverlay = "lifeMap" }: LifeMapUniverseProps) {
-  const active = overlayCopy[initialOverlay] ?? overlayCopy.lifeMap;
+export default function LifeMapUniverse({ initialOverlay, initialView }: LifeMapUniverseProps) {
+  const requestedView = initialOverlay ?? initialView ?? "lifeMap";
+  const active = overlayCopy[requestedView] ?? overlayCopy.lifeMap;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top,#172554_0%,#020617_48%,#000_100%)] text-white">
