@@ -1,7 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const nextCacheDir = process.env.NEXT_CACHE_DIR ?? ".next/cache";
-const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ?? "test-results";
+const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ?? "/tmp/urai-playwright-results";
+const webServerCommand = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? "npm run start";
+const shouldStartWebServer = !process.env.PLAYWRIGHT_BASE_URL;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -13,22 +14,26 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3014",
-    trace: "on-first-retry"
+    screenshot: "only-on-failure",
+    trace: process.env.CI ? "on-first-retry" : "off",
+    video: "off",
   },
-  webServer: {
-    command: `NEXT_CACHE_DIR=${nextCacheDir} npm run dev`,
-    url: "http://127.0.0.1:3014",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000
-  },
+  webServer: shouldStartWebServer
+    ? {
+        command: `mkdir -p ${outputDir} && ${webServerCommand}`,
+        url: "http://127.0.0.1:3014",
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      }
+    : undefined,
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] }
+      use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "mobile-chrome",
-      use: { ...devices["Pixel 5"] }
-    }
-  ]
+      use: { ...devices["Pixel 5"] },
+    },
+  ],
 });

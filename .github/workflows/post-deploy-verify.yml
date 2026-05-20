@@ -1,0 +1,69 @@
+name: Post Deploy Verify
+
+on:
+  workflow_dispatch:
+    inputs:
+      production_url:
+        description: "Production URL to verify"
+        required: false
+        default: "https://urai-4dc1d.web.app"
+
+concurrency:
+  group: post-deploy-verify
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify production deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PRODUCTION_URL: ${{ github.event.inputs.production_url }}
+      PLAYWRIGHT_BASE_URL: ${{ github.event.inputs.production_url }}
+      npm_config_cache: /tmp/urai-npm-cache
+      NPM_CONFIG_CACHE: /tmp/urai-npm-cache
+      PLAYWRIGHT_OUTPUT_DIR: test-results
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+          clean: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Prepare writable cache
+        run: |
+          mkdir -p "$npm_config_cache"
+          npm config set cache "$npm_config_cache" --global
+          npm config get cache
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Check public routes
+        run: |
+          set -euo pipefail
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/" >/dev/null
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/home" >/dev/null
+          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/status" >/dev/null
+
+      - name: Run production browser smoke
+        run: npm run test:smoke:production
+
+      - name: Upload verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-deploy-verification-results
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

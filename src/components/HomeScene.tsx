@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import HomeWebGLSky from "@/components/HomeWebGLSky";
 import LifeMapScene from "@/components/lifemap/LifeMapScene";
 import { useEmotionalTone } from "@/components/lifemap/useEmotionalTone";
@@ -88,26 +88,26 @@ export default function HomeScene() {
     return () => mq.removeEventListener("change", syncMotion);
   }, []);
 
-  const settleHome = (replace = false) => {
+  const settleHome = useCallback((replace = false) => {
     historyGuard.current = replace;
     setState("home");
     if (replace && typeof window !== "undefined") window.history.replaceState({ uraiImmersive: "home" }, "", window.location.pathname);
-  };
+  }, []);
 
-  const pushState = (next: ImmersiveState) => {
+  const pushState = useCallback((next: ImmersiveState) => {
     if (typeof window !== "undefined") window.history.pushState({ uraiImmersive: next }, "", window.location.pathname);
     setState(next);
-  };
+  }, []);
 
-  const beginAscent = () => {
+  const beginAscent = useCallback(() => {
     if (state !== "home") return;
     const next = reduceMotion ? "lifeMap" : "ascendingToLifeMap";
     pushState(next);
     if (reduceMotion) return;
     window.setTimeout(() => setState("lifeMap"), emotionalTone === "restorative" ? 1850 : 1550);
-  };
+  }, [emotionalTone, pushState, reduceMotion, state]);
 
-  const beginUnwind = () => {
+  const beginUnwind = useCallback(() => {
     if (state !== "lifeMap") {
       settleHome();
       return;
@@ -118,7 +118,7 @@ export default function HomeScene() {
     }
     setState("unwindingToHome");
     window.setTimeout(() => settleHome(true), 1050);
-  };
+  }, [reduceMotion, settleHome, state]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -136,7 +136,7 @@ export default function HomeScene() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [state, reduceMotion]);
+  }, [beginUnwind, settleHome, state]);
 
   useEffect(() => {
     const onPopState = () => {
@@ -148,7 +148,7 @@ export default function HomeScene() {
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, [state]);
+  }, [settleHome, state]);
 
   const submitOrbMessage = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

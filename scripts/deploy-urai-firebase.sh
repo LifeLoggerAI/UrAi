@@ -7,6 +7,11 @@ RUN_LOCAL_CHECKS="${URAI_DEPLOY_RUN_CHECKS:-1}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+export npm_config_cache="${npm_config_cache:-/tmp/urai-npm-cache}"
+mkdir -p "$npm_config_cache"
+
+echo "[urai-deploy] npm cache: ${npm_config_cache}"
+
 case "$TARGET_ENV" in
   staging)
     EXPECTED_PROJECT="urai-staging"

@@ -25,12 +25,12 @@ function resolveFirebaseStatus(): Pick<ServiceStatus, "status" | "message"> {
   if (missing.length) {
     return {
       status: "degraded",
-      message: `Configuration check: missing ${missing.join(", ")}.`,
+      message: `Firebase public config is incomplete: missing ${missing.join(", ")}.`,
     };
   }
   return {
     status: "operational",
-    message: "Realtime database, Firestore, and Storage responding normally.",
+    message: "Firebase public configuration is present. Runtime service health is verified by deploy smoke tests.",
   };
 }
 
@@ -38,13 +38,13 @@ function resolveFunctionsStatus(): Pick<ServiceStatus, "status" | "message"> {
   if (!process.env.FIREBASE_FUNCTIONS_REGION && !process.env.NEXT_PUBLIC_FUNCTIONS_ORIGIN) {
     return {
       status: "degraded",
-      message: "Set FIREBASE_FUNCTIONS_REGION or NEXT_PUBLIC_FUNCTIONS_ORIGIN to enable health checks.",
+      message: "Cloud Functions origin is not configured for this environment.",
     };
   }
 
   return {
     status: "operational",
-    message: "Functions endpoint ready for narrator + bloom generation cues.",
+    message: "Cloud Functions configuration is present. Runtime health is verified by callable/API smoke tests.",
   };
 }
 
@@ -52,13 +52,13 @@ function resolveNarratorStatus(): Pick<ServiceStatus, "status" | "message"> {
   if (!process.env.NEXT_PUBLIC_NARRATOR_API_BASE) {
     return {
       status: "degraded",
-      message: "Narrator base URL not configured — demo voiceovers may fall back to canned audio.",
+      message: "Narrator API base URL is not configured; companion/narrator surfaces should use deterministic fallback copy.",
     };
   }
 
   return {
     status: "operational",
-    message: "Narrator synthesis endpoint responding to warmup pings.",
+    message: "Narrator API configuration is present. Runtime health is verified by production smoke tests.",
   };
 }
 
@@ -74,7 +74,7 @@ export async function GET() {
       id: "web-app",
       label: "Web app",
       status: "operational",
-      message: "Next.js build healthy and CDN routes returning <200ms in the last deploy.",
+      message: "Next.js application bundle is serving this status route.",
       updatedAt: generatedAt,
       docsUrl: "https://urai.app/changelog",
     },

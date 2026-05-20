@@ -34,7 +34,8 @@ export async function POST(req: Request) {
       status: "joined" as const
     };
 
-    const db = getAdminDb();
+    const dryRun = process.env.URAI_WAITLIST_DRY_RUN === "1";
+    const db = dryRun ? null : getAdminDb();
     if (!db) {
       return NextResponse.json({ ok: true, mode: "dry-run", signup });
     }
