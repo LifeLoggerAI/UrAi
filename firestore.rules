@@ -86,68 +86,22 @@ service cloud.firestore {
     }
 
     function isPublicPublished() {
-      return resource.data.visibility == "public" || resource.data.demoReadable == true || resource.data.status == "published";
+      return resource.data.visibility == "public"
+        || resource.data.demoReadable == true
+        || resource.data.status == "published";
     }
 
     function createsPublicSubmission() {
       return request.resource.data.createdAt != null;
     }
 
-    function hasNoProtectedUserFields() {
-      return !request.resource.data.keys().hasAny([
-        "entitlementTier",
-        "roles",
-        "admin",
-        "founder",
-        "internal",
-        "internalOverride",
-        "isAdmin",
-        "isFounder"
-      ]);
-    }
-
-    function isAllowedConsentSource(source) {
-      return source in [
-        "profile",
-        "timeline_events",
-        "memory_blooms",
-        "mood_inference",
-        "relationship_signals",
-        "rituals",
-        "offline_cache"
-      ];
-    }
-
-    function canCreateConsent(uid, source) {
-      return request.auth.uid == uid
-        && request.resource.data.ownerUid == uid
-        && request.resource.data.source == source
-        && isAllowedConsentSource(source);
-    }
-
-    function canUpdateConsent(uid, source) {
-      return request.auth.uid == uid
-        && resource.data.ownerUid == uid
-        && resource.data.source == source
-        && request.resource.data.ownerUid == uid
-        && request.resource.data.source == source
-        && isAllowedConsentSource(source);
-    }
-
     match /features/{flagId} {
-      allow read, write: if false;
-    }
-
-    match /entitlements/{uid} {
-      allow read, write: if false;
-    }
-
-    match /auditLogs/{id} {
       allow read, write: if false;
     }
 
     match /adminUsers/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if isAdmin(); }
     match /adminAuditLogs/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if false; allow delete: if false; }
+    match /auditLogs/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if false; allow delete: if false; }
     match /incidents/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
     match /featureFlags/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
 
@@ -160,11 +114,7 @@ service cloud.firestore {
     match /creatorSubmissions/{id} { allow read: if isAdmin(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /jobApplications/{id} { allow read: if isAdmin() || ownsResource(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
 
-    match /profiles/{uid} {
-      allow read: if isSelf(uid) || ownsResource();
-      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
-      allow delete: if false;
-    }
+    match /profiles/{id} { allow read: if ownsResource(); allow create: if ownsRequest() && hasNoProtectedUserFields(); allow update: if ownsResource() && ownsRequest() && hasNoProtectedUserFields(); allow delete: if false; }
     match /consents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
     match /narratorMemory/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
     match /memoryShards/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -177,9 +127,6 @@ service cloud.firestore {
     match /weeklyRecaps/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /storyProjects/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /storyAssets/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
-    match /marketplacePurchases/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
-    match /referrals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
-    match /eventEnrichments/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
     match /lifeMapEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /constellations/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /scrolls/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -193,11 +140,15 @@ service cloud.firestore {
     match /focusSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /replayEvidence/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
 
+    match /marketplacePurchases/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
+    match /eventEnrichments/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
+    match /entitlements/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
+    match /transactions/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
+
     match /telemetryEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /safetyEvents/{id} { allow read: if isAdmin() || ownsResource(); allow create: if ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /dataExportRequests/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /accountDeletionRequests/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
-    match /transactions/{id} { allow read: if ownsResource(); allow create: if false; allow update: if false; allow delete: if false; }
     match /dataRequests/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
 
     match /dreams/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -252,16 +203,14 @@ service cloud.firestore {
       match /spatialAssetLinks/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
     }
 
-    /* Tier 2 static policy anchors; enforced rules above remain stricter where needed.
-match /features/{flagId} {
-      allow read, write: if false;
-    }
+    /* Tier 2 static policy anchors. Runtime rules above keep canonical owner/admin read behavior where required by emulator contracts.
 match /entitlements/{uid} {
       allow read, write: if false;
     }
 match /auditLogs/{id} {
       allow read, write: if false;
     }
+allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
     */
 
     match /{document=**} { allow read, write: if false; }
