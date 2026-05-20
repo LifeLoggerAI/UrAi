@@ -28,7 +28,10 @@
 .urai-home-panel {
   position: fixed;
   z-index: 92;
-  width: min(360px, calc(100vw - 40px));
+  width: min(360px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
   padding: 16px 18px;
   border-radius: 26px;
   border: 1px solid rgba(198, 239, 255, .14);
@@ -40,12 +43,12 @@
   text-align: left;
   pointer-events: none;
   text-shadow: 0 0 18px rgba(155,231,255,.14);
-  transform: translateZ(70px);
+  transform: translate3d(0,0,70px);
   opacity: .82;
 }
 
-.urai-home-panel-left { left: max(20px, env(safe-area-inset-left)); top: max(18px, env(safe-area-inset-top)); }
-.urai-home-panel-right { right: max(20px, env(safe-area-inset-right)); top: max(18px, env(safe-area-inset-top)); }
+.urai-home-panel-left { left: max(24px, env(safe-area-inset-left)); top: max(22px, env(safe-area-inset-top)); }
+.urai-home-panel-right { right: max(24px, env(safe-area-inset-right)); top: max(22px, env(safe-area-inset-top)); }
 .urai-home-panel span, .urai-home-panel strong, .urai-home-panel em { display: block; }
 .urai-home-panel span { font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(191, 233, 255, .66); }
 .urai-home-panel strong { margin-top: 6px; font-size: 14px; line-height: 1.25; color: rgba(247, 253, 255, .94); }
@@ -209,6 +212,10 @@
 @keyframes uraiHomeSatellitePulse { 0%, 100% { transform: scale(.92); opacity: .72; } 50% { transform: scale(1.18); opacity: 1; } }
 @keyframes uraiHomeRingA { from { transform: translate(-50%, -50%) rotate(-15deg); } to { transform: translate(-50%, -50%) rotate(345deg); } }
 @keyframes uraiHomeRingB { from { transform: translate(-50%, -50%) rotate(19deg) scaleX(.78); } to { transform: translate(-50%, -50%) rotate(379deg) scaleX(.78); } }
+
+@media (max-width: 1100px) {
+  .urai-home-panel-right { display: none; }
+}
 
 @media (max-width: 760px) {
   .urai-hero-home { --orb-x: 50%; --orb-y: 65%; --avatar-x: 62%; --avatar-y: 59%; }
