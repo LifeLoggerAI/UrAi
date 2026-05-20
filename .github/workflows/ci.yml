@@ -74,6 +74,18 @@ jobs:
       - name: Smoke tests
         run: npm run test:smoke
 
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            /tmp/urai-playwright-results
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
   functions:
     name: Firebase Functions validation
     runs-on: ubuntu-latest
