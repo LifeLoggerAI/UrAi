@@ -15,10 +15,6 @@ function read(file) {
   return exists(file) ? fs.readFileSync(path.join(root, file), 'utf8') : '';
 }
 
-function has(file, token) {
-  return read(file).includes(token);
-}
-
 function pkgScripts() {
   try {
     return JSON.parse(read('package.json')).scripts || {};
@@ -70,10 +66,19 @@ const checks = [
     tier: 'Tier-1',
     item: 'Firestore rules and indexes',
     status: exists('firestore.rules') && exists('firestore.indexes.json') ? 'Completed but not verified' : 'Blocked',
-    evidence: 'firestore.rules, firestore.indexes.json',
+    evidence: 'firestore.rules, firestore.indexes.json, tests/rules/firestore.rules.test.js',
     blocksTier1: !(exists('firestore.rules') && exists('firestore.indexes.json')),
     blocksTier2: true,
     next: 'Run npm run test:rules and deploy rules/indexes to staging before public freeze.',
+  },
+  {
+    tier: 'Tier-1',
+    item: 'Firebase client configuration boundary',
+    status: exists('src/lib/firebase.ts') ? 'Completed but not verified' : 'Blocked',
+    evidence: 'src/lib/firebase.ts',
+    blocksTier1: !exists('src/lib/firebase.ts'),
+    blocksTier2: true,
+    next: 'Run build/smoke with real NEXT_PUBLIC_FIREBASE_* values before claiming live Firebase readiness.',
   },
   {
     tier: 'Tier-1',
@@ -87,9 +92,9 @@ const checks = [
   {
     tier: 'Tier-1',
     item: 'Release/deploy runbooks',
-    status: exists('docs/LAUNCH_CLOSEOUT_RUNBOOK.md') && exists('docs/deployment/PRODUCTION_DEPLOYMENT.md') && exists('docs/deployment/ROLLBACK.md') ? 'Completed but not verified' : 'Blocked',
-    evidence: 'docs/LAUNCH_CLOSEOUT_RUNBOOK.md, docs/deployment/PRODUCTION_DEPLOYMENT.md, docs/deployment/ROLLBACK.md',
-    blocksTier1: !(exists('docs/LAUNCH_CLOSEOUT_RUNBOOK.md') && exists('docs/deployment/PRODUCTION_DEPLOYMENT.md') && exists('docs/deployment/ROLLBACK.md')),
+    status: exists('docs/LAUNCH_CLOSEOUT_RUNBOOK.md') && exists('docs/P1_RELEASE_HARDENING.md') ? 'Completed but not verified' : 'Blocked',
+    evidence: 'docs/LAUNCH_CLOSEOUT_RUNBOOK.md, docs/P1_RELEASE_HARDENING.md',
+    blocksTier1: !(exists('docs/LAUNCH_CLOSEOUT_RUNBOOK.md') && exists('docs/P1_RELEASE_HARDENING.md')),
     blocksTier2: true,
     next: 'Capture release candidate SHA, rollback SHA, staging URL, production URL, and gate outputs.',
   },
@@ -123,29 +128,29 @@ const checks = [
   {
     tier: 'Tier-2',
     item: 'Tier-2 public route isolation',
-    status: scripts['check:tier2-access'] ? 'Completed but not verified' : 'Blocked',
-    evidence: 'scripts/tier-lock/tier2-access-check.mjs',
+    status: scripts['check:tier2-access'] && scripts['check:public-copy'] ? 'Completed but not verified' : 'Blocked',
+    evidence: 'scripts/tier-lock/tier2-access-check.mjs, scripts/check-public-copy.mjs',
     blocksTier1: false,
-    blocksTier2: !scripts['check:tier2-access'],
-    next: 'Run npm run check:tier2-access and confirm public Tier-1 routes do not expose internal Tier-2 labels.',
+    blocksTier2: !(scripts['check:tier2-access'] && scripts['check:public-copy']),
+    next: 'Run npm run check:tier2-access and npm run check:public-copy to confirm public Tier-1 routes do not expose internal/future claims.',
   },
   {
-    tier: 'Tier-2',
-    item: 'Live-data and animation production claims',
-    status: 'Blocked',
-    evidence: 'docs/launch/LAUNCH_GATE_REGISTER.md gates #31 and #32',
+    tier: 'Tier-3+',
+    item: 'Cinematic/animation production claims',
+    status: 'Deferred',
+    evidence: 'src/components/HomeScene.tsx, src/components/HomeWebGLSky.tsx, src/components/lifemap/LifeMapScene.tsx, tests/e2e/v1-smoke.spec.ts',
     blocksTier1: false,
-    blocksTier2: true,
-    next: 'Close live Firebase client data and Rive/Lottie wrapper gates with test and visual evidence before claiming final Tier-2 freeze.',
+    blocksTier2: false,
+    next: 'Do not claim Tier-3/Tier-4/Tier-5 visual lock until mobile, reduced-motion, fixture, loading, empty, error, bundle, and visual evidence are captured.',
   },
   {
     tier: 'Both',
     item: 'Fresh post-merge CI/deployment evidence',
     status: 'Blocked',
-    evidence: 'docs/launch/LAUNCH_GATE_REGISTER.md gate #33',
+    evidence: 'CI logs, local command output, staging URL, production URL, screenshots/recording, tmp/p1-release-gate-report.md',
     blocksTier1: true,
     blocksTier2: true,
-    next: 'Attach current main CI, install, typecheck, lint, build, smoke, launch gate, deploy URL, and route smoke evidence.',
+    next: 'Attach current CI, install, typecheck, lint, build, smoke, launch gate, release gate, deploy URL, route smoke, and visual proof evidence.',
   },
 ];
 
@@ -180,18 +185,20 @@ lines.push('## Required verification commands before freeze');
 lines.push('');
 lines.push('```bash');
 lines.push('npm install');
-lines.push('npm run check:lockfile');
-lines.push('npm run check:v1');
-lines.push('npm run check:tier2-access');
-lines.push('npm run launch:p0');
-lines.push('npm run release:p1');
-lines.push('npm run seed:demo');
-lines.push('npm run test:unit');
+lines.push('npm run validate:completion');
 lines.push('npm run test:rules');
 lines.push('npm run typecheck');
 lines.push('npm run lint');
+lines.push('npm run test:unit');
 lines.push('npm run build');
+lines.push('npx playwright install chromium');
 lines.push('npm run test:smoke');
+lines.push('npm run check:tier-freeze');
+lines.push('URAI_P1_RUN_COMMANDS=1 npm run release:p1');
+lines.push('');
+lines.push('# If P0 is relevant:');
+lines.push('npm run launch:p0');
+lines.push('URAI_P0_RUN_COMMANDS=1 npm run launch:p0');
 lines.push('```');
 lines.push('');
 lines.push('## Blockers');
