@@ -23,8 +23,9 @@ test.describe("URAI production smoke", () => {
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
     await expect(page).toHaveURL(/\/$/);
+    await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+    await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
-    await expect(page.getByText("Memory Galaxy")).toBeVisible();
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
