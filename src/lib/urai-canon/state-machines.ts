@@ -33,7 +33,7 @@ export type UraiRouteMachineSnapshot = {
 
 export const URAI_INITIAL_ROUTE_MACHINE: UraiRouteMachineSnapshot = {
   state: "home",
-  route: "/home",
+  route: "/",
 };
 
 export function reduceUraiRouteMachine(
@@ -42,7 +42,7 @@ export function reduceUraiRouteMachine(
 ): UraiRouteMachineSnapshot {
   switch (event.type) {
     case "OPEN_HOME":
-      return { state: "home", route: "/home" };
+      return { state: "home", route: "/" };
     case "OPEN_LIFE_MAP":
       return { state: "life-map", route: "/life-map" };
     case "SELECT_STAR":
@@ -64,7 +64,7 @@ export function reduceUraiRouteMachine(
       if (snapshot.state === "replay-library") return { state: "focus-setup", route: "/focus", starId: snapshot.starId };
       if (snapshot.state === "focus-session" || snapshot.state === "focus-setup") return { state: "life-map", route: "/life-map" };
       if (snapshot.state === "star-selected") return { state: "life-map", route: "/life-map" };
-      if (snapshot.state === "life-map") return { state: "home", route: "/home" };
+      if (snapshot.state === "life-map") return { state: "home", route: "/" };
       return snapshot;
     case "INVALID_ID":
       return { state: "fallback-notice", route: parentRouteForState(event.parent), notice: "This item is unavailable or no longer exists." };
@@ -79,7 +79,7 @@ function parentRouteForState(state: UraiRouteMachineState): UraiRouteId | "/" {
   if (state === "star-selected") return "/life-map";
   if (state === "focus-session" || state === "focus-setup") return "/life-map";
   if (state === "replay-detail" || state === "replay-library") return "/focus";
-  return "/home";
+  return "/";
 }
 
 export type UraiFocusSessionState = "idle" | "planning" | "ready" | "active" | "paused" | "recovery" | "completed" | "archived";
