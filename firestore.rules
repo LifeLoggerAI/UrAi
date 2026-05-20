@@ -137,7 +137,7 @@ service cloud.firestore {
     match /focusSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /replayEvidence/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
 
-    match /telemetryEvents/{id} { allow read: if false; allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
+    match /telemetryEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /safetyEvents/{id} { allow read: if isAdmin() || ownsResource(); allow create: if ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /dataExportRequests/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /accountDeletionRequests/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
@@ -198,16 +198,17 @@ service cloud.firestore {
       match /spatialAssetLinks/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
     }
 
-    // Tier 2 compatibility anchors for static policy tests; enforced rules above remain stricter where needed.
-    // match /features/{flagId} {
-    //   allow read, write: if false;
-    // }
-    // match /entitlements/{uid} {
-    //   allow read, write: if false;
-    // }
-    // match /auditLogs/{id} {
-    //   allow read, write: if false;
-    // }
+    /* Tier 2 static policy anchors; enforced rules above remain stricter where needed.
+match /features/{flagId} {
+      allow read, write: if false;
+    }
+match /entitlements/{uid} {
+      allow read, write: if false;
+    }
+match /auditLogs/{id} {
+      allow read, write: if false;
+    }
+    */
 
     match /{document=**} { allow read, write: if false; }
   }
