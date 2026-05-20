@@ -161,6 +161,10 @@ function exists(file) {
   return fs.existsSync(path.join(root, file));
 }
 
+function hasCollectionMatch(rules, collection) {
+  return new RegExp(`match\\s+\\/${collection}\\/\\{[A-Za-z0-9_]+\\}`).test(rules);
+}
+
 const problems = [];
 
 for (const file of requiredFiles) {
@@ -184,7 +188,7 @@ for (const token of requiredContractTokens) {
 
 const firestoreRules = read("firestore.rules");
 for (const collection of requiredRulesCollections) {
-  if (!firestoreRules.includes(`match /${collection}/{id}`)) {
+  if (!hasCollectionMatch(firestoreRules, collection)) {
     problems.push(`Firestore rules missing canonical collection: ${collection}`);
   }
 }
