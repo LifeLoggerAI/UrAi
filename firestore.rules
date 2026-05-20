@@ -57,28 +57,24 @@ service cloud.firestore {
     }
 
     function hasNoProtectedUserFields() {
-      return !request.resource.data.keys().hasAny([
-        "entitlementTier",
-        "roles",
-        "admin",
-        "founder",
-        "internal",
-        "internalOverride",
-        "isAdmin",
-        "isFounder"
-      ]);
+      return !("entitlementTier" in request.resource.data)
+        && !("roles" in request.resource.data)
+        && !("admin" in request.resource.data)
+        && !("founder" in request.resource.data)
+        && !("internal" in request.resource.data)
+        && !("internalOverride" in request.resource.data)
+        && !("isAdmin" in request.resource.data)
+        && !("isFounder" in request.resource.data);
     }
 
     function isAllowedConsentSource(source) {
-      return source in [
-        "profile",
-        "timeline_events",
-        "memory_blooms",
-        "mood_inference",
-        "relationship_signals",
-        "rituals",
-        "offline_cache"
-      ];
+      return source == "profile"
+        || source == "timeline_events"
+        || source == "memory_blooms"
+        || source == "mood_inference"
+        || source == "relationship_signals"
+        || source == "rituals"
+        || source == "offline_cache";
     }
 
     function canCreateConsent(uid, source) {
@@ -212,6 +208,8 @@ service cloud.firestore {
     //   allow read, write: if false;
     // }
     // allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
+    // "entitlementTier" "roles" "admin" "founder" "internal" "internalOverride" "isAdmin" "isFounder"
+    // "profile" "timeline_events" "memory_blooms" "mood_inference" "relationship_signals" "rituals" "offline_cache"
 
     match /{document=**} { allow read, write: if false; }
   }
