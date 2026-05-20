@@ -24,6 +24,7 @@ jobs:
       NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:ci-placeholder"
       NEXT_PUBLIC_URAI_NARRATOR_FALLBACK: speech
       URAI_ENABLE_CHRONO_FIRESTORE: "0"
+      OPENAI_API_KEY: ci-placeholder-openai-key
 
     steps:
       - name: Check out repository
