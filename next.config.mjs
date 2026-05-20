@@ -24,6 +24,15 @@ const nextConfig = {
   reactStrictMode: true,
   images: { domains: [] },
   allowedDevOrigins: [...new Set([...cloudWorkstationDevOrigins, ...localDevOrigins, ...envDevOrigins])],
+  async redirects() {
+    return [
+      {
+        source: "/home",
+        destination: "/",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
