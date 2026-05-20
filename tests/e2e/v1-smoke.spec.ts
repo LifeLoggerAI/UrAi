@@ -32,27 +32,22 @@ test.describe("URAI V1 smoke", () => {
   test("final /home field exposes sky, orb, ground, companion, and return-home surfaces @smoke", async ({ page }) => {
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Charge orb" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Wake companion" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Tune body field" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Ascend through the sky into the Memory Galaxy" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Enter URAI ground foundation" })).toBeVisible();
 
-    await clickButtonByLabel(page, "Wake companion");
-    await expect(page.locator("aside").filter({ hasText: /quiet|listening|reflecting|forecasting|ritual|protective/i })).toBeVisible();
-
-    await clickButtonByLabel(page, "Open life map");
-    await expect(page.getByRole("button", { name: "Return home" })).toBeVisible();
+    await clickButtonByLabel(page, "Open URAI orb companion");
+    await expect(page.getByRole("dialog", { name: "URAI orb companion chat" })).toBeVisible();
+    await expect(page.getByText("URAI is listening.")).toBeVisible();
   });
 
   test("final /home reduced-motion path keeps core controls available @smoke", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("button", { name: "Open symbolic life map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Charge orb" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Wake companion" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open recovery bloom terrain" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Ascend through the sky into the Memory Galaxy" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Enter URAI ground foundation" })).toBeVisible();
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
