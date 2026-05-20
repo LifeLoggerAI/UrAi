@@ -114,7 +114,7 @@ service cloud.firestore {
     match /creatorSubmissions/{id} { allow read: if isAdmin(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /jobApplications/{id} { allow read: if isAdmin() || ownsResource(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
 
-    match /profiles/{id} { allow read: if ownsResource(); allow create: if ownsRequest() && hasNoProtectedUserFields(); allow update: if ownsResource() && ownsRequest() && hasNoProtectedUserFields(); allow delete: if false; }
+    match /profiles/{uid} { allow read: if isSelf(uid) || ownsResource(); allow create: if (isSelf(uid) || ownsRequest()) && hasNoProtectedUserFields(); allow update: if (isSelf(uid) || ownsResource()) && ownsRequest() && hasNoProtectedUserFields(); allow delete: if false; }
     match /consents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
     match /narratorMemory/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
     match /memoryShards/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -127,6 +127,7 @@ service cloud.firestore {
     match /weeklyRecaps/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /storyProjects/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /storyAssets/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /referrals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /lifeMapEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /constellations/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /scrolls/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -210,7 +211,6 @@ match /entitlements/{uid} {
 match /auditLogs/{id} {
       allow read, write: if false;
     }
-allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
     */
 
     match /{document=**} { allow read, write: if false; }
