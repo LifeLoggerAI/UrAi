@@ -7,6 +7,8 @@ import {
 
 describe("URAI Tier 1 and Tier 2 state machines", () => {
   it("models the Tier 1 core route loop", () => {
+    expect(URAI_INITIAL_ROUTE_MACHINE).toMatchObject({ state: "home", route: "/" });
+
     const lifeMap = reduceUraiRouteMachine(URAI_INITIAL_ROUTE_MACHINE, { type: "OPEN_LIFE_MAP" });
     expect(lifeMap).toMatchObject({ state: "life-map", route: "/life-map" });
 
@@ -32,7 +34,7 @@ describe("URAI Tier 1 and Tier 2 state machines", () => {
     expect(map).toMatchObject({ state: "life-map", route: "/life-map" });
 
     const home = reduceUraiRouteMachine(map, { type: "ESC" });
-    expect(home).toMatchObject({ state: "home", route: "/home" });
+    expect(home).toMatchObject({ state: "home", route: "/" });
   });
 
   it("routes invalid and locked IDs to visible parent fallback notices", () => {
