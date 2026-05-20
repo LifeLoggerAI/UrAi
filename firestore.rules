@@ -10,361 +10,430 @@ service cloud.firestore {
       return isSignedIn();
     }
 
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
     function isSelf(uid) {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    function isOwnerResource() {
-      return isSignedIn() && resource.data.ownerUid == request.auth.uid;
+    function ownsResource() {
+      return isSignedIn()
+        && (
+          resource.data.ownerUid == request.auth.uid
+          || resource.data.userId == request.auth.uid
+          || resource.data.uid == request.auth.uid
+        );
     }
 
-    function isOwnerRequest() {
-      return isSignedIn() && request.resource.data.ownerUid == request.auth.uid;
+    function ownsRequest() {
+      return isSignedIn()
+        && (
+          request.resource.data.ownerUid == request.auth.uid
+          || request.resource.data.userId == request.auth.uid
+          || request.resource.data.uid == request.auth.uid
+        );
     }
 
     function canReadOwnerDoc() {
-      return isOwnerResource();
+      return ownsResource();
     }
 
     function canCreateOwnerDoc() {
-      return isOwnerRequest();
+      return ownsRequest();
     }
 
     function canUpdateOwnerDoc() {
-      return isOwnerResource() && isOwnerRequest();
+      return ownsResource() && ownsRequest();
     }
 
-    function hasNoProtectedUserFields() {
-      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
-        "entitlementTier",
-        "roles",
-        "tier",
-        "role",
-        "admin",
-        "founder",
-        "internal",
-        "internalOverride",
-        "isAdmin",
-        "isFounder",
-        "createdAt"
-      ]);
+    function isPublicPublished() {
+      return resource.data.visibility == "public" || resource.data.demoReadable == true || resource.data.status == "published";
     }
 
-    function isAllowedConsentSource(source) {
-      return source in [
-        "profile",
-        "timeline_events",
-        "memory_blooms",
-        "mood_inference",
-        "relationship_signals",
-        "rituals",
-        "offline_cache"
-      ];
+    function createsPublicSubmission() {
+      return request.resource.data.createdAt is timestamp || request.resource.data.createdAt is string;
     }
 
-    function canCreateConsent(uid, source) {
-      return isSelf(uid)
-        && isAllowedConsentSource(source)
-        && request.resource.data.ownerUid == uid
-        && request.resource.data.uid == uid
-        && request.resource.data.source == source;
+    // Admin-only collections.
+    match /adminUsers/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
-    function canUpdateConsent(uid, source) {
-      return isSelf(uid)
-        && isAllowedConsentSource(source)
-        && resource.data.ownerUid == uid
-        && resource.data.uid == uid
-        && resource.data.source == source
-        && request.resource.data.ownerUid == uid
-        && request.resource.data.uid == uid
-        && request.resource.data.source == source;
+    match /adminAuditLogs/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if false;
+      allow delete: if false;
     }
 
-    // User-scoped collections
+    match /auditLogs/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /incidents/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /featureFlags/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Public/demo-readable catalog and status collections.
+    match /systemStatus/{id} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /marketplaceItems/{id} {
+      allow read: if isPublicPublished() || isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /jobs/{id} {
+      allow read: if isPublicPublished() || isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Public inbound submissions. Reads stay admin-only; clients may create only minimal submitted records.
+    match /waitlistEntries/{id} {
+      allow read: if isAdmin();
+      allow create: if createsPublicSubmission();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /contactMessages/{id} {
+      allow read: if isAdmin();
+      allow create: if createsPublicSubmission();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /creatorSubmissions/{id} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && ownsRequest();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /jobApplications/{id} {
+      allow read: if isAdmin() || ownsResource();
+      allow create: if isSignedIn() && ownsRequest();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // User-owned private canonical collections.
+    match /profiles/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if false;
+    }
+
+    match /consents/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if false;
+    }
+
+    match /narratorMemory/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if false;
+    }
+
+    match /memoryShards/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /insights/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /journeys/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /journeyChapters/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /stars/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /moodWeather/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /emotionalForecasts/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /weeklyRecaps/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /storyProjects/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /storyAssets/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /marketplacePurchases/{id} {
+      allow read: if ownsResource();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /referrals/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /eventEnrichments/{id} {
+      allow read: if ownsResource();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /lifeMapEvents/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /constellations/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /scrolls/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /storyScripts/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /relationships/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /socialGraph/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /obscuraSignals/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /mentalLoadScores/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /councilSessions/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    match /narratorMessages/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if ownsResource() && ownsRequest();
+      allow delete: if ownsResource();
+    }
+
+    // Sensitive server-mediated collections.
+    match /telemetryEvents/{id} {
+      allow read: if false;
+      allow create: if ownsRequest();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /safetyEvents/{id} {
+      allow read: if isAdmin() || ownsResource();
+      allow create: if ownsRequest();
+      allow update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /dataExportRequests/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /accountDeletionRequests/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /entitlements/{id} {
+      allow read: if ownsResource();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /transactions/{id} {
+      allow read: if ownsResource();
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    match /dataRequests/{id} {
+      allow read: if ownsResource();
+      allow create: if ownsRequest();
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Legacy/user-owned collections retained for current app compatibility.
+    match /dreams/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /rituals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /timelineEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /personaEvolutions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /soulThreads/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /socialArchetypes/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /weeklyScrolls/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /moods/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /shadowMetrics/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /obscuraPatterns/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /cognitiveStress/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /recoveryBlooms/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /relationshipConstellations/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /voiceEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /dreamConstellations/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /memoryBlooms/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /badges/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /notifications/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /journalEntries/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /events/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /insightMarket/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /moodForecasts/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /weeklyReflections/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /companionMessages/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /narratorInsights/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /relationshipSignals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /passiveSignals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+    match /symbolicStates/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if canUpdateOwnerDoc(); allow delete: if ownsResource(); }
+
+    // Legacy server-only aliases.
+    match /waitlistSignups/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
+    match /features/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
+    match /assetLifecycleEvents/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if false; allow delete: if false; }
+
     match /users/{uid} {
       allow read: if isSelf(uid);
-      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
+      allow create: if isSelf(uid);
+      allow update: if isSelf(uid);
       allow delete: if isSelf(uid);
 
       match /consents/{source} {
         allow read: if isSelf(uid);
-        allow create: if canCreateConsent(uid, source);
-        allow update: if canUpdateConsent(uid, source);
-        allow delete: if false;
-      }
-
-      match /settings/{doc} {
-        allow read, write: if isSelf(uid);
-      }
-
-      match /tokens/{doc} {
-        allow read, write: if isSelf(uid);
-      }
-
-      match /spatialScenes/{sceneId} {
-        allow read: if isSelf(uid);
-        allow create: if isSelf(uid) && request.resource.data.uid == uid;
-        allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
-        allow delete: if isSelf(uid) && resource.data.uid == uid;
-      }
-
-      match /xrAnchors/{anchorId} {
-        allow read: if isSelf(uid);
-        allow create: if isSelf(uid) && request.resource.data.uid == uid;
-        allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
-        allow delete: if isSelf(uid) && resource.data.uid == uid;
-      }
-
-      match /roomSemantics/{roomId} {
-        allow read: if isSelf(uid);
-        allow create: if isSelf(uid) && request.resource.data.uid == uid;
-        allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
-        allow delete: if isSelf(uid) && resource.data.uid == uid;
-      }
-
-      match /dreamPlanetariumScenes/{sceneId} {
-        allow read: if isSelf(uid);
-        allow create: if isSelf(uid) && request.resource.data.uid == uid;
-        allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
-        allow delete: if isSelf(uid) && resource.data.uid == uid;
-      }
-
-      match /spatialConsentZones/{zoneId} {
-        allow read: if isSelf(uid);
         allow create: if isSelf(uid) && request.resource.data.uid == uid;
         allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
         allow delete: if false;
       }
 
-      match /spatialAssetLinks/{assetId} {
-        allow read: if isSelf(uid);
-        allow create: if isSelf(uid) && request.resource.data.uid == uid;
-        allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid;
-        allow delete: if isSelf(uid) && resource.data.uid == uid;
-      }
+      match /settings/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid); allow update: if isSelf(uid); allow delete: if isSelf(uid); }
+      match /tokens/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid); allow update: if isSelf(uid); allow delete: if isSelf(uid); }
+      match /spatialScenes/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
+      match /xrAnchors/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
+      match /roomSemantics/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
+      match /dreamPlanetariumScenes/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
+      match /spatialConsentZones/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if false; }
+      match /spatialAssetLinks/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
     }
 
-    // Owner-scoped top-level collections
-    match /dreams/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /rituals/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /timelineEvents/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /personaEvolutions/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /soulThreads/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /socialArchetypes/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /weeklyScrolls/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /moods/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /shadowMetrics/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /obscuraPatterns/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /cognitiveStress/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /recoveryBlooms/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /relationshipConstellations/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /voiceEvents/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /dreamConstellations/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /memoryBlooms/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /badges/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /notifications/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /journalEntries/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /events/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /insightMarket/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /moodForecasts/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /weeklyReflections/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /companionMessages/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /narratorInsights/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /relationshipSignals/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /passiveSignals/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    match /symbolicStates/{docId} {
-      allow read: if canReadOwnerDoc();
-      allow create: if canCreateOwnerDoc();
-      allow update: if canUpdateOwnerDoc();
-      allow delete: if isOwnerResource();
-    }
-
-    // System/private collections
-    match /waitlistSignups/{id} {
-      allow read, write: if false;
-    }
-
-    match /features/{flagId} {
-      allow read, write: if false;
-    }
-
-    match /entitlements/{uid} {
-      allow read, write: if false;
-    }
-
-    match /auditLogs/{id} {
-      allow read, write: if false;
-    }
-
-    match /assetLifecycleEvents/{eventId} {
-      allow read, write: if false;
-    }
-
-    match /{document=**} {
-      allow read, write: if false;
-    }
+    match /{document=**} { allow read, write: if false; }
   }
 }
