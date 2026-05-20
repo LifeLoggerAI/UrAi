@@ -232,7 +232,7 @@ export default function UraiResolvedHomeScene() {
       data-ground={activeGround ?? "none"}
       data-rhythm={home.rhythmState}
     >
-      <button type="button" className="sky-layer" aria-label="Open symbolic life map" onClick={openLifeMap}>
+      <button type="button" className="sky-layer" aria-label="Ascend through the sky into the Memory Galaxy" onClick={openLifeMap}>
         <span className="sky-gradient" />
         <span className="distant-aurora" />
         <span className="sky-fog sky-fog-one" />
@@ -243,7 +243,7 @@ export default function UraiResolvedHomeScene() {
       </button>
 
       <section className="body-field" aria-label="Interactive URAI home field">
-        <button type="button" className="silhouette-button" aria-label="Tune body field" onClick={() => { setFocusSurface("ground"); setActiveGround("signal"); setActiveNode(null); }}>
+        <button type="button" className="silhouette-button" aria-label="Enter URAI ground foundation" onClick={() => { setFocusSurface("ground"); setActiveGround("signal"); setActiveNode(null); }}>
           <span className="body-halo" />
           <span className="body-head" />
           <span className="body-core" />
@@ -265,7 +265,7 @@ export default function UraiResolvedHomeScene() {
           <span className="orb-charge charge-three" />
         </button>
 
-        <button type="button" className="companion-dot" aria-label="Wake companion" onClick={() => { setFocusSurface("companion"); setActiveGround(null); setActiveNode(null); }}>
+        <button type="button" className="companion-dot" aria-label="Open URAI orb companion" onClick={() => { setFocusSurface("companion"); setActiveGround(null); setActiveNode(null); }}>
           <span />
         </button>
       </section>
@@ -338,11 +338,11 @@ function ScenePulse({
       : activeGround === "shadow" ? `${Math.round(home.shadowLoad * 100)}%`
         : activeGround === "memory" ? `${home.memoryNodeCount}`
           : activeGround === "signal" ? home.rhythmState
-            : focusSurface === "companion" ? home.companionMode
+            : focusSurface === "companion" ? "URAI is listening."
               : topNode?.title ?? home.moodWeather);
 
   return (
-    <aside className="scene-pulse" aria-live="polite">
+    <aside className="scene-pulse" aria-live="polite" role={focusSurface === "companion" ? "dialog" : undefined} aria-label={focusSurface === "companion" ? "URAI orb companion chat" : undefined}>
       <button type="button" className="pulse-close" aria-label="Close field pulse" onClick={onClose} />
       <strong>{title}</strong>
       <button type="button" className="pulse-map" aria-label="Open life map" onClick={onOpenLifeMap} />

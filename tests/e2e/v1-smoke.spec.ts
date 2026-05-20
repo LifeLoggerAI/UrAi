@@ -106,6 +106,6 @@ test.describe("URAI V1 smoke", () => {
   test("companion blocks empty prompt", async ({ page }) => {
     await openHome(page);
 
-    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
   });
 });

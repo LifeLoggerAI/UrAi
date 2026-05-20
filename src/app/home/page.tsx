@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
 
 export const metadata = {
   title: "URAI Inner Sky Shrine",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  redirect("/");
+  return <UraiResolvedHomeScene />;
 }

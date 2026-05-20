@@ -12,7 +12,7 @@ jobs:
   app:
     name: App validation
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
 
     steps:
       - name: Checkout
@@ -67,6 +67,24 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npm run test:smoke
+
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            /tmp/urai-playwright-results
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
 
   functions:
     name: Firebase Functions validation
