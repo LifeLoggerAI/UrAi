@@ -70,7 +70,9 @@ for (const collection of ownerUidCollections) {
   const matchStart = rules.indexOf(`match /${collection}/`);
   if (matchStart === -1) continue;
   const matchSnippet = rules.slice(matchStart, matchStart + 240);
-  if (!matchSnippet.includes("canReadOwnerDoc") || !matchSnippet.includes("canCreateOwnerDoc")) {
+  const hasOwnerReadGate = matchSnippet.includes("canReadOwnerDoc") || matchSnippet.includes("ownsResource");
+  const hasOwnerCreateGate = matchSnippet.includes("canCreateOwnerDoc") || matchSnippet.includes("ownsRequest");
+  if (!hasOwnerReadGate || !hasOwnerCreateGate) {
     fail(`${collection} is missing owner-gated read/create rules`);
   }
 }
