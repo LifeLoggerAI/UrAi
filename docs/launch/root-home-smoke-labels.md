@@ -1,0 +1,1 @@
+Root / renders after /home redirect, so the same accessible home controls must be mounted on the canonical root entrypoint.
