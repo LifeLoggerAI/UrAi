@@ -97,6 +97,8 @@ service cloud.firestore {
     match /mentalLoadScores/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /councilSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /narratorMessages/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /focusSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /replayEvidence/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
 
     match /telemetryEvents/{id} { allow read: if false; allow create: if ownsRequest(); allow update: if false; allow delete: if false; }
     match /safetyEvents/{id} { allow read: if isAdmin() || ownsResource(); allow create: if ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
