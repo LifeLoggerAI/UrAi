@@ -120,13 +120,31 @@ describe('Firestore security rules', () => {
     });
   });
 
-  describe('server-only and denied collections', () => {
-    test.each(['features', 'entitlements', 'auditLogs', 'transactions', 'eventEnrichments'])('denies client access to %s', async (collection) => {
-      await seedDocument(testEnv, collection, 'doc-1', { ownerUid: OWNER_UID, value: true });
+  describe('server-only and server-mediated collections', () => {
+    test('denies all client access to implementation-only feature definitions', async () => {
+      await seedDocument(testEnv, 'features', 'doc-1', { value: true });
       const ownerDb = testEnv.authenticatedContext(OWNER_UID).firestore();
       const adminDb = testEnv.authenticatedContext(ADMIN_UID, { admin: true }).firestore();
-      await expect(assertFails(ownerDb.collection(collection).doc('doc-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
-      await expect(assertFails(adminDb.collection(collection).doc('doc-1').set({ ownerUid: ADMIN_UID }))).resolves.toBeInstanceOf(PermissionDeniedError);
+      await expect(assertFails(ownerDb.collection('features').doc('doc-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
+      await expect(assertFails(adminDb.collection('features').doc('doc-1').set({ ownerUid: ADMIN_UID }))).resolves.toBeInstanceOf(PermissionDeniedError);
+    });
+
+    test.each(['entitlements', 'transactions', 'eventEnrichments'])('%s allows owner reads but rejects client writes', async (collection) => {
+      await seedDocument(testEnv, collection, 'doc-1', { ownerUid: OWNER_UID, value: true });
+      const ownerDb = testEnv.authenticatedContext(OWNER_UID).firestore();
+      const otherDb = testEnv.authenticatedContext(OTHER_UID).firestore();
+      await expect(assertSucceeds(ownerDb.collection(collection).doc('doc-1').get())).resolves.toBeTruthy();
+      await expect(assertFails(otherDb.collection(collection).doc('doc-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
+      await expect(assertFails(ownerDb.collection(collection).doc('new').set({ ownerUid: OWNER_UID }))).resolves.toBeInstanceOf(PermissionDeniedError);
+    });
+
+    test('audit logs remain admin-only and immutable', async () => {
+      await seedDocument(testEnv, 'auditLogs', 'doc-1', { value: true });
+      const ownerDb = testEnv.authenticatedContext(OWNER_UID).firestore();
+      const adminDb = testEnv.authenticatedContext(ADMIN_UID, { admin: true }).firestore();
+      await expect(assertSucceeds(adminDb.collection('auditLogs').doc('doc-1').get())).resolves.toBeTruthy();
+      await expect(assertFails(ownerDb.collection('auditLogs').doc('doc-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
+      await expect(assertFails(adminDb.collection('auditLogs').doc('doc-1').update({ value: false }))).resolves.toBeInstanceOf(PermissionDeniedError);
     });
   });
 
@@ -164,10 +182,12 @@ describe('Firestore security rules', () => {
       await expect(assertFails(ownerDb.collection('accountDeletionRequests').doc('delete-1').update({ status: 'changed' }))).resolves.toBeInstanceOf(PermissionDeniedError);
     });
 
-    test('allows telemetry writes but blocks client reads and edits', async () => {
+    test('allows telemetry owner writes and reads but blocks client edits', async () => {
       const ownerDb = testEnv.authenticatedContext(OWNER_UID).firestore();
+      const otherDb = testEnv.authenticatedContext(OTHER_UID).firestore();
       await expect(assertSucceeds(ownerDb.collection('telemetryEvents').doc('event-1').set({ ownerUid: OWNER_UID, type: 'route_view' }))).resolves.toBeNull();
-      await expect(assertFails(ownerDb.collection('telemetryEvents').doc('event-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
+      await expect(assertSucceeds(ownerDb.collection('telemetryEvents').doc('event-1').get())).resolves.toBeTruthy();
+      await expect(assertFails(otherDb.collection('telemetryEvents').doc('event-1').get())).resolves.toBeInstanceOf(PermissionDeniedError);
       await expect(assertFails(ownerDb.collection('telemetryEvents').doc('event-1').update({ type: 'tamper' }))).resolves.toBeInstanceOf(PermissionDeniedError);
     });
 
