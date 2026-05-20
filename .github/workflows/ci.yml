@@ -32,6 +32,9 @@ jobs:
       - name: Validate Firebase target
         run: npm run check:firebase
 
+      - name: Validate staging Firebase target
+        run: npm run check:firebase:staging
+
       - name: Check lockfile
         run: npm run check:lockfile
 
