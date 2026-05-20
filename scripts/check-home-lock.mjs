@@ -23,8 +23,9 @@ const lockReport = read('HOME_LOCK_REPORT.md');
 const e2eAudit = read('HOME_E2E_AUDIT.md');
 const dataContract = read('HOME_DATA_CONTRACT.md');
 const companionContract = read('HOME_COMPANION_CONTRACT.md');
+const homeMountsResolvedScene = homePage.includes('UraiResolvedHomeScene') && homePage.includes('<UraiResolvedHomeScene />');
 
-assertCheck('home route mounts UraiResolvedHomeScene', homePage.includes('UraiResolvedHomeScene') && homePage.includes('return <UraiResolvedHomeScene />'), 'src/app/home/page.tsx should route /home to the resolved home scene.');
+assertCheck('home route mounts UraiResolvedHomeScene', homeMountsResolvedScene, 'src/app/home/page.tsx should route /home to the resolved home scene.');
 assertCheck('root page remains a home scene entrypoint', rootPage.includes('HomeScene') || rootPage.includes('UraiResolvedHomeScene'), 'src/app/page.tsx should remain a valid home entrypoint.');
 assertCheck('resolved scene imports live home state hook', resolvedScene.includes('useUraiHomeState'), 'Resolved scene must consume the live home view model hook.');
 assertCheck('resolved scene exposes life-map mode', resolvedScene.includes('Mode = "home" | "transitioning" | "lifemap"') || resolvedScene.includes('lifemap'), 'Resolved scene must include home/transition/lifemap flow.');
