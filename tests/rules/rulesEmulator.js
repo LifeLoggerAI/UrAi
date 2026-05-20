@@ -44,7 +44,7 @@ function extractCollectionRules(rules, collections) {
     const pattern = new RegExp(`match\\s+\\/${collection}\\/\\{[^}]+\\}\\s*\\{`, 'm');
     const match = pattern.exec(rules);
     if (!match) throw new Error(`Missing rules for collection: ${collection}`);
-    const openBraceIndex = rules.indexOf('{', match.index);
+    const openBraceIndex = match.index + match[0].lastIndexOf('{');
     const block = extractBlockBody(rules, openBraceIndex);
     const allowPattern = /allow\s+([^:]+):\s*if\s*([^;]+);/g;
     const operations = {};
@@ -204,13 +204,13 @@ const CANONICAL_TEST_COLLECTIONS = [
   'emotionalForecasts', 'weeklyRecaps', 'storyProjects', 'storyAssets', 'marketplacePurchases', 'referrals',
   'jobApplications', 'telemetryEvents', 'safetyEvents', 'dataExportRequests', 'accountDeletionRequests',
   'eventEnrichments', 'lifeMapEvents', 'constellations', 'scrolls', 'storyScripts', 'relationships',
-  'socialGraph', 'obscuraSignals', 'mentalLoadScores', 'councilSessions', 'narratorMessages', 'entitlements',
-  'transactions', 'dataRequests', 'dreams', 'rituals', 'timelineEvents', 'personaEvolutions', 'soulThreads',
-  'socialArchetypes', 'weeklyScrolls', 'moods', 'shadowMetrics', 'obscuraPatterns', 'cognitiveStress',
-  'recoveryBlooms', 'relationshipConstellations', 'voiceEvents', 'dreamConstellations', 'memoryBlooms',
-  'badges', 'notifications', 'journalEntries', 'events', 'insightMarket', 'moodForecasts', 'weeklyReflections',
-  'companionMessages', 'narratorInsights', 'relationshipSignals', 'passiveSignals', 'symbolicStates',
-  'waitlistSignups', 'features', 'assetLifecycleEvents',
+  'socialGraph', 'obscuraSignals', 'mentalLoadScores', 'councilSessions', 'narratorMessages', 'focusSessions',
+  'replayEvidence', 'entitlements', 'transactions', 'dataRequests', 'dreams', 'rituals', 'timelineEvents',
+  'personaEvolutions', 'soulThreads', 'socialArchetypes', 'weeklyScrolls', 'moods', 'shadowMetrics',
+  'obscuraPatterns', 'cognitiveStress', 'recoveryBlooms', 'relationshipConstellations', 'voiceEvents',
+  'dreamConstellations', 'memoryBlooms', 'badges', 'notifications', 'journalEntries', 'events', 'insightMarket',
+  'moodForecasts', 'weeklyReflections', 'companionMessages', 'narratorInsights', 'relationshipSignals',
+  'passiveSignals', 'symbolicStates', 'waitlistSignups', 'features', 'assetLifecycleEvents',
 ];
 
 function initializeTestEnvironment({ projectId, firestore }) {
