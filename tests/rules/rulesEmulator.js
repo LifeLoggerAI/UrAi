@@ -41,9 +41,10 @@ function extractBlockBody(rules, openBraceIndex) {
 function extractCollectionRules(rules, collections) {
   const map = new Map();
   for (const collection of collections) {
-    const pattern = new RegExp(`match\\s+\\/${collection}\\/\\{[^}]+\\}\\s*\\{`, 'm');
+    const pattern = new RegExp(`match\\s+\\/${collection}\\/\\{([^}]+)\\}\\s*\\{`, 'm');
     const match = pattern.exec(rules);
     if (!match) throw new Error(`Missing rules for collection: ${collection}`);
+    const variableName = match[1];
     const openBraceIndex = match.index + match[0].lastIndexOf('{');
     const block = extractBlockBody(rules, openBraceIndex);
     const allowPattern = /allow\s+([^:]+):\s*if\s*([^;]+);/g;
@@ -54,7 +55,7 @@ function extractCollectionRules(rules, collections) {
         operations[op] = allowMatch[2].trim();
       }
     }
-    map.set(collection, operations);
+    map.set(collection, { variableName, operations });
   }
   return map;
 }
@@ -62,8 +63,8 @@ function extractCollectionRules(rules, collections) {
 function compileExpression(functionsCode, expression) {
   const cleaned = convertRulesSyntax(expression.trim());
   const script = new vm.Script(`${functionsCode}\n(${cleaned});`);
-  return ({ request, resource }) => {
-    const context = vm.createContext({ request, resource });
+  return ({ request, resource, matchVariables = {} }) => {
+    const context = vm.createContext({ request, resource, ...matchVariables });
     return script.runInContext(context);
   };
 }
@@ -73,19 +74,22 @@ class RulesEvaluator {
     this.functionsCode = extractFunctionsBlock(rules);
     const ruleMap = extractCollectionRules(rules, collections);
     this.compiled = new Map();
-    for (const [collection, operations] of ruleMap.entries()) {
+    for (const [collection, rule] of ruleMap.entries()) {
       const opEvaluators = {};
-      for (const [operation, expression] of Object.entries(operations)) {
+      for (const [operation, expression] of Object.entries(rule.operations)) {
         opEvaluators[operation] = compileExpression(this.functionsCode, expression);
       }
-      this.compiled.set(collection, opEvaluators);
+      this.compiled.set(collection, { variableName: rule.variableName, opEvaluators });
     }
   }
 
   evaluate(collection, operation, context) {
-    const opEvaluators = this.compiled.get(collection);
-    if (!opEvaluators || !opEvaluators[operation]) return false;
-    return Boolean(opEvaluators[operation](context));
+    const compiledRule = this.compiled.get(collection);
+    if (!compiledRule || !compiledRule.opEvaluators[operation]) return false;
+    const matchVariables = compiledRule.variableName && context.documentId
+      ? { [compiledRule.variableName]: context.documentId }
+      : {};
+    return Boolean(compiledRule.opEvaluators[operation]({ ...context, matchVariables }));
   }
 }
 
@@ -161,6 +165,7 @@ class DocumentReference {
   async _assertAllowed(operation, existing, nextData) {
     if (this.bypass) return;
     const allowed = this.env.evaluator.evaluate(this.collection, operation, {
+      documentId: this.id,
       request: {
         auth: this.auth,
         resource: { data: JSON.parse(JSON.stringify(nextData || {})) },
