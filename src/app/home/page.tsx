@@ -1,4 +1,4 @@
-import { UraiResolvedHomeScene } from "@/components/urai/UraiResolvedHomeScene";
+import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
 
 export const metadata = {
   title: "URAI Inner Sky Shrine",
