@@ -1,4 +1,5 @@
-import UraiHomeLaunchSurface from "@/components/urai/UraiHomeLaunchSurface";
+import HomeWorldSmokeContract from "@/components/urai/HomeWorldSmokeContract";
+import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
 
 export const metadata = {
   title: "URAI Inner Sky Shrine",
@@ -6,5 +7,10 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <UraiHomeLaunchSurface />;
+  return (
+    <>
+      <UraiResolvedHomeScene />
+      <HomeWorldSmokeContract />
+    </>
+  );
 }

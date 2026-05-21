@@ -35,6 +35,7 @@ describe("URAI canonical system contracts", () => {
       "/focus/session/[sessionId]",
       "/replay",
       "/replay/[replayId]",
+      "/ochat",
     ]);
 
     for (const route of URAI_REQUIRED_ROUTES) {
@@ -73,6 +74,7 @@ describe("URAI canonical system contracts", () => {
     expect(URAI_ROUTE_TRANSITIONS.homeToLifeMap.emotionalIntent).toContain("ascension");
     expect(URAI_ROUTE_TRANSITIONS.lifeMapStarToFocus.emotionalIntent).toContain("focus chamber");
     expect(URAI_ROUTE_TRANSITIONS.focusToReplay.emotionalIntent).toContain("memory theater");
+    expect(URAI_ROUTE_TRANSITIONS.homeToOchat.emotionalIntent).toContain("companion chamber");
     expect(assertUraiCanonIntegrity()).toEqual([]);
   });
 

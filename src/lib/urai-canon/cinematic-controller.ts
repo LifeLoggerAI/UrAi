@@ -150,6 +150,12 @@ function lerpVec3(a: UraiCameraVector3, b: UraiCameraVector3, t: number): UraiCa
   return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)] as const;
 }
 
+function resolveUiOpacity(progress: number): number {
+  if (progress < 0.18) return clamp01(1 - progress / 0.18);
+  if (progress > 0.82) return clamp01((progress - 0.82) / 0.18);
+  return 0;
+}
+
 export function getTransitionCameraFrame(
   transitionId: UraiCinematicTransitionId,
   elapsedMs: number,
@@ -160,6 +166,7 @@ export function getTransitionCameraFrame(
   const progress = easeOutCubic(elapsedMs / duration);
   const startPreset: UraiCameraPreset = URAI_CAMERA_PRESETS[transition.startPreset];
   const endPreset: UraiCameraPreset = URAI_CAMERA_PRESETS[transition.endPreset];
+  const inputUnlockAtMs = options.reducedMotion ? duration : transition.inputUnlockAtMs;
 
   return {
     position: lerpVec3(startPreset.position, endPreset.position, progress),
@@ -168,9 +175,17 @@ export function getTransitionCameraFrame(
     bloom: lerp(0.78, 1.14, progress),
     fog: lerp(0.34, 0.68, Math.sin(progress * Math.PI)),
     starOpacity: lerp(0.32, transitionId === "lifeMapToHome" || transitionId === "ochatToHome" ? 0.28 : 1, progress),
-    uiOpacity: progress < 0.18 ? 1 - progress / 0.18 : progress > 0.82 ? (progress - 0.82) / 0.18 : 0,
-    inputLocked: elapsedMs < transition.inputUnlockAtMs,
+    uiOpacity: resolveUiOpacity(progress),
+    inputLocked: elapsedMs < inputUnlockAtMs,
   };
+}
+
+export function resolveUraiCameraFrame(
+  transitionId: UraiCinematicTransitionId,
+  elapsedMs: number,
+  reducedMotion = false,
+): UraiCameraFrame {
+  return getTransitionCameraFrame(transitionId, elapsedMs, { reducedMotion });
 }
 
 export function shouldCommitRoute(transitionId: UraiCinematicTransitionId, elapsedMs: number): boolean {
@@ -179,4 +194,19 @@ export function shouldCommitRoute(transitionId: UraiCinematicTransitionId, elaps
 
 export function getRouteTransitionForRoutes(from: UraiRouteId, to: UraiRouteId): UraiCinematicTransitionContract | null {
   return Object.values(URAI_CINEMATIC_TRANSITIONS).find((transition) => transition.fromRoute === from && transition.toRoute === to) ?? null;
+}
+
+export function assertUraiCinematicTransitionIntegrity(): string[] {
+  const failures: string[] = [];
+  for (const [id, transition] of Object.entries(URAI_CINEMATIC_TRANSITIONS) as [UraiCinematicTransitionId, UraiCinematicTransitionContract][]) {
+    if (transition.id !== id) failures.push(`Cinematic transition id mismatch: ${id}`);
+    if (transition.durationMs <= 0) failures.push(`Cinematic transition must have positive duration: ${id}`);
+    if (transition.reducedMotionDurationMs <= 0) failures.push(`Cinematic transition must have reduced-motion duration: ${id}`);
+    if (transition.reducedMotionDurationMs > transition.durationMs) failures.push(`Reduced-motion duration must not exceed full duration: ${id}`);
+    if (transition.routeCommitAtMs <= 0 || transition.routeCommitAtMs > transition.durationMs) failures.push(`Route commit timing out of range: ${id}`);
+    if (transition.inputUnlockAtMs < transition.routeCommitAtMs) failures.push(`Input must not unlock before route commit: ${id}`);
+    if (!URAI_CAMERA_PRESETS[transition.startPreset]) failures.push(`Missing start camera preset: ${id}`);
+    if (!URAI_CAMERA_PRESETS[transition.endPreset]) failures.push(`Missing end camera preset: ${id}`);
+  }
+  return failures;
 }
