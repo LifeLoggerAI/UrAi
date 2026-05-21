@@ -8,12 +8,13 @@ export async function GET(request: NextRequest) {
   const flag = requireSpatialPrivateBeta();
   if (!flag.enabled) return NextResponse.json({ error: "spatial_feature_flag_disabled", message: flag.reason }, { status: flag.status });
 
-  const context = resolveSpatialRequestContext(request);
+  const context = await resolveSpatialRequestContext(request);
   if (!context) return NextResponse.json(unauthorizedSpatialResponse(), { status: 401 });
 
   return NextResponse.json({
     consent: null,
     source: "firestore-contract-pending",
+    context: { uid: context.uid, tenantId: context.tenantId, role: context.role, source: context.source },
     message: "No persisted consent profile is returned until Firestore rules/index ownership is verified.",
   });
 }
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
   const flag = requireSpatialPrivateBeta();
   if (!flag.enabled) return NextResponse.json({ error: "spatial_feature_flag_disabled", message: flag.reason }, { status: flag.status });
 
-  const context = resolveSpatialRequestContext(request);
+  const context = await resolveSpatialRequestContext(request);
   if (!context) return NextResponse.json(unauthorizedSpatialResponse(), { status: 401 });
 
   const body = await request.json().catch(() => ({}));
