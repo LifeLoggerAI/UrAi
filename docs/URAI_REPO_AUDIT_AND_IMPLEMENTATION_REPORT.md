@@ -46,12 +46,12 @@ URAI V1 is a public demo spine for a future passive emotional operating system. 
 
 ## Main implemented flows
 
-- `/` renders the canonical home/demo entry via `src/app/home/page.tsx`
-- `/home` is redirected to `/` by `next.config.mjs`
-- `/u/[handle]` renders a public-safe constellation demo
-- `/api/companion` returns deterministic companion replies through the local companion engine
-- `/api/waitlist` validates/rate-limits waitlist signup requests and writes via Firebase Admin when configured, otherwise supports dry-run mode
-- Firebase rules protect owner-scoped collections, protected user fields, waitlist/admin access, and homeWorld shape
+- `/` renders the canonical home/demo entry via the existing app route implementation.
+- `/home` now renders the HomeWorld route directly so Playwright smoke tests can inspect the route-level HomeWorld DOM contract.
+- `/u/[handle]` renders a public-safe constellation demo.
+- `/api/companion` returns deterministic companion replies through the local companion engine.
+- `/api/waitlist` validates/rate-limits waitlist signup requests and writes via Firebase Admin when configured, otherwise supports dry-run mode.
+- Firebase rules protect owner-scoped collections, protected user fields, waitlist/admin access, and homeWorld shape.
 
 ## Current implementation status
 
@@ -62,16 +62,16 @@ URAI V1 is a public demo spine for a future passive emotional operating system. 
 - Environment template separates public `NEXT_PUBLIC_*` values from private server credentials.
 - Waitlist route has rate limiting, email normalization, dry-run fallback, duplicate handling, and Firestore write behavior.
 - Companion route rejects empty messages and uses deterministic local behavior.
-- Firestore rules include owner checks, admin checks, protected user field checks, and V1 homeWorld validation.
+- Firestore rules include owner checks, admin checks, protected field checks, and V1 homeWorld validation.
 - Public constellation route uses demo data and public-safe copy.
 - Home scene and URAI world components already have a large sacred-tech visual foundation.
+- Canonical route/system tests now include the current `/ochat` route and companion transition contract.
 
 ### Gaps / risks found
 
 - README states V1 is intentionally conservative; final Tier 1-5/platform completion should not be claimed from this repo alone.
 - `TODO_SYSTEMS.md` says final status is blocked until fresh command evidence exists for install, typecheck, lint, tests, build, smoke, release gate, deploy, and post-deploy browser evidence.
 - Some product maturity items remain open: Storybook/state catalog, analytics observability, full keyboard/screen-reader QA evidence, visual regression evidence, replay provenance, and persistent focus/replay hardening.
-- `/home` redirects to `/`, while tests and docs still reference both routes. This may be intentional but should remain watched during browser smoke.
 - TypeScript config is not globally strict, though `strictNullChecks` is enabled. Do not introduce loose typing or broad `any`.
 - Full command verification was not run from this connector context; CI/local checkout must provide fresh evidence.
 
@@ -132,6 +132,32 @@ Changes:
 - Preserved metadata generation, public-safe demo data, memory blooms, star timeline, forecast, reflection, and waitlist CTA.
 - Preserved visible smoke-test text: `Public Constellation`, `Demo data · public-safe view`, `@adamclamp`, `Memory Blooms`, `Star Timeline`, and `Join Early Access`.
 
+### 5. Preserved `/home` as a direct route
+
+File: `next.config.mjs`
+
+Removed the `/home` to `/` redirect so the real `src/app/home/page.tsx` route can render directly for smoke tests and route-level QA. No API, Firebase, data, package script, or launch-gate behavior was changed.
+
+### 6. Repaired canonical type/test exports
+
+Files:
+
+- `src/lib/urai-canon/system.ts`
+- `src/lib/urai-canon/cinematic-controller.ts`
+- `tests/unit/urai-canon/system.test.ts`
+
+Changes:
+
+- Restored canonical system helpers expected by tests and type checks: `canAiReadPrivacyState`, `validateAssetManifestEntry`, and `assertUraiCanonIntegrity`.
+- Restored cinematic controller compatibility exports: `URAI_CINEMATIC_TRANSITIONS`, `resolveUraiCameraFrame`, and `assertUraiCinematicTransitionIntegrity`.
+- Aligned the canonical system test with the current `/ochat` route and `homeToOchat` transition.
+
+### 7. Repaired lightweight rules-emulator parsing
+
+File: `tests/rules/rulesEmulator.js`
+
+Expanded the test-only emulator syntax converter to support Firestore rules syntax already used by `firestore.rules`, including `is int`, `is number`, `is bool`, `in [...]`, and `keys().hasOnly(...)`. Production Firestore rules were not changed.
+
 ## Commands to run for final verification
 
 These must be run in a real checkout or CI environment:
@@ -148,6 +174,7 @@ npm run test:unit
 npm run test:rules
 npm run build
 npm run preflight
+npm run test:smoke
 npm run launch:p0
 npm run urai:tier1
 npm run urai:tier2
@@ -160,14 +187,16 @@ Not run in this connector-only implementation context. No command is claimed as 
 
 ## Prioritized next implementation plan
 
-1. Run fresh validation commands and fix any issues caused by this branch.
-2. Confirm `/home` redirect behavior against Playwright smoke expectations.
-3. Add visual regression screenshots for `/`, `/u/adamclamp`, mobile, and reduced-motion views.
-4. Add a small component/state catalog for sacred card, orb artifact, sealed state, loading state, success state, and error state.
-5. Continue applying the sacred-tech primitives to other launch-safe routes only after smoke stays green.
-6. Add analytics/observability evidence for waitlist, companion, and public constellation interactions.
-7. Keep Tier 1-5/full-platform completion claims blocked until fresh evidence exists.
+1. Run fresh validation commands and fix any failures caused by this branch.
+2. Verify `/` and `/home` both satisfy Playwright smoke expectations after redirect removal.
+3. If `test:rules` fails again, extend the lightweight emulator only for the specific Firestore syntax reported; do not weaken production rules.
+4. If `check:types` fails again, fix the exact exported contract or caller mismatch in the reported file.
+5. Add visual regression screenshots for `/`, `/u/adamclamp`, mobile, and reduced-motion views.
+6. Add a small component/state catalog for sacred card, orb artifact, sealed state, loading state, success state, and error state.
+7. Continue applying the sacred-tech primitives to other launch-safe routes only after smoke stays green.
+8. Add analytics/observability evidence for waitlist, companion, and public constellation interactions.
+9. Keep Tier 1-5/full-platform completion claims blocked until fresh evidence exists.
 
 ## Reviewer notes
 
-This branch intentionally makes small, reviewable changes. It does not alter Firebase rules, API contracts, env files, package scripts, launch gates, routing config, or data schemas. It strengthens the canonical URAI sacred-tech identity on the public demo surfaces without adding assets, dependencies, or broad rewrites.
+This branch intentionally makes small, reviewable changes. It does not alter Firebase production rules, API contracts, env files, package scripts, launch gates, or data schemas. The only routing config change removes a redirect that conflicted with the existing `/home` route smoke-test contract. The branch strengthens the canonical URAI sacred-tech identity on public demo surfaces and repairs validation contracts without adding assets, dependencies, secrets, or broad rewrites.
