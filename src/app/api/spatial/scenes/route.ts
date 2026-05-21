@@ -12,13 +12,13 @@ export async function GET(request: NextRequest) {
   const flag = requireSpatialPrivateBeta();
   if (!flag.enabled) return NextResponse.json({ error: "spatial_feature_flag_disabled", message: flag.reason }, { status: flag.status });
 
-  const context = resolveSpatialRequestContext(request);
+  const context = await resolveSpatialRequestContext(request);
   if (!context) return NextResponse.json(unauthorizedSpatialResponse(), { status: 401 });
 
   return NextResponse.json({
     scenes: [],
     source: "firestore-contract-pending",
-    context: { uid: context.uid, tenantId: context.tenantId, role: context.role },
+    context: { uid: context.uid, tenantId: context.tenantId, role: context.role, source: context.source },
     message: "Firestore-backed scene listing is intentionally blocked until production rules/indexes are verified.",
   });
 }
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   const flag = requireSpatialPrivateBeta();
   if (!flag.enabled) return NextResponse.json({ error: "spatial_feature_flag_disabled", message: flag.reason }, { status: flag.status });
 
-  const context = resolveSpatialRequestContext(request);
+  const context = await resolveSpatialRequestContext(request);
   if (!context) return NextResponse.json(unauthorizedSpatialResponse(), { status: 401 });
 
   const body = await request.json().catch(() => ({}));
