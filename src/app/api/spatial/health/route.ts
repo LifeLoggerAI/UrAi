@@ -23,13 +23,11 @@ export async function GET() {
     blockers: readiness.blocking,
     deferredCapabilities: readiness.deferredCapabilities,
     requiredV1Surfaces: readiness.requiredV1Surfaces,
-    contracts: {
-      collections: SPATIAL_COLLECTIONS,
-      storagePaths: SPATIAL_STORAGE_PATHS,
-    },
+    collections: SPATIAL_COLLECTIONS,
+    storagePaths: SPATIAL_STORAGE_PATHS,
     readiness,
     note: readiness.liveReady
-      ? "URAI Spatial is reporting live readiness because the explicit live mode and required checks are green."
-      : "URAI Spatial remains staged until auth, consent, provider, rules, and pipeline checks pass.",
+      ? "URAI Spatial is reporting live readiness because explicit live mode and all required checks are green."
+      : "URAI Spatial remains staged until auth, consent, provider, rules, device, and pipeline checks pass.",
   });
 }
