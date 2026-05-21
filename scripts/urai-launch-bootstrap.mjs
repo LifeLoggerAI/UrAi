@@ -5,19 +5,41 @@ import path from "node:path";
 
 const root = process.cwd();
 const pkgPath = path.join(root, "package.json");
+const evidenceDir = path.join(root, "artifacts", "launch");
+const evidencePath = path.join(evidenceDir, "product-bootstrap-report.json");
+const startedAt = new Date().toISOString();
 const env = { ...process.env };
 delete env.NPM_CONFIG_PREFIX;
 delete env.npm_config_prefix;
 
-defaultRun();
+const report = {
+  repo: "LifeLoggerAI/UrAi",
+  kind: "product-bootstrap",
+  startedAt,
+  finishedAt: null,
+  status: "running",
+  skipped: [],
+  commands: []
+};
 
-function defaultRun() {
+main();
+
+function main() {
+  fs.mkdirSync(evidenceDir, { recursive: true });
   const problems = [];
   if (!fs.existsSync(pkgPath)) problems.push("No package.json found. This must run from the LifeLoggerAI/UrAi repo root.");
   const pkg = fs.existsSync(pkgPath) ? JSON.parse(fs.readFileSync(pkgPath, "utf8")) : null;
   if (pkg && pkg.name !== "urai") problems.push(`Wrong repo: found package '${pkg.name}'. This bootstrap is for LifeLoggerAI/UrAi.`);
 
+  if (process.env.NPM_CONFIG_PREFIX || process.env.npm_config_prefix) {
+    report.skipped.push("NPM_CONFIG_PREFIX was present and removed for child commands.");
+  }
+
   if (problems.length) {
+    report.status = "failed";
+    report.finishedAt = new Date().toISOString();
+    report.error = problems.join(" ");
+    writeReport();
     console.error("URAI launch bootstrap cannot continue:");
     for (const problem of problems) console.error(`- ${problem}`);
     process.exit(1);
@@ -40,16 +62,42 @@ function defaultRun() {
 
   if (process.env.URAI_SKIP_E2E !== "1") {
     commands.splice(commands.length - 1, 0, ["npm", ["run", "test:smoke"]]);
+  } else {
+    report.skipped.push("Smoke tests skipped because URAI_SKIP_E2E=1.");
   }
 
   for (const [cmd, args] of commands) {
-    console.log(`\n$ ${cmd} ${args.join(" ")}`);
+    const commandText = `${cmd} ${args.join(" ")}`;
+    const commandStartedAt = new Date().toISOString();
+    console.log(`\n$ ${commandText}`);
     const result = spawnSync(cmd, args, { cwd: root, stdio: "inherit", env, shell: process.platform === "win32" });
+    const entry = {
+      command: commandText,
+      startedAt: commandStartedAt,
+      finishedAt: new Date().toISOString(),
+      status: result.status === 0 ? "passed" : "failed",
+      exitCode: result.status ?? 1
+    };
+    report.commands.push(entry);
+    writeReport();
     if (result.status !== 0) {
-      console.error(`\nURAI launch bootstrap failed at: ${cmd} ${args.join(" ")}`);
+      report.status = "failed";
+      report.finishedAt = new Date().toISOString();
+      report.error = `Failed at: ${commandText}`;
+      writeReport();
+      console.error(`\nURAI launch bootstrap failed at: ${commandText}`);
+      console.error(`Evidence written to ${path.relative(root, evidencePath)}`);
       process.exit(result.status ?? 1);
     }
   }
 
+  report.status = "passed";
+  report.finishedAt = new Date().toISOString();
+  writeReport();
   console.log("\nURAI launch bootstrap completed successfully.");
+  console.log(`Evidence written to ${path.relative(root, evidencePath)}`);
+}
+
+function writeReport() {
+  fs.writeFileSync(evidencePath, `${JSON.stringify(report, null, 2)}\n`);
 }
