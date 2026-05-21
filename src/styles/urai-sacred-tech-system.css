@@ -1,0 +1,286 @@
+:root {
+  --urai-void: #01030a;
+  --urai-midnight: #041023;
+  --urai-indigo: #172554;
+  --urai-violet: #4c1d95;
+  --urai-moon: #eaf7ff;
+  --urai-cyan: #7dd3fc;
+  --urai-gold: #f8e7a1;
+  --urai-glass: rgba(7, 16, 39, 0.68);
+  --urai-stone: rgba(4, 9, 21, 0.82);
+  --urai-mist: rgba(190, 232, 255, 0.14);
+  --urai-orb: rgba(125, 211, 252, 0.5);
+  --urai-seal: rgba(248, 231, 161, 0.28);
+}
+
+.urai-sacred-background {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(234, 247, 255, 0.13), transparent 13rem),
+    radial-gradient(ellipse at 50% 34%, rgba(76, 29, 149, 0.2), transparent 38rem),
+    radial-gradient(ellipse at 50% 82%, rgba(125, 211, 252, 0.12), transparent 30rem),
+    linear-gradient(180deg, var(--urai-void), var(--urai-midnight) 48%, #020611 72%, #000 100%);
+  color: white;
+  isolation: isolate;
+}
+
+.urai-sacred-background::before,
+.urai-sacred-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.urai-sacred-background::before {
+  z-index: 0;
+  opacity: 0.58;
+  background-image:
+    radial-gradient(circle at 7% 18%, rgba(234, 247, 255, 0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 18% 43%, rgba(125, 211, 252, 0.54) 0 1px, transparent 2px),
+    radial-gradient(circle at 31% 17%, rgba(234, 247, 255, 0.56) 0 1px, transparent 2px),
+    radial-gradient(circle at 46% 57%, rgba(190, 232, 255, 0.36) 0 1px, transparent 2px),
+    radial-gradient(circle at 58% 28%, rgba(234, 247, 255, 0.62) 0 1px, transparent 2px),
+    radial-gradient(circle at 75% 64%, rgba(125, 211, 252, 0.45) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 20%, rgba(234, 247, 255, 0.52) 0 1px, transparent 2px),
+    radial-gradient(circle at 92% 49%, rgba(190, 232, 255, 0.42) 0 1px, transparent 2px);
+  filter: drop-shadow(0 0 10px rgba(125, 211, 252, 0.32));
+}
+
+.urai-sacred-background::after {
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at 50% 92%, rgba(125, 211, 252, 0.16), transparent 36%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.92), transparent 44%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.44), transparent 36%, rgba(0, 0, 0, 0.54));
+}
+
+.urai-sacred-content {
+  position: relative;
+  z-index: 2;
+}
+
+.urai-star-mist-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 22%, rgba(234, 247, 255, 0.08), transparent 32%),
+    radial-gradient(ellipse at 20% 68%, rgba(76, 29, 149, 0.18), transparent 34%),
+    radial-gradient(ellipse at 78% 72%, rgba(125, 211, 252, 0.12), transparent 30%);
+  filter: blur(0.2px);
+}
+
+.urai-reflective-floor {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  bottom: -10rem;
+  z-index: 1;
+  width: min(1180px, 115vw);
+  height: 28rem;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 0 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(234, 247, 255, 0.18), rgba(125, 211, 252, 0.08) 24%, transparent 55%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.34), rgba(0, 0, 0, 0.96));
+  box-shadow: 0 -42px 110px rgba(125, 211, 252, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.urai-sacred-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(210, 235, 255, 0.16);
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(180deg, rgba(9, 19, 45, 0.72), rgba(2, 6, 23, 0.62)),
+    radial-gradient(circle at 24% 0%, rgba(125, 211, 252, 0.12), transparent 18rem);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.urai-sacred-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 24%, transparent 72%, rgba(125, 211, 252, 0.08)),
+    radial-gradient(circle at 80% 20%, rgba(248, 231, 161, 0.09), transparent 11rem);
+  opacity: 0.72;
+}
+
+.urai-sacred-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.urai-sacred-card:hover {
+  border-color: rgba(234, 247, 255, 0.26);
+  background:
+    linear-gradient(180deg, rgba(12, 27, 62, 0.78), rgba(2, 6, 23, 0.68)),
+    radial-gradient(circle at 24% 0%, rgba(125, 211, 252, 0.15), transparent 18rem);
+}
+
+.urai-sacred-card--gold {
+  border-color: rgba(248, 231, 161, 0.22);
+}
+
+.urai-sacred-card--violet {
+  border-color: rgba(196, 181, 253, 0.22);
+}
+
+.urai-orb-artifact {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--orb-size, 3.75rem);
+  height: var(--orb-size, 3.75rem);
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 24%, #ffffff 0 9%, rgba(234, 247, 255, 0.94) 16%, rgba(125, 211, 252, 0.64) 38%, rgba(30, 64, 175, 0.16) 72%, transparent 100%);
+  box-shadow:
+    inset -16px -18px 28px rgba(1, 5, 14, 0.58),
+    inset 9px 8px 18px rgba(255, 255, 255, 0.25),
+    0 0 28px rgba(234, 247, 255, 0.4),
+    0 0 74px rgba(125, 211, 252, 0.26);
+}
+
+.urai-orb-artifact::before,
+.urai-orb-artifact::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.urai-orb-artifact::before {
+  inset: -26%;
+  border: 1px solid rgba(234, 247, 255, 0.16);
+  transform: rotate(-14deg) scaleX(1.1) scaleY(0.82);
+}
+
+.urai-orb-artifact::after {
+  left: 22%;
+  top: 16%;
+  width: 34%;
+  height: 24%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.12), transparent 70%);
+  filter: blur(1px);
+}
+
+.urai-orb-artifact--gold {
+  background: radial-gradient(circle at 32% 24%, #ffffff 0 9%, rgba(255, 250, 220, 0.94) 16%, rgba(248, 231, 161, 0.62) 38%, rgba(146, 64, 14, 0.16) 72%, transparent 100%);
+  box-shadow: inset -16px -18px 28px rgba(1, 5, 14, 0.58), 0 0 60px rgba(248, 231, 161, 0.25);
+}
+
+.urai-orb-artifact--violet {
+  background: radial-gradient(circle at 32% 24%, #ffffff 0 9%, rgba(245, 243, 255, 0.94) 16%, rgba(196, 181, 253, 0.62) 38%, rgba(88, 28, 135, 0.18) 72%, transparent 100%);
+  box-shadow: inset -16px -18px 28px rgba(1, 5, 14, 0.58), 0 0 60px rgba(196, 181, 253, 0.24);
+}
+
+.urai-cosmic-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(234, 247, 255, 0.32), rgba(125, 211, 252, 0.18), transparent);
+}
+
+.urai-chip {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 247, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.35rem 0.75rem;
+  color: rgba(234, 247, 255, 0.72);
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.urai-premium-cta {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 247, 255, 0.18);
+  background:
+    radial-gradient(circle at 35% 10%, rgba(255, 255, 255, 0.34), transparent 42%),
+    linear-gradient(180deg, rgba(234, 247, 255, 0.18), rgba(125, 211, 252, 0.08));
+  padding: 0.65rem 1rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.urai-premium-cta:hover {
+  transform: translateY(-1px);
+  border-color: rgba(234, 247, 255, 0.34);
+}
+
+.urai-premium-cta:focus-visible,
+.urai-sacred-card button:focus-visible,
+.urai-field-input:focus-visible {
+  outline: 2px solid rgba(234, 247, 255, 0.75);
+  outline-offset: 3px;
+}
+
+.urai-field-input {
+  border: 1px solid rgba(234, 247, 255, 0.13);
+  background: rgba(1, 6, 18, 0.62);
+  color: white;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.urai-field-input::placeholder {
+  color: rgba(234, 247, 255, 0.38);
+}
+
+.urai-loading-signal {
+  color: rgba(234, 247, 255, 0.65);
+}
+
+.urai-success-signal {
+  color: rgba(187, 247, 208, 0.92);
+}
+
+.urai-error-signal {
+  color: rgba(254, 202, 202, 0.92);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .urai-star-mist-layer {
+    animation: uraiMistDrift 22s ease-in-out infinite alternate;
+  }
+
+  .urai-orb-artifact {
+    animation: uraiArtifactPulse 6.8s ease-in-out infinite;
+  }
+}
+
+@keyframes uraiMistDrift {
+  from {
+    transform: translate3d(-1.5vw, 0, 0) scale(1);
+    opacity: 0.78;
+  }
+  to {
+    transform: translate3d(1.5vw, -1vh, 0) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes uraiArtifactPulse {
+  0%, 100% {
+    transform: translateY(0) scale(0.98);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+  }
+}
