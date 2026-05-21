@@ -45,6 +45,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check deployment evidence template
+        run: npm run deploy:evidence
+
       - name: Run independent release verifier
         env:
           URAI_VERIFIER_RUN_COMMANDS: ${{ github.event.inputs.run_commands == 'true' && '1' || '0' }}
