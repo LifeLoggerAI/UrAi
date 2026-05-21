@@ -10,7 +10,7 @@ export default function ForecastCard({ forecast }: { forecast: MoodForecast }) {
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-sky-100/65">Mood Forecast</p>
           <h2 className="mt-2 text-2xl font-semibold capitalize tracking-tight">{forecast.rhythmState}</h2>
         </div>
-        <span className="urai-orb-artifact" style={{ "--orb-size": "3.1rem" } as React.CSSProperties} aria-hidden="true" />
+        <span className="urai-orb-artifact urai-orb-artifact--small" aria-hidden="true" />
       </div>
       <div className="mt-4 flex items-center justify-between gap-3 rounded-full border border-emerald-200/15 bg-emerald-300/10 px-3 py-2">
         <span className="text-xs uppercase tracking-[0.24em] text-emerald-100/60">Pattern confidence</span>
