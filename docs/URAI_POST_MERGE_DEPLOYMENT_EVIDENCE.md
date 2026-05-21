@@ -31,8 +31,8 @@ This document captures deployment evidence after a `main` release. Do not mark t
 - Required secret checked: `FIREBASE_SERVICE_ACCOUNT_URAI` - not verifiable from this context
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
-- Deployed URL: blocked - no deployed production URL attached
-- Notes: Closure requires a passing Firebase Hosting live run URL and deployed production URL. A public search for the likely Firebase Hosting domains did not return an indexed deployed URL in this verification context, so production browser smoke cannot be completed without a confirmed deployed URL or workflow artifact.
+- Deployed URL: partial evidence found for `https://www.urai.app/`; closure still blocked without deploy workflow run URL and full smoke evidence.
+- Notes: Internal deployment docs identify `https://www.urai.app` as the production URL and Firebase Hosting site `urai-4dc1d`. A web fetch on 2026-05-21 returned a live URAI Spatial home shell at `https://www.urai.app/` with visible text including `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, and `Home → LifeMap → Focus → Replay`. Subroute verification remained blocked in this context: the web tool could not safely open `/home`, `/u/adamclamp`, or the Firebase default hosting URL, and a container-level DNS check failed with temporary name resolution errors.
 
 ## Production smoke checklist
 
@@ -40,15 +40,15 @@ Record the exact deployed URL and browser used for each check.
 
 | Check | URL | Browser/device | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| Home loads | `/` | Desktop | blocked | No deployed production URL/run evidence attached. |
-| Home loads | `/` | Mobile | blocked | No deployed production URL/run evidence attached. |
-| Home reduced motion | `/` | Desktop reduced motion | blocked | No deployed production URL/run evidence attached. |
-| `/home` redirects to `/` | `/home` | Desktop | blocked | No deployed production URL/run evidence attached. |
-| Public constellation loads | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
-| Public constellation loads | `/u/adamclamp` | Mobile | blocked | No deployed production URL/run evidence attached. |
-| Waitlist form validates empty email | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
-| Waitlist form submits configured email | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
-| Companion fallback responds safely | `/api/companion` or UI path | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Home loads | `https://www.urai.app/` | Web fetch | partial pass | 2026-05-21 web fetch returned URAI Spatial home shell text: `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, `Home → LifeMap → Focus → Replay`. Closure still blocked without workflow run evidence and browser screenshot. |
+| Home loads | `/` | Mobile | blocked | No mobile browser evidence attached. |
+| Home reduced motion | `/` | Desktop reduced motion | blocked | No reduced-motion browser evidence attached. |
+| `/home` redirects to `/` | `/home` | Desktop | blocked | Web tool could not safely open this subroute in the current context; no production redirect proof attached. |
+| Public constellation loads | `/u/adamclamp` | Desktop | blocked | Web tool could not fetch this subroute in the current context; no production browser proof attached. |
+| Public constellation loads | `/u/adamclamp` | Mobile | blocked | No mobile browser evidence attached. |
+| Waitlist form validates empty email | `/u/adamclamp` | Desktop | blocked | No production browser proof attached. |
+| Waitlist form submits configured email | `/u/adamclamp` | Desktop | blocked | No production browser proof attached. |
+| Companion fallback responds safely | `/api/companion` or UI path | Desktop | blocked | No production API/UI proof attached. |
 
 ## Data and safety checks
 
@@ -73,9 +73,9 @@ Record the exact deployed URL and browser used for each check.
 - Missing passing Firebase Hosting live run URL.
 - Missing confirmation that `FIREBASE_TOKEN` is configured for the workflow requiring it.
 - Missing confirmation that `FIREBASE_SERVICE_ACCOUNT_URAI` is configured for the live hosting workflow.
-- Missing deployed production URL.
-- Missing production smoke evidence for `/`, `/home -> /`, `/u/adamclamp`, waitlist validation/submission, and companion fallback.
-- Missing desktop, mobile, and reduced-motion evidence.
+- Missing closure-grade deployed production URL evidence tied to a workflow run.
+- Missing production smoke evidence for `/home -> /`, `/u/adamclamp`, waitlist validation/submission, and companion fallback.
+- Missing desktop screenshot, mobile evidence, and reduced-motion evidence.
 - Missing data/safety verification.
 - Missing release owner approval.
 - Missing approved rollback SHA and rollback command.
