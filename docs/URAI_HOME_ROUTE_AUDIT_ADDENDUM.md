@@ -1,35 +1,34 @@
 # URAI Home Route Audit Addendum
 
-Branch: `urai-spatial-sacred-tech-polish`
+Status: merged post-PR #299 clarification
+Merge commit: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
 
 ## Finding
 
-The repo contains a real `src/app/home/page.tsx` route that renders the HomeWorld surface. Existing Playwright smoke coverage visits `/home` and expects `main[aria-label="URAI Home World"]` plus HomeWorld data attributes and controls.
+The repo has two HomeWorld requirements that must stay aligned:
 
-Before this branch, `next.config.mjs` redirected `/home` to `/`, which prevented `/home` from being independently inspected as a route-level HomeWorld contract.
+1. Production navigation treats `/` as the canonical home shell.
+2. Smoke checks need stable HomeWorld DOM hooks, labels, text, and data attributes.
 
-## Change made
+During PR #299, `/home` was briefly made direct to expose route-level hooks, but full production E2E expects `/home` to redirect to `/`. The final merged state restores `/home -> /` and keeps the runtime HomeWorld smoke contract available through the canonical root shell.
 
-Removed the `/home` to `/` redirect from `next.config.mjs`.
+## Final merged state
 
-## Why this is safe
+- `next.config.mjs` redirects `/home` to `/` with `permanent: false`.
+- `src/app/home/page.tsx` still renders `UraiResolvedHomeScene` and `HomeWorldSmokeContract` for static route-contract checks.
+- The canonical runtime entry remains `/`.
+- HomeWorld accessibility and smoke hooks remain covered without making `/home` the production canonical route.
 
-- No package scripts were removed.
-- No Firebase rules, data contracts, API routes, env handling, or launch gates were changed.
-- `/` still renders through the existing app route implementation.
-- `/home` can now render its actual route for smoke tests, QA, and direct route auditing.
+## Verified in PR #299
 
-## Required verification
+The final PR head `58f6ccaee55cb9246de5ecddd9dd985207fb05c1` passed:
 
-Run in CI or a local checkout:
-
-```bash
-npm run check:v1
-npm run check:types
-npm run lint
-npm run test:unit
-npm run build
-npm run test:smoke
-```
-
-No command is claimed as passed until it is actually run in a checkout or CI environment.
+- CI
+- UrAi CI/CD
+- Playwright Smoke
+- URAI Launch Gate
+- URAI Vault CI
+- Assets CI
+- QA - Lighthouse and A11y
+- QA - Local Script
+- Independent Release Verifier
