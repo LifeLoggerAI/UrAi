@@ -1,8 +1,16 @@
+import type { UraiSystemOwnerId } from '@/lib/urai-canon/source-of-truth';
+
 export type UraiLifecycleState = 'active' | 'archived' | 'deleted' | 'locked';
 export type UraiVisibilityState = 'visible' | 'hidden' | 'shielded' | 'vaulted';
 export type UraiPrivacyState = 'public_to_user' | 'private' | 'sensitive' | 'vaulted' | 'shared' | 'archived' | 'deleted';
 export type UraiAiAccessState = 'allowed' | 'permissioned' | 'denied';
 export type UraiConfidence = 'low' | 'medium' | 'high';
+
+export const URAI_STATE_HIERARCHY = {
+  lifecycleState: 'canonical record lifecycle and availability owner',
+  privacyState: 'access policy owner constrained by lifecycleState',
+  rule: 'deleted lifecycle overrides every privacy permission; archived lifecycle may only expose explicitly permissioned archive views',
+} as const;
 
 export type UraiCanonicalObjectType =
   | 'LifeMapNode'
@@ -169,7 +177,15 @@ export interface UraiAssetManifestEntry {
   performanceClass: 'low' | 'medium' | 'high' | 'cinematic';
 }
 
-export const URAI_SOURCE_OF_TRUTH_RULES = {
+export const URAI_SOURCE_OF_TRUTH_RULES: {
+  routeStateOwner: UraiSystemOwnerId;
+  selectedSpatialEntityOwner: UraiSystemOwnerId;
+  cameraStateOwner: UraiSystemOwnerId;
+  transitionOwner: UraiSystemOwnerId;
+  dataNormalizationOwner: UraiSystemOwnerId;
+  visibilityOwner: UraiSystemOwnerId;
+  aiOwnsSuggestionsOnly: true;
+} = {
   routeStateOwner: 'route-state-machine',
   selectedSpatialEntityOwner: 'life-map-state-machine',
   cameraStateOwner: 'camera-controller',
@@ -177,4 +193,4 @@ export const URAI_SOURCE_OF_TRUTH_RULES = {
   dataNormalizationOwner: 'data-adapter',
   visibilityOwner: 'permission-layer',
   aiOwnsSuggestionsOnly: true,
-} as const;
+};
