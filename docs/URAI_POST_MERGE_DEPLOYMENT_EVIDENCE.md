@@ -32,7 +32,7 @@ This document captures deployment evidence after a `main` release. Do not mark t
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
 - Deployed URL: blocked - no deployed production URL attached
-- Notes: Closure requires a passing Firebase Hosting live run URL and deployed production URL.
+- Notes: Closure requires a passing Firebase Hosting live run URL and deployed production URL. A public search for the likely Firebase Hosting domains did not return an indexed deployed URL in this verification context, so production browser smoke cannot be completed without a confirmed deployed URL or workflow artifact.
 
 ## Production smoke checklist
 
@@ -64,7 +64,7 @@ Record the exact deployed URL and browser used for each check.
 - Release owner: blocked - not recorded
 - Verification date: blocked - production evidence incomplete as of 2026-05-21
 - Approved for production traffic: no
-- Rollback SHA: blocked - no production deploy/rollback record attached
+- Rollback SHA: candidate pre-PR base SHA is `6320abca8952a4b24d7504988c2ca4e7d8be791e`; final rollback SHA must be approved by the release owner before production traffic is declared complete.
 - Follow-up issues: #300 remains open until deployment evidence is attached
 
 ## Known blockers
@@ -78,7 +78,7 @@ Record the exact deployed URL and browser used for each check.
 - Missing desktop, mobile, and reduced-motion evidence.
 - Missing data/safety verification.
 - Missing release owner approval.
-- Missing rollback SHA and rollback command.
+- Missing approved rollback SHA and rollback command.
 
 ## Closure rule
 
