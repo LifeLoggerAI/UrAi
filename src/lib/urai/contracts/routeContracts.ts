@@ -1,3 +1,5 @@
+import { URAI_CINEMATIC_TRANSITIONS } from '@/lib/urai-canon/cinematic-controller';
+
 export type UraiRouteId = 'home' | 'life-map' | 'life-map-star' | 'focus' | 'focus-session' | 'replay' | 'replay-detail' | 'ochat';
 
 export type UraiRouteMode =
@@ -62,7 +64,7 @@ export const URAI_DIRECT_ROUTE_CONTRACTS: UraiDirectRouteContract[] = [
   },
   {
     route: 'life-map-star',
-    pathPattern: '/life-map/star/:starId',
+    pathPattern: '/life-map/star/[starId]',
     directLoad: true,
     refreshSafe: true,
     loadingState: true,
@@ -90,7 +92,7 @@ export const URAI_DIRECT_ROUTE_CONTRACTS: UraiDirectRouteContract[] = [
   },
   {
     route: 'focus-session',
-    pathPattern: '/focus/session/:sessionId',
+    pathPattern: '/focus/session/[sessionId]',
     directLoad: true,
     refreshSafe: true,
     loadingState: true,
@@ -118,7 +120,7 @@ export const URAI_DIRECT_ROUTE_CONTRACTS: UraiDirectRouteContract[] = [
   },
   {
     route: 'replay-detail',
-    pathPattern: '/replay/:replayId',
+    pathPattern: '/replay/[replayId]',
     directLoad: true,
     refreshSafe: true,
     loadingState: true,
@@ -130,10 +132,26 @@ export const URAI_DIRECT_ROUTE_CONTRACTS: UraiDirectRouteContract[] = [
     deletedBehavior: 'show removed replay notice',
     archivedBehavior: 'open only if user has permission',
   },
+  {
+    route: 'ochat',
+    pathPattern: '/ochat',
+    directLoad: true,
+    refreshSafe: true,
+    loadingState: true,
+    errorState: true,
+    emptyState: true,
+    returnHome: true,
+    invalidIdBehavior: 'show orb chat fallback with visible notice',
+    lockedBehavior: 'show locked chat state',
+    deletedBehavior: 'not applicable',
+    archivedBehavior: 'not applicable',
+  },
 ];
 
+export type UraiTransitionId = keyof typeof URAI_CINEMATIC_TRANSITIONS | 'homeToOchat' | 'ochatToHome';
+
 export interface UraiTransitionContract {
-  id: 'home-to-life-map' | 'life-map-to-focus' | 'focus-to-replay' | 'replay-to-focus' | 'focus-to-life-map' | 'life-map-to-home';
+  id: UraiTransitionId;
   from: UraiRouteMode;
   to: UraiRouteMode;
   inputLockedMs: number;
@@ -143,10 +161,12 @@ export interface UraiTransitionContract {
 }
 
 export const URAI_TRANSITION_CONTRACTS: UraiTransitionContract[] = [
-  { id: 'home-to-life-map', from: 'home', to: 'life-map', inputLockedMs: 1200, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'cancel before route commit, otherwise unwind to home', mobileBackBehavior: 'unwind to home' },
-  { id: 'life-map-to-focus', from: 'life-map', to: 'focus', inputLockedMs: 900, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to life-map', mobileBackBehavior: 'return to life-map' },
-  { id: 'focus-to-replay', from: 'focus', to: 'replay', inputLockedMs: 800, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to focus', mobileBackBehavior: 'return to focus' },
-  { id: 'replay-to-focus', from: 'replay', to: 'focus', inputLockedMs: 650, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle focus before accepting next escape', mobileBackBehavior: 'settle focus before accepting next back' },
-  { id: 'focus-to-life-map', from: 'focus', to: 'life-map', inputLockedMs: 850, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle life-map before accepting next escape', mobileBackBehavior: 'settle life-map before accepting next back' },
-  { id: 'life-map-to-home', from: 'life-map', to: 'home', inputLockedMs: 1000, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'continue home unwind', mobileBackBehavior: 'continue home unwind' },
+  { id: 'homeToLifeMap', from: 'home', to: 'life-map', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.homeToLifeMap.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'cancel before route commit, otherwise unwind to home', mobileBackBehavior: 'unwind to home' },
+  { id: 'lifeMapStarToFocus', from: 'life-map', to: 'focus', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.lifeMapStarToFocus.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to life-map', mobileBackBehavior: 'return to life-map' },
+  { id: 'focusToReplay', from: 'focus', to: 'replay', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.focusToReplay.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to focus', mobileBackBehavior: 'return to focus' },
+  { id: 'replayToFocusEsc', from: 'replay', to: 'focus', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.replayToFocusEsc.inputUnlockAtMs, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle focus before accepting next escape', mobileBackBehavior: 'settle focus before accepting next back' },
+  { id: 'focusToLifeMapEsc', from: 'focus', to: 'life-map', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.focusToLifeMapEsc.inputUnlockAtMs, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle life-map before accepting next escape', mobileBackBehavior: 'settle life-map before accepting next back' },
+  { id: 'lifeMapToHome', from: 'life-map', to: 'home', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.lifeMapToHome.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'continue home unwind', mobileBackBehavior: 'continue home unwind' },
+  { id: 'homeToOchat', from: 'home', to: 'ochat', inputLockedMs: 900, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to home', mobileBackBehavior: 'return to home' },
+  { id: 'ochatToHome', from: 'ochat', to: 'home', inputLockedMs: 650, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle home before accepting next escape', mobileBackBehavior: 'settle home before accepting next back' },
 ];
