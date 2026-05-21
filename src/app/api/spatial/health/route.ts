@@ -10,17 +10,26 @@ export async function GET() {
   return NextResponse.json({
     service: "urai-spatial",
     status: readiness.status,
+    mode: readiness.mode,
+    liveReady: readiness.liveReady,
+    publicDemoReady: readiness.publicDemoReady,
+    privateBetaReady: readiness.privateBetaReady,
     generatedAt,
     flags: {
       demo: isSpatialDemoEnabled(),
       privateBeta: isSpatialPrivateBetaEnabled(),
       xrRuntime: isSpatialXrEnabled(),
     },
+    blockers: readiness.blocking,
+    deferredCapabilities: readiness.deferredCapabilities,
+    requiredV1Surfaces: readiness.requiredV1Surfaces,
     contracts: {
       collections: SPATIAL_COLLECTIONS,
       storagePaths: SPATIAL_STORAGE_PATHS,
     },
     readiness,
-    note: "URAI Spatial remains staging-scaffolded until authenticated production smoke, consent, asset pipeline, and worker checks pass.",
+    note: readiness.liveReady
+      ? "URAI Spatial is reporting live readiness because the explicit live mode and required checks are green."
+      : "URAI Spatial remains staged until auth, consent, provider, rules, and pipeline checks pass.",
   });
 }
