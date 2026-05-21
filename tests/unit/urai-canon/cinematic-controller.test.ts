@@ -4,16 +4,20 @@ import {
   resolveUraiCameraFrame,
 } from "@/lib/urai-canon/cinematic-controller";
 
+const expectedTransitionIds = [
+  "homeToLifeMap",
+  "lifeMapStarToFocus",
+  "focusToReplay",
+  "replayToFocusEsc",
+  "focusToLifeMapEsc",
+  "lifeMapToHome",
+  "homeToOchat",
+  "ochatToHome",
+];
+
 describe("URAI cinematic transition controller", () => {
   it("locks all canonical spatial transitions with sane timing", () => {
-    expect(Object.keys(URAI_CINEMATIC_TRANSITIONS)).toEqual([
-      "homeToLifeMap",
-      "lifeMapStarToFocus",
-      "focusToReplay",
-      "replayToFocusEsc",
-      "focusToLifeMapEsc",
-      "lifeMapToHome",
-    ]);
+    expect(Object.keys(URAI_CINEMATIC_TRANSITIONS)).toEqual(expectedTransitionIds);
     expect(assertUraiCinematicTransitionIntegrity()).toEqual([]);
   });
 
