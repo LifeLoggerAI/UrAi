@@ -7,6 +7,7 @@ const root = process.cwd();
 const pkgPath = path.join(root, "package.json");
 const evidenceDir = path.join(root, "artifacts", "launch");
 const evidencePath = path.join(evidenceDir, "product-bootstrap-report.json");
+const summaryPath = path.join(evidenceDir, "product-bootstrap-summary.md");
 const startedAt = new Date().toISOString();
 const env = { ...process.env };
 delete env.NPM_CONFIG_PREFIX;
@@ -44,7 +45,7 @@ function main() {
     report.finishedAt = new Date().toISOString();
     report.error = problems.join(" ");
     finalizeScore();
-    writeReport();
+    writeEvidence();
     console.error("URAI launch bootstrap cannot continue:");
     for (const problem of problems) console.error(`- ${problem}`);
     process.exit(1);
@@ -92,15 +93,16 @@ function main() {
     };
     report.commands.push(entry);
     finalizeScore();
-    writeReport();
+    writeEvidence();
     if (result.status !== 0) {
       report.status = "failed";
       report.finishedAt = new Date().toISOString();
       report.error = `Failed at: ${commandText}`;
       finalizeScore();
-      writeReport();
+      writeEvidence();
       console.error(`\nURAI launch bootstrap failed at: ${commandText}`);
       console.error(`Evidence written to ${path.relative(root, evidencePath)}`);
+      console.error(`Summary written to ${path.relative(root, summaryPath)}`);
       process.exit(result.status ?? 1);
     }
   }
@@ -108,10 +110,11 @@ function main() {
   report.status = "passed";
   report.finishedAt = new Date().toISOString();
   finalizeScore();
-  writeReport();
+  writeEvidence();
   console.log("\nURAI launch bootstrap completed successfully.");
   console.log(`Launch score: ${report.launchScore}/100`);
   console.log(`Evidence written to ${path.relative(root, evidencePath)}`);
+  console.log(`Summary written to ${path.relative(root, summaryPath)}`);
 }
 
 function finalizeScore() {
@@ -122,6 +125,38 @@ function finalizeScore() {
   report.launchScore = Math.round((report.passedCount / totalExpected) * 100);
 }
 
-function writeReport() {
+function writeEvidence() {
   fs.writeFileSync(evidencePath, `${JSON.stringify(report, null, 2)}\n`);
+  writeSummary();
+}
+
+function writeSummary() {
+  const lines = [
+    "# URAI Product Launch Evidence Summary",
+    "",
+    `- Repository: ${report.repo}`,
+    `- Kind: ${report.kind}`,
+    `- Status: ${report.status}`,
+    `- Launch score: ${report.launchScore}/100`,
+    `- Started: ${report.startedAt}`,
+    `- Finished: ${report.finishedAt ?? "not finished"}`,
+    `- Passed commands: ${report.passedCount}`,
+    `- Failed commands: ${report.failedCount}`,
+    `- Total commands: ${report.commandCount}`,
+    ""
+  ];
+
+  if (report.error) lines.push("## Failure", "", report.error, "");
+  if (report.skipped.length) {
+    lines.push("## Skipped / Adjusted", "");
+    for (const skipped of report.skipped) lines.push(`- ${skipped}`);
+    lines.push("");
+  }
+
+  lines.push("## Command Results", "", "| Status | Exit | Command |", "| --- | ---: | --- |");
+  for (const command of report.commands) {
+    lines.push(`| ${command.status} | ${command.exitCode} | \`${command.command}\` |`);
+  }
+  lines.push("");
+  fs.writeFileSync(summaryPath, `${lines.join("\n")}\n`);
 }
