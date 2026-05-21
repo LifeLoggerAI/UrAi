@@ -1,33 +1,50 @@
 import { NextRequest } from "next/server";
 
+import { getAdminAuth } from "@/lib/firebase-admin";
+
 export type SpatialRequestContext = {
   uid: string;
   tenantId: string;
   role: "user" | "admin";
-  source: "headers";
+  source: "firebase-id-token";
 };
 
-export function resolveSpatialRequestContext(request: NextRequest): SpatialRequestContext | null {
-  const uid = request.headers.get("x-urai-uid") || request.headers.get("x-user-id");
-  const tenantId = request.headers.get("x-urai-tenant-id") || request.headers.get("x-tenant-id");
-  const roleHeader = request.headers.get("x-urai-role") || request.headers.get("x-user-role") || "user";
-  const role = roleHeader === "admin" ? "admin" : "user";
+function bearerToken(request: NextRequest): string | null {
+  const authorization = request.headers.get("authorization") ?? "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  return match?.[1]?.trim() || null;
+}
 
-  if (!uid || !tenantId) return null;
+function claimString(value: unknown, fallback: string): string {
+  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+}
 
-  return {
-    uid,
-    tenantId,
-    role,
-    source: "headers",
-  };
+export async function resolveSpatialRequestContext(request: NextRequest): Promise<SpatialRequestContext | null> {
+  const auth = getAdminAuth();
+  const token = bearerToken(request);
+  if (!auth || !token) return null;
+
+  try {
+    const decoded = await auth.verifyIdToken(token, true);
+    const tenantId = claimString(decoded.tenantId ?? decoded.tenant_id, "default");
+    const role = decoded.admin === true || decoded.founder === true ? "admin" : "user";
+
+    return {
+      uid: decoded.uid,
+      tenantId,
+      role,
+      source: "firebase-id-token",
+    };
+  } catch {
+    return null;
+  }
 }
 
 export function unauthorizedSpatialResponse() {
   return {
     error: "spatial_auth_required",
-    message: "URAI Spatial production routes require an authenticated user and tenant context.",
-    requiredHeaders: ["x-urai-uid", "x-urai-tenant-id"],
+    message: "URAI Spatial private-beta routes require a verified Firebase ID token in the Authorization header.",
+    requiredAuth: "Authorization: Bearer <firebase-id-token>",
   };
 }
 
