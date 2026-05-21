@@ -7,6 +7,7 @@ export type SpatialSceneStatus =
   | "rolled_back";
 
 export type SpatialRendererMode = "spatial-scene-v1";
+export type SpatialLaunchMode = "public-demo" | "private-beta" | "production-live";
 
 export type SpatialConsentProfile = {
   id: string;
@@ -55,6 +56,15 @@ export const SPATIAL_COLLECTIONS = [
   "users/{uid}/dreamPlanetariumScenes/{sceneId}",
   "users/{uid}/spatialConsentZones/{zoneId}",
   "users/{uid}/spatialAssetLinks/{assetId}",
+  "timelineEvents/{id}",
+  "memoryBlooms/{id}",
+  "moodForecasts/{id}",
+  "companionMessages/{id}",
+  "narratorInsights/{id}",
+  "rituals/{id}",
+  "relationshipSignals/{id}",
+  "passiveSignals/{id}",
+  "symbolicStates/{id}",
   "auditLogs/{eventId}",
   "assetLifecycleEvents/{eventId}",
 ] as const;
@@ -71,13 +81,54 @@ export const SPATIAL_STORAGE_PATHS = [
   "users/{uid}/spatial/scenes/{sceneId}/manifest.json",
 ] as const;
 
+export const SPATIAL_V1_REQUIRED_SURFACES = [
+  "ground-layer",
+  "orb",
+  "sky",
+  "portal",
+  "companion-chat",
+  "memory-spatial-preview",
+  "reduced-motion-fallback",
+  "mobile-safe-layout",
+  "privacy-first-boundaries",
+] as const;
+
+export const SPATIAL_DEFERRED_CAPABILITIES = [
+  "live-xr-runtime",
+  "room-capture",
+  "live-sensitive-sensing",
+  "wearable-provider",
+  "asset-generation-export",
+  "data-marketplace",
+  "enterprise-admin",
+  "clinical-care-claims",
+] as const;
+
+function firebaseAdminConfigured() {
+  return Boolean(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY);
+}
+
 export const SPATIAL_DEFINITION_OF_DONE: SpatialReadinessCheck[] = [
   {
     id: "canonical-repo",
     label: "Canonical production repo",
     ok: true,
     requiredForLive: true,
-    message: "URAI Spatial is being integrated through LifeLoggerAI/UrAi, not UrAi-Dev.",
+    message: "URAI Spatial is integrated through LifeLoggerAI/UrAi for the main app launch surface.",
+  },
+  {
+    id: "public-demo-boundary",
+    label: "Public demo boundary",
+    ok: process.env.NEXT_PUBLIC_SPATIAL_DEMO_DISABLED !== "true",
+    requiredForLive: false,
+    message: "The public demo shell can remain available with fallback copy and staged capabilities.",
+  },
+  {
+    id: "firebase-admin-auth",
+    label: "Firebase Admin auth",
+    ok: firebaseAdminConfigured(),
+    requiredForLive: true,
+    message: "Firebase Admin credentials are required before private Spatial APIs can verify ID tokens in production.",
   },
   {
     id: "private-beta-flag",
@@ -109,12 +160,26 @@ export const SPATIAL_DEFINITION_OF_DONE: SpatialReadinessCheck[] = [
   },
 ];
 
+export function resolveSpatialLaunchMode(): SpatialLaunchMode {
+  if (process.env.NEXT_PUBLIC_SPATIAL_PRODUCTION_LIVE === "true") return "production-live";
+  if (process.env.NEXT_PUBLIC_SPATIAL_PRIVATE_BETA === "true") return "private-beta";
+  return "public-demo";
+}
+
 export function resolveSpatialReadiness() {
+  const mode = resolveSpatialLaunchMode();
   const blocking = SPATIAL_DEFINITION_OF_DONE.filter((check) => check.requiredForLive && !check.ok);
+  const liveReady = blocking.length === 0 && mode === "production-live";
 
   return {
-    status: blocking.length ? "staging-scaffolded" : "production-ready-candidate",
+    mode,
+    status: liveReady ? "production-live-ready" : mode === "private-beta" ? "private-beta-staged" : "public-demo-staged",
+    liveReady,
+    publicDemoReady: mode === "public-demo" || mode === "private-beta" || liveReady,
+    privateBetaReady: mode === "private-beta" && firebaseAdminConfigured(),
     blocking,
     checks: SPATIAL_DEFINITION_OF_DONE,
+    requiredV1Surfaces: SPATIAL_V1_REQUIRED_SURFACES,
+    deferredCapabilities: SPATIAL_DEFERRED_CAPABILITIES,
   } as const;
 }
