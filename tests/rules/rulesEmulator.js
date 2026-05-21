@@ -15,15 +15,29 @@ function normalizeAuth(auth) {
 }
 
 function convertRulesSyntax(source) {
-  return source.replace(/([A-Za-z0-9_.()]+)\s+is string/g, 'typeof ($1) === "string"');
+  return source
+    .replace(/([A-Za-z0-9_.()]+)\.keys\(\)\.hasOnly\((\[[^\]]*\])\)/g, 'hasOnlyKeys($1, $2)')
+    .replace(/([A-Za-z0-9_.()]+)\s+is string/g, 'typeof ($1) === "string"')
+    .replace(/([A-Za-z0-9_.()]+)\s+is int/g, 'Number.isInteger($1)')
+    .replace(/([A-Za-z0-9_.()]+)\s+is number/g, 'typeof ($1) === "number"')
+    .replace(/([A-Za-z0-9_.()]+)\s+is bool/g, 'typeof ($1) === "boolean"')
+    .replace(/([A-Za-z0-9_.()]+)\s+in\s+(\[[^\]]*\])/g, '($2).includes($1)');
 }
+
+const RULES_HELPERS = `
+function hasOnlyKeys(value, allowed) {
+  if (!value || typeof value !== 'object') return false;
+  const keys = Object.keys(value);
+  return keys.every((key) => allowed.includes(key));
+}
+`;
 
 function extractFunctionsBlock(rules) {
   const start = rules.indexOf('function isSignedIn');
   const firstMatch = rules.indexOf('\n    match /', start);
   const end = firstMatch;
   if (start === -1 || end === -1 || end <= start) throw new Error('Unable to locate reusable functions in firestore.rules');
-  return convertRulesSyntax(rules.slice(start, end));
+  return `${RULES_HELPERS}\n${convertRulesSyntax(rules.slice(start, end))}`;
 }
 
 function extractBlockBody(rules, openBraceIndex) {
@@ -64,7 +78,7 @@ function compileExpression(functionsCode, expression) {
   const cleaned = convertRulesSyntax(expression.trim());
   const script = new vm.Script(`${functionsCode}\n(${cleaned});`);
   return ({ request, resource, matchVariables = {} }) => {
-    const context = vm.createContext({ request, resource, ...matchVariables });
+    const context = vm.createContext({ request, resource, ...matchVariables, Number, Object });
     return script.runInContext(context);
   };
 }
@@ -155,6 +169,12 @@ class DocumentReference {
     const nextData = { ...existing, ...partial };
     await this._assertAllowed('update', existing, nextData);
     this.env.store.set(this._docKey(), JSON.parse(JSON.stringify(nextData)));
+    return null;
+  }
+  async delete() {
+    const existing = this._currentData();
+    await this._assertAllowed('delete', existing, existing);
+    this.env.store.delete(this._docKey());
     return null;
   }
   async get() {
