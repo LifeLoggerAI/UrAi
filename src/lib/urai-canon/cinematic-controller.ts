@@ -160,6 +160,7 @@ export function getTransitionCameraFrame(
   const progress = easeOutCubic(elapsedMs / duration);
   const startPreset: UraiCameraPreset = URAI_CAMERA_PRESETS[transition.startPreset];
   const endPreset: UraiCameraPreset = URAI_CAMERA_PRESETS[transition.endPreset];
+  const inputUnlockAtMs = options.reducedMotion ? duration : transition.inputUnlockAtMs;
 
   return {
     position: lerpVec3(startPreset.position, endPreset.position, progress),
@@ -169,7 +170,7 @@ export function getTransitionCameraFrame(
     fog: lerp(0.34, 0.68, Math.sin(progress * Math.PI)),
     starOpacity: lerp(0.32, transitionId === "lifeMapToHome" || transitionId === "ochatToHome" ? 0.28 : 1, progress),
     uiOpacity: progress < 0.18 ? 1 - progress / 0.18 : progress > 0.82 ? (progress - 0.82) / 0.18 : 0,
-    inputLocked: elapsedMs < transition.inputUnlockAtMs,
+    inputLocked: elapsedMs < inputUnlockAtMs,
   };
 }
 
