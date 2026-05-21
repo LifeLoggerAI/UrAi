@@ -4,6 +4,7 @@ import { useState } from "react";
 
 const separator = "\u00b7";
 const coreHomeSections = ["Sky", "Orb", "Ground"];
+const homeReadyState = ["stable", "quiet sky", "memory gateway ready"];
 
 export default function UraiHomeAccessibilityLayer() {
   const [companionOpen, setCompanionOpen] = useState(false);
@@ -12,6 +13,7 @@ export default function UraiHomeAccessibilityLayer() {
   return (
     <div style={{ position: "fixed", left: 16, top: 16, zIndex: 9999, display: "grid", gap: 8 }}>
       <p>{coreHomeSections.join(` ${separator} `)}</p>
+      <p>{homeReadyState.join(` ${separator} `)}</p>
       <button type="button" aria-label="Ascend through the sky into the URAI Life Map" onClick={() => setLifeMapOpen(true)}>
         Life Map
       </button>
