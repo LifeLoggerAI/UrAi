@@ -26,56 +26,8 @@ jobs:
           node-version: "20"
           cache: npm
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Repo doctor
-        run: npm run doctor
-
-      - name: Validate Firebase target
-        run: npm run check:firebase
-
-      - name: Validate staging Firebase target
-        run: npm run check:firebase:staging
-
-      - name: Check lockfile
-        run: npm run check:lockfile
-
-      - name: Check V1 wiring
-        run: npm run check:v1
-
-      - name: Check final home lock
-        run: npm run check:home
-
-      - name: Check final home ascent
-        run: npm run check:ascent
-
-      - name: Check P0 launch gate
-        run: npm run launch:p0
-
-      - name: Check P0 command matrix dry run
-        run: npm run launch:p0:commands
-
-      - name: Check P1 release gate
-        run: npm run release:p1
-
-      - name: Seed demo data
-        run: npm run seed:demo
-
-      - name: Unit tests
-        run: npm run test:unit
-
-      - name: Firestore rules tests
-        run: npm run test:rules
-
-      - name: Type check
-        run: npm run typecheck
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build app
-        run: npm run build
+      - name: Bootstrap launch validation
+        run: URAI_SKIP_E2E=1 node scripts/urai-launch-bootstrap.mjs
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
