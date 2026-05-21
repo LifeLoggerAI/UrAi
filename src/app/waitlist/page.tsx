@@ -1,5 +1,4 @@
 import WaitlistForm from "@/components/WaitlistForm";
-import UraiRouteShell from "@/components/urai/UraiRouteShell";
 
 export const metadata = {
   title: "Join the URAI Waitlist",
