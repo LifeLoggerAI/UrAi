@@ -3,8 +3,20 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const scannedRoots = ["README.md", "src/app", "docs/LAUNCH_CHECKLIST.md", "docs/V1_PRODUCT_SPEC.md", "docs/V1_DEMO_SCRIPT.md"];
-const ignoredPathFragments = [".next", "node_modules", "src/app/api", "src/app/admin", "src/app/app", "src/app/spatial", "scripts/check-public-copy.mjs"];
+const scannedRoots = [
+  "README.md",
+  "src/app",
+  "docs/LAUNCH_CHECKLIST.md",
+  "docs/V1_PRODUCT_SPEC.md",
+  "docs/V1_DEMO_SCRIPT.md",
+  "docs/URAI_SPATIAL_LAUNCH_AUDIT.md",
+  "docs/URAI_SPATIAL_COMPLETION_PLAN.md",
+  "docs/URAI_SPATIAL_FILE_CHECKLIST.md",
+  "docs/URAI_SPATIAL_V1_DEFINITION_OF_DONE.md",
+  "docs/URAI_SPATIAL_READINESS_MATRIX.md",
+  "docs/URAI_SPATIAL_PR_SUMMARY.md"
+];
+const ignoredPathFragments = [".next", "node_modules", "coverage", "dist", "build", "src/app/api", "src/app/admin", "src/app/app", "scripts/check-public-copy.mjs"];
 const textExtensions = new Set([".md", ".mdx", ".ts", ".tsx", ".js", ".jsx"]);
 const requiredBoundaryPhrases = ["not live in V1", "public demo", "demo spine"];
 
@@ -41,8 +53,16 @@ function isImplementationLine(line) {
   if (/^export\s+(type|interface|const|function)/.test(trimmed)) return true;
   if (/^type\s|^interface\s/.test(trimmed)) return true;
   if (/^\/\//.test(trimmed)) return true;
-  if (/^(className|aria-label|data-[A-Za-z-]+)=/.test(trimmed)) return true;
+  if (/^(className|data-[A-Za-z-]+)=/.test(trimmed)) return true;
   return false;
+}
+
+function publicTextFromLine(line) {
+  const fragments = [];
+  for (const match of line.matchAll(/>([^<>{}][^<>]*)</g)) fragments.push(match[1]);
+  for (const match of line.matchAll(/(?:aria-label|title|description|content|placeholder|alt)=["']([^"']+)["']/g)) fragments.push(match[1]);
+  for (const match of line.matchAll(/(?:title|description|summary|body|label|eyebrow|placeholder|alt|ariaLabel)\s*:\s*["'`]([^"'`]+)["'`]/g)) fragments.push(match[1]);
+  return fragments.length > 0 ? fragments.join(" ") : line;
 }
 
 const files = scannedRoots
@@ -64,9 +84,11 @@ for (const filePath of files) {
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
   lines.forEach((line, index) => {
     if (isImplementationLine(line)) return;
+    const publicText = publicTextFromLine(line);
     for (const claim of riskyClaims) {
-      if (!claim.pattern.test(line)) continue;
-      if (claim.allowedNearby.test(line)) continue;
+      claim.pattern.lastIndex = 0;
+      if (!claim.pattern.test(publicText)) continue;
+      if (claim.allowedNearby.test(publicText)) continue;
       const context = [lines[index - 1] ?? "", line, lines[index + 1] ?? ""].join(" ");
       if (claim.allowedNearby.test(context)) continue;
       console.error(`public-copy: risky V1 claim in ${relativePath}:${index + 1}`);
