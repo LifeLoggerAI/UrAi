@@ -95,6 +95,49 @@ service cloud.firestore {
       return request.resource.data.createdAt != null;
     }
 
+    function validHomeWorldState(uid) {
+      return request.resource.data.keys().hasOnly([
+        'userId',
+        'groundTier',
+        'orbTier',
+        'skyTier',
+        'moodState',
+        'recoveryState',
+        'energyScore',
+        'narratorSpeaking',
+        'orbPulseIntensity',
+        'skyWeatherIntensity',
+        'groundGrowthIntensity',
+        'updatedAt'
+      ])
+      && request.resource.data.userId == uid
+      && request.resource.data.groundTier is int
+      && request.resource.data.groundTier >= 1
+      && request.resource.data.groundTier <= 5
+      && request.resource.data.orbTier is int
+      && request.resource.data.orbTier >= 1
+      && request.resource.data.orbTier <= 5
+      && request.resource.data.skyTier is int
+      && request.resource.data.skyTier >= 1
+      && request.resource.data.skyTier <= 5
+      && request.resource.data.moodState in ['calm', 'low', 'recovery', 'dream', 'shadow', 'focused', 'joy']
+      && request.resource.data.recoveryState in ['dormant', 'recovering', 'stable', 'growing', 'awakened']
+      && request.resource.data.energyScore is number
+      && request.resource.data.energyScore >= 0
+      && request.resource.data.energyScore <= 100
+      && request.resource.data.narratorSpeaking is bool
+      && request.resource.data.orbPulseIntensity is number
+      && request.resource.data.orbPulseIntensity >= 0
+      && request.resource.data.orbPulseIntensity <= 1
+      && request.resource.data.skyWeatherIntensity is number
+      && request.resource.data.skyWeatherIntensity >= 0
+      && request.resource.data.skyWeatherIntensity <= 1
+      && request.resource.data.groundGrowthIntensity is number
+      && request.resource.data.groundGrowthIntensity >= 0
+      && request.resource.data.groundGrowthIntensity <= 1
+      && request.resource.data.updatedAt is string;
+    }
+
     match /features/{flagId} {
       allow read, write: if false;
     }
@@ -188,6 +231,8 @@ service cloud.firestore {
       allow read: if isSelf(uid);
       allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
       allow delete: if isSelf(uid);
+      match /profile/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && hasNoProtectedUserFields(); allow delete: if false; }
+      match /homeWorld/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && id == 'state' && validHomeWorldState(uid); allow delete: if false; }
       match /consents/{source} {
         allow read: if isSelf(uid);
         allow create: if canCreateConsent(uid, source);
