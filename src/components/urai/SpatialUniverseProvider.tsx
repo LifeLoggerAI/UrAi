@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
 import { getSpatialRuntimeContract, type UraiSpatialMode } from '@/lib/urai-canon/spatial-runtime';
 import { URAI_ROUTE_CONTRACTS, type UraiRouteId } from '@/lib/urai-canon/system';
+import SpatialUniverseShell from './SpatialUniverseShell';
 
 export type UraiQualityProfile = 'mobile-safe' | 'reduced-motion' | 'desktop-cinematic';
 
@@ -94,6 +95,7 @@ export function SpatialUniverseProvider({ children }: { children: ReactNode }) {
         data-urai-quality={state.qualityProfile}
         style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}
       />
+      <SpatialUniverseShell />
       {children}
     </SpatialUniverseContext.Provider>
   );
