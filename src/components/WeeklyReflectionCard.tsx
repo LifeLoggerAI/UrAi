@@ -8,7 +8,7 @@ export default function WeeklyReflectionCard({ reflection }: { reflection: Weekl
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-violet-100/65">Weekly Reflection</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">{reflection.title}</h2>
         </div>
-        <span className="urai-orb-artifact urai-orb-artifact--violet" style={{ "--orb-size": "3.1rem" } as React.CSSProperties} aria-hidden="true" />
+        <span className="urai-orb-artifact urai-orb-artifact--violet urai-orb-artifact--small" aria-hidden="true" />
       </div>
       <p className="mt-4 text-sm leading-6 text-white/82">{reflection.narratorSummary}</p>
       <div className="urai-cosmic-divider mt-4" />
