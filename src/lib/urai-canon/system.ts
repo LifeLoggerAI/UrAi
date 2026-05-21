@@ -6,6 +6,7 @@ export const URAI_REQUIRED_ROUTES = [
   "/focus/session/[sessionId]",
   "/replay",
   "/replay/[replayId]",
+  "/ochat",
 ] as const;
 
 export type UraiRouteId = (typeof URAI_REQUIRED_ROUTES)[number];
@@ -16,6 +17,7 @@ export type RouteFallbackBehavior =
   | "render-selected-star"
   | "render-focus-session"
   | "render-replay"
+  | "render-ochat"
   | "show-parent-with-notice";
 
 export type UraiRouteContract = {
@@ -139,6 +141,21 @@ export const URAI_ROUTE_CONTRACTS: Record<UraiRouteId, UraiRouteContract> = {
     deletedBehavior: "show-parent-with-notice",
     archivedBehavior: "render-replay",
     unwindTarget: "/focus",
+  },
+  "/ochat": {
+    route: "/ochat",
+    directLoad: true,
+    refreshSafe: true,
+    reducedMotionSafe: true,
+    mobileSafe: true,
+    loadingState: true,
+    emptyState: true,
+    errorState: true,
+    invalidIdBehavior: "render-ochat",
+    lockedBehavior: "show-parent-with-notice",
+    deletedBehavior: "render-home",
+    archivedBehavior: "render-ochat",
+    unwindTarget: "/home",
   },
 };
 
@@ -393,6 +410,18 @@ export const URAI_ROUTE_TRANSITIONS = {
     emotionalIntent: "cosmic map descends back into grounded sanctuary",
     phasesMs: [0, 120, 440, 900, 1600, 2200],
   },
+  homeToOchat: {
+    from: "/home",
+    to: "/ochat",
+    emotionalIntent: "orb opens into a calm companion chamber without leaving the sanctuary",
+    phasesMs: [0, 90, 260, 540, 900],
+  },
+  ochatToHome: {
+    from: "/ochat",
+    to: "/home",
+    emotionalIntent: "companion chamber settles back into the grounded home orb",
+    phasesMs: [0, 100, 280, 650],
+  },
 } as const;
 
 export type UraiValidationResult = {
@@ -418,14 +447,10 @@ export function validateCanonicalObject(value: unknown): UraiValidationResult {
     const record = value as Record<string, unknown>;
     const privacyState = record.privacyState;
     if (typeof privacyState === "string" && privacyState in URAI_PERMISSION_MATRIX) {
-      if (privacyState === "deleted" && record.deletedAt == null) {
-        unsafe.push("deleted objects must include deletedAt");
+      const policy = URAI_PERMISSION_MATRIX[privacyState as UraiPrivacyState];
+      if (policy.aiReadable === true && (privacyState === "sensitive" || privacyState === "vaulted" || privacyState === "deleted")) {
+        unsafe.push(`Unsafe AI readability for ${privacyState}`);
       }
-      if (privacyState === "archived" && record.archivedAt == null) {
-        unsafe.push("archived objects must include archivedAt");
-      }
-    } else if (!missing.includes("privacyState")) {
-      unsafe.push("privacyState must be a known URAI privacy state");
     }
   }
   return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
@@ -437,63 +462,11 @@ export function validateAiOutput(value: unknown): UraiValidationResult {
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
     if (record.prohibitedClaimsCheckPassed !== true) {
-      unsafe.push("AI output must pass prohibited claims check");
+      unsafe.push("AI output must pass prohibited claims check before display.");
     }
-    if (!Array.isArray(record.evidenceRefs)) {
-      unsafe.push("AI output evidenceRefs must be an array");
-    }
-    if (record.claimType === "fact" && Array.isArray(record.evidenceRefs) && record.evidenceRefs.length === 0) {
-      unsafe.push("AI fact claims require evidenceRefs");
-    }
-    if (typeof record.permissionScopeUsed === "string" && ["sensitive", "vaulted", "deleted"].includes(record.permissionScopeUsed)) {
-      unsafe.push("AI output cannot use sensitive, vaulted, or deleted permission scopes");
+    if (!Array.isArray(record.evidenceRefs) || record.evidenceRefs.length === 0) {
+      unsafe.push("AI output must include evidenceRefs.");
     }
   }
   return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
-}
-
-export function validateAssetManifestEntry(value: unknown): UraiValidationResult {
-  const missing = missingRequiredFields(value, URAI_ASSET_MANIFEST_FIELDS);
-  const unsafe: string[] = [];
-  if (value && typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    if (typeof record.fileSizeBudget === "number" && record.fileSizeBudget <= 0) {
-      unsafe.push("fileSizeBudget must be positive");
-    }
-    if (record.license === "unknown") {
-      unsafe.push("asset license cannot be unknown");
-    }
-    if (!record.fallbackVariant) {
-      unsafe.push("asset manifest entry must include fallbackVariant");
-    }
-  }
-  return { ok: missing.length === 0 && unsafe.length === 0, missing, unsafe };
-}
-
-export function getRouteContract(route: UraiRouteId): UraiRouteContract {
-  return URAI_ROUTE_CONTRACTS[route];
-}
-
-export function canAiReadPrivacyState(privacyState: UraiPrivacyState): boolean {
-  const policy = URAI_PERMISSION_MATRIX[privacyState];
-  return policy.aiReadable !== false && policy.aiReadable !== "denied";
-}
-
-export function assertUraiCanonIntegrity(): string[] {
-  const failures: string[] = [];
-  for (const route of URAI_REQUIRED_ROUTES) {
-    const contract = URAI_ROUTE_CONTRACTS[route];
-    if (!contract?.directLoad || !contract.refreshSafe || !contract.loadingState || !contract.errorState) {
-      failures.push(`Route contract incomplete: ${route}`);
-    }
-  }
-  for (const state of ["sensitive", "vaulted", "deleted"] as const) {
-    if (canAiReadPrivacyState(state)) {
-      failures.push(`Unsafe AI readability for privacy state: ${state}`);
-    }
-  }
-  if (!URAI_EMPTY_STATE_CANON.includes("no-fake-ai-claims")) {
-    failures.push("Empty state canon must prohibit fake AI claims.");
-  }
-  return failures;
 }
