@@ -148,7 +148,7 @@ export const URAI_DIRECT_ROUTE_CONTRACTS: UraiDirectRouteContract[] = [
   },
 ];
 
-export type UraiTransitionId = keyof typeof URAI_CINEMATIC_TRANSITIONS | 'homeToOchat' | 'ochatToHome';
+export type UraiTransitionId = keyof typeof URAI_CINEMATIC_TRANSITIONS;
 
 export interface UraiTransitionContract {
   id: UraiTransitionId;
@@ -167,6 +167,6 @@ export const URAI_TRANSITION_CONTRACTS: UraiTransitionContract[] = [
   { id: 'replayToFocusEsc', from: 'replay', to: 'focus', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.replayToFocusEsc.inputUnlockAtMs, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle focus before accepting next escape', mobileBackBehavior: 'settle focus before accepting next back' },
   { id: 'focusToLifeMapEsc', from: 'focus', to: 'life-map', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.focusToLifeMapEsc.inputUnlockAtMs, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle life-map before accepting next escape', mobileBackBehavior: 'settle life-map before accepting next back' },
   { id: 'lifeMapToHome', from: 'life-map', to: 'home', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.lifeMapToHome.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'continue home unwind', mobileBackBehavior: 'continue home unwind' },
-  { id: 'homeToOchat', from: 'home', to: 'ochat', inputLockedMs: 900, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to home', mobileBackBehavior: 'return to home' },
-  { id: 'ochatToHome', from: 'ochat', to: 'home', inputLockedMs: 650, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle home before accepting next escape', mobileBackBehavior: 'settle home before accepting next back' },
+  { id: 'homeToOchat', from: 'home', to: 'ochat', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.homeToOchat.inputUnlockAtMs, reducedMotionFallback: 'short-crossfade', escapeBehavior: 'return to home', mobileBackBehavior: 'return to home' },
+  { id: 'ochatToHome', from: 'ochat', to: 'home', inputLockedMs: URAI_CINEMATIC_TRANSITIONS.ochatToHome.inputUnlockAtMs, reducedMotionFallback: 'snap-fade', escapeBehavior: 'settle home before accepting next escape', mobileBackBehavior: 'settle home before accepting next back' },
 ];
