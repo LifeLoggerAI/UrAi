@@ -35,6 +35,15 @@ jobs:
       - name: Smoke tests
         run: npm run test:smoke
 
+      - name: Upload launch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-evidence
+          path: artifacts/launch
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Upload Playwright results
         if: always()
         uses: actions/upload-artifact@v4
