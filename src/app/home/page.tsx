@@ -1,3 +1,4 @@
+import HomeWorldSmokeContract from "@/components/urai/HomeWorldSmokeContract";
 import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
 
 export const metadata = {
@@ -6,5 +7,10 @@ export const metadata = {
 };
 
 export default function HomePage() {
-  return <UraiResolvedHomeScene />;
+  return (
+    <>
+      <UraiResolvedHomeScene />
+      <HomeWorldSmokeContract />
+    </>
+  );
 }
