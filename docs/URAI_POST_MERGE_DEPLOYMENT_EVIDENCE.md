@@ -1,37 +1,38 @@
 # URAI Post-Merge Deployment Evidence
 
-Status: template
+Status: production blocked - evidence incomplete
 Related issue: #300
 Latest merged implementation: PR #299
 Merge commit: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
+Last verification attempt: 2026-05-21
 
-Use this document to capture deployment evidence after a `main` release. Do not mark a release complete until the required workflow, Firebase, and browser checks are filled in with concrete results.
+This document captures deployment evidence after a `main` release. Do not mark this release complete until the required workflow, Firebase, and browser checks are filled in with concrete results.
 
 ## Deployment workflow evidence
 
 ### UrAi CI/CD
 
 - Workflow file: `.github/workflows/urai-ci.yml`
-- Trigger used: `push to main` / `workflow_dispatch`
-- Run URL:
-- Commit SHA:
-- Result: pending
-- Required secret checked: `FIREBASE_TOKEN`
-- Firebase deploy result:
-- Notes:
+- Trigger used: not verified through connected GitHub tool
+- Run URL: blocked - no run URL attached
+- Commit SHA: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
+- Result: blocked - no post-merge `main` workflow evidence attached
+- Required secret checked: `FIREBASE_TOKEN` - not verifiable from this context
+- Firebase deploy result: blocked - no deploy evidence attached
+- Notes: A connected GitHub workflow lookup for merge commit `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc` returned no workflow-run evidence. This does not prove the workflow never ran; it means no closure-grade run evidence is currently attached or visible through the connected tool.
 
 ### Firebase Hosting live
 
 - Workflow file: `.github/workflows/firebase-hosting-live.yml`
-- Trigger used: `push to main` / `workflow_dispatch`
-- Run URL:
-- Commit SHA:
-- Result: pending
-- Required secret checked: `FIREBASE_SERVICE_ACCOUNT_URAI`
+- Trigger used: not verified through connected GitHub tool
+- Run URL: blocked - no run URL attached
+- Commit SHA: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
+- Result: blocked - no Firebase Hosting live evidence attached
+- Required secret checked: `FIREBASE_SERVICE_ACCOUNT_URAI` - not verifiable from this context
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
-- Deployed URL:
-- Notes:
+- Deployed URL: blocked - no deployed production URL attached
+- Notes: Closure requires a passing Firebase Hosting live run URL and deployed production URL.
 
 ## Production smoke checklist
 
@@ -39,15 +40,15 @@ Record the exact deployed URL and browser used for each check.
 
 | Check | URL | Browser/device | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| Home loads | `/` | Desktop | pending | |
-| Home loads | `/` | Mobile | pending | |
-| Home reduced motion | `/` | Desktop reduced motion | pending | |
-| `/home` redirects to `/` | `/home` | Desktop | pending | |
-| Public constellation loads | `/u/adamclamp` | Desktop | pending | |
-| Public constellation loads | `/u/adamclamp` | Mobile | pending | |
-| Waitlist form validates empty email | `/u/adamclamp` | Desktop | pending | |
-| Waitlist form submits configured email | `/u/adamclamp` | Desktop | pending | |
-| Companion fallback responds safely | `/api/companion` or UI path | Desktop | pending | |
+| Home loads | `/` | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Home loads | `/` | Mobile | blocked | No deployed production URL/run evidence attached. |
+| Home reduced motion | `/` | Desktop reduced motion | blocked | No deployed production URL/run evidence attached. |
+| `/home` redirects to `/` | `/home` | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Public constellation loads | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Public constellation loads | `/u/adamclamp` | Mobile | blocked | No deployed production URL/run evidence attached. |
+| Waitlist form validates empty email | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Waitlist form submits configured email | `/u/adamclamp` | Desktop | blocked | No deployed production URL/run evidence attached. |
+| Companion fallback responds safely | `/api/companion` or UI path | Desktop | blocked | No deployed production URL/run evidence attached. |
 
 ## Data and safety checks
 
@@ -60,14 +61,25 @@ Record the exact deployed URL and browser used for each check.
 
 ## Release decision
 
-- Release owner:
-- Verification date:
-- Approved for production traffic: yes / no
-- Rollback SHA:
-- Follow-up issues:
+- Release owner: blocked - not recorded
+- Verification date: blocked - production evidence incomplete as of 2026-05-21
+- Approved for production traffic: no
+- Rollback SHA: blocked - no production deploy/rollback record attached
+- Follow-up issues: #300 remains open until deployment evidence is attached
 
 ## Known blockers
 
-List blockers here rather than implying production completion.
+- Missing passing `UrAi CI/CD` run URL for `main` / merge commit `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`.
+- Missing passing Firebase Hosting live run URL.
+- Missing confirmation that `FIREBASE_TOKEN` is configured for the workflow requiring it.
+- Missing confirmation that `FIREBASE_SERVICE_ACCOUNT_URAI` is configured for the live hosting workflow.
+- Missing deployed production URL.
+- Missing production smoke evidence for `/`, `/home -> /`, `/u/adamclamp`, waitlist validation/submission, and companion fallback.
+- Missing desktop, mobile, and reduced-motion evidence.
+- Missing data/safety verification.
+- Missing release owner approval.
+- Missing rollback SHA and rollback command.
 
-- 
+## Closure rule
+
+Issue #300 may only be closed after every required workflow, deployment, smoke, safety, approval, and rollback evidence item is attached. Do not claim production-final from this file while status remains `production blocked - evidence incomplete`.
