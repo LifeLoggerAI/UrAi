@@ -52,6 +52,18 @@ function extractBlockBody(rules, openBraceIndex) {
   throw new Error('Unclosed rules block');
 }
 
+function collectAllowOperations(block) {
+  const allowPattern = /allow\s+([^:]+):\s*if\s*([^;]+);/g;
+  const operations = {};
+  let allowMatch;
+  while ((allowMatch = allowPattern.exec(block)) !== null) {
+    for (const op of allowMatch[1].split(',').map((value) => value.trim())) {
+      operations[op] = allowMatch[2].trim();
+    }
+  }
+  return operations;
+}
+
 function extractCollectionRules(rules, collections) {
   const map = new Map();
   for (const collection of collections) {
@@ -61,17 +73,32 @@ function extractCollectionRules(rules, collections) {
     const variableName = match[1];
     const openBraceIndex = match.index + match[0].lastIndexOf('{');
     const block = extractBlockBody(rules, openBraceIndex);
-    const allowPattern = /allow\s+([^:]+):\s*if\s*([^;]+);/g;
-    const operations = {};
-    let allowMatch;
-    while ((allowMatch = allowPattern.exec(block)) !== null) {
-      for (const op of allowMatch[1].split(',').map((value) => value.trim())) {
-        operations[op] = allowMatch[2].trim();
-      }
-    }
-    map.set(collection, { variableName, operations });
+    map.set(collection, { variableName, operations: collectAllowOperations(block) });
   }
   return map;
+}
+
+function extractNestedUserHomeWorldRules(rules) {
+  const usersPattern = /match\s+\/users\/\{([^}]+)\}\s*\{/m;
+  const usersMatch = usersPattern.exec(rules);
+  if (!usersMatch) return null;
+
+  const userVariableName = usersMatch[1];
+  const usersOpenBraceIndex = usersMatch.index + usersMatch[0].lastIndexOf('{');
+  const usersBlock = extractBlockBody(rules, usersOpenBraceIndex);
+  const homeWorldPattern = /match\s+\/homeWorld\/\{([^}]+)\}\s*\{/m;
+  const homeWorldMatch = homeWorldPattern.exec(usersBlock);
+  if (!homeWorldMatch) return null;
+
+  const documentVariableName = homeWorldMatch[1];
+  const homeWorldOpenBraceIndex = homeWorldMatch.index + homeWorldMatch[0].lastIndexOf('{');
+  const homeWorldBlock = extractBlockBody(usersBlock, homeWorldOpenBraceIndex);
+  return {
+    key: 'users/{uid}/homeWorld',
+    variableName: documentVariableName,
+    parentVariables: [userVariableName],
+    operations: collectAllowOperations(homeWorldBlock),
+  };
 }
 
 function compileExpression(functionsCode, expression) {
@@ -87,22 +114,32 @@ class RulesEvaluator {
   constructor(rules, collections) {
     this.functionsCode = extractFunctionsBlock(rules);
     const ruleMap = extractCollectionRules(rules, collections);
+    const nestedHomeWorldRule = extractNestedUserHomeWorldRules(rules);
+    if (nestedHomeWorldRule) {
+      ruleMap.set(nestedHomeWorldRule.key, nestedHomeWorldRule);
+    }
+
     this.compiled = new Map();
     for (const [collection, rule] of ruleMap.entries()) {
       const opEvaluators = {};
       for (const [operation, expression] of Object.entries(rule.operations)) {
         opEvaluators[operation] = compileExpression(this.functionsCode, expression);
       }
-      this.compiled.set(collection, { variableName: rule.variableName, opEvaluators });
+      this.compiled.set(collection, {
+        variableName: rule.variableName,
+        parentVariables: rule.parentVariables || [],
+        opEvaluators,
+      });
     }
   }
 
   evaluate(collection, operation, context) {
     const compiledRule = this.compiled.get(collection);
     if (!compiledRule || !compiledRule.opEvaluators[operation]) return false;
-    const matchVariables = compiledRule.variableName && context.documentId
-      ? { [compiledRule.variableName]: context.documentId }
-      : {};
+    const matchVariables = { ...(context.matchVariables || {}) };
+    if (compiledRule.variableName && context.documentId) {
+      matchVariables[compiledRule.variableName] = context.documentId;
+    }
     return Boolean(compiledRule.opEvaluators[operation]({ ...context, matchVariables }));
   }
 }
@@ -124,32 +161,50 @@ class FirestoreClient {
     this.bypass = bypass;
   }
   collection(name) {
-    return new CollectionReference(this.env, this.auth, this.bypass, name);
+    return new CollectionReference(this.env, this.auth, this.bypass, [name]);
   }
 }
 
 class CollectionReference {
-  constructor(env, auth, bypass, name) {
+  constructor(env, auth, bypass, pathSegments) {
     this.env = env;
     this.auth = auth;
     this.bypass = bypass;
-    this.name = name;
+    this.pathSegments = pathSegments;
   }
   doc(id) {
-    return new DocumentReference(this.env, this.auth, this.bypass, this.name, id);
+    return new DocumentReference(this.env, this.auth, this.bypass, [...this.pathSegments, id]);
   }
 }
 
 class DocumentReference {
-  constructor(env, auth, bypass, collection, id) {
+  constructor(env, auth, bypass, pathSegments) {
     this.env = env;
     this.auth = auth;
     this.bypass = bypass;
-    this.collection = collection;
-    this.id = id;
+    this.pathSegments = pathSegments;
+  }
+  collection(name) {
+    return new CollectionReference(this.env, this.auth, this.bypass, [...this.pathSegments, name]);
   }
   _docKey() {
-    return `${this.collection}/${this.id}`;
+    return this.pathSegments.join('/');
+  }
+  _collectionRuleKey() {
+    if (this.pathSegments.length === 2) return this.pathSegments[0];
+    if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users' && this.pathSegments[2] === 'homeWorld') {
+      return 'users/{uid}/homeWorld';
+    }
+    return this.pathSegments.slice(0, -1).join('/');
+  }
+  _documentId() {
+    return this.pathSegments[this.pathSegments.length - 1];
+  }
+  _matchVariables() {
+    if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users' && this.pathSegments[2] === 'homeWorld') {
+      return { uid: this.pathSegments[1] };
+    }
+    return {};
   }
   _currentData() {
     return this.env.store.get(this._docKey()) || null;
@@ -184,8 +239,9 @@ class DocumentReference {
   }
   async _assertAllowed(operation, existing, nextData) {
     if (this.bypass) return;
-    const allowed = this.env.evaluator.evaluate(this.collection, operation, {
-      documentId: this.id,
+    const allowed = this.env.evaluator.evaluate(this._collectionRuleKey(), operation, {
+      documentId: this._documentId(),
+      matchVariables: this._matchVariables(),
       request: {
         auth: this.auth,
         resource: { data: JSON.parse(JSON.stringify(nextData || {})) },
