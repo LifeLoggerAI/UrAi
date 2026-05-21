@@ -15,6 +15,7 @@ dist/
 # Generated local reports/artifacts
 audit/
 tmp/
+artifacts/launch/
 test-results/
 playwright-report/
 tsconfig.tsbuildinfo
