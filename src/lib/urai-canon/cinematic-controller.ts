@@ -173,10 +173,33 @@ export function getTransitionCameraFrame(
   };
 }
 
+export function resolveUraiCameraFrame(
+  transitionId: UraiCinematicTransitionId,
+  elapsedMs: number,
+  reducedMotion = false,
+): UraiCameraFrame {
+  return getTransitionCameraFrame(transitionId, elapsedMs, { reducedMotion });
+}
+
 export function shouldCommitRoute(transitionId: UraiCinematicTransitionId, elapsedMs: number): boolean {
   return elapsedMs >= URAI_CINEMATIC_TRANSITIONS[transitionId].routeCommitAtMs;
 }
 
 export function getRouteTransitionForRoutes(from: UraiRouteId, to: UraiRouteId): UraiCinematicTransitionContract | null {
   return Object.values(URAI_CINEMATIC_TRANSITIONS).find((transition) => transition.fromRoute === from && transition.toRoute === to) ?? null;
+}
+
+export function assertUraiCinematicTransitionIntegrity(): string[] {
+  const failures: string[] = [];
+  for (const [id, transition] of Object.entries(URAI_CINEMATIC_TRANSITIONS) as [UraiCinematicTransitionId, UraiCinematicTransitionContract][]) {
+    if (transition.id !== id) failures.push(`Cinematic transition id mismatch: ${id}`);
+    if (transition.durationMs <= 0) failures.push(`Cinematic transition must have positive duration: ${id}`);
+    if (transition.reducedMotionDurationMs <= 0) failures.push(`Cinematic transition must have reduced-motion duration: ${id}`);
+    if (transition.reducedMotionDurationMs > transition.durationMs) failures.push(`Reduced-motion duration must not exceed full duration: ${id}`);
+    if (transition.routeCommitAtMs <= 0 || transition.routeCommitAtMs > transition.durationMs) failures.push(`Route commit timing out of range: ${id}`);
+    if (transition.inputUnlockAtMs < transition.routeCommitAtMs) failures.push(`Input must not unlock before route commit: ${id}`);
+    if (!URAI_CAMERA_PRESETS[transition.startPreset]) failures.push(`Missing start camera preset: ${id}`);
+    if (!URAI_CAMERA_PRESETS[transition.endPreset]) failures.push(`Missing end camera preset: ${id}`);
+  }
+  return failures;
 }
