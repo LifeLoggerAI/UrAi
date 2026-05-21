@@ -1,37 +1,25 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import React from 'react';
-import Card from '../../components/ui/Card';
+import UraiRouteShell from "@/components/urai/UraiRouteShell";
 
-type JournalEntry = {
-  timestamp: string;
-  transcription: string;
+export const metadata = {
+  title: "URAI Journal / Scribe",
+  description: "The URAI Scribe turns private reflections and passive signals into gentle narrative threads.",
 };
 
-export const dynamic = 'force-dynamic';
-
-async function getJournalEntries(): Promise<JournalEntry[]> {
-  const filePath = path.join(process.cwd(), 'data', 'journal-entries.json');
-  const fileContents = await fs.readFile(filePath, 'utf-8');
-
-  const entries: JournalEntry[] = JSON.parse(fileContents);
-
-  return entries;
-}
-
-export default async function JournalPage() {
-  const journalEntries = await getJournalEntries();
-
+export default function JournalPage() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Journal</h1>
-      <div className="space-y-4">
-        {journalEntries.map((entry, index) => (
-          <Card key={index} header={entry.timestamp}>
-            <p>{entry.transcription}</p>
-          </Card>
-        ))}
-      </div>
-    </div>
+    <UraiRouteShell
+      eyebrow="Journal / Scribe"
+      title="Your private Scribe is ready for the first real chapter."
+      description="URAI V1 keeps journaling calm and optional: reflections, companion notes, and Memory Star context can become private narrative threads without requiring constant manual input."
+      primaryHref="/home"
+      primaryLabel="Return to Home Orb"
+      secondaryHref="/settings/privacy"
+      secondaryLabel="Review Privacy Controls"
+      sections={[
+        { title: "Private by default", body: "Journal content belongs to the signed-in user and should never be exposed through the public demo route." },
+        { title: "Memory-aware", body: "The Scribe can connect entries to Memory Stars, Recovery Arcs, rituals, and replay eras when those signals exist." },
+        { title: "No medical claims", body: "V1 language stays reflective and supportive, avoiding diagnosis or therapy claims." },
+      ]}
+    />
   );
 }
