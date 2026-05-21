@@ -11,6 +11,8 @@ export type UraiSpatialMode =
   | "focus-session"
   | "replay-entering"
   | "replay"
+  | "ochat-entering"
+  | "ochat"
   | "returning-home"
   | "fallback-notice";
 
@@ -27,8 +29,8 @@ export type UraiSpatialRouteRuntimeContract = {
   stableMode: UraiSpatialMode;
   enteringMode: UraiSpatialMode;
   cameraPreset: keyof typeof URAI_CAMERA_PRESETS;
-  canonicalScreen: "home" | "life-map" | "focus" | "replay";
-  primaryObject: "world-orb" | "life-map-galaxy" | "focus-orb" | "replay-theater";
+  canonicalScreen: "home" | "life-map" | "focus" | "replay" | "ochat";
+  primaryObject: "world-orb" | "life-map-galaxy" | "focus-orb" | "replay-theater" | "companion-orb";
   mustDirectLoad: true;
   mobileSafeComposition: true;
   reducedMotionEquivalent: true;
@@ -71,6 +73,13 @@ export const URAI_CAMERA_PRESETS = {
     fov: 38,
     lensFeeling: "inside-the-orb source-backed memory theater",
     reducedMotionBehavior: "snap-fade",
+  },
+  ochat: {
+    position: [0, 4.8, 11.2],
+    target: [0, 1.7, 0],
+    fov: 40,
+    lensFeeling: "companion chamber held inside the home orb",
+    reducedMotionBehavior: "short-dissolve",
   },
 } as const satisfies Record<string, UraiCameraPreset>;
 
@@ -166,6 +175,19 @@ export const URAI_SPATIAL_ROUTE_RUNTIME: Record<UraiRouteId, UraiSpatialRouteRun
     loadingEmptyErrorHandled: true,
     evidenceSafe: true,
   },
+  "/ochat": {
+    route: "/ochat",
+    stableMode: "ochat",
+    enteringMode: "ochat-entering",
+    cameraPreset: "ochat",
+    canonicalScreen: "ochat",
+    primaryObject: "companion-orb",
+    mustDirectLoad: true,
+    mobileSafeComposition: true,
+    reducedMotionEquivalent: true,
+    loadingEmptyErrorHandled: true,
+    evidenceSafe: true,
+  },
 };
 
 export const URAI_VISUAL_RUNTIME_LAYERS = [
@@ -177,6 +199,7 @@ export const URAI_VISUAL_RUNTIME_LAYERS = [
   "memory-star-particles",
   "constellation-chapter-lines",
   "nebula-emotional-season-bands",
+  "companion-orb-chamber",
   "minimal-hidden-ui-safe-zones",
 ] as const;
 
@@ -232,6 +255,9 @@ export function assertUraiSpatialRuntimeIntegrity(): string[] {
   }
   if (!URAI_VISUAL_RUNTIME_LAYERS.includes("constellation-chapter-lines")) {
     failures.push("Spatial runtime must include constellation chapter lines.");
+  }
+  if (!URAI_VISUAL_RUNTIME_LAYERS.includes("companion-orb-chamber")) {
+    failures.push("Spatial runtime must include companion orb chamber.");
   }
   if (!URAI_VISUAL_RUNTIME_LAYERS.includes("minimal-hidden-ui-safe-zones")) {
     failures.push("Spatial runtime must include minimal hidden UI safe zones.");
