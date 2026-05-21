@@ -150,6 +150,12 @@ function lerpVec3(a: UraiCameraVector3, b: UraiCameraVector3, t: number): UraiCa
   return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)] as const;
 }
 
+function resolveUiOpacity(progress: number): number {
+  if (progress < 0.18) return clamp01(1 - progress / 0.18);
+  if (progress > 0.82) return clamp01((progress - 0.82) / 0.18);
+  return 0;
+}
+
 export function getTransitionCameraFrame(
   transitionId: UraiCinematicTransitionId,
   elapsedMs: number,
@@ -169,7 +175,7 @@ export function getTransitionCameraFrame(
     bloom: lerp(0.78, 1.14, progress),
     fog: lerp(0.34, 0.68, Math.sin(progress * Math.PI)),
     starOpacity: lerp(0.32, transitionId === "lifeMapToHome" || transitionId === "ochatToHome" ? 0.28 : 1, progress),
-    uiOpacity: progress < 0.18 ? 1 - progress / 0.18 : progress > 0.82 ? (progress - 0.82) / 0.18 : 0,
+    uiOpacity: resolveUiOpacity(progress),
     inputLocked: elapsedMs < inputUnlockAtMs,
   };
 }
