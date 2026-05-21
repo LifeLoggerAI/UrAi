@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
+import { SpatialUniverseProvider } from '@/components/urai/SpatialUniverseProvider';
 
 export default function AppProviders({ children }: { children?: React.ReactNode }) {
-  // Add any real providers here later (theme, query, auth, etc.)
-  return <>{children}</>;
+  return <SpatialUniverseProvider>{children}</SpatialUniverseProvider>;
 }
