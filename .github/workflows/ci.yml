@@ -34,6 +34,7 @@ jobs:
           # npm run check:home
           # npm run check:ascent
           # npm run launch:p0
+          # npm run release:p1
           # npm run seed:demo
           # npm run test:unit
           # npm run test:rules
