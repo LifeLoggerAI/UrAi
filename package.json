@@ -34,6 +34,7 @@
     "launch:p0": "node scripts/p0-launch-gate.mjs",
     "launch:p0:commands": "npm run doctor && node scripts/p0-command-matrix.mjs",
     "release:p1": "node scripts/p1-release-gate.mjs",
+    "deploy:evidence": "node scripts/deployment-evidence-check.mjs",
     "seed:demo": "node scripts/seed-demo.mjs",
     "seed:firestore": "node scripts/seed-demo.mjs --firestore",
     "seed:tier2": "node scripts/seed-tier2-access.mjs",
