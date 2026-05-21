@@ -27,7 +27,20 @@ jobs:
           cache: npm
 
       - name: Bootstrap launch validation
-        run: URAI_SKIP_E2E=1 node scripts/urai-launch-bootstrap.mjs
+        run: |
+          # Command contract executed by scripts/urai-launch-bootstrap.mjs:
+          # npm run check:lockfile
+          # npm run check:v1
+          # npm run check:home
+          # npm run check:ascent
+          # npm run launch:p0
+          # npm run seed:demo
+          # npm run test:unit
+          # npm run test:rules
+          # npm run typecheck
+          # npm run lint
+          # npm run build
+          URAI_SKIP_E2E=1 node scripts/urai-launch-bootstrap.mjs
 
       - name: Validate launch evidence
         run: node scripts/validate-launch-evidence.mjs
