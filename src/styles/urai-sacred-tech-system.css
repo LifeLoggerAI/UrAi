@@ -150,6 +150,10 @@
     0 0 74px rgba(125, 211, 252, 0.26);
 }
 
+.urai-orb-artifact--small {
+  --orb-size: 3.1rem;
+}
+
 .urai-orb-artifact::before,
 .urai-orb-artifact::after {
   content: "";
