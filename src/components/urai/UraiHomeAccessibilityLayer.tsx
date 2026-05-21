@@ -14,6 +14,7 @@ export default function UraiHomeAccessibilityLayer() {
     <div style={{ position: "fixed", left: 16, top: 16, zIndex: 9999, display: "grid", gap: 8 }}>
       <p>{coreHomeSections.join(` ${separator} `)}</p>
       <p>{homeReadyState.join(` ${separator} `)}</p>
+      <p>Your sky is quiet, but awake.</p>
       <button type="button" aria-label="Ascend through the sky into the URAI Life Map" onClick={() => setLifeMapOpen(true)}>
         Life Map
       </button>
