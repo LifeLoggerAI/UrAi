@@ -81,7 +81,7 @@ const firestoreDomains = [
   'incidents', 'consents', 'dataRequests', 'featureFlags', 'adminUsers',
 ];
 
-const requiredScripts = ['lint', 'check:types', 'test', 'test:unit', 'test:integration', 'test:e2e', 'test:rules', 'test:smoke', 'build'];
+const requiredScripts = ['lint', 'check:types', 'test', 'test:unit', 'test:integration', 'test:e2e', 'test:rules', 'test:smoke', 'build', 'deploy:evidence'];
 const checks = [];
 
 function walk(dir, out = []) {
