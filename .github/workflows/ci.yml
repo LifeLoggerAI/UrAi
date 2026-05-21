@@ -12,7 +12,7 @@ jobs:
   app:
     name: App validation
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -28,6 +28,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Repo doctor
+        run: npm run doctor
 
       - name: Validate Firebase target
         run: npm run check:firebase
@@ -49,6 +52,9 @@ jobs:
 
       - name: Check P0 launch gate
         run: npm run launch:p0
+
+      - name: Check P0 command matrix dry run
+        run: npm run launch:p0:commands
 
       - name: Check P1 release gate
         run: npm run release:p1
