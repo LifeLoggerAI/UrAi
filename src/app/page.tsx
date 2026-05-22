@@ -6,6 +6,7 @@ export const metadata = {
   description: "Give URAI one memory and watch it become a living world.",
 };
 
+// Home lock marker: the deeper resolved home scene remains mounted at ./home/page and is linked from this root entry.
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
