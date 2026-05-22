@@ -12,6 +12,9 @@ mkdir -p "$npm_config_cache"
 
 echo "[urai-deploy] npm cache: ${npm_config_cache}"
 
+echo "[urai-deploy] Verifying clean working tree before release..."
+node scripts/check-clean-working-tree.mjs
+
 case "$TARGET_ENV" in
   staging)
     EXPECTED_PROJECT="urai-staging"
