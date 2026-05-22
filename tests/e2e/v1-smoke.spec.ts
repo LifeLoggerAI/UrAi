@@ -15,7 +15,7 @@ test.describe("URAI V1 smoke", () => {
 
     await expectVisibleBodyText(page, /^URAI$/);
     await expectVisibleBodyText(page, /Start with a thought, moment, dream, voice-note transcript, or scene from your life/i);
-    await expect(page.getByLabel("One memory")).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "One memory" })).toBeVisible();
     await expect(page.getByLabel("Vibe")).toBeVisible();
     await expect(page.getByRole("button", { name: "Create scene" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Enter existing world" })).toHaveAttribute("href", "/home");
@@ -24,7 +24,7 @@ test.describe("URAI V1 smoke", () => {
   test("root generates and shares a first scene @smoke", async ({ page }) => {
     await openRoot(page);
 
-    await page.getByLabel("One memory").fill("I moved to a new city and started rebuilding my life.");
+    await page.getByRole("textbox", { name: "One memory" }).fill("I moved to a new city and started rebuilding my life.");
     await page.getByLabel("Vibe").selectOption("hopeful");
     await page.getByRole("button", { name: "Create scene" }).click();
 
