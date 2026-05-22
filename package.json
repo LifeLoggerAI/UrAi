@@ -14,7 +14,7 @@
     "doctor": "node scripts/repo-doctor.mjs",
     "bootstrap:check": "npm run doctor",
     "health": "bash ./scripts/baseline_health_check.sh",
-    "clean": "rimraf .next node_modules .turbo",
+    "clean": "rm -rf .next node_modules .turbo",
     "clean:install": "node scripts/clean-install-artifacts.mjs",
     "reinstall": "npm run clean:install && npm install",
     "codemod:dry": "node scripts/replace-demo-user.mjs --dry",
@@ -93,7 +93,6 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.5.15",
-    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.0.0"
   },
