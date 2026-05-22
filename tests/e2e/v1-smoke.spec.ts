@@ -1,71 +1,40 @@
 import { expect, test } from "@playwright/test";
 
-const ORB_COMPANION_BUTTON = "Open URAI orb companion";
-
-async function openHome(page: import("@playwright/test").Page) {
+async function openRoot(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator('main[aria-label="URAI Home World"]').first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Give URAI one memory. Watch it become a world." })).toBeVisible();
 }
 
 async function expectVisibleBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
   await expect(page.locator("body").getByText(text).first()).toBeVisible();
 }
 
-async function expectBodyTextAttached(page: import("@playwright/test").Page, text: string | RegExp) {
-  await expect(page.locator("body").getByText(text).first()).toHaveCount(1);
-}
-
-async function expectButtonVisible(page: import("@playwright/test").Page, label: string | RegExp) {
-  await expect(page.getByRole("button", { name: label }).first()).toBeVisible();
-}
-
-async function clickSmokeContractButton(page: import("@playwright/test").Page, label: string | RegExp) {
-  await page.getByRole("button", { name: label }).last().evaluate((node) => {
-    (node as HTMLButtonElement).click();
-  });
-}
-
 test.describe("URAI V1 smoke", () => {
-  test("home route renders core V1 sections @smoke", async ({ page }) => {
-    await openHome(page);
+  test("root renders memory-to-world entry flow @smoke", async ({ page }) => {
+    await openRoot(page);
 
     await expectVisibleBodyText(page, /^URAI$/);
-    await expectBodyTextAttached(page, /^Sky · Orb · Ground$/);
-    await expectVisibleBodyText(page, /stable · quiet sky · memory gateway ready/i);
-    await expectBodyTextAttached(page, /Your sky is quiet, but awake\./i);
+    await expectVisibleBodyText(page, /Start with a thought, moment, dream, voice-note transcript, or scene from your life/i);
+    await expect(page.getByLabel("One memory")).toBeVisible();
+    await expect(page.getByLabel("Vibe")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Create scene" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Enter existing world" })).toHaveAttribute("href", "/home");
   });
 
-  test("final /home field exposes HomeWorld DOM contract and core controls @smoke", async ({ page }) => {
-    await page.goto("/home", { waitUntil: "domcontentloaded" });
+  test("root generates and shares a first scene @smoke", async ({ page }) => {
+    await openRoot(page);
 
-    const homeWorld = page.locator('main[aria-label="URAI Home World"]').first();
-    await expect(homeWorld).toHaveAttribute("data-ground-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-orb-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-sky-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-mood", /calm|low|recovery|dream|shadow|focused|joy/);
-    await expect(homeWorld).toHaveAttribute("data-recovery", /dormant|recovering|stable|growing|awakened/);
-    await expect(homeWorld).toHaveAttribute("data-narrator-speaking", /true|false/);
+    await page.getByLabel("One memory").fill("I moved to a new city and started rebuilding my life.");
+    await page.getByLabel("Vibe").selectOption("hopeful");
+    await page.getByRole("button", { name: "Create scene" }).click();
 
-    await expectButtonVisible(page, "Ascend through the sky into the URAI Life Map");
-    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
-    await expectButtonVisible(page, "Enter the ground and foundation layer");
+    await expectVisibleBodyText(page, /^Your first scene$/);
+    await expectVisibleBodyText(page, /The World After/i);
+    await expectVisibleBodyText(page, /This is where your life stops being a note and starts becoming a world\./i);
 
-    await clickSmokeContractButton(page, ORB_COMPANION_BUTTON);
-    await expect(page.getByRole("heading", { name: "URAI is listening." })).toBeVisible();
-    await expect(page.getByLabel("Message URAI companion")).toBeVisible();
-    await clickSmokeContractButton(page, "Close companion chat");
-
-    await clickSmokeContractButton(page, "Ascend through the sky into the URAI Life Map");
-    await expectButtonVisible(page, "Reverse ascent and return home");
-  });
-
-  test("final /home reduced-motion path keeps core controls available @smoke", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/home", { waitUntil: "domcontentloaded" });
-
-    await expectButtonVisible(page, "Ascend through the sky into the URAI Life Map");
-    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
-    await expectButtonVisible(page, "Enter the ground and foundation layer");
+    const shareLink = page.getByRole("link", { name: "Share this scene" });
+    await expect(shareLink).toBeVisible();
+    await expect(shareLink).toHaveAttribute("href", /memory=.*rebuilding.*vibe=hopeful/);
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
@@ -139,9 +108,11 @@ test.describe("URAI V1 smoke", () => {
     expect(body.moodTag).toEqual(expect.any(String));
   });
 
-  test("companion blocks empty prompt", async ({ page }) => {
-    await openHome(page);
-
-    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
+  test("status endpoint reports ok", async ({ request }) => {
+    const response = await request.get("/api/status");
+    await expect(response).toBeOK();
+    const body = await response.json();
+    expect(body.ok).toBe(true);
+    expect(body.service).toBe("urai");
   });
 });
