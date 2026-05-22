@@ -19,8 +19,8 @@ async function expectButtonVisible(page: import("@playwright/test").Page, label:
   await expect(page.getByRole("button", { name: label }).first()).toBeVisible();
 }
 
-async function clickButtonByLabel(page: import("@playwright/test").Page, label: string | RegExp) {
-  await page.getByRole("button", { name: label }).first().evaluate((node) => {
+async function clickSmokeContractButton(page: import("@playwright/test").Page, label: string | RegExp) {
+  await page.getByRole("button", { name: label }).last().evaluate((node) => {
     (node as HTMLButtonElement).click();
   });
 }
@@ -50,12 +50,12 @@ test.describe("URAI V1 smoke", () => {
     await expectButtonVisible(page, ORB_COMPANION_BUTTON);
     await expectButtonVisible(page, "Enter the ground and foundation layer");
 
-    await clickButtonByLabel(page, ORB_COMPANION_BUTTON);
+    await clickSmokeContractButton(page, ORB_COMPANION_BUTTON);
     await expect(page.getByRole("heading", { name: "URAI is listening." })).toBeVisible();
     await expect(page.getByLabel("Message URAI companion")).toBeVisible();
-    await clickButtonByLabel(page, "Close companion chat");
+    await clickSmokeContractButton(page, "Close companion chat");
 
-    await clickButtonByLabel(page, "Ascend through the sky into the URAI Life Map");
+    await clickSmokeContractButton(page, "Ascend through the sky into the URAI Life Map");
     await expectButtonVisible(page, "Reverse ascent and return home");
   });
 
