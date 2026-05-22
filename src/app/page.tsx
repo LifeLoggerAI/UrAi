@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { encodeScene, generateScene, type SceneVibe } from "@/lib/scene-generator";
+import { generateScene, type SceneVibe } from "@/lib/scene-generator";
 
 export const metadata = {
   title: "URAI | Give it one memory",
@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
   const vibe = parseVibe(firstParam(params?.vibe));
   const hasScene = memory.trim().length > 0;
   const scene = generateScene(memory, vibe);
-  const shareId = encodeScene({ ...scene, id: "share" });
+  const shareHref = `/?memory=${encodeURIComponent(scene.memory)}&vibe=${scene.vibe}`;
 
   return (
     <main className="urai-entry-shell">
@@ -60,7 +60,7 @@ export default async function Page({ searchParams }: PageProps) {
         <p>{scene.atmosphere}</p>
         <p>{scene.world}</p>
         <blockquote>{scene.narratorLine}</blockquote>
-        {hasScene ? <Link className="primary" href={`/share/${shareId}`}>Open share scene</Link> : <span className="disabled-link">Add a memory to create the scene.</span>}
+        {hasScene ? <Link className="primary" href={shareHref}>Share this scene</Link> : <span className="disabled-link">Add a memory to create the scene.</span>}
       </aside>
       <div className="ambient ambient-one" aria-hidden="true" />
       <div className="ambient ambient-two" aria-hidden="true" />
