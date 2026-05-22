@@ -1,12 +1,13 @@
 # URAI
 
-URAI V1 is a public demo spine for a future passive emotional operating system: a symbolic life mirror, mood forecast layer, memory constellation, and companion narrator experience.
+URAI V1 is a public demo for the simplest version of the product promise: give URAI one memory, and it turns that memory into the first scene of a living world.
 
-This repository is launch-focused and intentionally conservative. Full passive sensing, therapy/diagnosis, marketplace, AR/VR, B2B, and studio/export systems are **not live in V1** unless they are explicitly implemented, consent-gated, tested, and documented.
+This repository is launch-focused and intentionally conservative. Full passive sensing, therapy/diagnosis, marketplace, AR/VR, B2B, studio/export systems, and automated life-logging are **not live in V1** unless they are explicitly implemented, consent-gated, tested, and documented.
 
-The current V1 repo focus is the **demo spine**:
+The current V1 repo focus is the **memory-to-world demo spine**:
 
-- `/` cinematic home scene
+- `/` memory-world entry scene
+- `/home` deeper URAI home experience with symbolic ground, orb, companion chat, reflection, and waitlist capture
 - `/u/adamclamp` public constellation demo
 - `/api/companion` deterministic mocked companion narrator endpoint with safety boundaries
 - `/api/waitlist` early-access capture endpoint
@@ -28,6 +29,7 @@ Then open:
 
 ```txt
 http://localhost:3014
+http://localhost:3014/home
 http://localhost:3014/u/adamclamp
 ```
 
@@ -54,7 +56,7 @@ npm run test:smoke
 npm run test:e2e
 ```
 
-`npm run test:smoke` covers the launch-critical home route, public constellation route, waitlist happy path, waitlist invalid-email state, companion happy path, and companion empty-input guard.
+`npm run test:smoke` covers the launch-critical memory-world root route, deeper home route, public constellation route, waitlist happy path, waitlist invalid-email state, companion happy path, and companion empty-input guard.
 
 ## Utility commands
 
@@ -116,7 +118,8 @@ The waitlist route works in local dry-run mode without Admin credentials. With A
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home demo spine with symbolic ground, mood forecast, reflection, companion chat, and waitlist form |
+| `/` | Launch entry where one memory becomes the first scene of a living world |
+| `/home` | Deeper URAI home experience with symbolic ground, orb, reflection, companion chat, and waitlist form |
 | `/u/adamclamp` | Public constellation demo with blooms, timeline stars, forecast, reflection, and waitlist CTA |
 | `/api/companion` | POST endpoint for deterministic mocked companion narrator responses with safety boundaries |
 | `/api/waitlist` | POST endpoint for early-access signups |
