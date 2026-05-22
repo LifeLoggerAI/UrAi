@@ -15,6 +15,10 @@ async function expectBodyTextAttached(page: import("@playwright/test").Page, tex
   await expect(page.locator("body").getByText(text).first()).toHaveCount(1);
 }
 
+async function expectButtonVisible(page: import("@playwright/test").Page, label: string | RegExp) {
+  await expect(page.getByRole("button", { name: label }).first()).toBeVisible();
+}
+
 async function clickButtonByLabel(page: import("@playwright/test").Page, label: string | RegExp) {
   await page.getByRole("button", { name: label }).first().evaluate((node) => {
     (node as HTMLButtonElement).click();
@@ -42,9 +46,9 @@ test.describe("URAI V1 smoke", () => {
     await expect(homeWorld).toHaveAttribute("data-recovery", /dormant|recovering|stable|growing|awakened/);
     await expect(homeWorld).toHaveAttribute("data-narrator-speaking", /true|false/);
 
-    await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
+    await expectButtonVisible(page, "Ascend through the sky into the URAI Life Map");
+    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
+    await expectButtonVisible(page, "Enter the ground and foundation layer");
 
     await clickButtonByLabel(page, ORB_COMPANION_BUTTON);
     await expect(page.getByRole("heading", { name: "URAI is listening." })).toBeVisible();
@@ -52,16 +56,16 @@ test.describe("URAI V1 smoke", () => {
     await clickButtonByLabel(page, "Close companion chat");
 
     await clickButtonByLabel(page, "Ascend through the sky into the URAI Life Map");
-    await expect(page.getByRole("button", { name: "Reverse ascent and return home" })).toBeVisible();
+    await expectButtonVisible(page, "Reverse ascent and return home");
   });
 
   test("final /home reduced-motion path keeps core controls available @smoke", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
+    await expectButtonVisible(page, "Ascend through the sky into the URAI Life Map");
+    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
+    await expectButtonVisible(page, "Enter the ground and foundation layer");
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
@@ -138,6 +142,6 @@ test.describe("URAI V1 smoke", () => {
   test("companion blocks empty prompt", async ({ page }) => {
     await openHome(page);
 
-    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
+    await expectButtonVisible(page, ORB_COMPANION_BUTTON);
   });
 });
