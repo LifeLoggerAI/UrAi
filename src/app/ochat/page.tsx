@@ -7,12 +7,12 @@ export const metadata = {
 
 export default function OchatPage() {
   return (
-    <main className="relative min-h-dvh overflow-hidden bg-[#020617] text-white">
+    <main aria-label="URAI orb companion chamber" className="relative min-h-dvh overflow-hidden bg-[#020617] text-white">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_34%,rgba(103,232,249,.22),transparent_30%),radial-gradient(circle_at_78%_12%,rgba(168,85,247,.2),transparent_35%),linear-gradient(180deg,#01030a,#07152b_48%,#020617)]" />
       <div className="pointer-events-none fixed inset-0 opacity-60 [background-image:radial-gradient(circle_at_18%_22%,rgba(255,255,255,.42)_0_1px,transparent_1.5px),radial-gradient(circle_at_76%_18%,rgba(186,230,253,.34)_0_1px,transparent_1.5px),radial-gradient(circle_at_47%_39%,rgba(221,214,254,.28)_0_1px,transparent_1.5px)]" />
 
       <section className="relative z-10 mx-auto flex min-h-dvh w-full max-w-5xl flex-col items-center justify-center px-5 py-12 text-center">
-        <div className="relative flex h-72 w-72 items-center justify-center rounded-full border border-cyan-100/15 bg-cyan-100/[0.035] shadow-[0_0_130px_rgba(103,232,249,.22)]">
+        <div aria-hidden="true" className="relative flex h-72 w-72 items-center justify-center rounded-full border border-cyan-100/15 bg-cyan-100/[0.035] shadow-[0_0_130px_rgba(103,232,249,.22)]">
           <div className="absolute inset-[-24%] rounded-full bg-[radial-gradient(circle,rgba(103,232,249,.18),rgba(168,85,247,.1)_42%,transparent_68%)] blur-2xl" />
           <div className="relative h-36 w-36 rounded-full bg-[radial-gradient(circle_at_32%_24%,#fff,#a5f3fc_24%,#0891b2_52%,#031525_88%)] shadow-[inset_-24px_-28px_40px_rgba(0,0,0,.72),0_0_80px_rgba(103,232,249,.42)]" />
         </div>
@@ -36,7 +36,7 @@ export default function OchatPage() {
           ))}
         </div>
 
-        <nav className="mt-8 flex flex-wrap justify-center gap-3">
+        <nav aria-label="Orb companion navigation" className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/home" className="rounded-full border border-cyan-100/30 bg-cyan-100/10 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50">Return home</Link>
           <Link href="/life-map" className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-100">Open life map</Link>
         </nav>
