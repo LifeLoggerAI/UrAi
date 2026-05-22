@@ -1,10 +1,16 @@
 # URAI Post-Merge Deployment Evidence
 
-Status: production evidence pending - repo gates green and PR #304 merged
+Status: production evidence pending - repo gates green, PR #304 merged, deploy proof coverage expanded
 Related issue: #300
 Latest merged implementation: PR #304
 Merge commit: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
 PR head verified before merge: `9c7528f0b02cd5374c33fc0a2163cd449e7e8161`
+Post-merge deploy-proof commits:
+
+- `b9a4217fdf91bf2c4ef4a756c847eb9656b94a79` - polished `/ochat` accessibility on `main`.
+- `bb9849962f4fde08399ee893f0300c7da6ac1517` - expanded Firebase production deploy HTTP route checks.
+- `14a669d569251d601165116c10fa3380fc7336c8` - added `/ochat` production browser smoke coverage.
+
 Last verification attempt: 2026-05-22
 
 This document captures deployment evidence after a `main` release. Do not mark production launch complete until the required workflow, Firebase, browser, mobile, reduced-motion, safety, and rollback checks are filled in with concrete results.
@@ -21,6 +27,14 @@ Merged changes:
 - Updated `tests/e2e/v1-smoke.spec.ts` for the final canonical home/orb label contract.
 - Updated `tests/e2e/v1-production-smoke.spec.ts` to avoid strict-mode collisions where final UI and smoke-contract orb controls share the same valid accessible label.
 - Updated `src/components/urai/HomeWorldSmokeContract.tsx` to expose required launch smoke anchors without reintroducing `Final Home Field`.
+
+## Post-merge hardening
+
+Post-merge commits expanded production proof coverage:
+
+- `/ochat` now has explicit page-level accessibility labels and decorative orb hiding.
+- `.github/workflows/deploy.yml` now HTTP-checks `/`, `/home`, `/ochat`, `/u/adamclamp`, and `/api/status` after deployment.
+- `tests/e2e/v1-production-smoke.spec.ts` now includes a dedicated `/ochat` browser smoke test that verifies the orb companion chamber, heading, privacy-safe copy, and return links to `/home` and `/life-map`.
 
 ## Pre-merge workflow evidence
 
@@ -43,6 +57,7 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 - Workflow file: `.github/workflows/urai-ci.yml`
 - Trigger expected: `push` to `main`
 - Merge commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
+- Latest deploy-proof commit SHA: `14a669d569251d601165116c10fa3380fc7336c8`
 - Result: pending - no post-merge `main` run URL attached yet
 - Required secret checked by workflow: `FIREBASE_TOKEN`
 - Firebase deploy result: pending - no deploy output attached yet
@@ -51,14 +66,15 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 ### Deploy Firebase Production workflow
 
 - Workflow file: `.github/workflows/deploy.yml`
-- Trigger expected: `push` to `main` because PR #304 changed `src/**`, `package.json`, and `tests/e2e/**`
+- Trigger expected: `push` to `main` because deploy-proof commits changed `.github/workflows/deploy.yml` and `tests/e2e/**`
 - Merge commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
+- Latest deploy-proof commit SHA: `14a669d569251d601165116c10fa3380fc7336c8`
 - Result: pending - no production deploy workflow run URL attached yet
 - Required secret checked by workflow: `FIREBASE_SERVICE_ACCOUNT`
 - Firebase project: `urai-4dc1d`
 - Firebase Hosting target: `hosting:urai-4dc1d`
 - Workflow production URL: `https://urai-4dc1d.web.app`
-- Notes: The workflow validates the Firebase target, builds the app, deploys hosting with `npx firebase-tools@15.18.0 deploy --only hosting:urai-4dc1d --project urai-4dc1d --non-interactive`, checks `/`, `/home`, and `/api/status`, installs Playwright Chromium, and runs `npm run test:smoke:production`.
+- Notes: The workflow validates the Firebase target, builds the app, deploys hosting with `npx firebase-tools@15.18.0 deploy --only hosting:urai-4dc1d --project urai-4dc1d --non-interactive`, checks `/`, `/home`, `/ochat`, `/u/adamclamp`, and `/api/status`, installs Playwright Chromium, and runs `npm run test:smoke:production`.
 
 ### Firebase Hosting live
 
@@ -66,6 +82,7 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 - Trigger used: pending - not verified through connected GitHub tool
 - Run URL: pending
 - Commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
+- Latest deploy-proof commit SHA: `14a669d569251d601165116c10fa3380fc7336c8`
 - Result: pending
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
@@ -80,16 +97,16 @@ Record the exact deployed URL and browser/device used for each check.
 | Check | URL | Browser/device | Result | Evidence |
 | --- | --- | --- | --- | --- |
 | Home loads | `https://www.urai.app/` | Desktop | pending | Need browser evidence after deploy. |
-| Home loads | `https://urai-4dc1d.web.app/` | Desktop | pending | Need Firebase Hosting evidence after deploy. |
+| Home loads | `https://urai-4dc1d.web.app/` | Desktop | pending | Firebase deploy workflow now checks this route. Attach run URL/output. |
 | Home loads | `/` | Mobile | pending | Need mobile browser evidence. |
 | Home reduced motion | `/` | Desktop reduced motion | pending | Need reduced-motion browser evidence. |
 | `/home` redirects to `/` | `/home` | Desktop | pending | Deploy workflow checks this path; attach run URL/output. |
-| Public constellation loads | `/u/adamclamp` | Desktop | pending | Need production browser proof. |
+| `/ochat` loads | `/ochat` | Desktop | pending | Deploy workflow and production smoke now check this path. Attach run URL/output. |
+| Public constellation loads | `/u/adamclamp` | Desktop | pending | Deploy workflow now HTTP-checks this path; production smoke checks visible public-safe content. Attach run URL/output. |
 | Public constellation loads | `/u/adamclamp` | Mobile | pending | Need mobile browser proof. |
 | Waitlist form validates empty email | `/u/adamclamp` | Desktop | pending | Need production browser proof. |
 | Waitlist form submits configured email | `/u/adamclamp` | Desktop | pending | Need production browser proof or explicit dry-run proof. |
 | Companion fallback responds safely | `/api/companion` or UI path | Desktop | pending | Need production API/UI proof. |
-| `/ochat` loads | `/ochat` | Desktop | pending | Need production browser proof after PR #304 deploy. |
 
 ## Data and safety checks
 
@@ -111,8 +128,8 @@ Record the exact deployed URL and browser/device used for each check.
 
 ## Known blockers
 
-- Missing passing `UrAi CI/CD` push-run URL for merge commit `1f0da470088bb67319146cf515b957cc1c5dfd8f`.
-- Missing passing Deploy Firebase Production workflow run URL for merge commit `1f0da470088bb67319146cf515b957cc1c5dfd8f`.
+- Missing passing `UrAi CI/CD` push-run URL for merge commit `1f0da470088bb67319146cf515b957cc1c5dfd8f` or latest deploy-proof commit `14a669d569251d601165116c10fa3380fc7336c8`.
+- Missing passing Deploy Firebase Production workflow run URL for latest deploy-proof commit `14a669d569251d601165116c10fa3380fc7336c8`.
 - Missing confirmation that `FIREBASE_TOKEN` is configured for `.github/workflows/urai-ci.yml`.
 - Missing confirmation that `FIREBASE_SERVICE_ACCOUNT` is configured for `.github/workflows/deploy.yml`.
 - Missing closure-grade deployed production URL evidence tied to a workflow run.
