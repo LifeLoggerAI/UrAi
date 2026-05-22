@@ -34,6 +34,19 @@ This document captures deployment evidence after a `main` release. Do not mark t
 - Deployed URL: partial evidence found for `https://www.urai.app/`; closure still blocked without deploy workflow run URL and full smoke evidence.
 - Notes: Internal deployment docs identify `https://www.urai.app` as the production URL and Firebase Hosting site `urai-4dc1d`. A web fetch on 2026-05-21 returned a live URAI Spatial home shell at `https://www.urai.app/` with visible text including `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, and `Home → LifeMap → Focus → Replay`. Subroute verification remained blocked in this context: the web tool could not safely open `/home`, `/u/adamclamp`, or the Firebase default hosting URL, and a container-level DNS check failed with temporary name resolution errors.
 
+### Deploy Firebase Production workflow
+
+- Workflow file: `.github/workflows/deploy.yml`
+- Trigger used: not verified through connected GitHub tool
+- Run URL: blocked - no run URL attached
+- Commit SHA: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
+- Result: blocked - no post-merge production deploy workflow evidence attached
+- Required secret checked: `FIREBASE_SERVICE_ACCOUNT` - not verifiable from this context
+- Firebase project: `urai-4dc1d`
+- Firebase Hosting target: `hosting:urai-4dc1d`
+- Workflow production URL: `https://urai-4dc1d.web.app`
+- Notes: `.github/workflows/deploy.yml` is an additional production deploy workflow. It validates the Firebase target, builds the app, deploys hosting with `npx firebase-tools@15.18.0 deploy --only hosting:urai-4dc1d --project urai-4dc1d --non-interactive`, checks `https://urai-4dc1d.web.app/`, `/home`, and `/api/status`, installs Playwright Chromium, and runs `npm run test:smoke:production`. A web fetch for `https://urai-4dc1d.web.app/` failed in this verification context, so it is not closure-grade production evidence.
+
 ## Production smoke checklist
 
 Record the exact deployed URL and browser used for each check.
@@ -71,8 +84,10 @@ Record the exact deployed URL and browser used for each check.
 
 - Missing passing `UrAi CI/CD` run URL for `main` / merge commit `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`.
 - Missing passing Firebase Hosting live run URL.
+- Missing passing Deploy Firebase Production workflow run URL.
 - Missing confirmation that `FIREBASE_TOKEN` is configured for the workflow requiring it.
 - Missing confirmation that `FIREBASE_SERVICE_ACCOUNT_URAI` is configured for the live hosting workflow.
+- Missing confirmation that `FIREBASE_SERVICE_ACCOUNT` is configured for `.github/workflows/deploy.yml`.
 - Missing closure-grade deployed production URL evidence tied to a workflow run.
 - Missing production smoke evidence for `/home -> /`, `/u/adamclamp`, waitlist validation/submission, and companion fallback.
 - Missing desktop screenshot, mobile evidence, and reduced-motion evidence.
