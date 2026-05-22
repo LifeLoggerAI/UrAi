@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
 
+const ORB_COMPANION_BUTTON = "Open URAI orb companion";
+
+async function expectOrbCompanionButton(page: import("@playwright/test").Page) {
+  await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON }).first()).toBeVisible();
+}
+
 test.describe("URAI production smoke", () => {
   test("root and /home resolve to the same canonical sanctuary shell @production-smoke", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -7,7 +13,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^URAI$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
-    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
 
     await page.goto("/home", { waitUntil: "domcontentloaded" });
@@ -15,7 +21,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^URAI$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
-    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
@@ -25,7 +31,7 @@ test.describe("URAI production smoke", () => {
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
-    await expect(page.getByRole("button", { name: "Open URAI orb companion" })).toBeVisible();
+    await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
