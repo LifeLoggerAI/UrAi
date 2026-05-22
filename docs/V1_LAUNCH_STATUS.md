@@ -2,7 +2,11 @@
 
 ## Current status
 
-V1 demo spine is implemented and repo-wired, including the merged Ancient Signals layer. Lockfiles were refreshed by the Dependabot/npm update merge, but local/CI runtime validation is still required before launch.
+V1 demo spine is implemented and repo-wired. Release-gate hardening was updated on 2026-05-22 by PR #305, merged at `70badf8827f62c600252ebbb04e79886c927aec6`.
+
+That merge added a clean working tree preflight before Firebase release commands, aligned stale-lockfile CI install steps to `npm install`, and stabilized Lighthouse CI Chrome launch flags. PR #305 was merged after green CI, UrAi CI/CD, Playwright Smoke, QA Lighthouse/A11y, URAI Vault CI, Assets CI, QA Local Script, Independent Release Verifier, and URAI Launch Gate.
+
+V1 is still not production-closeout complete until staging/prod evidence, configured Firebase persistence proof, deployment proof, mobile/desktop visual proof, and the final demo recording are attached to the launch closeout issues.
 
 ## Implemented
 
@@ -22,6 +26,8 @@ V1 demo spine is implemented and repo-wired, including the merged Ancient Signal
 - Waitlist CSV export command
 - V1 sanity checker
 - Lockfile staleness checker
+- Clean working tree release preflight
+- Firebase deploy target lock
 - Tailwind config
 - PostCSS config
 - Playwright config
@@ -37,19 +43,62 @@ V1 demo spine is implemented and repo-wired, including the merged Ancient Signal
 
 ## Known blocker
 
-No repo-level blocker is currently documented after the lockfile refresh merge. Runtime/build/deploy validation is still pending.
+The lockfile refresh remains pending. Current CI workflows that need to validate runtime/build/smoke behavior use `npm install` instead of `npm ci` until `docs/LOCKFILE_REFRESH.md` is completed. Do not switch those workflows back to `npm ci` until `npm run check:lockfile` passes from a clean checkout.
+
+Operational launch evidence is also still pending: staging smoke, production deploy approval, configured waitlist persistence proof, Firebase deploy proof, mobile/desktop visual proof, and final demo recording.
+
+## Latest merged release-gate evidence
+
+PR #305 merged at `70badf8827f62c600252ebbb04e79886c927aec6` after these checks passed on head `f29d747236a002118f1c98dda23dc006e005d774`:
+
+- CI
+- UrAi CI/CD
+- Playwright Smoke
+- QA Lighthouse/A11y
+- URAI Vault CI
+- Assets CI
+- QA Local Script
+- Independent Release Verifier
+- URAI Launch Gate
+
+Launch Gate evidence from the passing run included:
+
+- `npm run preflight` passed
+- Firebase target check passed for `urai-4dc1d/urai-4dc1d`
+- V1 sanity check passed
+- public copy boundary check passed
+- completion audit passed
+- typecheck passed
+- lint passed
+- unit tests passed: 21 suites, 90 tests
+- build passed
+- Tier 1 launch lock passed
+- route audit passed
+- console warning audit passed
+- env readiness audit passed
+- tier lock report passed
+- smoke tests passed: 12 tests
 
 ## Required validation
 
+Use `npm install` while the lockfile refresh is pending.
+
 ```bash
+npm install
+npm run check:clean-tree
 npm run check:v1
-npm run check:lockfile
 npm run seed:demo
 npm run test:unit
 npm run check:types
 npm run build
 npm run preflight
 npm run test:smoke
+```
+
+Run the lockfile check separately and treat failure as the reason `npm ci` cannot yet be restored:
+
+```bash
+npm run check:lockfile
 ```
 
 ## Functions validation
@@ -85,13 +134,16 @@ firebase deploy --only firestore:rules,firestore:indexes,functions
 
 ## Launch readiness checklist
 
-- [ ] `npm run check:lockfile` passes
-- [ ] `npm run preflight` passes
-- [ ] `npm run test:smoke` passes
-- [ ] `/` checked on mobile and desktop
-- [ ] `/u/adamclamp` checked on mobile and desktop
+- [ ] `npm run check:lockfile` passes from a clean checkout
+- [x] `npm run preflight` passes in PR #305 Launch Gate
+- [x] `npm run test:smoke` passes in PR #305 Launch Gate and Playwright Smoke
+- [ ] `/` checked on mobile and desktop with attached proof
+- [ ] `/u/adamclamp` checked on mobile and desktop with attached proof
 - [ ] Waitlist dry-run checked locally
 - [ ] Waitlist Firestore write checked in configured environment
 - [ ] Ancient Signals demo and persisted snapshot paths checked
-- [ ] Firestore rules/indexes/functions deployed
+- [ ] Firestore rules/indexes/functions deployed with evidence
 - [ ] `NEXT_PUBLIC_SITE_URL` set for deployment
+- [ ] Staging smoke proof attached
+- [ ] Production deploy approval evidence attached
+- [ ] Final demo recording attached
