@@ -27,6 +27,7 @@ jobs:
       PLAYWRIGHT_OUTPUT_DIR: test-results
       FIREBASE_PRODUCTION_URL: https://urai-4dc1d.web.app
       CUSTOM_PRODUCTION_URL: https://www.urai.app
+      URAI_EVIDENCE_RUN_LABEL: pr304-release-evidence
 
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +55,7 @@ jobs:
       - name: Verify Firebase production HTTP routes
         run: |
           set -euo pipefail
+          echo "Evidence run: $URAI_EVIDENCE_RUN_LABEL"
           check_url() {
             url="$1"
             echo "Checking $url"
