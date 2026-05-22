@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+const ORB_COMPANION_BUTTON = "Open URAI orb companion";
+
 async function openHome(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await expect(page.locator('main[aria-label="URAI Home World"]').first()).toBeVisible();
@@ -41,10 +43,10 @@ test.describe("URAI V1 smoke", () => {
     await expect(homeWorld).toHaveAttribute("data-narrator-speaking", /true|false/);
 
     await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
+    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
     await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
 
-    await clickButtonByLabel(page, "Open URAI companion chat from the orb");
+    await clickButtonByLabel(page, ORB_COMPANION_BUTTON);
     await expect(page.getByRole("heading", { name: "URAI is listening." })).toBeVisible();
     await expect(page.getByLabel("Message URAI companion")).toBeVisible();
     await clickButtonByLabel(page, "Close companion chat");
@@ -58,7 +60,7 @@ test.describe("URAI V1 smoke", () => {
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
+    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
     await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
   });
 
@@ -136,6 +138,6 @@ test.describe("URAI V1 smoke", () => {
   test("companion blocks empty prompt", async ({ page }) => {
     await openHome(page);
 
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
+    await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON })).toBeVisible();
   });
 });
