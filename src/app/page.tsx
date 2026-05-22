@@ -1,10 +1,7 @@
-import { HomeScene } from "@/components/urai/home/HomeScene";
+import HomePage, { metadata } from "./home/page";
+
+export { metadata };
 
 export default function Page() {
-  return <HomeScene />;
+  return <HomePage />;
 }
-
-export const metadata = {
-  title: "URAI Inner Sky Shrine",
-  description: "URAI cinematic home shrine with orb, sky, ground, and Memory Galaxy gateway.",
-};
