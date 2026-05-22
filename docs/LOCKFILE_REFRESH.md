@@ -1,13 +1,19 @@
 # Lockfile Refresh Requirement
 
-`package.json` has changed to add production/build dependencies:
+`package.json` has changed and the checked-in `package-lock.json` must be regenerated before CI should return to deterministic `npm ci` installs.
 
-- `firebase-admin`
-- `tailwindcss`
-- `postcss`
-- `autoprefixer`
+## Current validation behavior
 
-The checked-in `package-lock.json` must be regenerated before CI should return to `npm ci`.
+`npm run check:lockfile` now performs two checks:
+
+1. Confirms every root `dependencies` and `devDependencies` entry from `package.json` exists in the lockfile root package.
+2. Runs:
+
+```bash
+npm ci --dry-run --ignore-scripts --no-audit --no-fund
+```
+
+The dry run catches version and nested dependency drift that a root-name-only check can miss.
 
 ## Refresh steps
 
@@ -15,6 +21,7 @@ Run locally from the repo root:
 
 ```bash
 npm install
+npm run check:lockfile
 npm run seed:demo
 npm run test:unit
 npm run check:types
@@ -31,7 +38,7 @@ git commit -m "Refresh package lockfile"
 
 ## CI note
 
-`.github/workflows/ci.yml` temporarily uses `npm install` so dependency changes do not fail only because the lockfile is stale.
+CI workflows temporarily use `npm install` so dependency changes do not fail only because the lockfile is stale.
 
 After `package-lock.json` is refreshed and committed, update CI back to:
 
@@ -39,4 +46,4 @@ After `package-lock.json` is refreshed and committed, update CI back to:
 - run: npm ci
 ```
 
-This restores deterministic dependency installs for CI.
+Only restore `npm ci` after `npm run check:lockfile` passes from a clean checkout. This restores deterministic dependency installs for CI.
