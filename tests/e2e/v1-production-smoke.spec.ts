@@ -35,6 +35,17 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
   });
 
+  test("orb companion route renders safely and links home @production-smoke", async ({ page }) => {
+    await page.goto("/ochat", { waitUntil: "domcontentloaded" });
+
+    await expect(page.getByRole("main", { name: "URAI orb companion chamber" })).toBeVisible();
+    await expect(page.getByText(/^Orb companion$/).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "URAI is here without taking over." })).toBeVisible();
+    await expect(page.getByText(/No raw private logs appear here\./)).toBeVisible();
+    await expect(page.getByRole("link", { name: "Return home" })).toHaveAttribute("href", "/home");
+    await expect(page.getByRole("link", { name: "Open life map" })).toHaveAttribute("href", "/life-map");
+  });
+
   test("required spatial routes expose canonical route state @production-smoke", async ({ page }) => {
     await page.goto("/life-map", { waitUntil: "domcontentloaded" });
     const lifeMap = page.locator("main[data-route-state='life-map']");
