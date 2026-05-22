@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 async function openHome(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+  await expect(page.locator('main[aria-label="URAI Home World"]').first()).toBeVisible();
 }
 
 async function expectVisibleBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
@@ -86,6 +86,7 @@ test.describe("URAI V1 smoke", () => {
       ["/investors", /coherent launch surface/i],
       ["/memory/demo-star", /Memory Star opened/i],
       ["/cognitive-mirror", /Cognitive Mirror/i],
+      ["/ochat", /Orb companion/i],
     ] as const;
 
     for (const [route, expectedText] of routes) {
