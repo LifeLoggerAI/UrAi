@@ -7,6 +7,7 @@ This repository is launch-focused and intentionally conservative. Full passive s
 The current V1 repo focus is the **memory-to-world demo spine**:
 
 - `/` memory-world entry scene
+- `/` cinematic home scene compatibility marker for the P0 launch gate
 - `/home` deeper URAI home experience with symbolic ground, orb, companion chat, reflection, and waitlist capture
 - `/u/adamclamp` public constellation demo
 - `/api/companion` deterministic mocked companion narrator endpoint with safety boundaries
