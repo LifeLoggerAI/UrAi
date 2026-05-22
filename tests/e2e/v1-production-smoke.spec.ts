@@ -2,6 +2,10 @@ import { expect, test } from "@playwright/test";
 
 const ORB_COMPANION_BUTTON = "Open URAI orb companion";
 
+async function captureLaunchEvidence(page: import("@playwright/test").Page, name: string) {
+  await page.screenshot({ fullPage: true, path: `test-results/production-evidence/${name}.png` });
+}
+
 async function expectOrbCompanionButton(page: import("@playwright/test").Page) {
   await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON }).first()).toBeVisible();
 }
@@ -25,6 +29,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
+    await captureLaunchEvidence(page, "desktop-root-home");
 
     await page.goto("/home", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/$/);
@@ -33,6 +38,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
+    await captureLaunchEvidence(page, "desktop-home-redirect");
   });
 
   test("/home exposes canonical core interaction surfaces after redirect @production-smoke", async ({ page }) => {
@@ -52,6 +58,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expectOrbCompanionButton(page);
+    await captureLaunchEvidence(page, "desktop-root-reduced-motion");
   });
 
   test("orb companion route renders safely and links home @production-smoke", async ({ page }) => {
@@ -63,6 +70,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.getByText(/No raw private logs appear here\./)).toBeVisible();
     await expect(page.getByRole("link", { name: "Return home" })).toHaveAttribute("href", "/home");
     await expect(page.getByRole("link", { name: "Open life map" })).toHaveAttribute("href", "/life-map");
+    await captureLaunchEvidence(page, "desktop-ochat");
   });
 
   test("required spatial routes expose canonical route state @production-smoke", async ({ page }) => {
@@ -81,6 +89,7 @@ test.describe("URAI production smoke", () => {
     await expect(page.getByText("Filters and privacy")).toBeVisible();
     await expect(page.getByText("Constellation model")).toBeVisible();
     await expect(page.getByText("Artifact unlock review")).toBeVisible();
+    await captureLaunchEvidence(page, "desktop-life-map");
 
     await page.goto("/life-map/star/starter-star", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='star-selected']")).toBeVisible();
@@ -119,11 +128,13 @@ test.describe("URAI production smoke", () => {
 
   test("public constellation route renders public-safe content @production-smoke", async ({ page }) => {
     await expectPublicConstellation(page);
+    await captureLaunchEvidence(page, "desktop-public-constellation");
   });
 
   test("public constellation mobile layout remains public-safe @production-smoke", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await expectPublicConstellation(page);
+    await captureLaunchEvidence(page, "mobile-public-constellation");
   });
 
   test("waitlist form keeps invalid email disabled on public constellation @production-smoke", async ({ page }) => {
@@ -133,6 +144,22 @@ test.describe("URAI production smoke", () => {
     const form = email.locator("xpath=ancestor::form");
     await expect(email).toBeVisible();
     await expect(form.getByRole("button", { name: /Request Access|Joined/ })).toBeDisabled();
+  });
+
+  test("waitlist API accepts production smoke submission or dry-run @production-smoke", async ({ request }) => {
+    const response = await request.post("/api/waitlist", {
+      data: {
+        email: `production-smoke-${Date.now()}@example.com`,
+        source: "production-smoke",
+        handle: "adamclamp",
+        intent: "release-verification"
+      }
+    });
+
+    await expect(response).toBeOK();
+    const body = await response.json();
+    expect(body.ok).toBe(true);
+    expect(body.mode === "dry-run" || typeof body.id === "string").toBe(true);
   });
 
   test("companion fallback API responds without private data @production-smoke", async ({ request }) => {
