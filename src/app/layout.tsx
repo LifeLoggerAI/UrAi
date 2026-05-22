@@ -24,19 +24,19 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3014";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "URAI — Passive Emotional OS",
+    default: "URAI — Give it one memory",
     template: "%s | URAI",
   },
   description:
-    "URAI is a passive emotional operating system prototype for memory, mood forecasting, emotional reflection, and companion narration.",
+    "Give URAI one memory and watch it become the first scene of a living world.",
   applicationName: "URAI",
   keywords: [
     "URAI",
-    "emotional operating system",
-    "passive life logging",
-    "memory constellation",
-    "AI companion",
-    "mood forecasting",
+    "memory world",
+    "cinematic memory",
+    "living world",
+    "personal world",
+    "AI scene",
   ],
   authors: [{ name: "URAI Labs" }],
   creator: "URAI Labs",
@@ -45,15 +45,15 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "URAI",
-    title: "URAI — Passive Emotional OS",
+    title: "URAI — Give it one memory",
     description:
-      "A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.",
+      "Give URAI one memory and watch it become the first scene of a living world.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "URAI — Passive Emotional OS",
+    title: "URAI — Give it one memory",
     description:
-      "A symbolic life mirror for memory, mood forecasting, emotional reflection, and companion narration.",
+      "Give URAI one memory and watch it become the first scene of a living world.",
   },
 };
 
