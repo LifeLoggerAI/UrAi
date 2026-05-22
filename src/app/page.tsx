@@ -38,7 +38,7 @@ export default async function Page({ searchParams }: PageProps) {
         </p>
         <form className="memory-form" action="/" aria-label="Create a URAI scene">
           <label htmlFor="memory">One memory</label>
-          <textarea id="memory" name="memory" rows={5} maxLength={900} placeholder="Example: I moved to a new city and started rebuilding my life." defaultValue={memory} />
+          <textarea id="memory" name="memory" rows={5} maxLength={900} aria-label="One memory" defaultValue={memory} />
           <label htmlFor="vibe">Vibe</label>
           <select id="vibe" name="vibe" defaultValue={vibe}>
             {SCENE_VIBES.map((item) => (
