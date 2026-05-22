@@ -6,6 +6,16 @@ async function expectOrbCompanionButton(page: import("@playwright/test").Page) {
   await expect(page.getByRole("button", { name: ORB_COMPANION_BUTTON }).first()).toBeVisible();
 }
 
+async function expectPublicConstellation(page: import("@playwright/test").Page) {
+  await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
+
+  await expect(page.locator("body").getByText(/^Public Constellation$/).first()).toBeVisible();
+  await expect(page.locator("body").getByText(/^Demo data · public-safe view$/).first()).toBeVisible();
+  await expect(page.locator("body").getByText(/^@adamclamp$/).first()).toBeVisible();
+  await expect(page.locator("body").getByText(/^Join Early Access$/).first()).toBeVisible();
+  await expect(page.locator("body").getByText(/private memory/i)).toHaveCount(0);
+}
+
 test.describe("URAI production smoke", () => {
   test("root and /home resolve to the same canonical sanctuary shell @production-smoke", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -33,6 +43,15 @@ test.describe("URAI production smoke", () => {
     await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
     await expectOrbCompanionButton(page);
     await expect(page.locator("body").getByText(/Final Home Field/)).toHaveCount(0);
+  });
+
+  test("root supports reduced motion while preserving launch anchors @production-smoke", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+    await expect(page.locator("body").getByText(/^Sky · Orb · Ground$/).first()).toHaveCount(1);
+    await expectOrbCompanionButton(page);
   });
 
   test("orb companion route renders safely and links home @production-smoke", async ({ page }) => {
@@ -99,12 +118,37 @@ test.describe("URAI production smoke", () => {
   });
 
   test("public constellation route renders public-safe content @production-smoke", async ({ page }) => {
+    await expectPublicConstellation(page);
+  });
+
+  test("public constellation mobile layout remains public-safe @production-smoke", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expectPublicConstellation(page);
+  });
+
+  test("waitlist form keeps invalid email disabled on public constellation @production-smoke", async ({ page }) => {
     await page.goto("/u/adamclamp", { waitUntil: "domcontentloaded" });
 
-    await expect(page.locator("body").getByText(/^Public Constellation$/).first()).toBeVisible();
-    await expect(page.locator("body").getByText(/^Demo data · public-safe view$/).first()).toBeVisible();
-    await expect(page.locator("body").getByText(/^@adamclamp$/).first()).toBeVisible();
-    await expect(page.locator("body").getByText(/^Join Early Access$/).first()).toBeVisible();
+    const email = page.locator("#waitlist-email-public-constellation");
+    const form = email.locator("xpath=ancestor::form");
+    await expect(email).toBeVisible();
+    await expect(form.getByRole("button", { name: /Request Access|Joined/ })).toBeDisabled();
+  });
+
+  test("companion fallback API responds without private data @production-smoke", async ({ request }) => {
+    const response = await request.post("/api/companion", {
+      data: {
+        history: [],
+        message: "Give me a safe launch check."
+      }
+    });
+
+    await expect(response).toBeOK();
+    const body = await response.json();
+    expect(body.reply).toEqual(expect.any(String));
+    expect(body.moodTag).toEqual(expect.any(String));
+    expect(body.reply).not.toMatch(/diagnos/i);
+    expect(body.reply).not.toMatch(/private memory/i);
   });
 
   test("status API returns service status envelope @production-smoke", async ({ request }) => {
