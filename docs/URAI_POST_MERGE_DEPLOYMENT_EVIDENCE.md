@@ -4,7 +4,7 @@ Status: production blocked - evidence incomplete
 Related issue: #300
 Latest merged implementation: PR #299
 Merge commit: `d30827f1d4b05c4f8f2624ed12c961dd9bbea4dc`
-Last verification attempt: 2026-05-21
+Last verification attempt: 2026-05-22
 
 This document captures deployment evidence after a `main` release. Do not mark this release complete until the required workflow, Firebase, and browser checks are filled in with concrete results.
 
@@ -32,7 +32,7 @@ This document captures deployment evidence after a `main` release. Do not mark t
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
 - Deployed URL: partial evidence found for `https://www.urai.app/`; closure still blocked without deploy workflow run URL and full smoke evidence.
-- Notes: Internal deployment docs identify `https://www.urai.app` as the production URL and Firebase Hosting site `urai-4dc1d`. A web fetch on 2026-05-21 returned a live URAI Spatial home shell at `https://www.urai.app/` with visible text including `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, and `Home → LifeMap → Focus → Replay`. Subroute verification remained blocked in this context: the web tool could not safely open `/home`, `/u/adamclamp`, or the Firebase default hosting URL, and a container-level DNS check failed with temporary name resolution errors.
+- Notes: Internal deployment docs identify `https://www.urai.app` as the production URL and Firebase Hosting site `urai-4dc1d`. Web fetches on 2026-05-21 and 2026-05-22 returned a live URAI Spatial home shell at `https://www.urai.app/` with visible text including `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, and `Home → LifeMap → Focus → Replay`. Subroute verification remained blocked in this context: the web tool could not safely open `/home`, `/api/status`, `/u/adamclamp`, or the Firebase default hosting URL.
 
 ### Deploy Firebase Production workflow
 
@@ -53,7 +53,7 @@ Record the exact deployed URL and browser used for each check.
 
 | Check | URL | Browser/device | Result | Evidence |
 | --- | --- | --- | --- | --- |
-| Home loads | `https://www.urai.app/` | Web fetch | partial pass | 2026-05-21 web fetch returned URAI Spatial home shell text: `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, `Home → LifeMap → Focus → Replay`. Closure still blocked without workflow run evidence and browser screenshot. |
+| Home loads | `https://www.urai.app/` | Web fetch | partial pass | 2026-05-22 web fetch returned URAI Spatial home shell text: `URAI Spatial`, `Home`, `Tier 1 / Canonical Shell`, `Home → LifeMap → Focus → Replay`. Closure still blocked without workflow run evidence and browser screenshot. |
 | Home loads | `/` | Mobile | blocked | No mobile browser evidence attached. |
 | Home reduced motion | `/` | Desktop reduced motion | blocked | No reduced-motion browser evidence attached. |
 | `/home` redirects to `/` | `/home` | Desktop | blocked | Web tool could not safely open this subroute in the current context; no production redirect proof attached. |
@@ -75,7 +75,7 @@ Record the exact deployed URL and browser used for each check.
 ## Release decision
 
 - Release owner: blocked - not recorded
-- Verification date: blocked - production evidence incomplete as of 2026-05-21
+- Verification date: blocked - production evidence incomplete as of 2026-05-22
 - Approved for production traffic: no
 - Rollback SHA: candidate pre-PR base SHA is `6320abca8952a4b24d7504988c2ca4e7d8be791e`; final rollback SHA must be approved by the release owner before production traffic is declared complete.
 - Follow-up issues: #300 remains open until deployment evidence is attached
