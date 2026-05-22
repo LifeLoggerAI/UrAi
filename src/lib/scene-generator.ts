@@ -58,22 +58,38 @@ function titleFromMemory(memory: string, vibe: SceneVibe) {
   return `${prefixes[vibe]} ${short.charAt(0).toLowerCase()}${short.slice(1)}`;
 }
 
+function bytesToBase64Url(bytes: Uint8Array) {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return window.btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function base64UrlToBytes(value: string) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(normalized.length + ((4 - (normalized.length % 4)) % 4), "=");
+  const binary = window.atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
 function base64UrlEncode(value: string) {
   if (typeof Buffer !== "undefined") {
     return Buffer.from(value, "utf8").toString("base64url");
   }
-  if (typeof window !== "undefined") {
-    return window.btoa(unescape(encodeURIComponent(value))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  if (typeof window !== "undefined" && typeof TextEncoder !== "undefined") {
+    return bytesToBase64Url(new TextEncoder().encode(value));
   }
   return encodeURIComponent(value);
 }
 
 export function decodeSceneId(id: string): GeneratedScene | null {
   try {
-    const normalized = id.replace(/-/g, "+").replace(/_/g, "/");
     const json = typeof Buffer !== "undefined"
-      ? Buffer.from(normalized, "base64").toString("utf8")
-      : decodeURIComponent(escape(window.atob(normalized)));
+      ? Buffer.from(id, "base64url").toString("utf8")
+      : typeof window !== "undefined" && typeof TextDecoder !== "undefined"
+        ? new TextDecoder().decode(base64UrlToBytes(id))
+        : decodeURIComponent(id);
     const parsed = JSON.parse(json) as GeneratedScene;
     if (!parsed?.memory || !parsed?.title) return null;
     return parsed;
