@@ -2,8 +2,8 @@ import Link from "next/link";
 import { generateScene, SCENE_VIBES, type SceneVibe } from "@/lib/scene-generator";
 
 export const metadata = {
-  title: "URAI | Give it one memory",
-  description: "Give URAI one memory and watch it become a living world.",
+  title: "URAI | Your world is already forming",
+  description: "Enter URAI quietly, or add one optional memory to make the first bloom visible.",
 };
 
 // Home lock marker: the deeper resolved home scene remains mounted at ./home/page and is linked from this root entry.
@@ -25,40 +25,71 @@ export default async function Page({ searchParams }: PageProps) {
   const vibe = parseVibe(firstParam(params?.vibe));
   const hasScene = memory.trim().length > 0;
   const scene = generateScene(memory, vibe);
-  const shareHref = `/?memory=${encodeURIComponent(scene.memory)}&vibe=${scene.vibe}`;
+  const bloomHref = `/?memory=${encodeURIComponent(scene.memory)}&vibe=${scene.vibe}`;
+  const worldHref = hasScene ? `/home?memory=${encodeURIComponent(scene.memory)}&vibe=${scene.vibe}` : "/home?mode=quiet";
 
   return (
     <main className="urai-entry-shell">
       <section className="entry-card" aria-labelledby="urai-entry-title">
         <p className="eyebrow">URAI</p>
-        <h1 id="urai-entry-title">Give URAI one memory. Watch it become a world.</h1>
+        <h1 id="urai-entry-title">Your world is already forming.</h1>
         <p className="lede">
-          Start with a thought, moment, dream, voice-note transcript, or scene from your life.
-          URAI turns it into the first piece of a living cinematic world.
+          URAI quietly turns the patterns of your life into a living symbolic world -- memories,
+          moods, relationships, recovery, and moments becoming sky, stars, weather, and story.
         </p>
-        <form className="memory-form" action="/" aria-label="Create a URAI scene">
-          <label htmlFor="memory">One memory</label>
-          <textarea id="memory" name="memory" rows={5} maxLength={900} aria-label="One memory" defaultValue={memory} />
-          <label htmlFor="vibe">Vibe</label>
-          <select id="vibe" name="vibe" defaultValue={vibe}>
+        <p className="lede lede-soft">
+          You do not have to start with anything. Add one memory only if you want to give the
+          world its first visible spark.
+        </p>
+        <div className="primary-actions" aria-label="Enter URAI">
+          <Link className="primary primary-large" href={worldHref}>Enter my world</Link>
+          <span className="privacy-pill">Start quiet. Add only what you choose.</span>
+        </div>
+        <form className="memory-form optional-spark" action="/" aria-label="Optional first spark">
+          <div className="optional-heading">
+            <span>Add a memory</span>
+            <small>optional first spark</small>
+          </div>
+          <label htmlFor="memory">Optional first spark</label>
+          <textarea
+            id="memory"
+            name="memory"
+            rows={5}
+            maxLength={900}
+            aria-label="Optional first spark"
+            placeholder="Add a memory, dream, voice note, transcript, or moment... only if you want."
+            defaultValue={memory}
+          />
+          <label htmlFor="vibe">World tone</label>
+          <select id="vibe" name="vibe" defaultValue={vibe} aria-label="World tone">
             {SCENE_VIBES.map((item) => (
               <option key={item} value={item}>{item}</option>
             ))}
           </select>
-          <button className="primary" type="submit">Create scene</button>
+          <button className="secondary bloom-button" type="submit">{hasScene ? "Let it bloom" : "Preview optional spark"}</button>
         </form>
-        <div className="actions" aria-label="URAI links">
-          <Link className="secondary" href="/home">Enter existing world</Link>
-        </div>
-        <p className="note">No giant setup. Add one piece of life and let the world reveal itself.</p>
+        <p className="note">The sky is quiet for now. URAI will let the first patterns appear gently.</p>
       </section>
       <aside className={`scene-card ${hasScene ? "is-ready" : ""}`} aria-live="polite">
-        <p className="eyebrow">{hasScene ? "Your first scene" : "Preview"}</p>
-        <h2>{scene.title}</h2>
-        <p>{scene.atmosphere}</p>
-        <p>{scene.world}</p>
-        <blockquote>{scene.narratorLine}</blockquote>
-        {hasScene ? <Link className="primary" href={shareHref}>Share this scene</Link> : <span className="disabled-link">Add a memory to create the scene.</span>}
+        <p className="eyebrow">{hasScene ? "First spark" : "Preview"}</p>
+        <h2>{hasScene ? "This memory can become the first star in your world." : "The world can open before it knows everything."}</h2>
+        {hasScene ? (
+          <>
+            <p>{scene.atmosphere}</p>
+            <p>{scene.world}</p>
+            <blockquote>{scene.narratorLine}</blockquote>
+            <Link className="primary" href={bloomHref}>Let it bloom</Link>
+          </>
+        ) : (
+          <>
+            <p>
+              URAI does not need a full journal, profile, or setup ritual. It can begin as a quiet
+              sky, then slowly change as your life creates signals.
+            </p>
+            <blockquote>A memory is only a spark -- not a requirement.</blockquote>
+            <Link className="secondary" href="/home?mode=quiet">Open quiet world</Link>
+          </>
+        )}
       </aside>
       <div className="ambient ambient-one" aria-hidden="true" />
       <div className="ambient ambient-two" aria-hidden="true" />
@@ -130,6 +161,7 @@ const styles = `
     font-size: clamp(1.02rem, 2vw, 1.18rem);
     line-height: 1.6;
   }
+  .lede-soft { margin-top: 12px; color: rgba(226,232,240,.66); }
   .scene-card p {
     margin: 0;
     color: rgba(226,232,240,.75);
@@ -142,10 +174,44 @@ const styles = `
     color: white;
     line-height: 1.55;
   }
+  .primary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-top: 28px;
+  }
+  .privacy-pill {
+    border: 1px solid rgba(125,211,252,.18);
+    border-radius: 999px;
+    padding: 12px 16px;
+    color: rgba(226,232,240,.7);
+    background: rgba(15,23,42,.54);
+    font-size: .92rem;
+  }
   .memory-form {
     display: grid;
     gap: 12px;
-    margin-top: 28px;
+    margin-top: 24px;
+  }
+  .optional-spark {
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding-top: 20px;
+    opacity: .82;
+  }
+  .optional-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+    color: rgba(255,255,255,.94);
+    font-weight: 850;
+  }
+  .optional-heading small {
+    color: rgba(125,211,252,.76);
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
   }
   .memory-form label {
     color: rgba(226,232,240,.88);
@@ -163,15 +229,10 @@ const styles = `
     line-height: 1.5;
     outline: none;
   }
+  .memory-form textarea::placeholder { color: rgba(226,232,240,.36); }
   .memory-form textarea:focus, .memory-form select:focus {
     border-color: rgba(125,211,252,.58);
-    box-shadow: 0 0 0 4px rgba(125,211,252,.08);
-  }
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 18px;
+    box-shadow: 0 0 0 4px rgba(125,211,252,.08), 0 0 42px rgba(125,211,252,.08);
   }
   .primary, .secondary, .disabled-link {
     display: inline-flex;
@@ -191,11 +252,14 @@ const styles = `
     box-shadow: 0 16px 50px rgba(255,255,255,.16);
     cursor: pointer;
   }
+  .primary-large { min-width: 210px; }
   .secondary {
     border: 1px solid rgba(255,255,255,.16);
     color: rgba(255,255,255,.9);
     background: rgba(255,255,255,.05);
+    cursor: pointer;
   }
+  .bloom-button { width: 100%; }
   .disabled-link {
     background: rgba(255,255,255,.08);
     color: rgba(226,232,240,.62);
@@ -230,9 +294,9 @@ const styles = `
     background: rgba(192,132,252,.26);
   }
   @media (max-width: 980px) {
-    .urai-entry-shell { grid-template-columns: 1fr; }
+    .urai-entry-shell { grid-template-columns: 1fr; overflow: auto; }
     .entry-card, .scene-card { border-radius: 24px; }
-    .actions { display: grid; }
-    .actions a, .primary { width: 100%; }
+    .primary-actions { display: grid; }
+    .primary-actions a, .primary, .secondary { width: 100%; }
   }
 `;
