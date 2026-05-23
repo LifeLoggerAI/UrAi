@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 async function openRoot(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "Give URAI one memory. Watch it become a world." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your world is already forming." })).toBeVisible();
 }
 
 async function expectVisibleBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
@@ -10,31 +10,50 @@ async function expectVisibleBodyText(page: import("@playwright/test").Page, text
 }
 
 test.describe("URAI V1 smoke", () => {
-  test("root renders memory-to-world entry flow @smoke", async ({ page }) => {
+  test("root renders passive first world entry flow @smoke", async ({ page }) => {
     await openRoot(page);
 
     await expectVisibleBodyText(page, /^URAI$/);
-    await expectVisibleBodyText(page, /Start with a thought, moment, dream, voice-note transcript, or scene from your life/i);
-    await expect(page.getByRole("textbox", { name: "One memory" })).toBeVisible();
-    await expect(page.getByLabel("Vibe")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Create scene" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Enter existing world" })).toHaveAttribute("href", "/home");
+    await expectVisibleBodyText(page, /URAI quietly turns the patterns of your life/i);
+    await expect(page.getByRole("link", { name: "Enter my world" })).toHaveAttribute("href", "/home?mode=quiet");
+    await expect(page.getByRole("textbox", { name: "Optional first spark" })).toBeVisible();
+    await expect(page.getByLabel("World tone")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Preview optional spark" })).toBeVisible();
+    await expectVisibleBodyText(page, /A memory is only a spark -- not a requirement/i);
   });
 
-  test("root generates and shares a first scene @smoke", async ({ page }) => {
+  test("root previews an optional first spark @smoke", async ({ page }) => {
     await openRoot(page);
 
-    await page.getByRole("textbox", { name: "One memory" }).fill("I moved to a new city and started rebuilding my life.");
-    await page.getByLabel("Vibe").selectOption("hopeful");
-    await page.getByRole("button", { name: "Create scene" }).click();
+    await page.getByRole("textbox", { name: "Optional first spark" }).fill("I moved to a new city and started rebuilding my life.");
+    await page.getByLabel("World tone").selectOption("hopeful");
+    await page.getByRole("button", { name: "Preview optional spark" }).click();
 
-    await expectVisibleBodyText(page, /^Your first scene$/);
+    await expectVisibleBodyText(page, /^First spark$/);
+    await expectVisibleBodyText(page, /This memory can become the first star in your world/i);
     await expectVisibleBodyText(page, /The World After/i);
     await expectVisibleBodyText(page, /This is where your life stops being a note and starts becoming a world\./i);
 
-    const shareLink = page.getByRole("link", { name: "Share this scene" });
-    await expect(shareLink).toBeVisible();
-    await expect(shareLink).toHaveAttribute("href", /memory=.*rebuilding.*vibe=hopeful/);
+    const bloomLink = page.getByRole("link", { name: "Let it bloom" });
+    await expect(bloomLink).toBeVisible();
+    await expect(bloomLink).toHaveAttribute("href", /memory=.*rebuilding.*vibe=hopeful/);
+  });
+
+  test("quiet home entry renders living quiet world @smoke", async ({ page }) => {
+    await page.goto("/home?mode=quiet", { waitUntil: "domcontentloaded" });
+
+    await expectVisibleBodyText(page, /^Quiet world$/);
+    await expectVisibleBodyText(page, /The sky is quiet for now/i);
+    await expectVisibleBodyText(page, /Nothing is required yet/i);
+    await expectVisibleBodyText(page, /URAI will let the first patterns appear gently/i);
+  });
+
+  test("memory home entry renders first spark overlay @smoke", async ({ page }) => {
+    await page.goto("/home?memory=I%20moved%20to%20a%20new%20city%20and%20started%20rebuilding%20my%20life.&vibe=hopeful", { waitUntil: "domcontentloaded" });
+
+    await expectVisibleBodyText(page, /^First spark · hopeful$/);
+    await expectVisibleBodyText(page, /This memory can become the first star in your world/i);
+    await expectVisibleBodyText(page, /I moved to a new city and started rebuilding my life/i);
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
