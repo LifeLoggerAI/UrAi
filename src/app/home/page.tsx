@@ -1,5 +1,7 @@
 import HomeWorldSmokeContract from "@/components/urai/HomeWorldSmokeContract";
 import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
+import WorldEntryOverlay from "@/components/urai/WorldEntryOverlay";
+import WorldEntryPersistenceBridge from "@/components/urai/WorldEntryPersistenceBridge";
 import { parseWorldEntryState } from "@/lib/world-entry";
 
 export const metadata = {
@@ -18,6 +20,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   return (
     <>
       <UraiResolvedHomeScene entryState={entryState} />
+      <WorldEntryPersistenceBridge entryState={entryState} />
+      <WorldEntryOverlay entryState={entryState} />
       <HomeWorldSmokeContract />
     </>
   );
