@@ -2,7 +2,10 @@ import { spawnSync } from 'node:child_process'
 import process from 'node:process'
 
 const defaultMinimumMb = 4096
+const cloudMinimumMb = 1024
 const minimumMb = Number.parseInt(process.env.URAI_MIN_INSTALL_FREE_MB ?? String(defaultMinimumMb), 10)
+const cloudWorkstationMode = process.env.IDX_WORKSPACE_ID || process.env.CODESPACES || process.env.GITPOD_WORKSPACE_ID || process.env.CLOUD_WORKSTATION_ID
+const effectiveMinimumMb = cloudWorkstationMode ? Math.min(minimumMb, cloudMinimumMb) : minimumMb
 
 function fail(message) {
   console.error(`\n[URAI install] ${message}`)
@@ -38,8 +41,14 @@ if (!Number.isFinite(availableMb) || availableMb <= 0) {
   process.exit(0)
 }
 
-if (availableMb < minimumMb) {
-  fail(`Not enough free disk space for install. Required at least ${minimumMb} MB; found ${availableMb} MB.`)
+if (cloudWorkstationMode && availableMb < minimumMb && availableMb >= effectiveMinimumMb) {
+  console.warn(
+    `[URAI install] Cloud workstation mode detected. Continuing with ${availableMb} MB available; default target is ${minimumMb} MB.`,
+  )
+}
+
+if (availableMb < effectiveMinimumMb) {
+  fail(`Not enough free disk space for install. Required at least ${effectiveMinimumMb} MB; found ${availableMb} MB.`)
 }
 
 console.log(`[URAI install] Free disk preflight passed: ${availableMb} MB available.`)

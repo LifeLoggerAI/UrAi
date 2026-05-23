@@ -1,65 +1,59 @@
 import { expect, test } from "@playwright/test";
 
-async function openHome(page: import("@playwright/test").Page) {
+async function openRoot(page: import("@playwright/test").Page) {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await expect(page.locator("body").getByText(/^Inner Sky Shrine$/).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your world is already forming." })).toBeVisible();
 }
 
 async function expectVisibleBodyText(page: import("@playwright/test").Page, text: string | RegExp) {
   await expect(page.locator("body").getByText(text).first()).toBeVisible();
 }
 
-async function expectBodyTextAttached(page: import("@playwright/test").Page, text: string | RegExp) {
-  await expect(page.locator("body").getByText(text).first()).toHaveCount(1);
-}
-
-async function clickButtonByLabel(page: import("@playwright/test").Page, label: string | RegExp) {
-  await page.getByRole("button", { name: label }).first().evaluate((node) => {
-    (node as HTMLButtonElement).click();
-  });
-}
-
 test.describe("URAI V1 smoke", () => {
-  test("home route renders core V1 sections @smoke", async ({ page }) => {
-    await openHome(page);
+  test("root renders passive first world entry flow @smoke", async ({ page }) => {
+    await openRoot(page);
 
     await expectVisibleBodyText(page, /^URAI$/);
-    await expectBodyTextAttached(page, /^Sky · Orb · Ground$/);
-    await expectVisibleBodyText(page, /stable · quiet sky · memory gateway ready/i);
-    await expectBodyTextAttached(page, /Your sky is quiet, but awake\./i);
+    await expectVisibleBodyText(page, /URAI quietly turns the patterns of your life/i);
+    await expect(page.getByRole("link", { name: "Enter my world" })).toHaveAttribute("href", "/home?mode=quiet");
+    await expect(page.getByRole("textbox", { name: "Optional first spark" })).toBeVisible();
+    await expect(page.getByLabel("World tone")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Preview optional spark" })).toBeVisible();
+    await expectVisibleBodyText(page, /A memory is only a spark -- not a requirement/i);
   });
 
-  test("final /home field exposes HomeWorld DOM contract and core controls @smoke", async ({ page }) => {
-    await page.goto("/home", { waitUntil: "domcontentloaded" });
+  test("root previews an optional first spark @smoke", async ({ page }) => {
+    await openRoot(page);
 
-    const homeWorld = page.locator('main[aria-label="URAI Home World"]').first();
-    await expect(homeWorld).toHaveAttribute("data-ground-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-orb-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-sky-tier", /[1-5]/);
-    await expect(homeWorld).toHaveAttribute("data-mood", /calm|low|recovery|dream|shadow|focused|joy/);
-    await expect(homeWorld).toHaveAttribute("data-recovery", /dormant|recovering|stable|growing|awakened/);
-    await expect(homeWorld).toHaveAttribute("data-narrator-speaking", /true|false/);
+    await page.getByRole("textbox", { name: "Optional first spark" }).fill("I moved to a new city and started rebuilding my life.");
+    await page.getByLabel("World tone").selectOption("hopeful");
+    await page.getByRole("button", { name: "Preview optional spark" }).click();
 
-    await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
+    await expectVisibleBodyText(page, /^First spark$/);
+    await expectVisibleBodyText(page, /This memory can become the first star in your world/i);
+    await expectVisibleBodyText(page, /The World After/i);
+    await expectVisibleBodyText(page, /This is where your life stops being a note and starts becoming a world\./i);
 
-    await clickButtonByLabel(page, "Open URAI companion chat from the orb");
-    await expect(page.getByRole("heading", { name: "URAI is listening." })).toBeVisible();
-    await expect(page.getByLabel("Message URAI companion")).toBeVisible();
-    await clickButtonByLabel(page, "Close companion chat");
-
-    await clickButtonByLabel(page, "Ascend through the sky into the URAI Life Map");
-    await expect(page.getByRole("button", { name: "Reverse ascent and return home" })).toBeVisible();
+    const bloomLink = page.getByRole("link", { name: "Let it bloom" });
+    await expect(bloomLink).toBeVisible();
+    await expect(bloomLink).toHaveAttribute("href", /memory=.*rebuilding.*vibe=hopeful/);
   });
 
-  test("final /home reduced-motion path keeps core controls available @smoke", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/home", { waitUntil: "domcontentloaded" });
+  test("quiet home entry renders living quiet world @smoke", async ({ page }) => {
+    await page.goto("/home?mode=quiet", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("button", { name: "Ascend through the sky into the URAI Life Map" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Enter the ground and foundation layer" })).toBeVisible();
+    await expectVisibleBodyText(page, /^Quiet world$/);
+    await expectVisibleBodyText(page, /The sky is quiet for now/i);
+    await expectVisibleBodyText(page, /Nothing is required yet/i);
+    await expectVisibleBodyText(page, /URAI will let the first patterns appear gently/i);
+  });
+
+  test("memory home entry renders first spark overlay @smoke", async ({ page }) => {
+    await page.goto("/home?memory=I%20moved%20to%20a%20new%20city%20and%20started%20rebuilding%20my%20life.&vibe=hopeful", { waitUntil: "domcontentloaded" });
+
+    await expectVisibleBodyText(page, /^First spark · hopeful$/);
+    await expectVisibleBodyText(page, /This memory can become the first star in your world/i);
+    await expectVisibleBodyText(page, /I moved to a new city and started rebuilding my life/i);
   });
 
   test("public constellation route renders demo content @smoke", async ({ page }) => {
@@ -86,6 +80,7 @@ test.describe("URAI V1 smoke", () => {
       ["/investors", /coherent launch surface/i],
       ["/memory/demo-star", /Memory Star opened/i],
       ["/cognitive-mirror", /Cognitive Mirror/i],
+      ["/ochat", /Orb companion/i],
     ] as const;
 
     for (const [route, expectedText] of routes) {
@@ -132,9 +127,11 @@ test.describe("URAI V1 smoke", () => {
     expect(body.moodTag).toEqual(expect.any(String));
   });
 
-  test("companion blocks empty prompt", async ({ page }) => {
-    await openHome(page);
-
-    await expect(page.getByRole("button", { name: "Open URAI companion chat from the orb" })).toBeVisible();
+  test("status endpoint reports ok", async ({ request }) => {
+    const response = await request.get("/api/status");
+    await expect(response).toBeOK();
+    const body = await response.json();
+    expect(body.ok).toBe(true);
+    expect(body.service).toBe("urai");
   });
 });

@@ -24,7 +24,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # package-lock.json is currently stale against package.json; use npm install
+        # until docs/LOCKFILE_REFRESH.md is completed and workflows can return to npm ci.
+        run: npm install
 
       - name: Typecheck
         run: npm run check:types

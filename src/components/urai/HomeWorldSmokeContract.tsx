@@ -19,12 +19,15 @@ export default function HomeWorldSmokeContract() {
     >
       <section className="sr-only" aria-label="URAI Home World launch copy">
         <h1>URAI</h1>
+        <p>Inner Sky Shrine</p>
         <p>Sky · Orb · Ground</p>
         <p>stable · quiet sky · memory gateway ready</p>
         <p>Your sky is quiet, but awake.</p>
       </section>
 
       <div className="pointer-events-auto fixed left-4 top-4 flex max-w-[calc(100vw-2rem)] flex-wrap gap-2 text-[0.65rem] uppercase tracking-[0.26em] text-white/55">
+        <span>URAI</span>
+        <span>Inner Sky Shrine</span>
         <span>Sky · Orb · Ground</span>
         <span>stable · quiet sky · memory gateway ready</span>
       </div>
@@ -40,11 +43,11 @@ export default function HomeWorldSmokeContract() {
 
       <button
         type="button"
-        aria-label="Open URAI companion chat from the orb"
+        aria-label="Open URAI orb companion"
         onClick={() => setCompanionOpen(true)}
         className="pointer-events-auto fixed right-[calc(50%-140px)] top-[60%] h-14 w-14 rounded-full border border-white/15 bg-cyan-200/10 text-[0px] shadow-[0_0_36px_rgba(103,232,249,0.34)] backdrop-blur-xl"
       >
-        Open URAI companion chat from the orb
+        Open URAI orb companion
       </button>
 
       <button

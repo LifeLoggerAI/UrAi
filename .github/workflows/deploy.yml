@@ -103,6 +103,8 @@ jobs:
 
           check_url "$PRODUCTION_URL/"
           check_url "$PRODUCTION_URL/home"
+          check_url "$PRODUCTION_URL/ochat"
+          check_url "$PRODUCTION_URL/u/adamclamp"
           check_url "$PRODUCTION_URL/api/status"
 
       - name: Install Playwright Chromium

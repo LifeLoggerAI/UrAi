@@ -1,15 +1,27 @@
 import HomeWorldSmokeContract from "@/components/urai/HomeWorldSmokeContract";
 import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
+import WorldEntryOverlay from "@/components/urai/WorldEntryOverlay";
+import WorldEntryPersistenceBridge from "@/components/urai/WorldEntryPersistenceBridge";
+import { parseWorldEntryState } from "@/lib/world-entry";
 
 export const metadata = {
   title: "URAI Inner Sky Shrine",
   description: "Canonical URAI home shrine with orb, sky, ground, and Memory Galaxy gateway.",
 };
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const entryState = parseWorldEntryState(params);
+
   return (
     <>
-      <UraiResolvedHomeScene />
+      <UraiResolvedHomeScene entryState={entryState} />
+      <WorldEntryPersistenceBridge entryState={entryState} />
+      <WorldEntryOverlay entryState={entryState} />
       <HomeWorldSmokeContract />
     </>
   );

@@ -6,20 +6,21 @@ Use this script when showing the V1 demo to collaborators, testers, supporters, 
 
 Make the viewer understand URAI in under three minutes:
 
-> URAI turns emotional life data into a symbolic memory mirror, mood forecast, and companion reflection layer.
+> URAI turns one memory into the first scene of a living world.
 
 ## 30-second version
 
 1. Open `/`.
-2. Say: “URAI is a passive emotional operating system. This demo shows the core loop: symbolic state, mood forecast, weekly reflection, companion, and waitlist.”
-3. Click “Open public constellation.”
-4. Show `/u/adamclamp`.
-5. Say: “This is what a shareable symbolic life snapshot can look like.”
-6. Submit a waitlist email or show the waitlist form.
+2. Say: “URAI starts with one memory. This demo shows that memory becoming a calm, living world instead of a dashboard.”
+3. Point out the simple memory-to-world entry.
+4. Open `/home`.
+5. Say: “This is the deeper URAI home experience: symbolic ground, orb, reflection, companion, and waitlist.”
+6. Open `/u/adamclamp` if you want to show the older public constellation demo.
+7. Submit a waitlist email or show the waitlist form.
 
 ## 3-minute version
 
-### 1. Home scene
+### 1. Memory-world entry
 
 Open:
 
@@ -29,29 +30,36 @@ Open:
 
 Talk track:
 
-“URAI starts as a calm symbolic environment, not a dashboard. The goal is to make emotional patterns feel visible without overwhelming the user.”
+“URAI begins with a simple idea: give it one memory, and the product turns that memory into the first scene of a living world. The root page is intentionally small, emotional, and easy to understand.”
+
+Point out:
+
+- memory-first product promise
+- calm cinematic entry
+- living-world framing
+- path into the deeper home experience
+
+### 2. Deeper home experience
+
+Open:
+
+```txt
+/home
+```
+
+Talk track:
+
+“After the first-memory entry, URAI can expand into a deeper home experience. This is where the symbolic ground, orb, reflection, companion, and waitlist loop live.”
 
 Point out:
 
 - symbolic ground layer
-- mood forecast
-- weekly reflection
+- orb/companion presence
+- reflection module
 - companion chat
 - waitlist form
 
-### 2. Mood forecast
-
-Talk track:
-
-“The forecast gives a simple rhythm state and next best action. It avoids clinical claims and focuses on reflection and behavior.”
-
-### 3. Weekly reflection
-
-Talk track:
-
-“The weekly reflection turns scattered progress into a narrative memory. This is the start of URAI’s life-story layer.”
-
-### 4. Companion
+### 3. Companion
 
 Ask the companion:
 
@@ -63,7 +71,7 @@ Talk track:
 
 “The companion is intentionally grounded. It does not overclaim. It reflects the next useful step.”
 
-### 5. Public constellation
+### 4. Public constellation
 
 Open:
 
@@ -73,9 +81,9 @@ Open:
 
 Talk track:
 
-“This page shows the future shareable memory constellation: blooms, timeline stars, mood forecast, and reflection.”
+“This page shows the broader demo world: blooms, timeline stars, forecast, and reflection. It is useful for showing where the memory-world concept can grow.”
 
-### 6. Waitlist
+### 5. Waitlist
 
 Talk track:
 
@@ -85,7 +93,7 @@ Talk track:
 
 ### Is this a therapy app?
 
-No. URAI is an emotional reflection and memory intelligence product. It should not diagnose, treat, or replace professional care.
+No. URAI is a memory and reflection product. It should not diagnose, treat, or replace professional care.
 
 ### Is passive data active in V1?
 
@@ -93,7 +101,7 @@ No. V1 is a demo spine with static demo data and optional waitlist capture. Pass
 
 ### What is the moat?
 
-Long-term moat comes from personal memory continuity, symbolic personalization, longitudinal emotional context, consent-based data architecture, and companion evolution.
+Long-term moat comes from personal memory continuity, symbolic personalization, longitudinal context, consent-based data architecture, and companion evolution.
 
 ### What is the first product milestone?
 
@@ -103,4 +111,4 @@ A clean public demo, working waitlist, seedable Firestore demo data, and a stabl
 
 End with:
 
-“URAI’s first product is not another tracker. It is a symbolic mirror that helps people understand the emotional pattern of their life.”
+“URAI’s first product is not another tracker. It is a place where one memory becomes a world you can return to.”
