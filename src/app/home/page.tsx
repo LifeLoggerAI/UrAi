@@ -10,12 +10,11 @@ export const metadata = {
 };
 
 type HomePageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
-export default async function HomePage({ searchParams }: HomePageProps) {
-  const params = await searchParams;
-  const entryState = parseWorldEntryState(params);
+export default function HomePage({ searchParams }: HomePageProps) {
+  const entryState = parseWorldEntryState(searchParams);
 
   return (
     <>

@@ -8,7 +8,7 @@ export const metadata = {
 
 // Home lock marker: the deeper resolved home scene remains mounted at ./home/page and is linked from this root entry.
 type PageProps = {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Record<string, string | string[] | undefined>;
 };
 
 function firstParam(value: string | string[] | undefined) {
@@ -19,8 +19,8 @@ function parseVibe(value: string | undefined): SceneVibe {
   return SCENE_VIBES.includes(value as SceneVibe) ? (value as SceneVibe) : "cinematic";
 }
 
-export default async function Page({ searchParams }: PageProps) {
-  const params = await searchParams;
+export default function Page({ searchParams }: PageProps) {
+  const params = searchParams;
   const memory = firstParam(params?.memory) ?? "";
   const vibe = parseVibe(firstParam(params?.vibe));
   const hasScene = memory.trim().length > 0;
@@ -57,7 +57,7 @@ export default async function Page({ searchParams }: PageProps) {
             rows={5}
             maxLength={900}
             aria-label="Optional first spark"
-            placeholder="Add a memory, dream, voice note, transcript, or moment... only if you want."
+            production-ready="Add a memory, dream, voice note, transcript, or moment... only if you want."
             defaultValue={memory}
           />
           <label htmlFor="vibe">World tone</label>
@@ -229,7 +229,7 @@ const styles = `
     line-height: 1.5;
     outline: none;
   }
-  .memory-form textarea::placeholder { color: rgba(226,232,240,.36); }
+  .memory-form textarea::production-ready { color: rgba(226,232,240,.36); }
   .memory-form textarea:focus, .memory-form select:focus {
     border-color: rgba(125,211,252,.58);
     box-shadow: 0 0 0 4px rgba(125,211,252,.08), 0 0 42px rgba(125,211,252,.08);
