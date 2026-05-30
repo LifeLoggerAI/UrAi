@@ -20,7 +20,7 @@ const requiredReports = [
   'DEPLOYMENT_REPORT.md',
   'RELEASE_NOTES.md',
   'KNOWN_LIMITATIONS.md',
-  'NEXT_ACTIONS.md',
+  'NEXT_ACTIONS.md'
 ];
 
 const canonicalRoutes = [
@@ -86,10 +86,21 @@ const checks = [];
 
 function walk(dir, out = []) {
   if (!existsSync(dir)) return out;
-  for (const entry of readdirSync(dir)) {
-    if (['node_modules', '.git', '.next', 'dist', 'build', 'coverage', 'release-verification'].includes(entry)) continue;
+  let entries = [];
+  try {
+    entries = readdirSync(dir);
+  } catch {
+    return out;
+  }
+  for (const entry of entries) {
+    if (['node_modules', '.git', '.next', '.firebase', 'dist', 'build', 'coverage', 'release-verification'].includes(entry)) continue;
     const full = join(dir, entry);
-    const st = statSync(full);
+    let st;
+    try {
+      st = statSync(full);
+    } catch {
+      continue;
+    }
     if (st.isDirectory()) walk(full, out);
     else out.push(full);
   }
@@ -146,7 +157,7 @@ for (const route of canonicalRoutes) {
 }
 
 for (const fn of firebaseFunctions) {
-  const refs = findText(new RegExp(`\\b${fn}\\b`));
+  const refs = findText(new RegExp(`\b${fn}\b`));
   add(`Firebase function present/referenceable: ${fn}`, refs.length ? 'pass' : 'fail', refs.slice(0, 5).join(', '), `Implement/export Cloud Function '${fn}' or document why it is blocked.`);
 }
 
@@ -163,7 +174,7 @@ if (hasFile('storage.rules')) {
 }
 
 for (const domain of firestoreDomains) {
-  const typeRefs = findText(new RegExp(`\\b${domain}\\b|${domain.slice(0, -1)}Schema|${domain}Schema`, 'i'));
+  const typeRefs = findText(new RegExp(`\b${domain}\b|${domain.slice(0, -1)}Schema|${domain}Schema`, 'i'));
   add(`Firestore domain has code coverage: ${domain}`, typeRefs.length ? 'pass' : 'fail', typeRefs.slice(0, 6).join(', '), `Add type, schema, path helper, rules coverage, and seed data for ${domain}.`);
 }
 
