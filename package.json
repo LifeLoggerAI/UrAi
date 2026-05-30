@@ -6,7 +6,7 @@
     "preinstall": "node scripts/check-install-disk-space.mjs",
     "install:check": "node scripts/check-install-disk-space.mjs",
     "dev": "next dev -p 3014 --hostname 0.0.0.0",
-    "build": "next build",
+    "build": "mkdir -p .next/cache && next build",
     "start": "next start -p 3014",
     "lint": "eslint --ext .ts,.tsx src",
     "test:rules": "jest --config tests/rules/jest.config.cjs",
