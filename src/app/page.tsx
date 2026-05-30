@@ -2,8 +2,8 @@ import Link from "next/link";
 import { generateScene, SCENE_VIBES, type SceneVibe } from "@/lib/scene-generator";
 
 export const metadata = {
-  title: "URAI | Your world is already forming",
-  description: "Enter URAI quietly, or add one optional memory to make the first bloom visible.",
+  title: "UrAi | Your life, mapped as a living galaxy",
+  description: "Enter UrAi quietly, explore the life-map galaxy, or add one optional memory to make the first star visible.",
 };
 
 // Home lock marker: the deeper resolved home scene remains mounted at ./home/page and is linked from this root entry.
@@ -31,18 +31,18 @@ export default function Page({ searchParams }: PageProps) {
   return (
     <main className="urai-entry-shell">
       <section className="entry-card" aria-labelledby="urai-entry-title">
-        <p className="eyebrow">URAI</p>
-        <h1 id="urai-entry-title">Your world is already forming.</h1>
+        <p className="eyebrow">UrAi App / Genesis</p>
+        <h1 id="urai-entry-title">Your life, mapped as a living galaxy.</h1>
         <p className="lede">
-          URAI quietly turns the patterns of your life into a living symbolic world -- memories,
-          moods, relationships, recovery, and moments becoming sky, stars, weather, and story.
+          UrAi quietly turns the patterns of your life into a symbolic world -- memories, moods,
+          relationships, recovery, and moments becoming sky, stars, weather, and story.
         </p>
         <p className="lede lede-soft">
-          You do not have to start with anything. Add one memory only if you want to give the
-          world its first visible spark.
+          You can start with silence. Add one memory only if you want the first star to appear.
         </p>
-        <div className="primary-actions" aria-label="Enter URAI">
+        <div className="primary-actions" aria-label="Enter UrAi">
           <Link className="primary primary-large" href={worldHref}>Enter my world</Link>
+          <Link className="secondary" href="/privacy">Privacy</Link>
           <span className="privacy-pill">Start quiet. Add only what you choose.</span>
         </div>
         <form className="memory-form optional-spark" action="/" aria-label="Optional first spark">
@@ -57,7 +57,7 @@ export default function Page({ searchParams }: PageProps) {
             rows={5}
             maxLength={900}
             aria-label="Optional first spark"
-            production-ready="Add a memory, dream, voice note, transcript, or moment... only if you want."
+            placeholder="Add a memory, dream, voice note, transcript, or moment... only if you want."
             defaultValue={memory}
           />
           <label htmlFor="vibe">World tone</label>
@@ -68,10 +68,10 @@ export default function Page({ searchParams }: PageProps) {
           </select>
           <button className="secondary bloom-button" type="submit">{hasScene ? "Let it bloom" : "Preview optional spark"}</button>
         </form>
-        <p className="note">The sky is quiet for now. URAI will let the first patterns appear gently.</p>
+        <p className="note">The sky is quiet for now. UrAi lets the first patterns appear gently.</p>
       </section>
       <aside className={`scene-card ${hasScene ? "is-ready" : ""}`} aria-live="polite">
-        <p className="eyebrow">{hasScene ? "First spark" : "Preview"}</p>
+        <p className="eyebrow">{hasScene ? "First star" : "Quiet world"}</p>
         <h2>{hasScene ? "This memory can become the first star in your world." : "The world can open before it knows everything."}</h2>
         {hasScene ? (
           <>
@@ -83,7 +83,7 @@ export default function Page({ searchParams }: PageProps) {
         ) : (
           <>
             <p>
-              URAI does not need a full journal, profile, or setup ritual. It can begin as a quiet
+              UrAi does not need a full journal, profile, or setup ritual. It can begin as a quiet
               sky, then slowly change as your life creates signals.
             </p>
             <blockquote>A memory is only a spark -- not a requirement.</blockquote>
@@ -229,7 +229,7 @@ const styles = `
     line-height: 1.5;
     outline: none;
   }
-  .memory-form textarea::production-ready { color: rgba(226,232,240,.36); }
+  .memory-form textarea::placeholder { color: rgba(226,232,240,.36); }
   .memory-form textarea:focus, .memory-form select:focus {
     border-color: rgba(125,211,252,.58);
     box-shadow: 0 0 0 4px rgba(125,211,252,.08), 0 0 42px rgba(125,211,252,.08);
