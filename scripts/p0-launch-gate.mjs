@@ -181,9 +181,12 @@ for (const command of commands) {
     continue;
   }
 
+  console.log(`[p0-launch-gate] running ${command}...`);
   const [bin, ...args] = command.split(" ");
   const result = spawnSync(bin, args, { cwd: root, encoding: "utf8", stdio: "pipe" });
   const output = `${result.stdout || ""}\n${result.stderr || ""}`.trim().slice(-3000);
+  if (result.status === 0) console.log(`[p0-launch-gate] passed ${command}`);
+  else console.error(`[p0-launch-gate] failed ${command} with exit ${result.status}`);
   add(`Command passes: ${command}`, result.status === 0, output || `exit ${result.status}`, `Fix failing command: ${command}`);
 }
 
@@ -224,7 +227,7 @@ function section(title, rows) {
   return `## ${title}\n\n${rows.map((check) => `- **${check.name}**\n  - Status: ${check.status}\n  - Evidence: ${check.evidence || "none"}\n  - Next action: ${nextActionFor(check)}`).join("\n")}\n`;
 }
 
-const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_HOME_DESKTOP_VERIFIED=1 \\\nURAI_HOME_MOBILE_VERIFIED=1 \\\nURAI_HOME_REDUCED_MOTION_VERIFIED=1 \\\nURAI_HOME_FIREBASE_EMULATOR_VERIFIED=1 \\\nURAI_HOME_COMPANION_FALLBACK_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL=\"https://example.com/demo.mp4\" \\\nnpm run launch:p0\n\`\`\`\n`;
+const report = `# URAI P0 Launch Gate Report\n\nGenerated: ${new Date().toISOString()}\n\nVerdict: **${verdict}**\n\nSummary:\n\n- Passed: ${passed.length}\n- Failed: ${failed.length}\n- Unverified: ${unverified.length}\n\n${section("Failed checks", failed)}\n${section("Unverified evidence", unverified)}\n${section("Passed checks", passed)}\n## Commands\n\nStatic gate:\n\n\`\`\`bash\nnpm run launch:p0\n\`\`\`\n\nFull local gate:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 npm run launch:p0\n\`\`\`\n\nFull evidence gate example:\n\n\`\`\`bash\nURAI_P0_RUN_COMMANDS=1 \\\nURAI_P0_DESKTOP_VERIFIED=1 \\\nURAI_P0_MOBILE_VERIFIED=1 \\\nURAI_P0_WAITLIST_PERSISTENCE_VERIFIED=1 \\\nURAI_P0_FIREBASE_RULES_INDEXES_DEPLOYED=1 \\\nURAI_P0_PRIVATE_DATA_SAFETY_VERIFIED=1 \\\nURAI_HOME_DESKTOP_VERIFIED=1 \\\nURAI_HOME_MOBILE_VERIFIED=1 \\\nURAI_HOME_REDUCED_MOTION_VERIFIED=1 \\\nURAI_HOME_FIREBASE_EMULATOR_VERIFIED=1 \\\nURAI_HOME_COMPANION_FALLBACK_VERIFIED=1 \\\nURAI_P0_DEMO_RECORDING_URL="https://example.com/demo.mp4" \\\nnpm run launch:p0\n\`\`\`\n`;
 
 fs.writeFileSync(path.join(reportDir, "p0-launch-gate-report.md"), report);
 console.log(report);
