@@ -19,12 +19,12 @@ import React from "react";
 import AppProviders from "./providers";
 import type { Metadata } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3014";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "URAI — Give it one memory",
+    default: "URAI - Give it one memory",
     template: "%s | URAI",
   },
   description:
@@ -45,13 +45,13 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "URAI",
-    title: "URAI — Give it one memory",
+    title: "URAI - Give it one memory",
     description:
       "Give URAI one memory and watch it become the first scene of a living world.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "URAI — Give it one memory",
+    title: "URAI - Give it one memory",
     description:
       "Give URAI one memory and watch it become the first scene of a living world.",
   },
