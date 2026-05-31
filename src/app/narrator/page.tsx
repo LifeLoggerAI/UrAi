@@ -11,9 +11,9 @@ export default function NarratorPage() {
       eyebrow="Narrator"
       title="The narrator speaks only when the signal is useful."
       description="URAI V1 uses a safe companion/narrator layer for reflections, Life Map context, and replay cues. It stays explainable, private, and grounded in visible user-owned signals."
-      primaryHref="/home"
+      primaryHref="/app/home"
       primaryLabel="Return to Home Orb"
-      secondaryHref="/life-map"
+      secondaryHref="/app/life-map"
       secondaryLabel="Open Life Map"
       sections={[
         { title: "Context-aware", body: "Narrator cues can attach to Memory Stars, replay beats, emotional weather, and recovery arcs." },
