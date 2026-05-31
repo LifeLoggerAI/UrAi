@@ -38,8 +38,8 @@ const ROUTE_PATTERNS: UraiRouteId[] = [
 
 function normalizePathname(pathname: string | null): UraiRouteId {
   const current = pathname ?? '/home';
-  if (current === '/' || current === '/home') return '/home';
-  if (current === '/life-map') return '/life-map';
+  if (current === '/' || current === '/home' || current === '/app/home') return '/home';
+  if (current === '/life-map' || current === '/app/life-map') return '/life-map';
   if (current.startsWith('/life-map/star/')) return '/life-map/star/[starId]';
   if (current === '/focus') return '/focus';
   if (current.startsWith('/focus/session/')) return '/focus/session/[sessionId]';
@@ -56,6 +56,10 @@ function detectQualityProfile(): UraiQualityProfile {
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false;
   const narrow = window.innerWidth < 760;
   return coarsePointer || narrow ? 'mobile-safe' : 'desktop-cinematic';
+}
+
+function showSpatialShell() {
+  return process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_URAI_DEBUG_SPATIAL === 'true';
 }
 
 export function resolveSpatialUniverseState(pathname: string | null, qualityProfile: UraiQualityProfile = 'desktop-cinematic'): SpatialUniverseState {
@@ -95,7 +99,7 @@ export function SpatialUniverseProvider({ children }: { children: ReactNode }) {
         data-urai-quality={state.qualityProfile}
         style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}
       />
-      <SpatialUniverseShell />
+      {showSpatialShell() ? <SpatialUniverseShell /> : null}
       {children}
     </SpatialUniverseContext.Provider>
   );
