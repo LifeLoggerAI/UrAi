@@ -11,9 +11,9 @@ export default function JournalPage() {
       eyebrow="Journal / Scribe"
       title="Your private Scribe is ready for the first real chapter."
       description="URAI V1 keeps journaling calm and optional: reflections, companion notes, and Memory Star context can become private narrative threads without requiring constant manual input."
-      primaryHref="/home"
+      primaryHref="/app/home"
       primaryLabel="Return to Home Orb"
-      secondaryHref="/settings/privacy"
+      secondaryHref="/app/settings/privacy"
       secondaryLabel="Review Privacy Controls"
       sections={[
         { title: "Private by default", body: "Journal content belongs to the signed-in user and should never be exposed through the public demo route." },

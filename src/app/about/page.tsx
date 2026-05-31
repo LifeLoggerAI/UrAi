@@ -13,7 +13,7 @@ export default function AboutPage() {
       description="URAI V1 starts with one memory, then turns it into a cinematic scene users can share, revisit, and expand through the deeper home experience."
       primaryHref="/"
       primaryLabel="Create a Scene"
-      secondaryHref="/home"
+      secondaryHref="/app/home"
       secondaryLabel="Enter Existing World"
       sections={[
         { title: "One memory first", body: "The public entry is intentionally simple: add a memory, choose a vibe, and see the first scene form without setup." },

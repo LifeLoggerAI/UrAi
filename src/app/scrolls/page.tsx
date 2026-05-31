@@ -11,9 +11,9 @@ export default function ScrollsPage() {
       eyebrow="Scrolls"
       title="Your life can become a scroll when you choose to export it."
       description="URAI V1 keeps scrolls as user-controlled narrative artifacts: seasonal reflections, replay summaries, and Memory Bloom recaps that can be generated privately before any sharing."
-      primaryHref="/life-map"
+      primaryHref="/app/life-map"
       primaryLabel="Open Life Map"
-      secondaryHref="/settings/privacy"
+      secondaryHref="/app/settings/privacy"
       secondaryLabel="Privacy Controls"
       sections={[
         { title: "User-controlled", body: "A scroll should never be public by default. Export and sharing must be intentional." },
