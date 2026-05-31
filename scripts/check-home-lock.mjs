@@ -10,40 +10,57 @@ function read(relativePath) {
   return fs.readFileSync(absolute, 'utf8');
 }
 
+function readMany(relativePaths) {
+  return relativePaths.map(read).join('\n');
+}
+
 function assertCheck(name, passed, detail) {
   checks.push({ name, passed, detail });
 }
 
-const homePage = read('src/app/home/page.tsx');
-const rootPage = read('src/app/page.tsx');
-const resolvedScene = read('src/components/urai/UraiResolvedHomeScene.tsx');
-const stateHook = read('src/lib/use-urai-home-state.ts');
-const packageJson = read('package.json');
-const lockReport = read('HOME_LOCK_REPORT.md');
-const e2eAudit = read('HOME_E2E_AUDIT.md');
-const dataContract = read('HOME_DATA_CONTRACT.md');
-const companionContract = read('HOME_COMPANION_CONTRACT.md');
-const homeMountsResolvedScene = homePage.includes('UraiResolvedHomeScene') && homePage.includes('<UraiResolvedHomeScene />');
-const rootMountsHomeScene = rootPage.includes('HomeScene') || rootPage.includes('UraiResolvedHomeScene') || rootPage.includes('./home/page');
+const rootLayout = read('src/app/layout.tsx');
+const robots = read('src/app/robots.ts');
+const sitemap = read('src/app/sitemap.ts');
+const provider = read('src/components/urai/SpatialUniverseProvider.tsx');
+const notFound = read('src/app/not-found.tsx');
+const appHome = read('src/app/app/home/page.tsx');
+const appLifeMap = read('src/app/app/life-map/page.tsx');
+const appCouncil = read('src/app/app/council/page.tsx');
+const appSettings = read('src/app/app/settings/page.tsx');
+const appPrivacy = read('src/app/app/settings/privacy/page.tsx');
+const publicRoutes = readMany([
+  'src/app/early-access/page.tsx',
+  'src/app/narrator/page.tsx',
+  'src/app/scrolls/page.tsx',
+  'src/app/journal/page.tsx',
+  'src/app/settings/privacy/page.tsx',
+]);
+const routeSources = readMany([
+  'src/app/layout.tsx',
+  'src/app/robots.ts',
+  'src/app/sitemap.ts',
+  'src/components/urai/SpatialUniverseProvider.tsx',
+  'src/components/urai/SpatialUniverseShell.tsx',
+  'src/app/not-found.tsx',
+  'src/app/early-access/page.tsx',
+  'src/app/narrator/page.tsx',
+  'src/app/scrolls/page.tsx',
+  'src/app/journal/page.tsx',
+]);
 
-assertCheck('home route mounts UraiResolvedHomeScene', homeMountsResolvedScene, 'src/app/home/page.tsx should route /home to the resolved home scene.');
-assertCheck('root page remains a home scene entrypoint', rootMountsHomeScene, 'src/app/page.tsx should remain a valid home entrypoint.');
-assertCheck('resolved scene imports live home state hook', resolvedScene.includes('useUraiHomeState'), 'Resolved scene must consume the live home view model hook.');
-assertCheck('resolved scene exposes life-map mode', resolvedScene.includes('Mode = "home" | "transitioning" | "lifemap"') || resolvedScene.includes('lifemap'), 'Resolved scene must include home/transition/lifemap flow.');
-assertCheck('resolved scene has reduced-motion path', resolvedScene.includes('prefers-reduced-motion') && resolvedScene.includes('reduceMotion'), 'Resolved scene must support reduced-motion ascent.');
-assertCheck('resolved scene has return-home behavior', resolvedScene.includes('returnHome') && resolvedScene.includes('Return home'), 'Resolved scene must provide return-home behavior.');
-assertCheck('resolved scene has memory stars', resolvedScene.includes('memory-star') && resolvedScene.includes('Constellation'), 'Resolved scene must surface memory stars/constellation nodes.');
-assertCheck('resolved scene has orb physical states', resolvedScene.includes('aura-orb-button') && resolvedScene.includes('data-orb-charge') && resolvedScene.includes('orb-core'), 'Resolved scene must include physical orb interaction state.');
-assertCheck('resolved scene has ground hotspots', resolvedScene.includes('GROUND_ZONES') && resolvedScene.includes('ground-hotspot'), 'Resolved scene must include ground/body interaction zones.');
-assertCheck('home state hook uses Firebase auth', stateHook.includes('onAuthStateChanged') && stateHook.includes('auth()'), 'Home state must bind to authenticated Firebase user.');
-assertCheck('home state hook uses Firestore snapshots', stateHook.includes('onSnapshot') && stateHook.includes('db()'), 'Home state must use Firestore reads/snapshots.');
-assertCheck('home state hook normalizes life-map nodes', stateHook.includes('normalizeNode') && stateHook.includes('lifeMapNodes'), 'Home state must normalize memory/life-map nodes.');
-assertCheck('home state hook has explicit fallback source states', stateHook.includes('source: "firestore"') && stateHook.includes('source: "demo"') && stateHook.includes('source: "unconfigured"'), 'Home state must distinguish live, demo, and unconfigured data.');
-assertCheck('package exposes check:home', packageJson.includes('"check:home"'), 'package.json must expose npm run check:home.');
-assertCheck('home lock report exists', lockReport.includes('HOME LOCK REPORT'), 'HOME_LOCK_REPORT.md must exist.');
-assertCheck('home e2e audit exists', e2eAudit.includes('HOME E2E AUDIT'), 'HOME_E2E_AUDIT.md must exist.');
-assertCheck('home data contract exists', dataContract.includes('HOME DATA CONTRACT'), 'HOME_DATA_CONTRACT.md must exist.');
-assertCheck('home companion contract exists', companionContract.includes('HOME COMPANION CONTRACT'), 'HOME_COMPANION_CONTRACT.md must exist.');
+assertCheck('production metadata does not fall back to localhost', !rootLayout.includes('http://localhost:3014'), 'src/app/layout.tsx must default to https://urai.app.');
+assertCheck('robots does not fall back to localhost', !robots.includes('http://localhost:3014'), 'src/app/robots.ts must default to https://urai.app.');
+assertCheck('sitemap does not fall back to localhost', !sitemap.includes('http://localhost:3014'), 'src/app/sitemap.ts must default to https://urai.app.');
+assertCheck('spatial shell is gated outside production', provider.includes('NEXT_PUBLIC_URAI_DEBUG_SPATIAL') && provider.includes('NODE_ENV'), 'Spatial shell must render only when explicit debug env is enabled outside production.');
+assertCheck('branded not-found exists', notFound.includes('This path has gone quiet.') && notFound.includes('/app/home') && !notFound.includes('This page could not be found'), 'src/app/not-found.tsx must be branded and avoid default Next.js 404 copy.');
+assertCheck('canonical app home exists', appHome.includes('HomeScene'), 'src/app/app/home/page.tsx must mount the Genesis home scene.');
+assertCheck('canonical app life map exists', appLifeMap.includes('SpatialLifeMap'), 'src/app/app/life-map/page.tsx must mount the app Life Map.');
+assertCheck('canonical app council exists', appCouncil.length > 0, 'src/app/app/council/page.tsx must exist.');
+assertCheck('canonical app settings exists', appSettings.length > 0, 'src/app/app/settings/page.tsx must exist.');
+assertCheck('canonical app privacy route exists', appPrivacy.includes('Privacy Settings'), 'src/app/app/settings/privacy/page.tsx must exist.');
+assertCheck('public route links prefer app routes', !publicRoutes.includes('primaryHref="/home"') && !publicRoutes.includes('secondaryHref="/home"'), 'Public support routes should link to /app/home instead of legacy /home.');
+assertCheck('launch sources avoid public localhost references', !routeSources.includes('localhost:3014'), 'Launch route sources should not contain localhost:3014.');
+assertCheck('launch sources avoid default 404 copy', !routeSources.includes('This page could not be found'), 'Launch route sources should not contain default Next.js 404 copy.');
 
 const failed = checks.filter((check) => !check.passed);
 for (const check of checks) {
@@ -53,8 +70,8 @@ for (const check of checks) {
 }
 
 if (failed.length) {
-  console.error(`\nURAI home lock check failed: ${failed.length} failing check(s).`);
+  console.error(`\nURAI launch static checks failed: ${failed.length} failing check(s).`);
   process.exit(1);
 }
 
-console.log('\nURAI home lock static checks passed. Runtime, emulator, and deploy evidence are still required before marking /home LOCKED.');
+console.log('\nURAI launch static checks passed. Run npm run build and inspect generated output before deploy.');
