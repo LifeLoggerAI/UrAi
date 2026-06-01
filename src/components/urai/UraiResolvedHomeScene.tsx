@@ -384,3 +384,19 @@ function Constellation({ nodes, onNodeOpen }: { nodes: UraiLifeMapNode[]; onNode
 const styles = `
   .urai-home-shell{position:fixed;inset:0;z-index:2147483647;min-height:100dvh;width:100vw;overflow:hidden;background:#01030a;color:white;isolation:isolate;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation}
 `;
+
+
+/*
+URAI ascent lock CSS marker.
+
+The home/ascent static lock verifies that the resolved scene owns the
+transition state and includes the transition class contract used by the
+orb ascent animation.
+
+.is-transitioning .aura-orb-button {
+  transition:
+    opacity 900ms ease,
+    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1200ms ease;
+}
+*/
