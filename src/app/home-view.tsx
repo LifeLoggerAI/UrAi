@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "@/components/ui/Button";
 import Chip from "@/components/ui/Chip";
@@ -8,6 +8,9 @@ import OrbChatDrawer from "@/components/orb/OrbChatDrawer";
 import ImmersiveWorld3D from "@/components/urai/world/ImmersiveWorld3D";
 import { URAI_CONSENT_CATEGORIES, getEnabledConsentCategories, setAllConsentCategories, setConsentCategory } from "@/lib/urai/consent";
 import { createDefaultGenesisHomeState } from "@/lib/urai/genesis";
+import { runGenesisSignalPipeline } from "@/lib/urai/signal-pipeline";
+import { saveGenesisHomeSnapshot } from "@/lib/urai/storage";
+import { playUraiSound, preloadUraiSounds } from "@/lib/urai/sound";
 import type { UraiConsentCategory } from "@/lib/urai/types";
 
 const USER_ID = "local-genesis-user";
@@ -19,6 +22,7 @@ export default function HomeView(): React.ReactElement {
   const [controlOpen, setControlOpen] = useState(false);
   const [passportOpen, setPassportOpen] = useState(false);
   const [selectedStarId, setSelectedStarId] = useState<string | null>(null);
+  const [isCapturingMoment, setIsCapturingMoment] = useState(false);
 
   const latestReflection = homeState.latestReflections[0];
   const selectedStar = homeState.memoryStars.find((star) => star.id === selectedStarId);
@@ -26,6 +30,46 @@ export default function HomeView(): React.ReactElement {
     (reflection) => reflection.id === selectedStar?.reflectionId,
   );
   const enabledCategories = getEnabledConsentCategories(homeState.consent);
+
+  useEffect(() => {
+    preloadUraiSounds();
+  }, []);
+
+  useEffect(() => {
+    void saveGenesisHomeSnapshot({
+      consent: homeState.consent,
+      passport: homeState.passport,
+      moodWeather: homeState.moodWeather,
+      signals: homeState.latestSignals,
+      reflections: homeState.latestReflections,
+      memoryStars: homeState.memoryStars,
+    });
+  }, [homeState]);
+
+  function openOrb(): void {
+    void playUraiSound("orbOpen");
+    setOrbOpen(true);
+  }
+
+  function closeOrb(): void {
+    void playUraiSound("orbClose");
+    setOrbOpen(false);
+  }
+
+  function openPermissions(): void {
+    void playUraiSound("permissionsOpen");
+    setControlOpen(true);
+  }
+
+  function openPassport(): void {
+    void playUraiSound("passportOpen");
+    setPassportOpen(true);
+  }
+
+  function openMemoryStar(starId: string): void {
+    void playUraiSound("memoryStarOpen");
+    setSelectedStarId(starId);
+  }
 
   function toggleConsent(category: UraiConsentCategory, enabled: boolean): void {
     setHomeState((current) => ({
@@ -39,6 +83,40 @@ export default function HomeView(): React.ReactElement {
       ...current,
       consent: setAllConsentCategories(current.consent, enabled),
     }));
+  }
+
+  async function createGenesisMoment(): Promise<void> {
+    if (isCapturingMoment) return;
+
+    setIsCapturingMoment(true);
+    try {
+      const result = await runGenesisSignalPipeline(
+        {
+          userId: homeState.userId,
+          source: "manualSystemEvent",
+          title: "A new signal bloomed",
+          intensity: 0.58,
+          emotionalTone: "hope",
+          contextLabel: "present moment",
+          privacyLevel: "privateCloud",
+          metadata: {
+            sourceView: "home-view",
+            enabledConsentCategories: enabledCategories,
+          },
+        },
+        homeState.memoryStars.length,
+      );
+
+      setHomeState((current) => ({
+        ...current,
+        latestSignals: [result.signal, ...current.latestSignals].slice(0, 12),
+        latestReflections: [result.reflection, ...current.latestReflections].slice(0, 12),
+        memoryStars: [result.memoryStar, ...current.memoryStars].slice(0, 48),
+      }));
+      void playUraiSound("memoryStarOpen");
+    } finally {
+      setIsCapturingMoment(false);
+    }
   }
 
   return (
@@ -58,7 +136,7 @@ export default function HomeView(): React.ReactElement {
             <span className="h-2 w-2 rounded-full bg-cyan-200 shadow-[0_0_18px_rgba(125,211,252,.85)]" />
             <span>Genesis</span>
           </div>
-          <Button variant="secondary" onClick={() => setPassportOpen(true)}>
+          <Button variant="secondary" onClick={openPassport}>
             Passport
           </Button>
         </header>
@@ -76,7 +154,7 @@ export default function HomeView(): React.ReactElement {
               <button
                 type="button"
                 aria-label="Open URAI Orb"
-                onClick={() => setOrbOpen(true)}
+                onClick={openOrb}
                 className="group relative flex h-52 w-52 items-center justify-center rounded-full border border-cyan-100/20 bg-slate-950/20 shadow-[0_0_120px_rgba(125,211,252,.18)] backdrop-blur-[2px] md:h-64 md:w-64"
               >
                 <motion.div
@@ -121,15 +199,19 @@ export default function HomeView(): React.ReactElement {
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button variant="primary" onClick={() => setOrbOpen(true)}>
+                <Button variant="primary" onClick={openOrb}>
                   Talk to URAI
                 </Button>
-                <Button variant="secondary" onClick={() => setControlOpen(true)}>
+                <Button variant="secondary" onClick={openPermissions}>
                   Permissions
+                </Button>
+                <Button variant="secondary" onClick={() => void createGenesisMoment()}>
+                  {isCapturingMoment ? "Blooming..." : "Bloom Moment"}
                 </Button>
                 <Button
                   variant="secondary"
                   onClick={() => {
+                    void playUraiSound("lifeMapTransition");
                     window.location.href = "/life-map";
                   }}
                 >
@@ -146,7 +228,7 @@ export default function HomeView(): React.ReactElement {
               key={star.id}
               type="button"
               aria-label={`Open memory star: ${star.label}`}
-              onClick={() => setSelectedStarId(star.id)}
+              onClick={() => openMemoryStar(star.id)}
               className="pointer-events-auto absolute h-2.5 w-2.5 rounded-full border-0"
               style={{
                 left: `${star.x}%`,
@@ -312,7 +394,7 @@ export default function HomeView(): React.ReactElement {
 
       <OrbChatDrawer
         open={orbOpen}
-        onClose={() => setOrbOpen(false)}
+        onClose={closeOrb}
         context={{
           todayMoodState: homeState.moodWeather.moodBlend.join(" + "),
           mentalLoadScore: homeState.moodWeather.intensity,
