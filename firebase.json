@@ -14,6 +14,98 @@
         "source": "**",
         "destination": "/index.html"
       }
+    ],
+    "redirects": [
+      {
+        "source": "/",
+        "destination": "/app/home",
+        "type": 302
+      },
+      {
+        "source": "/home",
+        "destination": "/app/home",
+        "type": 302
+      },
+      {
+        "source": "/home/**",
+        "destination": "/app/home",
+        "type": 302
+      },
+      {
+        "source": "/life-map",
+        "destination": "/app/life-map",
+        "type": 302
+      },
+      {
+        "source": "/life-map/**",
+        "destination": "/app/life-map",
+        "type": 302
+      },
+      {
+        "source": "/mirror",
+        "destination": "/app/mirror",
+        "type": 302
+      },
+      {
+        "source": "/scrolls",
+        "destination": "/app/scrolls",
+        "type": 302
+      },
+      {
+        "source": "/rituals",
+        "destination": "/app/rituals",
+        "type": 302
+      },
+      {
+        "source": "/dashboard",
+        "destination": "/app/dashboard",
+        "type": 302
+      },
+      {
+        "source": "/settings",
+        "destination": "/app/settings",
+        "type": 302
+      },
+      {
+        "source": "/focus",
+        "destination": "/app/home",
+        "type": 302
+      },
+      {
+        "source": "/app/focus",
+        "destination": "/app/home",
+        "type": 302
+      },
+      {
+        "source": "/tiers",
+        "destination": "/app/tiers",
+        "type": 302
+      },
+      {
+        "source": "/tier-1",
+        "destination": "/app/tier-1",
+        "type": 302
+      },
+      {
+        "source": "/tier-2",
+        "destination": "/app/tier-2",
+        "type": 302
+      },
+      {
+        "source": "/tier-3",
+        "destination": "/app/tier-3",
+        "type": 302
+      },
+      {
+        "source": "/tier-4",
+        "destination": "/app/tier-4",
+        "type": 302
+      },
+      {
+        "source": "/tier-5",
+        "destination": "/app/tier-5",
+        "type": 302
+      }
     ]
   },
   "firestore": {
