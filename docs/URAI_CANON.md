@@ -13,16 +13,14 @@
 
 ## Canonical Home Component
 - `src/components/urai/home/HomeScene.tsx`
+- App route uses `HomeScene` with `ascentTarget="/app/life-map"` to keep transitions in the app route tree.
 
 ## Canonical Life-Map Component
 - `src/app/app/life-map/page.tsx` using `src/components/spatial-life-map/SpatialLifeMap`
 
 ## Focus and Replay Components
-- Focus route uses `LifeMapUniverse` with `initialView="focus"`
-- Replay route uses `LifeMapUniverse` with `initialView="replay"`
-- Existing support components remain:
-  - `src/components/life-map/FocusMemoryView.tsx`
-  - `src/components/life-map/ReplayControls.tsx`
+- Focus route uses `SpatialLifeMap` with `initialMode="focus"`
+- Replay route uses `SpatialLifeMap` with `initialMode="replay"`
 
 ## Canon Rules
 - Do not reintroduce alternate generic/card-heavy home routes.
