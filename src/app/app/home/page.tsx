@@ -1,5 +1,8 @@
-import { HomeScene } from "@/components/urai/home/HomeScene";
+import HomeView from "../../home-view";
 
-export default function HomePage() {
-  return <HomeScene />;
+export const dynamic = "force-static";
+export const revalidate = false;
+
+export default function AppHomePage() {
+  return <HomeView />;
 }

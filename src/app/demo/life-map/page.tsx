@@ -1,9 +1,6 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import LifeMapPage from "../../life-map/page";
 
-export const metadata = {
-  title: "URAI Life Map Demo",
-};
+export const dynamic = "force-static";
+export const revalidate = false;
 
-export default function DemoLifeMapPage() {
-  return <LifeMapUniverse />;
-}
+export default LifeMapPage;

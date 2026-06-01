@@ -1,10 +1,8 @@
-import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
+import HomeView from "../home-view";
 
-export const metadata = {
-  title: "URAI Genesis Home",
-  description: "Polished URAI Genesis home with sky, orb, ground, and Memory Galaxy gateway.",
-};
+export const dynamic = "force-static";
+export const revalidate = false;
 
 export default function HomePage() {
-  return <UraiResolvedHomeScene />;
+  return <HomeView />;
 }

@@ -1,5 +1,6 @@
-import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
+import LifeMapPage from "../../life-map/page";
 
-export default function AppLifeMapPage() {
-  return <SpatialLifeMap />;
-}
+export const dynamic = "force-static";
+export const revalidate = false;
+
+export default LifeMapPage;
