@@ -16,7 +16,6 @@
 
 ## Canonical Home Component
 - `src/components/urai/home/HomeScene.tsx`
-- App route uses `HomeScene` with `ascentTarget="/app/life-map"`.
 
 ## Canonical Life-Map Runtime
 - All life-map/focus/replay routes render `src/components/spatial-life-map/SpatialLifeMap`.
