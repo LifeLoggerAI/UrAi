@@ -15,8 +15,8 @@ import {
 } from '../../lib/chronoAnalytics';
 import { isFirebaseConfigured } from '../../lib/firebase';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const dynamic = "force-static";
+export const revalidate = false;
 
 const DEMO_USER_ID = 'demo-user';
 const CHRONO_FIRESTORE_TIMEOUT_MS = 2500;

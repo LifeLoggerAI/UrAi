@@ -1,15 +1,36 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import SystemRoutePage from "@/components/SystemRoutePage";
 
-export const metadata = {
-  title: "URAI Star Focus",
-  description: "Direct-loadable Life Map star route with safe parent fallback behavior.",
-};
+const SEEDED_STAR_IDS = [
+  "genesis",
+  "first-memory",
+  "threshold",
+  "mirror",
+  "legacy",
+];
 
-type PageProps = {
+export function generateStaticParams() {
+  return SEEDED_STAR_IDS.map((starId) => ({
+    starId,
+  }));
+}
+
+export default async function LifeMapStarPage({
+  params,
+}: {
   params: Promise<{ starId: string }>;
-};
-
-export default async function LifeMapStarPage({ params }: PageProps) {
+}) {
   const { starId } = await params;
-  return <LifeMapUniverse initialView="lifeMap" selectedStarId={starId} routeNotice="Selected star context" />;
+
+  return (
+    <SystemRoutePage
+      title={`Life Map Star: ${starId}`}
+      description="A static-export compatible life-map star detail route for URAI Genesis."
+      status="demo"
+    >
+      <div className="rounded-2xl bg-white/10 p-4 text-sm text-white/70">
+        This life-map star is ready to connect to memory shards, symbolic
+        events, emotional field reconstruction, replay scenes, and exports.
+      </div>
+    </SystemRoutePage>
+  );
 }

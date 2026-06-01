@@ -1,17 +1,36 @@
 import SystemRoutePage from "@/components/SystemRoutePage";
 
-type InvitePageProps = {
-  params: Promise<{ code: string }>;
-};
+const SEEDED_INVITE_CODES = [
+  "genesis",
+  "demo",
+  "adam",
+  "urai",
+  "preview",
+];
 
-export default async function InvitePage({ params }: InvitePageProps) {
+export function generateStaticParams() {
+  return SEEDED_INVITE_CODES.map((code) => ({
+    code,
+  }));
+}
+
+export default async function InvitePage({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}) {
   const { code } = await params;
 
   return (
     <SystemRoutePage
-      title="URAI Invite"
-      description={`Invite ${code} is ready for the URAI early access flow, companion onboarding, and Life Map activation.`}
-      status="guarded"
-    />
+      title={`Invite: ${code}`}
+      description="A static-export compatible invite preview route for URAI Genesis."
+      status="demo"
+    >
+      <div className="rounded-2xl bg-white/10 p-4 text-sm text-white/70">
+        This invite code is ready to connect to Firebase invite validation,
+        onboarding access, Passport permissions, and Genesis preview flows.
+      </div>
+    </SystemRoutePage>
   );
 }
