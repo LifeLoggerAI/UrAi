@@ -1,11 +1,11 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
-  title: "Life Map | UrAi",
+  title: "Life Map | URAI",
   description:
-    "The UrAi Life Map is a cinematic memory galaxy for reflection, recovery, purpose, emotional weather, and legacy.",
+    "The URAI Life Map is a cinematic memory galaxy for reflection, recovery, purpose, emotional weather, and legacy.",
 };
 
-export default function Page() {
-  return <LifeMapUniverse initialView="lifeMap" />;
+export default function LifeMapPage() {
+  return <SpatialLifeMap />;
 }
