@@ -1,10 +1,9 @@
-import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
+import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export const metadata = {
-  title: "URAI Focus",
-  description: "Focus mode inside the URAI life-map field.",
+  title: "URAI Focus Chamber",
 };
 
 export default function FocusPage() {
-  return <SpatialLifeMap initialMode="focus" />;
+  return <LifeMapUniverse initialView="focus" />;
 }
