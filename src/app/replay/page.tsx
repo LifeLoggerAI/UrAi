@@ -1,9 +1,10 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
   title: "URAI Replay",
+  description: "Replay mode inside the URAI life-map field.",
 };
 
 export default function ReplayPage() {
-  return <LifeMapUniverse initialView="replay" />;
+  return <SpatialLifeMap initialMode="replay" />;
 }
