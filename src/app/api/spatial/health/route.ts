@@ -1,3 +1,6 @@
+export const dynamic = "force-static";
+export const revalidate = false;
+
 import { NextResponse } from "next/server";
 
 import { resolveSpatialReadiness, SPATIAL_COLLECTIONS, SPATIAL_STORAGE_PATHS } from "@/lib/spatial/contracts";
