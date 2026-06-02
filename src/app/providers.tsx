@@ -5,6 +5,7 @@ import { SpatialUniverseProvider } from '@/components/urai/SpatialUniverseProvid
 import { UraiAudioProvider } from '@/providers/UraiAudioProvider';
 import { UraiGroundProvider } from '@/providers/UraiGroundProvider';
 import { UraiLifeMapProvider } from '@/providers/UraiLifeMapProvider';
+import { UraiMirrorProvider } from '@/providers/UraiMirrorProvider';
 import { UraiVoiceProvider } from '@/providers/UraiVoiceProvider';
 import { UraiCaptionBubble } from '@/components/voice/UraiCaptionBubble';
 
@@ -14,7 +15,9 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
       <UraiVoiceProvider>
         <UraiGroundProvider>
           <UraiLifeMapProvider>
-            <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
+            <UraiMirrorProvider>
+              <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
+            </UraiMirrorProvider>
           </UraiLifeMapProvider>
         </UraiGroundProvider>
         <UraiCaptionBubble />
