@@ -395,3 +395,17 @@ body {
 [class*="status-card"] {
   display: none !important;
 }
+
+/* URAI production: remove lingering spatial/debug badges */
+.spatial-debug,
+.spatial-debug-card,
+.spatial-status-card,
+.spatial-universe-card,
+.spatial-world-label,
+.spatial-world-orb,
+[class*="spatial-debug"],
+[class*="debug-card"],
+[class*="world-orb"],
+[class*="status-card"] {
+  display: none !important;
+}
