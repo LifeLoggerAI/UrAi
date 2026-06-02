@@ -6,9 +6,11 @@ import type { UraiScene } from "@/lib/urai/scene-theme";
 import { UraiCompanionShell } from "@/components/companion/UraiCompanionShell";
 import { AssetPreloader } from "@/components/genesis/AssetPreloader";
 import { LayeredGenesisScene } from "@/components/genesis/LayeredGenesisScene";
+import { GroundGarden } from "@/components/ground/GroundGarden";
 import { LifeMapGalaxy } from "@/components/lifemap/LifeMapGalaxy";
 import { PortalNav } from "@/components/urai/PortalNav";
 import { SceneCopy } from "@/components/urai/SceneCopy";
+import { useUraiGround } from "@/providers/UraiGroundProvider";
 import { useUraiLifeMap } from "@/providers/UraiLifeMapProvider";
 
 type HomeSceneProps = {
@@ -18,6 +20,7 @@ type HomeSceneProps = {
 
 export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   const router = useRouter();
+  const ground = useUraiGround();
   const lifeMap = useUraiLifeMap();
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
 
@@ -32,14 +35,22 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
 
   const openPassport = useCallback(() => {
     setIsCompanionOpen(false);
+    ground.closeGround();
     lifeMap.closeLifeMap();
     router.push("/passport");
-  }, [lifeMap, router]);
+  }, [ground, lifeMap, router]);
 
   const openLifeMapFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
+    ground.closeGround();
     lifeMap.openLifeMap();
-  }, [lifeMap]);
+  }, [ground, lifeMap]);
+
+  const openGroundFromCompanion = useCallback(() => {
+    setIsCompanionOpen(false);
+    lifeMap.closeLifeMap();
+    ground.openGround();
+  }, [ground, lifeMap]);
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
@@ -48,9 +59,9 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
           moodState="luminous"
           onSkyOpen={lifeMap.openLifeMap}
           onOrbOpen={openCompanion}
-          onGroundOpen={() => onNavigate("ground")}
+          onGroundOpen={ground.openGround}
           onPassportOpen={openPassport}
-          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen}
+          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen}
         />
       </AssetPreloader>
 
@@ -63,7 +74,8 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         </div>
       </div>
 
-      <LifeMapGalaxy isOpen={lifeMap.isLifeMapOpen} onClose={lifeMap.closeLifeMap} moodState="luminous" />
+      <LifeMapGalaxy isOpen={lifeMap.isLifeMapOpen} onClose={lifeMap.closeLifeMap} moodState="luminous" onOpenPassport={openPassport} />
+      <GroundGarden isOpen={ground.isGroundOpen} onClose={ground.closeGround} moodState="luminous" onOpenPassport={openPassport} />
 
       <UraiCompanionShell
         isOpen={isCompanionOpen}
@@ -72,7 +84,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         moodState="luminous"
         onOpenLifeMap={openLifeMapFromCompanion}
         onOpenPassport={openPassport}
-        onOpenGround={() => onNavigate("ground")}
+        onOpenGround={openGroundFromCompanion}
       />
     </section>
   );
