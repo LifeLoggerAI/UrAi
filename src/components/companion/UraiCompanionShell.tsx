@@ -6,21 +6,39 @@ import { getEnabledCouncilRoles } from "@/lib/council/uraiCouncilRoles";
 import { generateLocalCompanionResponse } from "@/lib/companion/localCompanionResponder";
 import { getQuickPromptsForContext } from "@/lib/companion/quickPrompts";
 import type { CompanionMessage, CompanionMode, CompanionQuickPrompt, GenesisMoodState } from "@/lib/companion/companionTypes";
+import { DEFAULT_PASSPORT_CONTEXT_PERMISSIONS, type PassportContextPermissions } from "@/lib/passport/passportContextTypes";
 import { useUraiVoice } from "@/providers/UraiVoiceProvider";
 import styles from "./UraiCompanionShell.module.css";
+
+type SuggestedAction = {
+  type: "open_life_map" | "open_passport" | "open_ground" | "none";
+  label?: string;
+};
+
+type CompanionApiResponse = {
+  reply?: string;
+  caption?: string;
+  councilRoleId?: string;
+  safetyLevel?: "normal" | "gentle" | "boundary";
+  suggestedAction?: SuggestedAction;
+};
 
 type UraiCompanionShellProps = {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: CompanionMode;
   moodState?: GenesisMoodState;
+  userId?: string;
+  contextPermissions?: Partial<PassportContextPermissions>;
   onOpenLifeMap?: () => void;
   onOpenPassport?: () => void;
+  onOpenGround?: () => void;
 };
 
 const MAX_MESSAGE_LENGTH = 500;
 const LAST_MODE_KEY = "urai.companion.lastMode";
 const LAST_ROLE_KEY = "urai.council.lastRole";
+const FALLBACK_COPY = "Something didn’t open cleanly. We can still keep this simple.";
 
 function createId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -35,13 +53,25 @@ function readStoredMode(initialMode: CompanionMode): CompanionMode {
   return stored === "companion" || stored === "council" ? stored : initialMode;
 }
 
+function actionLabel(action?: SuggestedAction): string | null {
+  if (!action || action.type === "none") return null;
+  if (action.label) return action.label;
+  if (action.type === "open_life_map") return "Open Life Map";
+  if (action.type === "open_passport") return "Open Passport";
+  if (action.type === "open_ground") return "Open Ground";
+  return null;
+}
+
 export function UraiCompanionShell({
   isOpen,
   onClose,
   initialMode = "companion",
   moodState = "luminous",
+  userId,
+  contextPermissions,
   onOpenLifeMap,
   onOpenPassport,
+  onOpenGround,
 }: UraiCompanionShellProps) {
   const reduceMotion = useReducedMotion();
   const voice = useUraiVoice();
@@ -52,10 +82,12 @@ export function UraiCompanionShell({
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<CompanionMessage[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [suggestedAction, setSuggestedAction] = useState<SuggestedAction>({ type: "none" });
 
   const councilRoles = useMemo(() => getEnabledCouncilRoles(), []);
   const activeRole = councilRoles.find((role) => role.id === selectedRoleId) ?? councilRoles[0];
   const quickPrompts = useMemo(() => getQuickPromptsForContext(mode, mode === "council" ? activeRole?.id : undefined), [activeRole?.id, mode]);
+  const activeActionLabel = actionLabel(suggestedAction);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -100,19 +132,32 @@ export function UraiCompanionShell({
 
   const changeMode = (nextMode: CompanionMode) => {
     setMode(nextMode);
+    setSuggestedAction({ type: "none" });
     if (typeof window !== "undefined") window.localStorage.setItem(LAST_MODE_KEY, nextMode);
   };
 
   const changeRole = (roleId: string) => {
     setSelectedRoleId(roleId);
     setMode("council");
+    setSuggestedAction({ type: "none" });
     if (typeof window !== "undefined") {
       window.localStorage.setItem(LAST_MODE_KEY, "council");
       window.localStorage.setItem(LAST_ROLE_KEY, roleId);
     }
   };
 
-  const appendLocalExchange = (text: string, source: CompanionMessage["source"] = "manual") => {
+  const appendFallbackResponse = (trimmed: string, nextContext: { mode: CompanionMode; councilRoleId?: string; moodState: GenesisMoodState }) => {
+    const local = generateLocalCompanionResponse(trimmed, nextContext);
+    setMessages((current) => [
+      ...current,
+      {
+        ...local,
+        text: local.text || FALLBACK_COPY,
+      },
+    ]);
+  };
+
+  const appendRemoteExchange = async (text: string, source: CompanionMessage["source"] = "manual") => {
     const trimmed = text.trim().slice(0, MAX_MESSAGE_LENGTH);
     if (!trimmed || isGenerating) return;
 
@@ -131,15 +176,65 @@ export function UraiCompanionShell({
     setMessages((current) => [...current, userMessage]);
     setInput("");
     setIsGenerating(true);
+    setSuggestedAction({ type: "none" });
 
-    window.setTimeout(() => {
-      const response = generateLocalCompanionResponse(trimmed, nextContext);
-      setMessages((current) => [...current, response]);
-      setIsGenerating(false);
-      if (voice.captionsEnabled && (trimmed.toLowerCase().includes("calm") || mode === "council")) {
+    try {
+      const response = await fetch("/api/companion/respond", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: trimmed,
+          mode,
+          councilRoleId: nextContext.councilRoleId,
+          moodState,
+          userId,
+          contextPermissions: { ...DEFAULT_PASSPORT_CONTEXT_PERMISSIONS, ...(contextPermissions ?? {}) },
+        }),
+      });
+
+      if (!response.ok) throw new Error("companion response failed");
+      const data = (await response.json()) as CompanionApiResponse;
+      const reply = (data.reply || FALLBACK_COPY).trim().slice(0, 520);
+
+      setMessages((current) => [
+        ...current,
+        {
+          id: createId(),
+          role: "urai",
+          mode,
+          councilRoleId: data.councilRoleId ?? nextContext.councilRoleId,
+          text: reply,
+          createdAt: new Date().toISOString(),
+          moodState,
+          source: "systemWhisper",
+        },
+      ]);
+      setSuggestedAction(data.suggestedAction ?? { type: "none" });
+
+      if (voice.captionsEnabled && (data.caption || mode === "council")) {
         void voice.playVoiceLine("council.listening", { priority: "council", forceCaption: !voice.voiceEnabled });
       }
-    }, reduceMotion ? 0 : 240);
+    } catch {
+      appendFallbackResponse(trimmed, nextContext);
+      setSuggestedAction({ type: "none" });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const runSuggestedAction = () => {
+    if (suggestedAction.type === "open_life_map" && onOpenLifeMap) {
+      onClose();
+      onOpenLifeMap();
+    }
+    if (suggestedAction.type === "open_passport" && onOpenPassport) {
+      onClose();
+      onOpenPassport();
+    }
+    if (suggestedAction.type === "open_ground" && onOpenGround) {
+      onClose();
+      onOpenGround();
+    }
   };
 
   const handleQuickPrompt = (prompt: CompanionQuickPrompt) => {
@@ -147,7 +242,7 @@ export function UraiCompanionShell({
     if (prompt.councilRoleId) changeRole(prompt.councilRoleId);
 
     if (prompt.action === "openLifeMap" && onOpenLifeMap) {
-      appendLocalExchange(prompt.prompt, "quickPrompt");
+      void appendRemoteExchange(prompt.prompt, "quickPrompt");
       window.setTimeout(() => {
         onClose();
         onOpenLifeMap();
@@ -156,7 +251,7 @@ export function UraiCompanionShell({
     }
 
     if (prompt.action === "openPassport" && onOpenPassport) {
-      appendLocalExchange(prompt.prompt, "quickPrompt");
+      void appendRemoteExchange(prompt.prompt, "quickPrompt");
       window.setTimeout(() => {
         onClose();
         onOpenPassport();
@@ -164,10 +259,10 @@ export function UraiCompanionShell({
       return;
     }
 
-    appendLocalExchange(prompt.prompt, "quickPrompt");
+    void appendRemoteExchange(prompt.prompt, "quickPrompt");
   };
 
-  const handleSubmit = () => appendLocalExchange(input, "manual");
+  const handleSubmit = () => void appendRemoteExchange(input, "manual");
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -188,8 +283,9 @@ export function UraiCompanionShell({
             aria-modal="true"
             aria-labelledby="urai-companion-title"
             className={styles.shell}
+            data-generating={isGenerating ? "true" : "false"}
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 34, scale: 0.98 }}
-            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: isGenerating ? 1.006 : 1 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 26, scale: 0.98 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
           >
@@ -222,7 +318,14 @@ export function UraiCompanionShell({
                   {message.text}
                 </p>
               ))}
+              {isGenerating ? <p className={`${styles.message} ${styles.uraiMessage} ${styles.thinkingMessage}`}>Listening…</p> : null}
             </div>
+
+            {activeActionLabel ? (
+              <div className={styles.actionRow}>
+                <button type="button" className={styles.actionChip} onClick={runSuggestedAction}>{activeActionLabel}</button>
+              </div>
+            ) : null}
 
             <div className={styles.quickPromptRow} aria-label="Quick prompts">
               {quickPrompts.map((prompt) => (
