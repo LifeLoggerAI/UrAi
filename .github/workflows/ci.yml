@@ -1,17 +1,101 @@
 name: CI
+
 on:
   pull_request:
+    branches:
+      - main
   push:
-    branches: [ "!main" ]
+    branches:
+      - main
+
 jobs:
-  build:
+  app:
+    name: App validation
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+
     steps:
-      - uses: actions/checkout@v4
-        with: { lfs: true }
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run build
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Bootstrap launch validation
+        run: |
+          # Command contract executed by scripts/urai-launch-bootstrap.mjs:
+          # npm run check:lockfile
+          # npm run check:v1
+          # npm run check:home
+          # npm run check:ascent
+          # npm run launch:p0
+          # npm run release:p1
+          # npm run seed:demo
+          # npm run test:unit
+          # npm run test:rules
+          # npm run typecheck
+          # npm run lint
+          # npm run build
+          URAI_SKIP_E2E=1 node scripts/urai-launch-bootstrap.mjs
+
+      - name: Validate launch evidence
+        run: node scripts/validate-launch-evidence.mjs
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npm run test:smoke
+
+      - name: Upload launch evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-evidence
+          path: artifacts/launch
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            /tmp/urai-playwright-results
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7
+
+  functions:
+    name: Firebase Functions validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: functions
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build functions
+        run: npm run build

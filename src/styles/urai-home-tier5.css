@@ -1,0 +1,471 @@
+/* URAI /home Tier 5 cinematic finish. Loaded after base home styles. */
+
+.urai-hero-home {
+  background:
+    radial-gradient(circle at 50% 28%, rgba(226, 248, 255, .11), transparent 11%),
+    radial-gradient(circle at 50% 43%, rgba(95, 234, 246, .18), transparent 17%),
+    radial-gradient(circle at 33% 54%, rgba(115, 92, 255, .11), transparent 31%),
+    radial-gradient(circle at 70% 56%, rgba(255, 229, 156, .08), transparent 28%),
+    linear-gradient(180deg, #00030a 0%, #071225 30%, #071f34 52%, #03101e 70%, #000105 100%);
+}
+
+.urai-hero-home::before {
+  z-index: 46;
+  background:
+    radial-gradient(ellipse at 50% 41%, transparent 25%, rgba(0, 0, 0, .08) 48%, rgba(0, 0, 0, .72) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.34), transparent 24%, transparent 67%, rgba(0,0,0,.84)),
+    linear-gradient(90deg, rgba(0,0,0,.58), transparent 24%, transparent 76%, rgba(0,0,0,.58));
+}
+
+.urai-hero-home::after {
+  z-index: 7;
+  background:
+    radial-gradient(ellipse at 50% 47%, rgba(201, 250, 255, .12), transparent 28%),
+    radial-gradient(ellipse at 50% 78%, rgba(110, 231, 255, .09), transparent 34%),
+    linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .26) 68%, rgba(0, 0, 0, .62) 100%);
+}
+
+.urai-celestial-depth,
+.urai-atmosphere-band,
+.urai-sky-vault-ring,
+.urai-moon-crescent,
+.urai-distant-planet {
+  position: absolute;
+  pointer-events: none;
+}
+
+.urai-celestial-depth {
+  inset: 0;
+  z-index: 2;
+}
+
+.urai-moon-crescent {
+  right: 12vw;
+  top: 10vh;
+  width: clamp(80px, 9vw, 146px);
+  height: clamp(80px, 9vw, 146px);
+  border-radius: 999px;
+  background: radial-gradient(circle at 42% 38%, rgba(244, 253, 255, .95), rgba(184, 232, 255, .32) 38%, transparent 66%);
+  filter: blur(.2px) drop-shadow(0 0 42px rgba(190, 235, 255, .22));
+  opacity: .42;
+  mix-blend-mode: screen;
+}
+
+.urai-moon-crescent::after {
+  content: "";
+  position: absolute;
+  inset: -2% -14% 2% 18%;
+  border-radius: inherit;
+  background: #061225;
+  filter: blur(2px);
+}
+
+.urai-distant-planet {
+  left: 17vw;
+  top: 22vh;
+  width: clamp(86px, 13vw, 190px);
+  height: clamp(36px, 5vw, 76px);
+  border-radius: 999px;
+  border: 1px solid rgba(189, 230, 255, .045);
+  transform: rotate(-9deg);
+  opacity: .28;
+  box-shadow: 0 0 60px rgba(125, 211, 252, .05), inset 0 0 45px rgba(155, 231, 255, .035);
+}
+
+.urai-atmosphere-band {
+  left: -14vw;
+  right: -14vw;
+  height: 18vh;
+  border-radius: 50%;
+  filter: blur(2px);
+  mix-blend-mode: screen;
+}
+
+.urai-atmosphere-band-a {
+  top: 34vh;
+  background: linear-gradient(90deg, transparent, rgba(101, 178, 240, .18), rgba(99, 238, 245, .2), transparent);
+  transform: rotate(-2deg);
+  opacity: .74;
+}
+
+.urai-atmosphere-band-b {
+  top: 43vh;
+  background: linear-gradient(90deg, transparent, rgba(25, 73, 135, .22), rgba(85, 241, 236, .13), transparent);
+  transform: rotate(1.6deg);
+  opacity: .86;
+}
+
+.urai-atmosphere-band-c {
+  top: 54vh;
+  height: 14vh;
+  background: linear-gradient(90deg, rgba(0,0,0,0), rgba(80, 149, 226, .09), rgba(255, 235, 178, .045), rgba(0,0,0,0));
+  transform: rotate(-1deg);
+  opacity: .54;
+}
+
+.urai-sky-vault-ring {
+  left: 50%;
+  top: 42%;
+  width: min(76vw, 1040px);
+  height: min(24vw, 330px);
+  border: 1px solid rgba(211, 244, 255, .045);
+  border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  box-shadow: inset 0 0 34px rgba(155, 231, 255, .025), 0 0 42px rgba(155, 231, 255, .025);
+}
+
+.urai-sky-vault-ring-b {
+  width: min(54vw, 780px);
+  height: min(38vw, 510px);
+  transform: translate(-50%, -50%) rotate(23deg) scaleX(.52);
+  opacity: .72;
+}
+
+.urai-sky-architecture {
+  opacity: .72;
+  transform: translate3d(0, -1vh, 0) scale(1.04);
+}
+
+.urai-hero-stars {
+  opacity: .88;
+  mask-image: radial-gradient(ellipse at 50% 42%, black 0%, black 54%, transparent 95%);
+}
+
+.urai-hero-aurora-cyan {
+  left: 17%;
+  top: 27%;
+  width: 66%;
+  height: 36%;
+  background: rgba(78,232,242,.16);
+}
+
+.urai-hero-aurora-violet {
+  right: 2%;
+  top: 24%;
+  width: 50%;
+  height: 44%;
+  background: rgba(150,120,255,.105);
+}
+
+.urai-hero-aurora-gold {
+  right: 18%;
+  bottom: 21%;
+  width: 42%;
+  height: 28%;
+  background: rgba(255,229,138,.095);
+}
+
+.urai-hero-orb-system {
+  filter: drop-shadow(0 0 24px rgba(155, 231, 255, .18));
+}
+
+.urai-hero-orb-halo {
+  background:
+    radial-gradient(circle, rgba(255,255,255,.31), rgba(158,243,255,.29) 18%, rgba(255,229,138,.13) 42%, rgba(134, 108, 255, .08) 58%, transparent 76%);
+  filter: blur(20px);
+  opacity: .88;
+}
+
+.urai-hero-orb {
+  background:
+    radial-gradient(circle at 30% 24%, rgba(255,255,255,1) 0 12%, rgba(216,255,255,.96) 21%, rgba(66,218,232,.75) 42%, rgba(6,32,63,.98) 74%, rgba(0,5,18,1) 100%);
+  box-shadow:
+    inset -24px -28px 44px rgba(0,9,30,.68),
+    inset 13px 10px 30px rgba(255,255,255,.32),
+    0 0 42px rgba(224,255,255,.82),
+    0 0 118px rgba(78,232,242,.42),
+    0 0 240px rgba(255,229,138,.12),
+    0 24px 80px rgba(0,0,0,.5);
+}
+
+.urai-hero-orb::after {
+  content: "";
+  position: absolute;
+  inset: -22%;
+  border-radius: inherit;
+  background: conic-gradient(from 210deg, transparent, rgba(255,255,255,.16), transparent 18%, transparent 58%, rgba(125,211,252,.16), transparent 72%);
+  opacity: .52;
+  mix-blend-mode: screen;
+  animation: uraiOrbSheen 14s linear infinite;
+}
+
+.urai-hero-orb-ring {
+  border-color: rgba(224, 253, 255, .26);
+  box-shadow: 0 0 32px rgba(155,231,255,.14), inset 0 0 18px rgba(255,255,255,.045);
+}
+
+.urai-hero-body-aura {
+  top: 64%;
+  background: radial-gradient(ellipse, rgba(155,231,255,.18), rgba(78,232,242,.07) 43%, rgba(177,150,255,.035) 62%, transparent 76%);
+}
+
+.urai-avatar-presence {
+  position: absolute;
+  left: 50%;
+  top: 63%;
+  width: clamp(132px, 13vw, 210px);
+  height: clamp(295px, 40vh, 470px);
+  transform: translate(-50%, -50%);
+  opacity: .78;
+}
+
+.urai-avatar-shadow,
+.urai-avatar-spine,
+.urai-avatar-head,
+.urai-avatar-shoulders,
+.urai-avatar-torso,
+.urai-avatar-root {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.urai-avatar-shadow {
+  bottom: 2%;
+  width: 72%;
+  height: 9%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(126, 225, 246, .24), transparent 72%);
+  filter: blur(10px);
+}
+
+.urai-avatar-spine {
+  top: 24%;
+  width: 2px;
+  height: 58%;
+  background: linear-gradient(180deg, rgba(240,255,255,.62), rgba(125,211,252,.24), transparent);
+  box-shadow: 0 0 18px rgba(155,231,255,.28);
+}
+
+.urai-avatar-head {
+  top: 10%;
+  width: 22%;
+  height: 14%;
+  border-radius: 999px 999px 46% 46%;
+  background: radial-gradient(circle at 42% 28%, rgba(255,255,255,.78), rgba(150,224,246,.25) 48%, rgba(0,0,0,0) 74%);
+  filter: drop-shadow(0 0 18px rgba(155,231,255,.22));
+}
+
+.urai-avatar-shoulders {
+  top: 27%;
+  width: 58%;
+  height: 18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(196,244,255,.22), rgba(125,211,252,.07) 54%, transparent 76%);
+}
+
+.urai-avatar-torso {
+  top: 36%;
+  width: 38%;
+  height: 44%;
+  clip-path: polygon(42% 0, 58% 0, 74% 100%, 26% 100%);
+  background: linear-gradient(180deg, rgba(230,255,255,.3), rgba(125,211,252,.12) 44%, rgba(125,211,252,.02));
+  filter: blur(.3px);
+}
+
+.urai-avatar-root {
+  bottom: 4%;
+  width: 22%;
+  height: 24%;
+  background: linear-gradient(180deg, rgba(125,211,252,.09), transparent);
+  clip-path: polygon(45% 0, 55% 0, 68% 100%, 32% 100%);
+}
+
+.urai-hero-terrain {
+  height: 57vh;
+  min-height: 450px;
+  transition: transform .6s cubic-bezier(.16,1,.3,1), filter .6s cubic-bezier(.16,1,.3,1);
+}
+
+.urai-hero-terrain-svg {
+  filter: drop-shadow(0 -50px 110px rgba(78,232,242,.08));
+}
+
+.urai-reflection-floor {
+  position: absolute;
+  left: 12vw;
+  right: 12vw;
+  bottom: 8vh;
+  height: 23vh;
+  z-index: 8;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(178, 255, 255, .2), rgba(78,232,242,.08) 34%, rgba(0,0,0,0) 72%),
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,0));
+  filter: blur(.2px);
+  opacity: .76;
+  transform: perspective(700px) rotateX(64deg);
+  box-shadow: inset 0 0 44px rgba(155,231,255,.06), 0 0 72px rgba(78,232,242,.06);
+}
+
+.urai-ground-ritual-ring {
+  position: absolute;
+  left: 50%;
+  bottom: 10vh;
+  width: min(62vw, 850px);
+  height: min(19vw, 260px);
+  border: 1px solid rgba(207, 247, 255, .085);
+  border-radius: 50%;
+  transform: translateX(-50%) perspective(800px) rotateX(65deg);
+  z-index: 10;
+  box-shadow: 0 0 38px rgba(78,232,242,.07), inset 0 0 26px rgba(255,255,255,.025);
+}
+
+.urai-ground-ritual-ring-b {
+  width: min(42vw, 600px);
+  bottom: 12vh;
+  opacity: .56;
+}
+
+.urai-foundation-glow-lines {
+  position: absolute;
+  left: 18vw;
+  right: 18vw;
+  bottom: 9vh;
+  height: 18vh;
+  z-index: 11;
+  pointer-events: none;
+  opacity: .6;
+}
+
+.urai-foundation-glow-lines span {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: 100%;
+  transform-origin: bottom center;
+  background: linear-gradient(0deg, rgba(192,255,239,.42), rgba(125,211,252,.12), transparent);
+  filter: drop-shadow(0 0 14px rgba(125,211,252,.3));
+}
+
+.urai-foundation-glow-lines span:nth-child(1) { transform: rotate(-35deg); }
+.urai-foundation-glow-lines span:nth-child(2) { transform: rotate(-18deg); height: 78%; }
+.urai-foundation-glow-lines span:nth-child(3) { transform: rotate(0deg); height: 92%; }
+.urai-foundation-glow-lines span:nth-child(4) { transform: rotate(18deg); height: 76%; }
+.urai-foundation-glow-lines span:nth-child(5) { transform: rotate(35deg); }
+
+.urai-home-panel {
+  border-color: rgba(207, 240, 255, .115) !important;
+  background: linear-gradient(180deg, rgba(3, 10, 25, .6), rgba(0, 4, 14, .42)) !important;
+  box-shadow: 0 22px 70px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.035) !important;
+  backdrop-filter: blur(18px) saturate(1.2) !important;
+}
+
+.urai-zone-runes {
+  position: absolute;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 92;
+  display: flex;
+  gap: .45rem;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.urai-zone-runes span {
+  border: 1px solid rgba(255,255,255,.095);
+  border-radius: 999px;
+  padding: .42rem .62rem;
+  background: rgba(0, 6, 18, .28);
+  color: rgba(238,250,255,.35);
+  font-size: .52rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.urai-hero-copy {
+  display: none;
+}
+
+.urai-sky-zone:hover ~ .urai-hero-sky .urai-atmosphere-band-a,
+.urai-sky-zone:focus-visible ~ .urai-hero-sky .urai-atmosphere-band-a {
+  opacity: 1;
+  filter: blur(0px) brightness(1.18);
+}
+
+.urai-orb-zone:hover ~ .urai-hero-sky,
+.urai-orb-zone:focus-visible ~ .urai-hero-sky {
+  filter: brightness(1.06);
+}
+
+.urai-orb-zone:hover ~ .urai-hero-orb-system,
+.urai-orb-zone:focus-visible ~ .urai-hero-orb-system {
+  filter: drop-shadow(0 0 52px rgba(210, 248, 255, .42));
+}
+
+.urai-ground-zone:hover ~ .urai-hero-terrain,
+.urai-ground-zone:focus-visible ~ .urai-hero-terrain {
+  filter: drop-shadow(0 -36px 110px rgba(78,232,242,.18));
+}
+
+.urai-orb-chat-layer,
+.urai-ground-layer {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(222,252,255,.12), rgba(78,232,242,.12) 18%, rgba(0,0,0,.7) 46%, rgba(0,0,0,.9)),
+    linear-gradient(180deg, rgba(0, 8, 18, .24), rgba(0,0,0,.74));
+  backdrop-filter: blur(16px) saturate(1.2);
+}
+
+.urai-orb-chat,
+.urai-ground-sanctum {
+  border-color: rgba(222, 252, 255, .2);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(125,211,252,.12), transparent 36%),
+    linear-gradient(180deg, rgba(8,16,38,.78), rgba(0,4,18,.72));
+  box-shadow: 0 42px 150px rgba(0,0,0,.7), 0 0 140px rgba(78,232,242,.16), inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.urai-orb-chat h1,
+.urai-ground-sanctum h1 {
+  text-shadow: 0 0 34px rgba(155,231,255,.16);
+}
+
+.urai-layer-close,
+.urai-chat-form button {
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.urai-layer-close:hover,
+.urai-chat-form button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.14);
+}
+
+.layer-groundZoom .urai-hero-terrain {
+  transform: translateY(-14%) scale(1.12);
+}
+
+.layer-groundZoom .urai-reflection-floor,
+.layer-groundZoom .urai-ground-ritual-ring,
+.layer-groundZoom .urai-foundation-glow-lines {
+  opacity: 1;
+  filter: brightness(1.28);
+}
+
+.layer-orbChat .urai-hero-orb-system {
+  filter: drop-shadow(0 0 80px rgba(210, 248, 255, .55));
+}
+
+@keyframes uraiOrbSheen {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 760px) {
+  .urai-moon-crescent { right: 7vw; top: 12vh; opacity: .3; }
+  .urai-distant-planet { display: none; }
+  .urai-reflection-floor { left: 3vw; right: 3vw; bottom: 9vh; }
+  .urai-ground-ritual-ring { width: 94vw; bottom: 10vh; }
+  .urai-zone-runes { bottom: .55rem; }
+  .urai-home-panel-right { max-width: calc(100vw - 2rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .urai-hero-orb::after,
+  .urai-foundation-glow-lines span {
+    animation: none !important;
+  }
+}

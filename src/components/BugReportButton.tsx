@@ -53,7 +53,7 @@ export default function BugReportButton() {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FB_PROJECT_ID);
+  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 
   useEffect(() => {
     installConsoleRecorder();
@@ -116,7 +116,7 @@ export default function BugReportButton() {
     }
   };
 
-  const shouldShowForm = state === "open" || state === "sending" || state === "error";
+  const shouldShowForm = state === "open" || state === "sending" || state === "error" || state === "success";
 
   return (
     <div className="w-full max-w-xl rounded-2xl border border-white/10 bg-black/60 p-4 text-left text-sm text-white/70 shadow-lg">
@@ -143,51 +143,54 @@ export default function BugReportButton() {
         <>
           {shouldShowForm ? (
             <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-              <div>
-                <label className="sr-only" htmlFor="bug-description">
-                  What went wrong?
-                </label>
-                <textarea
-                  id="bug-description"
-                  className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none focus:ring-0"
-                  placeholder="Quick note so we can recreate it"
-                  value={description}
-                  onChange={(event) => {
-                    setDescription(event.target.value);
-                    if (state === "error") {
-                      setState("open");
-                      setErrorMessage(null);
-                    }
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div className="flex-1">
-                  <label className="sr-only" htmlFor="bug-email">
-                    Email (optional)
-                  </label>
-                  <input
-                    id="bug-email"
-                    type="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    placeholder="Email for follow-up (optional)"
-                    className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none focus:ring-0"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={state === "sending"}
-                  className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/40 disabled:text-black/60"
-                >
-                  {state === "sending" ? "Uploading…" : "Send bug"}
-                </button>
-              </div>
               {state === "success" ? (
                 <p className="text-xs text-emerald-300">Report landed. Thank you.</p>
-              ) : null}
+              ) : (
+                <>
+                  <div>
+                    <label className="sr-only" htmlFor="bug-description">
+                      What went wrong?
+                    </label>
+                    <textarea
+                      id="bug-description"
+                      className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none focus:ring-0"
+                      placeholder="Quick note so we can recreate it"
+                      value={description}
+                      onChange={(event) => {
+                        setDescription(event.target.value);
+                        if (state === "error") {
+                          setState("open");
+                          setErrorMessage(null);
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <div className="flex-1">
+                      <label className="sr-only" htmlFor="bug-email">
+                        Email (optional)
+                      </label>
+                      <input
+                        id="bug-email"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        placeholder="Email for follow-up (optional)"
+                        className="w-full rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-white/40 focus:outline-none focus:ring-0"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={state === "sending"}
+                      className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/40 disabled:text-black/60"
+                    >
+                      {state === "sending" ? "Uploading…" : "Send bug"}
+                    </button>
+                  </div>
+                </>
+              )}
               {state === "error" && errorMessage ? (
                 <p className="text-xs text-rose-300">{errorMessage}</p>
               ) : null}

@@ -1,0 +1,290 @@
+/* Final focus/replay/world correction pass loaded last. */
+
+.spatial-life-map.is-focus .spatial-title-card,
+.spatial-life-map.is-bloom .spatial-title-card,
+.spatial-life-map.is-replay .spatial-title-card {
+  opacity: .22;
+  transform: translateX(-50%) translateY(-10px) scale(.96) !important;
+  pointer-events: none;
+}
+
+.spatial-life-map.is-focus .spatial-star-preview,
+.spatial-life-map.is-focus .spatial-chapter-rail,
+.spatial-life-map.is-bloom .spatial-star-preview,
+.spatial-life-map.is-bloom .spatial-chapter-rail,
+.spatial-life-map.is-replay .spatial-star-preview,
+.spatial-life-map.is-replay .spatial-chapter-rail {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.spatial-life-map.is-focus .spatial-controls {
+  opacity: .28;
+  transform: translateX(-50%) translateY(18px) scale(.98) !important;
+}
+
+.spatial-life-map.is-focus .spatial-controls:hover,
+.spatial-life-map.is-focus .spatial-controls:focus-within {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+.spatial-focus-chamber {
+  position: fixed;
+  inset: 0;
+  z-index: 82;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(210, 248, 255, .08), transparent 21%),
+    radial-gradient(circle at 42% 50%, rgba(189, 166, 255, .08), transparent 28%);
+  animation: spatialFocusIn .42s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.spatial-focus-chamber::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 18%, rgba(0,0,0,.36) 68%, rgba(0,0,0,.78) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.5), transparent 24%, transparent 76%, rgba(0,0,0,.5));
+  pointer-events: none;
+}
+
+.spatial-focus-weather {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(76vw, 980px);
+  height: min(52vw, 650px);
+  transform: translate(-50%, -50%) rotate(-8deg);
+  border-radius: 999px;
+  border: 1px solid rgba(220, 246, 255, .07);
+  background:
+    radial-gradient(ellipse at 34% 36%, rgba(255,255,255,.07), transparent 20%),
+    radial-gradient(ellipse at 54% 48%, rgba(125,234,249,.1), transparent 34%),
+    radial-gradient(ellipse at 68% 56%, rgba(189,166,255,.08), transparent 32%);
+  box-shadow: inset 0 0 80px rgba(190, 248, 255, .035), 0 0 100px rgba(125,234,249,.055);
+  pointer-events: none;
+}
+
+.spatial-focus-orb {
+  position: absolute;
+  left: clamp(2rem, 17vw, 16rem);
+  top: 50%;
+  width: clamp(180px, 22vw, 330px);
+  height: clamp(180px, 22vw, 330px);
+  transform: translateY(-50%);
+  border-radius: 999px;
+  filter: saturate(1.16) brightness(1.05);
+  opacity: .95;
+  animation: spatialFocusOrb 5.4s ease-in-out infinite;
+}
+
+.spatial-focus-orb::before {
+  content: "";
+  position: absolute;
+  inset: -42%;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(255,255,255,.2), rgba(125,234,249,.1) 33%, transparent 70%);
+  filter: blur(18px);
+}
+
+.spatial-focus-copy {
+  position: relative;
+  width: min(720px, calc(100vw - 2rem));
+  min-height: min(560px, 78vh);
+  margin-left: clamp(0rem, 15vw, 18rem);
+  display: grid;
+  align-content: end;
+  padding: clamp(1.5rem, 4vw, 2.8rem);
+  pointer-events: auto;
+  border: 1px solid rgba(220, 246, 255, .16);
+  border-radius: 38px;
+  background:
+    radial-gradient(circle at 14% 10%, rgba(255,255,255,.08), transparent 28%),
+    radial-gradient(circle at 76% 24%, rgba(125,234,249,.08), transparent 34%),
+    linear-gradient(180deg, rgba(8, 17, 38, .72), rgba(1, 5, 16, .64));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 42px 150px rgba(0,0,0,.62),
+    0 0 120px rgba(125,234,249,.1);
+  backdrop-filter: blur(26px) saturate(1.2);
+}
+
+.spatial-focus-copy p {
+  margin: 0;
+  color: rgba(191, 233, 255, .62);
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+}
+
+.spatial-focus-copy h2 {
+  margin: .55rem 0 0;
+  max-width: 720px;
+  color: rgba(240,253,255,.98);
+  font-size: clamp(3rem, 7.8vw, 6.7rem);
+  font-weight: 500;
+  line-height: .88;
+  letter-spacing: -.08em;
+  text-shadow: 0 0 36px rgba(155,231,255,.18);
+}
+
+.spatial-focus-copy > span {
+  display: block;
+  max-width: 640px;
+  margin-top: 1rem;
+  color: rgba(240,253,255,.82);
+  font-size: clamp(1rem, 1.45vw, 1.18rem);
+  line-height: 1.62;
+}
+
+.spatial-focus-signals,
+.spatial-focus-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: 1.1rem;
+}
+
+.spatial-focus-signals small,
+.spatial-focus-actions button,
+.spatial-focus-close {
+  border: 1px solid rgba(220,246,255,.18);
+  border-radius: 999px;
+  background: rgba(6,13,28,.66);
+  color: rgba(240,253,255,.86);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.spatial-focus-signals small {
+  padding: .42rem .68rem;
+  color: rgba(220,244,255,.62);
+  font-size: .74rem;
+}
+
+.spatial-focus-actions button {
+  padding: .72rem 1rem;
+  cursor: pointer;
+  transition: transform .2s cubic-bezier(.16, 1, .3, 1), border-color .2s ease, background .2s ease;
+}
+
+.spatial-focus-actions button:hover,
+.spatial-focus-close:hover,
+.spatial-focus-actions button:focus-visible,
+.spatial-focus-close:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(220,246,255,.36);
+  background: rgba(18,30,58,.78);
+  outline: none;
+}
+
+.spatial-focus-close {
+  position: absolute;
+  right: calc(50% - min(360px, calc(50vw - 1rem)) + 1.2rem);
+  top: max(7rem, 15vh);
+  z-index: 3;
+  width: 2.6rem;
+  height: 2.6rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  pointer-events: auto;
+}
+
+.spatial-replay-overlay {
+  pointer-events: auto !important;
+}
+
+.spatial-replay-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spatial-replay-card::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.1), transparent 16%),
+    radial-gradient(circle at 74% 78%, rgba(125,234,249,.09), transparent 22%),
+    linear-gradient(115deg, transparent 24%, rgba(255,255,255,.05) 25%, transparent 26%, transparent 62%, rgba(189,166,255,.05) 63%, transparent 65%);
+  opacity: .7;
+  pointer-events: none;
+}
+
+.spatial-replay-card > * {
+  position: relative;
+}
+
+.spatial-life-map.is-galaxy .spatial-title-card {
+  opacity: .82;
+}
+
+.spatial-life-map.is-galaxy .spatial-title-card:hover {
+  opacity: 1;
+}
+
+.spatial-life-map.is-galaxy .spatial-star-preview {
+  opacity: .82;
+}
+
+.spatial-life-map.is-galaxy .spatial-star-preview:hover,
+.spatial-life-map.is-galaxy .spatial-star-preview:focus-visible {
+  opacity: 1;
+}
+
+.spatial-life-map.is-galaxy .spatial-controls {
+  opacity: .58;
+}
+
+.spatial-life-map.is-galaxy .spatial-controls:hover,
+.spatial-life-map.is-galaxy .spatial-controls:focus-within {
+  opacity: 1;
+}
+
+@keyframes spatialFocusIn {
+  from { opacity: 0; filter: blur(10px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@keyframes spatialFocusOrb {
+  0%, 100% { transform: translateY(-50%) scale(.98); }
+  50% { transform: translateY(-50%) scale(1.035); }
+}
+
+@media (max-width: 860px) {
+  .spatial-focus-orb {
+    left: 50%;
+    top: 24%;
+    width: clamp(120px, 38vw, 190px);
+    height: clamp(120px, 38vw, 190px);
+    transform: translate(-50%, -50%);
+  }
+
+  .spatial-focus-copy {
+    width: calc(100vw - 1rem);
+    min-height: 72vh;
+    margin-left: 0;
+    border-radius: 28px;
+    padding: 1.25rem;
+  }
+
+  .spatial-focus-copy h2 {
+    font-size: clamp(2.8rem, 15vw, 4.8rem);
+  }
+
+  .spatial-focus-close {
+    right: 1.2rem;
+    top: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-focus-chamber,
+  .spatial-focus-orb {
+    animation: none !important;
+  }
+}

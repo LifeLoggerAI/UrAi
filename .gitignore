@@ -2,20 +2,43 @@
 node_modules/
 .pnpm-store/
 .turbo/
+
 # Next.js
 .next/
 out/
 .vercel/
+
 # Coverage / dist
 coverage/
 dist/
+
+# Generated local reports/artifacts
+audit/
+tmp/
+artifacts/launch/
+test-results/
+playwright-report/
+tsconfig.tsbuildinfo
+*.zip
+
 # Firebase local/debug
 .firebase/
 firebase-debug.log
 firestore-debug.log
+
+# Heavy media assets stay in CDN/storage, not Git
+public/assets/sky/**/*.mp4
+public/assets/ground/**/*.mp4
+public/assets/avatar/**/*.mp4
+public/assets/**/*.mov
+*.mp4
+*.mov
+
 # OS
 .DS_Store
 Thumbs.db
+
 # Env (keep a template instead)
 .env*
 !env.local.template
+.vercel

@@ -1,0 +1,36 @@
+name: Staging Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Staging base URL to verify
+        required: true
+        default: https://urai-staging.web.app
+
+jobs:
+  smoke:
+    name: Browser and API smoke against staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify staging smoke
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url }}
+        run: npm run test:smoke

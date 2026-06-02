@@ -20,7 +20,7 @@ export default function FeedbackBox() {
     return PLACEHOLDER_EXAMPLES[Math.floor(Math.random() * PLACEHOLDER_EXAMPLES.length)];
   }, []);
 
-  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FB_PROJECT_ID);
+  const isFirebaseConfigured = Boolean(process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

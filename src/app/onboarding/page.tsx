@@ -1,5 +1,6 @@
-import React from 'react';
-import Button from '../components/ui/Button';
+"use client";
+
+import Button from '@/components/ui/Button';
 
 export default function OnboardingPage() {
   return (

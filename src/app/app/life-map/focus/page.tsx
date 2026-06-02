@@ -1,4 +1,4 @@
-import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
+import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
   title: "URAI Focus",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function AppLifeMapFocusPage() {
-  return <LifeMapUniverse initialView="focus" />;
+  return <SpatialLifeMap initialMode="focus" />;
 }

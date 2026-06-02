@@ -1,21 +1,125 @@
-name: Deploy (Firebase Hosting)
+name: Deploy (Firebase Production)
+
 on:
+  workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "firebase.json"
+      - "package.json"
+      - "package-lock.json"
+      - "playwright.config.ts"
+      - "tests/e2e/**"
+      - "scripts/deploy-urai-firebase.sh"
+      - ".github/workflows/deploy.yml"
+
+concurrency:
+  group: firebase-production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
+    name: Deploy production Firebase
     runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      npm_config_cache: /tmp/urai-npm-cache
+      NEXT_DISABLE_CACHE: "1"
+      FIREBASE_CLI_EXPERIMENTS: webframeworks
+      PLAYWRIGHT_OUTPUT_DIR: test-results
+      PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
+      PRODUCTION_URL: https://urai-4dc1d.web.app
+
     steps:
       - uses: actions/checkout@v4
-        with: { lfs: true }
-      - uses: actions/setup-node@v4
-        with: { node-version: '20' }
-      - run: npm ci
-      - run: npm run build
-      - name: Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          channelId: live
-          projectId: urai-42390883
+          lfs: false
+          clean: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Prepare writable tool caches
+        run: |
+          mkdir -p "$npm_config_cache"
+          npm config set cache "$npm_config_cache" --global
+          npm config get cache
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate production Firebase target
+        env:
+          URAI_EXPECTED_FIREBASE_PROJECT: urai-4dc1d
+          URAI_EXPECTED_FIREBASE_SITE: urai-4dc1d
+        run: node scripts/check-firebase-target.mjs --config firebase.json
+
+      - name: Run production build
+        run: npm run build
+
+      - name: Write Firebase service account credentials
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          set -euo pipefail
+          credentials_file="$RUNNER_TEMP/firebase-service-account.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$credentials_file"
+          node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));" "$credentials_file"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$credentials_file" >> "$GITHUB_ENV"
+
+      - name: Deploy production hosting
+        env:
+          npm_config_cache: /tmp/urai-npm-cache
+          NEXT_DISABLE_CACHE: "1"
+          FIREBASE_CLI_EXPERIMENTS: webframeworks
+        run: npx firebase-tools@15.18.0 deploy --only hosting:urai-4dc1d --project urai-4dc1d --non-interactive
+
+      - name: Verify production HTTP routes
+        run: |
+          set -euo pipefail
+          check_url() {
+            url="$1"
+            echo "Checking $url"
+            for attempt in $(seq 1 18); do
+              status="$(curl --silent --show-error --location --output /tmp/urai-http-check-body --write-out '%{http_code}' "$url" || true)"
+              if [ "$status" = "200" ]; then
+                echo "OK $url"
+                return 0
+              fi
+              echo "Attempt $attempt failed for $url with HTTP $status"
+              head -c 500 /tmp/urai-http-check-body || true
+              echo
+              sleep 10
+            done
+            echo "Production route did not become healthy: $url"
+            return 1
+          }
+
+          check_url "$PRODUCTION_URL/"
+          check_url "$PRODUCTION_URL/home"
+          check_url "$PRODUCTION_URL/ochat"
+          check_url "$PRODUCTION_URL/u/adamclamp"
+          check_url "$PRODUCTION_URL/api/status"
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify production browser smoke
+        run: npm run test:smoke:production
+
+      - name: Upload production verification artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-verification-results
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

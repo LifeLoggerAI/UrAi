@@ -1,0 +1,78 @@
+name: Playwright Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git ref to test"
+        required: false
+        default: "main"
+
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/e2e/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/playwright-smoke.yml"
+
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/e2e/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/playwright-smoke.yml"
+
+jobs:
+  smoke:
+    name: Browser smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout requested ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        # package-lock.json is currently stale against package.json; use npm install
+        # until docs/LOCKFILE_REFRESH.md is completed and workflows can return to npm ci.
+        run: npm install
+
+      - name: Build app for smoke tests
+        env:
+          NEXT_DISABLE_CACHE: "1"
+        run: npm run build
+
+      - name: Install Playwright Chromium and OS dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run smoke tests
+        env:
+          PLAYWRIGHT_OUTPUT_DIR: test-results
+          NEXT_CACHE_DIR: .next/cache
+          URAI_WAITLIST_DRY_RUN: "1"
+        run: npm run test:smoke
+
+      - name: Upload Playwright test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-smoke-results
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+          retention-days: 7

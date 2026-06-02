@@ -1,0 +1,62 @@
+name: Independent Release Verifier
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_commands:
+        description: "Run package commands instead of static verification only"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - system-release-verifier
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify-release:
+    name: Verify URAI release readiness
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check deployment evidence template
+        run: npm run deploy:evidence
+
+      - name: Run independent release verifier
+        env:
+          URAI_VERIFIER_RUN_COMMANDS: ${{ github.event.inputs.run_commands == 'true' && '1' || '0' }}
+        run: npm run verify:release
+
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-release-verification
+          path: release-verification/INDEPENDENT_RELEASE_VERIFICATION.md
+          if-no-files-found: warn
