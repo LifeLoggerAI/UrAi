@@ -9,6 +9,10 @@ import { HomeWorldCanvas } from "@/components/urai/home/HomeWorldCanvas";
 type HomeLayer = "home" | "orbChat" | "groundZoom";
 type OrbMessage = { id: string; role: "user" | "urai"; text: string };
 
+type HomeSceneProps = {
+  ascentTarget?: string;
+};
+
 function HeroStars() {
   return (
     <div className="urai-hero-stars" aria-hidden>
@@ -195,8 +199,8 @@ function nextOrbReply(text: string) {
   return `I hear “${text}.” I am keeping it as a soft signal, not a verdict. The next star to watch is the one that returns when everything gets quiet.`;
 }
 
-export function HomeScene() {
-  const { phase, beginAscent, isTransitioning } = useAscentTransition("/life-map");
+export function HomeScene({ ascentTarget = "/life-map" }: HomeSceneProps) {
+  const { phase, beginAscent, isTransitioning } = useAscentTransition(ascentTarget);
 
   const [layer, setLayer] = useState<HomeLayer>("home");
   const [orbInput, setOrbInput] = useState("");
