@@ -19,7 +19,7 @@ export type CompanionQuickPrompt = {
   prompt: string;
   mode?: CompanionMode;
   councilRoleId?: string;
-  action?: "openLifeMap" | "openPassport" | "openGround";
+  action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror";
 };
 
 export type LocalCompanionResponderContext = {
