@@ -1,14 +1,43 @@
 import type { GenesisMoodState } from "@/lib/companion/companionTypes";
-import type { LifeMapData, LifeMapStar } from "./lifeMapTypes";
+import { normalizePassportContextPermissions, type PassportContextPermissions } from "@/lib/passport/passportContextTypes";
+import type { LifeMapData, LifeMapSourceItem, LifeMapStar, LifeMapStarType, PassportDataLayerId } from "./lifeMapTypes";
+
+type LifeMapPassportProfile = {
+  userId?: string;
+  permissionVersion?: number;
+  lifeMapEnabled?: boolean;
+  enabledLayers?: Partial<Record<PassportDataLayerId, boolean>>;
+  contextPermissions?: Partial<PassportContextPermissions>;
+};
 
 type BuildPermissionedLifeMapInput = {
   userId?: string;
   moodState?: GenesisMoodState;
   permissionVersion?: number;
+  passportProfile?: LifeMapPassportProfile | null;
+  memories?: LifeMapSourceItem[];
+  reflections?: LifeMapSourceItem[];
+  rituals?: LifeMapSourceItem[];
+  milestones?: LifeMapSourceItem[];
+  relationshipSummaries?: LifeMapSourceItem[];
+  shadowSummaries?: LifeMapSourceItem[];
+  legacySummaries?: LifeMapSourceItem[];
 };
 
 const CHAPTER_ID = "genesis";
 const now = () => new Date().toISOString();
+
+function isLayerAllowed(profile: LifeMapPassportProfile | null | undefined, layer: PassportDataLayerId): boolean {
+  if (layer === "system" || layer === "passport") return true;
+  if (profile?.lifeMapEnabled === false) return false;
+  if (profile?.enabledLayers?.[layer] === true) return true;
+  const p = normalizePassportContextPermissions(profile?.contextPermissions);
+  if (layer === "mood") return p.allowMoodContext;
+  if (layer === "memory" || layer === "ritual" || layer === "milestone" || layer === "recovery" || layer === "legacy") return p.allowMemoryContext;
+  if (layer === "relationship") return p.allowRelationshipContext;
+  if (layer === "shadow" || layer === "longTermPattern") return p.allowLongTermPatternContext;
+  return false;
+}
 
 export function createSafeStarterStars(moodState: GenesisMoodState = "luminous"): LifeMapStar[] {
   const createdAt = now();
@@ -21,14 +50,45 @@ export function createSafeStarterStars(moodState: GenesisMoodState = "luminous")
   ];
 }
 
+function sourceToStar(item: LifeMapSourceItem, index: number, type: LifeMapStarType, layer: PassportDataLayerId, moodState: GenesisMoodState): LifeMapStar {
+  const angle = index * 0.72;
+  const radius = 18 + (index % 5) * 6;
+  return {
+    id: item.id ?? `${type}-${index}`,
+    type,
+    title: item.title ?? "Symbolic moment",
+    subtitle: item.subtitle,
+    summary: item.summary ?? "A permissioned symbolic summary.",
+    createdAt: item.createdAt ?? now(),
+    emotionalTone: item.emotionalTone ?? moodState,
+    intensity: item.intensity ?? "soft",
+    visibility: "visible",
+    x: Math.max(8, Math.min(92, 50 + Math.cos(angle) * radius)),
+    y: Math.max(14, Math.min(82, 46 + Math.sin(angle) * radius)),
+    z: index % 3,
+    chapterId: CHAPTER_ID,
+    sourceLayerId: layer,
+    glyph: type === "ritual" ? "✺" : type === "milestone" ? "✦" : type === "relationship" ? "∞" : type === "shadow" ? "◐" : type === "legacy" ? "◆" : "•",
+  };
+}
+
 export function buildPermissionedLifeMap(input: BuildPermissionedLifeMapInput = {}): LifeMapData {
   const moodState = input.moodState ?? "luminous";
-  const stars = createSafeStarterStars(moodState);
+  const profile = input.passportProfile;
+  const generated: LifeMapStar[] = [];
+  if (isLayerAllowed(profile, "mood")) generated.push(sourceToStar({ id: "visible-mood-weather", title: "Mood Weather", subtitle: "A visible state, not a diagnosis.", summary: `The current visible Genesis tone is ${moodState}.` }, 1, "mood", "mood", moodState));
+  if (isLayerAllowed(profile, "memory")) generated.push(...(input.memories ?? input.reflections ?? []).map((item, index) => sourceToStar(item, index + 2, "memory", "memory", moodState)));
+  if (isLayerAllowed(profile, "ritual")) generated.push(...(input.rituals ?? []).map((item, index) => sourceToStar(item, index + 7, "ritual", "ritual", moodState)));
+  if (isLayerAllowed(profile, "milestone")) generated.push(...(input.milestones ?? []).map((item, index) => sourceToStar(item, index + 12, "milestone", "milestone", moodState)));
+  if (isLayerAllowed(profile, "relationship")) generated.push(...(input.relationshipSummaries ?? []).map((item, index) => sourceToStar(item, index + 17, "relationship", "relationship", moodState)));
+  if (isLayerAllowed(profile, "shadow")) generated.push(...(input.shadowSummaries ?? []).map((item, index) => sourceToStar(item, index + 22, "shadow", "shadow", moodState)));
+  if (isLayerAllowed(profile, "legacy")) generated.push(...(input.legacySummaries ?? []).map((item, index) => sourceToStar(item, index + 27, "legacy", "legacy", moodState)));
+  const stars = generated.length > 0 ? [...createSafeStarterStars(moodState).slice(0, 2), ...generated] : createSafeStarterStars(moodState);
   return {
-    userId: input.userId,
+    userId: profile?.userId ?? input.userId,
     stars,
-    chapters: [{ id: CHAPTER_ID, title: "Genesis", subtitle: "The map is quiet and safe.", startDate: stars[0]?.createdAt ?? now(), dominantMood: moodState, starIds: stars.map((star) => star.id), constellationStyle: "thread" }],
+    chapters: [{ id: CHAPTER_ID, title: "Genesis", subtitle: generated.length > 0 ? "Permissioned stars are beginning to appear." : "The map is quiet and safe.", startDate: stars[0]?.createdAt ?? now(), dominantMood: moodState, starIds: stars.map((star) => star.id), constellationStyle: "thread" }],
     generatedAt: now(),
-    permissionVersion: input.permissionVersion ?? 1,
+    permissionVersion: profile?.permissionVersion ?? input.permissionVersion ?? 1,
   };
 }
