@@ -3,6 +3,8 @@
 import { motion, useReducedMotion } from "framer-motion";
 import type { UraiScene } from "@/lib/urai/scene-theme";
 import { getSceneTheme } from "@/lib/urai/scene-theme";
+import { getAssetPath } from "@/lib/assets/uraiAssetManifest";
+import { SafeLayerImage } from "@/components/common/SafeLayerImage";
 
 type OrbCoreProps = {
   scene: UraiScene;
@@ -29,28 +31,37 @@ export function OrbCore({ scene, size = "large", intensity = 1, interactive = fa
       aria-label="URAI orb"
       onClick={onClick}
       disabled={!interactive}
-      className={`relative isolate flex items-center justify-center rounded-full border border-white/20 bg-transparent outline-none ${sizeClasses[size]}`}
-      style={{ boxShadow: `0 0 ${90 * intensity}px ${theme.glow}`, cursor: interactive ? "pointer" : "default" }}
+      className={`relative isolate flex items-center justify-center rounded-full bg-transparent outline-none focus:ring-2 focus:ring-white/50 ${sizeClasses[size]}`}
+      style={{ cursor: interactive ? "pointer" : "default" }}
       whileHover={interactive && !reduceMotion ? { scale: 1.04 } : undefined}
       whileTap={interactive && !reduceMotion ? { scale: 0.98 } : undefined}
-      animate={reduceMotion ? undefined : { scale: [1, 1.025, 1] }}
+      animate={reduceMotion ? undefined : { y: [0, -5, 0], scale: [1, 1.025, 1] }}
       transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
     >
-      <span className="absolute inset-[-22%] rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${theme.glow} 0%, transparent 70%)` }} />
-      <motion.span
-        className="absolute inset-[-8%] rounded-full border border-white/15"
-        style={{ background: "conic-gradient(from 180deg, transparent, rgba(255,255,255,0.22), transparent, rgba(255,255,255,0.12), transparent)" }}
-        animate={reduceMotion ? undefined : { rotate: 360 }}
-        transition={{ duration: 26, repeat: Infinity, ease: "linear" }}
+      <SafeLayerImage
+        src={getAssetPath("orbGlow")}
+        alt=""
+        priority
+        className="pointer-events-none absolute inset-[-24%] h-[148%] w-[148%] object-contain opacity-90 mix-blend-screen"
+        style={{ filter: `brightness(${0.88 + intensity * 0.4}) drop-shadow(0 0 ${36 + intensity * 34}px ${theme.glow})` }}
       />
-      <span className="absolute inset-[8%] rounded-full" style={{ background: `radial-gradient(circle at 38% 32%, rgba(255,255,255,0.95) 0%, ${theme.accent} 16%, ${theme.secondary} 42%, rgba(10,14,32,0.92) 72%, rgba(0,0,0,0.98) 100%)` }} />
-      <span className="absolute inset-[18%] rounded-full bg-white/10 blur-xl" />
-      <span className="absolute inset-[2%] rounded-full border border-white/25" style={{ boxShadow: `inset 0 0 34px rgba(255,255,255,0.16), 0 0 44px ${theme.glow}` }} />
+      <SafeLayerImage
+        src={getAssetPath("orbCore")}
+        alt=""
+        priority
+        className="pointer-events-none absolute inset-0 h-full w-full object-contain"
+        style={{ filter: `brightness(${0.92 + intensity * 0.22}) saturate(${1 + intensity * 0.18})` }}
+      />
       <motion.span
-        className="absolute h-2/3 w-2/3 rounded-full opacity-40 blur-md"
-        style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.34), transparent 55%)" }}
-        animate={reduceMotion ? undefined : { opacity: [0.22, 0.45, 0.22], x: [-8, 8, -8], y: [4, -6, 4] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute inset-[-10%] rounded-full border border-white/15"
+        style={{ boxShadow: `0 0 ${48 + intensity * 52}px ${theme.glow}, inset 0 0 34px rgba(255,255,255,0.12)` }}
+        animate={reduceMotion ? undefined : { opacity: [0.42, 0.76, 0.42], rotate: 360 }}
+        transition={{ opacity: { duration: 5, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 28, repeat: Infinity, ease: "linear" } }}
+      />
+      <SafeLayerImage
+        src={getAssetPath("orbParticles")}
+        alt=""
+        className="pointer-events-none absolute inset-[-16%] h-[132%] w-[132%] object-contain opacity-80 mix-blend-screen"
       />
     </motion.button>
   );
