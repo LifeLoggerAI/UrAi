@@ -5,6 +5,7 @@ import type { UraiScene } from "@/lib/urai/scene-theme";
 import { getSceneTheme } from "@/lib/urai/scene-theme";
 import { getAssetPath, type UraiAssetKey } from "@/lib/assets/uraiAssetManifest";
 import { SafeLayerImage } from "@/components/common/SafeLayerImage";
+import { useInteractionSound } from "@/hooks/useInteractionSound";
 
 type PortalNavProps = {
   activeScene: UraiScene;
@@ -21,13 +22,24 @@ const portals: Array<{ id: UraiScene; label: string; glyph: string; assetKey?: U
 
 export function PortalNav({ activeScene, onNavigate, onReturnHome }: PortalNavProps) {
   const theme = getSceneTheme(activeScene);
+  const sound = useInteractionSound();
+
+  const returnHomeWithSound = async () => {
+    await sound.playSoftTap();
+    onReturnHome();
+  };
+
+  const navigateWithSound = async (scene: UraiScene) => {
+    await sound.playPortalOpen(scene === "life-map" ? "life-map" : scene);
+    onNavigate(scene);
+  };
 
   return (
     <nav aria-label="URAI scene portals" className="relative z-20 mt-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-5">
       {activeScene !== "home" && (
         <motion.button
           type="button"
-          onClick={onReturnHome}
+          onClick={returnHomeWithSound}
           className="group rounded-full border border-white/12 bg-white/[0.045] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 shadow-2xl backdrop-blur-xl transition hover:border-white/28 hover:bg-white/[0.075] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
@@ -43,7 +55,7 @@ export function PortalNav({ activeScene, onNavigate, onReturnHome }: PortalNavPr
             key={portal.id}
             type="button"
             aria-label={`Enter ${portal.label}`}
-            onClick={() => onNavigate(portal.id)}
+            onClick={() => navigateWithSound(portal.id)}
             className="group relative flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.045] px-3 py-2 text-sm text-white/80 shadow-2xl backdrop-blur-xl transition hover:border-white/28 hover:bg-white/[0.075] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40 disabled:opacity-70"
             disabled={isActive}
             style={{ boxShadow: isActive ? `0 0 28px ${theme.glow}` : undefined }}
