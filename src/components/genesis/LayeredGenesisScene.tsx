@@ -2,6 +2,8 @@
 
 import { getAssetPath } from "@/lib/assets/uraiAssetManifest";
 import { SafeLayerImage } from "@/components/common/SafeLayerImage";
+import { useGenesisSoundscape } from "@/hooks/useGenesisSoundscape";
+import { useInteractionSound } from "@/hooks/useInteractionSound";
 import { OrbLayer } from "./OrbLayer";
 
 type GenesisMoodState = "calm" | "heavy" | "focused" | "anxious" | "hopeful" | "recovering" | "shadow" | "threshold" | "luminous";
@@ -32,6 +34,28 @@ const groundImageClass = "pointer-events-none absolute inset-x-0 bottom-0 h-[var
 
 export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOpen, onGroundOpen, onPassportOpen, className = "" }: LayeredGenesisSceneProps) {
   const mood = moodValues[moodState];
+  const sound = useInteractionSound();
+  useGenesisSoundscape({ moodState, sceneActive: true });
+
+  const openSky = async () => {
+    await sound.playPortalOpen("life-map");
+    onSkyOpen?.();
+  };
+
+  const openOrb = async () => {
+    await sound.playOrbTap();
+    onOrbOpen?.();
+  };
+
+  const openGround = async () => {
+    await sound.playGroundOpen();
+    onGroundOpen?.();
+  };
+
+  const openPassport = async () => {
+    await sound.playPortalOpen("passport");
+    onPassportOpen?.();
+  };
 
   return (
     <div className={`urai-scene-root relative min-h-screen w-full overflow-hidden bg-black ${className}`}>
@@ -91,14 +115,14 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
       <SafeLayerImage src={getAssetPath("groundBloom")} alt="" priority className={`${groundImageClass} mix-blend-screen`} style={{ opacity: 0.72 }} />
       <SafeLayerImage src={getAssetPath("groundMist")} alt="" className={`${groundImageClass} mix-blend-screen`} style={{ opacity: 0.62 }} />
 
-      <button type="button" aria-label="Open Life Map" onClick={onSkyOpen} className="absolute inset-x-0 top-0 z-20 h-[55%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
-      <button type="button" aria-label="Open Ground" onClick={onGroundOpen} className="absolute inset-x-0 bottom-0 z-20 h-[28%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
+      <button type="button" aria-label="Open Life Map" onClick={openSky} className="absolute inset-x-0 top-0 z-20 h-[55%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
+      <button type="button" aria-label="Open Ground" onClick={openGround} className="absolute inset-x-0 bottom-0 z-20 h-[28%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
 
       <div className="absolute left-1/2 top-[var(--orb-y)] z-30 -translate-x-1/2 -translate-y-1/2">
-        <OrbLayer intensity={mood.orbIntensity} interactive onClick={onOrbOpen} />
+        <OrbLayer intensity={mood.orbIntensity} interactive onClick={openOrb} />
       </div>
 
-      <button type="button" aria-label="Open URAI Passport" onClick={onPassportOpen} className="absolute bottom-[var(--passport-offset)] right-[var(--passport-offset)] z-40 h-12 w-12 rounded-full bg-white/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
+      <button type="button" aria-label="Open URAI Passport" onClick={openPassport} className="absolute bottom-[var(--passport-offset)] right-[var(--passport-offset)] z-40 h-12 w-12 rounded-full bg-white/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
       <SafeLayerImage src={getAssetPath("passportPortal")} alt="" className="pointer-events-none absolute bottom-[calc(var(--passport-offset)-0.25rem)] right-[calc(var(--passport-offset)-0.25rem)] z-30 h-14 w-14 select-none object-contain opacity-70 mix-blend-screen" />
       <SafeLayerImage src={getAssetPath("foregroundVignette")} alt="" className={`${baseImageClass} mix-blend-multiply`} style={{ opacity: 0.72 }} />
     </div>
