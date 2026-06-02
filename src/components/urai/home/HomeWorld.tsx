@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import OrbChatDrawer from "@/components/orb/OrbChatDrawer";
 import HomeSky from "./HomeSky";
 import HomeGround from "./HomeGround";
 import HomeAvatar from "./HomeAvatar";
 import HomeOrb from "./HomeOrb";
 import { HOME_WORLD_STATES, type HomeWorldMode } from "./homeWorldState";
+import UraiCompanionShell from "../../companion/UraiCompanionShell";
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -41,6 +41,10 @@ export default function HomeWorld(): React.ReactElement {
     setTransitioning(true);
     vibrate(18);
     window.setTimeout(() => router.push("/life-map"), reducedMotion ? 80 : 700);
+  }
+
+  function openPassport() {
+    router.push("/passport");
   }
 
   function openOrb() {
@@ -129,18 +133,12 @@ export default function HomeWorld(): React.ReactElement {
         `}</style>
       </main>
 
-      <OrbChatDrawer
-        open={orbOpen}
-        onClose={() => setOrbOpen(false)}
-        context={{
-          todayMoodState: state.mode,
-          mentalLoadScore: state.mode === "threshold" ? 0.82 : 0.42,
-          rhythmState: state.mode,
-          lastNarratorInsight: state.body,
-          recentTimelineEvents: ["Tier 5 home opened", "Orb ready", "Memory Galaxy available"],
-          relationshipSignals: ["private by default", "user controlled"],
-          userTonePreference: "direct",
-        }}
+      <UraiCompanionShell 
+        isOpen={orbOpen} 
+        onClose={() => setOrbOpen(false)} 
+        moodState={mode}
+        onLifeMapOpen={enterGalaxy}
+        onPassportOpen={openPassport}
       />
     </>
   );
