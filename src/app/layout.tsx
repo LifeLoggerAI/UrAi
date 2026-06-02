@@ -15,9 +15,9 @@ import "../styles/urai-aaa-final-focus.css";
 import "../styles/urai-home-world-composition.css";
 import "../styles/urai-sacred-tech-system.css";
 
-import React from "react";
-import AppProviders from "./providers";
 import type { Metadata } from "next";
+import AppProviders from "./providers";
+import OnboardingGate from "@/components/layout/OnboardingGate";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
 
@@ -57,11 +57,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <OnboardingGate>{children}</OnboardingGate>
+        </AppProviders>
       </body>
     </html>
   );

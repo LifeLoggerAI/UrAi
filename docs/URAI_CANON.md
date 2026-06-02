@@ -20,10 +20,26 @@
 
 * `src/components/urai/home/HomeScene.tsx`
 
+## Canonical Life-Map Component
+
+* `src/app/app/life-map/page.tsx` uses `src/components/spatial-life-map/SpatialLifeMap`
+
 ## Runtime Split (Current)
 
 * Root routes keep `LifeMapUniverse` behavior to satisfy existing smoke contracts.
 * App-scoped life-map routes use `src/components/spatial-life-map/SpatialLifeMap` for immersive 3D flow.
+* Focus and replay routes preserve `LifeMapUniverse` behavior where required by existing contracts.
+
+## Focus and Replay Components
+
+* `/focus` uses the contract-safe root focus route.
+* `/replay` uses the contract-safe root replay route.
+* `/app/life-map/focus` uses spatial focus mode.
+* `/app/life-map/replay` uses spatial replay mode.
+* Existing support components remain:
+
+  * `src/components/life-map/FocusMemoryView.tsx`
+  * `src/components/life-map/ReplayControls.tsx`
 
 ## Canon Rules
 
