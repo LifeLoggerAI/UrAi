@@ -1,6 +1,8 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import type { UraiScene } from "@/lib/urai/scene-theme";
+import { UraiCompanionShell } from "@/components/companion/UraiCompanionShell";
 import { AssetPreloader } from "@/components/genesis/AssetPreloader";
 import { LayeredGenesisScene } from "@/components/genesis/LayeredGenesisScene";
 import { PortalNav } from "@/components/urai/PortalNav";
@@ -12,13 +14,21 @@ type HomeSceneProps = {
 };
 
 export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
-  const handleOrbOpen = () => {
-    if (onOpenOrbChat) {
-      onOpenOrbChat();
-      return;
-    }
-    onNavigate("life-map");
-  };
+  const [isCompanionOpen, setIsCompanionOpen] = useState(false);
+
+  const openCompanion = useCallback(() => {
+    onOpenOrbChat?.();
+    setIsCompanionOpen(true);
+  }, [onOpenOrbChat]);
+
+  const closeCompanion = useCallback(() => {
+    setIsCompanionOpen(false);
+  }, []);
+
+  const navigateFromCompanion = useCallback((scene: UraiScene) => {
+    setIsCompanionOpen(false);
+    onNavigate(scene);
+  }, [onNavigate]);
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
@@ -26,9 +36,10 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         <LayeredGenesisScene
           moodState="luminous"
           onSkyOpen={() => onNavigate("life-map")}
-          onOrbOpen={handleOrbOpen}
+          onOrbOpen={openCompanion}
           onGroundOpen={() => onNavigate("ground")}
-          onPassportOpen={() => undefined}
+          onPassportOpen={() => onNavigate("passport")}
+          isCompanionOpen={isCompanionOpen}
         />
       </AssetPreloader>
 
@@ -40,6 +51,15 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
           <PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} />
         </div>
       </div>
+
+      <UraiCompanionShell
+        isOpen={isCompanionOpen}
+        onClose={closeCompanion}
+        initialMode="companion"
+        moodState="luminous"
+        onOpenLifeMap={() => navigateFromCompanion("life-map")}
+        onOpenPassport={() => navigateFromCompanion("passport")}
+      />
     </section>
   );
 }
