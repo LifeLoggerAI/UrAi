@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { UraiScene } from "@/lib/urai/scene-theme";
 import { getSceneTheme } from "@/lib/urai/scene-theme";
+import { useUraiAudio } from "@/providers/UraiAudioProvider";
 import { OrbCore } from "@/components/urai/OrbCore";
 import { PortalNav } from "@/components/urai/PortalNav";
 import { SceneCopy } from "@/components/urai/SceneCopy";
@@ -23,6 +25,15 @@ const lanterns = [
 export function GroundScene({ onNavigate, onReturnHome }: GroundSceneProps) {
   const theme = getSceneTheme("ground");
   const shouldReduceMotion = useReducedMotion();
+  const audio = useUraiAudio();
+
+  useEffect(() => {
+    if (!audio.settings.enabled || !audio.isUnlocked || audio.settings.reducedSensoryMode) return;
+    void audio.playLoop("ground-soft-loop", { category: "ambient", volume: 0.14, fadeMs: 1600 });
+    return () => {
+      void audio.stopLoop("ground-soft-loop", { fadeMs: 1400 });
+    };
+  }, [audio, audio.isUnlocked, audio.settings.enabled, audio.settings.reducedSensoryMode]);
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden px-6 py-10">
