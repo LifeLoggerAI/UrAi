@@ -1,4 +1,5 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/dom";
+import { cleanup, render } from "@testing-library/react";
 import type { ReactElement } from "react";
 
 import RootLoading from "@/app/loading";
