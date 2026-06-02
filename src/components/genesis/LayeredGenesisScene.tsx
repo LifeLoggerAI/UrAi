@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect } from "react";
 import { getAssetPath } from "@/lib/assets/uraiAssetManifest";
 import { SafeLayerImage } from "@/components/common/SafeLayerImage";
 import { useGenesisSoundscape } from "@/hooks/useGenesisSoundscape";
 import { useInteractionSound } from "@/hooks/useInteractionSound";
+import { useUraiVoice } from "@/providers/UraiVoiceProvider";
 import { OrbLayer } from "./OrbLayer";
 
 type GenesisMoodState = "calm" | "heavy" | "focused" | "anxious" | "hopeful" | "recovering" | "shadow" | "threshold" | "luminous";
@@ -35,25 +37,38 @@ const groundImageClass = "pointer-events-none absolute inset-x-0 bottom-0 h-[var
 export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOpen, onGroundOpen, onPassportOpen, className = "" }: LayeredGenesisSceneProps) {
   const mood = moodValues[moodState];
   const sound = useInteractionSound();
+  const voice = useUraiVoice();
   useGenesisSoundscape({ moodState, sceneActive: true });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hasHeardWelcome = window.localStorage.getItem("urai.genesis.hasHeardWelcome") === "true";
+    const key = hasHeardWelcome ? "welcome.returning" : "welcome.firstOpen";
+    if (!hasHeardWelcome) window.localStorage.setItem("urai.genesis.hasHeardWelcome", "true");
+    void voice.playVoiceLine(key, { priority: "normal", forceCaption: !voice.voiceEnabled });
+  }, []);
 
   const openSky = async () => {
     await sound.playPortalOpen("life-map");
+    void voice.playVoiceLine("portal.galaxy", { priority: "portal" });
     onSkyOpen?.();
   };
 
   const openOrb = async () => {
     await sound.playOrbTap();
+    void voice.playVoiceLine("orb.tap", { priority: "normal" });
     onOrbOpen?.();
   };
 
   const openGround = async () => {
     await sound.playGroundOpen();
+    void voice.playVoiceLine("ground.open", { priority: "portal" });
     onGroundOpen?.();
   };
 
   const openPassport = async () => {
     await sound.playPortalOpen("passport");
+    void voice.playVoiceLine("portal.passport", { priority: "portal" });
     onPassportOpen?.();
   };
 
