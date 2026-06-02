@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urai://contracts/ecosystem-schema-v1",
+  "title": "URAI Ecosystem Shared Schema V1",
+  "type": "object",
+  "required": [
+    "users",
+    "memories",
+    "emotionalFields",
+    "lifeMapNodes",
+    "generatedAssets",
+    "spatialScenes",
+    "jobs",
+    "contentPacks",
+    "b2bAccounts",
+    "xrSceneObjects"
+  ],
+  "properties": {
+    "users": { "type": "array", "items": { "$ref": "#/$defs/user" } },
+    "memories": { "type": "array", "items": { "$ref": "#/$defs/memory" } },
+    "emotionalFields": { "type": "array", "items": { "$ref": "#/$defs/emotionalField" } },
+    "lifeMapNodes": { "type": "array", "items": { "$ref": "#/$defs/lifeMapNode" } },
+    "generatedAssets": { "type": "array", "items": { "$ref": "#/$defs/generatedAsset" } },
+    "spatialScenes": { "type": "array", "items": { "$ref": "#/$defs/spatialScene" } },
+    "jobs": { "type": "array", "items": { "$ref": "#/$defs/job" } },
+    "contentPacks": { "type": "array", "items": { "$ref": "#/$defs/contentPack" } },
+    "b2bAccounts": { "type": "array", "items": { "$ref": "#/$defs/b2bAccount" } },
+    "xrSceneObjects": { "type": "array", "items": { "$ref": "#/$defs/xrSceneObject" } }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1 },
+    "isoTime": { "type": "string", "format": "date-time" },
+    "user": {
+      "type": "object",
+      "required": ["id", "handle", "tier", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "handle": { "type": "string" },
+        "tier": { "type": "string", "enum": ["demo", "v1", "tier2", "admin", "b2b"] },
+        "createdAt": { "$ref": "#/$defs/isoTime" }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "required": ["id", "userId", "summary", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "userId": { "$ref": "#/$defs/id" },
+        "summary": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "$ref": "#/$defs/isoTime" }
+      }
+    },
+    "emotionalField": {
+      "type": "object",
+      "required": ["id", "memoryId", "valence", "intensity"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "memoryId": { "$ref": "#/$defs/id" },
+        "valence": { "type": "number", "minimum": -1, "maximum": 1 },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "signals": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "lifeMapNode": {
+      "type": "object",
+      "required": ["id", "memoryId", "position", "nodeType"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "memoryId": { "$ref": "#/$defs/id" },
+        "nodeType": { "type": "string", "enum": ["star", "cluster", "anchor", "replay"] },
+        "position": {
+          "type": "object",
+          "required": ["x", "y", "z"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "z": { "type": "number" }
+          }
+        }
+      }
+    },
+    "generatedAsset": {
+      "type": "object",
+      "required": ["id", "assetType", "format", "uri", "status"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "assetType": { "type": "string", "enum": ["orb", "ground", "sky", "emotion", "bloom", "lifemap-node", "scene", "ar-anchor", "vr-object"] },
+        "format": { "type": "string", "enum": ["png", "svg", "webp", "glb", "gltf", "json", "wav", "mp3"] },
+        "uri": { "type": "string" },
+        "status": { "type": "string", "enum": ["generated", "validated", "published", "failed"] }
+      }
+    },
+    "spatialScene": {
+      "type": "object",
+      "required": ["id", "sceneKey", "version", "assetIds"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sceneKey": { "type": "string" },
+        "version": { "type": "string" },
+        "assetIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "job": {
+      "type": "object",
+      "required": ["id", "jobType", "status", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "jobType": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "LEASED", "RUNNING", "SUCCESS", "FAILED", "DEAD", "CANCELLED"] },
+        "createdAt": { "$ref": "#/$defs/isoTime" },
+        "resultAssetIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "contentPack": {
+      "type": "object",
+      "required": ["id", "slug", "version", "assetIds"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "slug": { "type": "string" },
+        "version": { "type": "string" },
+        "assetIds": { "type": "array", "items": { "$ref": "#/$defs/id" } }
+      }
+    },
+    "b2bAccount": {
+      "type": "object",
+      "required": ["id", "name", "status", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["lead", "active", "paused", "closed"] },
+        "createdAt": { "$ref": "#/$defs/isoTime" }
+      }
+    },
+    "xrSceneObject": {
+      "type": "object",
+      "required": ["id", "sceneId", "objectType", "transform"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "sceneId": { "$ref": "#/$defs/id" },
+        "objectType": { "type": "string", "enum": ["mesh", "anchor", "portal", "light", "audio"] },
+        "assetId": { "$ref": "#/$defs/id" },
+        "transform": {
+          "type": "object",
+          "required": ["position", "rotation", "scale"],
+          "properties": {
+            "position": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+            "rotation": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+            "scale": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 }
+          }
+        }
+      }
+    }
+  }
+}
