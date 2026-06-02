@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { UraiScene } from "@/lib/urai/scene-theme";
 import { UraiCompanionShell } from "@/components/companion/UraiCompanionShell";
 import { AssetPreloader } from "@/components/genesis/AssetPreloader";
@@ -14,6 +15,7 @@ type HomeSceneProps = {
 };
 
 export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
+  const router = useRouter();
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
 
   const openCompanion = useCallback(() => {
@@ -30,6 +32,11 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
     onNavigate(scene);
   }, [onNavigate]);
 
+  const openPassport = useCallback(() => {
+    setIsCompanionOpen(false);
+    router.push("/passport");
+  }, [router]);
+
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
       <AssetPreloader>
@@ -38,7 +45,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
           onSkyOpen={() => onNavigate("life-map")}
           onOrbOpen={openCompanion}
           onGroundOpen={() => onNavigate("ground")}
-          onPassportOpen={() => onNavigate("passport")}
+          onPassportOpen={openPassport}
           isCompanionOpen={isCompanionOpen}
         />
       </AssetPreloader>
@@ -58,7 +65,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         initialMode="companion"
         moodState="luminous"
         onOpenLifeMap={() => navigateFromCompanion("life-map")}
-        onOpenPassport={() => navigateFromCompanion("passport")}
+        onOpenPassport={openPassport}
       />
     </section>
   );
