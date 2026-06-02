@@ -2,8 +2,11 @@ import type { CompanionMode, CompanionQuickPrompt } from "./companionTypes";
 
 export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   { id: "life-map", label: "Show me the Life Map", prompt: "Show me the Life Map", mode: "companion", action: "openLifeMap" },
+  { id: "open-ground", label: "Open Ground", prompt: "Open Ground", mode: "companion", action: "openGround" },
   { id: "what-looking-at", label: "What am I looking at?", prompt: "What am I looking at?", mode: "companion" },
-  { id: "calm-support", label: "Help me settle this", prompt: "Help me settle this", mode: "companion" },
+  { id: "help-ground", label: "Help me ground", prompt: "Help me ground", mode: "companion" },
+  { id: "what-growing", label: "What is growing?", prompt: "What is growing?", mode: "council", councilRoleId: "mirror" },
+  { id: "small-ritual", label: "Create a small ritual", prompt: "Create a small ritual", mode: "council", councilRoleId: "guide" },
   { id: "reflect-pattern", label: "Reflect the pattern", prompt: "Reflect the pattern", mode: "council", councilRoleId: "mirror" },
   { id: "control", label: "What can I control?", prompt: "What can I control?", mode: "council", councilRoleId: "guardian" },
   { id: "passport-settings", label: "Open Passport settings", prompt: "Open Passport settings", mode: "council", councilRoleId: "guardian", action: "openPassport" },
@@ -15,5 +18,5 @@ export function getQuickPromptsForContext(mode: CompanionMode, councilRoleId?: s
     if (prompt.mode !== mode) return false;
     if (mode === "council" && prompt.councilRoleId && prompt.councilRoleId !== councilRoleId) return false;
     return true;
-  }).slice(0, 4);
+  }).slice(0, 5);
 }
