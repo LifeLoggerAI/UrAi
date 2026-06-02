@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { buildPermissionedLifeMap } from "@/lib/lifemap/buildPermissionedLifeMap";
 import type { GenesisMoodState } from "@/lib/companion/companionTypes";
 import type { LifeMapChapter, LifeMapData, LifeMapStar, LifeMapStarType } from "@/lib/lifemap/lifeMapTypes";
@@ -10,6 +10,8 @@ type UraiLifeMapContextValue = {
   selectedStar: LifeMapStar | null;
   selectedChapter: LifeMapChapter | null;
   isLifeMapOpen: boolean;
+  zoomLevel: number;
+  setZoomLevel: (value: number) => void;
   openLifeMap: () => void;
   closeLifeMap: () => void;
   selectStar: (starId: string) => void;
@@ -22,16 +24,40 @@ type UraiLifeMapContextValue = {
 };
 
 const UraiLifeMapContext = createContext<UraiLifeMapContextValue | null>(null);
+const ZOOM_KEY = "urai.lifemap.zoom";
+const FILTER_KEY = "urai.lifemap.filter";
+const LAST_VIEW_KEY = "urai.lifemap.lastView";
+
+function readStoredFilter(): LifeMapStarType | "all" {
+  if (typeof window === "undefined") return "all";
+  return (window.localStorage.getItem(FILTER_KEY) as LifeMapStarType | "all" | null) ?? "all";
+}
+
+function readStoredZoom(): number {
+  if (typeof window === "undefined") return 1;
+  const parsed = Number(window.localStorage.getItem(ZOOM_KEY));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+}
 
 export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
   const [lifeMapData, setLifeMapData] = useState<LifeMapData>(() => buildPermissionedLifeMap({ moodState: "luminous" }));
   const [selectedStar, setSelectedStar] = useState<LifeMapStar | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<LifeMapChapter | null>(lifeMapData.chapters[0] ?? null);
   const [isLifeMapOpen, setIsLifeMapOpen] = useState(false);
-  const [filterByType, setFilterByType] = useState<LifeMapStarType | "all">("all");
+  const [filterByType, setFilterByTypeState] = useState<LifeMapStarType | "all">("all");
   const [showPrivateStars, setShowPrivateStars] = useState(false);
+  const [zoomLevel, setZoomLevelState] = useState(1);
 
-  const openLifeMap = useCallback(() => setIsLifeMapOpen(true), []);
+  useEffect(() => {
+    setFilterByTypeState(readStoredFilter());
+    setZoomLevelState(readStoredZoom());
+  }, []);
+
+  const openLifeMap = useCallback(() => {
+    setIsLifeMapOpen(true);
+    if (typeof window !== "undefined") window.localStorage.setItem(LAST_VIEW_KEY, "galaxy");
+  }, []);
+
   const closeLifeMap = useCallback(() => {
     setIsLifeMapOpen(false);
     setSelectedStar(null);
@@ -52,11 +78,24 @@ export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
     setSelectedStar(null);
   }, []);
 
+  const setFilterByType = useCallback((type: LifeMapStarType | "all") => {
+    setFilterByTypeState(type);
+    if (typeof window !== "undefined") window.localStorage.setItem(FILTER_KEY, type);
+  }, []);
+
+  const setZoomLevel = useCallback((value: number) => {
+    const next = Math.max(0.7, Math.min(1.8, value));
+    setZoomLevelState(next);
+    if (typeof window !== "undefined") window.localStorage.setItem(ZOOM_KEY, String(next));
+  }, []);
+
   const value = useMemo<UraiLifeMapContextValue>(() => ({
     lifeMapData,
     selectedStar,
     selectedChapter,
     isLifeMapOpen,
+    zoomLevel,
+    setZoomLevel,
     openLifeMap,
     closeLifeMap,
     selectStar,
@@ -66,7 +105,7 @@ export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
     setFilterByType,
     showPrivateStars,
     setShowPrivateStars,
-  }), [clearSelectedStar, closeLifeMap, filterByType, isLifeMapOpen, lifeMapData, openLifeMap, regenerateLifeMap, selectStar, selectedChapter, selectedStar, showPrivateStars]);
+  }), [clearSelectedStar, closeLifeMap, filterByType, isLifeMapOpen, lifeMapData, openLifeMap, regenerateLifeMap, selectStar, selectedChapter, selectedStar, setFilterByType, setZoomLevel, showPrivateStars, zoomLevel]);
 
   return <UraiLifeMapContext.Provider value={value}>{children}</UraiLifeMapContext.Provider>;
 }
