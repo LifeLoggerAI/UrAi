@@ -34,20 +34,51 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
   const mood = moodValues[moodState];
 
   return (
-    <div
-      className={`urai-scene-root relative min-h-screen w-full overflow-hidden bg-black ${className}`}
-      style={{
-        ["--scene-focus-x" as string]: "50%",
-        ["--scene-focus-y" as string]: "48%",
-        ["--body-focus-y" as string]: "62%",
-        ["--ground-height" as string]: "32vh",
-        ["--orb-y" as string]: "58%",
-      }}
-    >
+    <div className={`urai-scene-root relative min-h-screen w-full overflow-hidden bg-black ${className}`}>
+      <style jsx>{`
+        .urai-scene-root {
+          --scene-focus-x: 50%;
+          --scene-focus-y: 48%;
+          --body-focus-y: 62%;
+          --ground-height: 32vh;
+          --orb-y: 58%;
+          --passport-offset: 1.5rem;
+        }
+
+        @media (max-width: 430px) {
+          .urai-scene-root {
+            --scene-focus-x: 50%;
+            --scene-focus-y: 44%;
+            --body-focus-y: 64%;
+            --ground-height: 30vh;
+            --orb-y: 60%;
+            --passport-offset: 1rem;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .urai-scene-root {
+            --scene-focus-y: 47%;
+            --body-focus-y: 61%;
+            --ground-height: 32vh;
+            --orb-y: 57%;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .urai-scene-root {
+            --scene-focus-y: 48%;
+            --body-focus-y: 60%;
+            --ground-height: 34vh;
+            --orb-y: 56%;
+          }
+        }
+      `}</style>
+
       <SafeLayerImage src={getAssetPath("skyBackground")} alt="" priority className={baseImageClass} style={{ opacity: 1, objectPosition: "var(--scene-focus-x) var(--scene-focus-y)" }} />
-      <SafeLayerImage src={getAssetPath("skyCloudFar")} alt="" priority className={`${baseImageClass} mix-blend-screen`} style={{ opacity: 0.55 }} />
-      <SafeLayerImage src={getAssetPath("skyCloudMid")} alt="" priority className={`${baseImageClass} mix-blend-soft-light`} style={{ opacity: 0.72 }} />
-      <SafeLayerImage src={getAssetPath("skyCloudNear")} alt="" priority className={`${baseImageClass} mix-blend-screen`} style={{ opacity: 0.86 }} />
+      <SafeLayerImage src={getAssetPath("skyCloudFar")} alt="" priority className={`${baseImageClass} mix-blend-screen`} style={{ opacity: 0.55, objectPosition: "var(--scene-focus-x) 38%" }} />
+      <SafeLayerImage src={getAssetPath("skyCloudMid")} alt="" priority className={`${baseImageClass} mix-blend-soft-light`} style={{ opacity: 0.72, objectPosition: "var(--scene-focus-x) 48%" }} />
+      <SafeLayerImage src={getAssetPath("skyCloudNear")} alt="" priority className={`${baseImageClass} mix-blend-screen`} style={{ opacity: 0.86, objectPosition: "var(--scene-focus-x) 58%" }} />
       <SafeLayerImage src={getAssetPath("moodAtmosphereOverlay")} alt="" className={`${baseImageClass} mix-blend-overlay`} style={{ opacity: mood.atmosphereOpacity }} />
       <SafeLayerImage src={getAssetPath("starfieldOverlay")} alt="" className={`${baseImageClass} mix-blend-screen`} style={{ opacity: mood.starfieldOpacity }} />
       <SafeLayerImage src={getAssetPath("auroraOverlay")} alt="" className={`${baseImageClass} mix-blend-screen`} style={{ opacity: mood.auroraOpacity }} />
@@ -67,8 +98,8 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
         <OrbLayer intensity={mood.orbIntensity} interactive onClick={onOrbOpen} />
       </div>
 
-      <button type="button" aria-label="Open URAI Passport" onClick={onPassportOpen} className="absolute bottom-6 right-6 z-40 h-12 w-12 rounded-full bg-white/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
-      <SafeLayerImage src={getAssetPath("passportPortal")} alt="" className="pointer-events-none absolute bottom-5 right-5 z-30 h-14 w-14 select-none object-contain opacity-70 mix-blend-screen" />
+      <button type="button" aria-label="Open URAI Passport" onClick={onPassportOpen} className="absolute bottom-[var(--passport-offset)] right-[var(--passport-offset)] z-40 h-12 w-12 rounded-full bg-white/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
+      <SafeLayerImage src={getAssetPath("passportPortal")} alt="" className="pointer-events-none absolute bottom-[calc(var(--passport-offset)-0.25rem)] right-[calc(var(--passport-offset)-0.25rem)] z-30 h-14 w-14 select-none object-contain opacity-70 mix-blend-screen" />
       <SafeLayerImage src={getAssetPath("foregroundVignette")} alt="" className={`${baseImageClass} mix-blend-multiply`} style={{ opacity: 0.72 }} />
     </div>
   );
