@@ -34,6 +34,10 @@
   backdrop-filter: blur(22px) saturate(1.1);
 }
 
+.shell[data-generating="true"] {
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38), 0 0 76px rgba(248, 217, 139, 0.13);
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -69,7 +73,8 @@
 .sendButton,
 .modeButton,
 .roleButton,
-.quickPrompt {
+.quickPrompt,
+.actionChip {
   appearance: none;
   border: 0;
   font: inherit;
@@ -92,6 +97,7 @@
 .modeButton:focus-visible,
 .roleButton:focus-visible,
 .quickPrompt:focus-visible,
+.actionChip:focus-visible,
 .input:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.68);
   outline-offset: 2px;
@@ -177,6 +183,27 @@
   color: rgba(255, 255, 255, 0.94);
 }
 
+.thinkingMessage {
+  color: rgba(255, 255, 255, 0.58);
+  animation: companionPulse 1.5s ease-in-out infinite;
+}
+
+.actionRow {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 1rem 0.6rem;
+}
+
+.actionChip {
+  border-radius: 999px;
+  background: rgba(248, 217, 139, 0.14);
+  color: rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+  padding: 0.46rem 0.72rem;
+  font-size: 0.76rem;
+  box-shadow: inset 0 0 0 1px rgba(248, 217, 139, 0.14);
+}
+
 .quickPromptRow {
   display: flex;
   gap: 0.5rem;
@@ -238,6 +265,15 @@
   opacity: 0.44;
 }
 
+@keyframes companionPulse {
+  0%, 100% {
+    opacity: 0.48;
+  }
+  50% {
+    opacity: 0.82;
+  }
+}
+
 @media (min-width: 768px) {
   .shell {
     right: clamp(1.5rem, 6vw, 5rem);
@@ -252,5 +288,9 @@
   .scrim,
   .shell {
     backdrop-filter: none;
+  }
+
+  .thinkingMessage {
+    animation: none;
   }
 }
