@@ -16,6 +16,7 @@ type LayeredGenesisSceneProps = {
   onOrbOpen?: () => void;
   onGroundOpen?: () => void;
   onPassportOpen?: () => void;
+  isCompanionOpen?: boolean;
   className?: string;
 };
 
@@ -34,7 +35,7 @@ const moodValues: Record<GenesisMoodState, { atmosphereOpacity: number; auroraOp
 const baseImageClass = "pointer-events-none absolute inset-0 h-full w-full select-none object-cover";
 const groundImageClass = "pointer-events-none absolute inset-x-0 bottom-0 h-[var(--ground-height)] w-full select-none object-cover object-bottom";
 
-export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOpen, onGroundOpen, onPassportOpen, className = "" }: LayeredGenesisSceneProps) {
+export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOpen, onGroundOpen, onPassportOpen, isCompanionOpen = false, className = "" }: LayeredGenesisSceneProps) {
   const mood = moodValues[moodState];
   const sound = useInteractionSound();
   const voice = useUraiVoice();
@@ -56,7 +57,7 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
 
   const openOrb = async () => {
     await sound.playOrbTap();
-    void voice.playVoiceLine("orb.tap", { priority: "normal" });
+    void voice.playVoiceLine("orb.tap", { priority: "normal", forceCaption: !voice.voiceEnabled });
     onOrbOpen?.();
   };
 
@@ -133,8 +134,10 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
       <button type="button" aria-label="Open Life Map" onClick={openSky} className="absolute inset-x-0 top-0 z-20 h-[55%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
       <button type="button" aria-label="Open Ground" onClick={openGround} className="absolute inset-x-0 bottom-0 z-20 h-[28%] cursor-pointer bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
 
+      {isCompanionOpen ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-25 bg-black/20 backdrop-blur-[2px]" /> : null}
+
       <div className="absolute left-1/2 top-[var(--orb-y)] z-30 -translate-x-1/2 -translate-y-1/2">
-        <OrbLayer intensity={mood.orbIntensity} interactive onClick={openOrb} />
+        <OrbLayer intensity={isCompanionOpen ? Math.min(1.18, mood.orbIntensity + 0.18) : mood.orbIntensity} interactive onClick={openOrb} isAwake={isCompanionOpen} />
       </div>
 
       <button type="button" aria-label="Open URAI Passport" onClick={openPassport} className="absolute bottom-[var(--passport-offset)] right-[var(--passport-offset)] z-40 h-12 w-12 rounded-full bg-white/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50" />
