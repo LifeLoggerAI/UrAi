@@ -122,11 +122,7 @@ export default function ImmersiveWorld3D({ mode, activeLabel, selectedLabel, cla
 
       <div className="urai-world-atmosphere" />
       <div className="urai-world-vignette" />
-      {(activeLabel || selectedLabel) && (
-        <div className="urai-world-status">
-          <span>{selectedLabel || activeLabel}</span>
-        </div>
-      )}
+      {false && (activeLabel || selectedLabel) && null}
 
       <style jsx>{`
         .urai-immersive-world {
