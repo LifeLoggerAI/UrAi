@@ -101,9 +101,8 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
       <AssetPreloader>
-        <LayeredGenesisScene moodState="luminous" onSkyOpen={lifeMap.openLifeMap} onOrbOpen={openCompanion} onGroundOpen={ground.openGround} onPassportOpen={openPassport} isCompanionOpen={immersiveOpen} />
+        <LayeredGenesisScene moodState="luminous" onSkyOpen={lifeMap.openLifeMap} onOrbOpen={openCompanion} onGroundOpen={ground.openGround} onPassportOpen={openPassport} onSettingsOpen={openSettingsFromCompanion} isCompanionOpen={immersiveOpen} />
       </AssetPreloader>
-      <button type="button" aria-label="Open Settings" onClick={() => settings.openSettings()} className="pointer-events-auto fixed right-5 top-5 z-50 rounded-full border border-white/10 bg-black/24 px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/62 shadow-2xl backdrop-blur-xl transition hover:bg-white/10 hover:text-white">Settings</button>
       <div className="pointer-events-none absolute inset-0 z-40 flex min-h-screen w-full flex-col items-center justify-between px-6 py-12">
         <div className="pointer-events-auto pt-4"><SceneCopy scene="home" /></div>
         <div className="pointer-events-auto w-full pb-2"><PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} /></div>
