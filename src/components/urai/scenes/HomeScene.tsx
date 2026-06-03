@@ -9,11 +9,13 @@ import { LayeredGenesisScene } from "@/components/genesis/LayeredGenesisScene";
 import { GroundGarden } from "@/components/ground/GroundGarden";
 import { LifeMapGalaxy } from "@/components/lifemap/LifeMapGalaxy";
 import { MirrorView } from "@/components/mirror/MirrorView";
+import { ShadowRealmView } from "@/components/shadow/ShadowRealmView";
 import { PortalNav } from "@/components/urai/PortalNav";
 import { SceneCopy } from "@/components/urai/SceneCopy";
 import { useUraiGround } from "@/providers/UraiGroundProvider";
 import { useUraiLifeMap } from "@/providers/UraiLifeMapProvider";
 import { useUraiMirror } from "@/providers/UraiMirrorProvider";
+import { useUraiShadow } from "@/providers/UraiShadowProvider";
 
 type HomeSceneProps = {
   onNavigate: (scene: UraiScene) => void;
@@ -25,13 +27,15 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   const ground = useUraiGround();
   const lifeMap = useUraiLifeMap();
   const mirror = useUraiMirror();
+  const shadow = useUraiShadow();
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
 
   const closeAllLayers = useCallback(() => {
     ground.closeGround();
     lifeMap.closeLifeMap();
     mirror.closeMirror();
-  }, [ground, lifeMap, mirror]);
+    shadow.closeShadow();
+  }, [ground, lifeMap, mirror, shadow]);
 
   const openCompanion = useCallback(() => {
     onOpenOrbChat?.();
@@ -52,22 +56,33 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
     setIsCompanionOpen(false);
     ground.closeGround();
     mirror.closeMirror();
+    shadow.closeShadow();
     lifeMap.openLifeMap();
-  }, [ground, lifeMap, mirror]);
+  }, [ground, lifeMap, mirror, shadow]);
 
   const openGroundFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
     lifeMap.closeLifeMap();
     mirror.closeMirror();
+    shadow.closeShadow();
     ground.openGround();
-  }, [ground, lifeMap, mirror]);
+  }, [ground, lifeMap, mirror, shadow]);
 
   const openMirrorFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
     lifeMap.closeLifeMap();
     ground.closeGround();
+    shadow.closeShadow();
     mirror.openMirror();
-  }, [ground, lifeMap, mirror]);
+  }, [ground, lifeMap, mirror, shadow]);
+
+  const openShadowFromCompanion = useCallback(() => {
+    setIsCompanionOpen(false);
+    lifeMap.closeLifeMap();
+    ground.closeGround();
+    mirror.closeMirror();
+    shadow.openShadow();
+  }, [ground, lifeMap, mirror, shadow]);
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
@@ -78,7 +93,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
           onOrbOpen={openCompanion}
           onGroundOpen={ground.openGround}
           onPassportOpen={openPassport}
-          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen}
+          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen}
         />
       </AssetPreloader>
 
@@ -93,15 +108,8 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
 
       <LifeMapGalaxy isOpen={lifeMap.isLifeMapOpen} onClose={lifeMap.closeLifeMap} moodState="luminous" onOpenPassport={openPassport} />
       <GroundGarden isOpen={ground.isGroundOpen} onClose={ground.closeGround} moodState="luminous" onOpenPassport={openPassport} />
-      <MirrorView
-        isOpen={mirror.isMirrorOpen}
-        onClose={mirror.closeMirror}
-        moodState="luminous"
-        onOpenGround={openGroundFromCompanion}
-        onOpenLifeMap={openLifeMapFromCompanion}
-        onOpenPassport={openPassport}
-        onTalkToCompanion={openCompanion}
-      />
+      <MirrorView isOpen={mirror.isMirrorOpen} onClose={mirror.closeMirror} moodState="luminous" onOpenGround={openGroundFromCompanion} onOpenLifeMap={openLifeMapFromCompanion} onOpenPassport={openPassport} onTalkToCompanion={openCompanion} />
+      <ShadowRealmView isOpen={shadow.isShadowOpen} onClose={shadow.closeShadow} onOpenGround={openGroundFromCompanion} onOpenPassport={openPassport} onTalkToGuardian={openCompanion} />
 
       <UraiCompanionShell
         isOpen={isCompanionOpen}
@@ -112,6 +120,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         onOpenPassport={openPassport}
         onOpenGround={openGroundFromCompanion}
         onOpenMirror={openMirrorFromCompanion}
+        onOpenShadow={openShadowFromCompanion}
       />
     </section>
   );
