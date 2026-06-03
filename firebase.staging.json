@@ -4,7 +4,10 @@
     "source": "."
   },
   "firestore": {
-    "rules": "firestore.rules",
+    "rules": "firestore.staging.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
