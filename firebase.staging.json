@@ -1,7 +1,49 @@
 {
   "hosting": {
     "site": "urai-staging",
-    "source": "."
+    "public": "out",
+    "ignore": [
+      "firebase.staging.json",
+      "firebase.static.staging.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/api/companion",
+        "function": {
+          "functionId": "companion",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/waitlist",
+        "function": {
+          "functionId": "waitlist",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/healthz",
+        "function": {
+          "functionId": "healthz",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "/api/buildinfo",
+        "function": {
+          "functionId": "buildinfo",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "firestore": {
     "rules": "firestore.rules",
