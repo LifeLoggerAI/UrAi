@@ -1,5 +1,7 @@
 import type { CompanionMessage, LocalCompanionResponderContext } from "./companionTypes";
 
+type LocalCompanionResponderInput = string | { text?: string; message?: string; content?: string };
+
 function createId(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -7,11 +9,16 @@ function createId(): string {
   return `urai-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function normalizeInput(input: string): string {
-  return input.trim().toLowerCase();
+function getInputText(input: LocalCompanionResponderInput): string {
+  if (typeof input === "string") return input;
+  return input.text ?? input.message ?? input.content ?? "";
 }
 
-function chooseResponse(input: string, context: LocalCompanionResponderContext): string {
+function normalizeInput(input: LocalCompanionResponderInput): string {
+  return getInputText(input).trim().toLowerCase();
+}
+
+function chooseResponse(input: LocalCompanionResponderInput, context: LocalCompanionResponderContext): string {
   const normalized = normalizeInput(input);
 
   if (context.mode === "council") {
@@ -63,7 +70,7 @@ function chooseResponse(input: string, context: LocalCompanionResponderContext):
   return companionResponses[Math.floor(Math.random() * companionResponses.length)];
 }
 
-export function generateLocalCompanionResponse(input: string, context: LocalCompanionResponderContext): CompanionMessage {
+export function generateLocalCompanionResponse(input: LocalCompanionResponderInput, context: LocalCompanionResponderContext): CompanionMessage {
   return {
     id: createId(),
     role: "urai",
