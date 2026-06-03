@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ImgHTMLAttributes } from "react";
+import { useState, type CSSProperties, type ImgHTMLAttributes } from "react";
 import { TRANSPARENT_PIXEL } from "@/lib/assets/uraiAssetManifest";
 
 type SafeLayerImageProps = {
@@ -9,9 +9,16 @@ type SafeLayerImageProps = {
   className?: string;
   style?: CSSProperties;
   priority?: boolean;
-} & Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "className" | "style" | "draggable">;
+  layerKey?: string;
+  onLoad?: () => void;
+} & Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "className" | "style" | "draggable" | "onLoad">;
 
-export function SafeLayerImage({ src, alt = "", className, style, priority = false, ...props }: SafeLayerImageProps) {
+export function SafeLayerImage({ src, alt = "", className, style, priority = false, layerKey, onLoad, ...props }: SafeLayerImageProps) {
+  const [failed, setFailed] = useState(false);
+  const dataLayer = process.env.NODE_ENV === "development" && layerKey ? layerKey : undefined;
+
+  if (failed) return null;
+
   return (
     <img
       {...props}
@@ -22,10 +29,11 @@ export function SafeLayerImage({ src, alt = "", className, style, priority = fal
       draggable={false}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
       aria-hidden={alt === "" ? true : undefined}
-      onError={(event) => {
-        event.currentTarget.style.opacity = "0";
-      }}
+      data-layer={dataLayer}
+      onLoad={() => onLoad?.()}
+      onError={() => setFailed(true)}
     />
   );
 }
