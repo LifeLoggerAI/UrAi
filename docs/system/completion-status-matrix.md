@@ -11,10 +11,10 @@ This document provides a high-level overview of the completion status of each ma
 | Integration Dependency Map | DONE | Initial dependency map complete. |
 | Evidence Ledger | PENDING | Ledger created, ready for evidence. |
 | Evidence Gates | PENDING | Gates defined, awaiting evidence. |
-| Shared Foundation | PENDING | | 
-| Council | PENDING | | 
-| Intelligence Engine | PENDING | | 
-| Passive Data | PENDING | | 
+| Shared Foundation | DONE | Phase 2 complete. See `docs/system/build-evidence.md`. | 
+| Council | DONE | Phase 3 complete. See `docs/products/council/qa.md`. | 
+| Intelligence Engine | DONE | Phase 4 complete. See `docs/products/intelligence-engine/qa.md`. | 
+| Passive Data | DONE | Phase 5 complete. See `docs/products/passive-data/qa.md`. | 
 | Genesis Core | PENDING | | 
 | Standalone Products | PENDING | | 
 | AR / VR / XR | PENDING | | 
