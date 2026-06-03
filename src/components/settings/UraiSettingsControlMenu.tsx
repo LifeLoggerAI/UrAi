@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { DeleteAccountDialog } from "@/components/auth/DeleteAccountDialog";
+import { UraiAccountGate } from "@/components/auth/UraiAccountGate";
 import { SETTINGS_SECTIONS, type SettingsSectionId } from "@/lib/settings/settingsTypes";
 import { useUraiAudio } from "@/providers/UraiAudioProvider";
+import { useUraiAuth } from "@/providers/UraiAuthProvider";
 import { useUraiCloudSync } from "@/providers/UraiCloudSyncProvider";
 import { useUraiExport } from "@/providers/UraiExportProvider";
 import { useUraiLegacy } from "@/providers/UraiLegacyProvider";
@@ -12,13 +15,47 @@ import { useUraiOnboarding } from "@/providers/UraiOnboardingProvider";
 import { useUraiSettings } from "@/providers/UraiSettingsProvider";
 import { useUraiVoice } from "@/providers/UraiVoiceProvider";
 
-type UraiSettingsControlMenuProps = { isOpen: boolean; onClose: () => void; initialSection?: SettingsSectionId; onOpenPassport?: () => void; onOpenExportCenter?: () => void; };
-function Toggle({ label, checked, onChange, description }: { label: string; checked: boolean; onChange: (checked: boolean) => void; description?: string }) { return <label className="flex items-start justify-between gap-4 rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78"><span><span className="block font-medium text-white/88">{label}</span>{description ? <span className="mt-1 block text-xs leading-5 text-white/48">{description}</span> : null}</span><input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="mt-1" /></label>; }
-function Range({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) { return <label className="block rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78"><span className="font-medium text-white/88">{label}</span><input aria-label={label} className="mt-3 w-full" type="range" min={0} max={1} step={0.05} value={value} onChange={(event) => onChange(Number(event.target.value))} /></label>; }
-function NumberInput({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) { return <label className="block rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78"><span className="font-medium text-white/88">{label}</span><input aria-label={label} className="mt-2 w-full rounded-xl bg-black/20 px-3 py-2 text-white" type="number" min={0} value={value} onChange={(event) => onChange(Math.max(0, Number(event.target.value || 0)))} /></label>; }
+type UraiSettingsControlMenuProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  initialSection?: SettingsSectionId;
+  onOpenPassport?: () => void;
+  onOpenExportCenter?: () => void;
+};
+
+function Toggle({ label, checked, onChange, description }: { label: string; checked: boolean; onChange: (checked: boolean) => void; description?: string }) {
+  return (
+    <label className="flex items-start justify-between gap-4 rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78">
+      <span>
+        <span className="block font-medium text-white/88">{label}</span>
+        {description ? <span className="mt-1 block text-xs leading-5 text-white/48">{description}</span> : null}
+      </span>
+      <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} className="mt-1" />
+    </label>
+  );
+}
+
+function Range({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
+  return (
+    <label className="block rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78">
+      <span className="font-medium text-white/88">{label}</span>
+      <input aria-label={label} className="mt-3 w-full" type="range" min={0} max={1} step={0.05} value={value} onChange={(event) => onChange(Number(event.target.value))} />
+    </label>
+  );
+}
+
+function NumberInput({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
+  return (
+    <label className="block rounded-2xl bg-white/[0.055] p-3 text-sm text-white/78">
+      <span className="font-medium text-white/88">{label}</span>
+      <input aria-label={label} className="mt-2 w-full rounded-xl bg-black/20 px-3 py-2 text-white" type="number" min={0} value={value} onChange={(event) => onChange(Math.max(0, Number(event.target.value || 0)))} />
+    </label>
+  );
+}
 
 export function UraiSettingsControlMenu({ isOpen, onClose, initialSection, onOpenPassport, onOpenExportCenter }: UraiSettingsControlMenuProps) {
   const reduceMotion = useReducedMotion();
+  const auth = useUraiAuth();
   const audio = useUraiAudio();
   const cloud = useUraiCloudSync();
   const exports = useUraiExport();
@@ -27,17 +64,81 @@ export function UraiSettingsControlMenu({ isOpen, onClose, initialSection, onOpe
   const onboarding = useUraiOnboarding();
   const settings = useUraiSettings();
   const voice = useUraiVoice();
-  const [confirmAction, setConfirmAction] = useState<"settings" | "onboarding" | "notifications" | "quiet" | null>(null);
-  useEffect(() => { if (!isOpen) return; if (initialSection) settings.setActiveSection(initialSection); const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") onClose(); }; window.addEventListener("keydown", onKeyDown); return () => window.removeEventListener("keydown", onKeyDown); }, [initialSection, isOpen, onClose, settings]);
+  const [confirmAction, setConfirmAction] = useState<"settings" | "onboarding" | "notifications" | "quiet" | "signout" | null>(null);
+  const [accountGateOpen, setAccountGateOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialSection) settings.setActiveSection(initialSection);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [initialSection, isOpen, onClose, settings]);
+
   const active = settings.activeSection;
-  const layerSummary = useMemo(() => ({ openLayers: [notifications.notificationsEnabled, audio.settings.enabled, voice.voiceEnabled, legacy.legacyArchive.legacyEnabled].filter(Boolean).length, exportStatus: exports.currentReview?.canExport ? "ready for review" : "review first", legacyStatus: legacy.legacyArchive.legacyEnabled ? "open" : "closed", shadowStatus: "closed unless opened in Passport" }), [audio.settings.enabled, exports.currentReview?.canExport, legacy.legacyArchive.legacyEnabled, notifications.notificationsEnabled, voice.voiceEnabled]);
-  const syncLabel = cloud.syncEnabled ? cloud.syncStatus === "synced" ? "Synced" : cloud.syncStatus === "offline" ? "Offline" : cloud.syncStatus === "saving" ? "Saving" : "Sync paused" : "Saved on this device";
-  const makeQuieter = () => { settings.setReducedSensoryMode(true); settings.setReducedMotion(true); settings.setAmbientAnimationEnabled(false); settings.setHapticsEnabled(false); audio.setReducedSensoryMode(true); audio.setHapticsEnabled(false); audio.setAudioEnabled(false); voice.setVoiceEnabled(false); voice.setWhispersEnabled(false); notifications.setNotificationsEnabled(false); notifications.updateTimingProfile({ reducedNotificationMode: true, allowPush: false, allowSms: false, allowEmail: false, maxPerDay: 0, maxPerWeek: 0 }); };
+  const layerSummary = useMemo(() => ({
+    openLayers: [notifications.notificationsEnabled, audio.settings.enabled, voice.voiceEnabled, legacy.legacyArchive.legacyEnabled].filter(Boolean).length,
+    exportStatus: exports.currentReview?.canExport ? "ready for review" : "review first",
+    legacyStatus: legacy.legacyArchive.legacyEnabled ? "open" : "closed",
+    shadowStatus: "closed unless opened in Passport",
+  }), [audio.settings.enabled, exports.currentReview?.canExport, legacy.legacyArchive.legacyEnabled, notifications.notificationsEnabled, voice.voiceEnabled]);
+
+  const syncLabel = cloud.syncEnabled
+    ? cloud.syncStatus === "synced" ? "Synced" : cloud.syncStatus === "offline" ? "Offline" : cloud.syncStatus === "saving" ? "Saving" : "Sync paused"
+    : cloud.syncRequested ? "Waiting for sign-in" : "Saved on this device";
+  const accountModeLabel = auth.isLocalOnly ? "This device" : auth.isAnonymous ? "Anonymous sync" : "Signed in";
+
+  const makeQuieter = () => {
+    settings.setReducedSensoryMode(true);
+    settings.setReducedMotion(true);
+    settings.setAmbientAnimationEnabled(false);
+    settings.setHapticsEnabled(false);
+    audio.setReducedSensoryMode(true);
+    audio.setHapticsEnabled(false);
+    audio.setAudioEnabled(false);
+    voice.setVoiceEnabled(false);
+    voice.setWhispersEnabled(false);
+    notifications.setNotificationsEnabled(false);
+    notifications.updateTimingProfile({ reducedNotificationMode: true, allowPush: false, allowSms: false, allowEmail: false, maxPerDay: 0, maxPerWeek: 0 });
+  };
+
   const clearLocalOnboarding = () => { onboarding.resetOnboarding(); setConfirmAction(null); };
   const clearNotificationHistory = () => { notifications.clearNotifications(); setConfirmAction(null); };
   const resetLocalSettings = () => { settings.resetSettingsProfile(); setConfirmAction(null); };
   const turnOffQuiet = () => { makeQuieter(); setConfirmAction(null); };
+  const signOutKeepLocal = () => { void auth.signOut({ clearLocal: false }); cloud.disableCloudSync(); setConfirmAction(null); };
+  const requestCloudSync = async () => {
+    const result = await cloud.enableCloudSync();
+    if (!result.ok && cloud.needsAccountForSync) setAccountGateOpen(true);
+  };
+
+  const renderAccountSection = () => (
+    <div className="space-y-4">
+      <p className="text-sm leading-6 text-white/66">URAI can stay local, or sync when you choose.</p>
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Current mode: {accountModeLabel}</div>
+        <div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Cloud sync: {syncLabel}</div>
+        <div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Email: {auth.profile?.email ?? "Not shared"}</div>
+        <div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Display name: {auth.profile?.displayName ?? "Not set"}</div>
+      </div>
+      <p className="rounded-2xl bg-white/[0.055] p-3 text-xs leading-5 text-white/52">Sync copies approved URAI state to your account. Passport still controls what can sync. Shadow, Legacy, Companion memory, and Exports stay closed unless you explicitly open them.</p>
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => setAccountGateOpen(true)} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Sign in</button>
+        <button onClick={() => void auth.signInAnonymouslyIfNeeded()} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Anonymous sync</button>
+        <button onClick={() => void requestCloudSync()} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Enable cloud sync</button>
+        <button onClick={cloud.disableCloudSync} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Disable cloud sync</button>
+        <button onClick={() => setConfirmAction("signout")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Sign out</button>
+        <button onClick={() => setDeleteDialogOpen(true)} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Delete account</button>
+      </div>
+      {auth.authError ? <p className="rounded-2xl bg-white/[0.08] p-3 text-sm text-white/70">{auth.authError}</p> : null}
+    </div>
+  );
+
   const renderSection = () => {
+    if (active === "account") return renderAccountSection();
     if (active === "passport") return <div className="space-y-3"><p className="text-sm leading-6 text-white/66">Passport controls what URAI can use.</p><div className="grid gap-3 md:grid-cols-2"><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Open systems: {layerSummary.openLayers}</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">AI context: safe unless opened</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Export: {layerSummary.exportStatus}</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Shadow: {layerSummary.shadowStatus}</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Legacy: {layerSummary.legacyStatus}</div></div><div className="flex flex-wrap gap-2"><button onClick={onOpenPassport} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Open Passport</button><button onClick={() => settings.setActiveSection("exports")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Review Exports</button><button onClick={() => setConfirmAction("quiet")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Close sensitive layers</button></div></div>;
     if (active === "audio") return <div className="space-y-3"><Toggle label="Sound enabled" checked={audio.settings.enabled} onChange={(checked) => { audio.setAudioEnabled(checked); if (checked) void audio.unlockAudio(); }} description="Sound stays off until you choose it." /><Range label="Master volume" value={audio.settings.masterVolume} onChange={audio.setMasterVolume} /><Range label="Ambient volume" value={audio.settings.ambientVolume} onChange={audio.setAmbientVolume} /><Range label="Effects volume" value={audio.settings.effectsVolume} onChange={audio.setEffectsVolume} /><Toggle label="Haptics" checked={audio.settings.hapticsEnabled} onChange={(checked) => { audio.setHapticsEnabled(checked); settings.setHapticsEnabled(checked); }} /><Toggle label="Gentle mode" checked={audio.settings.reducedSensoryMode} onChange={(checked) => { audio.setReducedSensoryMode(checked); settings.setReducedSensoryMode(checked); }} /></div>;
     if (active === "voice") return <div className="space-y-3"><Toggle label="Voice enabled" checked={voice.voiceEnabled} onChange={voice.setVoiceEnabled} description="Voice is optional. Captions can remain on." /><Toggle label="Captions enabled" checked={voice.captionsEnabled} onChange={voice.setCaptionsEnabled} /><Range label="Voice volume" value={voice.voiceVolume} onChange={voice.setVoiceVolume} /><Toggle label="Companion whispers" checked={voice.whispersEnabled} onChange={voice.setWhispersEnabled} /><Toggle label="Council narration" checked={voice.councilNarrationEnabled} onChange={voice.setCouncilNarrationEnabled} /></div>;
@@ -46,10 +147,72 @@ export function UraiSettingsControlMenu({ isOpen, onClose, initialSection, onOpe
     if (active === "appearance") return <div className="space-y-3"><Toggle label="Cinematic mode" checked={settings.settingsProfile.controlState.ambientAnimationEnabled} onChange={settings.setAmbientAnimationEnabled} /><Toggle label="High contrast" checked={settings.settingsProfile.controlState.highContrast} onChange={settings.setHighContrast} /><Toggle label="Scene motion" checked={!settings.settingsProfile.controlState.reducedMotion} onChange={(checked) => settings.setReducedMotion(!checked)} /><p className="rounded-2xl bg-white/[0.055] p-3 text-sm leading-6 text-white/58">Glow and text sizing stay simple here so URAI does not become a theme dashboard.</p></div>;
     if (active === "onboarding") return <div className="space-y-3"><p className="text-sm leading-6 text-white/66">Review your first-run choices or begin the entry journey again.</p><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Onboarding: {onboarding.preferences.status === "completed" ? "completed" : onboarding.preferences.status === "skipped" ? "skipped" : "available"}</div><div className="flex flex-wrap gap-2"><button onClick={() => { onboarding.resetOnboarding(); onClose(); }} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Restart onboarding</button><button onClick={onboarding.applySafeDefaults} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Apply safe defaults</button><button onClick={onOpenPassport} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Open Passport</button></div></div>;
     if (active === "exports") return <div className="space-y-3"><p className="text-sm leading-6 text-white/66">Exports are review-first. No public links are created automatically.</p><div className="grid gap-3 md:grid-cols-2"><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Export Center: available</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Legacy exports: {legacy.legacyArchive.legacyEnabled ? "review first" : "closed"}</div><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Shadow exports: extra confirmation</div></div><div className="flex flex-wrap gap-2"><button onClick={onOpenExportCenter} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Open Export Center</button><button onClick={onOpenPassport} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Review export permissions</button></div></div>;
-    if (active === "data") return <div className="space-y-3"><p className="text-sm leading-6 text-white/66">This changes what is stored on this device. You can choose carefully.</p><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Sync status: {syncLabel}{cloud.lastSyncedAt ? ` · ${new Date(cloud.lastSyncedAt).toLocaleString()}` : ""}</div><div className="flex flex-wrap gap-2"><button onClick={() => void cloud.enableCloudSync()} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Enable cloud sync</button><button onClick={cloud.disableCloudSync} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Pause cloud sync</button><button onClick={() => void cloud.syncNow()} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Sync now</button><button onClick={() => setConfirmAction("notifications")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local notification history</button><button onClick={() => setConfirmAction("onboarding")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local onboarding state</button><button onClick={() => setConfirmAction("quiet")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Turn off optional systems</button><button onClick={() => setConfirmAction("settings")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local settings</button></div></div>;
+    if (active === "data") return <div className="space-y-3"><p className="text-sm leading-6 text-white/66">This changes what is stored on this device. You can choose carefully.</p><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/70">Sync status: {syncLabel}{cloud.lastSyncedAt ? ` · ${new Date(cloud.lastSyncedAt).toLocaleString()}` : ""}</div><div className="flex flex-wrap gap-2"><button onClick={() => void requestCloudSync()} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Enable cloud sync</button><button onClick={cloud.disableCloudSync} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Pause cloud sync</button><button onClick={() => void cloud.syncNow()} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Sync now</button><button onClick={() => setConfirmAction("notifications")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local notification history</button><button onClick={() => setConfirmAction("onboarding")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local onboarding state</button><button onClick={() => setConfirmAction("quiet")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Turn off optional systems</button><button onClick={() => setConfirmAction("settings")} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/68">Clear local settings</button></div></div>;
     return <div className="space-y-3"><h3 className="text-xl font-medium text-white">URAI</h3><p className="text-sm leading-6 text-white/66">URAI is designed around permission, reflection, and user-owned memory.</p><div className="rounded-2xl bg-white/[0.055] p-3 text-sm text-white/58">Version: early app preview</div></div>;
   };
-  const confirmCopy = confirmAction === "quiet" ? "Make URAI quieter and turn off optional signals on this device?" : confirmAction === "onboarding" ? "Clear onboarding state on this device?" : confirmAction === "notifications" ? "Clear notification history on this device?" : "Reset local settings on this device?";
-  const runConfirm = () => { if (confirmAction === "quiet") turnOffQuiet(); else if (confirmAction === "onboarding") clearLocalOnboarding(); else if (confirmAction === "notifications") clearNotificationHistory(); else resetLocalSettings(); };
-  return <AnimatePresence>{isOpen ? <motion.section role="dialog" aria-modal="true" aria-labelledby="urai-settings-title" className="fixed inset-0 z-[110] grid place-items-end bg-black/35 p-0 text-white backdrop-blur-md md:place-items-center md:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><motion.div className="relative flex h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-t-[2rem] border border-white/10 bg-slate-950/86 shadow-2xl md:h-[82vh] md:rounded-[2rem]" initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 30, scale: 0.98 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.98 }}><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(180,210,255,0.13),transparent_32%)]" /><header className="relative z-10 flex items-start justify-between gap-4 border-b border-white/10 p-5"><div><h2 id="urai-settings-title" className="text-2xl font-medium text-white">URAI Settings</h2><p className="mt-1 text-sm text-white/58">Control what opens, speaks, remembers, notifies, and leaves.</p></div><button type="button" onClick={onClose} aria-label="Close Settings" className="rounded-full bg-white/10 px-4 py-2 text-sm text-white/76">Close</button></header><div className="relative z-10 grid min-h-0 flex-1 md:grid-cols-[260px_1fr]"><nav className="flex gap-2 overflow-x-auto border-b border-white/10 p-4 md:block md:space-y-2 md:overflow-y-auto md:border-b-0 md:border-r" aria-label="Settings sections">{SETTINGS_SECTIONS.map((section) => <button key={section.id} type="button" onClick={() => settings.setActiveSection(section.id)} className={`min-w-fit rounded-2xl px-3 py-2 text-left text-sm md:block md:w-full ${active === section.id ? "bg-white/14 text-white" : "bg-white/[0.045] text-white/58"}`}><span className="block font-medium">{section.label}</span><span className="hidden text-xs text-white/38 md:block">{section.description}</span></button>)}</nav><main className="min-h-0 overflow-y-auto p-5">{renderSection()}</main></div>{confirmAction ? <div className="absolute inset-0 z-20 grid place-items-center bg-black/50 p-5"><div role="alertdialog" aria-modal="true" className="w-full max-w-md rounded-[1.5rem] border border-white/10 bg-slate-950 p-5 shadow-2xl"><h3 className="text-lg font-medium text-white">Confirm carefully</h3><p className="mt-2 text-sm leading-6 text-white/66">{confirmCopy}</p><div className="mt-5 flex flex-wrap gap-2"><button type="button" onClick={runConfirm} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">Confirm</button><button type="button" onClick={() => setConfirmAction(null)} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/66">Cancel</button></div></div></div> : null}</motion.div></motion.section> : null}</AnimatePresence>;
+
+  const confirmCopy = confirmAction === "quiet"
+    ? "Make URAI quieter and turn off optional signals on this device?"
+    : confirmAction === "onboarding"
+      ? "Clear onboarding state on this device?"
+      : confirmAction === "notifications"
+        ? "Clear notification history on this device?"
+        : confirmAction === "signout"
+          ? "Do you want URAI to stay on this device? This will stop cloud sync."
+          : "Reset local settings on this device?";
+
+  const runConfirm = () => {
+    if (confirmAction === "quiet") turnOffQuiet();
+    else if (confirmAction === "onboarding") clearLocalOnboarding();
+    else if (confirmAction === "notifications") clearNotificationHistory();
+    else if (confirmAction === "signout") signOutKeepLocal();
+    else resetLocalSettings();
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {isOpen ? (
+          <motion.section role="dialog" aria-modal="true" aria-labelledby="urai-settings-title" className="fixed inset-0 z-[110] grid place-items-end bg-black/35 p-0 text-white backdrop-blur-md md:place-items-center md:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <motion.div className="relative flex h-[92vh] w-full max-w-6xl flex-col overflow-hidden rounded-t-[2rem] border border-white/10 bg-slate-950/86 shadow-2xl md:h-[82vh] md:rounded-[2rem]" initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 30, scale: 0.98 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.98 }}>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(180,210,255,0.13),transparent_32%)]" />
+              <header className="relative z-10 flex items-start justify-between gap-4 border-b border-white/10 p-5">
+                <div>
+                  <h2 id="urai-settings-title" className="text-2xl font-medium text-white">URAI Settings</h2>
+                  <p className="mt-1 text-sm text-white/58">Control what opens, speaks, remembers, notifies, and leaves.</p>
+                </div>
+                <button type="button" onClick={onClose} aria-label="Close Settings" className="rounded-full bg-white/10 px-4 py-2 text-sm text-white/76">Close</button>
+              </header>
+              <div className="relative z-10 grid min-h-0 flex-1 md:grid-cols-[260px_1fr]">
+                <nav className="flex gap-2 overflow-x-auto border-b border-white/10 p-4 md:block md:space-y-2 md:overflow-y-auto md:border-b-0 md:border-r" aria-label="Settings sections">
+                  {SETTINGS_SECTIONS.map((section) => (
+                    <button key={section.id} type="button" onClick={() => settings.setActiveSection(section.id)} className={`min-w-fit rounded-2xl px-3 py-2 text-left text-sm md:block md:w-full ${active === section.id ? "bg-white/14 text-white" : "bg-white/[0.045] text-white/58"}`}>
+                      <span className="block font-medium">{section.label}</span>
+                      <span className="hidden text-xs text-white/38 md:block">{section.description}</span>
+                    </button>
+                  ))}
+                </nav>
+                <main className="min-h-0 overflow-y-auto p-5">{renderSection()}</main>
+              </div>
+              {confirmAction ? (
+                <div className="absolute inset-0 z-20 grid place-items-center bg-black/50 p-5">
+                  <div role="alertdialog" aria-modal="true" className="w-full max-w-md rounded-[1.5rem] border border-white/10 bg-slate-950 p-5 shadow-2xl">
+                    <h3 className="text-lg font-medium text-white">Confirm carefully</h3>
+                    <p className="mt-2 text-sm leading-6 text-white/66">{confirmCopy}</p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      <button type="button" onClick={runConfirm} className="rounded-full bg-white/12 px-4 py-2 text-sm text-white">{confirmAction === "signout" ? "Keep local copy" : "Confirm"}</button>
+                      {confirmAction === "signout" ? <button type="button" onClick={() => { void auth.signOut({ clearLocal: true }); cloud.disableCloudSync(); setConfirmAction(null); }} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/66">Clear local copy</button> : null}
+                      <button type="button" onClick={() => setConfirmAction(null)} className="rounded-full bg-white/[0.07] px-4 py-2 text-sm text-white/66">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </motion.div>
+          </motion.section>
+        ) : null}
+      </AnimatePresence>
+      <UraiAccountGate isOpen={accountGateOpen} onClose={() => setAccountGateOpen(false)} reason="sync" />
+      <DeleteAccountDialog isOpen={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)} />
+    </>
+  );
 }
