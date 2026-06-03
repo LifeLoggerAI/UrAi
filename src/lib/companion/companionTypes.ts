@@ -3,6 +3,7 @@ import type { GenesisMoodState } from "../types";
 export type { GenesisMoodState } from "../types";
 
 export type CompanionMode = "companion" | "council";
+export type CompanionMoodState = GenesisMoodState | string;
 
 export type CompanionMessage = {
   id: string;
@@ -11,7 +12,7 @@ export type CompanionMessage = {
   councilRoleId?: string;
   text: string;
   createdAt: string;
-  moodState?: GenesisMoodState;
+  moodState?: CompanionMoodState;
   source?: "manual" | "quickPrompt" | "systemWhisper";
 };
 
@@ -27,5 +28,5 @@ export type CompanionQuickPrompt = {
 export type LocalCompanionResponderContext = {
   mode: CompanionMode;
   councilRoleId?: string;
-  moodState?: GenesisMoodState;
+  moodState?: CompanionMoodState;
 };
