@@ -1,7 +1,7 @@
 "use client";
 
-import HomeWorld from "@/components/urai/home/HomeWorld";
+import { HomeScene } from "@/components/urai/home/HomeScene";
 
 export default function HomeView(): React.ReactElement {
-  return <HomeWorld />;
+  return <HomeScene />;
 }
