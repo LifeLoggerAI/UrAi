@@ -1,0 +1,20 @@
+export function getUserDocPath(userId: string): string { return `users/${userId}`; }
+export function getPassportProfilePath(userId: string): string { return `users/${userId}/passport/profile`; }
+export function getSettingsProfilePath(userId: string): string { return `users/${userId}/settings/profile`; }
+export function getOnboardingProfilePath(userId: string): string { return `users/${userId}/onboarding/profile`; }
+export function getAudioPreferencesPath(userId: string): string { return `users/${userId}/audio/preferences`; }
+export function getVoicePreferencesPath(userId: string): string { return `users/${userId}/voice/preferences`; }
+export function getNotificationProfilePath(userId: string): string { return `users/${userId}/notifications/profile`; }
+export function getNotificationItemsPath(userId: string): string { return `users/${userId}/notifications/items`; }
+export function getCompanionSessionsPath(userId: string): string { return `users/${userId}/companion/sessions`; }
+export function getLifeMapStarsPath(userId: string): string { return `users/${userId}/lifemap/stars`; }
+export function getLifeMapChaptersPath(userId: string): string { return `users/${userId}/lifemap/chapters`; }
+export function getGroundElementsPath(userId: string): string { return `users/${userId}/ground/elements`; }
+export function getMirrorReflectionsPath(userId: string): string { return `users/${userId}/mirror/reflections`; }
+export function getShadowReflectionsPath(userId: string): string { return `users/${userId}/shadow/reflections`; }
+export function getLegacyItemsPath(userId: string): string { return `users/${userId}/legacy/items`; }
+export function getLegacyChaptersPath(userId: string): string { return `users/${userId}/legacy/chapters`; }
+export function getRitualsPath(userId: string): string { return `users/${userId}/rituals/items`; }
+export function getExportArtifactsPath(userId: string): string { return `users/${userId}/exports/artifacts`; }
+export function getSyncStatePath(userId: string): string { return `users/${userId}/system/syncState`; }
+export function getExportStoragePath(userId: string, artifactId: string): string { return `users/${userId}/exports/${artifactId}/`; }
