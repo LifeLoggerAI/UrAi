@@ -1,4 +1,6 @@
-import { GenesisMoodState } from '../types';
+import type { GenesisMoodState } from "../types";
+
+export type { GenesisMoodState } from "../types";
 
 export type CompanionMode = "companion" | "council";
 
@@ -19,7 +21,11 @@ export type CompanionQuickPrompt = {
   prompt: string;
   mode?: CompanionMode;
   councilRoleId?: string;
+  action?: "openLifeMap" | "openPassport" | "openGround";
 };
 
-// A fallback type if GenesisMoodState is not found in the project
-type GenesisMoodState = string;
+export type LocalCompanionResponderContext = {
+  mode: CompanionMode;
+  councilRoleId?: string;
+  moodState?: GenesisMoodState;
+};
