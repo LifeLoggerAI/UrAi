@@ -77,7 +77,7 @@ export function createSealedShadowReflections(): ShadowReflection[] {
 }
 
 function toReflection(summary: ShadowSourceSummary, index: number): ShadowReflection {
-  const sourceLayerIds = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["shadow"];
+  const sourceLayerIds: PassportDataLayerId[] = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["shadow"];
   return {
     id: summary.id ?? `shadow-reflection-${index}`,
     title: summary.title ?? "A difficult pattern may be present.",
@@ -104,7 +104,7 @@ export function buildPermissionedShadow(input: BuildPermissionedShadowInput = {}
 
   if (consent) {
     for (const [index, summary] of (input.sourceSummaries ?? []).entries()) {
-      const layers = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["shadow"];
+      const layers: PassportDataLayerId[] = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["shadow"];
       if (layers.every((layer) => allowed(profile, layer))) reflections.push(toReflection(summary, index));
     }
   }
