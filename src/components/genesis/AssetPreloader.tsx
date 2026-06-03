@@ -1,34 +1,29 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { getAssetPath, type UraiAssetKey } from "@/lib/assets/uraiAssetManifest";
+import { CRITICAL_GENESIS_ASSET_KEYS, getAssetPath, type UraiAssetKey } from "@/lib/assets/uraiAssetManifest";
 
-const CRITICAL_ASSETS: UraiAssetKey[] = [
-  "skyBackground",
-  "skyCloudFar",
-  "skyCloudMid",
-  "skyCloudNear",
-  "bodySilhouetteBase",
-  "bodySilhouetteGlow",
-  "auraField",
-  "orbCore",
-  "orbGlow",
-  "groundBase",
-  "groundBloom",
-  "foregroundVignette",
-];
+const MIN_FADE_MS = 900;
+const FAIL_SAFE_MS = 1200;
 
 type AssetPreloaderProps = {
   children: ReactNode;
   assets?: UraiAssetKey[];
+  reducedSensoryMode?: boolean;
 };
 
-export function AssetPreloader({ children, assets = CRITICAL_ASSETS }: AssetPreloaderProps) {
-  const [loaded, setLoaded] = useState(false);
+export function AssetPreloader({ children, assets = CRITICAL_GENESIS_ASSET_KEYS, reducedSensoryMode = false }: AssetPreloaderProps) {
+  const [ready, setReady] = useState(reducedSensoryMode);
   const assetPaths = useMemo(() => assets.map(getAssetPath), [assets]);
 
   useEffect(() => {
+    if (reducedSensoryMode) {
+      setReady(true);
+      return;
+    }
+
     let cancelled = false;
+    const startedAt = Date.now();
     const loaders = assetPaths.map(
       (src) =>
         new Promise<void>((resolve) => {
@@ -39,26 +34,31 @@ export function AssetPreloader({ children, assets = CRITICAL_ASSETS }: AssetPrel
         }),
     );
 
+    const failSafe = window.setTimeout(() => {
+      if (!cancelled) setReady(true);
+    }, FAIL_SAFE_MS);
+
     Promise.all(loaders).then(() => {
-      if (!cancelled) setLoaded(true);
+      const remaining = Math.max(0, MIN_FADE_MS - (Date.now() - startedAt));
+      window.setTimeout(() => {
+        if (!cancelled) setReady(true);
+      }, remaining);
     });
 
     return () => {
       cancelled = true;
+      window.clearTimeout(failSafe);
     };
-  }, [assetPaths]);
+  }, [assetPaths, reducedSensoryMode]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-black">
+    <div className="relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_50%_32%,#203963_0%,#101a38_48%,#050714_100%)]">
       <div
-        className="absolute inset-0 transition-opacity duration-700"
-        style={{
-          opacity: loaded ? 0 : 1,
-          background:
-            "radial-gradient(circle at 50% 34%, rgba(32,57,99,0.74) 0%, rgba(16,26,56,0.9) 48%, rgba(5,7,20,1) 100%)",
-        }}
+        aria-hidden="true"
+        className="absolute inset-0 transition-opacity duration-[1100ms]"
+        style={{ opacity: ready ? 0 : 1 }}
       />
-      <div className="relative min-h-screen w-full transition-opacity duration-[900ms]" style={{ opacity: loaded ? 1 : 0 }}>
+      <div className="relative min-h-screen w-full transition-opacity duration-[1100ms]" style={{ opacity: ready ? 1 : 0.001 }}>
         {children}
       </div>
     </div>
