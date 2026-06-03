@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // URAI privacy-first baseline:
+    // - No public reads by default.
+    // - Users may only access their own records.
+    // - Stricter schema validation should be added before production launch.
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Future admin/service paths stay locked until explicitly implemented.
+    match /admin/{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
