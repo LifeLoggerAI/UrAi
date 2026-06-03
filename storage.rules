@@ -14,19 +14,30 @@ service firebase.storage {
       return isSignedIn() && request.auth.uid == uid;
     }
 
+    // User files are private to the owner. Admin review should use explicit support workflows, not broad storage reads.
+    // Add content-type and size constraints before enabling broad uploads.
     match /users/{uid}/{allPaths=**} {
-      allow read: if isOwner(uid) || isAdmin();
-      allow write: if isOwner(uid) || isAdmin();
+      allow read, write: if isOwner(uid);
     }
 
     match /staging/{uid}/{allPaths=**} {
-      allow read: if isOwner(uid) || isAdmin();
-      allow write: if isOwner(uid) || isAdmin();
+      allow read, write: if isOwner(uid);
     }
 
+    // Public production assets are read-only from clients.
     match /public/{allPaths=**} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if false;
+    }
+
+    // Internal system assets may be managed only by custom-claim admins.
+    match /system/{allPaths=**} {
+      allow read, write: if isAdmin();
+    }
+
+    // No public user exports by default.
+    match /exports/{uid}/{allPaths=**} {
+      allow read, write: if isOwner(uid);
     }
 
     match /{allPaths=**} {
