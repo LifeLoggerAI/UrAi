@@ -1,6 +1,8 @@
 "use client";
 
 import type { MirrorReflection } from "@/lib/mirror/mirrorTypes";
+import { legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
+import { useUraiLegacy } from "@/providers/UraiLegacyProvider";
 
 type MirrorReflectionDetailProps = {
   reflection: MirrorReflection | null;
@@ -24,7 +26,14 @@ function whyText(reflection: MirrorReflection): string {
 }
 
 export function MirrorReflectionDetail({ reflection, onClose, onOpenGround, onOpenLifeMap, onOpenPassport, onTalkToCompanion }: MirrorReflectionDetailProps) {
+  const legacy = useUraiLegacy();
   if (!reflection) return <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/35 p-4 text-sm text-white/75 backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[360px] md:bottom-auto">Select a reflection to open it gently.</aside>;
+
+  const addToLegacy = () => {
+    if (reflection.permissionRequired) return;
+    legacy.addItemToLegacy(legacyCandidateFromSummary({ id: `legacy-mirror-${reflection.id}`, type: "mirror_pattern", title: reflection.title, summary: reflection.summary, sourceLayerIds: reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["system"], tone: "reflective", linkedMirrorReflectionId: reflection.id }));
+    legacy.openLegacy();
+  };
 
   const runAction = () => {
     if (reflection.suggestedAction === "open_ground") onOpenGround?.();
@@ -50,6 +59,7 @@ export function MirrorReflectionDetail({ reflection, onClose, onOpenGround, onOp
       <div className="mt-4 flex flex-wrap gap-2">
         {reflection.suggestedAction && reflection.suggestedAction !== "none" ? <button type="button" onClick={runAction} className="rounded-full bg-white/10 px-3 py-2 text-xs text-white/84">Suggested next step</button> : null}
         <button type="button" onClick={onTalkToCompanion} className="rounded-full bg-white/[0.07] px-3 py-2 text-xs text-white/68">Reflect with URAI</button>
+        {!reflection.permissionRequired ? <button type="button" onClick={addToLegacy} className="rounded-full bg-amber-200/14 px-3 py-2 text-xs text-white/84">Add to Legacy</button> : null}
         <button type="button" className="rounded-full bg-white/[0.05] px-3 py-2 text-xs text-white/56">Hide reflection</button>
       </div>
     </aside>
