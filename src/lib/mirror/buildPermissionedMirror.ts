@@ -47,7 +47,7 @@ export function createSafeMirrorReflections(): MirrorReflection[] {
 }
 
 function summaryToReflection(summary: MirrorSourceSummary, index: number): MirrorReflection {
-  const sourceLayerIds = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["system"];
+  const sourceLayerIds: PassportDataLayerId[] = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["system"];
   return {
     id: summary.id ?? `mirror-summary-${index}`,
     title: summary.title ?? "A pattern may be forming.",
@@ -65,29 +65,13 @@ function summaryToReflection(summary: MirrorSourceSummary, index: number): Mirro
 export function buildPermissionedMirror(input: BuildPermissionedMirrorInput = {}): MirrorSession {
   const profile = input.passportProfile;
   const reflections: MirrorReflection[] = [];
-
-  if (allowed(profile, "mood") && input.moodState) {
-    reflections.push({ id: "visible-mood-reflection", title: "A visible mood tone is present.", summary: `From what is visible, the current tone looks ${input.moodState}. This is not a diagnosis.`, patternType: "mood_shift", tone: "gentle", confidence: "low", createdAt: now(), sourceLayerIds: ["mood"], suggestedAction: "open_ground", visible: true });
-  }
-
-  if (allowed(profile, "memory") && input.lifeMapData?.stars?.length) {
-    reflections.push({ id: "lifemap-reflection", title: "The sky has visible points.", summary: "Life Map stars you allowed can become gentle reflection points.", patternType: "rhythm", tone: "hopeful", confidence: "low", createdAt: now(), sourceLayerIds: ["memory"], suggestedAction: "open_life_map", visible: true });
-  }
-
-  if (allowed(profile, "recovery") && input.groundData?.elements?.length) {
-    reflections.push({ id: "ground-reflection", title: "The Ground has visible symbols.", summary: "From the visible Ground, a rooted reflection may be available.", patternType: "recovery", tone: "grounding", confidence: "low", createdAt: now(), sourceLayerIds: ["recovery"], suggestedAction: "open_ground", visible: true });
-  }
-
+  if (allowed(profile, "mood") && input.moodState) reflections.push({ id: "visible-mood-reflection", title: "A visible mood tone is present.", summary: `From what is visible, the current tone looks ${input.moodState}. This is not a diagnosis.`, patternType: "mood_shift", tone: "gentle", confidence: "low", createdAt: now(), sourceLayerIds: ["mood"], suggestedAction: "open_ground", visible: true });
+  if (allowed(profile, "memory") && input.lifeMapData?.stars?.length) reflections.push({ id: "lifemap-reflection", title: "The sky has visible points.", summary: "Life Map stars you allowed can become gentle reflection points.", patternType: "rhythm", tone: "hopeful", confidence: "low", createdAt: now(), sourceLayerIds: ["memory"], suggestedAction: "open_life_map", visible: true });
+  if (allowed(profile, "recovery") && input.groundData?.elements?.length) reflections.push({ id: "ground-reflection", title: "The Ground has visible symbols.", summary: "From the visible Ground, a rooted reflection may be available.", patternType: "recovery", tone: "grounding", confidence: "low", createdAt: now(), sourceLayerIds: ["recovery"], suggestedAction: "open_ground", visible: true });
   for (const [index, summary] of (input.availableSummaries ?? []).entries()) {
-    const layers = summary.sourceLayerIds ?? ["system"];
+    const layers: PassportDataLayerId[] = summary.sourceLayerIds?.length ? summary.sourceLayerIds : ["system"];
     if (layers.every((layer) => allowed(profile, layer))) reflections.push(summaryToReflection(summary, index));
   }
-
   const finalReflections = reflections.length > 0 ? reflections : createSafeMirrorReflections();
-  return {
-    id: `mirror-${Date.now()}`,
-    reflections: finalReflections,
-    generatedAt: now(),
-    permissionVersion: profile?.permissionVersion ?? 1,
-  };
+  return { id: `mirror-${Date.now()}`, reflections: finalReflections, generatedAt: now(), permissionVersion: profile?.permissionVersion ?? 1 };
 }
