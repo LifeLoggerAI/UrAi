@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const isStaticExport = process.env.URAI_STATIC_EXPORT !== '0';
+const isStaticExport = process.env.URAI_STATIC_EXPORT === '1';
 
 const nextConfig = {
   ...(isStaticExport ? { output: 'export' } : {}),
