@@ -2,6 +2,7 @@ import type { CompanionMode, GenesisMoodState } from "./companionTypes";
 import { normalizePassportContextPermissions, type PassportContextPermissions } from "@/lib/passport/passportContextTypes";
 import type { PassportDataLayerId, PermissionedCompanionContext, UraiAISuggestedActionType } from "@/lib/ai/aiTypes";
 
+export type { PermissionedCompanionContext } from "@/lib/ai/aiTypes";
 export type CompanionAvailableAction = UraiAISuggestedActionType;
 
 type SelectedContext = {
