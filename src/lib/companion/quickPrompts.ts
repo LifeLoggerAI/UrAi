@@ -8,6 +8,7 @@ export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   { id: "help-ground", label: "Help me ground", prompt: "Help me ground", mode: "companion" },
   { id: "what-changed", label: "What changed?", prompt: "What changed?", mode: "council", councilRoleId: "mirror" },
   { id: "why-seeing-this", label: "Why am I seeing this?", prompt: "Why am I seeing this?", mode: "council", councilRoleId: "guardian" },
+  { id: "open-shadow", label: "Open Shadow", prompt: "Open Shadow", mode: "council", councilRoleId: "guardian", action: "openShadow" },
   { id: "what-growing", label: "What is growing?", prompt: "What is growing?", mode: "council", councilRoleId: "mirror" },
   { id: "small-ritual", label: "Create a small ritual", prompt: "Create a small ritual", mode: "council", councilRoleId: "guide" },
   { id: "reflect-pattern", label: "Reflect the pattern", prompt: "Reflect the pattern", mode: "council", councilRoleId: "mirror" },
