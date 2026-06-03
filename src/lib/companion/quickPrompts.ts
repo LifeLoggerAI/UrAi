@@ -3,6 +3,8 @@ import type { CompanionMode, CompanionQuickPrompt } from "./companionTypes";
 export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   { id: "life-map", label: "Show me the Life Map", prompt: "Show me the Life Map", mode: "companion", action: "openLifeMap" },
   { id: "open-ground", label: "Open Ground", prompt: "Open Ground", mode: "companion", action: "openGround" },
+  { id: "open-settings", label: "Open settings", prompt: "Open settings", mode: "companion", action: "openSettings" },
+  { id: "make-quieter", label: "Make URAI quieter", prompt: "Make URAI quieter", mode: "companion", action: "openSettings" },
   { id: "open-mirror", label: "Open Mirror", prompt: "Open Mirror", mode: "companion", action: "openMirror" },
   { id: "open-legacy", label: "Open Legacy", prompt: "Open Legacy", mode: "companion", action: "openLegacy" },
   { id: "open-export", label: "Export Scroll", prompt: "Open Export Scrolls", mode: "companion", action: "openExport" },
@@ -13,13 +15,16 @@ export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   { id: "what-changed", label: "What changed?", prompt: "What changed?", mode: "council", councilRoleId: "mirror" },
   { id: "why-seeing-this", label: "Why am I seeing this?", prompt: "Why am I seeing this?", mode: "council", councilRoleId: "guardian" },
   { id: "open-shadow", label: "Open Shadow", prompt: "Open Shadow", mode: "council", councilRoleId: "guardian", action: "openShadow" },
+  { id: "settings-control", label: "Settings", prompt: "Open settings", mode: "council", councilRoleId: "guardian", action: "openSettings" },
+  { id: "notifications-review", label: "Review notifications", prompt: "Review notifications", mode: "council", councilRoleId: "guardian", action: "openSettings" },
+  { id: "voice-review", label: "Voice settings", prompt: "Voice settings", mode: "council", councilRoleId: "guardian", action: "openSettings" },
   { id: "carry-forward", label: "Carry this forward", prompt: "Carry this forward", mode: "council", councilRoleId: "guardian", action: "openLegacy" },
   { id: "make-ritual", label: "Make this a ritual", prompt: "Make this a ritual", mode: "council", councilRoleId: "guide", action: "suggestRitual" },
   { id: "soften-this", label: "Soften this", prompt: "Soften this", mode: "council", councilRoleId: "guardian", action: "suggestRitual" },
   { id: "what-growing", label: "What is growing?", prompt: "What is growing?", mode: "council", councilRoleId: "mirror" },
   { id: "reflect-pattern", label: "Reflect the pattern", prompt: "Reflect the pattern", mode: "council", councilRoleId: "mirror" },
   { id: "control", label: "What can I control?", prompt: "What can I control?", mode: "council", councilRoleId: "guardian" },
-  { id: "passport-settings", label: "Open Passport settings", prompt: "Open Passport settings", mode: "council", councilRoleId: "guardian", action: "openPassport" },
+  { id: "passport-settings", label: "Open Passport", prompt: "Open Passport", mode: "council", councilRoleId: "guardian", action: "openPassport" },
 ];
 
 export function getQuickPromptsForContext(mode: CompanionMode, councilRoleId?: string): CompanionQuickPrompt[] {
