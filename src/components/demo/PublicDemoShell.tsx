@@ -20,8 +20,8 @@ export function PublicDemoShell({ founder = false }: { founder?: boolean }) {
           <div className="w-full max-w-2xl rounded-[2rem] border border-white/10 bg-black/48 p-6 text-center shadow-2xl backdrop-blur-xl">
             <p className="text-xs uppercase tracking-[0.3em] text-white/42">{founder ? "Founder Demo" : "URAI Genesis Demo"}</p>
             <h1 className="mt-3 text-4xl font-medium tracking-tight">{demo.demoProfile.title}</h1>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/68">This public demo uses sample data so you can experience URAI’s symbolic interface safely. Tap the orb, sky, Ground, Mirror, and Passport to see how permissioned reflection works.</p>
-            <p className="mt-3 text-xs text-white/48">No private user data is shown in this demo. Shadow and Legacy stay protected.</p>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/68">This public demo uses sample data so you can experience URAI’s symbolic interface safely. Tap the orb to open the Companion, tap the sky for Life Map, and open Passport to see how permissions work.</p>
+            <p className="mt-3 text-xs text-white/48">No private user data is shown in this demo. Mirror shows sample reflections. Shadow and Legacy stay protected.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button onClick={() => setEntered(true)} className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black">Enter Genesis</button>
               <button onClick={() => setShowWaitlist(true)} className="rounded-full bg-white/[0.08] px-5 py-3 text-sm text-white/76">Join Waitlist</button>
