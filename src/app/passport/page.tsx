@@ -1,3 +1,4 @@
+import { NotificationCenter } from "@/components/notifications/NotificationCenter";
 import { NotificationControlPanel } from "@/components/passport/NotificationControlPanel";
 import UraiRouteShell from "@/components/urai/UraiRouteShell";
 
@@ -23,8 +24,11 @@ export default function PassportPage() {
           { title: "No hidden sales surface", body: "Passport belongs to the app experience, not ads, studio work, or investor routing." },
         ]}
       />
-      <div className="bg-slate-950 px-5 pb-12 sm:px-8">
+      <div className="space-y-6 bg-slate-950 px-5 pb-12 sm:px-8">
         <NotificationControlPanel />
+        <div className="mx-auto max-w-5xl">
+          <NotificationCenter />
+        </div>
       </div>
     </>
   );
