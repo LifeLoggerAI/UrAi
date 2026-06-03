@@ -8,6 +8,7 @@ import { UraiGroundProvider } from '@/providers/UraiGroundProvider';
 import { UraiLegacyProvider } from '@/providers/UraiLegacyProvider';
 import { UraiLifeMapProvider } from '@/providers/UraiLifeMapProvider';
 import { UraiMirrorProvider } from '@/providers/UraiMirrorProvider';
+import { UraiNotificationProvider } from '@/providers/UraiNotificationProvider';
 import { UraiRitualProvider } from '@/providers/UraiRitualProvider';
 import { UraiShadowProvider } from '@/providers/UraiShadowProvider';
 import { UraiVoiceProvider } from '@/providers/UraiVoiceProvider';
@@ -17,21 +18,23 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
   return (
     <UraiAudioProvider>
       <UraiVoiceProvider>
-        <UraiExportProvider>
-          <UraiRitualProvider>
-            <UraiGroundProvider>
-              <UraiLifeMapProvider>
-                <UraiMirrorProvider>
-                  <UraiShadowProvider>
-                    <UraiLegacyProvider>
-                      <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
-                    </UraiLegacyProvider>
-                  </UraiShadowProvider>
-                </UraiMirrorProvider>
-              </UraiLifeMapProvider>
-            </UraiGroundProvider>
-          </UraiRitualProvider>
-        </UraiExportProvider>
+        <UraiNotificationProvider>
+          <UraiExportProvider>
+            <UraiRitualProvider>
+              <UraiGroundProvider>
+                <UraiLifeMapProvider>
+                  <UraiMirrorProvider>
+                    <UraiShadowProvider>
+                      <UraiLegacyProvider>
+                        <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
+                      </UraiLegacyProvider>
+                    </UraiShadowProvider>
+                  </UraiMirrorProvider>
+                </UraiLifeMapProvider>
+              </UraiGroundProvider>
+            </UraiRitualProvider>
+          </UraiExportProvider>
+        </UraiNotificationProvider>
         <UraiCaptionBubble />
       </UraiVoiceProvider>
     </UraiAudioProvider>
