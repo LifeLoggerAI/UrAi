@@ -46,14 +46,7 @@ function canUseLayer(profile: LegacyPassportProfile | null | undefined, layer: P
 }
 
 function closedArchive(profile: LegacyPassportProfile | null | undefined): LegacyArchive {
-  return {
-    userId: profile?.userId,
-    chapters: [],
-    items: [],
-    generatedAt: now(),
-    permissionVersion: profile?.permissionVersion ?? 1,
-    legacyEnabled: false,
-  };
+  return { userId: profile?.userId, chapters: [], items: [], generatedAt: now(), permissionVersion: profile?.permissionVersion ?? 1, legacyEnabled: false };
 }
 
 function emptyOpenItems(): LegacyItem[] {
@@ -65,7 +58,7 @@ function emptyOpenItems(): LegacyItem[] {
 }
 
 function candidateToItem(candidate: LegacyCandidateSource, index: number, profile: LegacyPassportProfile | null | undefined): LegacyItem | null {
-  const layers = candidate.sourceLayerIds.length ? candidate.sourceLayerIds : ["system"];
+  const layers: PassportDataLayerId[] = candidate.sourceLayerIds.length ? candidate.sourceLayerIds : ["system"];
   const shadowLinked = layers.includes("shadow") || Boolean(candidate.linkedShadowReflectionId);
   if (!candidate.userApproved) return null;
   if (!layers.every((layer) => canUseLayer(profile, layer))) return null;
@@ -99,14 +92,7 @@ export function buildPermissionedLegacy(input: BuildPermissionedLegacyInput = {}
   const items = approvedItems.length > 0 ? approvedItems : emptyOpenItems();
   const approvedForChapter = items.filter((item) => item.userApproved && item.visibility !== "sealed");
   const chapters = approvedForChapter.length > 0 ? [synthesizeLegacyChapter(approvedForChapter)] : [];
-  return {
-    userId: profile?.userId,
-    chapters,
-    items,
-    generatedAt: now(),
-    permissionVersion: profile?.permissionVersion ?? 1,
-    legacyEnabled: true,
-  };
+  return { userId: profile?.userId, chapters, items, generatedAt: now(), permissionVersion: profile?.permissionVersion ?? 1, legacyEnabled: true };
 }
 
 export function legacyCandidateFromSummary(input: { id: string; type: LegacyCandidateSource["type"]; title: string; summary: string; sourceLayerIds: PassportDataLayerId[]; tone?: LegacyTone; linkedLifeMapStarId?: string; linkedGroundElementId?: string; linkedMirrorReflectionId?: string; linkedShadowReflectionId?: string }): LegacyCandidateSource {
