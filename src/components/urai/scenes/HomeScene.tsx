@@ -12,6 +12,7 @@ import { LegacyView } from "@/components/legacy/LegacyView";
 import { LifeMapGalaxy } from "@/components/lifemap/LifeMapGalaxy";
 import { MirrorView } from "@/components/mirror/MirrorView";
 import { RitualFlow } from "@/components/rituals/RitualFlow";
+import { RitualShelf } from "@/components/rituals/RitualShelf";
 import { ShadowRealmView } from "@/components/shadow/ShadowRealmView";
 import { PortalNav } from "@/components/urai/PortalNav";
 import { SceneCopy } from "@/components/urai/SceneCopy";
@@ -61,41 +62,12 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
     router.push("/passport");
   }, [closeAllLayers, router]);
 
-  const openLifeMapFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    lifeMap.openLifeMap();
-  }, [closeAllLayers, lifeMap]);
-
-  const openGroundFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    ground.openGround();
-  }, [closeAllLayers, ground]);
-
-  const openMirrorFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    mirror.openMirror();
-  }, [closeAllLayers, mirror]);
-
-  const openShadowFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    shadow.openShadow();
-  }, [closeAllLayers, shadow]);
-
-  const openLegacyFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    legacy.openLegacy();
-  }, [closeAllLayers, legacy]);
-
-  const openExportFromCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-    closeAllLayers();
-    exports.openExport();
-  }, [closeAllLayers, exports]);
+  const openLifeMapFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); lifeMap.openLifeMap(); }, [closeAllLayers, lifeMap]);
+  const openGroundFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); ground.openGround(); }, [closeAllLayers, ground]);
+  const openMirrorFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); mirror.openMirror(); }, [closeAllLayers, mirror]);
+  const openShadowFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); shadow.openShadow(); }, [closeAllLayers, shadow]);
+  const openLegacyFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); legacy.openLegacy(); }, [closeAllLayers, legacy]);
+  const openExportFromCompanion = useCallback(() => { setIsCompanionOpen(false); closeAllLayers(); exports.openExport(); }, [closeAllLayers, exports]);
 
   const suggestSmallRitual = useCallback(() => {
     const [ritual] = rituals.suggestForContext({ moodState: "luminous" });
@@ -105,14 +77,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
       <AssetPreloader>
-        <LayeredGenesisScene
-          moodState="luminous"
-          onSkyOpen={lifeMap.openLifeMap}
-          onOrbOpen={openCompanion}
-          onGroundOpen={ground.openGround}
-          onPassportOpen={openPassport}
-          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen || legacy.isLegacyOpen || exports.isExportOpen || rituals.isRitualFlowOpen}
-        />
+        <LayeredGenesisScene moodState="luminous" onSkyOpen={lifeMap.openLifeMap} onOrbOpen={openCompanion} onGroundOpen={ground.openGround} onPassportOpen={openPassport} isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen || legacy.isLegacyOpen || exports.isExportOpen || rituals.isRitualFlowOpen} />
       </AssetPreloader>
 
       <div className="pointer-events-none absolute inset-0 z-40 flex min-h-screen w-full flex-col items-center justify-between px-6 py-12">
@@ -120,6 +85,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         <div className="pointer-events-auto w-full pb-2"><PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} /></div>
       </div>
 
+      <RitualShelf isVisible={!lifeMap.isLifeMapOpen && !ground.isGroundOpen && !mirror.isMirrorOpen && !shadow.isShadowOpen && !legacy.isLegacyOpen && !exports.isExportOpen && !isCompanionOpen} />
       <LifeMapGalaxy isOpen={lifeMap.isLifeMapOpen} onClose={lifeMap.closeLifeMap} moodState="luminous" onOpenPassport={openPassport} />
       <GroundGarden isOpen={ground.isGroundOpen} onClose={ground.closeGround} moodState="luminous" onOpenPassport={openPassport} />
       <MirrorView isOpen={mirror.isMirrorOpen} onClose={mirror.closeMirror} moodState="luminous" onOpenGround={openGroundFromCompanion} onOpenLifeMap={openLifeMapFromCompanion} onOpenPassport={openPassport} onTalkToCompanion={openCompanion} />
@@ -128,20 +94,7 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
       <ExportCenter isOpen={exports.isExportOpen} onClose={exports.closeExport} moodState="luminous" onOpenPassport={openPassport} />
       <RitualFlow ritual={rituals.activeRitual} isOpen={rituals.isRitualFlowOpen} onClose={rituals.closeRitualFlow} onComplete={rituals.completeRitual} onSkip={rituals.skipRitual} />
 
-      <UraiCompanionShell
-        isOpen={isCompanionOpen}
-        onClose={closeCompanion}
-        initialMode="companion"
-        moodState="luminous"
-        onOpenLifeMap={openLifeMapFromCompanion}
-        onOpenPassport={openPassport}
-        onOpenGround={openGroundFromCompanion}
-        onOpenMirror={openMirrorFromCompanion}
-        onOpenShadow={openShadowFromCompanion}
-        onOpenLegacy={openLegacyFromCompanion}
-        onOpenExport={openExportFromCompanion}
-        onSuggestRitual={suggestSmallRitual}
-      />
+      <UraiCompanionShell isOpen={isCompanionOpen} onClose={closeCompanion} initialMode="companion" moodState="luminous" onOpenLifeMap={openLifeMapFromCompanion} onOpenPassport={openPassport} onOpenGround={openGroundFromCompanion} onOpenMirror={openMirrorFromCompanion} onOpenShadow={openShadowFromCompanion} onOpenLegacy={openLegacyFromCompanion} onOpenExport={openExportFromCompanion} onSuggestRitual={suggestSmallRitual} />
     </section>
   );
 }
