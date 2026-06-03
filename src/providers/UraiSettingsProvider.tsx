@@ -1,7 +1,12 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { getSettingsProfilePath } from "@/lib/firebase/firestoreCollections";
+import { serializeSettingsProfile } from "@/lib/firebase/serializeForFirestore";
+import { resolveSettingsConflict } from "@/lib/firebase/syncConflictResolution";
 import { DEFAULT_SETTINGS_PROFILE, type SettingsSectionId, type UraiSettingsProfile } from "@/lib/settings/settingsTypes";
+import { useUraiAuth } from "@/providers/UraiAuthProvider";
+import { useUraiCloudSync } from "@/providers/UraiCloudSyncProvider";
 
 type UraiSettingsContextValue = {
   settingsProfile: UraiSettingsProfile;
@@ -42,24 +47,33 @@ function writeProfile(profile: UraiSettingsProfile) {
 }
 
 export function UraiSettingsProvider({ children }: { children: ReactNode }) {
+  const auth = useUraiAuth();
+  const cloud = useUraiCloudSync();
   const [settingsProfile, setSettingsProfile] = useState<UraiSettingsProfile>(() => withTimestamp(DEFAULT_SETTINGS_PROFILE));
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
-    setSettingsProfile(readProfile());
-  }, []);
+    const local = readProfile();
+    setSettingsProfile(local);
+    if (!auth.userId || !cloud.syncEnabled) return;
+    void cloud.pullFromCloud<UraiSettingsProfile>(getSettingsProfilePath(auth.userId)).then((remote) => {
+      if (!remote) return;
+      const resolved = resolveSettingsConflict(local, remote);
+      setSettingsProfile(resolved);
+      writeProfile(resolved);
+    });
+  }, [auth.userId, cloud]);
 
   const persist = useCallback((next: UraiSettingsProfile) => {
     const stamped = withTimestamp(next);
     setSettingsProfile(stamped);
     writeProfile(stamped);
-  }, []);
+    if (auth.userId && cloud.syncEnabled) {
+      void cloud.pushToCloud(getSettingsProfilePath(auth.userId), serializeSettingsProfile(stamped));
+    }
+  }, [auth.userId, cloud]);
 
-  const openSettings = useCallback((section?: SettingsSectionId) => {
-    setIsSettingsOpen(true);
-    if (section) persist({ ...settingsProfile, activeSection: section });
-  }, [persist, settingsProfile]);
-
+  const openSettings = useCallback((section?: SettingsSectionId) => { setIsSettingsOpen(true); if (section) persist({ ...settingsProfile, activeSection: section }); }, [persist, settingsProfile]);
   const closeSettings = useCallback(() => setIsSettingsOpen(false), []);
   const setActiveSection = useCallback((section: SettingsSectionId) => persist({ ...settingsProfile, activeSection: section }), [persist, settingsProfile]);
   const setReducedSensoryMode = useCallback((enabled: boolean) => persist({ ...settingsProfile, controlState: { ...settingsProfile.controlState, reducedSensoryMode: enabled, hapticsEnabled: enabled ? false : settingsProfile.controlState.hapticsEnabled, ambientAnimationEnabled: enabled ? false : settingsProfile.controlState.ambientAnimationEnabled } }), [persist, settingsProfile]);
@@ -69,20 +83,7 @@ export function UraiSettingsProvider({ children }: { children: ReactNode }) {
   const setHapticsEnabled = useCallback((enabled: boolean) => persist({ ...settingsProfile, controlState: { ...settingsProfile.controlState, hapticsEnabled: enabled } }), [persist, settingsProfile]);
   const resetSettingsProfile = useCallback(() => persist(DEFAULT_SETTINGS_PROFILE), [persist]);
 
-  const value = useMemo<UraiSettingsContextValue>(() => ({
-    settingsProfile,
-    activeSection: settingsProfile.activeSection,
-    isSettingsOpen,
-    openSettings,
-    closeSettings,
-    setActiveSection,
-    setReducedSensoryMode,
-    setReducedMotion,
-    setHighContrast,
-    setAmbientAnimationEnabled,
-    setHapticsEnabled,
-    resetSettingsProfile,
-  }), [closeSettings, isSettingsOpen, openSettings, resetSettingsProfile, setActiveSection, setAmbientAnimationEnabled, setHapticsEnabled, setHighContrast, setReducedMotion, setReducedSensoryMode, settingsProfile]);
+  const value = useMemo<UraiSettingsContextValue>(() => ({ settingsProfile, activeSection: settingsProfile.activeSection, isSettingsOpen, openSettings, closeSettings, setActiveSection, setReducedSensoryMode, setReducedMotion, setHighContrast, setAmbientAnimationEnabled, setHapticsEnabled, resetSettingsProfile }), [closeSettings, isSettingsOpen, openSettings, resetSettingsProfile, setActiveSection, setAmbientAnimationEnabled, setHapticsEnabled, setHighContrast, setReducedMotion, setReducedSensoryMode, settingsProfile]);
 
   return <UraiSettingsContext.Provider value={value}>{children}</UraiSettingsContext.Provider>;
 }
