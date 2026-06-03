@@ -24,6 +24,7 @@ type UraiCompanionShellProps = {
   onOpenPassport?: () => void;
   onOpenGround?: () => void;
   onOpenMirror?: () => void;
+  onOpenShadow?: () => void;
 };
 
 const MAX_MESSAGE_LENGTH = 500;
@@ -51,7 +52,7 @@ function actionLabel(action?: SuggestedAction): string | null {
   return null;
 }
 
-export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror }: UraiCompanionShellProps) {
+export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror, onOpenShadow }: UraiCompanionShellProps) {
   const reduceMotion = useReducedMotion();
   const voice = useUraiVoice();
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -148,7 +149,7 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
     }
   };
 
-  const openAction = (action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror") => {
+  const openAction = (action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror" | "openShadow") => {
     if (action === "openLifeMap" && onOpenLifeMap) {
       onClose();
       onOpenLifeMap();
@@ -164,6 +165,10 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
     if (action === "openMirror" && onOpenMirror) {
       onClose();
       onOpenMirror();
+    }
+    if (action === "openShadow" && onOpenShadow) {
+      onClose();
+      onOpenShadow();
     }
   };
 
