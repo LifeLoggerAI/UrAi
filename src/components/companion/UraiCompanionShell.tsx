@@ -26,6 +26,8 @@ type UraiCompanionShellProps = {
   onOpenMirror?: () => void;
   onOpenShadow?: () => void;
   onOpenLegacy?: () => void;
+  onOpenExport?: () => void;
+  onSuggestRitual?: () => void;
 };
 
 const MAX_MESSAGE_LENGTH = 500;
@@ -53,7 +55,7 @@ function actionLabel(action?: SuggestedAction): string | null {
   return null;
 }
 
-export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror, onOpenShadow, onOpenLegacy }: UraiCompanionShellProps) {
+export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror, onOpenShadow, onOpenLegacy, onOpenExport, onSuggestRitual }: UraiCompanionShellProps) {
   const reduceMotion = useReducedMotion();
   const voice = useUraiVoice();
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -78,19 +80,14 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
       const storedRole = window.localStorage.getItem(LAST_ROLE_KEY);
       if (storedRole && councilRoles.some((role) => role.id === storedRole)) setSelectedRoleId(storedRole);
     }
-    if (messages.length === 0) {
-      setMessages([{ id: createId(), role: "urai", mode: storedMode, councilRoleId: storedMode === "council" ? selectedRoleId : undefined, text: "I’m here.", createdAt: new Date().toISOString(), moodState, source: "systemWhisper" }]);
-    }
+    if (messages.length === 0) setMessages([{ id: createId(), role: "urai", mode: storedMode, councilRoleId: storedMode === "council" ? selectedRoleId : undefined, text: "I’m here.", createdAt: new Date().toISOString(), moodState, source: "systemWhisper" }]);
     window.setTimeout(() => inputRef.current?.focus(), 120);
   }, [councilRoles, initialMode, isOpen, messages.length, moodState, selectedRoleId]);
 
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-      }
+      if (event.key === "Escape") { event.preventDefault(); onClose(); }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -131,11 +128,7 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
     setIsGenerating(true);
     setSuggestedAction({ type: "none" });
     try {
-      const response = await fetch("/api/companion/respond", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed, mode, councilRoleId: nextContext.councilRoleId, moodState, userId, contextPermissions: { ...DEFAULT_PASSPORT_CONTEXT_PERMISSIONS, ...(contextPermissions ?? {}) } }),
-      });
+      const response = await fetch("/api/companion/respond", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: trimmed, mode, councilRoleId: nextContext.councilRoleId, moodState, userId, contextPermissions: { ...DEFAULT_PASSPORT_CONTEXT_PERMISSIONS, ...(contextPermissions ?? {}) } }) });
       if (!response.ok) throw new Error("companion response failed");
       const data = (await response.json()) as CompanionApiResponse;
       const reply = (data.reply || FALLBACK_COPY).trim().slice(0, 520);
@@ -150,13 +143,15 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
     }
   };
 
-  const openAction = (action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror" | "openShadow" | "openLegacy") => {
+  const openAction = (action?: CompanionQuickPrompt["action"]) => {
     if (action === "openLifeMap" && onOpenLifeMap) { onClose(); onOpenLifeMap(); }
     if (action === "openPassport" && onOpenPassport) { onClose(); onOpenPassport(); }
     if (action === "openGround" && onOpenGround) { onClose(); onOpenGround(); }
     if (action === "openMirror" && onOpenMirror) { onClose(); onOpenMirror(); }
     if (action === "openShadow" && onOpenShadow) { onClose(); onOpenShadow(); }
     if (action === "openLegacy" && onOpenLegacy) { onClose(); onOpenLegacy(); }
+    if (action === "openExport" && onOpenExport) { onClose(); onOpenExport(); }
+    if (action === "suggestRitual" && onSuggestRitual) { onClose(); onSuggestRitual(); }
   };
 
   const runSuggestedAction = () => {
@@ -168,52 +163,28 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
   const handleQuickPrompt = (prompt: CompanionQuickPrompt) => {
     if (prompt.mode) changeMode(prompt.mode);
     if (prompt.councilRoleId) changeRole(prompt.councilRoleId);
-    if (prompt.action) {
-      void appendRemoteExchange(prompt.prompt, "quickPrompt");
-      window.setTimeout(() => openAction(prompt.action), reduceMotion ? 0 : 260);
-      return;
-    }
+    if (prompt.action) { void appendRemoteExchange(prompt.prompt, "quickPrompt"); window.setTimeout(() => openAction(prompt.action), reduceMotion ? 0 : 260); return; }
     void appendRemoteExchange(prompt.prompt, "quickPrompt");
   };
 
   const handleSubmit = () => void appendRemoteExchange(input, "manual");
   const handleInputKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit();
-    }
+    if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); handleSubmit(); }
   };
 
   return (
     <AnimatePresence>
       {isOpen ? (
         <>
-          <motion.div className={styles.backdrop} aria-hidden="true" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <button type="button" tabIndex={-1} aria-label="Close Companion" className={styles.scrim} onClick={onClose} />
-          </motion.div>
+          <motion.div className={styles.backdrop} aria-hidden="true" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><button type="button" tabIndex={-1} aria-label="Close Companion" className={styles.scrim} onClick={onClose} /></motion.div>
           <motion.section role="dialog" aria-modal="true" aria-labelledby="urai-companion-title" className={styles.shell} data-generating={isGenerating ? "true" : "false"} initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 34, scale: 0.98 }} animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: isGenerating ? 1.006 : 1 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 26, scale: 0.98 }} transition={{ duration: 0.24, ease: "easeOut" }}>
-            <header className={styles.header}>
-              <div className={styles.brand}>
-                <h2 id="urai-companion-title" className={styles.title}>URAI</h2>
-                <span className={styles.subtitle}>{mode === "council" ? `${activeRole?.name ?? "Guide"} · ${activeRole?.tone ?? "Calm"}` : "Companion · calm voice"}</span>
-              </div>
-              <button type="button" aria-label="Close Companion" className={styles.closeButton} onClick={onClose}>×</button>
-            </header>
-            <div className={styles.modeToggle} aria-label="Companion mode">
-              <button type="button" className={`${styles.modeButton} ${mode === "companion" ? styles.activeMode : ""}`} onClick={() => changeMode("companion")}>Companion</button>
-              <button type="button" className={`${styles.modeButton} ${mode === "council" ? styles.activeMode : ""}`} onClick={() => changeMode("council")}>Council</button>
-            </div>
+            <header className={styles.header}><div className={styles.brand}><h2 id="urai-companion-title" className={styles.title}>URAI</h2><span className={styles.subtitle}>{mode === "council" ? `${activeRole?.name ?? "Guide"} · ${activeRole?.tone ?? "Calm"}` : "Companion · calm voice"}</span></div><button type="button" aria-label="Close Companion" className={styles.closeButton} onClick={onClose}>×</button></header>
+            <div className={styles.modeToggle} aria-label="Companion mode"><button type="button" className={`${styles.modeButton} ${mode === "companion" ? styles.activeMode : ""}`} onClick={() => changeMode("companion")}>Companion</button><button type="button" className={`${styles.modeButton} ${mode === "council" ? styles.activeMode : ""}`} onClick={() => changeMode("council")}>Council</button></div>
             {mode === "council" ? <div className={styles.roleRow} aria-label="Council roles">{councilRoles.map((role) => <button key={role.id} type="button" className={`${styles.roleButton} ${role.id === activeRole?.id ? styles.activeRole : ""}`} aria-label={`Select ${role.name}`} onClick={() => changeRole(role.id)}>{role.name}</button>)}</div> : null}
-            <div ref={messagesRef} className={styles.messages} aria-live="polite">
-              {messages.map((message) => <p key={message.id} className={`${styles.message} ${message.role === "user" ? styles.userMessage : styles.uraiMessage}`}>{message.text}</p>)}
-              {isGenerating ? <p className={`${styles.message} ${styles.uraiMessage} ${styles.thinkingMessage}`}>Listening…</p> : null}
-            </div>
+            <div ref={messagesRef} className={styles.messages} aria-live="polite">{messages.map((message) => <p key={message.id} className={`${styles.message} ${message.role === "user" ? styles.userMessage : styles.uraiMessage}`}>{message.text}</p>)}{isGenerating ? <p className={`${styles.message} ${styles.uraiMessage} ${styles.thinkingMessage}`}>Listening…</p> : null}</div>
             {activeActionLabel ? <div className={styles.actionRow}><button type="button" className={styles.actionChip} onClick={runSuggestedAction}>{activeActionLabel}</button></div> : null}
             <div className={styles.quickPromptRow} aria-label="Quick prompts">{quickPrompts.map((prompt) => <button key={prompt.id} type="button" className={styles.quickPrompt} onClick={() => handleQuickPrompt(prompt)}>{prompt.label}</button>)}</div>
-            <form className={styles.form} onSubmit={(event) => { event.preventDefault(); handleSubmit(); }}>
-              <textarea ref={inputRef} aria-label="Message URAI" className={styles.input} value={input} maxLength={MAX_MESSAGE_LENGTH} rows={1} placeholder="Say what you want to see…" onChange={(event) => setInput(event.target.value)} onKeyDown={handleInputKeyDown} />
-              <button type="submit" className={styles.sendButton} disabled={isGenerating || input.trim().length === 0}>Send</button>
-            </form>
+            <form className={styles.form} onSubmit={(event) => { event.preventDefault(); handleSubmit(); }}><textarea ref={inputRef} aria-label="Message URAI" className={styles.input} value={input} maxLength={MAX_MESSAGE_LENGTH} rows={1} placeholder="Say what you want to see…" onChange={(event) => setInput(event.target.value)} onKeyDown={handleInputKeyDown} /><button type="submit" className={styles.sendButton} disabled={isGenerating || input.trim().length === 0}>Send</button></form>
           </motion.section>
         </>
       ) : null}
