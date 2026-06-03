@@ -25,6 +25,7 @@ type UraiCompanionShellProps = {
   onOpenGround?: () => void;
   onOpenMirror?: () => void;
   onOpenShadow?: () => void;
+  onOpenLegacy?: () => void;
 };
 
 const MAX_MESSAGE_LENGTH = 500;
@@ -52,7 +53,7 @@ function actionLabel(action?: SuggestedAction): string | null {
   return null;
 }
 
-export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror, onOpenShadow }: UraiCompanionShellProps) {
+export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion", moodState = "luminous", userId, contextPermissions, onOpenLifeMap, onOpenPassport, onOpenGround, onOpenMirror, onOpenShadow, onOpenLegacy }: UraiCompanionShellProps) {
   const reduceMotion = useReducedMotion();
   const voice = useUraiVoice();
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -149,27 +150,13 @@ export function UraiCompanionShell({ isOpen, onClose, initialMode = "companion",
     }
   };
 
-  const openAction = (action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror" | "openShadow") => {
-    if (action === "openLifeMap" && onOpenLifeMap) {
-      onClose();
-      onOpenLifeMap();
-    }
-    if (action === "openPassport" && onOpenPassport) {
-      onClose();
-      onOpenPassport();
-    }
-    if (action === "openGround" && onOpenGround) {
-      onClose();
-      onOpenGround();
-    }
-    if (action === "openMirror" && onOpenMirror) {
-      onClose();
-      onOpenMirror();
-    }
-    if (action === "openShadow" && onOpenShadow) {
-      onClose();
-      onOpenShadow();
-    }
+  const openAction = (action?: "openLifeMap" | "openPassport" | "openGround" | "openMirror" | "openShadow" | "openLegacy") => {
+    if (action === "openLifeMap" && onOpenLifeMap) { onClose(); onOpenLifeMap(); }
+    if (action === "openPassport" && onOpenPassport) { onClose(); onOpenPassport(); }
+    if (action === "openGround" && onOpenGround) { onClose(); onOpenGround(); }
+    if (action === "openMirror" && onOpenMirror) { onClose(); onOpenMirror(); }
+    if (action === "openShadow" && onOpenShadow) { onClose(); onOpenShadow(); }
+    if (action === "openLegacy" && onOpenLegacy) { onClose(); onOpenLegacy(); }
   };
 
   const runSuggestedAction = () => {
