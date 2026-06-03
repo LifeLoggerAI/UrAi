@@ -55,7 +55,7 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
   const openOrb = async () => { await sound.playOrbTap(); void voice.playVoiceLine("orb.tap", { priority: "normal", forceCaption: !voice.voiceEnabled }); onOrbOpen?.(); };
   const openGround = async () => { await sound.playGroundOpen(); void voice.playVoiceLine("ground.open", { priority: "portal" }); onGroundOpen?.(); };
   const openPassport = async () => { await sound.playPortalOpen("passport"); void voice.playVoiceLine("portal.passport", { priority: "portal" }); onPassportOpen?.(); };
-  const openSettings = async () => { await sound.playOneShot("soft-select", { category: "ui", volume: 0.12 }); onSettingsOpen?.(); };
+  const openSettings = async () => { await sound.playSoftTap(); onSettingsOpen?.(); };
 
   return (
     <div className={`urai-scene-root relative min-h-screen w-full overflow-hidden bg-[radial-gradient(circle_at_50%_32%,#203963_0%,#101a38_48%,#050714_100%)] ${className}`} data-mood={moodState}>
@@ -94,9 +94,7 @@ export function LayeredGenesisScene({ moodState = "luminous", onSkyOpen, onOrbOp
       <SafeLayerImage layerKey="settingsGlyph" src={getAssetPath("settingsGlyph")} alt="" className={`${portalClass} left-[var(--passport-offset)] bottom-[var(--passport-offset)] z-30 h-10 w-10 opacity-45`} />
       <SafeLayerImage layerKey="orbShadow" src={getAssetPath("orbShadow")} alt="" className="pointer-events-none absolute left-[var(--orb-x)] top-[var(--orb-y)] z-30 h-[calc(var(--orb-size)*1.35)] w-[calc(var(--orb-size)*1.35)] -translate-x-1/2 -translate-y-1/2 select-none object-contain opacity-55" />
       {isCompanionOpen ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-35 bg-black/20 backdrop-blur-[2px]" /> : null}
-      <div className="absolute left-[var(--orb-x)] top-[var(--orb-y)] z-40 -translate-x-1/2 -translate-y-1/2" style={{ width: "var(--orb-size)", height: "var(--orb-size)" }}>
-        <OrbLayer intensity={isCompanionOpen ? Math.min(1.18, mood.orbIntensity + 0.18) : mood.orbIntensity} interactive onClick={openOrb} isAwake={isCompanionOpen} />
-      </div>
+      <div className="absolute left-[var(--orb-x)] top-[var(--orb-y)] z-40 -translate-x-1/2 -translate-y-1/2" style={{ width: "var(--orb-size)", height: "var(--orb-size)" }}><OrbLayer intensity={isCompanionOpen ? Math.min(1.18, mood.orbIntensity + 0.18) : mood.orbIntensity} interactive onClick={openOrb} isAwake={isCompanionOpen} /></div>
       <SafeLayerImage layerKey="foregroundVignette" src={getAssetPath("foregroundVignette")} alt="" priority className={`${baseImageClass} mix-blend-multiply`} style={{ opacity: "var(--vignette-opacity)" }} />
       <SafeLayerImage layerKey="edgeDarken" src={getAssetPath("edgeDarken")} alt="" className={`${baseImageClass} mix-blend-multiply`} style={{ opacity: 0.5 }} />
       <SafeLayerImage layerKey="cinematicSoftFrame" src={getAssetPath("cinematicSoftFrame")} alt="" className={`${baseImageClass} mix-blend-soft-light`} style={{ opacity: 0.42 }} />
