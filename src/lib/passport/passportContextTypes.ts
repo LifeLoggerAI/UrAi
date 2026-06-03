@@ -8,6 +8,11 @@ export type PassportContextPermissions = {
   allowGmailContext: boolean;
   allowDeviceBehaviorContext: boolean;
   allowLongTermPatternContext: boolean;
+  allowShadowCloudSync: boolean;
+  allowLegacyCloudSync: boolean;
+  allowCompanionSessionMemory: boolean;
+  allowCompanionCloudSync: boolean;
+  allowExportMetadataCloudSync: boolean;
 };
 
 export const DEFAULT_PASSPORT_CONTEXT_PERMISSIONS: PassportContextPermissions = {
@@ -20,6 +25,11 @@ export const DEFAULT_PASSPORT_CONTEXT_PERMISSIONS: PassportContextPermissions = 
   allowGmailContext: false,
   allowDeviceBehaviorContext: false,
   allowLongTermPatternContext: false,
+  allowShadowCloudSync: false,
+  allowLegacyCloudSync: false,
+  allowCompanionSessionMemory: false,
+  allowCompanionCloudSync: false,
+  allowExportMetadataCloudSync: false,
 };
 
 export function normalizePassportContextPermissions(permissions?: Partial<PassportContextPermissions> | null): PassportContextPermissions {
