@@ -1,116 +1,75 @@
-import { CompanionMessage, CompanionMode } from "./companionTypes";
-import { GenesisMoodState } from "../types";
+import type { CompanionMessage, LocalCompanionResponderContext } from "./companionTypes";
 
-type LocalCompanionResponderInput = {
-  text: string;
-  source?: CompanionMessage["source"];
-};
-
-type LocalCompanionResponderContext = {
-  mode: CompanionMode;
-  councilRoleId?: string;
-  moodState?: GenesisMoodState;
-};
-
-const localUUID = () => {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-        return crypto.randomUUID();
-    }
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-};
-
-
-export function generateLocalCompanionResponse(
-  input: LocalCompanionResponderInput,
-  context: LocalCompanionResponderContext
-): CompanionMessage {
-  const { text } = input;
-  const { mode, councilRoleId } = context;
-
-  let responseText = "I’m here. Say a little or a lot.";
-  let responseCouncilRoleId = councilRoleId;
-
-  const lowercasedText = text.toLowerCase();
-
-  if (
-    lowercasedText.includes("privacy") ||
-    lowercasedText.includes("data") ||
-    lowercasedText.includes("permission") ||
-    lowercasedText.includes("control") ||
-    lowercasedText.includes("passport") ||
-    lowercasedText.includes("settings")
-  ) {
-    responseCouncilRoleId = "guardian";
-  } else if (
-    lowercasedText.includes("pattern") ||
-    lowercasedText.includes("repeat") ||
-    lowercasedText.includes("why") ||
-    lowercasedText.includes("mirror") ||
-    lowercasedText.includes("reflect")
-  ) {
-    responseCouncilRoleId = "mirror";
-  } else if (
-    lowercasedText.includes("map") ||
-    lowercasedText.includes("what is this") ||
-    lowercasedText.includes("where") ||
-    lowercasedText.includes("explain") ||
-    lowercasedText.includes("orient") ||
-    lowercasedText.includes("start") ||
-    lowercasedText.includes("first")
-  ) {
-    responseCouncilRoleId = "guide";
+function createId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
   }
+  return `urai-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
+function normalizeInput(input: string): string {
+  return input.trim().toLowerCase();
+}
 
-  if (mode === "council" || responseCouncilRoleId) {
-    switch (responseCouncilRoleId) {
-      case "guide":
-        responseText = "Let’s orient first. Are you trying to understand, decide, or calm things down?";
-        if (lowercasedText.includes("start") || lowercasedText.includes("first")) {
-          responseText = "Start with one thing. What feels most useful to see right now?";
-        }
-        break;
-      case "mirror":
-        responseText = "I can reflect the pattern, but I won’t judge it. What part should we look at?";
-         if (lowercasedText.includes("repeating")) {
-            responseText = "We can look at what keeps repeating, gently and clearly.";
-        }
-        break;
-      case "guardian":
-        responseText = "You stay in control here. We can pause, hide, or narrow what URAI uses.";
-        if (lowercasedText.includes("control") || lowercasedText.includes("decide")) {
-            responseText = "You decide what URAI can use. We can keep this narrow.";
-        }
-        break;
-      default:
-        responseText = "We can keep this simple. What do you want to look at first?";
-        break;
-    }
-  } else {
-      if (
-        lowercasedText.includes("calm") ||
-        lowercasedText.includes("overwhelm") ||
-        lowercasedText.includes("anxious") ||
-        lowercasedText.includes("stress")
-      ) {
-        responseText = "Let's take a moment. We can focus on just one thing to ground us.";
-      } else if (lowercasedText.includes("step")) {
-        responseText = "We can turn this into a small next step.";
-      } else {
-        responseText = "I’m here. Say a little or a lot.";
+function chooseResponse(input: string, context: LocalCompanionResponderContext): string {
+  const normalized = normalizeInput(input);
+
+  if (context.mode === "council") {
+    if (context.councilRoleId === "guardian") {
+      if (normalized.includes("passport") || normalized.includes("settings") || normalized.includes("control")) {
+        return "You decide what URAI can use. We can open the controls and narrow it.";
       }
+      return "You stay in control here. We can pause, hide, or narrow what URAI uses.";
+    }
+
+    if (context.councilRoleId === "mirror") {
+      if (normalized.includes("repeat") || normalized.includes("pattern")) {
+        return "I can reflect the pattern without judging it. Name the part that keeps returning.";
+      }
+      return "I can reflect this gently. What part should we look at first?";
+    }
+
+    if (context.councilRoleId === "guide") {
+      if (normalized.includes("looking") || normalized.includes("what is") || normalized.includes("orient")) {
+        return "This is your Genesis scene. Start with sky, Ground, Passport, or the orb.";
+      }
+      return "Let's orient first. Are you trying to understand, decide, or calm things down?";
+    }
   }
 
+  if (normalized.includes("calm") || normalized.includes("anxious") || normalized.includes("overwhelmed")) {
+    return "We can keep this small. One breath, one choice, one next step.";
+  }
 
+  if (normalized.includes("life map") || normalized.includes("map")) {
+    return "The Life Map opens through the sky. I can help you move there when you're ready.";
+  }
+
+  if (normalized.includes("passport") || normalized.includes("privacy") || normalized.includes("settings")) {
+    return "You decide what URAI can use. Passport is where those controls live.";
+  }
+
+  if (normalized.includes("what am i looking at") || normalized.includes("what is this")) {
+    return "This is Genesis: sky for your Life Map, Ground for roots, Passport for control, and the orb for URAI.";
+  }
+
+  const companionResponses = [
+    "I'm here. Say a little or a lot.",
+    "We can keep this simple. What do you want to look at first?",
+    "We can turn this into a small next step.",
+    "Stay close to what feels useful. We do not need to rush.",
+  ];
+
+  return companionResponses[Math.floor(Math.random() * companionResponses.length)];
+}
+
+export function generateLocalCompanionResponse(input: string, context: LocalCompanionResponderContext): CompanionMessage {
   return {
-    id: localUUID(),
+    id: createId(),
     role: "urai",
     mode: context.mode,
-    councilRoleId: responseCouncilRoleId,
-    text: responseText,
+    councilRoleId: context.mode === "council" ? context.councilRoleId : undefined,
+    text: chooseResponse(input, context),
     createdAt: new Date().toISOString(),
     moodState: context.moodState,
     source: "systemWhisper",
