@@ -1,17 +1,40 @@
 import { uraiAudioEngine } from "./uraiAudioEngine";
 
-export async function playGentleNotification(): Promise<void> {
-  await uraiAudioEngine.playOneShot("gentle-chime", { category: "notification", volume: 0.44 });
+type NotificationSoundOptions = {
+  quietHours?: boolean;
+  allowDuringQuietHours?: boolean;
+};
+
+function canPlayNotificationSound(options: NotificationSoundOptions = {}): boolean {
+  return !(options.quietHours && !options.allowDuringQuietHours);
 }
 
-export async function playPassportPulse(): Promise<void> {
-  await uraiAudioEngine.playOneShot("passport-pulse", { category: "notification", volume: 0.4 });
+export async function playGentleNotification(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("gentle-chime", { category: "notification", volume: 0.26 });
 }
 
-export async function playMoodForecastChime(): Promise<void> {
-  await uraiAudioEngine.playOneShot("gentle-chime", { category: "notification", volume: 0.34 });
+export async function playPassportPulse(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("passport-pulse", { category: "notification", volume: 0.22 });
 }
 
-export async function playRecoveryBloomChime(): Promise<void> {
-  await uraiAudioEngine.playOneShot("soft-bloom", { category: "transition", volume: 0.42 });
+export async function playMoodForecastChime(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("gentle-chime", { category: "notification", volume: 0.2 });
+}
+
+export async function playRecoveryBloomChime(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("recovery-bloom", { category: "notification", volume: 0.22 });
+}
+
+export async function playRitualReadyChime(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("ritual-ready", { category: "notification", volume: 0.2 });
+}
+
+export async function playExportReadyChime(options?: NotificationSoundOptions): Promise<void> {
+  if (!canPlayNotificationSound(options)) return;
+  await uraiAudioEngine.playOneShot("export-ready", { category: "notification", volume: 0.18 });
 }
