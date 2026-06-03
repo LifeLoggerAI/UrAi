@@ -1,66 +1,29 @@
 import { NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { COLLECTIONS } from "@/lib/shared/urai-contracts";
-import {
-  checkWaitlistRateLimit,
-  normalizeWaitlistSignup,
-  rateLimitKeyForRequest,
-  waitlistIdForEmail,
-  type WaitlistRequest
-} from "@/lib/waitlist";
+import { checkWaitlistRateLimit, normalizeWaitlistSignup, rateLimitKeyForRequest, waitlistIdForEmail, type WaitlistRequest } from "@/lib/waitlist";
 
 export async function POST(req: Request) {
   try {
     const limit = checkWaitlistRateLimit(rateLimitKeyForRequest(req));
-    if (!limit.ok) {
-      return NextResponse.json(
-        { error: "Too many waitlist attempts. Please try again soon." },
-        { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } }
-      );
-    }
-
+    if (!limit.ok) return NextResponse.json({ error: "Please try again soon." }, { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } });
     const body = (await req.json()) as WaitlistRequest;
     const normalized = normalizeWaitlistSignup(body);
-
-    if (!normalized) {
-      return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
-    }
-
+    if (!normalized) return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
     const now = new Date().toISOString();
-    const signup = {
-      ...normalized,
-      createdAt: now,
-      updatedAt: now,
-      status: "joined" as const
-    };
-
+    const signup = { ...normalized, consent: true, createdAt: now, updatedAt: now, status: "joined" as const };
     const dryRun = process.env.URAI_WAITLIST_DRY_RUN === "1";
     const db = dryRun ? null : getAdminDb();
-    if (!db) {
-      return NextResponse.json({ ok: true, mode: "dry-run", signup });
-    }
-
+    if (!db) return NextResponse.json({ ok: true, mode: "dry-run" });
     const docId = waitlistIdForEmail(normalized.email);
     const docRef = db.collection(COLLECTIONS.waitlistSignups).doc(docId);
     const existing = await docRef.get();
-
     if (existing.exists) {
-      await docRef.set(
-        {
-          email: normalized.email,
-          updatedAt: now,
-          lastSource: normalized.source,
-          lastHandle: normalized.handle,
-          lastIntent: normalized.intent,
-          status: "joined"
-        },
-        { merge: true }
-      );
+      await docRef.set({ email: normalized.email, updatedAt: now, name: normalized.name ?? null, interestType: normalized.interestType ?? null, lastSource: normalized.source, lastHandle: normalized.handle, lastIntent: normalized.intent, consent: true, status: "joined" }, { merge: true });
       return NextResponse.json({ ok: true, id: docId, duplicate: true });
     }
-
     await docRef.set(signup);
-    return NextResponse.json({ ok: true, id: docId, signup });
+    return NextResponse.json({ ok: true, id: docId });
   } catch {
     return NextResponse.json({ error: "Unable to join waitlist." }, { status: 400 });
   }
