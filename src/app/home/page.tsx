@@ -1,10 +1,5 @@
-import { HomeScene } from "@/components/urai/home/HomeScene";
+import UraiResolvedHomeScene from '@/components/urai/UraiResolvedHomeScene';
 
-export const metadata = {
-  title: "URAI Genesis",
-  description: "Your life, quietly organized.",
-};
-
-export default function Page() {
-  return <HomeScene />;
+export default function HomePage() {
+  return <UraiResolvedHomeScene />;
 }

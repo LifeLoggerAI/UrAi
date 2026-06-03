@@ -194,6 +194,7 @@ service cloud.firestore {
     match /socialGraph/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /obscuraSignals/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /mentalLoadScores/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /cognitiveStress/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /councilSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /narratorMessages/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /focusSessions/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -245,7 +246,7 @@ service cloud.firestore {
       // Pass 24 account foundation: users can only read/write their own account document.
       // Account creation must not grant protected roles or enable sensitive Passport layers.
       allow read: if isSelf(uid);
-      allow create, update: if isSelf(uid) && validUserProfile(uid);
+      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
       allow delete: if isSelf(uid);
       match /profile/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && hasNoProtectedUserFields(); allow delete: if false; }
       match /homeWorld/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && id == 'state' && validHomeWorldState(uid); allow delete: if false; }
