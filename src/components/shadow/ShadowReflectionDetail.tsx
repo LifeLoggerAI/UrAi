@@ -1,6 +1,8 @@
 "use client";
 
+import { legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
 import type { ShadowReflection, ShadowViewMode } from "@/lib/shadow/shadowTypes";
+import { useUraiLegacy } from "@/providers/UraiLegacyProvider";
 
 type ShadowReflectionDetailProps = {
   reflection: ShadowReflection | null;
@@ -26,8 +28,14 @@ function summaryFor(reflection: ShadowReflection, mode: ShadowViewMode): string 
 }
 
 export function ShadowReflectionDetail({ reflection, viewMode, onClose, onOpenGround, onOpenPassport, onTalkToGuardian, onSoften, onHide }: ShadowReflectionDetailProps) {
+  const legacy = useUraiLegacy();
   if (!reflection) return <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/35 p-4 text-sm text-white/75 backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[360px] md:bottom-auto">Select a protected reflection, or keep Shadow sealed.</aside>;
   const locked = reflection.visibility === "locked";
+  const addToLegacy = () => {
+    if (locked) return;
+    legacy.addItemToLegacy(legacyCandidateFromSummary({ id: `legacy-shadow-${reflection.id}`, type: "shadow_reflection", title: titleFor(reflection, "soft"), summary: summaryFor(reflection, "soft"), sourceLayerIds: reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["shadow"], tone: "solemn", linkedShadowReflectionId: reflection.id }));
+    legacy.openLegacy();
+  };
   const runSuggested = () => {
     if (reflection.suggestedAction === "open_ground") onOpenGround?.();
     if (reflection.suggestedAction === "talk_to_guardian") onTalkToGuardian?.();
@@ -53,6 +61,7 @@ export function ShadowReflectionDetail({ reflection, viewMode, onClose, onOpenGr
         {locked ? <button type="button" onClick={onOpenPassport} className="rounded-full bg-sky-200/15 px-3 py-2 text-xs text-white/84">Open Passport</button> : null}
         {reflection.suggestedAction && reflection.suggestedAction !== "none" ? <button type="button" onClick={runSuggested} className="rounded-full bg-white/10 px-3 py-2 text-xs text-white/84">Suggested next step</button> : null}
         <button type="button" onClick={onTalkToGuardian} className="rounded-full bg-white/[0.07] px-3 py-2 text-xs text-white/68">Talk to Guardian</button>
+        {!locked ? <button type="button" onClick={addToLegacy} className="rounded-full bg-amber-200/14 px-3 py-2 text-xs text-white/84">Add to Legacy</button> : null}
         {reflection.userCanSoften ? <button type="button" onClick={onSoften} className="rounded-full bg-white/[0.06] px-3 py-2 text-xs text-white/62">Soften view</button> : null}
         {reflection.userCanHide ? <button type="button" onClick={onHide} className="rounded-full bg-white/[0.05] px-3 py-2 text-xs text-white/56">Hide</button> : null}
       </div>
