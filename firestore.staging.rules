@@ -1,0 +1,128 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    function isSelf(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function ownsExistingResource() {
+      return isSignedIn()
+        && (
+          resource.data.ownerUid == request.auth.uid
+          || resource.data.actorUid == request.auth.uid
+          || resource.data.userId == request.auth.uid
+          || resource.data.uid == request.auth.uid
+        );
+    }
+
+    function ownsIncomingResource() {
+      return isSignedIn()
+        && (
+          request.resource.data.ownerUid == request.auth.uid
+          || request.resource.data.actorUid == request.auth.uid
+          || request.resource.data.userId == request.auth.uid
+          || request.resource.data.uid == request.auth.uid
+        );
+    }
+
+    function hasNoProtectedUserFields() {
+      return !('entitlementTier' in request.resource.data)
+        && !('roles' in request.resource.data)
+        && !('admin' in request.resource.data)
+        && !('founder' in request.resource.data)
+        && !('internal' in request.resource.data)
+        && !('internalOverride' in request.resource.data)
+        && !('isAdmin' in request.resource.data)
+        && !('isFounder' in request.resource.data);
+    }
+
+    function validUserProfile(uid) {
+      return request.resource.data.userId == uid
+        && hasNoProtectedUserFields()
+        && (!('accountStatus' in request.resource.data) || request.resource.data.accountStatus in ['active', 'signed_out', 'pending_deletion', 'deleted', 'error'])
+        && (!('authMode' in request.resource.data) || request.resource.data.authMode in ['local', 'anonymous', 'authenticated'])
+        && (!('cloudSyncEnabled' in request.resource.data) || request.resource.data.cloudSyncEnabled is bool)
+        && (!('passportInitialized' in request.resource.data) || request.resource.data.passportInitialized is bool)
+        && (!('onboardingCompleted' in request.resource.data) || request.resource.data.onboardingCompleted is bool);
+    }
+
+    function createsPublicSubmission() {
+      return request.resource.data.createdAt != null;
+    }
+
+    function validWaitlistSubmission() {
+      return createsPublicSubmission()
+        && request.resource.data.keys().hasOnly(['email', 'name', 'source', 'createdAt', 'status'])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() >= 5
+        && request.resource.data.email.size() <= 254
+        && (!('name' in request.resource.data) || request.resource.data.name is string)
+        && (!('source' in request.resource.data) || request.resource.data.source is string)
+        && (!('status' in request.resource.data) || request.resource.data.status in ['new', 'pending', 'invited']);
+    }
+
+    match /staging_users/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create, update: if isSelf(uid) && validUserProfile(uid);
+      allow delete: if false;
+    }
+
+    match /staging_events/{id} {
+      allow read: if isAdmin() || ownsExistingResource();
+      allow create: if ownsIncomingResource();
+      allow update: if isAdmin() || (ownsExistingResource() && ownsIncomingResource());
+      allow delete: if isAdmin();
+    }
+
+    match /staging_jobs/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    match /staging_waitlist/{id} {
+      allow read: if isAdmin();
+      allow create: if validWaitlistSubmission();
+      allow update, delete: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create, update: if isSelf(uid) && validUserProfile(uid);
+      allow delete: if false;
+
+      match /{document=**} {
+        allow read, write: if isSelf(uid) || isAdmin();
+      }
+    }
+
+    match /profiles/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create, update: if isSelf(uid) && hasNoProtectedUserFields();
+      allow delete: if false;
+    }
+
+    match /waitlistEntries/{id} {
+      allow read: if isAdmin();
+      allow create: if createsPublicSubmission();
+      allow update, delete: if false;
+    }
+
+    match /contactMessages/{id} {
+      allow read: if isAdmin();
+      allow create: if createsPublicSubmission();
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
