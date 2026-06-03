@@ -1,5 +1,6 @@
 import { normalizePassportContextPermissions, type PassportContextPermissions } from "@/lib/passport/passportContextTypes";
 import type { PassportDataLayerId } from "@/lib/lifemap/lifeMapTypes";
+import { canExportLayer, getPrivacyBlockReason, type PrivacyLayerId } from "@/lib/privacy/privacyRulesEngine";
 import type { ExportArtifact, ExportCandidate, ExportReviewIssue, ExportReviewResult } from "./exportTypes";
 
 type ExportPassportProfile = {
@@ -15,20 +16,19 @@ type ExportPassportProfile = {
 const now = () => new Date().toISOString();
 const SENSITIVE_LAYERS: PassportDataLayerId[] = ["shadow", "relationship", "location", "audioTranscript", "gmail", "deviceBehavior", "longTermPattern"];
 
+function mapExportLayer(layer: PassportDataLayerId): PrivacyLayerId {
+  if (layer === "relationship") return "relationships";
+  if (layer === "audioTranscript") return "audioTranscript";
+  if (layer === "longTermPattern") return "longTermPattern";
+  if (layer === "memory" || layer === "milestone" || layer === "ritual" || layer === "recovery") return "memory";
+  return layer as PrivacyLayerId;
+}
+
 function canUseLayer(profile: ExportPassportProfile | null | undefined, layer: PassportDataLayerId): boolean {
-  if (layer === "system" || layer === "passport") return true;
-  if (profile?.enabledLayers?.[layer] === true) return true;
+  if (layer === "system") return true;
+  if (layer === "passport") return true;
   const p = normalizePassportContextPermissions(profile?.contextPermissions);
-  if (layer === "memory" || layer === "legacy" || layer === "ritual" || layer === "milestone") return p.allowMemoryContext;
-  if (layer === "mood" || layer === "recovery") return p.allowMoodContext;
-  if (layer === "relationship") return p.allowRelationshipContext;
-  if (layer === "location") return p.allowLocationContext;
-  if (layer === "audioTranscript") return p.allowAudioTranscriptContext;
-  if (layer === "gmail") return p.allowGmailContext;
-  if (layer === "calendar") return p.allowCalendarContext;
-  if (layer === "deviceBehavior") return p.allowDeviceBehaviorContext;
-  if (layer === "shadow" || layer === "longTermPattern") return p.allowLongTermPatternContext;
-  return false;
+  return canExportLayer(mapExportLayer(layer), p);
 }
 
 function createArtifact(candidate: ExportCandidate, profile: ExportPassportProfile | null | undefined): ExportArtifact {
@@ -58,13 +58,15 @@ export function reviewExportCandidate(candidate: ExportCandidate, profile: Expor
   const issues: ExportReviewIssue[] = [];
 
   if (!profile?.exportEnabled) {
-    issues.push({ id: "export-off", severity: "blocked", title: "Export is closed", message: "Export must be opened in Passport before anything can be created." });
+    issues.push({ id: "export-off", severity: "blocked", title: "Export is closed", message: "Review what leaves URAI. Export must be opened in Passport before anything can be created." });
   }
   if (!artifact.userApproved) {
     issues.push({ id: "approval-required", severity: "blocked", title: "Approval required", message: "Exports are never created automatically. Approve this artifact first." });
   }
   for (const layer of artifact.sourceLayerIds) {
-    if (!canUseLayer(profile, layer)) issues.push({ id: `layer-${layer}`, severity: "blocked", title: "Layer is closed", message: "This source layer is not open for export.", sourceLayerId: layer });
+    if (!canUseLayer(profile, layer)) {
+      issues.push({ id: `layer-${layer}`, severity: "blocked", title: "Layer is closed", message: getPrivacyBlockReason(mapExportLayer(layer), "export"), sourceLayerId: layer });
+    }
   }
   if (artifact.includesShadow && !profile?.shadowExportConfirmed) {
     issues.push({ id: "shadow-confirmation", severity: "blocked", title: "Shadow needs extra confirmation", message: "Shadow-linked exports require a separate confirmation and softened summary only.", sourceLayerId: "shadow" });
