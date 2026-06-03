@@ -26,6 +26,7 @@ type UraiCloudSyncContextValue = {
 const UraiCloudSyncContext = createContext<UraiCloudSyncContextValue | null>(null);
 const ENABLED_KEY = "urai.cloudSync.enabled";
 const LAST_SYNC_KEY = "urai.cloudSync.lastSyncedAt";
+const SYNC_PRIVACY_COPY = "Sync copies only approved URAI state to your account. Passport still controls sensitive layers.";
 
 export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
   const auth = useUraiAuth();
@@ -57,19 +58,7 @@ export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
     setSyncStatus("saving");
     try {
       const now = new Date().toISOString();
-      await setDoc(
-        doc(client.db, path),
-        {
-          id: path.split("/").pop() ?? "profile",
-          userId: auth.userId,
-          data,
-          updatedAt: now,
-          createdAt: now,
-          schemaVersion: CURRENT_SCHEMA_VERSION,
-          syncScope: "approved-safe-state",
-        },
-        { merge: true },
-      );
+      await setDoc(doc(client.db, path), { id: path.split("/").pop() ?? "profile", userId: auth.userId, data, updatedAt: now, createdAt: now, schemaVersion: CURRENT_SCHEMA_VERSION, syncScope: "approved-safe-state", privacyReminder: SYNC_PRIVACY_COPY }, { merge: true });
       setSyncStatus("synced");
       setLastSyncedAt(now);
       writeLocal(true, now);
@@ -99,11 +88,7 @@ export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
   const syncNow = useCallback(async (): Promise<UraiSyncResult> => {
     if (!auth.userId) return { ok: false, status: "offline" };
     const now = new Date().toISOString();
-    return pushToCloud(getSyncStatePath(auth.userId), {
-      lastRequestedAt: now,
-      syncEnabled: true,
-      reminder: "Passport controls sensitive layers before sync.",
-    });
+    return pushToCloud(getSyncStatePath(auth.userId), { lastRequestedAt: now, syncEnabled: true, reminder: SYNC_PRIVACY_COPY });
   }, [auth.userId, pushToCloud]);
 
   const enableCloudSync = useCallback(async (): Promise<UraiSyncResult> => {
@@ -118,11 +103,7 @@ export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
       return { ok: false, status: "idle", errorMessage: "Sign in only if you want cloud sync." };
     }
     const now = new Date().toISOString();
-    return pushToCloud(getSyncStatePath(auth.userId), {
-      enabledAt: now,
-      syncEnabled: true,
-      passportReminder: "Sensitive layers stay closed unless Passport opens them.",
-    });
+    return pushToCloud(getSyncStatePath(auth.userId), { enabledAt: now, syncEnabled: true, passportReminder: SYNC_PRIVACY_COPY, sensitiveDefaults: "Shadow, Legacy, Companion memory, Export file upload, health, Gmail, calendar, transcripts, and location remain closed unless Passport opens them." });
   }, [auth.isAuthenticated, auth.isLocalOnly, auth.userId, client.db, pushToCloud, writeLocal]);
 
   const disableCloudSync = useCallback(() => {
@@ -134,19 +115,7 @@ export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
 
   const resolveConflict = useCallback(<T,>(local: T, remote: T, resolver?: (local: T, remote: T) => T): T => resolver ? resolver(local, remote) : local, []);
 
-  const value = useMemo<UraiCloudSyncContextValue>(() => ({
-    syncEnabled: canSync,
-    syncRequested,
-    syncStatus,
-    lastSyncedAt,
-    needsAccountForSync,
-    enableCloudSync,
-    disableCloudSync,
-    syncNow,
-    pullFromCloud,
-    pushToCloud,
-    resolveConflict,
-  }), [canSync, disableCloudSync, enableCloudSync, lastSyncedAt, needsAccountForSync, pullFromCloud, pushToCloud, resolveConflict, syncNow, syncRequested, syncStatus]);
+  const value = useMemo<UraiCloudSyncContextValue>(() => ({ syncEnabled: canSync, syncRequested, syncStatus, lastSyncedAt, needsAccountForSync, enableCloudSync, disableCloudSync, syncNow, pullFromCloud, pushToCloud, resolveConflict }), [canSync, disableCloudSync, enableCloudSync, lastSyncedAt, needsAccountForSync, pullFromCloud, pushToCloud, resolveConflict, syncNow, syncRequested, syncStatus]);
 
   return <UraiCloudSyncContext.Provider value={value}>{children}</UraiCloudSyncContext.Provider>;
 }
