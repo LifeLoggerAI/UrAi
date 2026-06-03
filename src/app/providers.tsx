@@ -9,6 +9,7 @@ import { UraiLegacyProvider } from '@/providers/UraiLegacyProvider';
 import { UraiLifeMapProvider } from '@/providers/UraiLifeMapProvider';
 import { UraiMirrorProvider } from '@/providers/UraiMirrorProvider';
 import { UraiNotificationProvider } from '@/providers/UraiNotificationProvider';
+import { UraiOnboardingProvider } from '@/providers/UraiOnboardingProvider';
 import { UraiRitualProvider } from '@/providers/UraiRitualProvider';
 import { UraiShadowProvider } from '@/providers/UraiShadowProvider';
 import { UraiVoiceProvider } from '@/providers/UraiVoiceProvider';
@@ -19,21 +20,23 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
     <UraiAudioProvider>
       <UraiVoiceProvider>
         <UraiNotificationProvider>
-          <UraiExportProvider>
-            <UraiRitualProvider>
-              <UraiGroundProvider>
-                <UraiLifeMapProvider>
-                  <UraiMirrorProvider>
-                    <UraiShadowProvider>
-                      <UraiLegacyProvider>
-                        <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
-                      </UraiLegacyProvider>
-                    </UraiShadowProvider>
-                  </UraiMirrorProvider>
-                </UraiLifeMapProvider>
-              </UraiGroundProvider>
-            </UraiRitualProvider>
-          </UraiExportProvider>
+          <UraiOnboardingProvider>
+            <UraiExportProvider>
+              <UraiRitualProvider>
+                <UraiGroundProvider>
+                  <UraiLifeMapProvider>
+                    <UraiMirrorProvider>
+                      <UraiShadowProvider>
+                        <UraiLegacyProvider>
+                          <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
+                        </UraiLegacyProvider>
+                      </UraiShadowProvider>
+                    </UraiMirrorProvider>
+                  </UraiLifeMapProvider>
+                </UraiGroundProvider>
+              </UraiRitualProvider>
+            </UraiExportProvider>
+          </UraiOnboardingProvider>
         </UraiNotificationProvider>
         <UraiCaptionBubble />
       </UraiVoiceProvider>
