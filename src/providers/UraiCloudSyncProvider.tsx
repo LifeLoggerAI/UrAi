@@ -1,17 +1,20 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getSyncStatePath } from "@/lib/firebase/firestoreCollections";
 import { getUraiFirebaseClient } from "@/lib/firebase/firebaseClient";
 import type { FirebaseSyncStatus, UraiSyncResult } from "@/lib/firebase/firebaseTypes";
 import { CURRENT_SCHEMA_VERSION } from "@/lib/firebase/schemaVersions";
+import { readUserScopedValue, writeUserScopedValue } from "@/lib/storage/userScopedStorage";
 import { useUraiAuth } from "@/providers/UraiAuthProvider";
 
 type UraiCloudSyncContextValue = {
   syncEnabled: boolean;
+  syncRequested: boolean;
   syncStatus: FirebaseSyncStatus;
   lastSyncedAt: string | null;
+  needsAccountForSync: boolean;
   enableCloudSync: () => Promise<UraiSyncResult>;
   disableCloudSync: () => void;
   syncNow: () => Promise<UraiSyncResult>;
@@ -24,49 +27,62 @@ const UraiCloudSyncContext = createContext<UraiCloudSyncContextValue | null>(nul
 const ENABLED_KEY = "urai.cloudSync.enabled";
 const LAST_SYNC_KEY = "urai.cloudSync.lastSyncedAt";
 
-function readEnabled(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(ENABLED_KEY) === "true";
-}
-
-function readLastSyncedAt(): string | null {
-  if (typeof window === "undefined") return null;
-  return window.localStorage.getItem(LAST_SYNC_KEY);
-}
-
-function writeLocal(enabled: boolean, lastSyncedAt?: string | null) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(ENABLED_KEY, String(enabled));
-  if (lastSyncedAt) window.localStorage.setItem(LAST_SYNC_KEY, lastSyncedAt);
-}
-
 export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
   const auth = useUraiAuth();
   const client = getUraiFirebaseClient();
-  const [syncEnabled, setSyncEnabled] = useState(readEnabled);
+  const [syncRequested, setSyncRequested] = useState(false);
   const [syncStatus, setSyncStatus] = useState<FirebaseSyncStatus>(client.db ? "idle" : "offline");
-  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(readLastSyncedAt);
+  const [lastSyncedAt, setLastSyncedAt] = useState<string | null>(null);
 
-  const canSync = Boolean(client.db && auth.userId && syncEnabled);
+  useEffect(() => {
+    const userId = auth.userId ?? "local";
+    setSyncRequested(readUserScopedValue<boolean>(ENABLED_KEY, userId, false) === true);
+    setLastSyncedAt(readUserScopedValue<string>(LAST_SYNC_KEY, userId, null));
+    if (!client.db) setSyncStatus("offline");
+  }, [auth.userId, client.db]);
+
+  const canSync = Boolean(client.db && auth.userId && auth.isAuthenticated && !auth.isLocalOnly && syncRequested);
+  const needsAccountForSync = Boolean(syncRequested && (!auth.isAuthenticated || auth.isLocalOnly));
+
+  const writeLocal = useCallback((enabled: boolean, syncedAt?: string | null) => {
+    const userId = auth.userId ?? "local";
+    writeUserScopedValue(ENABLED_KEY, userId, enabled);
+    if (syncedAt) writeUserScopedValue(LAST_SYNC_KEY, userId, syncedAt);
+  }, [auth.userId]);
 
   const pushToCloud = useCallback(async <T,>(path: string, data: T): Promise<UraiSyncResult> => {
-    if (!client.db || !auth.userId || !syncEnabled) return { ok: false, status: "offline" };
+    if (!client.db || !auth.userId || !auth.isAuthenticated || auth.isLocalOnly || !syncRequested) {
+      return { ok: false, status: needsAccountForSync ? "idle" : "offline", errorMessage: needsAccountForSync ? "Sign in only if you want cloud sync." : undefined };
+    }
     setSyncStatus("saving");
     try {
       const now = new Date().toISOString();
-      await setDoc(doc(client.db, path), { id: path.split("/").pop() ?? "profile", userId: auth.userId, data, updatedAt: now, createdAt: now, schemaVersion: CURRENT_SCHEMA_VERSION }, { merge: true });
+      await setDoc(
+        doc(client.db, path),
+        {
+          id: path.split("/").pop() ?? "profile",
+          userId: auth.userId,
+          data,
+          updatedAt: now,
+          createdAt: now,
+          schemaVersion: CURRENT_SCHEMA_VERSION,
+          syncScope: "approved-safe-state",
+        },
+        { merge: true },
+      );
       setSyncStatus("synced");
       setLastSyncedAt(now);
-      writeLocal(syncEnabled, now);
+      writeLocal(true, now);
+      await auth.updateProfile({ cloudSyncEnabled: true });
       return { ok: true, status: "synced" };
     } catch {
       setSyncStatus("error");
       return { ok: false, status: "error", errorMessage: "Cloud sync is unavailable right now." };
     }
-  }, [auth.userId, client.db, syncEnabled]);
+  }, [auth, client.db, needsAccountForSync, syncRequested, writeLocal]);
 
   const pullFromCloud = useCallback(async <T,>(path: string): Promise<T | null> => {
-    if (!client.db || !auth.userId || !syncEnabled) return null;
+    if (!client.db || !auth.userId || !auth.isAuthenticated || auth.isLocalOnly || !syncRequested) return null;
     setSyncStatus("loading");
     try {
       const snap = await getDoc(doc(client.db, path));
@@ -78,35 +94,59 @@ export function UraiCloudSyncProvider({ children }: { children: ReactNode }) {
       setSyncStatus("error");
       return null;
     }
-  }, [auth.userId, client.db, syncEnabled]);
+  }, [auth.isAuthenticated, auth.isLocalOnly, auth.userId, client.db, syncRequested]);
 
   const syncNow = useCallback(async (): Promise<UraiSyncResult> => {
-    if (!client.db || !auth.userId || !syncEnabled) return { ok: false, status: "offline" };
+    if (!auth.userId) return { ok: false, status: "offline" };
     const now = new Date().toISOString();
-    return pushToCloud(getSyncStatePath(auth.userId), { lastRequestedAt: now, syncEnabled: true });
-  }, [auth.userId, client.db, pushToCloud, syncEnabled]);
+    return pushToCloud(getSyncStatePath(auth.userId), {
+      lastRequestedAt: now,
+      syncEnabled: true,
+      reminder: "Passport controls sensitive layers before sync.",
+    });
+  }, [auth.userId, pushToCloud]);
 
   const enableCloudSync = useCallback(async (): Promise<UraiSyncResult> => {
-    if (!client.db || !auth.userId) {
-      setSyncEnabled(false);
-      setSyncStatus("offline");
-      return { ok: false, status: "offline" };
-    }
-    setSyncEnabled(true);
+    setSyncRequested(true);
     writeLocal(true);
+    if (!client.db) {
+      setSyncStatus("offline");
+      return { ok: false, status: "offline", errorMessage: "Cloud sync is unavailable right now." };
+    }
+    if (!auth.userId || !auth.isAuthenticated || auth.isLocalOnly) {
+      setSyncStatus("idle");
+      return { ok: false, status: "idle", errorMessage: "Sign in only if you want cloud sync." };
+    }
     const now = new Date().toISOString();
-    return pushToCloud(getSyncStatePath(auth.userId), { enabledAt: now, syncEnabled: true });
-  }, [auth.userId, client.db, pushToCloud]);
+    return pushToCloud(getSyncStatePath(auth.userId), {
+      enabledAt: now,
+      syncEnabled: true,
+      passportReminder: "Sensitive layers stay closed unless Passport opens them.",
+    });
+  }, [auth.isAuthenticated, auth.isLocalOnly, auth.userId, client.db, pushToCloud, writeLocal]);
 
   const disableCloudSync = useCallback(() => {
-    setSyncEnabled(false);
+    setSyncRequested(false);
     setSyncStatus(client.db ? "idle" : "offline");
     writeLocal(false);
-  }, [client.db]);
+    void auth.updateProfile({ cloudSyncEnabled: false });
+  }, [auth, client.db, writeLocal]);
 
   const resolveConflict = useCallback(<T,>(local: T, remote: T, resolver?: (local: T, remote: T) => T): T => resolver ? resolver(local, remote) : local, []);
 
-  const value = useMemo<UraiCloudSyncContextValue>(() => ({ syncEnabled: canSync, syncStatus, lastSyncedAt, enableCloudSync, disableCloudSync, syncNow, pullFromCloud, pushToCloud, resolveConflict }), [canSync, disableCloudSync, enableCloudSync, lastSyncedAt, pullFromCloud, pushToCloud, resolveConflict, syncNow, syncStatus]);
+  const value = useMemo<UraiCloudSyncContextValue>(() => ({
+    syncEnabled: canSync,
+    syncRequested,
+    syncStatus,
+    lastSyncedAt,
+    needsAccountForSync,
+    enableCloudSync,
+    disableCloudSync,
+    syncNow,
+    pullFromCloud,
+    pushToCloud,
+    resolveConflict,
+  }), [canSync, disableCloudSync, enableCloudSync, lastSyncedAt, needsAccountForSync, pullFromCloud, pushToCloud, resolveConflict, syncNow, syncRequested, syncStatus]);
 
   return <UraiCloudSyncContext.Provider value={value}>{children}</UraiCloudSyncContext.Provider>;
 }
