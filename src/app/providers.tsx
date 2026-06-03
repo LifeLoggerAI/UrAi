@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { SpatialUniverseProvider } from '@/components/urai/SpatialUniverseProvider';
 import { UraiAudioProvider } from '@/providers/UraiAudioProvider';
+import { UraiAuthProvider } from '@/providers/UraiAuthProvider';
+import { UraiCloudSyncProvider } from '@/providers/UraiCloudSyncProvider';
 import { UraiExportProvider } from '@/providers/UraiExportProvider';
 import { UraiGroundProvider } from '@/providers/UraiGroundProvider';
 import { UraiLegacyProvider } from '@/providers/UraiLegacyProvider';
@@ -18,31 +20,35 @@ import { UraiCaptionBubble } from '@/components/voice/UraiCaptionBubble';
 
 export default function AppProviders({ children }: { children?: React.ReactNode }) {
   return (
-    <UraiAudioProvider>
-      <UraiVoiceProvider>
-        <UraiNotificationProvider>
-          <UraiOnboardingProvider>
-            <UraiSettingsProvider>
-              <UraiExportProvider>
-                <UraiRitualProvider>
-                  <UraiGroundProvider>
-                    <UraiLifeMapProvider>
-                      <UraiMirrorProvider>
-                        <UraiShadowProvider>
-                          <UraiLegacyProvider>
-                            <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
-                          </UraiLegacyProvider>
-                        </UraiShadowProvider>
-                      </UraiMirrorProvider>
-                    </UraiLifeMapProvider>
-                  </UraiGroundProvider>
-                </UraiRitualProvider>
-              </UraiExportProvider>
-            </UraiSettingsProvider>
-          </UraiOnboardingProvider>
-        </UraiNotificationProvider>
-        <UraiCaptionBubble />
-      </UraiVoiceProvider>
-    </UraiAudioProvider>
+    <UraiAuthProvider>
+      <UraiCloudSyncProvider>
+        <UraiSettingsProvider>
+          <UraiAudioProvider>
+            <UraiVoiceProvider>
+              <UraiNotificationProvider>
+                <UraiOnboardingProvider>
+                  <UraiExportProvider>
+                    <UraiRitualProvider>
+                      <UraiGroundProvider>
+                        <UraiLifeMapProvider>
+                          <UraiMirrorProvider>
+                            <UraiShadowProvider>
+                              <UraiLegacyProvider>
+                                <SpatialUniverseProvider>{children}</SpatialUniverseProvider>
+                              </UraiLegacyProvider>
+                            </UraiShadowProvider>
+                          </UraiMirrorProvider>
+                        </UraiLifeMapProvider>
+                      </UraiGroundProvider>
+                    </UraiRitualProvider>
+                  </UraiExportProvider>
+                </UraiOnboardingProvider>
+                <UraiCaptionBubble />
+              </UraiNotificationProvider>
+            </UraiVoiceProvider>
+          </UraiAudioProvider>
+        </UraiSettingsProvider>
+      </UraiCloudSyncProvider>
+    </UraiAuthProvider>
   );
 }
