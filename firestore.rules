@@ -59,6 +59,21 @@ service cloud.firestore {
         && !("isFounder" in request.resource.data);
     }
 
+    function isAllowedUserAccountStatus() {
+      return !("accountStatus" in request.resource.data)
+        || request.resource.data.accountStatus in ["active", "signed_out", "pending_deletion", "deleted", "error"];
+    }
+
+    function validUserProfile(uid) {
+      return request.resource.data.userId == uid
+        && hasNoProtectedUserFields()
+        && isAllowedUserAccountStatus()
+        && (!("authMode" in request.resource.data) || request.resource.data.authMode in ["local", "anonymous", "authenticated"])
+        && (!("cloudSyncEnabled" in request.resource.data) || request.resource.data.cloudSyncEnabled is bool)
+        && (!("passportInitialized" in request.resource.data) || request.resource.data.passportInitialized is bool)
+        && (!("onboardingCompleted" in request.resource.data) || request.resource.data.onboardingCompleted is bool);
+    }
+
     function isAllowedConsentSource(source) {
       return source == "profile"
         || source == "timeline_events"
@@ -154,7 +169,7 @@ service cloud.firestore {
 
     match /waitlistEntries/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
     match /contactMessages/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
-    match /creatorSubmissions/{id} { allow read: if isAdmin(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
+    match /creatorSubmissions/{id} { allow read: if isSignedIn() && ownsRequest(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /jobApplications/{id} { allow read: if isAdmin() || ownsResource(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
 
     match /profiles/{uid} { allow read: if isSelf(uid) || ownsResource(); allow create: if (isSelf(uid) || ownsRequest()) && hasNoProtectedUserFields(); allow update: if (isSelf(uid) || ownsResource()) && ownsRequest() && hasNoProtectedUserFields(); allow delete: if false; }
@@ -205,7 +220,6 @@ service cloud.firestore {
     match /moods/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /shadowMetrics/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /obscuraPatterns/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
-    match /cognitiveStress/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /recoveryBlooms/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /relationshipConstellations/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /voiceEvents/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
@@ -228,8 +242,10 @@ service cloud.firestore {
     match /assetLifecycleEvents/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if false; allow delete: if false; }
 
     match /users/{uid} {
+      // Pass 24 account foundation: users can only read/write their own account document.
+      // Account creation must not grant protected roles or enable sensitive Passport layers.
       allow read: if isSelf(uid);
-      allow create, update: if request.auth != null && request.auth.uid == uid && hasNoProtectedUserFields();
+      allow create, update: if isSelf(uid) && validUserProfile(uid);
       allow delete: if isSelf(uid);
       match /profile/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && hasNoProtectedUserFields(); allow delete: if false; }
       match /homeWorld/{id} { allow read: if isSelf(uid); allow create, update: if isSelf(uid) && id == 'state' && validHomeWorldState(uid); allow delete: if false; }
