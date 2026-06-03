@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { AI_RATE_LIMIT_REPLY, checkAIRateLimit } from "@/lib/ai/aiRateLimit";
-import { classifyCompanionInput } from "@/lib/ai/aiInputSafety";
+import { classifyCompanionInput, type CompanionInputSafety } from "@/lib/ai/aiInputSafety";
 import { generateAIReply } from "@/lib/ai/generateAIReply";
 import { buildPermissionedCompanionContext } from "@/lib/companion/buildPermissionedContext";
 import type { CompanionMessage, CompanionMode, GenesisMoodState } from "@/lib/companion/companionTypes";
@@ -50,6 +50,31 @@ function jsonReply(reply: string, safetyLevel: "normal" | "gentle" | "boundary" 
   });
 }
 
+function closedLayerBoundary(inputSafety: CompanionInputSafety, permissions: PassportContextPermissions) {
+  if (inputSafety.flags.includes("gmail_context") && !permissions.allowGmailContext) {
+    return jsonReply("I can help with email context only if Gmail is open in Passport.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("location_context") && !permissions.allowLocationContext) {
+    return jsonReply("I can only use place context if Location is open in Passport.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("transcript_context") && !permissions.allowAudioTranscriptContext) {
+    return jsonReply("I can reflect conversations only if Transcripts are open in Passport.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("relationship_context") && !permissions.allowRelationshipContext) {
+    return jsonReply("I can look at relationship patterns only if that layer is open.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("health_context")) {
+    return jsonReply("I can only use health-adjacent context if that layer is open. I still won’t diagnose.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("shadow_context") && !permissions.allowShadowCloudSync) {
+    return jsonReply("That belongs behind Shadow. You can open it only if you choose.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  if (inputSafety.flags.includes("legacy_context") && !permissions.allowLegacyCloudSync) {
+    return jsonReply("Legacy is closed, so I won’t treat this as part of your long-term story.", "boundary", { type: "open_passport", label: "Open Passport" });
+  }
+  return null;
+}
+
 export async function POST(request: Request) {
   let body: CompanionRespondRequest;
 
@@ -88,6 +113,9 @@ export async function POST(request: Request) {
       suggestedAction: inputSafety.suggestedAction ?? { type: "none" },
     });
   }
+
+  const boundary = closedLayerBoundary(inputSafety, permissions);
+  if (boundary) return boundary;
 
   const context = buildPermissionedCompanionContext({
     userId: body.userId,
