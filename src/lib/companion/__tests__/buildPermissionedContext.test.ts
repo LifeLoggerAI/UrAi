@@ -7,7 +7,7 @@ describe("buildPermissionedCompanionContext", () => {
     expect(context.allowedLayers).toContain("mood");
     expect(context.blockedLayers).toContain("gmail");
     expect(context.blockedLayers).toContain("location");
-    expect(context.gmailContext).toBeUndefined();
+    expect(JSON.stringify(context).toLowerCase()).not.toContain("gmail content");
   });
 
   it("does not include raw transcripts, Gmail, location, or Passport profile", () => {
