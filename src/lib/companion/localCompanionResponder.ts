@@ -14,14 +14,50 @@ function normalizeInput(input: string): string {
 function chooseResponse(input: string, context: LocalCompanionResponderContext): string {
   const normalized = normalizeInput(input);
 
+  if (normalized.includes("gmail") || normalized.includes("email")) {
+    return "I can help with email context only if Gmail is open in Passport.";
+  }
+
+  if (normalized.includes("where was i") || normalized.includes("location") || normalized.includes("gps")) {
+    return "I can only use place context if Location is open in Passport.";
+  }
+
+  if (normalized.includes("transcript") || normalized.includes("recording") || normalized.includes("what did they say")) {
+    return "I can reflect conversations only if Transcripts are open in Passport.";
+  }
+
+  if (normalized.includes("lying") || normalized.includes("lie") || normalized.includes("deceive")) {
+    return "I can’t know whether someone is lying. I can help you slow down, name uncertainty, and choose a boundary.";
+  }
+
+  if (normalized.includes("diagnose") || normalized.includes("do i have")) {
+    return "I can’t diagnose you. I can help you organize what you’re noticing for a qualified professional.";
+  }
+
+  if (normalized.includes("shadow")) {
+    return "That belongs behind Shadow. You can open it only if you choose.";
+  }
+
+  if (normalized.includes("legacy")) {
+    return "Legacy is closed unless you open it, so I won’t treat this as part of your long-term story.";
+  }
+
+  if (normalized.includes("export")) {
+    return "Nothing leaves URAI until you approve the artifact.";
+  }
+
   if (normalized.includes("notification") || normalized.includes("notify") || normalized.includes("whisper") || normalized.includes("quiet") || normalized.includes("quieter")) {
     if (normalized.includes("turn off") || normalized.includes("stop") || normalized.includes("quieter") || normalized.includes("quiet")) {
-      return "URAI can stay quiet. Passport lets you turn whispers off, use gentle mode, and keep only the moments you approve.";
+      return "URAI can stay quiet. Passport and Settings let you keep only the whispers you approve.";
     }
     if (normalized.includes("what did") || normalized.includes("about")) {
-      return "Whispers are kept generic. Passport shows the quiet inbox of what URAI was allowed to surface.";
+      return "Whispers are kept generic. Passport shows what URAI was allowed to surface.";
     }
-    return "URAI should whisper only when it matters. You control notification timing in Passport.";
+    return "URAI should whisper only when it matters. You control notification timing in Settings.";
+  }
+
+  if (normalized.includes("ritual")) {
+    return "Try one small ritual: breathe once, name the feeling softly, then choose one tiny next step.";
   }
 
   if (context.mode === "council") {
@@ -36,7 +72,7 @@ function chooseResponse(input: string, context: LocalCompanionResponderContext):
       if (normalized.includes("repeat") || normalized.includes("pattern")) {
         return "I can reflect the pattern without judging it. Name the part that keeps returning.";
       }
-      return "I can reflect this gently. What part should we look at first?";
+      return "I can reflect this gently, without pretending certainty. What part should we look at first?";
     }
 
     if (context.councilRoleId === "guide") {
