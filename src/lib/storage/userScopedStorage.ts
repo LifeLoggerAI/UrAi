@@ -3,7 +3,7 @@ export function getUserScopedKey(baseKey: string, userId?: string | null): strin
   return `${baseKey}.${scopedUserId}`;
 }
 
-export function readUserScopedValue<T>(baseKey: string, userId?: string | null, fallback?: T): T | null {
+export function readUserScopedValue<T>(baseKey: string, userId?: string | null, fallback?: T | null): T | null {
   if (typeof window === "undefined") return fallback ?? null;
   const scopedKey = getUserScopedKey(baseKey, userId);
   const scoped = window.localStorage.getItem(scopedKey);
