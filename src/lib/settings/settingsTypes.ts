@@ -1,4 +1,5 @@
 export type SettingsSectionId =
+  | "account"
   | "passport"
   | "audio"
   | "voice"
@@ -28,6 +29,7 @@ export type UraiSettingsProfile = {
 };
 
 export const SETTINGS_SECTIONS: Array<{ id: SettingsSectionId; label: string; description: string }> = [
+  { id: "account", label: "Account", description: "Local mode, sync, deletion" },
   { id: "passport", label: "Passport", description: "Permissions and gates" },
   { id: "audio", label: "Sound", description: "Ambient sound and haptics" },
   { id: "voice", label: "Voice", description: "Voice and captions" },
