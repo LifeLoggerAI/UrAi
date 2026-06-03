@@ -1,5 +1,6 @@
 "use client";
 
+import type { PassportDataLayerId } from "@/lib/lifemap/lifeMapTypes";
 import { legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
 import type { ShadowReflection, ShadowViewMode } from "@/lib/shadow/shadowTypes";
 import { useUraiExport } from "@/providers/UraiExportProvider";
@@ -35,7 +36,7 @@ export function ShadowReflectionDetail({ reflection, viewMode, onClose, onOpenGr
   const rituals = useUraiRituals();
   if (!reflection) return <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/35 p-4 text-sm text-white/75 backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[360px] md:bottom-auto">Select a protected reflection, or keep Shadow sealed.</aside>;
   const locked = reflection.visibility === "locked";
-  const layers = reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["shadow"];
+  const layers: PassportDataLayerId[] = reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["shadow"];
   const softTitle = titleFor(reflection, "soft");
   const softSummary = summaryFor(reflection, "soft");
   const addToLegacy = () => {
