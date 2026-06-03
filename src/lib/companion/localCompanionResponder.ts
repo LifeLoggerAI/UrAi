@@ -14,6 +14,16 @@ function normalizeInput(input: string): string {
 function chooseResponse(input: string, context: LocalCompanionResponderContext): string {
   const normalized = normalizeInput(input);
 
+  if (normalized.includes("notification") || normalized.includes("notify") || normalized.includes("whisper") || normalized.includes("quiet") || normalized.includes("quieter")) {
+    if (normalized.includes("turn off") || normalized.includes("stop") || normalized.includes("quieter") || normalized.includes("quiet")) {
+      return "URAI can stay quiet. Passport lets you turn whispers off, use gentle mode, and keep only the moments you approve.";
+    }
+    if (normalized.includes("what did") || normalized.includes("about")) {
+      return "Whispers are kept generic. Passport shows the quiet inbox of what URAI was allowed to surface.";
+    }
+    return "URAI should whisper only when it matters. You control notification timing in Passport.";
+  }
+
   if (context.mode === "council") {
     if (context.councilRoleId === "guardian") {
       if (normalized.includes("passport") || normalized.includes("settings") || normalized.includes("control")) {
