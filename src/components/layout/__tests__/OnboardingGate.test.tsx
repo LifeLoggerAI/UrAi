@@ -30,7 +30,7 @@ describe("OnboardingGate", () => {
       </OnboardingGate>
     );
 
-    expect(screen.getByText("Onboarding Content")).toBeInTheDocument();
+    expect(screen.getByText("Onboarding Content")).not.toBeNull();
     expect(screen.queryByTestId("main-layout")).toBeNull();
   });
 
@@ -43,7 +43,7 @@ describe("OnboardingGate", () => {
       </OnboardingGate>
     );
 
-    expect(screen.getByTestId("main-layout")).toBeInTheDocument();
-    expect(screen.getByText("Main App")).toBeInTheDocument();
+    expect(screen.getByTestId("main-layout")).not.toBeNull();
+    expect(screen.getByText("Main App")).not.toBeNull();
   });
 });
