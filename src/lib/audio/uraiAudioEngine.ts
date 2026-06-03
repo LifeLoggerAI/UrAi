@@ -1,4 +1,4 @@
-import { getAudioPath, type UraiAudioCategory, type UraiAudioKey } from "./uraiAudioManifest";
+import { getAudioAsset, type UraiAudioCategory, type UraiAudioKey } from "./uraiAudioManifest";
 
 export type { UraiAudioCategory, UraiAudioKey };
 
@@ -31,24 +31,42 @@ const DEFAULT_SETTINGS: UraiAudioSettings = {
   reducedSensoryMode: false,
 };
 
+const DEFAULT_CATEGORY_VOLUMES: Record<UraiAudioCategory, number> = {
+  ambient: DEFAULT_SETTINGS.ambientVolume,
+  orb: DEFAULT_SETTINGS.effectsVolume,
+  portal: DEFAULT_SETTINGS.effectsVolume,
+  transition: DEFAULT_SETTINGS.effectsVolume,
+  ui: DEFAULT_SETTINGS.effectsVolume,
+  notification: DEFAULT_SETTINGS.effectsVolume,
+  mood: DEFAULT_SETTINGS.ambientVolume,
+};
+
 function clampVolume(value: number): number {
   if (Number.isNaN(value)) return 0;
   return Math.max(0, Math.min(1, value));
 }
 
+function categorySensoryFactor(category: UraiAudioCategory, reduced: boolean): number {
+  if (!reduced) return 1;
+  if (category === "ambient" || category === "mood") return 0.6;
+  if (category === "ui" || category === "notification") return 0.5;
+  if (category === "portal" || category === "transition" || category === "orb") return 0.48;
+  return 0.5;
+}
+
+type LoopRecord = {
+  audio: HTMLAudioElement;
+  key: string;
+  category: UraiAudioCategory;
+  baseVolume: number;
+  fadeTimer?: number;
+};
+
 class UraiAudioEngine {
   private settings: UraiAudioSettings = { ...DEFAULT_SETTINGS };
   private unlocked = false;
-  private loops = new Map<string, HTMLAudioElement>();
-  private categoryVolumes: Record<UraiAudioCategory, number> = {
-    ambient: DEFAULT_SETTINGS.ambientVolume,
-    orb: DEFAULT_SETTINGS.effectsVolume,
-    portal: DEFAULT_SETTINGS.effectsVolume,
-    transition: DEFAULT_SETTINGS.effectsVolume,
-    ui: DEFAULT_SETTINGS.effectsVolume,
-    notification: DEFAULT_SETTINGS.effectsVolume,
-    mood: DEFAULT_SETTINGS.ambientVolume,
-  };
+  private loops = new Map<string, LoopRecord>();
+  private categoryVolumes: Record<UraiAudioCategory, number> = { ...DEFAULT_CATEGORY_VOLUMES };
 
   async init(): Promise<void> {
     return;
@@ -71,6 +89,7 @@ class UraiAudioEngine {
     this.categoryVolumes.transition = this.settings.effectsVolume;
     this.categoryVolumes.ui = this.settings.effectsVolume;
     this.categoryVolumes.notification = this.settings.effectsVolume;
+    this.rebalanceLoops();
     if (!this.settings.enabled) void this.stopAll({ fadeMs: 700 });
   }
 
@@ -81,13 +100,13 @@ class UraiAudioEngine {
 
   async playOneShot(key: UraiAudioKey | string, options: PlayOptions = {}): Promise<void> {
     if (!this.canPlay()) return;
-    const src = getAudioPath(key);
-    if (!src) return;
+    const asset = getAudioAsset(key);
+    if (!asset || asset.loop) return;
 
     try {
-      const audio = new Audio(src);
-      audio.preload = "auto";
-      audio.volume = this.resolveVolume(options.category ?? "ui", options.volume);
+      const audio = new Audio(asset.path);
+      audio.preload = "none";
+      audio.volume = this.resolveVolume(options.category ?? asset.category, options.volume ?? asset.defaultVolume);
       await audio.play();
     } catch {
       return;
@@ -96,37 +115,50 @@ class UraiAudioEngine {
 
   async playLoop(key: UraiAudioKey | string, options: LoopOptions = {}): Promise<void> {
     if (!this.canPlay()) return;
-    const src = getAudioPath(key);
-    if (!src) return;
+    const asset = getAudioAsset(key);
+    if (!asset || !asset.loop) return;
 
-    const existing = this.loops.get(key);
-    const targetVolume = this.resolveVolume(options.category ?? "ambient", options.volume);
+    const category = options.category ?? asset.category;
+    const baseVolume = options.volume ?? asset.defaultVolume;
+    const targetVolume = this.resolveVolume(category, baseVolume);
+    const existing = this.loops.get(asset.key);
+
     if (existing) {
+      existing.category = category;
+      existing.baseVolume = baseVolume;
       await this.fadeTo(existing, targetVolume, options.fadeMs ?? 900);
       return;
     }
 
     try {
-      const audio = new Audio(src);
+      const audio = new Audio(asset.path);
       audio.loop = true;
-      audio.preload = "auto";
+      audio.preload = "none";
       audio.volume = options.fadeMs ? 0 : targetVolume;
-      this.loops.set(key, audio);
+      const record: LoopRecord = { audio, key: asset.key, category, baseVolume };
+      this.loops.set(asset.key, record);
       await audio.play();
-      if (options.fadeMs) await this.fadeTo(audio, targetVolume, options.fadeMs);
+      if (options.fadeMs) await this.fadeTo(record, targetVolume, options.fadeMs);
     } catch {
-      this.loops.delete(key);
+      this.loops.delete(asset.key);
       return;
     }
   }
 
   async stopLoop(key: UraiAudioKey | string, options: { fadeMs?: number } = {}): Promise<void> {
-    const audio = this.loops.get(key);
-    if (!audio) return;
-    if (options.fadeMs) await this.fadeTo(audio, 0, options.fadeMs);
-    audio.pause();
-    audio.currentTime = 0;
-    this.loops.delete(key);
+    const asset = getAudioAsset(key);
+    const loopKey = asset?.key ?? key;
+    const record = this.loops.get(loopKey);
+    if (!record) return;
+    if (options.fadeMs) await this.fadeTo(record, 0, options.fadeMs);
+    try {
+      record.audio.pause();
+      record.audio.currentTime = 0;
+    } catch {
+      // no-op
+    }
+    if (record.fadeTimer) window.clearTimeout(record.fadeTimer);
+    this.loops.delete(loopKey);
   }
 
   async crossfadeLoop(
@@ -134,11 +166,18 @@ class UraiAudioEngine {
     toKey: UraiAudioKey | string,
     options: { durationMs?: number; toVolume?: number; category?: UraiAudioCategory } = {},
   ): Promise<void> {
+    if (!this.canPlay()) return;
     const durationMs = options.durationMs ?? 2400;
+    const toAsset = getAudioAsset(toKey);
     await Promise.all([
       this.stopLoop(fromKey, { fadeMs: durationMs }),
-      this.playLoop(toKey, { fadeMs: durationMs, volume: options.toVolume, category: options.category ?? "mood" }),
+      toAsset ? this.playLoop(toAsset.key, { fadeMs: durationMs, volume: options.toVolume ?? toAsset.defaultVolume, category: options.category ?? toAsset.category }) : Promise.resolve(),
     ]);
+  }
+
+  async stopCategory(category: UraiAudioCategory, options: { fadeMs?: number } = {}): Promise<void> {
+    const keys = [...this.loops.values()].filter((record) => record.category === category).map((record) => record.key);
+    await Promise.all(keys.map((key) => this.stopLoop(key, options)));
   }
 
   setMasterVolume(value: number): void {
@@ -162,6 +201,7 @@ class UraiAudioEngine {
   setReducedSensoryMode(enabled: boolean): void {
     this.settings.reducedSensoryMode = enabled;
     this.rebalanceLoops();
+    if (enabled) void this.stopCategory("mood", { fadeMs: 1200 });
   }
 
   async stopAll(options: { fadeMs?: number } = {}): Promise<void> {
@@ -173,29 +213,31 @@ class UraiAudioEngine {
   }
 
   private resolveVolume(category: UraiAudioCategory, volume = 1): number {
-    const sensoryFactor = this.settings.reducedSensoryMode ? 0.45 : 1;
+    const sensoryFactor = categorySensoryFactor(category, this.settings.reducedSensoryMode);
     return clampVolume(volume * this.settings.masterVolume * (this.categoryVolumes[category] ?? 1) * sensoryFactor);
   }
 
   private rebalanceLoops(): void {
-    for (const audio of this.loops.values()) {
-      audio.volume = Math.min(audio.volume, this.settings.masterVolume);
+    for (const record of this.loops.values()) {
+      record.audio.volume = this.resolveVolume(record.category, record.baseVolume);
     }
   }
 
-  private fadeTo(audio: HTMLAudioElement, targetVolume: number, durationMs: number): Promise<void> {
+  private fadeTo(record: LoopRecord, targetVolume: number, durationMs: number): Promise<void> {
+    if (record.fadeTimer) window.clearTimeout(record.fadeTimer);
     return new Promise((resolve) => {
-      const startVolume = audio.volume;
+      const startVolume = record.audio.volume;
       const startedAt = Date.now();
       const duration = Math.max(1, durationMs);
       const tick = () => {
         const progress = Math.min(1, (Date.now() - startedAt) / duration);
-        audio.volume = startVolume + (targetVolume - startVolume) * progress;
+        record.audio.volume = startVolume + (targetVolume - startVolume) * progress;
         if (progress >= 1) {
+          record.fadeTimer = undefined;
           resolve();
           return;
         }
-        window.setTimeout(tick, 40);
+        record.fadeTimer = window.setTimeout(tick, 40);
       };
       tick();
     });
