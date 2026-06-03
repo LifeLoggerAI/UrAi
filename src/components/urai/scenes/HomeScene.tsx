@@ -4,19 +4,23 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UraiScene } from "@/lib/urai/scene-theme";
 import { UraiCompanionShell } from "@/components/companion/UraiCompanionShell";
+import { ExportCenter } from "@/components/exports/ExportCenter";
 import { AssetPreloader } from "@/components/genesis/AssetPreloader";
 import { LayeredGenesisScene } from "@/components/genesis/LayeredGenesisScene";
 import { GroundGarden } from "@/components/ground/GroundGarden";
 import { LegacyView } from "@/components/legacy/LegacyView";
 import { LifeMapGalaxy } from "@/components/lifemap/LifeMapGalaxy";
 import { MirrorView } from "@/components/mirror/MirrorView";
+import { RitualFlow } from "@/components/rituals/RitualFlow";
 import { ShadowRealmView } from "@/components/shadow/ShadowRealmView";
 import { PortalNav } from "@/components/urai/PortalNav";
 import { SceneCopy } from "@/components/urai/SceneCopy";
+import { useUraiExport } from "@/providers/UraiExportProvider";
 import { useUraiGround } from "@/providers/UraiGroundProvider";
 import { useUraiLegacy } from "@/providers/UraiLegacyProvider";
 import { useUraiLifeMap } from "@/providers/UraiLifeMapProvider";
 import { useUraiMirror } from "@/providers/UraiMirrorProvider";
+import { useUraiRituals } from "@/providers/UraiRitualProvider";
 import { useUraiShadow } from "@/providers/UraiShadowProvider";
 
 type HomeSceneProps = {
@@ -26,29 +30,30 @@ type HomeSceneProps = {
 
 export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   const router = useRouter();
+  const exports = useUraiExport();
   const ground = useUraiGround();
   const legacy = useUraiLegacy();
   const lifeMap = useUraiLifeMap();
   const mirror = useUraiMirror();
+  const rituals = useUraiRituals();
   const shadow = useUraiShadow();
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
 
   const closeAllLayers = useCallback(() => {
+    exports.closeExport();
     ground.closeGround();
     legacy.closeLegacy();
     lifeMap.closeLifeMap();
     mirror.closeMirror();
     shadow.closeShadow();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [exports, ground, legacy, lifeMap, mirror, shadow]);
 
   const openCompanion = useCallback(() => {
     onOpenOrbChat?.();
     setIsCompanionOpen(true);
   }, [onOpenOrbChat]);
 
-  const closeCompanion = useCallback(() => {
-    setIsCompanionOpen(false);
-  }, []);
+  const closeCompanion = useCallback(() => setIsCompanionOpen(false), []);
 
   const openPassport = useCallback(() => {
     setIsCompanionOpen(false);
@@ -58,48 +63,44 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
 
   const openLifeMapFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
-    ground.closeGround();
-    legacy.closeLegacy();
-    mirror.closeMirror();
-    shadow.closeShadow();
+    closeAllLayers();
     lifeMap.openLifeMap();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [closeAllLayers, lifeMap]);
 
   const openGroundFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
-    legacy.closeLegacy();
-    lifeMap.closeLifeMap();
-    mirror.closeMirror();
-    shadow.closeShadow();
+    closeAllLayers();
     ground.openGround();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [closeAllLayers, ground]);
 
   const openMirrorFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
-    legacy.closeLegacy();
-    lifeMap.closeLifeMap();
-    ground.closeGround();
-    shadow.closeShadow();
+    closeAllLayers();
     mirror.openMirror();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [closeAllLayers, mirror]);
 
   const openShadowFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
-    legacy.closeLegacy();
-    lifeMap.closeLifeMap();
-    ground.closeGround();
-    mirror.closeMirror();
+    closeAllLayers();
     shadow.openShadow();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [closeAllLayers, shadow]);
 
   const openLegacyFromCompanion = useCallback(() => {
     setIsCompanionOpen(false);
-    lifeMap.closeLifeMap();
-    ground.closeGround();
-    mirror.closeMirror();
-    shadow.closeShadow();
+    closeAllLayers();
     legacy.openLegacy();
-  }, [ground, legacy, lifeMap, mirror, shadow]);
+  }, [closeAllLayers, legacy]);
+
+  const openExportFromCompanion = useCallback(() => {
+    setIsCompanionOpen(false);
+    closeAllLayers();
+    exports.openExport();
+  }, [closeAllLayers, exports]);
+
+  const suggestSmallRitual = useCallback(() => {
+    const [ritual] = rituals.suggestForContext({ moodState: "luminous" });
+    if (ritual) rituals.startRitual(ritual.id);
+  }, [rituals]);
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
@@ -110,17 +111,13 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
           onOrbOpen={openCompanion}
           onGroundOpen={ground.openGround}
           onPassportOpen={openPassport}
-          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen || legacy.isLegacyOpen}
+          isCompanionOpen={isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen || legacy.isLegacyOpen || exports.isExportOpen || rituals.isRitualFlowOpen}
         />
       </AssetPreloader>
 
       <div className="pointer-events-none absolute inset-0 z-40 flex min-h-screen w-full flex-col items-center justify-between px-6 py-12">
-        <div className="pointer-events-auto pt-4">
-          <SceneCopy scene="home" />
-        </div>
-        <div className="pointer-events-auto w-full pb-2">
-          <PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} />
-        </div>
+        <div className="pointer-events-auto pt-4"><SceneCopy scene="home" /></div>
+        <div className="pointer-events-auto w-full pb-2"><PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} /></div>
       </div>
 
       <LifeMapGalaxy isOpen={lifeMap.isLifeMapOpen} onClose={lifeMap.closeLifeMap} moodState="luminous" onOpenPassport={openPassport} />
@@ -128,6 +125,8 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
       <MirrorView isOpen={mirror.isMirrorOpen} onClose={mirror.closeMirror} moodState="luminous" onOpenGround={openGroundFromCompanion} onOpenLifeMap={openLifeMapFromCompanion} onOpenPassport={openPassport} onTalkToCompanion={openCompanion} />
       <ShadowRealmView isOpen={shadow.isShadowOpen} onClose={shadow.closeShadow} onOpenGround={openGroundFromCompanion} onOpenPassport={openPassport} onTalkToGuardian={openCompanion} />
       <LegacyView isOpen={legacy.isLegacyOpen} onClose={legacy.closeLegacy} moodState="luminous" onOpenPassport={openPassport} onOpenLifeMap={openLifeMapFromCompanion} onOpenGround={openGroundFromCompanion} onTalkToCompanion={openCompanion} />
+      <ExportCenter isOpen={exports.isExportOpen} onClose={exports.closeExport} moodState="luminous" onOpenPassport={openPassport} />
+      <RitualFlow ritual={rituals.activeRitual} isOpen={rituals.isRitualFlowOpen} onClose={rituals.closeRitualFlow} onComplete={rituals.completeRitual} onSkip={rituals.skipRitual} />
 
       <UraiCompanionShell
         isOpen={isCompanionOpen}
@@ -140,6 +139,8 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
         onOpenMirror={openMirrorFromCompanion}
         onOpenShadow={openShadowFromCompanion}
         onOpenLegacy={openLegacyFromCompanion}
+        onOpenExport={openExportFromCompanion}
+        onSuggestRitual={suggestSmallRitual}
       />
     </section>
   );
