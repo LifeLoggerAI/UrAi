@@ -1,6 +1,8 @@
 "use client";
 
 import type { GroundElement } from "@/lib/ground/groundTypes";
+import { legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
+import { useUraiLegacy } from "@/providers/UraiLegacyProvider";
 
 type GroundElementDetailProps = {
   element: GroundElement | null;
@@ -14,8 +16,14 @@ function formatDate(value: string): string {
 }
 
 export function GroundElementDetail({ element, onClose, onOpenPassport, onReflect }: GroundElementDetailProps) {
+  const legacy = useUraiLegacy();
   if (!element) return <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/35 p-4 text-sm text-white/75 backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[340px] md:bottom-auto">Tap a root, bloom, or lantern.</aside>;
   const locked = element.state === "requires_permission";
+  const addToLegacy = () => {
+    if (locked) return;
+    legacy.addItemToLegacy(legacyCandidateFromSummary({ id: `legacy-ground-${element.id}`, type: element.type === "recoveryBloom" ? "recovery" : "ground_bloom", title: element.title, summary: element.summary ?? element.subtitle ?? "A Ground symbol carried forward as a summary.", sourceLayerIds: [element.sourceLayerId ?? "system"], tone: "grounded", linkedGroundElementId: element.id }));
+    legacy.openLegacy();
+  };
   return (
     <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/40 p-4 text-white/82 shadow-2xl backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[360px] md:bottom-auto">
       <div className="flex items-start justify-between gap-3">
@@ -34,6 +42,7 @@ export function GroundElementDetail({ element, onClose, onOpenPassport, onReflec
       </dl>
       <div className="mt-4 flex flex-wrap gap-2">
         {locked ? <button type="button" onClick={onOpenPassport} className="rounded-full bg-sky-200/15 px-3 py-2 text-xs text-white/84">Open Passport</button> : <button type="button" onClick={() => onReflect?.(element)} className="rounded-full bg-white/10 px-3 py-2 text-xs text-white/84">Reflect with URAI</button>}
+        {!locked ? <button type="button" onClick={addToLegacy} className="rounded-full bg-amber-200/14 px-3 py-2 text-xs text-white/84">Add to Legacy</button> : null}
         <button type="button" className="rounded-full bg-white/[0.06] px-3 py-2 text-xs text-white/62">Create grounding ritual</button>
         <button type="button" className="rounded-full bg-white/[0.06] px-3 py-2 text-xs text-white/62">Hide this</button>
       </div>
