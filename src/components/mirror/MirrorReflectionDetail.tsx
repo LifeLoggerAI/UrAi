@@ -1,5 +1,6 @@
 "use client";
 
+import type { PassportDataLayerId } from "@/lib/lifemap/lifeMapTypes";
 import type { MirrorReflection } from "@/lib/mirror/mirrorTypes";
 import { legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
 import { useUraiExport } from "@/providers/UraiExportProvider";
@@ -32,7 +33,7 @@ export function MirrorReflectionDetail({ reflection, onClose, onOpenGround, onOp
   const legacy = useUraiLegacy();
   const rituals = useUraiRituals();
   if (!reflection) return <aside className="pointer-events-auto absolute inset-x-4 bottom-4 z-30 rounded-3xl border border-white/10 bg-black/35 p-4 text-sm text-white/75 backdrop-blur-xl md:left-auto md:right-6 md:top-24 md:w-[360px] md:bottom-auto">Select a reflection to open it gently.</aside>;
-  const layers = reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["system"];
+  const layers: PassportDataLayerId[] = reflection.sourceLayerIds.length ? reflection.sourceLayerIds : ["system"];
   const addToLegacy = () => {
     if (reflection.permissionRequired) return;
     legacy.addItemToLegacy(legacyCandidateFromSummary({ id: `legacy-mirror-${reflection.id}`, type: "mirror_pattern", title: reflection.title, summary: reflection.summary, sourceLayerIds: layers, tone: "reflective", linkedMirrorReflectionId: reflection.id }));
