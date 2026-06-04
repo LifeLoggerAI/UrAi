@@ -1,24 +1,23 @@
 # Product and Demo Summary
 
-This is not legal advice. This document summarizes the product for legal review.
+This is not legal advice.
 
-## Core Product Vision (Not Yet Implemented)
+URAI Genesis is a private symbolic life interface with an Orb Companion, Life Map, Ground, Mirror, Passport controls, protected Shadow and Legacy gates, and user-controlled exports.
 
-URAI is envisioned as a personal reflection tool. It is NOT a therapy app, medical device, or a tool for crisis management.
+The public demo uses sample data only. It demonstrates the interaction model, visual language, permission controls, and protected gates without exposing private user data.
 
-## Public Demo
+## Current Launch Surface
 
-The public demo is a limited, non-production build intended to showcase a potential future user experience. It uses pre-canned data and does not store user input from the core demo flows.
+* Public demo
+* Waitlist
+* Feedback
+* Fundraising/supporter copy
+* Outreach copy
 
-### Features:
+## Boundaries
 
-* **Static Narrative**: A guided tour of a pre-populated "memory galaxy."
-* **No Account Required**: The demo is accessible without signup.
-* **Feedback Form**: An optional form allows users to submit feedback. This is the only point of data collection in the public demo.
+URAI Genesis should not be described as therapy, diagnosis, treatment, emergency support, lie detection, clinical validation, or a guaranteed outcome product.
 
-## Key Disclaimers for Review
+## Deferred Systems
 
-* This is a speculative demo of a potential product.
-* Not for medical, diagnostic, or therapeutic use.
-* AI-generated content may be inaccurate or offensive.
-* All data shown is sample data and not from real users.
+Private user data integrations, persistent Companion memory, sensitive cloud sync, audio/transcript analysis, health imports, location imports, email imports, calendar imports, and Shadow/Legacy sensitive unlocks require additional review before enablement.

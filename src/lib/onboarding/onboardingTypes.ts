@@ -1,8 +1,11 @@
+import { ConsentLayerId } from "@/lib/privacy/consentCopyRegistry";
+
 export type OnboardingStepId =
   | "welcome"
   | "orb_intro"
   | "passport_intro"
   | "safe_defaults"
+  | "device_activity_intro"
   | "sound_voice"
   | "notifications"
   | "life_map_preview"
@@ -48,6 +51,7 @@ export type OnboardingStep = {
   body: string;
   choices: OnboardingChoice[];
   caption?: string;
+  consentLayerId?: ConsentLayerId;
 };
 
 export const ONBOARDING_STEP_ORDER: OnboardingStepId[] = [
@@ -55,6 +59,7 @@ export const ONBOARDING_STEP_ORDER: OnboardingStepId[] = [
   "orb_intro",
   "passport_intro",
   "safe_defaults",
+  "device_activity_intro",
   "sound_voice",
   "notifications",
   "life_map_preview",
@@ -101,6 +106,7 @@ export const ONBOARDING_STEPS: Record<OnboardingStepId, OnboardingStep> = {
       { id: "review", label: "Review Passport", action: "open_passport" },
       { id: "safe", label: "Use safe defaults", action: "continue" },
     ],
+    consentLayerId: "passport",
   },
   safe_defaults: {
     id: "safe_defaults",
@@ -110,6 +116,13 @@ export const ONBOARDING_STEPS: Record<OnboardingStepId, OnboardingStep> = {
       { id: "apply", label: "Apply safe defaults", action: "apply_safe_defaults" },
       { id: "closed", label: "Keep everything closed", action: "continue" },
     ],
+  },
+  device_activity_intro: {
+    id: "device_activity_intro",
+    title: "Device activity",
+    body: "URAI can learn from your device activity to provide a more personalized experience.",
+    choices: [],
+    consentLayerId: "deviceBehavior",
   },
   sound_voice: {
     id: "sound_voice",
