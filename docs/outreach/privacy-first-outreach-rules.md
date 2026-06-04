@@ -1,0 +1,3 @@
+- We will never sell your data.
+- We will never share your data without your consent.
+- We will always be transparent about how we use your data.
