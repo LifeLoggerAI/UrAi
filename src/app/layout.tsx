@@ -20,13 +20,14 @@ import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";
 
 const siteUrl = process.env.NEXT_PUBLIC_URAI_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
-const description = "A privacy-first AI companion and symbolic life map where users control what opens, reflects, remembers, and leaves.";
+const title = "URAI Genesis — Private AI Companion + Symbolic Life Map";
+const description = "URAI is a privacy-first AI companion and symbolic life map where users control what opens, reflects, remembers, and leaves.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: siteUrl },
   title: {
-    default: "URAI Genesis",
+    default: title,
     template: "%s | URAI Genesis",
   },
   description,
@@ -39,13 +40,13 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "URAI Genesis",
-    title: "URAI Genesis",
+    title,
     description,
     images: [{ url: "/og/urai-genesis-preview.png", width: 1200, height: 630, alt: "URAI Genesis preview" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "URAI Genesis",
+    title,
     description,
     images: ["/og/urai-genesis-preview.png"],
   },
