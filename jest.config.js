@@ -15,14 +15,17 @@ const config = {
     "<rootDir>/node_modules/",
     "<rootDir>/tests/e2e/",
     "<rootDir>/.next/",
+    "<rootDir>/.firebase/",
   ],
   modulePathIgnorePatterns: [
     "<rootDir>/.next/",
+    "<rootDir>/.firebase/",
     "<rootDir>/test-results/",
     "<rootDir>/playwright-report/",
   ],
   watchPathIgnorePatterns: [
     "<rootDir>/.next/",
+    "<rootDir>/.firebase/",
     "<rootDir>/test-results/",
     "<rootDir>/playwright-report/",
   ],
