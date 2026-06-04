@@ -3,12 +3,18 @@ import type { GenesisMoodState } from "@/lib/companion/companionTypes";
 export type PassportDataLayerId =
   | "mood"
   | "memory"
-  | "relationship"
+  | "relationships"
   | "location"
-  | "audioTranscript"
+  | "audio"
+  | "transcripts"
   | "calendar"
   | "gmail"
   | "deviceBehavior"
+  | "screenActivity"
+  | "notifications"
+  | "motion"
+  | "sleep"
+  | "health"
   | "longTermPattern"
   | "ritual"
   | "milestone"
@@ -16,7 +22,12 @@ export type PassportDataLayerId =
   | "shadow"
   | "legacy"
   | "passport"
-  | "system";
+  | "system"
+  | "aiCompanion"
+  | "lifeMap"
+  | "ground"
+  | "mirror"
+  | "export";
 
 export type LifeMapStarType =
   | "memory"
