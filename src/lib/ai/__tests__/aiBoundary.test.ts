@@ -19,7 +19,7 @@ const context: PermissionedCompanionContext = {
 };
 
 function reply(text: string): UraiAIReply {
-  return { text, safetyLevel: "normal", provider: "local" };
+  return { text, safetyLevel: "normal", provider: "local_fallback" };
 }
 
 describe("AI boundaries", () => {

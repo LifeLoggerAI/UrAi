@@ -3,13 +3,14 @@ import type { UraiNotification } from "@/lib/notifications/notificationTypes";
 
 const candidate: UraiNotification = {
   id: "n1",
-  type: "gentle_checkin",
+  type: "companion_whisper",
   title: "URAI",
   body: "A gentle note is available.",
   sourceType: "system",
+  sourceLayerIds: [],
   priority: "normal",
   channels: ["in_app", "push", "sms", "email"],
-  status: "pending",
+  status: "scheduled",
   createdAt: new Date().toISOString(),
 };
 
@@ -33,13 +34,13 @@ describe("notification timing", () => {
 
   it("respects daily and weekly limits", () => {
     const shown = Array.from({ length: 2 }, (_, index) => ({ ...candidate, id: `shown-${index}`, shownAt: new Date().toISOString() }));
-    const result = shouldSurfaceNotification({ candidate: { ...candidate, id: "new" }, timingProfile: DEFAULT_NOTIFICATION_TIMING_PROFILE, recentNotifications: shown });
+    const result = shouldSurfaceNotification({ candidate: { ...candidate, id: "new" }, timingProfile: { ...DEFAULT_NOTIFICATION_TIMING_PROFILE, quietHoursEnabled: false }, recentNotifications: shown });
     expect(result.allowed).toBe(false);
     expect(result.reason).toBe("daily_limit");
   });
 
   it("reduced sensory mode limits channels to in-app", () => {
-    const result = shouldSurfaceNotification({ candidate, timingProfile: { ...DEFAULT_NOTIFICATION_TIMING_PROFILE, allowPush: true }, reducedSensoryMode: true, passportProfile: { notificationsEnabled: true } });
+    const result = shouldSurfaceNotification({ candidate, timingProfile: { ...DEFAULT_NOTIFICATION_TIMING_PROFILE, quietHoursEnabled: false, allowPush: true }, reducedSensoryMode: true, passportProfile: { notificationsEnabled: true } });
     expect(result.allowed).toBe(true);
     expect(result.adjustedChannel).toEqual(["in_app"]);
   });

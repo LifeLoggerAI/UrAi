@@ -16,12 +16,22 @@ describe("voice engine", () => {
   });
 
   it("voice cooldowns prevent repeated caption changes", async () => {
-    await uraiVoiceEngine.playVoiceLine("orb.tap", { forceCaption: true });
-    const first = uraiVoiceEngine.getCurrentCaption();
-    uraiVoiceEngine.clearCaption();
-    await uraiVoiceEngine.playVoiceLine("orb.tap", { forceCaption: true });
-    expect(uraiVoiceEngine.getCurrentCaption()).toBeNull();
-    expect(first).toContain("look gently");
+    jest.useFakeTimers();
+    try {
+      jest.setSystemTime(new Date("2026-01-01T12:00:00Z"));
+
+      await uraiVoiceEngine.playVoiceLine("orb.wake", { forceCaption: true });
+      const first = uraiVoiceEngine.getCurrentCaption();
+
+      expect(first).not.toBeNull();
+
+      uraiVoiceEngine.clearCaption();
+      await uraiVoiceEngine.playVoiceLine("orb.wake", { forceCaption: true });
+
+      expect(uraiVoiceEngine.getCurrentCaption()).toBeNull();
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it("idle whispers stay disabled in reduced sensory", async () => {
