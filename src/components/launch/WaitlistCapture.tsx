@@ -32,7 +32,7 @@ export function WaitlistCapture({ source = "launch" }: { source?: string }) {
   return (
     <section className="rounded-[1.75rem] border border-white/10 bg-black/28 p-5 text-white shadow-2xl backdrop-blur-xl">
       <h2 className="text-xl font-medium">Join the URAI waitlist.</h2>
-      <p className="mt-2 text-sm leading-6 text-white/62">Clear consent, no sensitive information required.</p>
+      <p className="mt-2 text-sm leading-6 text-white/62">Be among the first to try a private AI companion and symbolic life map built around permission, reflection, and user-owned memory.</p>
       <div className="mt-4 grid gap-3">
         <input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email" type="email" className="rounded-2xl bg-white/[0.08] px-4 py-3 text-sm text-white outline-none ring-1 ring-white/10 placeholder:text-white/34" />
         <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Name optional" className="rounded-2xl bg-white/[0.08] px-4 py-3 text-sm text-white outline-none ring-1 ring-white/10 placeholder:text-white/34" />
@@ -40,6 +40,7 @@ export function WaitlistCapture({ source = "launch" }: { source?: string }) {
           {INTEREST_TYPES.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>
         <button type="button" onClick={submit} disabled={status === "saving" || !email.includes("@")} className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black disabled:opacity-45">{status === "saving" ? "Joining…" : "Join waitlist"}</button>
+        <p className="text-xs leading-5 text-white/42">We will not sell your waitlist information.</p>
         {status === "error" ? <p className="text-sm text-white/58">The waitlist is unavailable right now. Please try again later.</p> : null}
       </div>
     </section>

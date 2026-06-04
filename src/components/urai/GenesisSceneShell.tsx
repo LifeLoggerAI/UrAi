@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { TransitionDirection, UraiScene } from "@/lib/urai/scene-theme";
 import { AmbientParticleLayer } from "./AmbientParticleLayer";
 import { CinematicBackdrop } from "./CinematicBackdrop";
@@ -17,26 +17,32 @@ export function GenesisSceneShell() {
   const [transitionDirection, setTransitionDirection] = useState<TransitionDirection>("enter");
   const [selectedMemoryId, setSelectedMemoryId] = useState<string | null>(null);
 
-  const goToScene = (scene: UraiScene) => {
-    if (scene === activeScene) return;
-    setPreviousScene(activeScene);
-    setTransitionDirection("enter");
-    setActiveScene(scene);
-  };
+  const goToScene = useCallback((scene: UraiScene) => {
+    setActiveScene((currentScene) => {
+      if (scene === currentScene) return currentScene;
+      setPreviousScene(currentScene);
+      setTransitionDirection("enter");
+      return scene;
+    });
+  }, []);
 
-  const returnHome = () => {
-    if (activeScene === "home") return;
-    setPreviousScene(activeScene);
-    setTransitionDirection("return");
-    setActiveScene("home");
-  };
+  const returnHome = useCallback(() => {
+    setActiveScene((currentScene) => {
+      if (currentScene === "home") return currentScene;
+      setPreviousScene(currentScene);
+      setTransitionDirection("return");
+      return "home";
+    });
+  }, []);
 
-  const returnToLifeMap = () => {
-    if (activeScene === "life-map") return;
-    setPreviousScene(activeScene);
-    setTransitionDirection("return");
-    setActiveScene("life-map");
-  };
+  const returnToLifeMap = useCallback(() => {
+    setActiveScene((currentScene) => {
+      if (currentScene === "life-map") return currentScene;
+      setPreviousScene(currentScene);
+      setTransitionDirection("return");
+      return "life-map";
+    });
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -49,7 +55,7 @@ export function GenesisSceneShell() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeScene]);
+  }, [activeScene, returnHome, returnToLifeMap]);
 
   return (
     <main className="relative min-h-screen w-full overflow-hidden bg-black text-white">

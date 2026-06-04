@@ -1,17 +1,35 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
     // URAI privacy-first baseline:
     // - No public reads by default.
     // - Users may only access their own records.
     // - Stricter schema validation should be added before production launch.
     match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isOwner(userId);
     }
 
-    // Future admin/service paths stay locked until explicitly implemented.
+    // Waitlist public create only. No public read.
+    match /waitlist/{document=**} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // Admin area draft.
+    // Replace email allowlist with custom claims before scaled launch.
+    // Recommended production form:
+    // allow read, write: if request.auth != null && request.auth.token.uraiAdmin == true;
     match /admin/{document=**} {
-      allow read, write: if false;
+      allow read, write: if request.auth != null && request.auth.token.uraiAdmin == true;
+    }
+
+    match /system/featureFlags/{document=**} {
+      allow read: if request.auth != null && request.auth.token.uraiAdmin == true;
+      allow write: if request.auth != null && request.auth.token.uraiAdmin == true;
     }
   }
 }

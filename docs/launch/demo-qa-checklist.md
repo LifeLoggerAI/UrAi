@@ -1,0 +1,21 @@
+# URAI Demo QA Checklist
+
+- [ ] `/demo` loads without auth.
+- [ ] `/u/adamclamp` loads without auth.
+- [ ] No private data appears.
+- [ ] Sample Demo badge is visible.
+- [ ] Passport copy says demo/sample data when surfaced.
+- [ ] Companion says sample data when asked what it can see.
+- [ ] Companion does not claim to know the visitor personally.
+- [ ] Life Map stars are sample only.
+- [ ] Ground elements are sample only.
+- [ ] Mirror reflections are sample only.
+- [ ] Shadow is protected.
+- [ ] Legacy is sample only.
+- [ ] Export is sample-only or disabled.
+- [ ] Waitlist works or fails gracefully.
+- [ ] Mobile layout works.
+- [ ] No debug labels.
+- [ ] No fake personal claims.
+- [ ] Signed-in user visiting demo remains isolated from private account state.
+- [ ] Demo interactions do not sync to a real user profile.

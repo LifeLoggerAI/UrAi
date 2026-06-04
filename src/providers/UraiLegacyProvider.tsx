@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { buildPermissionedLegacy, legacyCandidateFromSummary } from "@/lib/legacy/buildPermissionedLegacy";
+import { buildPermissionedLegacy } from "@/lib/legacy/buildPermissionedLegacy";
 import type { LegacyArchive, LegacyCandidateSource, LegacyChapter, LegacyItem } from "@/lib/legacy/legacyTypes";
 import type { GenesisMoodState } from "@/lib/companion/companionTypes";
 
@@ -47,17 +47,17 @@ export function UraiLegacyProvider({ children }: { children: ReactNode }) {
   const [selectedLegacyChapter, setSelectedLegacyChapter] = useState<LegacyChapter | null>(null);
   const [isLegacyOpen, setIsLegacyOpen] = useState(false);
 
-  useEffect(() => {
-    const confirmed = readConfirmedGate();
-    setHasConfirmedGate(confirmed);
-    setLegacyArchive(buildPermissionedLegacy({ passportProfile: createProfile(confirmed), userApprovedItems }));
-  }, []);
-
   const rebuild = useCallback((confirmed: boolean, items: LegacyCandidateSource[]) => {
     const next = buildPermissionedLegacy({ passportProfile: createProfile(confirmed), userApprovedItems: items });
     setLegacyArchive(next);
     setSelectedLegacyChapter(next.chapters[0] ?? null);
   }, []);
+
+  useEffect(() => {
+    const confirmed = readConfirmedGate();
+    setHasConfirmedGate(confirmed);
+    rebuild(confirmed, []);
+  }, [rebuild]);
 
   const openLegacy = useCallback(() => {
     setIsLegacyOpen(true);

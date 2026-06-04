@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useUraiAudio } from "@/providers/UraiAudioProvider";
 import {
   groundPulseHaptic,
@@ -27,10 +27,13 @@ const portalSoundMap: Partial<Record<PortalType, string>> = {
 
 export function useInteractionSound() {
   const audio = useUraiAudio();
-  const hapticSettings = {
-    hapticsEnabled: audio.settings.hapticsEnabled,
-    reducedSensoryMode: audio.settings.reducedSensoryMode,
-  };
+  const hapticSettings = useMemo(
+    () => ({
+      hapticsEnabled: audio.settings.hapticsEnabled,
+      reducedSensoryMode: audio.settings.reducedSensoryMode,
+    }),
+    [audio.settings.hapticsEnabled, audio.settings.reducedSensoryMode],
+  );
 
   const ensureUnlocked = useCallback(async () => {
     if (audio.settings.enabled && !audio.isUnlocked) await audio.unlockAudio();

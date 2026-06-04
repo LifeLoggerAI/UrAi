@@ -1,18 +1,26 @@
-name: QA – Lighthouse & A11y
+name: URAI QA
+
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   qa:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      URAI_WAITLIST_DRY_RUN: "1"
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ""
+      FIREBASE_PROJECT_ID: ""
+      OPENAI_API_KEY: ""
     permissions:
       contents: read
       actions: read
       checks: write
       pull-requests: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,50 +28,26 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: npm
 
-      - name: Install deps
-        run: npm install
+      - name: Install
+        run: npm ci
 
-      - name: Build app
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Build
         run: npm run build
 
-      - name: Start app (Next.js)
-        run: |
-          (npm run start &) 
-          echo "Waiting for localhost:3014..."
-          npx wait-on http://localhost:3014
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
 
-      - name: Install Lighthouse CLI
-        run: npm i -g lighthouse
-
-      - name: Run Lighthouse (Perf + A11y + SEO)
-        run: |
-          mkdir -p lh-artifacts
-          lighthouse http://localhost:3014 \
-            --only-categories=performance,accessibility,seo \
-            --output=json --output-path=./lh-artifacts/report.json \
-            --chrome-flags="--headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-setuid-sandbox --remote-debugging-address=127.0.0.1"
-
-      - name: Upload Lighthouse report
-        uses: actions/upload-artifact@v4
-        with:
-          name: lighthouse-report
-          path: lh-artifacts/report.json
-
-      - name: Gate on V1 launch min scores
-        run: |
-          node -e "
-          const fs=require('fs');
-          const r=JSON.parse(fs.readFileSync('./lh-artifacts/report.json','utf8'));
-          const cats=r.categories;
-          const s = k => Math.round((cats[k].score||0)*100);
-          const perf=s('performance'), a11y=s('accessibility'), seo=s('seo');
-          console.log('Scores =>', {perf, a11y, seo});
-          if(perf<85) console.warn('PERFORMANCE WARNING: Lighthouse performance < 85 on a shared GitHub runner. Treat this as a report-only signal for PR CI.');
-          const fails=[];
-          if(a11y<90) fails.push('accessibility < 90');
-          if(seo<90) fails.push('seo < 90');
-          if(fails.length){ console.error('QUALITY GATES FAILED:', fails.join(', ')); process.exit(1); }
-          "
+      - name: E2E tests
+        run: npm run test:e2e

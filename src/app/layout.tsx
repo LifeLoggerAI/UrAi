@@ -19,41 +19,36 @@ import type { Metadata } from "next";
 import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
+const siteUrl = process.env.NEXT_PUBLIC_URAI_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
+const title = "URAI Genesis — Private AI Companion + Symbolic Life Map";
+const description = "URAI is a privacy-first AI companion and symbolic life map where users control what opens, reflects, remembers, and leaves.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  alternates: { canonical: siteUrl },
   title: {
-    default: "URAI - Give it one memory",
-    template: "%s | URAI",
+    default: title,
+    template: "%s | URAI Genesis",
   },
-  description:
-    "Give URAI one memory and watch it become the first scene of a living world.",
-  applicationName: "URAI",
-  keywords: [
-    "URAI",
-    "memory world",
-    "cinematic memory",
-    "living world",
-    "personal world",
-    "AI scene",
-  ],
+  description,
+  applicationName: "URAI Genesis",
+  keywords: ["URAI", "privacy-first AI", "symbolic life map", "AI companion", "personal reflection"],
   authors: [{ name: "URAI Labs" }],
   creator: "URAI Labs",
   publisher: "URAI Labs",
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "URAI",
-    title: "URAI - Give it one memory",
-    description:
-      "Give URAI one memory and watch it become the first scene of a living world.",
+    siteName: "URAI Genesis",
+    title,
+    description,
+    images: [{ url: "/og/urai-genesis-preview.png", width: 1200, height: 630, alt: "URAI Genesis preview" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "URAI - Give it one memory",
-    description:
-      "Give URAI one memory and watch it become the first scene of a living world.",
+    title,
+    description,
+    images: ["/og/urai-genesis-preview.png"],
   },
 };
 

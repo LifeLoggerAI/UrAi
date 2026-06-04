@@ -306,7 +306,7 @@ export function UraiAuthProvider({ children }: { children: ReactNode }) {
   const isAnonymous = Boolean(user?.isAnonymous);
   const isLocalOnly = authMode === "local" || !isAuthenticated;
   const userId = user?.uid ?? profile?.userId ?? null;
-  const authState: UraiAuthState = {
+  const authState = useMemo<UraiAuthState>(() => ({
     userId: userId ?? undefined,
     profile: profile ?? undefined,
     authMode,
@@ -315,7 +315,7 @@ export function UraiAuthProvider({ children }: { children: ReactNode }) {
     isLocalOnly,
     loading: authLoading,
     error: authError ?? undefined,
-  };
+  }), [authError, authLoading, authMode, isAnonymous, isAuthenticated, isLocalOnly, profile, userId]);
 
   const value = useMemo<UraiAuthContextValue>(() => ({
     authState,

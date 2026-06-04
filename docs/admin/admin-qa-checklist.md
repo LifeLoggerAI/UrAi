@@ -1,0 +1,21 @@
+# URAI Admin QA Checklist
+
+- [ ] Admin route denied when signed out.
+- [ ] Admin route denied for unauthorized user.
+- [ ] Admin route works for founder/admin when allowlist/custom claim is configured.
+- [ ] Feature flags load.
+- [ ] Feature flags save locally/admin-safe.
+- [ ] Safety-critical feature flags require confirmation.
+- [ ] Waitlist viewer loads.
+- [ ] Waitlist CSV export is local and admin-only.
+- [ ] Demo controls do not expose private data.
+- [ ] Demo remains sample-only.
+- [ ] Launch status controls update admin state.
+- [ ] Maintenance mode component renders.
+- [ ] Public demo obeys public demo flag when fully wired.
+- [ ] Waitlist obeys waitlist flag when fully wired.
+- [ ] No admin links visible in public UI.
+- [ ] No secrets exposed in UI or API responses.
+- [ ] No private user data shown.
+- [ ] Admin tools do not bypass Passport.
+- [ ] Firestore rules use custom claims before scaled launch.
