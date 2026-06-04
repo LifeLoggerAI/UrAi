@@ -1,18 +1,22 @@
 import {
+  IntelligenceConfidence,
   IntelligenceSignal,
+  IntelligenceSignalType,
+  IntelligenceSafetyBand,
   SymbolicInferenceConfig,
   SymbolicInferenceResult,
   SymbolicInputSummary,
 } from "./intelligenceTypes";
 import {
-  isLayerAllowedForSymbolicInference,
-  shouldBlockRawSensitiveInput,
-  sanitizeSymbolicSummary,
   getSafetyBandForInput,
+  isLayerAllowedForSymbolicInference,
   makeUncertaintyPrefix,
+  sanitizeSymbolicSummary,
+  shouldBlockRawSensitiveInput,
 } from "./intelligenceSafety";
 import { scoreMoodAndRhythm } from "./moodRhythmScoring";
 
+// ID HELPER
 function createIntelligenceSignalId(prefix: string, seedParts: string[] = []): string {
   const seed = seedParts.join("|").toLowerCase().replace(/\s+/g, "-");
   let hash = 0;
@@ -28,7 +32,32 @@ function createIntelligenceSignalId(prefix: string, seedParts: string[] = []): s
   return `${prefix}_${timePart}_${safeHash}`;
 }
 
-export const DEFAULT_SYMBOLIC_INFERENCE_CONFIG: SymbolicInferenceConfig = {
+// SAFE LANGUAGE HELPER
+const FORBIDDEN_USER_FACING_TERMS = [
+  "diagnosis", "disorder", "pathology", "you are depressed", "you have anxiety",
+  "you definitely", "the truth is", "this proves", "this means you are",
+  "hidden truth", "lie detected", "betrayal confirmed", "surveillance", "tracked you",
+];
+
+function makeSafeUserFacingSummary(summary: string): string {
+  let safe = summary;
+
+  safe = safe.replace(/detected/gi, "noticed as a possible pattern");
+  safe = safe.replace(/proves/gi, "may suggest");
+  safe = safe.replace(/definitely/gi, "may");
+  safe = safe.replace(/the truth is/gi, "one possible reflection is");
+  safe = safe.replace(/tracked you/gi, "appeared in approved summaries");
+
+  FORBIDDEN_USER_FACING_TERMS.forEach((term) => {
+    const escaped = term.replace(/[.*+?^${}()|[\]\]/g, "\\$&");
+    safe = safe.replace(new RegExp(escaped, "gi"), "a symbolic reflection");
+  });
+
+  return safe.trim();
+}
+
+// CONFIG
+export const DEFAULT_SYMBOLIC_INFERENCE_CONFIG = {
   allowShadowCandidates: false,
   allowLegacyCandidates: true,
   allowRitualSuggestions: true,
@@ -37,29 +66,70 @@ export const DEFAULT_SYMBOLIC_INFERENCE_CONFIG: SymbolicInferenceConfig = {
   minConfidenceForLifeMap: "medium",
   minConfidenceForGround: "low",
   minConfidenceForMirror: "medium",
-};
+} satisfies SymbolicInferenceConfig;
 
+// HEURISTICS HELPERS
+const LIFE_MAP_WORDS = ["milestone", "transition", "chapter", "first time", "last time", "meaningful", "completed", "breakthrough", "identity", "threshold", "season", "relationship moment"];
+const GROUND_WORDS = ["recovery", "grounding", "calm", "rest", "nature", "complete", "stability", "center", "breath", "small win", "quiet"];
+const MIRROR_WORDS = ["pattern", "recurring", "loop", "again", "theme", "rhythm", "correlation", "friction", "return to"];
+const SHADOW_WORDS = ["difficult_pattern", "avoidance", "spiraling", "shame", "friction", "over-checking", "overload", "unresolved", "tension"];
+const LEGACY_WORDS = ["legacy", "milestone", "family", "teaching", "creative breakthrough", "completed chapter", "values", "resilience", "identity evolution", "long-term memory"];
+
+function normalizedText(input: SymbolicInputSummary): string {
+  return [input.summary, input.title, ...(input.tags ?? []), input.kind, input.rhythmHint]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function matchesAny(text: string, words: string[]): boolean {
+  return words.some((word) => text.includes(word));
+}
+
+function sortAndCapSignals(signals: IntelligenceSignal[], maxSignals: number): IntelligenceSignal[] {
+    return signals
+      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+      .slice(0, maxSignals);
+}
+
+
+// MAIN FUNCTION
 export function runSymbolicInference(params: {
   inputs: SymbolicInputSummary[];
   openPassportLayerIds: string[];
   config?: Partial<SymbolicInferenceConfig>;
 }): SymbolicInferenceResult {
-  const config = { ...DEFAULT_SYMBOLIC_INFERENCE_CONFIG, ...params.config };
+  const finalConfig = { ...DEFAULT_SYMBOLIC_INFERENCE_CONFIG, ...params.config };
+  const generatedAt = new Date().toISOString();
 
   const validInputs = params.inputs
     .filter(input => isLayerAllowedForSymbolicInference(input.layerId, params.openPassportLayerIds))
     .filter(input => !shouldBlockRawSensitiveInput(input))
     .map(input => ({ ...input, summary: sanitizeSymbolicSummary(input.summary) }));
 
-  let signals: IntelligenceSignal[] = [];
+  if (validInputs.length === 0) {
+      return {
+          generatedAt,
+          signals: [],
+          lifeMapCandidates: [],
+          groundCandidates: [],
+          mirrorCandidates: [],
+          shadowCandidates: [],
+          legacyCandidates: [],
+          ritualCandidates: [],
+      };
+  }
 
+  let signals: IntelligenceSignal[] = [];
   const moodRhythmScore = scoreMoodAndRhythm(validInputs);
+
+  // Mood/Rhythm Signal
   signals.push({
       id: createIntelligenceSignalId('mood-rhythm', [moodRhythmScore.moodState, moodRhythmScore.rhythmState]),
       type: 'mood',
       title: 'Mood and Rhythm Analysis',
-      summary: `${makeUncertaintyPrefix(moodRhythmScore.confidence)} Current mood state appears to be ${moodRhythmScore.moodState} and rhythm is ${moodRhythmScore.rhythmState}`.trim(),
-      createdAt: new Date().toISOString(),
+      summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix(moodRhythmScore.confidence)} Current mood state appears to be ${moodRhythmScore.moodState} and rhythm is ${moodRhythmScore.rhythmState}`.trim()),
+      createdAt: generatedAt,
       sourceRecordIds: validInputs.map(i => i.id),
       sourceLayerIds: validInputs.map(i => i.layerId),
       confidence: moodRhythmScore.confidence,
@@ -67,132 +137,152 @@ export function runSymbolicInference(params: {
       moodState: moodRhythmScore.moodState,
       score: (moodRhythmScore.moodScore + moodRhythmScore.rhythmScore) / 2,
       suggestedDestination: 'mirror',
+      userApproved: false,
   });
 
-  // Generate signals based on heuristics, not just keywords
+  // Input-based signals
   validInputs.forEach(input => {
+    const text = normalizedText(input);
     const safetyBand = getSafetyBandForInput(input);
 
-    // Life Map Candidates
-    if (input.intensity > 70 && moodRhythmScore.energyScore > 60 && config.minConfidenceForLifeMap !== 'high') {
+    // Life Map
+    if (matchesAny(text, LIFE_MAP_WORDS) || (input.intensity && input.intensity > 80 && moodRhythmScore.moodScore > 70)) {
         signals.push({
-            id: createIntelligenceSignalId('lifemap-event', [input.id]),
+            id: createIntelligenceSignalId('lifemap-candidate', [input.id]),
             type: 'life_event',
             title: 'Significant Life Event Candidate',
-            summary: `${makeUncertaintyPrefix('medium')} A significant life event may have occurred.`,
+            summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix('medium')} A significant life event may have occurred based on input: "${input.summary}"`),
             createdAt: input.createdAt,
             sourceRecordIds: [input.id],
             sourceLayerIds: [input.layerId],
             confidence: 'medium',
-            safetyBand: safetyBand,
+            safetyBand,
             suggestedDestination: 'lifemap',
+            userApproved: false,
         });
     }
 
-    // Grounding Candidates
-    if (moodRhythmScore.recoveryScore < 40 && moodRhythmScore.stressScore > 60) {
+    // Ground
+    if (matchesAny(text, GROUND_WORDS) || (moodRhythmScore.recoveryScore < 40 && moodRhythmScore.overloadScore > 60)) {
         signals.push({
-            id: createIntelligenceSignalId('grounding-needed', [input.id]),
+            id: createIntelligenceSignalId('ground-candidate', [input.id]),
             type: 'grounding',
-            title: 'Grounding Candidate',
-            summary: `${makeUncertaintyPrefix('low')} A grounding activity could be beneficial.`,
+            title: 'Grounding Activity Candidate',
+            summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix('low')} A grounding activity could be beneficial.`),
             createdAt: input.createdAt,
             sourceRecordIds: [input.id],
             sourceLayerIds: [input.layerId],
             confidence: 'low',
-            safetyBand: safetyBand,
+            safetyBand,
             suggestedDestination: 'ground',
+            userApproved: false,
         });
     }
 
-    // Mirror Candidates
-    if (input.summary.includes('pattern') || input.summary.includes('recurring')) {
+    // Mirror
+    if (matchesAny(text, MIRROR_WORDS)) {
         signals.push({
-            id: createIntelligenceSignalId('mirror-pattern', [input.id]),
+            id: createIntelligenceSignalId('mirror-candidate', [input.id]),
             type: 'reflection',
             title: 'Reflection Candidate',
-            summary: `${makeUncertaintyPrefix('medium')} A recurring pattern may be worth reflecting on.`,
+            summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix('medium')} A recurring pattern may be worth reflecting on: "${input.summary}"`),
             createdAt: input.createdAt,
             sourceRecordIds: [input.id],
             sourceLayerIds: [input.layerId],
             confidence: 'medium',
-            safetyBand: safetyBand,
+            safetyBand,
             suggestedDestination: 'mirror',
+            userApproved: false,
         });
     }
-
-    if (config.allowShadowCandidates && moodRhythmScore.moodScore < 40 && input.intensity > 60) {
+    
+    // Shadow
+    if (finalConfig.allowShadowCandidates && matchesAny(text, SHADOW_WORDS)) {
         signals.push({
             id: createIntelligenceSignalId('shadow-candidate', [input.id]),
-            type: 'shadow',
-            title: 'Shadow Candidate',
-            summary: `${makeUncertaintyPrefix('medium')} A potential shadow aspect may be surfacing.`,
+            type: 'shadow_candidate',
+            title: 'Shadow Work Candidate',
+            summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix('medium')} A difficult pattern or unresolved tension might be present.`),
             createdAt: input.createdAt,
             sourceRecordIds: [input.id],
             sourceLayerIds: [input.layerId],
             confidence: 'medium',
-            safetyBand: safetyBand,
+            safetyBand: 'shadow_required',
             suggestedDestination: 'shadow',
+            userApproved: false,
         });
     }
 
-    if (config.allowLegacyCandidates && input.summary.includes('remember')) {
+    // Legacy
+    if (finalConfig.allowLegacyCandidates && matchesAny(text, LEGACY_WORDS)) {
         signals.push({
             id: createIntelligenceSignalId('legacy-candidate', [input.id]),
-            type: 'legacy',
+            type: 'legacy_candidate',
             title: 'Legacy Candidate',
-            summary: `${makeUncertaintyPrefix('low')} This memory could be a legacy candidate.`,
+            summary: makeSafeUserFacingSummary(`${makeUncertaintyPrefix('low')} A theme of legacy or long-term significance was noticed.`),
             createdAt: input.createdAt,
             sourceRecordIds: [input.id],
             sourceLayerIds: [input.layerId],
             confidence: 'low',
-            safetyBand: safetyBand,
+            safetyBand: 'legacy_required',
             suggestedDestination: 'legacy',
+            userApproved: false,
         });
     }
   });
 
-
-  if(config.allowRitualSuggestions) {
-    if (moodRhythmScore.recoveryScore > 60) signals.push({id: createIntelligenceSignalId('ritual-grounding'), type: 'ritual', title: 'Grounding Ritual Suggestion', summary: 'Consider a grounding ritual to aid recovery.', createdAt: new Date().toISOString(), sourceRecordIds: [], sourceLayerIds: [], confidence: 'medium', safetyBand: 'safe', suggestedDestination: 'ritual' });
-    if (moodRhythmScore.overloadScore > 70) signals.push({id: createIntelligenceSignalId('ritual-reset'), type: 'ritual', title: 'Quiet/Reset Ritual Suggestion', summary: 'A quiet/reset ritual might help with the feeling of being overloaded.', createdAt: new Date().toISOString(), sourceRecordIds: [], sourceLayerIds: [], confidence: 'medium', safetyBand: 'safe', suggestedDestination: 'ritual' });
+  // Ritual suggestions
+  if (finalConfig.allowRitualSuggestions) {
+    if (moodRhythmScore.recoveryScore > 70) {
+        signals.push({
+            id: createIntelligenceSignalId('ritual-recovery'),
+            type: 'ritual',
+            title: 'Recovery Ritual Suggestion',
+            summary: makeSafeUserFacingSummary('Strong recovery noticed. A ritual to honor rest could be beneficial.'),
+            createdAt: generatedAt,
+            sourceRecordIds: [], sourceLayerIds: [],
+            confidence: 'medium', safetyBand: 'safe',
+            suggestedDestination: 'ritual', userApproved: false,
+        });
+    }
+    if (moodRhythmScore.overloadScore > 70) {
+        signals.push({
+            id: createIntelligenceSignalId('ritual-overload'),
+            type: 'ritual',
+            title: 'Overload Reset Ritual Suggestion',
+            summary: makeSafeUserFacingSummary('High overload noticed. A quiet or reset ritual may help restore balance.'),
+            createdAt: generatedAt,
+            sourceRecordIds: [], sourceLayerIds: [],
+            confidence: 'medium', safetyBand: 'safe',
+            suggestedDestination: 'ritual', userApproved: false,
+        });
+    }
   }
 
-  if(config.allowCompanionContext) {
+  // Companion context
+  if (finalConfig.allowCompanionContext) {
       signals.push({
         id: createIntelligenceSignalId('companion-context'),
         type: 'system',
         title: 'Companion Context',
-        summary: `Symbolic context: mood is ${moodRhythmScore.moodState}, rhythm is ${moodRhythmScore.rhythmState}`,
-        createdAt: new Date().toISOString(),
-        sourceRecordIds: [],
-        sourceLayerIds: [],
-        confidence: 'low',
-        safetyBand: 'safe',
-        suggestedDestination: 'companion'
+        summary: `Symbolic context: mood is ${moodRhythmScore.moodState}, rhythm is ${moodRhythmScore.rhythmState}`, // System-facing, no need for makeSafe
+        createdAt: generatedAt,
+        sourceRecordIds: [], sourceLayerIds: [],
+        confidence: 'high', safetyBand: 'safe',
+        suggestedDestination: 'companion', userApproved: false,
       });
   }
 
-  // Cap signals, ensuring forbidden terms are not in the summary.
-  signals = signals.sort((a,b) => (b.score || 0) - (a.score || 0)).slice(0, config.maxSignalsPerRun);
-
-  const forbiddenTerms = ["diagnosis", "disorder", "pathology", "you are depressed", "you have anxiety", "you definitely", "the truth is", "this proves", "this means you are", "hidden truth", "lie detected", "betrayal confirmed", "surveillance", "tracked you"];
-  signals.forEach(signal => {
-      forbiddenTerms.forEach(term => {
-          if (signal.summary.includes(term)) {
-              signal.summary = 'A symbolic pattern was detected, which may be worth reflecting on.';
-          }
-      });
-  });
+  const cappedSignals = sortAndCapSignals(signals, finalConfig.maxSignalsPerRun);
 
   return {
-    generatedAt: new Date().toISOString(),
-    signals: signals,
-    lifeMapCandidates: signals.filter(s => s.suggestedDestination === 'lifemap'),
-    groundCandidates: signals.filter(s => s.suggestedDestination === 'ground'),
-    mirrorCandidates: signals.filter(s => s.suggestedDestination === 'mirror'),
-    shadowCandidates: signals.filter(s => s.suggestedDestination === 'shadow'),
-    legacyCandidates: signals.filter(s => s.suggestedDestination === 'legacy'),
-    ritualCandidates: signals.filter(s => s.suggestedDestination === 'ritual'),
+    generatedAt,
+    signals: cappedSignals,
+    lifeMapCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "lifemap"),
+    groundCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "ground"),
+    mirrorCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "mirror"),
+    shadowCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "shadow"),
+    legacyCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "legacy"),
+    ritualCandidates: cappedSignals.filter((signal) => signal.suggestedDestination === "ritual"),
   };
 }
