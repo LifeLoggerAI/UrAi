@@ -1,0 +1,151 @@
+
+.passport-control-center {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  font-family: sans-serif;
+  max-width: 900px;
+  margin: auto;
+}
+
+.passport-control-center h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.passport-control-center .subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #a0a0a0;
+}
+
+.passport-status-summary {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #2a2a2a;
+  border-radius: 0.5rem;
+}
+
+.passport-status-summary p {
+  margin: 0;
+  color: #c0c0c0;
+}
+
+.passport-layer-group {
+  margin-bottom: 2rem;
+}
+
+.passport-layer-group h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.passport-layer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.passport-layer-card {
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.passport-layer-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.passport-layer-card .title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.passport-layer-card .summary {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+.passport-layer-card .details {
+  font-size: 0.8rem;
+  color: #c0c0c0;
+  margin-bottom: 1rem;
+}
+
+.passport-layer-card .details span {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    margin-right: 0.5rem;
+}
+
+.passport-layer-card .status-open {
+  background-color: #00b368;
+  color: #ffffff;
+}
+
+.passport-layer-card .status-closed {
+  background-color: #444;
+  color: #c0c0c0;
+}
+
+.passport-layer-card .status-blocked {
+    background-color: #ff4d4d;
+    color: #ffffff;
+}
+
+.passport-layer-card .sensitivity-low {
+    background-color: #333;
+}
+.passport-layer-card .sensitivity-medium {
+    background-color: #555;
+}
+.passport-layer-card .sensitivity-high {
+    background-color: #777;
+}
+.passport-layer-card .sensitivity-protected {
+    background-color: #999;
+}
+
+
+.passport-layer-card .action-button {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.passport-layer-card .action-button.open {
+    background-color: #4caf50;
+    color: white;
+}
+
+.passport-layer-card .action-button.close {
+    background-color: #f44336;
+    color: white;
+}
+
+.passport-layer-card .action-button.blocked {
+    background-color: #888;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.passport-layer-card .action-button:hover:not(:disabled) {
+    opacity: 0.8;
+}

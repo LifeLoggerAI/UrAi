@@ -13,6 +13,7 @@ import { UraiFeatureFlagProvider } from '@/providers/UraiFeatureFlagProvider';
 // import { UraiMirrorProvider } from '@/providers/UraiMirrorProvider';
 // import { UraiNotificationProvider } from '@/providers/UraiNotificationProvider';
 import { UraiOnboardingProvider } from '@/providers/UraiOnboardingProvider';
+import { UraiPassportProvider } from '@/providers/UraiPassportProvider';
 // import { UraiRitualProvider } from '@/providers/UraiRitualProvider';
 import { UraiSettingsProvider } from '@/providers/UraiSettingsProvider';
 // import { UraiShadowProvider } from '@/providers/UraiShadowProvider';
@@ -38,7 +39,8 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
         <UraiFeatureFlagProvider>
           <UraiSettingsProvider>
             <UraiOnboardingProvider>
-              {/* Disabled providers for Pass 1:
+              <UraiPassportProvider>
+                {/* Disabled providers for Pass 1:
               <UraiCloudSyncProvider>
                 <UraiAudioProvider>
                   <UraiVoiceProvider>
@@ -66,7 +68,8 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
                 </UraiAudioProvider>
               </UraiCloudSyncProvider>
               */}
-              {children}
+                {children}
+              </UraiPassportProvider>
             </UraiOnboardingProvider>
           </UraiSettingsProvider>
         </UraiFeatureFlagProvider>

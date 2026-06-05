@@ -1,46 +1,121 @@
+
 "use client";
 
+import React, { createContext, useContext, useMemo, useReducer } from "react";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-
-type UraiPassportState = {
-  hasConsent: boolean;
-};
+  createDefaultPassportState,
+  getLayerStatus,
+  isLayerOpen,
+  openLayer as openLayerState,
+  closeLayer as closeLayerState,
+  requireLayer as requireLayerState,
+  listOpenLayers as listOpenLayersState,
+  listClosedLayers as listClosedLayersState,
+  explainLayer,
+  resetPassportState,
+  exportPassportState as exportPassportStateFunc,
+  importPassportState as importPassportStateFunc,
+} from "@/lib/passport/passportState";
+import type {
+  PassportLayerId,
+  PassportState,
+  PassportLayerDefinition,
+  PassportLayerStatus,
+} from "@/lib/passport/passportLayerTypes";
 
 type UraiPassportContextValue = {
-  passportState: UraiPassportState;
-  grantConsent: () => void;
-  revokeConsent: () => void;
+  passportState: PassportState;
+  getLayerStatus: (layerId: PassportLayerId) => PassportLayerStatus;
+  isLayerOpen: (layerId: PassportLayerId) => boolean;
+  openLayer: (layerId: PassportLayerId, reason?: string) => void;
+  closeLayer: (layerId: PassportLayerId, reason?: string) => void;
+  requireLayer: (layerId: PassportLayerId) => {
+    allowed: boolean;
+    status: PassportLayerStatus;
+    reason: string;
+  };
+  listOpenLayers: () => PassportLayerId[];
+  listClosedLayers: () => PassportLayerId[];
+  explainLayer: (layerId: PassportLayerId) => PassportLayerDefinition;
+  resetPassport: () => void;
+  exportPassportState: () => PassportState;
+  importPassportState: (value: unknown) => void;
 };
 
-const UraiPassportContext = createContext<UraiPassportContextValue | null>(null);
+const UraiPassportContext = createContext<UraiPassportContextValue | null>(
+  null
+);
 
-export function UraiPassportProvider({ children }: { children: ReactNode }) {
-  const [hasConsent, setHasConsent] = useState(false);
+type PassportAction =
+  | { type: "OPEN_LAYER"; layerId: PassportLayerId; reason?: string }
+  | { type: "CLOSE_LAYER"; layerId: PassportLayerId; reason?: string }
+  | { type: "RESET_PASSPORT" }
+  | { type: "IMPORT_STATE"; state: PassportState };
 
-  const grantConsent = useCallback(() => {
-    setHasConsent(true);
-  }, []);
+function passportReducer(
+  state: PassportState,
+  action: PassportAction
+): PassportState {
+  switch (action.type) {
+    case "OPEN_LAYER":
+      return openLayerState(state, action.layerId, action.reason);
+    case "CLOSE_LAYER":
+      return closeLayerState(state, action.layerId, action.reason);
+    case "RESET_PASSPORT":
+      return resetPassportState();
+    case "IMPORT_STATE":
+      return action.state;
+    default:
+      return state;
+  }
+}
 
-  const revokeConsent = useCallback(() => {
-    setHasConsent(false);
-  }, []);
+export function UraiPassportProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}): JSX.Element {
+  const [passportState, dispatch] = useReducer(
+    passportReducer,
+    createDefaultPassportState()
+  );
 
-  const passportState = useMemo<UraiPassportState>(() => ({
-    hasConsent,
-  }), [hasConsent]);
+  const getLayerStatusMemo = (layerId: PassportLayerId) =>
+    getLayerStatus(passportState, layerId);
+  const isLayerOpenMemo = (layerId: PassportLayerId) =>
+    isLayerOpen(passportState, layerId);
+  const openLayer = (layerId: PassportLayerId, reason?: string) =>
+    dispatch({ type: "OPEN_LAYER", layerId, reason });
+  const closeLayer = (layerId: PassportLayerId, reason?: string) =>
+    dispatch({ type: "CLOSE_LAYER", layerId, reason });
+  const requireLayer = (layerId: PassportLayerId) =>
+    requireLayerState(passportState, layerId);
+  const listOpenLayers = () => listOpenLayersState(passportState);
+  const listClosedLayers = () => listClosedLayersState(passportState);
+  const resetPassport = () => dispatch({ type: "RESET_PASSPORT" });
+  const exportPassportState = () => exportPassportStateFunc(passportState);
+  const importPassportState = (value: unknown) => {
+    const newState = importPassportStateFunc(value);
+    dispatch({ type: "IMPORT_STATE", state: newState });
+  };
 
-  const value = useMemo<UraiPassportContextValue>(() => ({
-    passportState,
-    grantConsent,
-    revokeConsent,
-  }), [passportState, grantConsent, revokeConsent]);
+  const value = useMemo(
+    () => ({
+      passportState,
+      getLayerStatus: getLayerStatusMemo,
+      isLayerOpen: isLayerOpenMemo,
+      openLayer,
+      closeLayer,
+      requireLayer,
+      listOpenLayers,
+      listClosedLayers,
+      explainLayer,
+      resetPassport,
+      exportPassportState,
+      importPassportState,
+    }),
+    [passportState]
+  );
 
   return (
     <UraiPassportContext.Provider value={value}>
