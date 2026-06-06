@@ -1,0 +1,18 @@
+
+.passport-layer-card {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-content {
+  flex-grow: 1;
+}
+
+.card-actions {
+  display: flex;
+  flex-direction: column;
+}

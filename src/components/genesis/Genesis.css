@@ -1,0 +1,48 @@
+/* src/components/genesis/Genesis.css */
+
+.genesis-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure it's in the background */
+  overflow: hidden;
+}
+
+.genesis-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0a0a0f; /* Dark, calm blue/black */
+  background-image: radial-gradient(circle at 50% 50%, #1a1a2f 0%, #0a0a0f 70%);
+  opacity: 0.9;
+}
+
+.genesis-orb-container {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* Orb is above other UI but not modal-blocking */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Updated to style the <img> tag */
+.genesis-orb {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  border-radius: 50%; /* Keep the circular shape for shadow/hover effects */
+  box-shadow: 0 0 15px 5px rgba(127, 90, 240, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.genesis-orb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px 8px rgba(127, 90, 240, 0.8);
+}

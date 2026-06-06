@@ -12,7 +12,7 @@ export type ConsentCopy = {
 export type ConsentLayerId =
   | "passport" | "aiCompanion" | "lifeMap" | "ground" | "mirror" | "shadow" | "legacy" | "exports"
   | "audio" | "transcripts" | "location" | "gmail" | "calendar" | "health" | "relationships"
-  | "notifications" | "cloudSync" | "accountDeletion" | "companionMemory";
+  | "notifications" | "cloudSync" | "accountDeletion" | "companionMemory" | "deviceBehavior";
 
 export const CONSENT_COPY_REGISTRY: Record<ConsentLayerId, ConsentCopy> = {
   passport: { title: "Passport controls URAI", shortBody: "Passport is where you choose which layers may open, sync, export, or appear in AI context.", confirmLabel: "Open Passport", cancelLabel: "Keep closed", sensitivity: "medium", requiresExplicitOptIn: false },
@@ -34,6 +34,7 @@ export const CONSENT_COPY_REGISTRY: Record<ConsentLayerId, ConsentCopy> = {
   cloudSync: { title: "Cloud sync", shortBody: "Sync copies only approved URAI state to your account. Passport still controls sensitive layers.", confirmLabel: "Enable sync", cancelLabel: "Keep local", sensitivity: "high", requiresExplicitOptIn: true },
   accountDeletion: { title: "Delete account data", shortBody: "This changes data URAI controls. It does not delete data from third-party services.", confirmLabel: "Continue to deletion", cancelLabel: "Cancel", sensitivity: "very_high", requiresExplicitOptIn: true },
   companionMemory: { title: "Companion memory", shortBody: "Companion memory stays off by default. Only summaries should be saved if you explicitly allow it.", confirmLabel: "Allow Companion memory", cancelLabel: "Keep memory off", sensitivity: "high", requiresExplicitOptIn: true },
+  deviceBehavior: { title: "Device Behavior", shortBody: "This allows URAI to learn from your device activity to provide a more personalized experience.", confirmLabel: "Allow", cancelLabel: "Don't allow", sensitivity: "high", requiresExplicitOptIn: true },
 };
 
 export function getConsentCopy(layerId: ConsentLayerId): ConsentCopy {

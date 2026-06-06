@@ -18,6 +18,7 @@ import "../styles/urai-sacred-tech-system.css";
 import type { Metadata } from "next";
 import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";
+import { Genesis } from "@/components/genesis"; // Import Genesis component
 
 const siteUrl = process.env.NEXT_PUBLIC_URAI_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
 const title = "URAI Genesis — Private AI Companion + Symbolic Life Map";
@@ -61,6 +62,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppProviders>
+          <Genesis /> {/* Add Genesis as the background */}
           <OnboardingGate>{children}</OnboardingGate>
         </AppProviders>
       </body>
