@@ -49,7 +49,7 @@ function makeSafeUserFacingSummary(summary: string): string {
   safe = safe.replace(/tracked you/gi, "appeared in approved summaries");
 
   FORBIDDEN_USER_FACING_TERMS.forEach((term) => {
-    const escaped = term.replace(/[.*+?^${}()|[\]\]/g, "\\$&");
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     safe = safe.replace(new RegExp(escaped, "gi"), "a symbolic reflection");
   });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ConsentGate } from "./ConsentGate";
+import { ConsentGate } from "../privacy/ConsentGate";
 
 type LegacyConsentGateProps = {
   onOpenLegacy: () => void;
