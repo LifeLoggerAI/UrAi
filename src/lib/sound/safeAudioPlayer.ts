@@ -11,6 +11,11 @@ export const DEFAULT_URAI_SOUND_PREFERENCE: UraiSoundPreference = {
   volume: 0.35,
 };
 
+function clampVolume(value: number): number {
+  if (!Number.isFinite(value)) return DEFAULT_URAI_SOUND_PREFERENCE.volume;
+  return Math.max(0, Math.min(1, value));
+}
+
 export function getStoredSoundPreference(): UraiSoundPreference {
   if (typeof window === "undefined") {
     return DEFAULT_URAI_SOUND_PREFERENCE;
@@ -57,11 +62,11 @@ export async function playUraiSound(
       }
       ambientAudio = new Audio(soundDef.src);
       ambientAudio.loop = true;
-      ambientAudio.volume = soundDef.defaultVolume * prefs.volume;
+      ambientAudio.volume = clampVolume(soundDef.defaultVolume * prefs.volume);
       await ambientAudio.play();
     } else {
       const audio = new Audio(soundDef.src);
-      audio.volume = soundDef.defaultVolume * prefs.volume;
+      audio.volume = clampVolume(soundDef.defaultVolume * prefs.volume);
       await audio.play();
     }
     return true;

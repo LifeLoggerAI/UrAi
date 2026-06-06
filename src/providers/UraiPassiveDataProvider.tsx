@@ -32,7 +32,7 @@ interface UraiPassiveDataContextType {
 const UraiPassiveDataContext = createContext<UraiPassiveDataContextType | undefined>(undefined);
 
 export function UraiPassiveDataProvider({ children }: { children: React.ReactNode }) {
-  const { passportProfile } = useUraiPassport();
+  const passport = useUraiPassport();
   const [sourceStatuses, setSourceStatuses] = useState<PassiveSourceStatus[]>(getDefaultPassiveSourceStatuses());
   const [records, setRecords] = useState<PassiveDataRecord[]>([]);
 
@@ -48,7 +48,7 @@ export function UraiPassiveDataProvider({ children }: { children: React.ReactNod
   };
 
   const enableSource = (sourceId: PassiveDataSourceId) => {
-    const { allowed, reason } = canIngestPassiveSource({ sourceId, passportProfile, action: 'collect' });
+    const { allowed, reason } = canIngestPassiveSource({ sourceId, passport, action: 'collect' });
     if (allowed) {
       updateStatus(sourceId, { status: 'ready', enabled: true });
     } else {
@@ -67,7 +67,7 @@ export function UraiPassiveDataProvider({ children }: { children: React.ReactNod
   };
 
   const ingestRecord = (record: Omit<PassiveDataRecord, 'id' | 'createdAt'>) => {
-    const { allowed } = canIngestPassiveSource({ sourceId: record.sourceId, passportProfile, action: 'collect' });
+    const { allowed } = canIngestPassiveSource({ sourceId: record.sourceId, passport, action: 'collect' });
     if (allowed) {
       const newRecord: PassiveDataRecord = {
         ...record,

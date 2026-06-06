@@ -96,7 +96,7 @@ export function scoreMoodAndRhythm(
       rhythmState = "stable";
   }
 
-  const moodState = mapScoreToMoodState(totalMoodScore);
+  const moodState = mapScoreToMoodState((moodScore - 50) * 2);
 
   const confidence = confidenceFromScore((validInputs.length / (inputs.length || 1)) * 100);
 

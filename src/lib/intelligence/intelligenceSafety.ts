@@ -22,6 +22,63 @@ export function confidenceFromScore(score: number): IntelligenceConfidence {
   return "high";
 }
 
+function hasPaymentCardLikeDigits(text: string): boolean {
+  let digits = "";
+
+  for (const char of text) {
+    if (char >= "0" && char <= "9") {
+      digits += char;
+      if (digits.length > 19) digits = "";
+      continue;
+    }
+
+    if ((char === " " || char === "-") && digits.length > 0) {
+      continue;
+    }
+
+    if (digits.length >= 13 && digits.length <= 19) {
+      return true;
+    }
+
+    digits = "";
+  }
+
+  return digits.length >= 13 && digits.length <= 19;
+}
+
+function redactPaymentCardLikeDigits(text: string): string {
+  let result = "";
+  let buffer = "";
+  let digitCount = 0;
+
+  const flush = () => {
+    if (!buffer) return;
+    result += digitCount >= 13 && digitCount <= 19 ? "[payment card removed]" : buffer;
+    buffer = "";
+    digitCount = 0;
+  };
+
+  for (const char of text) {
+    if (char >= "0" && char <= "9") {
+      buffer += char;
+      digitCount += 1;
+      if (digitCount > 19) flush();
+      continue;
+    }
+
+    if ((char === " " || char === "-") && buffer) {
+      buffer += char;
+      continue;
+    }
+
+    flush();
+    result += char;
+  }
+
+  flush();
+  return result;
+}
+
 export function isLayerAllowedForSymbolicInference(
   layerId: string,
   openLayerIds: string[]
@@ -56,9 +113,7 @@ export function shouldBlockRawSensitiveInput(
     return true;
   }
     
-  // Basic regex for payment cards
-  const cardRegex = /\b(?:\d[ -]*?){13,16}\b/;
-  if (cardRegex.test(summary)) {
+  if (hasPaymentCardLikeDigits(summary)) {
     return true;
   }
 
@@ -112,8 +167,7 @@ export function sanitizeSymbolicSummary(text: string): string {
     const gpsRegex = /[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/g;
     sanitized = sanitized.replace(gpsRegex, "[location removed]");
 
-    const cardRegex = /\b(?:\d[ -]*?){13,16}\b/g;
-    sanitized = sanitized.replace(cardRegex, "[payment card removed]");
+    sanitized = redactPaymentCardLikeDigits(sanitized);
 
     return sanitized.trim().slice(0, 500);
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { SymbolicInferenceResult } from "../lib/intelligence";
+import { SymbolicInferenceResult } from "@/lib/intelligence";
 
 type IntelligencePreviewPanelProps = {
   result: SymbolicInferenceResult | null;

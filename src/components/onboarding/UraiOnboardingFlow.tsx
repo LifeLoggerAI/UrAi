@@ -100,6 +100,7 @@ export function UraiOnboardingFlow({ isOpen, onComplete, onSkip, onOpenPassport,
                         finishOrAdvance();
                     }}
                     onCancel={finishOrAdvance}
+                    onReviewPassport={onOpenPassport}
                 />
             );
         }
