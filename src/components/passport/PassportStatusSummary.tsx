@@ -1,27 +1,21 @@
 
-"use client";
-import React from "react";
-import { useUraiPassport } from "@/providers/UraiPassportProvider";
-import "./Passport.css";
+'use client';
 
-export function PassportStatusSummary() {
+import { useUraiPassport } from '../../providers/UraiPassportProvider';
+
+export const PassportStatusSummary = () => {
   const { passportState } = useUraiPassport();
-  const openLayers = Object.values(passportState.layers).filter(
-    (layer) => layer.status === "open"
-  ).length;
-  const closedLayers = Object.values(passportState.layers).filter(
-    (layer) => layer.status === "closed"
-  ).length;
-  const blockedLayers = Object.values(passportState.layers).filter(
-    (layer) => layer.status === "blocked"
-  ).length;
+
+  const openLayers = Object.values(passportState).filter(status => status === 'open').length;
+  const closedLayers = Object.values(passportState).filter(status => status === 'closed').length;
+  const blockedLayers = Object.values(passportState).filter(status => status === 'blocked').length;
 
   return (
-    <div className="passport-status-summary">
-      <p>
-        {openLayers} open, {closedLayers} closed, {blockedLayers} blocked.
-      </p>
+    <div>
+      <p>Open layers: {openLayers}</p>
+      <p>Closed layers: {closedLayers}</p>
+      <p>Blocked layers: {blockedLayers}</p>
       <p>Closed layers stay closed until you open them.</p>
     </div>
   );
-}
+};

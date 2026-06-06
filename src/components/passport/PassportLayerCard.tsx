@@ -1,98 +1,41 @@
-"use client";
 
-import { useMemo } from "react";
-import type { PassportLayerId } from "@/lib/passport";
-import { useUraiPassport } from "@/providers/UraiPassportProvider";
-import "./Passport.css";
+'use client';
 
-function formatPassportLabel(value: string): string {
-  if (!value) return "";
-  return value.charAt(0).toUpperCase() + value.slice(1);
+import { useUraiPassport } from '../../providers/UraiPassportProvider';
+import { PassportLayerId, PASSPORT_LAYER_DEFINITIONS } from '../../lib/passport';
+import './Passport.css';
+
+interface PassportLayerCardProps {
+  layerId: PassportLayerId;
 }
 
-function isProtectedReviewLayer(layerId: PassportLayerId): boolean {
-  return layerId === "shadow" || layerId === "legacy" || layerId === "export";
-}
+export const PassportLayerCard = ({ layerId }: PassportLayerCardProps) => {
+  const { passportState, openLayer, closeLayer } = useUraiPassport();
+  const layerDef = PASSPORT_LAYER_DEFINITIONS[layerId];
+  const status = passportState[layerId];
 
-export function PassportLayerCard({ layerId }: { layerId: PassportLayerId }) {
-  const { openLayer, closeLayer, explainLayer, getLayerStatus } = useUraiPassport();
-
-  const definition = explainLayer(layerId);
-  const status = getLayerStatus(layerId);
-
-  const statusLabel = useMemo(() => formatPassportLabel(status), [status]);
-  const sensitivityLabel = useMemo(
-    () => formatPassportLabel(definition.sensitivity),
-    [definition.sensitivity]
-  );
-
-  const requiresReview =
-    status === "closed" &&
-    (definition.requiresExplicitApproval || isProtectedReviewLayer(layerId));
-
-  const isBlocked = status === "blocked" || !definition.canBeOpenedByUser;
-  const isActionDisabled = isBlocked || requiresReview;
-
-  const buttonText = (() => {
-    if (isBlocked) return "Blocked";
-    if (requiresReview) return "Requires review";
-    if (status === "open") return "Close layer";
-    return "Open layer";
-  })();
-
-  const handleToggle = () => {
-    if (isActionDisabled) return;
-
-    if (status === "open") {
-      closeLayer(layerId, "Closed from Passport Control Center");
-      return;
-    }
-
-    if (status === "closed") {
-      openLayer(layerId, "Opened from Passport Control Center");
-    }
-  };
+  const isProtectedAndClosed = layerDef.sensitivity === 'protected' && status === 'closed';
 
   return (
-    <article className="passport-layer-card">
-      <div className="passport-layer-card__header">
-        <h3 className="passport-layer-card__title">{definition.title}</h3>
-        <span className={`passport-layer-card__status status-${status}`}>
-          {statusLabel}
-        </span>
+    <div className="passport-layer-card">
+      <div className="card-content">
+        <h4>{layerDef.title}</h4>
+        <p>{layerDef.summary}</p>
+        <p>Status: {status}</p>
+        <p>Sensitivity: {layerDef.sensitivity}</p>
+        <p>Requires explicit approval: {layerDef.requiresExplicitApproval.toString()}</p>
       </div>
-
-      <p className="passport-layer-card__summary">{definition.summary}</p>
-
-      <div className="passport-layer-card__details" aria-label="Layer details">
-        <span className={`passport-layer-card__pill sensitivity-${definition.sensitivity}`}>
-          {sensitivityLabel}
-        </span>
-        {definition.requiresExplicitApproval ? (
-          <span className="passport-layer-card__pill passport-layer-card__pill--review">
-            Requires explicit approval
-          </span>
-        ) : (
-          <span className="passport-layer-card__pill">User controlled</span>
+      <div className="card-actions">
+        {status === 'closed' && !isProtectedAndClosed && layerDef.canBeOpenedByUser && (
+          <button onClick={() => openLayer(layerId)}>Open layer</button>
+        )}
+        {status === 'open' && (
+          <button onClick={() => closeLayer(layerId)}>Close layer</button>
+        )}
+        {isProtectedAndClosed && (
+            <button disabled>Requires review</button>
         )}
       </div>
-
-      {requiresReview ? (
-        <p className="passport-layer-card__note">
-          This layer needs a separate review flow before it reveals anything.
-        </p>
-      ) : null}
-
-      <button
-        type="button"
-        onClick={handleToggle}
-        disabled={isActionDisabled}
-        className={`passport-layer-card__button ${
-          isActionDisabled ? "blocked" : status === "open" ? "close" : "open"
-        }`}
-      >
-        {buttonText}
-      </button>
-    </article>
+    </div>
   );
-}
+};

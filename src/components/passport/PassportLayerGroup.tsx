@@ -1,32 +1,25 @@
-"use client";
 
-import type { PassportLayerId } from "@/lib/passport";
-import { PassportLayerCard } from "./PassportLayerCard";
-import "./Passport.css";
+'use client';
 
-export function PassportLayerGroup({
-  title,
-  layerIds,
-  description,
-}: {
+import { PassportLayerId } from '../../lib/passport';
+import { PassportLayerCard } from './PassportLayerCard';
+
+interface PassportLayerGroupProps {
   title: string;
   layerIds: PassportLayerId[];
   description?: string;
-}) {
-  return (
-    <section className="passport-layer-group">
-      <header className="passport-layer-group__header">
-        <h2 className="passport-layer-group__title">{title}</h2>
-        {description ? (
-          <p className="passport-layer-group__description">{description}</p>
-        ) : null}
-      </header>
+}
 
-      <div className="passport-layer-grid">
-        {layerIds.map((layerId) => (
+export const PassportLayerGroup = ({ title, layerIds, description }: PassportLayerGroupProps) => {
+  return (
+    <div>
+      <h3>{title}</h3>
+      {description && <p>{description}</p>}
+      <div>
+        {layerIds.map(layerId => (
           <PassportLayerCard key={layerId} layerId={layerId} />
         ))}
       </div>
-    </section>
+    </div>
   );
-}
+};

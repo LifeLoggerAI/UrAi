@@ -1,4 +1,6 @@
 
-export * from "./passportLayerTypes";
-export * from "./passportLayerRegistry";
-export * from "./passportState";
+export * from './keys';
+export * from './registry';
+export * from './state';
+export * from './client';
+export * from './passage';

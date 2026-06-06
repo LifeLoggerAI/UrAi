@@ -1,60 +1,33 @@
 
-"use client";
-import React from "react";
-import { useUraiPassport } from "@/providers/UraiPassportProvider";
-import { PassportStatusSummary } from "./PassportStatusSummary";
-import { PassportLayerGroup } from "./PassportLayerGroup";
-import { PassportLayerId } from "@/lib/passport";
-import "./Passport.css";
+'use client';
 
-const coreReflectionLayers: PassportLayerId[] = [
-  "lifemap",
-  "ground",
-  "mirror",
-  "intelligence",
-  "companion_context",
-];
-const protectedLayers: PassportLayerId[] = ["shadow", "legacy", "export"];
-const passiveSourceLayers: PassportLayerId[] = [
-  "passive_data",
-  "audio",
-  "location",
-  "health",
-  "gmail",
-  "calendar",
-  "contacts",
-  "motion",
-  "camera",
-];
-const experienceLayers: PassportLayerId[] = ["notifications", "spatial", "system"];
-const adminLayers: PassportLayerId[] = ["admin"];
+import { useUraiPassport } from '../../providers/UraiPassportProvider';
+import { PassportLayerGroup } from './PassportLayerGroup';
+import { PassportStatusSummary } from './PassportStatusSummary';
+import { PASSPORT_LAYER_DEFINITIONS } from '../../lib/passport';
 
-export function PassportControlCenter() {
+const CORE_REFLECTION_LAYERS = ['lifemap', 'ground', 'mirror', 'intelligence', 'companion_context'];
+const PROTECTED_LAYERS = ['shadow', 'legacy', 'export'];
+const PASSIVE_SOURCES_LAYERS = ['passive_data', 'audio', 'location', 'health', 'gmail', 'calendar', 'contacts', 'motion', 'camera'];
+const EXPERIENCE_LAYERS = ['notifications', 'spatial', 'system'];
+const ADMIN_LAYERS = ['admin'];
+
+export const PassportControlCenter = () => {
+  const { passportState } = useUraiPassport();
+
   return (
-    <div className="passport-control-center">
+    <div>
       <h1>Passport</h1>
-      <p className="subtitle">URAI only opens what you choose.</p>
-      <p className="passport-explanation">
-        Passport is your control surface for what URAI can use. Closed layers
-        remain closed until you choose otherwise.
-      </p>
+      <p>URAI only opens what you choose.</p>
+      <p>Passport is your control surface for what URAI can use. Closed layers remain closed until you choose otherwise.</p>
+
       <PassportStatusSummary />
-      <PassportLayerGroup
-        title="Core Reflection"
-        layerIds={coreReflectionLayers}
-      />
-      <PassportLayerGroup
-        title="Protected"
-        layerIds={protectedLayers}
-        description="Protected layers require a separate review flow before they reveal anything."
-      />
-      <PassportLayerGroup
-        title="Passive Sources"
-        layerIds={passiveSourceLayers}
-        description="Opening a layer here does not start collection. It only records your Passport preference."
-      />
-      <PassportLayerGroup title="Experience" layerIds={experienceLayers} />
-      <PassportLayerGroup title="Admin" layerIds={adminLayers} />
+
+      <PassportLayerGroup title="Core Reflection" layerIds={CORE_REFLECTION_LAYERS} />
+      <PassportLayerGroup title="Protected" layerIds={PROTECTED_LAYERS} description="Protected layers require a separate review flow before they reveal anything." />
+      <PassportLayerGroup title="Passive Sources" layerIds={PASSIVE_SOURCES_LAYERS} description="Opening a layer here does not start collection. It only records your Passport preference." />
+      <PassportLayerGroup title="Experience" layerIds={EXPERIENCE_LAYERS} />
+      <PassportLayerGroup title="Admin" layerIds={ADMIN_LAYERS} />
     </div>
   );
-}
+};
