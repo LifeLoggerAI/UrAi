@@ -12,6 +12,7 @@ on:
       - "src/app/page.tsx"
       - "docs/URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md"
       - "docs/URAI_RELEASE_ROLLBACK_PR304.md"
+      - "docs/ops/**"
 
 permissions:
   contents: read
@@ -100,12 +101,29 @@ jobs:
           head -c 500 /tmp/urai-custom-domain-body || true
           test "$status" = "200"
 
+      - name: Write production evidence summary
+        if: always()
+        run: |
+          mkdir -p evidence
+          {
+            echo "# URAI Production Evidence Run"
+            echo
+            echo "- Evidence label: $URAI_EVIDENCE_RUN_LABEL"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Run id: $GITHUB_RUN_ID"
+            echo "- Run attempt: $GITHUB_RUN_ATTEMPT"
+            echo "- Firebase URL checked: $FIREBASE_PRODUCTION_URL"
+            echo "- Custom domain checked best-effort: $CUSTOM_PRODUCTION_URL"
+            echo "- Generated at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > evidence/production-evidence-summary.md
+
       - name: Upload production evidence artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: production-evidence-results
           path: |
+            evidence
             test-results
             playwright-report
           if-no-files-found: ignore
