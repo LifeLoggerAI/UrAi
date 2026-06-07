@@ -4,10 +4,27 @@ import {
   SymbolicInputSummary,
 } from "./intelligenceTypes";
 
-const EMAIL_REGEX = /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g;
-const PHONE_REGEX = /(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g;
-const GPS_REGEX = /\b[-+]?((?:[1-8]?\d(?:\.\d+)?)|90(?:\.0+)?)[\s,]+[NS]?\s*,?\s*[-+]?((?:180(?:\.0+)?)|(?:(?:1[0-7]\d)|(?:[1-9]?\d))(?:\.\d+)?)[\s,]+[EW]?\b/gi;
-const CARD_REGEX = /\b(?:\d[ -]*?){13,16}\b/g;
+const EMAIL_PATTERN = "\\b[^\\s@]+@[^\\s@]+\\.[^\\s@]+\\b";
+const PHONE_PATTERN = "(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}";
+const GPS_PATTERN = "\\b[-+]?((?:[1-8]?\\d(?:\\.\\d+)?)|90(?:\\.0+)?)[\\s,]+[NS]?\\s*,?\\s*[-+]?((?:180(?:\\.0+)?)|(?:(?:1[0-7]\\d)|(?:[1-9]?\\d))(?:\\.\\d+)?)[\\s,]+[EW]?\\b";
+const CARD_PATTERN = "\\b(?:\\d[ -]*?){13,16}\\b";
+const SSN_PATTERN = "\\b\\d{3}-\\d{2}-\\d{4}\\b";
+
+function hasEmail(text: string): boolean {
+  return new RegExp(EMAIL_PATTERN, "i").test(text);
+}
+function hasPhone(text: string): boolean {
+  return new RegExp(PHONE_PATTERN, "i").test(text);
+}
+function hasGps(text: string): boolean {
+  return new RegExp(GPS_PATTERN, "i").test(text);
+}
+function hasCard(text: string): boolean {
+  return new RegExp(CARD_PATTERN, "i").test(text);
+}
+function hasSsn(text: string): boolean {
+  return new RegExp(SSN_PATTERN, "i").test(text);
+}
 
 export function clampScore(value: number): number {
   if (isNaN(value) || !isFinite(value)) {
@@ -35,33 +52,24 @@ export function isLayerAllowedForSymbolicInference(
 }
 
 function hasPII(text: string): boolean {
-  return EMAIL_REGEX.test(text) || PHONE_REGEX.test(text) || GPS_REGEX.test(text) || CARD_REGEX.test(text) || /\b\d{3}-\d{2}-\d{4}\b/.test(text);
+  return hasEmail(text) || hasPhone(text) || hasGps(text) || hasCard(text) || hasSsn(text);
 }
 
 export function shouldBlockRawSensitiveInput(
   input: SymbolicInputSummary
 ): boolean {
-  if (input.containsSensitiveRawData) {
-    return true;
-  }
+  if (input.containsSensitiveRawData) return true;
+  if (hasPII(input.summary)) return true;
 
   const summary = input.summary.toLowerCase();
-
-  if (CARD_REGEX.test(summary)) {
-    return true;
-  }
-
-  if (/\b\d{3}-\d{2}-\d{4}\b/.test(summary)) {
-    return true;
-  }
 
   const medicalKeywords = ["diagnosis", "disorder", "syndrome", "condition", "treatment", "clinical"];
   if (medicalKeywords.some(keyword => summary.includes(keyword))) {
     return true;
   }
-    
+
   if (summary.length > 1000 && summary.split(" ").length > 150) {
-      return true;
+    return true;
   }
 
   return false;
@@ -89,14 +97,14 @@ export function getSafetyBandForInput(
 }
 
 export function sanitizeSymbolicSummary(text: string): string {
-    let sanitized = text;
+  let sanitized = text;
 
-    sanitized = sanitized.replace(EMAIL_REGEX, "[REDACTED_EMAIL]");
-    sanitized = sanitized.replace(PHONE_REGEX, "[REDACTED_PHONE]");
-    sanitized = sanitized.replace(GPS_REGEX, "[REDACTED_GPS]");
-    sanitized = sanitized.replace(CARD_REGEX, "[REDACTED_PAYMENT_CARD]");
+  sanitized = sanitized.replace(new RegExp(EMAIL_PATTERN, "gi"), "[REDACTED_EMAIL]");
+  sanitized = sanitized.replace(new RegExp(PHONE_PATTERN, "gi"), "[REDACTED_PHONE]");
+  sanitized = sanitized.replace(new RegExp(GPS_PATTERN, "gi"), "[REDACTED_GPS]");
+  sanitized = sanitized.replace(new RegExp(CARD_PATTERN, "gi"), "[REDACTED_PAYMENT_CARD]");
 
-    return sanitized.trim().slice(0, 500);
+  return sanitized.trim().slice(0, 500);
 }
 
 export function makeUncertaintyPrefix(confidence: IntelligenceConfidence): string {
