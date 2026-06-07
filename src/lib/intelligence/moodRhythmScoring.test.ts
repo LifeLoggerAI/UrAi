@@ -1,5 +1,5 @@
-import { scoreMoodAndRhythm } from '../../src/lib/intelligence/moodRhythmScoring';
-import { SymbolicInputSummary } from '../../src/lib/intelligence/intelligenceTypes';
+import { scoreMoodAndRhythm } from './moodRhythmScoring';
+import { SymbolicInputSummary } from './intelligenceTypes';
 
 describe('scoreMoodAndRhythm', () => {
   it('should return a balanced mood and rhythm for neutral inputs', () => {
