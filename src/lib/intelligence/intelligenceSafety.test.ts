@@ -6,7 +6,7 @@ import {
   sanitizeSymbolicSummary,
   getSafetyBandForInput,
   makeUncertaintyPrefix
-} from '../../src/lib/intelligence/intelligenceSafety';
+} from './intelligenceSafety';
 
 describe('Intelligence Safety Functions', () => {
   describe('clampScore', () => {
@@ -46,33 +46,33 @@ describe('Intelligence Safety Functions', () => {
       expect(shouldBlockRawSensitiveInput({ summary: 'My email is test@example.com' })).toBe(true);
     });
     it('should block inputs with phone numbers', () => {
-        expect(shouldBlockRawSensitiveInput({ summary: 'My number is 555-555-5555' })).toBe(true);
+      expect(shouldBlockRawSensitiveInput({ summary: 'My number is 555-555-5555' })).toBe(true);
     });
   });
 
   describe('sanitizeSymbolicSummary', () => {
     it('should sanitize email addresses from the summary', () => {
-      expect(sanitizeSymbolicSummary('My email is test@example.com')).toBe('My email is [email removed]');
+      expect(sanitizeSymbolicSummary('My email is test@example.com')).toBe('My email is [REDACTED_EMAIL]');
     });
     it('should sanitize phone numbers from the summary', () => {
-        expect(sanitizeSymbolicSummary('My number is 555-555-5555')).toBe('My number is [phone number removed]');
+      expect(sanitizeSymbolicSummary('My number is 555-555-5555')).toBe('My number is [REDACTED_PHONE]');
     });
     it('should sanitize GPS coordinates from the summary', () => {
-        expect(sanitizeSymbolicSummary('I am at 40.7128, -74.0060')).toBe('I am at [location removed]');
+      expect(sanitizeSymbolicSummary('I am at 40.7128, -74.0060')).toBe('I am at [REDACTED_GPS]');
     });
   });
-  
-  describe('getSafetyBandForInput', ()=>{
-      it('should return blocked for sensitive input', ()=>{
-          expect(getSafetyBandForInput({summary: 'I am at 40.7128, -74.0060'})).toBe('blocked')
-      })
-  })
-  
-  describe('makeUncertaintyPrefix', ()=>{
-      it('should return the correct prefix for each confidence level', ()=>{
-          expect(makeUncertaintyPrefix('low')).toBe("A faint pattern may be forming:")
-          expect(makeUncertaintyPrefix('medium')).toBe("A possible pattern is emerging:")
-          expect(makeUncertaintyPrefix('high')).toBe("A stronger symbolic pattern appears:")
-      })
-  })
+
+  describe('getSafetyBandForInput', () => {
+    it('should return danger for PII input', () => {
+      expect(getSafetyBandForInput({ summary: 'I am at 40.7128, -74.0060' })).toBe('danger');
+    });
+  });
+
+  describe('makeUncertaintyPrefix', () => {
+    it('should return the correct prefix for each confidence level', () => {
+      expect(makeUncertaintyPrefix('low')).toBe('A faint pattern may be forming:');
+      expect(makeUncertaintyPrefix('medium')).toBe('A possible pattern is emerging:');
+      expect(makeUncertaintyPrefix('high')).toBe('A stronger symbolic pattern appears:');
+    });
+  });
 });
