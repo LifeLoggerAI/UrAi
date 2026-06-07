@@ -3,8 +3,8 @@ import {
   toGroundBloomDraft,
   toMirrorReflectionDraft,
   toRitualSuggestionDraft,
-} from '../../src/lib/intelligence/intelligenceDestinations';
-import { IntelligenceSignal } from '../../src/lib/intelligence/intelligenceTypes';
+} from './intelligenceDestinations';
+import { IntelligenceSignal } from './intelligenceTypes';
 
 describe('Intelligence Destination Converters', () => {
   const now = new Date().toISOString();
@@ -15,7 +15,7 @@ describe('Intelligence Destination Converters', () => {
     summary: 'This is a test summary.',
     confidence: 'medium',
     createdAt: now,
-    moodState: 'balanced',
+    moodState: 'hopeful',
     suggestedDestination,
   });
 

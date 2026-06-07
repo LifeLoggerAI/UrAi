@@ -5,7 +5,7 @@ import { UraiFirebaseClientState } from '../firebase/firebaseTypes';
 
 // Mock Firebase client
 jest.mock('@/lib/firebase/firebaseClient', () => ({
-  getUraiFirebaseClient: (): { state: UraiFirebaseClientState } => ({
+  getUraiFirebaseClient: () => ({
     state: { configured: true, reason: 'ready' },
     auth: {
       onAuthStateChanged: jest.fn(),

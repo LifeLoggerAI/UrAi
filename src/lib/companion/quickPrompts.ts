@@ -1,4 +1,4 @@
-import { CompanionQuickPrompt } from "./companionTypes";
+import { CompanionQuickPrompt, CompanionMode } from "./companionTypes";
 
 export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   {
@@ -24,5 +24,14 @@ export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
 ];
 
 export function getCompanionQuickPrompts(): CompanionQuickPrompt[] {
+  return COMPANION_QUICK_PROMPTS;
+}
+
+export function getQuickPromptsForContext(
+  mode?: CompanionMode,
+  councilRoleId?: string
+): CompanionQuickPrompt[] {
+  // This is a placeholder implementation. The actual implementation should
+  // filter prompts based on the mode and councilRoleId.
   return COMPANION_QUICK_PROMPTS;
 }

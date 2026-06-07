@@ -4,13 +4,13 @@
 import { useUraiPassport } from '../../providers/UraiPassportProvider';
 import { PassportLayerGroup } from './PassportLayerGroup';
 import { PassportStatusSummary } from './PassportStatusSummary';
-import { PASSPORT_LAYER_DEFINITIONS } from '../../lib/passport';
+import { PassportLayerId } from '../../lib/passport';
 
-const CORE_REFLECTION_LAYERS = ['lifemap', 'ground', 'mirror', 'intelligence', 'companion_context'];
-const PROTECTED_LAYERS = ['shadow', 'legacy', 'export'];
-const PASSIVE_SOURCES_LAYERS = ['passive_data', 'audio', 'location', 'health', 'gmail', 'calendar', 'contacts', 'motion', 'camera'];
-const EXPERIENCE_LAYERS = ['notifications', 'spatial', 'system'];
-const ADMIN_LAYERS = ['admin'];
+const CORE_REFLECTION_LAYERS: PassportLayerId[] = ['lifemap', 'ground', 'mirror', 'intelligence', 'companion_context'];
+const PROTECTED_LAYERS: PassportLayerId[] = ['shadow', 'legacy', 'export'];
+const PASSIVE_SOURCES_LAYERS: PassportLayerId[] = ['passive_data', 'audio', 'location', 'health', 'gmail', 'calendar', 'contacts', 'motion', 'camera'];
+const EXPERIENCE_LAYERS: PassportLayerId[] = ['notifications', 'spatial', 'system'];
+const ADMIN_LAYERS: PassportLayerId[] = ['admin'];
 
 export const PassportControlCenter = () => {
   const { passportState } = useUraiPassport();

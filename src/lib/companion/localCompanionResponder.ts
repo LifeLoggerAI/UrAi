@@ -66,3 +66,10 @@ export function getLocalCompanionResponse(input: string): CompanionResponse {
     suggestedPrompts: getCompanionQuickPrompts(),
   };
 }
+
+export function generateLocalCompanionResponse(
+  input: string,
+  context?: any
+): CompanionMessage {
+  return getLocalCompanionResponse(input).message;
+}

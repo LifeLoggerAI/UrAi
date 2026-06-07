@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, ReactElement } from 'react';
 import { 
   UraiSoundId, 
   UraiSoundPreference, 
@@ -23,7 +23,7 @@ interface UraiSoundContextType {
 
 const UraiSoundContext = createContext<UraiSoundContextType | null>(null);
 
-export function UraiSoundProvider({ children }: { children: React.ReactNode }): JSX.Element {
+export function UraiSoundProvider({ children }: { children: React.ReactNode }): ReactElement {
   const [preference, setPreference] = useState<UraiSoundPreference>(DEFAULT_URAI_SOUND_PREFERENCE);
 
   useEffect(() => {

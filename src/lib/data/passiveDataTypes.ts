@@ -1,5 +1,5 @@
 
-import type { PassportDataLayerId } from "@/lib/passport/passportTypes";
+import type { PassportLayerId as PassportDataLayerId } from "@/lib/passport";
 
 export type PassiveDataSourceId =
 | "mood_manual"
