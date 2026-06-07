@@ -4,6 +4,11 @@ import {
   SymbolicInputSummary,
 } from "./intelligenceTypes";
 
+const EMAIL_REGEX = /\b[^\s@]+@[^\s@]+\.[^\s@]+\b/g;
+const PHONE_REGEX = /(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g;
+const GPS_REGEX = /\b[-+]?((?:[1-8]?\d(?:\.\d+)?)|90(?:\.0+)?)[\s,]+[NS]?\s*,?\s*[-+]?((?:180(?:\.0+)?)|(?:(?:1[0-7]\d)|(?:[1-9]?\d))(?:\.\d+)?)[\s,]+[EW]?\b/gi;
+const CARD_REGEX = /\b(?:\d[ -]*?){13,16}\b/g;
+
 export function clampScore(value: number): number {
   if (isNaN(value) || !isFinite(value)) {
     return 0;
@@ -29,6 +34,10 @@ export function isLayerAllowedForSymbolicInference(
   return openLayerIds.includes(layerId);
 }
 
+function hasPII(text: string): boolean {
+  return EMAIL_REGEX.test(text) || PHONE_REGEX.test(text) || GPS_REGEX.test(text) || CARD_REGEX.test(text) || /\b\d{3}-\d{2}-\d{4}\b/.test(text);
+}
+
 export function shouldBlockRawSensitiveInput(
   input: SymbolicInputSummary
 ): boolean {
@@ -38,43 +47,19 @@ export function shouldBlockRawSensitiveInput(
 
   const summary = input.summary.toLowerCase();
 
-  // Basic regex for GPS coordinates
-  const gpsRegex = /[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/;
-  if (gpsRegex.test(summary)) {
+  if (CARD_REGEX.test(summary)) {
     return true;
   }
 
-  // Basic regex for email
-  const emailRegex = /\S+@\S+\.\S+/;
-  if (emailRegex.test(summary)) {
+  if (/\b\d{3}-\d{2}-\d{4}\b/.test(summary)) {
     return true;
   }
 
-  // Basic regex for phone numbers (very basic)
-  const phoneRegex = /(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
-  if (phoneRegex.test(summary)) {
-    return true;
-  }
-    
-  // Basic regex for payment cards
-  const cardRegex = /\b(?:\d[ -]*?){13,16}\b/;
-  if (cardRegex.test(summary)) {
-    return true;
-  }
-
-  // Basic regex for SSN
-  const ssnRegex = /\b\d{3}-\d{2}-\d{4}\b/;
-  if (ssnRegex.test(summary)) {
-      return true;
-  }
-
-  // Keywords for medical diagnosis
   const medicalKeywords = ["diagnosis", "disorder", "syndrome", "condition", "treatment", "clinical"];
   if (medicalKeywords.some(keyword => summary.includes(keyword))) {
     return true;
   }
     
-  // Check for long raw-like content
   if (summary.length > 1000 && summary.split(" ").length > 150) {
       return true;
   }
@@ -85,6 +70,9 @@ export function shouldBlockRawSensitiveInput(
 export function getSafetyBandForInput(
   input: SymbolicInputSummary
 ): IntelligenceSafetyBand {
+  if (hasPII(input.summary)) {
+    return "danger";
+  }
   if (shouldBlockRawSensitiveInput(input)) {
     return "blocked";
   }
@@ -103,17 +91,10 @@ export function getSafetyBandForInput(
 export function sanitizeSymbolicSummary(text: string): string {
     let sanitized = text;
 
-    const emailRegex = /\S+@\S+\.\S+/g;
-    sanitized = sanitized.replace(emailRegex, "[email removed]");
-
-    const phoneRegex = /(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/g;
-    sanitized = sanitized.replace(phoneRegex, "[phone number removed]");
-
-    const gpsRegex = /[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)/g;
-    sanitized = sanitized.replace(gpsRegex, "[location removed]");
-
-    const cardRegex = /\b(?:\d[ -]*?){13,16}\b/g;
-    sanitized = sanitized.replace(cardRegex, "[payment card removed]");
+    sanitized = sanitized.replace(EMAIL_REGEX, "[REDACTED_EMAIL]");
+    sanitized = sanitized.replace(PHONE_REGEX, "[REDACTED_PHONE]");
+    sanitized = sanitized.replace(GPS_REGEX, "[REDACTED_GPS]");
+    sanitized = sanitized.replace(CARD_REGEX, "[REDACTED_PAYMENT_CARD]");
 
     return sanitized.trim().slice(0, 500);
 }
