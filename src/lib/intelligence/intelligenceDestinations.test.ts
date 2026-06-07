@@ -3,8 +3,8 @@ import {
   toGroundBloomDraft,
   toMirrorReflectionDraft,
   toRitualSuggestionDraft,
-} from '../../src/lib/intelligence/intelligenceDestinations';
-import { IntelligenceSignal } from '../../src/lib/intelligence/intelligenceTypes';
+} from './intelligenceDestinations';
+import { IntelligenceSignal } from './intelligenceTypes';
 
 describe('Intelligence Destination Converters', () => {
   const now = new Date().toISOString();
@@ -17,6 +17,10 @@ describe('Intelligence Destination Converters', () => {
     createdAt: now,
     moodState: 'balanced',
     suggestedDestination,
+    type: 'system',
+    sourceRecordIds: [],
+    sourceLayerIds: [],
+    safetyBand: 'safe',
   });
 
   describe('toLifeMapStarDraft', () => {
