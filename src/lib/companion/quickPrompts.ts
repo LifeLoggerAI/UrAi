@@ -10,6 +10,7 @@ export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
     id: "show-passport",
     label: "Show me Passport",
     prompt: "Show me Passport",
+    action: "openPassport",
   },
   {
     id: "what-is-genesis",
@@ -23,6 +24,33 @@ export const COMPANION_QUICK_PROMPTS: CompanionQuickPrompt[] = [
   },
 ];
 
+const COUNCIL_QUICK_PROMPTS: CompanionQuickPrompt[] = [
+  {
+    id: "council-reflect",
+    label: "Reflect with Council",
+    prompt: "What is the gentlest pattern I should notice right now?",
+    mode: "council",
+  },
+  {
+    id: "council-ground",
+    label: "Ground me",
+    prompt: "Give me a small grounding ritual.",
+    mode: "council",
+    action: "suggestRitual",
+  },
+];
+
 export function getCompanionQuickPrompts(): CompanionQuickPrompt[] {
+  return COMPANION_QUICK_PROMPTS;
+}
+
+export function getQuickPromptsForContext(mode: string = "companion", councilRoleId?: string): CompanionQuickPrompt[] {
+  if (mode === "council") {
+    return COUNCIL_QUICK_PROMPTS.map((prompt) => ({
+      ...prompt,
+      councilRoleId,
+    }));
+  }
+
   return COMPANION_QUICK_PROMPTS;
 }
