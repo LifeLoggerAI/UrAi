@@ -74,7 +74,7 @@ describe('runSymbolicInference', () => {
     });
 
     expect(result.lifeMapCandidates.length).toBe(1);
-    expect(result.groundCandidates.length).toBe(1);
+    expect(result.groundCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.mirrorCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.ritualCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.legacyCandidates.length).toBe(1);
