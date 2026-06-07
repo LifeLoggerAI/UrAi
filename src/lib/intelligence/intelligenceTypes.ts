@@ -26,6 +26,7 @@ export type IntelligenceSafetyBand =
   | "sensitive"
   | "shadow_required"
   | "legacy_required"
+  | "danger"
   | "blocked";
 
 export type IntelligenceDestination =
@@ -72,6 +73,9 @@ export type RhythmState =
   | "overstimulated"
   | "recovering"
   | "quiet"
+  | "even"
+  | "chaotic"
+  | "stuck"
   | "unknown";
 
 export type SymbolicInputSummary = {
@@ -86,7 +90,10 @@ export type SymbolicInputSummary = {
     | "journal_summary"
     | "calendar_summary"
     | "device_state_summary"
-    | "system_summary";
+    | "system_summary"
+    | "test"
+    | "private"
+    | string;
   title?: string;
   summary: string;
   tags?: string[];
