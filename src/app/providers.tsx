@@ -4,7 +4,7 @@ import * as React from 'react';
 // import { SpatialUniverseProvider } from '@/components/urai/SpatialUniverseProvider';
 // import { UraiAudioProvider } from '@/providers/UraiAudioProvider';
 import { UraiAuthProvider } from '@/providers/UraiAuthProvider';
-// import { UraiCloudSyncProvider } from '@/providers/UraiCloudSyncProvider';
+import { UraiCloudSyncProvider } from '@/providers/UraiCloudSyncProvider';
 // import { UraiExportProvider } from '@/providers/UraiExportProvider';
 import { UraiFeatureFlagProvider } from '@/providers/UraiFeatureFlagProvider';
 // import { UraiGroundProvider } from '@/providers/UraiGroundProvider';
@@ -15,18 +15,17 @@ import { UraiFeatureFlagProvider } from '@/providers/UraiFeatureFlagProvider';
 import { UraiOnboardingProvider } from '@/providers/UraiOnboardingProvider';
 import { UraiPassportProvider } from '@/providers/UraiPassportProvider';
 // import { UraiRitualProvider } from '@/providers/UraiRitualProvider';
-import { UraiSettingsProvider } from '@/providers/UraiSettingsProvider';
 // import { UraiShadowProvider } from '@/providers/UraiShadowProvider';
 // import { UraiVoiceProvider } from '@/providers/UraiVoiceProvider';
 // import { UraiCaptionBubble } from '@/components/voice/UraiCaptionBubble';
+import { UraiSettingsProvider } from '@/providers/UraiSettingsProvider';
 import { UraiErrorBoundary } from '@/components/system/UraiErrorBoundary';
 import { installProductionConsoleGuard } from '@/lib/debug/productionConsoleGuard';
 
 /**
  * URAI MASTER COMPLETION PASS 1:
- * This provider stack has been patched to disable all non-essential and high-risk
- * systems. The goal is to establish a safe, minimal foundation for the application
- * before proceeding with further implementation.
+ * This provider stack keeps the safe foundational providers active and leaves
+ * high-risk media/spatial sync providers disabled until their own release gates pass.
  */
 export default function AppProviders({ children }: { children?: React.ReactNode }) {
   React.useEffect(() => {
@@ -36,12 +35,12 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
   return (
     <UraiErrorBoundary>
       <UraiAuthProvider>
-        <UraiFeatureFlagProvider>
-          <UraiSettingsProvider>
-            <UraiOnboardingProvider>
-              <UraiPassportProvider>
-                {/* Disabled providers for Pass 1:
-              <UraiCloudSyncProvider>
+        <UraiCloudSyncProvider>
+          <UraiFeatureFlagProvider>
+            <UraiSettingsProvider>
+              <UraiOnboardingProvider>
+                <UraiPassportProvider>
+                  {/* Disabled providers for Pass 1:
                 <UraiAudioProvider>
                   <UraiVoiceProvider>
                     <UraiNotificationProvider>
@@ -66,13 +65,13 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
                     </UraiNotificationProvider>
                   </UraiVoiceProvider>
                 </UraiAudioProvider>
-              </UraiCloudSyncProvider>
               */}
-                {children}
-              </UraiPassportProvider>
-            </UraiOnboardingProvider>
-          </UraiSettingsProvider>
-        </UraiFeatureFlagProvider>
+                  {children}
+                </UraiPassportProvider>
+              </UraiOnboardingProvider>
+            </UraiSettingsProvider>
+          </UraiFeatureFlagProvider>
+        </UraiCloudSyncProvider>
       </UraiAuthProvider>
     </UraiErrorBoundary>
   );
