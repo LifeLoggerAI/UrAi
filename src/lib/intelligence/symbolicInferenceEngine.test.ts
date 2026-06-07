@@ -1,8 +1,8 @@
 import {
   runSymbolicInference,
   DEFAULT_SYMBOLIC_INFERENCE_CONFIG,
-} from '../../src/lib/intelligence/symbolicInferenceEngine';
-import { SymbolicInputSummary } from '../../src/lib/intelligence/intelligenceTypes';
+} from './symbolicInferenceEngine';
+import { SymbolicInputSummary } from './intelligenceTypes';
 
 describe('runSymbolicInference', () => {
   const sampleInputs: SymbolicInputSummary[] = [
@@ -63,6 +63,10 @@ describe('runSymbolicInference', () => {
     },
   ];
 
+  it('should expose the default symbolic inference config', () => {
+    expect(DEFAULT_SYMBOLIC_INFERENCE_CONFIG.maxSignalsPerRun).toBeGreaterThan(0);
+  });
+
   it('should generate candidates for all enabled destinations', () => {
     const result = runSymbolicInference({
       inputs: sampleInputs,
@@ -74,7 +78,7 @@ describe('runSymbolicInference', () => {
     expect(result.mirrorCandidates.length).toBe(1);
     expect(result.ritualCandidates.length).toBe(1);
     expect(result.legacyCandidates.length).toBe(1);
-    expect(result.shadowCandidates.length).toBe(0); // Shadow is disabled by default
+    expect(result.shadowCandidates.length).toBe(0);
   });
 
   it('should enable shadow candidates when configured', () => {
