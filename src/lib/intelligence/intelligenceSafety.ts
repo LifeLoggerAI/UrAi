@@ -7,6 +7,7 @@ import {
 const EMAIL_PATTERN = "\\b[^\\s@]+@[^\\s@]+\\.[^\\s@]+\\b";
 const PHONE_PATTERN = "(\\+\\d{1,2}\\s?)?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}";
 const GPS_PATTERN = "\\b[-+]?((?:[1-8]?\\d(?:\\.\\d+)?)|90(?:\\.0+)?)[\\s,]+[NS]?\\s*,?\\s*[-+]?((?:180(?:\\.0+)?)|(?:(?:1[0-7]\\d)|(?:[1-9]?\\d))(?:\\.\\d+)?)[\\s,]+[EW]?\\b";
+const DECIMAL_GPS_PATTERN = "[-+]?(?:[1-8]?\\d(?:\\.\\d+)?|90(?:\\.0+)?),\\s*[-+]?(?:180(?:\\.0+)?|(?:1[0-7]\\d|[1-9]?\\d)(?:\\.\\d+)?)";
 const CARD_PATTERN = "\\b(?:\\d[ -]*?){13,16}\\b";
 const SSN_PATTERN = "\\b\\d{3}-\\d{2}-\\d{4}\\b";
 
@@ -17,7 +18,7 @@ function hasPhone(text: string): boolean {
   return new RegExp(PHONE_PATTERN, "i").test(text);
 }
 function hasGps(text: string): boolean {
-  return new RegExp(GPS_PATTERN, "i").test(text);
+  return new RegExp(GPS_PATTERN, "i").test(text) || new RegExp(DECIMAL_GPS_PATTERN, "i").test(text);
 }
 function hasCard(text: string): boolean {
   return new RegExp(CARD_PATTERN, "i").test(text);
@@ -102,6 +103,7 @@ export function sanitizeSymbolicSummary(text: string): string {
   sanitized = sanitized.replace(new RegExp(EMAIL_PATTERN, "gi"), "[REDACTED_EMAIL]");
   sanitized = sanitized.replace(new RegExp(PHONE_PATTERN, "gi"), "[REDACTED_PHONE]");
   sanitized = sanitized.replace(new RegExp(GPS_PATTERN, "gi"), "[REDACTED_GPS]");
+  sanitized = sanitized.replace(new RegExp(DECIMAL_GPS_PATTERN, "gi"), "[REDACTED_GPS]");
   sanitized = sanitized.replace(new RegExp(CARD_PATTERN, "gi"), "[REDACTED_PAYMENT_CARD]");
 
   return sanitized.trim().slice(0, 500);
