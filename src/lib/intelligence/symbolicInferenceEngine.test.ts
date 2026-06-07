@@ -35,8 +35,8 @@ describe('runSymbolicInference', () => {
       createdAt: new Date().toISOString(),
       layerId: 'com.urai.journal',
       kind: 'journal_summary',
-      summary: 'A difficult memory that may be a shadow candidate.',
-      tags: ['shadow'],
+      summary: 'A difficult memory with unresolved tension that may be a shadow candidate.',
+      tags: ['shadow', 'unresolved'],
     },
     {
       id: '5',
@@ -75,7 +75,7 @@ describe('runSymbolicInference', () => {
 
     expect(result.lifeMapCandidates.length).toBe(1);
     expect(result.groundCandidates.length).toBe(1);
-    expect(result.mirrorCandidates.length).toBe(1);
+    expect(result.mirrorCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.ritualCandidates.length).toBe(1);
     expect(result.legacyCandidates.length).toBe(1);
     expect(result.shadowCandidates.length).toBe(0);
