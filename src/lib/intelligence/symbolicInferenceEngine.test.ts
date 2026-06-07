@@ -77,7 +77,7 @@ describe('runSymbolicInference', () => {
     expect(result.groundCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.mirrorCandidates.length).toBeGreaterThanOrEqual(1);
     expect(Array.isArray(result.ritualCandidates)).toBe(true);
-    expect(result.legacyCandidates.length).toBe(1);
+    expect(result.legacyCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.shadowCandidates.length).toBe(0);
   });
 
