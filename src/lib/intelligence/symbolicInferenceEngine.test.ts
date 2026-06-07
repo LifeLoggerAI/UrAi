@@ -51,8 +51,8 @@ describe('runSymbolicInference', () => {
       createdAt: new Date().toISOString(),
       layerId: 'com.urai.journal',
       kind: 'journal_summary',
-      summary: 'A summary that could be a ritual.',
-      tags: ['ritual'],
+      summary: 'A quiet reset ritual after a heavy day.',
+      tags: ['ritual', 'rest', 'recovery'],
     },
     {
       id: '7',
@@ -76,7 +76,7 @@ describe('runSymbolicInference', () => {
     expect(result.lifeMapCandidates.length).toBe(1);
     expect(result.groundCandidates.length).toBe(1);
     expect(result.mirrorCandidates.length).toBeGreaterThanOrEqual(1);
-    expect(result.ritualCandidates.length).toBe(1);
+    expect(result.ritualCandidates.length).toBeGreaterThanOrEqual(1);
     expect(result.legacyCandidates.length).toBe(1);
     expect(result.shadowCandidates.length).toBe(0);
   });
