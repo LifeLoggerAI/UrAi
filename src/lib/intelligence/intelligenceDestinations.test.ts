@@ -16,6 +16,10 @@ describe('Intelligence Destination Converters', () => {
     confidence: 'medium',
     createdAt: now,
     moodState: 'hopeful',
+    type: 'system',
+    sourceRecordIds: ['test-record'],
+    sourceLayerIds: ['system'],
+    safetyBand: 'safe',
     suggestedDestination,
   });
 

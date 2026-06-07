@@ -1,5 +1,33 @@
 
-import type { PassportLayerId as PassportDataLayerId } from "@/lib/passport";
+
+
+export type PassportDataLayerId =
+  | "mood"
+  | "deviceBehavior"
+  | "screenActivity"
+  | "location"
+  | "motion"
+  | "health"
+  | "sleep"
+  | "audio"
+  | "transcripts"
+  | "gmail"
+  | "calendar"
+  | "contacts"
+  | "relationships"
+  | "memory"
+  | "aiCompanion"
+  | "lifeMap"
+  | "ground"
+  | "mirror"
+  | "shadow"
+  | "legacy"
+  | "notifications"
+  | "spatial"
+  | "system"
+  | "admin"
+  | "passive_data"
+  | "longTermPattern";
 
 export type PassiveDataSourceId =
 | "mood_manual"

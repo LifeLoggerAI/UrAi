@@ -14,11 +14,11 @@ type ExportPassportProfile = {
 };
 
 const now = () => new Date().toISOString();
-const SENSITIVE_LAYERS: PassportDataLayerId[] = ["shadow", "relationship", "location", "audioTranscript", "gmail", "deviceBehavior", "longTermPattern"];
+const SENSITIVE_LAYERS: PassportDataLayerId[] = ["shadow", "relationships", "location", "transcripts", "gmail", "deviceBehavior", "longTermPattern"];
 
 function mapExportLayer(layer: PassportDataLayerId): PrivacyLayerId {
-  if (layer === "relationship") return "relationships";
-  if (layer === "audioTranscript") return "audioTranscript";
+  if (layer === "relationships") return "relationships";
+  if (layer === "transcripts") return "transcripts";
   if (layer === "longTermPattern") return "longTermPattern";
   if (layer === "memory" || layer === "milestone" || layer === "ritual" || layer === "recovery") return "memory";
   return layer as PrivacyLayerId;

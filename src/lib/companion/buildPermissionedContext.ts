@@ -63,7 +63,7 @@ export function buildPermissionedCompanionContext({
   const allowExports = aiAllowed("exports", p);
   const allowGmail = aiAllowed("gmail", p);
   const allowLocation = aiAllowed("location", p);
-  const allowTranscripts = aiAllowed("audioTranscript", p);
+  const allowTranscripts = aiAllowed("transcripts", p);
   const allowRelationships = aiAllowed("relationships", p);
   const allowDevice = aiAllowed("deviceBehavior", p);
   const allowCalendar = aiAllowed("calendar", p);

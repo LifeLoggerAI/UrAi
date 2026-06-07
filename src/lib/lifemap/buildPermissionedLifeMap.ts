@@ -34,7 +34,7 @@ function isLayerAllowed(profile: LifeMapPassportProfile | null | undefined, laye
   const p = normalizePassportContextPermissions(profile?.contextPermissions);
   if (layer === "mood") return p.allowMoodContext;
   if (layer === "memory" || layer === "ritual" || layer === "milestone" || layer === "recovery" || layer === "legacy") return p.allowMemoryContext;
-  if (layer === "relationship") return p.allowRelationshipContext;
+  if (layer === "relationships") return p.allowRelationshipContext;
   if (layer === "shadow" || layer === "longTermPattern") return p.allowLongTermPatternContext;
   return false;
 }
@@ -80,7 +80,7 @@ export function buildPermissionedLifeMap(input: BuildPermissionedLifeMapInput = 
   if (isLayerAllowed(profile, "memory")) generated.push(...(input.memories ?? input.reflections ?? []).map((item, index) => sourceToStar(item, index + 2, "memory", "memory", moodState)));
   if (isLayerAllowed(profile, "ritual")) generated.push(...(input.rituals ?? []).map((item, index) => sourceToStar(item, index + 7, "ritual", "ritual", moodState)));
   if (isLayerAllowed(profile, "milestone")) generated.push(...(input.milestones ?? []).map((item, index) => sourceToStar(item, index + 12, "milestone", "milestone", moodState)));
-  if (isLayerAllowed(profile, "relationship")) generated.push(...(input.relationshipSummaries ?? []).map((item, index) => sourceToStar(item, index + 17, "relationship", "relationship", moodState)));
+  if (isLayerAllowed(profile, "relationships")) generated.push(...(input.relationshipSummaries ?? []).map((item, index) => sourceToStar(item, index + 17, "relationship", "relationships", moodState)));
   if (isLayerAllowed(profile, "shadow")) generated.push(...(input.shadowSummaries ?? []).map((item, index) => sourceToStar(item, index + 22, "shadow", "shadow", moodState)));
   if (isLayerAllowed(profile, "legacy")) generated.push(...(input.legacySummaries ?? []).map((item, index) => sourceToStar(item, index + 27, "legacy", "legacy", moodState)));
   const stars = generated.length > 0 ? [...createSafeStarterStars(moodState).slice(0, 2), ...generated] : createSafeStarterStars(moodState);

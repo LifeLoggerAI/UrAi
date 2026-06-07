@@ -22,8 +22,8 @@ describe('intelligenceSafety', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',
+        kind: "system_summary",
         summary: 'My email is test@example.com',
-        hasPii: true,
         createdAt: '',
         intensity: 0,
       };
@@ -34,8 +34,8 @@ describe('intelligenceSafety', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',
+        kind: "system_summary",
         summary: 'This is a test summary',
-        hasPii: false,
         createdAt: '',
         intensity: 0,
       };
@@ -65,8 +65,8 @@ describe('intelligenceSafety', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',
+        kind: "system_summary",
         summary: 'My email is test@example.com',
-        hasPii: true,
         createdAt: '',
         intensity: 0,
       };
@@ -77,8 +77,8 @@ describe('intelligenceSafety', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',
+        kind: "system_summary",
         summary: 'This is a test summary',
-        hasPii: false,
         createdAt: '',
         intensity: 0,
       };

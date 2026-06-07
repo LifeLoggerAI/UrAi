@@ -1,11 +1,11 @@
-import { scoreMoodAndRhythm } from '../../src/lib/intelligence/moodRhythmScoring';
-import { SymbolicInputSummary } from '../../src/lib/intelligence/intelligenceTypes';
+import { scoreMoodAndRhythm } from './moodRhythmScoring';
+import { SymbolicInputSummary } from './intelligenceTypes';
 
 describe('scoreMoodAndRhythm', () => {
   it('should return a balanced mood and rhythm for neutral inputs', () => {
     const inputs: SymbolicInputSummary[] = [
-      { id: '1', summary: 'This is a neutral summary.', createdAt: new Date().toISOString(), layerId: 'test', kind: 'test' },
-      { id: '2', summary: 'Another neutral summary.', createdAt: new Date().toISOString(), layerId: 'test', kind: 'test' },
+      { id: '1', summary: 'This is a neutral summary.', createdAt: new Date().toISOString(), layerId: 'test', kind: 'system_summary' },
+      { id: '2', summary: 'Another neutral summary.', createdAt: new Date().toISOString(), layerId: 'test', kind: 'system_summary' },
     ];
     const result = scoreMoodAndRhythm(inputs);
     expect(result.moodState).toBe('balanced');
@@ -19,7 +19,7 @@ describe('scoreMoodAndRhythm', () => {
         summary: 'Feeling fantastic today, full of joy and excitement!',
         createdAt: new Date().toISOString(),
         layerId: 'test',
-        kind: 'test',
+        kind: 'system_summary',
         intensity: 90,
       },
     ];
@@ -34,7 +34,7 @@ describe('scoreMoodAndRhythm', () => {
         summary: 'A really sad and difficult day. Feeling a lot of sorrow.',
         createdAt: new Date().toISOString(),
         layerId: 'test',
-        kind: 'test',
+        kind: 'system_summary',
         intensity: 80,
       },
     ];
@@ -49,7 +49,7 @@ describe('scoreMoodAndRhythm', () => {
         summary: 'Everything is happening at once, feeling scattered and overwhelmed.',
         createdAt: new Date().toISOString(),
         layerId: 'test',
-        kind: 'test',
+        kind: 'system_summary',
         intensity: 90,
       },
     ];
@@ -64,7 +64,7 @@ describe('scoreMoodAndRhythm', () => {
         summary: 'Feeling stuck in a rut, every day is the same.',
         createdAt: new Date().toISOString(),
         layerId: 'test',
-        kind: 'test',
+        kind: 'system_summary',
         intensity: 70,
       },
     ];

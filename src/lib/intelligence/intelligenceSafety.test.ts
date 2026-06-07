@@ -6,7 +6,7 @@ import {
   sanitizeSymbolicSummary,
   getSafetyBandForInput,
   makeUncertaintyPrefix
-} from '../../src/lib/intelligence/intelligenceSafety';
+} from './intelligenceSafety';
 
 describe('Intelligence Safety Functions', () => {
   describe('clampScore', () => {
@@ -37,16 +37,41 @@ describe('Intelligence Safety Functions', () => {
 
   describe('shouldBlockRawSensitiveInput', () => {
     it('should block inputs with sensitive raw data flag', () => {
-      expect(shouldBlockRawSensitiveInput({ summary: '', containsSensitiveRawData: true })).toBe(true);
+      expect(shouldBlockRawSensitiveInput({
+        id: "test-summary-1",
+        createdAt: new Date().toISOString(),
+        layerId: "system",
+        kind: "system_summary",
+        summary: '',
+        containsSensitiveRawData: true
+      })).toBe(true);
     });
     it('should block inputs with GPS coordinates', () => {
-      expect(shouldBlockRawSensitiveInput({ summary: 'I am at 40.7128, -74.0060' })).toBe(true);
+      expect(shouldBlockRawSensitiveInput({
+        id: "test-summary-2",
+        createdAt: new Date().toISOString(),
+        layerId: "system",
+        kind: "system_summary",
+        summary: 'I am at 40.7128, -74.0060'
+      })).toBe(true);
     });
     it('should block inputs with email addresses', () => {
-      expect(shouldBlockRawSensitiveInput({ summary: 'My email is test@example.com' })).toBe(true);
+      expect(shouldBlockRawSensitiveInput({
+        id: "test-summary-3",
+        createdAt: new Date().toISOString(),
+        layerId: "system",
+        kind: "system_summary",
+        summary: 'My email is test@example.com'
+      })).toBe(true);
     });
     it('should block inputs with phone numbers', () => {
-        expect(shouldBlockRawSensitiveInput({ summary: 'My number is 555-555-5555' })).toBe(true);
+        expect(shouldBlockRawSensitiveInput({
+        id: "test-summary-4",
+        createdAt: new Date().toISOString(),
+        layerId: "system",
+        kind: "system_summary",
+        summary: 'My number is 555-555-5555'
+      })).toBe(true);
     });
   });
 
@@ -64,7 +89,13 @@ describe('Intelligence Safety Functions', () => {
   
   describe('getSafetyBandForInput', ()=>{
       it('should return blocked for sensitive input', ()=>{
-          expect(getSafetyBandForInput({summary: 'I am at 40.7128, -74.0060'})).toBe('blocked')
+          expect(getSafetyBandForInput({
+        id: "test-summary-5",
+        createdAt: new Date().toISOString(),
+        layerId: "system",
+        kind: "system_summary",
+        summary: 'I am at 40.7128, -74.0060'
+      })).toBe('blocked')
       })
   })
   

@@ -25,7 +25,7 @@ describe("shadow safety", () => {
   });
 
   it("filters unopened source layers", () => {
-    const session = buildPermissionedShadow({ passportProfile: { shadowEnabled: true, shadowConsentConfirmed: true, contextPermissions: normalizePassportContextPermissions({ allowLongTermPatternContext: true }) }, sourceSummaries: [{ id: "blocked", title: "Blocked", summary: "Blocked", sourceLayerIds: ["relationship"] }] });
+    const session = buildPermissionedShadow({ passportProfile: { shadowEnabled: true, shadowConsentConfirmed: true, contextPermissions: normalizePassportContextPermissions({ allowLongTermPatternContext: true }) }, sourceSummaries: [{ id: "blocked", title: "Blocked", summary: "Blocked", sourceLayerIds: ["relationships"] }] });
     expect(session.reflections.some((reflection) => reflection.id === "blocked")).toBe(false);
   });
 });

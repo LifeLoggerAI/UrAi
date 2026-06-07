@@ -17,7 +17,7 @@ describe("legacy safety", () => {
   });
 
   it("does not save unapproved or disallowed source layers", () => {
-    const archive = buildPermissionedLegacy({ passportProfile: { legacyEnabled: true, contextPermissions: normalizePassportContextPermissions({ allowMemoryContext: true }) }, userApprovedItems: [{ id: "no", type: "memory", title: "No", summary: "No", sourceLayerIds: ["memory"], userApproved: false, exportAllowed: false }, { id: "blocked", type: "memory", title: "Blocked", summary: "Blocked", sourceLayerIds: ["relationship"], userApproved: true, exportAllowed: false }] });
+    const archive = buildPermissionedLegacy({ passportProfile: { legacyEnabled: true, contextPermissions: normalizePassportContextPermissions({ allowMemoryContext: true }) }, userApprovedItems: [{ id: "no", type: "memory", title: "No", summary: "No", sourceLayerIds: ["memory"], userApproved: false, exportAllowed: false }, { id: "blocked", type: "memory", title: "Blocked", summary: "Blocked", sourceLayerIds: ["relationships"], userApproved: true, exportAllowed: false }] });
     expect(archive.items.some((item) => item.id === "no" || item.id === "blocked")).toBe(false);
   });
 

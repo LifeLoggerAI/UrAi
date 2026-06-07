@@ -1,8 +1,8 @@
 import {
   runSymbolicInference,
   DEFAULT_SYMBOLIC_INFERENCE_CONFIG,
-} from '../../src/lib/intelligence/symbolicInferenceEngine';
-import { SymbolicInputSummary } from '../../src/lib/intelligence/intelligenceTypes';
+} from './symbolicInferenceEngine';
+import { SymbolicInputSummary } from './intelligenceTypes';
 
 describe('runSymbolicInference', () => {
   const sampleInputs: SymbolicInputSummary[] = [
@@ -58,7 +58,7 @@ describe('runSymbolicInference', () => {
       id: '7',
       createdAt: new Date().toISOString(),
       layerId: 'com.urai.private',
-      kind: 'private',
+      kind: 'system_summary',
       summary: 'This is a private layer that should be ignored',
     },
   ];

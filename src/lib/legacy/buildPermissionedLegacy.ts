@@ -39,7 +39,7 @@ function canUseLayer(profile: LegacyPassportProfile | null | undefined, layer: P
   const p = normalizePassportContextPermissions(profile?.contextPermissions);
   if (layer === "memory" || layer === "legacy") return p.allowMemoryContext;
   if (layer === "mood" || layer === "recovery") return p.allowMoodContext;
-  if (layer === "relationship") return p.allowRelationshipContext;
+  if (layer === "relationships") return p.allowRelationshipContext;
   if (layer === "deviceBehavior") return p.allowDeviceBehaviorContext;
   if (layer === "shadow" || layer === "longTermPattern") return p.allowLongTermPatternContext;
   return false;

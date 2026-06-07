@@ -29,7 +29,7 @@ function allowed(profile: ShadowPassportProfile | null | undefined, layer: Passp
   const p = normalizePassportContextPermissions(profile?.contextPermissions);
   if (layer === "shadow" || layer === "longTermPattern") return p.allowLongTermPatternContext;
   if (layer === "mood" || layer === "recovery") return p.allowMoodContext;
-  if (layer === "relationship") return p.allowRelationshipContext;
+  if (layer === "relationships") return p.allowRelationshipContext;
   if (layer === "deviceBehavior") return p.allowDeviceBehaviorContext;
   if (layer === "legacy" || layer === "memory") return p.allowMemoryContext;
   return false;
