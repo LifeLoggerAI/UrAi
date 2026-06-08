@@ -5,11 +5,16 @@ on:
   push:
     branches: [main]
     paths:
-      - "tests/e2e/v1-production-smoke.spec.ts"
+      - "src/**"
+      - "tests/e2e/**"
       - "playwright.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - "firebase.json"
+      - "firestore.rules"
+      - "firestore.indexes.json"
+      - "storage.rules"
       - ".github/workflows/production-evidence.yml"
-      - "src/app/ochat/page.tsx"
-      - "src/app/page.tsx"
       - "docs/URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md"
       - "docs/URAI_RELEASE_ROLLBACK_PR304.md"
       - "docs/ops/**"
