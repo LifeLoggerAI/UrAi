@@ -9,6 +9,7 @@ on:
       - "public/**"
       - "firestore.rules"
       - "firestore.indexes.json"
+      - "storage.rules"
       - "firebase.json"
       - "package.json"
       - "package-lock.json"
@@ -72,6 +73,11 @@ jobs:
           printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$credentials_file"
           node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));" "$credentials_file"
           echo "GOOGLE_APPLICATION_CREDENTIALS=$credentials_file" >> "$GITHUB_ENV"
+
+      - name: Deploy production Firestore and Storage rules
+        env:
+          npm_config_cache: /tmp/urai-npm-cache
+        run: npx firebase-tools@15.18.0 deploy --only firestore:rules,firestore:indexes,storage --project urai-4dc1d --non-interactive
 
       - name: Deploy production hosting
         env:
