@@ -18,6 +18,10 @@ export type MemoryStar = {
   intensity: number;
   color: string;
   narratorLine: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  audioUrl?: string;
+  posterUrl?: string;
 };
 
 export const mockMemoryStars: MemoryStar[] = [
