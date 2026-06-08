@@ -64,11 +64,19 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   },
 ];
 
+const getFilmBeats = (memory: MemoryStar) => memory.filmBeats?.length ? memory.filmBeats : [
+  "Open on the strongest real asset inside the star.",
+  "Reconstruct missing context as a cinematic bridge.",
+  "Let the narrator explain why the moment matters.",
+  "Pull back into the galaxy with the chapter saved inside the star.",
+];
+
 export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
   const shouldReduceMotion = useReducedMotion();
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const frames = useMemo(() => buildFilmFrames(memory), [memory]);
   const activeFrame = frames[activeFrameIndex] ?? frames[0];
+  const beats = getFilmBeats(memory);
 
   return (
     <div className="relative grid w-full max-w-6xl gap-5 lg:grid-cols-[1fr_22rem]">
@@ -126,8 +134,8 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
 
       <aside className="rounded-[2rem] border border-white/12 bg-black/30 p-5 shadow-2xl backdrop-blur-2xl">
         <p className="text-xs uppercase tracking-[0.28em]" style={{ color: memory.color }}>Now playing</p>
-        <h3 className="mt-3 text-2xl font-light text-white">{memory.label}</h3>
-        <p className="mt-2 text-sm leading-6 text-white/62">{memory.subtitle}</p>
+        <h3 className="mt-3 text-2xl font-light text-white">{memory.filmTitle ?? memory.label}</h3>
+        <p className="mt-2 text-sm leading-6 text-white/62">{memory.filmLogline ?? memory.subtitle}</p>
         <div className="mt-5 space-y-2">
           {frames.map((frame, index) => {
             const isActive = frame.id === activeFrame.id;
@@ -145,6 +153,22 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
               </button>
             );
           })}
+        </div>
+        <div className="mt-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <p className="text-[0.65rem] uppercase tracking-[0.24em] text-white/42">Chapter beats</p>
+          <div className="mt-4 space-y-3">
+            {beats.map((beat, index) => (
+              <button
+                key={`${memory.id}-beat-${index}`}
+                type="button"
+                onClick={() => setActiveFrameIndex(Math.min(index, frames.length - 1))}
+                className="flex w-full gap-3 rounded-2xl border border-white/10 bg-black/20 p-3 text-left transition hover:border-white/24 focus:outline-none focus:ring-2 focus:ring-white/40"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/15 text-[0.65rem] text-white/60">{index + 1}</span>
+                <span className="text-xs leading-5 text-white/62">{beat}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </aside>
     </div>
