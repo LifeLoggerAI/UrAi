@@ -1,6 +1,6 @@
 # URAI Post-Merge Deployment Evidence
 
-Status: production evidence pending - repo gates green, PR #304 merged, deploy proof coverage expanded, release-owner approval recorded, production evidence workflow added and triggered
+Status: production evidence pending - repo gates green, PR #304 merged, deploy proof coverage expanded, release-owner approval recorded, production evidence workflow added and trigger coverage broadened
 Related issue: #300
 Latest merged implementation: PR #304
 Merge commit: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
@@ -15,8 +15,9 @@ Post-merge deploy-proof commits:
 - `9342e776edf334c5473588f57b23e82376a11161` - added rollback plan for PR #304 release.
 - `c9fc1f925aa28d632a3fe295061aae693cea11b6` - added `.github/workflows/production-evidence.yml` for live route checks, production smoke, and artifact upload without Firebase deploy secrets.
 - `991963616b4261f4340ee7a5878705b87be9aeaa` - triggered the Production Evidence workflow path with explicit evidence label `pr304-release-evidence`.
+- `844de00f67e083da1dd113609acd2378288bb0fa` - broadened Production Evidence workflow push paths so source, tests, package, Firebase config, rules, indexes, storage rules, and evidence docs trigger verification.
 
-Last verification attempt: 2026-05-22
+Last verification attempt: 2026-06-08
 
 This document captures deployment evidence after a `main` release. Do not mark production launch complete until the required workflow, Firebase, browser, mobile, reduced-motion, safety, and rollback checks are filled in with concrete results.
 
@@ -42,6 +43,7 @@ Post-merge commits expanded production proof coverage:
 - `tests/e2e/v1-production-smoke.spec.ts` now includes dedicated coverage for `/ochat`, reduced-motion root smoke, mobile public constellation smoke, waitlist invalid-state behavior, public-data safety, companion fallback safety, screenshot artifact capture, and waitlist persistence/dry-run proof.
 - `docs/URAI_RELEASE_ROLLBACK_PR304.md` documents the rollback candidate SHA and revert/reset commands.
 - `.github/workflows/production-evidence.yml` provides a secrets-free production evidence path that checks live Firebase Hosting routes, runs production Playwright smoke, attempts the custom domain, and uploads artifacts.
+- `.github/workflows/production-evidence.yml` now runs for source, e2e, package, Firebase configuration, Firestore rules/indexes, Storage rules, workflow, and evidence-doc changes on `main`, in addition to manual dispatch.
 
 ## Pre-merge workflow evidence
 
@@ -64,7 +66,7 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 - Workflow file: `.github/workflows/urai-ci.yml`
 - Trigger expected: `push` to `main`
 - Merge commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
-- Latest deploy-proof commit SHA: `991963616b4261f4340ee7a5878705b87be9aeaa`
+- Latest deploy-proof commit SHA: `844de00f67e083da1dd113609acd2378288bb0fa`
 - Result: pending - no post-merge `main` run URL attached yet
 - Required secret checked by workflow: `FIREBASE_TOKEN`
 - Firebase deploy result: pending - no deploy output attached yet
@@ -75,7 +77,7 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 - Workflow file: `.github/workflows/deploy.yml`
 - Trigger expected: `push` to `main` because deploy-proof commits changed `.github/workflows/deploy.yml` and `tests/e2e/**`
 - Merge commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
-- Latest deploy-proof commit SHA: `991963616b4261f4340ee7a5878705b87be9aeaa`
+- Latest deploy-proof commit SHA: `844de00f67e083da1dd113609acd2378288bb0fa`
 - Result: pending - no production deploy workflow run URL attached yet
 - Required secret checked by workflow: `FIREBASE_SERVICE_ACCOUNT`
 - Firebase project: `urai-4dc1d`
@@ -86,8 +88,8 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 ### Production Evidence workflow
 
 - Workflow file: `.github/workflows/production-evidence.yml`
-- Trigger expected: `workflow_dispatch` or `push` to `main` on evidence-related paths.
-- Trigger commit SHA: `991963616b4261f4340ee7a5878705b87be9aeaa`
+- Trigger expected: `workflow_dispatch` or `push` to `main` for source, e2e, package, Firebase configuration, Firestore rules/indexes, Storage rules, workflow, rollback, ops, or evidence-doc changes.
+- Trigger commit SHA: `844de00f67e083da1dd113609acd2378288bb0fa`
 - Result: pending - the connected GitHub tool did not expose push-triggered run visibility.
 - Required secrets: none for the evidence workflow.
 - Evidence label: `pr304-release-evidence`
@@ -112,7 +114,7 @@ All PR #304 gates were green on head `9c7528f0b02cd5374c33fc0a2163cd449e7e8161` 
 - Trigger used: pending - not verified through connected GitHub tool
 - Run URL: pending
 - Commit SHA: `1f0da470088bb67319146cf515b957cc1c5dfd8f`
-- Latest deploy-proof commit SHA: `991963616b4261f4340ee7a5878705b87be9aeaa`
+- Latest deploy-proof commit SHA: `844de00f67e083da1dd113609acd2378288bb0fa`
 - Result: pending
 - Firebase project: `urai-4dc1d`
 - Hosting channel: `live`
@@ -153,7 +155,7 @@ Record the exact deployed URL and browser/device used for each check.
 
 - Release owner: Adam Clamp
 - Release-owner approval: recorded from chat instruction on 2026-05-22 to continue PR #304 release verification path.
-- Verification date: pending - production evidence incomplete as of 2026-05-22
+- Verification date: pending - production evidence incomplete as of 2026-06-08
 - Approved for production traffic: approved to proceed with release verification; final production traffic closure remains pending deploy-run and live evidence.
 - Rollback SHA: pre-PR #304 base SHA is `115c0548167818967dc955fc616d0302f93a2452`.
 - Rollback plan: `docs/URAI_RELEASE_ROLLBACK_PR304.md`.
@@ -161,9 +163,9 @@ Record the exact deployed URL and browser/device used for each check.
 
 ## Known blockers
 
-- Missing passing `UrAi CI/CD` push-run URL for merge commit `1f0da470088bb67319146cf515b957cc1c5dfd8f` or latest deploy-proof commit `991963616b4261f4340ee7a5878705b87be9aeaa`.
-- Missing passing Deploy Firebase Production workflow run URL for latest deploy-proof commit `991963616b4261f4340ee7a5878705b87be9aeaa`.
-- Missing passing Production Evidence workflow run URL for trigger commit `991963616b4261f4340ee7a5878705b87be9aeaa`.
+- Missing passing `UrAi CI/CD` push-run URL for merge commit `1f0da470088bb67319146cf515b957cc1c5dfd8f` or latest deploy-proof commit `844de00f67e083da1dd113609acd2378288bb0fa`.
+- Missing passing Deploy Firebase Production workflow run URL for latest deploy-proof commit `844de00f67e083da1dd113609acd2378288bb0fa`.
+- Missing passing Production Evidence workflow run URL for trigger commit `844de00f67e083da1dd113609acd2378288bb0fa`.
 - Missing confirmation that `FIREBASE_TOKEN` is configured for `.github/workflows/urai-ci.yml`.
 - Missing confirmation that `FIREBASE_SERVICE_ACCOUNT` is configured for `.github/workflows/deploy.yml`.
 - Missing closure-grade deployed production URL evidence tied to a workflow run.
