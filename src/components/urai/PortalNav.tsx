@@ -3,9 +3,36 @@
 import { motion } from "framer-motion";
 import type { UraiScene } from "@/lib/urai/scene-theme";
 import { getSceneTheme } from "@/lib/urai/scene-theme";
-import { getAssetPath, type UraiAssetKey } from "@/lib/assets/uraiAssetManifest";
-import { SafeLayerImage } from "@/components/common/SafeLayerImage";
 import { useInteractionSound } from "@/hooks/useInteractionSound";
+import { useState } from "react";
+
+// ... (SVG icon components remain the same)
+// SVG Icons for portals
+const LifeMapIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+  </svg>
+);
+
+const GroundIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M3 12h18M3 6h18M3 18h18" />
+  </svg>
+);
+
+const FocusIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="12" cy="12" r="6" />
+    <circle cx="12" cy="12" r="2" />
+  </svg>
+);
+
+const ReplayIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    <path d="M2.5 2v6h6M2.66 15.57a10 10 0 1 0 .57-8.38" />
+  </svg>
+);
 
 type PortalNavProps = {
   activeScene: UraiScene;
@@ -15,11 +42,11 @@ type PortalNavProps = {
 
 type PortalSoundScene = "life-map" | "ground" | "focus" | "replay";
 
-const portals: Array<{ id: UraiScene; label: string; glyph: string; assetKey?: UraiAssetKey }> = [
-  { id: "life-map", label: "Life Map", glyph: "*", assetKey: "galaxyPortal" },
-  { id: "ground", label: "Ground", glyph: "o" },
-  { id: "focus", label: "Focus", glyph: "<>" },
-  { id: "replay", label: "Replay", glyph: "@", assetKey: "legacyPortal" },
+const portals: Array<{ id: UraiScene; label: string; icon: React.ComponentType }> = [
+  { id: "life-map", label: "Life Map", icon: LifeMapIcon },
+  { id: "ground", label: "Ground", icon: GroundIcon },
+  { id: "focus", label: "Focus", icon: FocusIcon },
+  { id: "replay", label: "Replay", icon: ReplayIcon },
 ];
 
 function toPortalSoundScene(scene: UraiScene): PortalSoundScene | null {
@@ -30,6 +57,7 @@ function toPortalSoundScene(scene: UraiScene): PortalSoundScene | null {
 export function PortalNav({ activeScene, onNavigate, onReturnHome }: PortalNavProps) {
   const theme = getSceneTheme(activeScene);
   const sound = useInteractionSound();
+  const [hoveredPortal, setHoveredPortal] = useState<string | null>(null);
 
   const returnHomeWithSound = async () => {
     await sound.playSoftTap();
@@ -44,21 +72,35 @@ export function PortalNav({ activeScene, onNavigate, onReturnHome }: PortalNavPr
   };
 
   return (
-    <nav aria-label="URAI scene portals" className="relative z-20 mt-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-5">
+    <nav aria-label="URAI scene portals" className="relative z-20 mt-12 flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-5 opacity-50 hover:opacity-100 transition-opacity duration-300">
       {activeScene !== "home" && (
-        <motion.button type="button" onClick={returnHomeWithSound} className="group rounded-full border border-white/12 bg-white/[0.045] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 shadow-2xl backdrop-blur-xl transition hover:border-white/28 hover:bg-white/[0.075] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
+        <motion.button type="button" onClick={returnHomeWithSound} className="group rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/60 shadow-lg backdrop-blur-md transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40" whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
           Home
         </motion.button>
       )}
       {portals.map((portal) => {
         const isActive = portal.id === activeScene;
+        const Icon = portal.icon;
         return (
-          <motion.button key={portal.id} type="button" aria-label={`Enter ${portal.label}`} onClick={() => navigateWithSound(portal.id)} className="group relative flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.045] px-3 py-2 text-sm text-white/80 shadow-2xl backdrop-blur-xl transition hover:border-white/28 hover:bg-white/[0.075] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40 disabled:opacity-70" disabled={isActive} style={{ boxShadow: isActive ? `0 0 28px ${theme.glow}` : undefined }} whileHover={!isActive ? { y: -2, scale: 1.02 } : undefined} whileTap={!isActive ? { scale: 0.98 } : undefined}>
-            <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white/15 text-xs" style={{ color: isActive ? theme.accent : "rgba(255,255,255,0.72)", background: isActive ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.05)" }}>
-              {portal.assetKey ? <SafeLayerImage src={getAssetPath(portal.assetKey)} alt="" className="absolute inset-0 h-full w-full object-contain opacity-80 mix-blend-screen" /> : null}
-              <span className="relative z-10">{portal.glyph}</span>
-            </span>
-            <span className="hidden text-xs uppercase tracking-[0.18em] md:inline">{portal.label}</span>
+          <motion.button 
+            key={portal.id} 
+            type="button" 
+            aria-label={`Enter ${portal.label}`}
+            onClick={() => navigateWithSound(portal.id)} 
+            onMouseEnter={() => setHoveredPortal(portal.id)}
+            onMouseLeave={() => setHoveredPortal(null)}
+            className="group relative flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] p-3 text-white/60 shadow-lg backdrop-blur-md transition hover:border-white/20 hover:bg-white/[0.06] hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40 disabled:opacity-50"
+            disabled={isActive} 
+            style={{ boxShadow: isActive ? `0 0 20px ${theme.glow}` : undefined }} 
+            whileHover={!isActive ? { y: -2, scale: 1.02 } : undefined} 
+            whileTap={!isActive ? { scale: 0.98 } : undefined}
+          >
+            <Icon />
+            {hoveredPortal === portal.id && (
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-black/50 px-2 py-1 text-xs text-white/80 backdrop-blur-sm">
+                {portal.label}
+              </span>
+            )}
           </motion.button>
         );
       })}

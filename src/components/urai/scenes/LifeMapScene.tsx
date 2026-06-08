@@ -7,7 +7,7 @@ import { mockMemoryStars } from "@/lib/urai/mock-memory-stars";
 import { ConstellationLayer } from "@/components/urai/ConstellationLayer";
 import { OrbCore } from "@/components/urai/OrbCore";
 import { PortalNav } from "@/components/urai/PortalNav";
-import { SceneCopy } from "@/components/urai/SceneCopy";
+import { SceneIntro } from "@/components/urai/SceneIntro";
 
 type LifeMapSceneProps = {
   selectedMemoryId?: string | null;
@@ -56,7 +56,11 @@ export function LifeMapScene({ selectedMemoryId, onSelectMemory, onNavigate, onR
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col">
         <div className="flex items-start justify-between gap-6 pt-6">
           <div className="max-w-xl">
-            <SceneCopy scene="life-map" />
+            <SceneIntro
+              eyebrow="Galaxy"
+              title="Your life, mapped as a living constellation."
+              subtitle="Memory stars, thresholds, rituals, and emotional weather unfold across time."
+            />
           </div>
           <button
             type="button"

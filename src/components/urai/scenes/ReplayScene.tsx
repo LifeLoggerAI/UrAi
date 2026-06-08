@@ -10,7 +10,6 @@ import { replayModes } from "@/lib/urai/replay-modes";
 import { ConstellationLayer } from "@/components/urai/ConstellationLayer";
 import { OrbCore } from "@/components/urai/OrbCore";
 import { PortalNav } from "@/components/urai/PortalNav";
-import { SceneCopy } from "@/components/urai/SceneCopy";
 
 type ReplaySceneProps = {
   selectedMemoryId?: string | null;
@@ -53,7 +52,7 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col">
         <div className="flex items-start justify-between gap-6 pt-6">
           <div className="max-w-xl">
-            <SceneCopy scene="replay" />
+            <div></div>
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={onReturnToLifeMap} className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 backdrop-blur-xl transition hover:border-white/30 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40">Life Map</button>

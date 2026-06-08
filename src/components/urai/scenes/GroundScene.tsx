@@ -7,7 +7,7 @@ import { getSceneTheme } from "@/lib/urai/scene-theme";
 import { useUraiAudio } from "@/providers/UraiAudioProvider";
 import { OrbCore } from "@/components/urai/OrbCore";
 import { PortalNav } from "@/components/urai/PortalNav";
-import { SceneCopy } from "@/components/urai/SceneCopy";
+import { SceneIntro } from "@/components/urai/SceneIntro";
 
 type GroundSceneProps = {
   onNavigate: (scene: UraiScene) => void;
@@ -83,7 +83,13 @@ export function GroundScene({ onNavigate, onReturnHome }: GroundSceneProps) {
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col">
         <div className="flex items-start justify-between gap-6 pt-6">
-          <div className="max-w-xl"><SceneCopy scene="ground" /></div>
+          <div className="max-w-xl">
+            <SceneIntro
+              eyebrow="Ground"
+              title="A living terrain for your emotional field."
+              subtitle="Signals settle here as texture, rhythm, and quiet recovery."
+            />
+          </div>
           <button type="button" onClick={onReturnHome} className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 backdrop-blur-xl transition hover:border-white/30 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40">Home</button>
         </div>
 

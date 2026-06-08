@@ -6,7 +6,6 @@ import type { UraiScene } from "@/lib/urai/scene-theme";
 import { UraiCompanionShell } from "@/components/companion/UraiCompanionShell";
 import { ExportCenter } from "@/components/exports/ExportCenter";
 import { AssetPreloader } from "@/components/genesis/AssetPreloader";
-import { LayeredGenesisScene } from "@/components/genesis/LayeredGenesisScene";
 import { GroundGarden } from "@/components/ground/GroundGarden";
 import { LegacyView } from "@/components/legacy/LegacyView";
 import { LifeMapGalaxy } from "@/components/lifemap/LifeMapGalaxy";
@@ -18,7 +17,7 @@ import { RitualShelf } from "@/components/rituals/RitualShelf";
 import { UraiSettingsControlMenu } from "@/components/settings/UraiSettingsControlMenu";
 import { ShadowRealmView } from "@/components/shadow/ShadowRealmView";
 import { PortalNav } from "@/components/urai/PortalNav";
-import { SceneCopy } from "@/components/urai/SceneCopy";
+import { HomeWorldCanvas } from "@/components/urai/home/HomeWorldCanvas";
 import { useUraiAudio } from "@/providers/UraiAudioProvider";
 import { useUraiExport } from "@/providers/UraiExportProvider";
 import { useUraiGround } from "@/providers/UraiGroundProvider";
@@ -96,15 +95,14 @@ export function HomeScene({ onNavigate, onOpenOrbChat }: HomeSceneProps) {
   }, [notifications]);
 
   const onboardingOpen = onboarding.isFirstRun && onboarding.preferences.status === "in_progress";
-  const immersiveOpen = isCompanionOpen || lifeMap.isLifeMapOpen || ground.isGroundOpen || mirror.isMirrorOpen || shadow.isShadowOpen || legacy.isLegacyOpen || exports.isExportOpen || rituals.isRitualFlowOpen || onboardingOpen || settings.isSettingsOpen;
 
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden">
       <AssetPreloader>
-        <LayeredGenesisScene moodState="luminous" onSkyOpen={lifeMap.openLifeMap} onOrbOpen={openCompanion} onGroundOpen={ground.openGround} onPassportOpen={openPassport} onSettingsOpen={openSettingsFromCompanion} isCompanionOpen={immersiveOpen} />
+        <HomeWorldCanvas />
       </AssetPreloader>
       <div className="pointer-events-none absolute inset-0 z-40 flex min-h-screen w-full flex-col items-center justify-between px-6 py-12">
-        <div className="pointer-events-auto pt-4"><SceneCopy scene="home" /></div>
+        <div />
         <div className="pointer-events-auto w-full pb-2"><PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} /></div>
       </div>
       <RitualShelf isVisible={!lifeMap.isLifeMapOpen && !ground.isGroundOpen && !mirror.isMirrorOpen && !shadow.isShadowOpen && !legacy.isLegacyOpen && !exports.isExportOpen && !isCompanionOpen && !onboardingOpen && !settings.isSettingsOpen} />

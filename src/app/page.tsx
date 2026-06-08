@@ -1,4 +1,4 @@
-import { HomeScene } from "@/components/urai/home/HomeScene";
+import ClientHome from "@/app/client-home";
 
 export const metadata = {
   title: "URAI Genesis",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <HomeScene />;
+  return <ClientHome />;
 }

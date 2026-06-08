@@ -6,7 +6,6 @@ import type { UraiScene } from "@/lib/urai/scene-theme";
 import { getSceneTheme } from "@/lib/urai/scene-theme";
 import { OrbCore } from "@/components/urai/OrbCore";
 import { PortalNav } from "@/components/urai/PortalNav";
-import { SceneCopy } from "@/components/urai/SceneCopy";
 
 type FocusMode = "desert" | "storm";
 
@@ -84,7 +83,7 @@ export function FocusScene({ onNavigate, onReturnHome }: FocusSceneProps) {
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col">
         <div className="flex items-start justify-between gap-6 pt-6">
           <div className="max-w-xl">
-            <SceneCopy scene="focus" />
+            <div></div>
           </div>
           <button
             type="button"
