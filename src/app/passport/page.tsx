@@ -1,6 +1,5 @@
-
-import { PassportControlCenter } from '../../components/passport';
+import Passport from '@/components/passport/Passport';
 
 export default function PassportPage() {
-  return <PassportControlCenter />;
+  return <Passport />;
 }

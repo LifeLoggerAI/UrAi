@@ -1,0 +1,173 @@
+:root {
+  --galaxy-bg: #01040d;
+  --star-color: rgba(255, 255, 255, 0.8);
+  --constellation-line-color: rgba(125, 211, 252, 0.2);
+  --card-bg: rgba(10, 20, 30, 0.7);
+  --card-border: rgba(255, 255, 255, 0.15);
+}
+
+.lifeMapScene {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background-color: var(--galaxy-bg);
+  background-image: radial-gradient(ellipse at 70% 30%, #08243f 0%, transparent 50%),
+                    radial-gradient(ellipse at 30% 80%, #120d22 0%, transparent 50%);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  animation: fadeInScene 1.5s ease-in-out;
+}
+
+.starfield {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  animation: drift 60s linear infinite alternate;
+}
+
+.constellationLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    mix-blend-mode: screen;
+    animation: drift 90s linear infinite alternate;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--star-color);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: starPulse 5s infinite alternate;
+}
+
+.star:hover {
+  transform: scale(2) !important;
+  box-shadow: 0 0 20px 7px var(--star-color);
+  animation-play-state: paused;
+}
+
+/* Star States */
+.star[data-state="recovery"] { --star-color: #2dd4bf; }
+.star[data-state="bond"] { --star-color: #a78bfa; }
+.star[data-state="threshold"] { --star-color: #fb923c; }
+.star[data-state="blueFog"] { --star-color: #60a5fa; }
+.star[data-state="reflection"] { --star-color: #f4f4f5; }
+
+
+.memoryCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 90vw, 400px);
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  animation: fadeInCard 0.5s ease-out;
+}
+
+.memoryCard .closeButton {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.memoryCard .closeButton:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.memoryCard .title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.memoryCard .state {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.memoryCard .state[data-state="recovery"] { color: #2dd4bf; }
+.memoryCard .state[data-state="bond"] { color: #a78bfa; }
+.memoryCard .state[data-state="threshold"] { color: #fb923c; }
+.memoryCard .state[data-state="blueFog"] { color: #60a5fa; }
+.memoryCard .state[data-state="reflection"] { color: #f4f4f5; }
+
+
+.memoryCard .narratorLine {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 16px 0;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255,255,255,0.2);
+}
+
+.memoryCard .era {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.returnToField {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  color: rgba(255, 255, 255, 0.5);
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.returnToField:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
+@keyframes fadeInScene {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInCard {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes drift {
+    from { transform: translate(-1%, -0.5%); }
+    to { transform: translate(1%, 0.5%); }
+}
+
+@keyframes starPulse {
+    from {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}

@@ -10,7 +10,7 @@ function MistPlanes() {
   const mistRef = useRef<THREE.Group>(null);
 
   const mistPlanes = useMemo(() => {
-    const planes = [];
+    const planes: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>[] = [];
     for (let i = 0; i < 15; i++) {
       const plane = new THREE.PlaneGeometry(8, 2);
       const material = new THREE.MeshBasicMaterial({

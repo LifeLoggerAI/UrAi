@@ -1,5 +1,5 @@
-import UraiResolvedHomeScene from '@/components/urai/UraiResolvedHomeScene';
+import GenesisHome from '@/components/genesis/GenesisHome';
 
 export default function HomePage() {
-  return <UraiResolvedHomeScene />;
+  return <GenesisHome />;
 }

@@ -1,0 +1,202 @@
+:root {
+    --replay-bg: #01040d;
+    --replay-orb-color: rgba(94, 234, 212, 0.6);
+    --replay-stage-glow: rgba(94, 234, 212, 0.1);
+    --replay-timeline-bg: rgba(10, 20, 30, 0.5);
+    --replay-timeline-handle: rgba(255, 255, 255, 0.8);
+    --replay-text-color: rgba(255, 255, 255, 0.7);
+}
+
+.replayScene {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background-color: var(--replay-bg);
+    color: var(--replay-text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    animation: fadeInScene 1.5s ease-in-out;
+}
+
+.replayBackground {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(ellipse at 50% 50%, var(--scene-glow-color, transparent) 0%, transparent 40%);
+    transition: background-color 1s ease, background-image 1s ease;
+}
+
+.replayStage {
+    position: relative;
+    z-index: 10;
+    max-width: 600px;
+    padding: 40px;
+    animation: stageFadeIn 1s ease-out 0.5s both;
+    transition: opacity 0.5s ease;
+}
+
+.replayStage.scene-changing {
+    opacity: 0;
+}
+
+.replayOrb {
+    position: absolute;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(ellipse, var(--replay-orb-color) 0%, transparent 70%);
+    filter: blur(20px);
+    animation: orbPulse 6s infinite alternate ease-in-out;
+}
+
+.sceneState {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    color: var(--scene-glow-color, #fff);
+    transition: color 1s ease;
+}
+
+.sceneTitle {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+.sceneNarratorLine {
+    font-style: italic;
+    max-width: 450px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+}
+
+.sceneEra {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Controls & Timeline */
+
+.replayControls {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 20;
+}
+
+.replayControls button {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.replayControls button:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.playPauseButton {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 24px !important;
+}
+
+.replayTimeline {
+    position: absolute;
+    bottom: 50px;
+    left: 10%;
+    right: 10%;
+    height: 4px;
+    background: var(--replay-timeline-bg);
+    border-radius: 2px;
+    z-index: 20;
+}
+
+.timelineProgress {
+    height: 100%;
+    background: var(--replay-timeline-handle);
+    border-radius: 2px;
+    transition: width 0.3s linear;
+}
+
+
+.replayNav {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 20;
+  padding: 8px 12px;
+  border-radius: 99px;
+  background: rgba(10, 20, 30, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+.replayNav a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+.replayNav a:hover { color: #fff; }
+
+.returnToFieldReplay {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    color: rgba(255, 255, 255, 0.5);
+    background: none;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 8px 12px;
+}
+.returnToFieldReplay:hover { color: #fff; }
+
+/* Scene State Colors */
+.replayBackground[data-state="recovery"] { --scene-glow-color: #2dd4bf; }
+.replayBackground[data-state="bond"] { --scene-glow-color: #fbbf24; }
+.replayBackground[data-state="threshold"] { --scene-glow-color: #c084fc; }
+.replayBackground[data-state="blueFog"] { --scene-glow-color: #60a5fa; }
+.replayBackground[data-state="reflection"] { --scene-glow-color: #f4f4f5; }
+
+
+@keyframes stageFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes orbPulse {
+    from { opacity: 0.7; transform: translateX(-50%) scale(0.95); }
+    to { opacity: 1; transform: translateX(-50%) scale(1.05); }
+}
+
+@keyframes fadeInScene {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

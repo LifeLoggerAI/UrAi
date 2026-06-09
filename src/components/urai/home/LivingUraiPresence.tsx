@@ -39,6 +39,7 @@ function OrbParticleField() {
       <bufferGeometry attach="geometry">
         <bufferAttribute
           attach="attributes-position"
+          args={[positions, 3]}
           count={positions.length / 3}
           array={positions}
           itemSize={3}
@@ -80,13 +81,13 @@ export function LivingUraiPresence() {
     if (shellRef.current) {
       const shellScale = 1 + breathing * 0.03;
       shellRef.current.scale.set(shellScale, shellScale, shellScale);
-      (shellRef.current.material as THREE.ShaderMaterial).opacity =
+      (shellRef.current.material as THREE.MeshStandardMaterial).opacity =
         0.3 + breathing * 0.1;
     }
     if (haloRef.current) {
       const haloScale = 1 + breathing * 0.02;
       haloRef.current.scale.set(haloScale, haloScale, haloScale);
-       (haloRef.current.material as THREE.ShaderMaterial).opacity =
+       (haloRef.current.material as THREE.MeshBasicMaterial).opacity =
         0.1 + breathing * 0.05;
     }
   });
@@ -161,4 +162,3 @@ export function LivingUraiPresence() {
     </group>
   );
 }
-

@@ -1,115 +1,214 @@
-export type UraiISODateString = string;
-
-export type UraiGenesisVersion = "genesis-v1";
+export type UraiGenesisVersion = 'genesis-v1';
 
 export type UraiConsentCategory =
-  | "audio"
-  | "location"
-  | "motion"
-  | "deviceActivity"
-  | "notifications"
-  | "calendar"
-  | "contacts"
-  | "health"
-  | "photos"
-  | "passport";
+  | 'audio'
+  | 'location'
+  | 'motion'
+  | 'deviceActivity'
+  | 'notifications'
+  | 'calendar'
+  | 'contacts'
+  | 'health'
+  | 'photos'
+  | 'passport';
 
-export type UraiConsentCategoryConfig = {
+export interface UraiConsentCategoryConfig {
   id: UraiConsentCategory;
   label: string;
   description: string;
   requiredForGenesisLoop: boolean;
-};
+}
 
-export type UraiConsentState = {
+export interface UraiConsentState {
   userId: string;
   version: UraiGenesisVersion;
   categories: Record<UraiConsentCategory, boolean>;
   allEnabled: boolean;
-  lastUpdatedAt: UraiISODateString;
-};
+  lastUpdatedAt: string;
+}
 
-export type UraiPassportShareMode = "private" | "reviewOnly" | "shareable" | "disabled";
-
-export type UraiPassportState = {
+export interface UraiPassportState {
   userId: string;
   version: UraiGenesisVersion;
-  shareMode: UraiPassportShareMode;
+  shareMode: 'private' | 'public';
   allowedCategories: UraiConsentCategory[];
-  lastReviewedAt?: UraiISODateString;
-  updatedAt: UraiISODateString;
-};
+  updatedAt: string;
+}
 
-export type UraiPassiveSignalSource =
-  | "audio"
-  | "location"
-  | "motion"
-  | "deviceActivity"
-  | "notification"
-  | "calendar"
-  | "health"
-  | "photo"
-  | "manualSystemEvent";
+export type UraiMoodWeatherState =
+  | 'clear'
+  | 'greenRecoveryBloom'
+  | 'blueFog'
+  | 'threshold'
+  | 'bond'
+  | 'reflection'
+  | 'storm'
+  | 'calm'
+  | 'aurora';
 
-export type UraiPrivacyLevel = "localOnly" | "privateCloud" | "passportShareable";
+export interface UraiMoodWeather {
+  userId: string;
+  calculatedAt: string;
+  skyState: string;
+  moodBlend: string[];
+  intensity: number;
+  [key: string]: unknown;
+}
 
-export type UraiPassiveSignal = {
+export type UraiPassiveSignalKind =
+  | 'audio'
+  | 'location'
+  | 'motion'
+  | 'deviceActivity'
+  | 'notification'
+  | 'calendar'
+  | 'contact'
+  | 'health'
+  | 'photo'
+  | 'passport'
+  | 'manual'
+  | 'system';
+
+export interface UraiPassiveSignal {
   id: string;
   userId: string;
-  source: UraiPassiveSignalSource;
-  capturedAt: UraiISODateString;
+  source?: string;
+  kind?: UraiPassiveSignalKind;
   title?: string;
+  label?: string;
+  value?: string | number | boolean | null;
   intensity?: number;
+  confidence?: number;
+  capturedAt?: string;
+  timestamp?: string;
   emotionalTone?: string;
   contextLabel?: string;
-  rawStorageRef?: string;
-  privacyLevel: UraiPrivacyLevel;
+  privacyLevel?: string;
   metadata?: Record<string, unknown>;
-};
+  [key: string]: unknown;
+}
 
-export type UraiNarratorTone = "calm" | "mythic" | "clear" | "protective" | "celebratory";
+export interface UraiGenesisHomeState {
+  userId: string;
+  consent?: UraiConsentState;
+  passport?: UraiPassportState;
+  moodWeather: UraiMoodWeather;
+  latestSignals?: UraiPassiveSignal[];
+  activeSignals?: UraiPassiveSignal[];
+  displayName?: string;
+  currentState?: string;
+  auraColor?: string;
+  recoveryLevel?: number;
+  fieldIntensity?: number;
+  lastUpdated?: string;
+  narratorLine?: string;
+  [key: string]: unknown;
+}
 
-export type UraiNarratorReflection = {
+export interface UserFieldState {
+  userId: string;
+  displayName: string;
+  currentState: string;
+  auraColor: string;
+  recoveryLevel: number;
+  fieldIntensity: number;
+  lastUpdated: string;
+}
+
+export interface MemoryStar {
   id: string;
   userId: string;
-  createdAt: UraiISODateString;
+  title: string;
+  state: string;
+  era: string;
+  narratorLine: string;
+  x: number;
+  y: number;
+  z: number;
+  intensity: number;
+  relatedStarIds: string[];
+  createdAt: string;
+}
+
+export interface ReplayScene {
+  id: string;
+  userId: string;
+  title: string;
+  state: string;
+  era: string;
+  narratorLine: string;
+  duration: number;
+  order: number;
+  memoryStarId: string;
+}
+
+export interface PassportPermission {
+  id: string;
+  userId: string;
+  category: string;
+  enabled: boolean;
+  sensitivity: 'low' | 'medium' | 'high';
+  description: string;
+  updatedAt: string;
+}
+
+/* Legacy URAI compatibility exports */
+export type UraiNarratorTone =
+  | 'calm'
+  | 'clear'
+  | 'protective'
+  | 'celebratory'
+  | 'mythic';
+
+export interface UraiNarratorReflection {
+  id: string;
+  userId: string;
+  createdAt: string;
   signalIds: string[];
   title: string;
   body: string;
   tone: UraiNarratorTone;
   visibleToUser: boolean;
-};
+  [key: string]: unknown;
+}
 
-export type UraiMemoryStar = {
+export interface UraiMemoryStar {
   id: string;
   userId: string;
-  createdAt: UraiISODateString;
+  createdAt: string;
   reflectionId?: string;
-  label: string;
+  label?: string;
+  title?: string;
   constellation?: string;
-  auraColor: string;
-  magnitude: number;
+  auraColor?: string;
+  magnitude?: number;
   x: number;
   y: number;
-  z?: number;
-};
+  z: number;
+  [key: string]: unknown;
+}
 
-export type UraiMoodSkyState = "clear" | "mist" | "rain" | "storm" | "sunrise" | "night" | "aurora";
+/* Signal pipeline compatibility exports */
+export type UraiPassiveSignalSource =
+  | 'manualSystemEvent'
+  | 'audio'
+  | 'location'
+  | 'motion'
+  | 'deviceActivity'
+  | 'notification'
+  | 'calendar'
+  | 'contact'
+  | 'health'
+  | 'photo'
+  | 'passport'
+  | 'system'
+  | 'imported'
+  | (string & {});
 
-export type UraiMoodWeather = {
-  userId: string;
-  calculatedAt: UraiISODateString;
-  skyState: UraiMoodSkyState;
-  moodBlend: string[];
-  intensity: number;
-};
-
-export type UraiGenesisHomeState = {
-  userId: string;
-  consent: UraiConsentState;
-  passport: UraiPassportState;
-  moodWeather: UraiMoodWeather;
-  latestSignals: UraiPassiveSignal[];
-  latestReflections: UraiNarratorReflection[];
-  memoryStars: UraiMemoryStar[];
-};
+export type UraiPrivacyLevel =
+  | 'localOnly'
+  | 'privateCloud'
+  | 'encryptedCloud'
+  | 'passportShared'
+  | 'public'
+  | (string & {});

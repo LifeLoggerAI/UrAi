@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import { GenesisOrb } from './GenesisOrb';
 import { CompanionShell } from '@/components/companion';

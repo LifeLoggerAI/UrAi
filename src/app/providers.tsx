@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 // import { SpatialUniverseProvider } from '@/components/urai/SpatialUniverseProvider';
-// import { UraiAudioProvider } from '@/providers/UraiAudioProvider';
+import { UraiAudioProvider } from '@/providers/UraiAudioProvider';
 import { UraiAuthProvider } from '@/providers/UraiAuthProvider';
-// import { UraiCloudSyncProvider } from '@/providers/UraiCloudSyncProvider';
-// import { UraiExportProvider } from '@/providers/UraiExportProvider';
+import { UraiCloudSyncProvider } from '@/providers/UraiCloudSyncProvider';
+import { UraiExportProvider } from '@/providers/UraiExportProvider';
 import { UraiFeatureFlagProvider } from '@/providers/UraiFeatureFlagProvider';
 // import { UraiGroundProvider } from '@/providers/UraiGroundProvider';
 // import { UraiLegacyProvider } from '@/providers/UraiLegacyProvider';
@@ -36,12 +36,14 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
   return (
     <UraiErrorBoundary>
       <UraiAuthProvider>
-        <UraiFeatureFlagProvider>
-          <UraiSettingsProvider>
-            <UraiOnboardingProvider>
-              <UraiPassportProvider>
-                {/* Disabled providers for Pass 1:
-              <UraiCloudSyncProvider>
+        <UraiCloudSyncProvider>
+          <UraiAudioProvider>
+            <UraiExportProvider>
+              <UraiFeatureFlagProvider>
+              <UraiSettingsProvider>
+              <UraiOnboardingProvider>
+                <UraiPassportProvider>
+                  {/* Disabled providers for Pass 1:
                 <UraiAudioProvider>
                   <UraiVoiceProvider>
                     <UraiNotificationProvider>
@@ -66,13 +68,15 @@ export default function AppProviders({ children }: { children?: React.ReactNode 
                     </UraiNotificationProvider>
                   </UraiVoiceProvider>
                 </UraiAudioProvider>
-              </UraiCloudSyncProvider>
-              */}
-                {children}
-              </UraiPassportProvider>
-            </UraiOnboardingProvider>
-          </UraiSettingsProvider>
-        </UraiFeatureFlagProvider>
+                */}
+                  {children}
+                </UraiPassportProvider>
+              </UraiOnboardingProvider>
+              </UraiSettingsProvider>
+              </UraiFeatureFlagProvider>
+            </UraiExportProvider>
+          </UraiAudioProvider>
+        </UraiCloudSyncProvider>
       </UraiAuthProvider>
     </UraiErrorBoundary>
   );
