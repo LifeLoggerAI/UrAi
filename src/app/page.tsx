@@ -1,5 +1,9 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import UraiProviderTree from "@/providers/UraiProviderTree";
 
 export default function RootPage() {
-  redirect('/home');
+  return (
+    <UraiProviderTree />
+  );
 }

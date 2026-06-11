@@ -1,11 +1,9 @@
 "use client";
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import './GenesisHome.css';
+import '../../styles/NewGenesisHome.css';
 
-// A simple hook for mouse position to create a parallax effect
 const useMousePosition = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -32,11 +30,9 @@ export default function GenesisHome() {
   }, []);
 
   const handleSceneClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Ensure clicks on interactive elements don't trigger navigation
-    if ((e.target as HTMLElement).closest('.genesisTopNav, .genesisFieldCard, .genesisStateChips')) {
-      return;
+    if (!(e.target as HTMLElement).closest('.genesisTopNav, .genesisFieldCard, .genesisPortalPrompt')) {
+      router.push('/life-map');
     }
-    router.push('/galaxy');
   };
 
   const parallaxX = isClient ? (x / window.innerWidth - 0.5) * 30 : 0;
@@ -44,16 +40,13 @@ export default function GenesisHome() {
 
   return (
     <div className="genesisHomeScene" onClick={handleSceneClick}>
-      {/* Background & Atmosphere */}
       <div className="genesisAtmosphere" />
       <div className="genesisVignette" />
       <div className="genesisParticleField" />
       <div className="genesisFog" />
 
-      {/* Ground */}
       <div className="genesisGroundPlane" />
 
-      {/* Orb & Vessel */}
       <div 
         className="genesisOrbContainer"
         style={{
@@ -69,7 +62,6 @@ export default function GenesisHome() {
         <div className="genesisVesselGrounding" />
       </div>
 
-      {/* UI Elements */}
       <div className="genesisBrandMark">URAI</div>
 
       <nav className="genesisTopNav">
@@ -79,21 +71,14 @@ export default function GenesisHome() {
       </nav>
 
       <div className="genesisFieldCard">
-        <div className="label">PRIVATE FIELD</div>
+        <div className="label">CURRENT FIELD</div>
         <div className="title">URAI</div>
-        <div className="state">RECOVERY</div>
-        <div className="subtitle">green recovery bloom</div>
+        <div className="state">Threshold</div>
+        <div className="subtitle">A turning point is forming.</div>
       </div>
 
-      <div className="genesisStateChips">
-        <div className="chip blue">Blue Fog</div>
-        <div className="chip green">Recovery</div>
-        <div className="chip purple">Bond</div>
-        <div className="chip orange">Threshold</div>
-      </div>
-
-      <div className="genesisPortalPrompt">
-        Tap the sky to enter Life Map
+      <div className="genesisPortalPrompt" onClick={() => router.push('/life-map')}>
+        Enter Life Map
       </div>
     </div>
   );

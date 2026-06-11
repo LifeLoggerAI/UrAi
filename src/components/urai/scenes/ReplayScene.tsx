@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
@@ -88,7 +88,7 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
               );
             })}
           </div>
-          <PortalNav activeScene="replay" onNavigate={onNavigate} onReturnHome={onReturnHome} />
+          <PortalNav onNavigate={(scene) => onNavigate(scene)} activeScene="replay" />
         </div>
       </div>
     </section>

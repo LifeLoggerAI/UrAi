@@ -17,7 +17,7 @@ export function HomeScene({onNavigate, }: HomeSceneProps) {
       <HomeWorldCanvas />
       <div className="pointer-events-none absolute inset-0 z-40 flex min-h-screen w-full flex-col items-center justify-between px-6 py-12">
         <div />
-        <div className="pointer-events-auto w-full pb-2"><PortalNav activeScene="home" onNavigate={onNavigate} onReturnHome={() => onNavigate("home")} /></div>
+        <div className="pointer-events-auto w-full pb-2"><PortalNav onNavigate={onNavigate} activeScene="home" /></div>
       </div>
     </section>
   );

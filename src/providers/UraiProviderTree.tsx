@@ -12,6 +12,7 @@ import { UraiOnboardingProvider } from "@/providers/UraiOnboardingProvider";
 import { UraiRitualProvider } from "@/providers/UraiRitualProvider";
 import { UraiSettingsProvider } from "@/providers/UraiSettingsProvider";
 import { UraiShadowProvider } from "@/providers/UraiShadowProvider";
+import { UraiSceneProvider } from "./UraiSceneProvider";
 
 export default function ClientHome() {
   return (
@@ -26,7 +27,9 @@ export default function ClientHome() {
                     <UraiShadowProvider>
                       <UraiLegacyProvider>
                         <UraiRitualProvider>
-                          <HomeScene onNavigate={() => {}} />
+                          <UraiSceneProvider>
+                            <HomeScene />
+                          </UraiSceneProvider>
                         </UraiRitualProvider>
                       </UraiLegacyProvider>
                     </UraiShadowProvider>

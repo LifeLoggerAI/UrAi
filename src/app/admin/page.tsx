@@ -2,9 +2,9 @@
 
 import { AdminShell } from "@/components/admin/AdminShell";
 import { requireAdminAccess } from "@/lib/admin/adminAccess";
-import { useUraiAuth } from "@/providers/UraiAuthProvider";
+import { useUraiAuth, UraiAuthProvider } from "@/providers/UraiAuthProvider";
 
-export default function AdminPage() {
+function AdminPageContent() {
   const auth = useUraiAuth();
   const access = requireAdminAccess({ uid: auth.userId, email: auth.profile?.email ?? auth.user?.email });
 
@@ -25,4 +25,12 @@ export default function AdminPage() {
   }
 
   return <AdminShell />;
+}
+
+export default function AdminPage() {
+  return (
+    <UraiAuthProvider>
+      <AdminPageContent />
+    </UraiAuthProvider>
+  );
 }

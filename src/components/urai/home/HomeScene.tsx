@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { GenesisSceneShell } from "@/components/urai/GenesisSceneShell";
 
@@ -7,5 +7,13 @@ type HomeSceneProps = {
 };
 
 export function HomeScene(_props: HomeSceneProps) {
-  return <GenesisSceneShell />;
+  return (
+    <GenesisSceneShell
+      onNavigate={() => {}}
+      onOpenOrbChat={() => {}}
+      activeScene="home"
+    >
+      <></>
+    </GenesisSceneShell>
+  );
 }
