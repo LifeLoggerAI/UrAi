@@ -15,8 +15,10 @@ import type {
   LifeMapData,
   LifeMapStar,
   LifeMapStarType,
+  LifeMapVisibility,
 } from "@/lib/lifemap/lifeMapTypes";
 import { getUraiMemories, type UraiMemory } from "@/lib/urai-memory";
+import { PassportDataLayerId } from "@/lib/passport/passportLayerTypes";
 
 type UraiLifeMapContextValue = {
   lifeMapData: LifeMapData;
@@ -50,13 +52,14 @@ const transformMemoryToStar = (memory: UraiMemory): LifeMapStar => ({
   createdAt: memory.createdAt,
   type: memory.type,
   intensity: memory.glowIntensity,
-  visibility: memory.visibility,
+  visibility: memory.visibility as LifeMapVisibility,
   x: memory.constellationPosition.x,
   y: memory.constellationPosition.y,
   glyph: memory.glyph,
-  sourceLayerId: memory.sourceLayerId,
+  sourceLayerId: memory.sourceLayerId as PassportDataLayerId | undefined,
   // All memories are part of the first chapter for now. This can be expanded later.
   chapterId: "chapter-genesis",
+  railPosition: 1,
 });
 
 // Initial empty state with chapter definition

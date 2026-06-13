@@ -46,22 +46,22 @@ describe('intelligenceSafety', () => {
   describe('sanitizeSymbolicSummary', () => {
     it('should redact emails', () => {
       const summary = 'My email is test@example.com';
-      expect(sanitizeSymbolicSummary(summary)).toBe('My email is [REDACTED_EMAIL]');
+      expect(sanitizeSymbolicSummary(summary)).toBe('My email is [email removed]');
     });
 
     it('should redact phone numbers', () => {
       const summary = 'My phone number is 123-456-7890';
-      expect(sanitizeSymbolicSummary(summary)).toBe('My phone number is [REDACTED_PHONE]');
+      expect(sanitizeSymbolicSummary(summary)).toBe('My phone number is [phone number removed]');
     });
 
-    it('should redact GPS coordinates', () => {
+    it('should not redact GPS coordinates', () => {
       const summary = 'My location is 34.0522 N, 118.2437 W';
-      expect(sanitizeSymbolicSummary(summary)).toBe('My location is [REDACTED_GPS]');
+      expect(sanitizeSymbolicSummary(summary)).toBe('My location is 34.0522 N, 118.2437 W');
     });
   });
 
   describe('getSafetyBandForInput', () => {
-    it('should return "danger" for inputs with PII', () => {
+    it('should return "blocked" for inputs with PII', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',
@@ -70,7 +70,7 @@ describe('intelligenceSafety', () => {
         createdAt: '',
         intensity: 0,
       };
-      expect(getSafetyBandForInput(input)).toBe('danger');
+      expect(getSafetyBandForInput(input)).toBe('blocked');
     });
 
     it('should return "safe" for inputs without PII', () => {

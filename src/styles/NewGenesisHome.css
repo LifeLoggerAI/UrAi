@@ -279,6 +279,39 @@
   justify-content: center;
 }
 
+.gatewayGlow {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 15;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.gatewayGlow:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+#mirrorGlow {
+  top: 50px;
+  left: 50px;
+}
+
+#shadowGlow {
+  top: 50px;
+  right: 50px;
+}
+
+#legacyGlow {
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 @keyframes genesisNoiseDrift {
   0%, 100% { transform: translate(0, 0); }
   10% { transform: translate(-5%, -10%); }

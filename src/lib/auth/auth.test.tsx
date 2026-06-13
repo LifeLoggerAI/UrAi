@@ -1,23 +1,34 @@
 
 import { UraiAuthProvider, useUraiAuth } from '@/providers/UraiAuthProvider';
-import { render, act } from '@testing-library/react';
+import { render, act, findByTestId } from '@testing-library/react';
 import { UraiFirebaseClientState } from '../firebase/firebaseTypes';
 
+let authStateCallback: (user: any) => void;
+
 // Mock Firebase client
+const mockAuth = {
+  onAuthStateChanged: jest.fn(callback => {
+    authStateCallback = callback;
+    return () => {}; // Unsubscribe function
+  }),
+  signInAnonymously: jest.fn(),
+  signInWithPopup: jest.fn(),
+  signInWithEmailAndPassword: jest.fn(),
+  createUserWithEmailAndPassword: jest.fn(),
+  sendPasswordResetEmail: jest.fn(),
+  signOut: jest.fn(() => {
+    // Simulate sign-out by clearing the user
+    // @ts-ignore
+    mockAuth.currentUser = null;
+  }),
+  deleteUser: jest.fn(),
+  currentUser: null,
+};
+
 jest.mock('@/lib/firebase/firebaseClient', () => ({
   getUraiFirebaseClient: () => ({
     state: { configured: true, reason: 'ready' },
-    auth: {
-      onAuthStateChanged: jest.fn(),
-      signInAnonymously: jest.fn(),
-      signInWithPopup: jest.fn(),
-      signInWithEmailAndPassword: jest.fn(),
-      createUserWithEmailAndPassword: jest.fn(),
-      sendPasswordResetEmail: jest.fn(),
-      signOut: jest.fn(),
-      deleteUser: jest.fn(),
-      currentUser: null,
-    },
+    auth: mockAuth,
     db: {},
     storage: {},
   }),
@@ -42,7 +53,7 @@ describe('UraiAuthProvider', () => {
       );
     };
 
-    const { getByText, findByTestId } = render(
+    const { getByText, findByTestId, container } = render(
       <UraiAuthProvider>
         <TestComponent />
       </UraiAuthProvider>
@@ -50,12 +61,16 @@ describe('UraiAuthProvider', () => {
 
     await act(async () => {
       getByText('Sign In').click();
+      // Simulate auth state change for sign-in
+      authStateCallback({ uid: 'test-user' });
     });
 
     expect(await findByTestId('status')).toHaveTextContent('Signed In');
 
     await act(async () => {
       getByText('Sign Out').click();
+      // Simulate auth state change for sign-out
+      authStateCallback(null);
     });
 
     expect(await findByTestId('status')).toHaveTextContent('Signed Out');

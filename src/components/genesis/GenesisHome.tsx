@@ -30,9 +30,19 @@ export default function GenesisHome() {
   }, []);
 
   const handleSceneClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!(e.target as HTMLElement).closest('.genesisTopNav, .genesisFieldCard, .genesisPortalPrompt')) {
+    if (!(e.target as HTMLElement).closest('.genesisTopNav, .genesisFieldCard, .genesisPortalPrompt, .gatewayGlow')) {
       router.push('/life-map');
     }
+  };
+
+  const handleOrbClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    router.push('/ochat');
+  };
+
+  const handleGroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    router.push('/record');
   };
 
   const parallaxX = isClient ? (x / window.innerWidth - 0.5) * 30 : 0;
@@ -40,12 +50,16 @@ export default function GenesisHome() {
 
   return (
     <div className="genesisHomeScene" onClick={handleSceneClick}>
+      <div id="mirrorGlow" className="gatewayGlow" onClick={() => router.push('/cognitive-mirror')} />
+      <div id="shadowGlow" className="gatewayGlow" onClick={() => router.push('/shadow')} />
+      <div id="legacyGlow" className="gatewayGlow" onClick={() => router.push('/scrolls')} />
+
       <div className="genesisAtmosphere" />
       <div className="genesisVignette" />
       <div className="genesisParticleField" />
       <div className="genesisFog" />
 
-      <div className="genesisGroundPlane" />
+      <div className="genesisGroundPlane" onClick={handleGroundClick} />
 
       <div 
         className="genesisOrbContainer"
@@ -53,6 +67,7 @@ export default function GenesisHome() {
           transform: `translate(-50%, -60%) translate(${parallaxX}px, ${parallaxY}px)`,
           transition: 'transform 0.2s ease-out',
         }}
+        onClick={handleOrbClick}
       >
         <div className="genesisOrb" />
         <div className="genesisOrbCore" />

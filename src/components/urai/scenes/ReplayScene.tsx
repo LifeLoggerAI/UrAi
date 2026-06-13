@@ -88,7 +88,7 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
               );
             })}
           </div>
-          <PortalNav onNavigate={(scene) => onNavigate(scene)} activeScene="replay" />
+          <PortalNav onNavigate={onNavigate} activeScene="replay" />
         </div>
       </div>
     </section>

@@ -1,18 +1,16 @@
 'use client';
 
-import { motion, Variants, Variant } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Link from 'next/link';
-import { ElementType } from 'react';
-import { Home, Map, Layers, Lock } from 'lucide-react';
+import { LucideIcon, Home, Map, Layers } from 'lucide-react';
 import { UraiScene } from '@/lib/urai/scene-theme';
 
-type Scene = 'home' | 'life-map' | 'replay' | 'passport';
-
-const scenes: Record<Scene, { label: string; path: string; icon: ElementType }> = {
+const scenes: Record<UraiScene, { label: string; path: string; icon: LucideIcon }> = {
     home: { label: 'Home', path: '/', icon: Home },
     'life-map': { label: 'Life Map', path: '/life-map', icon: Map },
     replay: { label: 'Replay', path: '/replay', icon: Layers },
-    passport: { label: 'Passport', path: '/passport', icon: Lock },
+    ground: { label: 'Ground', path: '/ground', icon: Layers },
+    focus: { label: 'Focus', path: '/focus', icon: Layers },
 };
 
 export type PortalNavProps = {
@@ -33,7 +31,7 @@ export const PortalNav = ({ activeScene, onNavigate }: PortalNavProps) => {
             animate="visible"
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
             <ul className="flex items-center gap-2 rounded-full border border-white/10 bg-black/30 p-2 shadow-2xl backdrop-blur-xl">
-                {(Object.keys(scenes) as Scene[]).map((scene) => {
+                {(Object.keys(scenes) as UraiScene[]).map((scene) => {
                     const isActive = activeScene === scene;
                     const IconComponent = scenes[scene].icon;
                     return (
