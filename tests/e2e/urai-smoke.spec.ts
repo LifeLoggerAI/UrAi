@@ -10,7 +10,7 @@ test("@smoke public demo flow stays sample-only", async ({ page }) => {
   await page.keyboard.press("Escape").catch(() => undefined);
   await page.getByLabel(/Open URAI Companion/i).last().click();
   await page.getByLabel(/Message URAI/i).fill("What can you see about me?");
-  await page.getByRole("button", { name: /Send/i }).click();
+  await page.getByRole("button", { name: /^Send$/ }).click();
   await expect(page.getByText(/sample data|Passport|private/i).first()).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByLabel(/Open Life Map/i).click();
