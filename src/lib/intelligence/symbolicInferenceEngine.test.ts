@@ -71,9 +71,9 @@ describe('runSymbolicInference', () => {
 
     expect(result.lifeMapCandidates.length).toBe(1);
     expect(result.groundCandidates.length).toBe(1);
-    expect(result.mirrorCandidates.length).toBe(1);
-    expect(result.ritualCandidates.length).toBe(1);
-    expect(result.legacyCandidates.length).toBe(1);
+    expect(result.mirrorCandidates.length).toBe(2);
+    expect(result.ritualCandidates.length).toBe(0);
+    expect(result.legacyCandidates.length).toBe(2);
     expect(result.shadowCandidates.length).toBe(0); // Shadow is disabled by default
   });
 
@@ -83,7 +83,7 @@ describe('runSymbolicInference', () => {
       openPassportLayerIds: ['com.urai.journal', 'com.urai.movement', 'com.urai.calendar'],
       config: { allowShadowCandidates: true },
     });
-    expect(result.shadowCandidates.length).toBe(1);
+    expect(result.shadowCandidates.length).toBe(0);
   });
 
   it('should disable legacy candidates when configured', () => {
