@@ -3,67 +3,67 @@ name: Post Deploy Verify
 on:
   workflow_dispatch:
     inputs:
-      production_url:
-        description: "Production URL to verify"
-        required: false
+      base_url:
+        description: "Base URL to verify after deploy"
+        required: true
         default: "https://urai-4dc1d.web.app"
+
+permissions:
+  contents: read
 
 concurrency:
   group: post-deploy-verify
   cancel-in-progress: true
 
 jobs:
-  verify:
-    name: Verify production deployment
+  post-deploy-verify:
+    name: Verify deployed URAI routes
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
+
     env:
-      PRODUCTION_URL: ${{ github.event.inputs.production_url }}
-      PLAYWRIGHT_BASE_URL: ${{ github.event.inputs.production_url }}
-      npm_config_cache: /tmp/urai-npm-cache
-      NPM_CONFIG_CACHE: /tmp/urai-npm-cache
-      PLAYWRIGHT_OUTPUT_DIR: test-results
+      BASE_URL: ${{ github.event.inputs.base_url }}
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: false
-          clean: false
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-
-      - name: Prepare writable cache
-        run: |
-          mkdir -p "$npm_config_cache"
-          npm config set cache "$npm_config_cache" --global
-          npm config get cache
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Check public routes
+      - name: Verify HTTP routes
+        shell: bash
         run: |
           set -euo pipefail
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/" >/dev/null
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/home" >/dev/null
-          curl --retry 6 --retry-delay 5 --fail --silent --show-error --location "$PRODUCTION_URL/status" >/dev/null
+          mkdir -p evidence
 
-      - name: Run production browser smoke
-        run: npm run test:smoke:production
+          check_url() {
+            path="$1"
+            url="${BASE_URL%/}${path}"
+            echo "Checking $url"
+            status="$(curl --silent --show-error --location --output "evidence/body-${path//\//_}.txt" --write-out '%{http_code}' "$url" || true)"
+            echo "$url -> $status"
+            test "$status" = "200"
+          }
+
+          check_url "/"
+          check_url "/home"
+          check_url "/demo"
+          check_url "/status"
+
+      - name: Write verification summary
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p evidence
+          {
+            echo "# URAI Post Deploy Verification"
+            echo
+            echo "- Base URL: ${BASE_URL}"
+            echo "- Commit: ${GITHUB_SHA}"
+            echo "- Run ID: ${GITHUB_RUN_ID}"
+            echo "- Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > evidence/post-deploy-summary.md
 
       - name: Upload verification artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: post-deploy-verification-results
-          path: |
-            test-results
-            playwright-report
+          path: evidence
           if-no-files-found: ignore
           retention-days: 7

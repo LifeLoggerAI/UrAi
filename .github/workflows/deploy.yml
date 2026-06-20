@@ -2,25 +2,6 @@ name: Deploy (Firebase Production)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "src/**"
-      - "public/**"
-      - "firestore.rules"
-      - "firestore.indexes.json"
-      - "storage.rules"
-      - "firebase.json"
-      - "package.json"
-      - "package-lock.json"
-      - "playwright.config.ts"
-      - "tests/e2e/**"
-      - "scripts/deploy-urai-firebase.sh"
-      - ".github/workflows/deploy.yml"
-
-concurrency:
-  group: firebase-production-deploy
-  cancel-in-progress: true
 
 jobs:
   deploy:

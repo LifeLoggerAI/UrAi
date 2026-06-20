@@ -2,31 +2,6 @@ name: Production Evidence
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "src/**"
-      - "tests/e2e/**"
-      - "playwright.config.ts"
-      - "package.json"
-      - "package-lock.json"
-      - "firebase.json"
-      - "firestore.rules"
-      - "firestore.indexes.json"
-      - "storage.rules"
-      - ".github/workflows/production-evidence.yml"
-      - "docs/URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md"
-      - "docs/URAI_RELEASE_ROLLBACK_PR304.md"
-      - "docs/ops/**"
-
-permissions:
-  contents: read
-  issues: write
-  actions: read
-
-concurrency:
-  group: production-evidence
-  cancel-in-progress: true
 
 jobs:
   evidence:

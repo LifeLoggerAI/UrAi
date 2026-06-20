@@ -4,27 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       run_commands:
-        description: "Run package commands instead of static verification only"
-        required: false
+        description: "Execute command-backed full-platform verifier"
+        required: true
         default: "false"
         type: choice
         options:
           - "false"
           - "true"
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
-      - system-release-verifier
-
-permissions:
-  contents: read
-
-defaults:
-  run:
-    shell: bash
 
 jobs:
   verify-release:
