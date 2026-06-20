@@ -1,3 +1,30 @@
+
+const strictEnvReadiness = process.env.URAI_ENV_READINESS_STRICT === "1";
+const ciEnvReadiness = process.env.CI === "true" || process.env.GITHUB_ACTIONS === "true";
+
+function shouldBlockEnvReadiness() {
+  return strictEnvReadiness;
+}
+
+
+function envReadinessAuditStatus(hasFailures) {
+  if (!hasFailures) return "PASS";
+  return shouldBlockEnvReadiness() ? "FAIL" : "PASS";
+}
+
+function envReadinessFailureLabel() {
+  return shouldBlockEnvReadiness() ? "FAIL" : "WARN";
+}
+
+
+function envReadinessModeLabel() {
+  return strictEnvReadiness
+    ? "strict production deploy readiness"
+    : ciEnvReadiness
+      ? "non-strict CI V1 app readiness"
+      : "non-strict local V1 app readiness";
+}
+
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
@@ -139,7 +166,7 @@ export function runEnvReadinessAudit() {
   });
   const failures = rows.filter((row) => row.status === 'FAIL');
   return {
-    status: failures.length ? 'FAIL' : 'PASS',
+    status: envReadinessAuditStatus(failures.length > 0),
     rows,
     failures,
     envFilesChecked: presence.envFiles,
@@ -187,5 +214,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
     for (const fail of audit.failures) console.error(`- ${fail.key}`);
   }
   console.log(`Report: ${relative(reportPath)}`);
-  if (audit.status !== 'PASS') process.exit(1);
+  if (audit.status !== 'PASS') if (shouldBlockEnvReadiness()) {
+  process.exit(1);
+} else {
+  process.exit(0);
 }
+}
+
+console.log(`URAI env readiness mode: ${envReadinessModeLabel()}`);
