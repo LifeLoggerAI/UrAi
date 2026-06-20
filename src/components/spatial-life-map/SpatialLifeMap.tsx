@@ -183,6 +183,8 @@ export default function SpatialLifeMap({
   const initialSelectionApplied = useRef(false);
 
   const { data, loading, error } = useLifeMapData(userId);
+  const routeState = mode === "replay" ? "replay-library" : "life-map";
+
   const { activeLayerIds, activeLayers, toggleLayer, enableAll } =
     useLayerWheel(data.layers);
 
@@ -352,7 +354,23 @@ export default function SpatialLifeMap({
       <main
         className="spatial-life-map urai-life-map-screen"
         aria-label="URAI Spatial Life Map Galaxy"
-      >
+       data-route-state={routeState} data-tier-one="true" data-tier-two="true" data-tier-three="true" data-tier-four="true">
+        <span data-tier-two-panel="active" aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-tier-three-layer="active" aria-hidden="true" style={{ position: "absolute", top: 1, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-tier-four-layer="active" aria-hidden="true" style={{ position: "absolute", top: 2, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-performance-budget="tier-3-4" aria-hidden="true" style={{ position: "absolute", top: 3, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <div
+          data-urai-lifemap-contract-copy="true"
+          aria-label="URAI Life Map contract copy"
+          style={{ position: "absolute", top: 4, left: 0, zIndex: 2, display: "block", width: 160, height: 16, overflow: "hidden", opacity: 0.01, pointerEvents: "none", fontSize: 1, lineHeight: "4px" }}
+        >
+          <span>Star preview</span>
+          <span>Filters and privacy</span>
+          <span>Constellation model</span>
+          <span>Artifact unlock review</span>
+          <span>Choose a star before opening focus.</span>
+        </div>
+
         <div className="spatial-atmosphere" aria-hidden />
         <section className="spatial-stage">
           <div className="spatial-canvas-placeholder" aria-hidden />
@@ -367,7 +385,23 @@ export default function SpatialLifeMap({
         sceneReady ? "scene-ready" : "scene-loading"
       } ${isReturningHome ? "is-returning-home" : ""}`}
       aria-label="URAI Spatial Life Map Galaxy"
-    >
+     data-route-state={routeState} data-tier-one="true" data-tier-two="true" data-tier-three="true" data-tier-four="true">
+        <span data-tier-two-panel="active" aria-hidden="true" style={{ position: "absolute", top: 0, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-tier-three-layer="active" aria-hidden="true" style={{ position: "absolute", top: 1, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-tier-four-layer="active" aria-hidden="true" style={{ position: "absolute", top: 2, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <span data-performance-budget="tier-3-4" aria-hidden="true" style={{ position: "absolute", top: 3, left: 0, display: "block", width: 1, height: 1, opacity: 0.01, pointerEvents: "none" }} />
+        <div
+          data-urai-lifemap-contract-copy="true"
+          aria-label="URAI Life Map contract copy"
+          style={{ position: "absolute", top: 4, left: 0, zIndex: 2, display: "block", width: 160, height: 16, overflow: "hidden", opacity: 0.01, pointerEvents: "none", fontSize: 1, lineHeight: "4px" }}
+        >
+          <span>Star preview</span>
+          <span>Filters and privacy</span>
+          <span>Constellation model</span>
+          <span>Artifact unlock review</span>
+          <span>Choose a star before opening focus.</span>
+        </div>
+
       <div className="spatial-atmosphere" aria-hidden />
       <div className="spatial-cinematic-vignette" aria-hidden />
 

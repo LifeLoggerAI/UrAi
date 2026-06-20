@@ -1,5 +1,5 @@
-import UraiResolvedHomeScene from '@/components/urai/UraiResolvedHomeScene';
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return <UraiResolvedHomeScene />;
+  redirect("/");
 }

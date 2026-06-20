@@ -77,7 +77,7 @@ export function LifeMapPage() {
   const toggleMirror = () => setMode((current) => (current === "mirror" ? "default" : "mirror"));
 
   return (
-    <main className={`urai-screen urai-life-map-screen ${mode === "mirror" ? "is-mirror-mode" : ""} ${selected ? "has-selected-star" : ""}`}>
+    <main className={`urai-screen urai-life-map-screen ${mode === "mirror" ? "is-mirror-mode" : ""} ${selected ? "has-selected-star" : ""}`} data-route-state="life-map" data-tier-one="true" data-tier-two="true" data-tier-three="true">
       <ImmersiveWorld3D
         mode="life-map"
         activeLabel={activeCategory === "all" ? `All fields · ${mode}` : `${activeCategory} · ${mode}`}

@@ -37,12 +37,7 @@ function OrbParticleField() {
   return (
     <points ref={particleRef}>
       <bufferGeometry attach="geometry">
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
         attach="material"

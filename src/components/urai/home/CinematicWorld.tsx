@@ -1,5 +1,6 @@
 "use client";
 
+import type { Mesh } from 'three';
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
@@ -10,7 +11,7 @@ function MistPlanes() {
   const mistRef = useRef<THREE.Group>(null);
 
   const mistPlanes = useMemo(() => {
-    const planes = [];
+    const planes: Mesh[] = [];
     for (let i = 0; i < 15; i++) {
       const plane = new THREE.PlaneGeometry(8, 2);
       const material = new THREE.MeshBasicMaterial({

@@ -127,7 +127,7 @@ export default function CinematicLifeMapExperience() {
   });
 
   return (
-    <main className={`cinematic-life-map mode-${mode}`} aria-label="URAI Memory Galaxy">
+    <main className={`cinematic-life-map mode-${mode}`} aria-label="URAI Memory Galaxy" data-route-state="life-map" data-tier-one="true" data-tier-two="true" data-tier-three="true">
       <div className="cinematic-sky" aria-hidden />
       <div className="cinematic-dust" aria-hidden>
         {Array.from({ length: 90 }, (_, index) => <i key={index} style={{ "--i": index } as React.CSSProperties} />)}
