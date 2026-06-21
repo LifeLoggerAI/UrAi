@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 100 125" role="img" aria-labelledby="title desc" data-urai-product="uraiCommunications" data-mode="light">
+<title id="title">URAI Communications</title>
+<desc id="desc">URAI master symbol system logo variant for URAI Communications</desc>
+
+<circle cx="50" cy="50" r="36" fill="none" stroke="#0B0F1A" stroke-width="2"/>
+<circle cx="50" cy="50" r="8" fill="#2ED3B7"/>
+<g data-modifier="node-message-transfer" stroke="#2ED3B7" fill="#2ED3B7" opacity="0.75"><line x1="32" y1="50" x2="68" y2="50" stroke-width="1.4"/><circle cx="32" cy="50" r="3"/><circle cx="68" cy="50" r="3"/><circle cx="50" cy="32" r="2.5"/></g>
+<text x="50" y="105" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="8" font-weight="700" letter-spacing="1.6" fill="#0B0F1A">URAI</text>
+<text x="50" y="116" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="4.2" font-weight="500" letter-spacing="0.9" fill="#0B0F1A" opacity="0.72">Communications</text>
+</svg>

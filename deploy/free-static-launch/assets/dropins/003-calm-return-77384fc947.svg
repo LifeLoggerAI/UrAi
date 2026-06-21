@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1440" viewBox="0 0 1440 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Calm Return demo memory</title>
+  <desc id="desc">Privacy-safe abstract calm return placeholder for URAI Spatial demo memory rendering.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="54%" r="62%">
+      <stop offset="0%" stop-color="#ecfeff"/>
+      <stop offset="42%" stop-color="#38bdf8"/>
+      <stop offset="78%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+  </defs>
+  <rect width="1440" height="1440" fill="url(#bg)"/>
+  <path d="M280 770 C430 650 570 890 720 770 C870 650 1010 890 1160 770" fill="none" stroke="#e0f2fe" stroke-width="22" opacity="0.74"/>
+  <path d="M360 890 C480 800 600 980 720 890 C840 800 960 980 1080 890" fill="none" stroke="#bae6fd" stroke-width="14" opacity="0.58"/>
+  <circle cx="720" cy="628" r="150" fill="#f8fafc" opacity="0.5"/>
+</svg>

@@ -321,3 +321,89 @@ h1 {
   .float-card.two { bottom: 18px; }
   .row { grid-template-columns: 1fr; gap: 8px; }
 }
+
+
+/* URAI_CURATED_ASSET_LAYER */
+.urai-asset-dropin {
+  margin: 48px auto 0;
+  width: min(1100px, calc(100vw - 32px));
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(178,137,255,.18), transparent 36%),
+    radial-gradient(circle at 86% 16%, rgba(118,255,213,.13), transparent 34%),
+    rgba(255,255,255,.045);
+  box-shadow: 0 28px 100px rgba(0,0,0,.42);
+  overflow: hidden;
+}
+.urai-asset-dropin__head { padding: 24px 24px 10px; }
+.urai-asset-dropin__eyebrow {
+  color: rgba(190,255,219,.92);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+.urai-asset-dropin__title {
+  margin: 8px 0 8px;
+  font-size: clamp(25px, 4vw, 48px);
+  line-height: .95;
+}
+.urai-asset-dropin__copy {
+  max-width: 760px;
+  color: rgba(255,255,255,.72);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.urai-asset-proof-pill {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 14px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(154,255,197,.14);
+  color: rgba(200,255,225,.95);
+  font-size: 12px;
+  font-weight: 800;
+}
+.urai-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  gap: 12px;
+  padding: 18px 18px 22px;
+}
+.urai-asset-card {
+  min-height: 150px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+}
+.urai-asset-card img,
+.urai-asset-card video {
+  width: 100%;
+  height: 166px;
+  object-fit: cover;
+  display: block;
+}
+.urai-asset-card audio {
+  width: calc(100% - 18px);
+  margin: 58px 9px 14px;
+}
+.urai-asset-card__label {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 9px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.50);
+  color: rgba(255,255,255,.92);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  backdrop-filter: blur(10px);
+}

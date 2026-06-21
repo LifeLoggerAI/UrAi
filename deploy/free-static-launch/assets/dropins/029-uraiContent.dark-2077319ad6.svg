@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 100 125" role="img" aria-labelledby="title desc" data-urai-product="uraiContent" data-mode="dark">
+<title id="title">URAI Content</title>
+<desc id="desc">URAI master symbol system logo variant for URAI Content</desc>
+<rect width="100" height="125" rx="10" fill="#0B0F1A"/>
+<circle cx="50" cy="50" r="36" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+<circle cx="50" cy="50" r="8" fill="#F5B942"/>
+<g data-modifier="layer-stack-shift" stroke="#F5B942" stroke-width="1.6" opacity="0.75"><line x1="34" y1="38" x2="66" y2="38"/><line x1="30" y1="50" x2="70" y2="50"/><line x1="34" y1="62" x2="66" y2="62"/></g>
+<text x="50" y="105" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="8" font-weight="700" letter-spacing="1.6" fill="#FFFFFF">URAI</text>
+<text x="50" y="116" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="4.2" font-weight="500" letter-spacing="0.9" fill="#FFFFFF" opacity="0.72">Content</text>
+</svg>

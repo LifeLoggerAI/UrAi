@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1440" viewBox="0 0 1440 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Mirror Focus demo memory</title>
+  <desc id="desc">Privacy-safe abstract mirror focus placeholder for URAI Spatial demo memory rendering.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="64%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="42%" stop-color="#67e8f9"/>
+      <stop offset="76%" stop-color="#312e81"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+  </defs>
+  <rect width="1440" height="1440" fill="url(#bg)"/>
+  <ellipse cx="720" cy="720" rx="250" ry="360" fill="#f8fafc" opacity="0.2" stroke="#e0f2fe" stroke-width="18"/>
+  <path d="M520 720 C600 610 840 610 920 720 C840 830 600 830 520 720Z" fill="#020617" opacity="0.44"/>
+  <circle cx="720" cy="720" r="68" fill="#fef3c7" opacity="0.88"/>
+  <path d="M720 304 L720 1136" stroke="#bae6fd" stroke-width="8" opacity="0.45"/>
+</svg>
