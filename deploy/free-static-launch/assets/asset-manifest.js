@@ -1,5 +1,5 @@
 window.URAI_STATIC_ASSETS = {
-  "generatedAt": "2026-06-21T01:48:50.640Z",
+  "generatedAt": "2026-06-21T01:50:20.916Z",
   "launchMode": "curated-urai-asset-dropin",
   "count": 48,
   "totalBytes": 1594012,

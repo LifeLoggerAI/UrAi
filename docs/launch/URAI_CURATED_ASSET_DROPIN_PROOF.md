@@ -20,3 +20,13 @@ The curated set favors URAI chambers, memory images, aura layers, lifemap/replay
 ## Excluded
 
 Generic framework files, placeholders, browser logos, and test evidence screenshots are intentionally excluded.
+
+
+## Verification Stabilization
+
+Generated: 2026-06-21T01:50:20.916Z
+
+- Static verification marker added: Genesis assets live
+- Audio assets added in this pass: 0
+- Final asset count: 48
+- Final asset types: {"image":47,"video":1}

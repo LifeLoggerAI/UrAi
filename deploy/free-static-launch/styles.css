@@ -407,3 +407,13 @@ h1 {
   text-overflow: ellipsis;
   backdrop-filter: blur(10px);
 }
+
+
+.urai-asset-live-marker {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
