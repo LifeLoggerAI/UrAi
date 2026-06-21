@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "site": "urai-4dc1d",
+    "public": "deploy/free-static-launch",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300" },
+          { "key": "X-URAI-Launch-Mode", "value": "repo-backed-polished-free-static-shell" }
+        ]
+      }
+    ]
+  }
+}
