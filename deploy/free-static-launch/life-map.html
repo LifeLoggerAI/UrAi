@@ -3,57 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>URAI — Life-map</title>
+  <title>URAI | Life Map</title>
   <meta name="description" content="URAI is a living personal world for memory, reflection, recovery, identity, and life-mapping." />
-  <meta property="og:title" content="URAI — Life-map" />
-  <meta property="og:description" content="Step inside yourself. URAI is a living personal world for memory, reflection, recovery, identity, and life-mapping." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://urai-4dc1d.web.app" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <div class="urai-asset-live-marker" data-urai-assets="live">Genesis assets live</div>
   <div class="shell">
     <nav class="nav">
-      <a class="brand" href="/"><span class="brand-mark"></span><span>URAI</span></a>
+      <a class="brand" href="/"><span class="brand-orb"></span><span>URAI</span></a>
       <div class="nav-links">
         <a class="" href="/">Home</a>
-        <a class="" href="/demo">Demo</a>
         <a class="active" href="/life-map">Life-map</a>
+        <a class="" href="/replay">Replay</a>
+        <a class="" href="/mirror">Mirror</a>
+        <a class="" href="/passport">Passport</a>
         <a class="" href="/status">Status</a>
-        <a class="" href="/waitlist">Waitlist</a>
       </div>
     </nav>
 
-    <main class="section">
-      <div class="badge"><span class="dot"></span> Life-map preview • curated assets live</div>
-      <h1>Your life as a <span class="gradient">navigable world.</span></h1>
-      <p class="lead">The life-map is the heart of URAI: memories, people, moods, places, rituals, and change over time arranged like something you can move through.</p>
-      <div class="stage" style="margin-top:30px; min-height:520px">
-        <div class="ring" style="width:min(460px,84vw); top:42px"></div>
-        <div class="orb" style="width:min(260px,62vw); top:90px"></div>
-        <div class="float-card three"><strong>People</strong><span>Relationships become constellations, not contact lists.</span></div>
-        <div class="float-card one"><strong>Places</strong><span>Locations hold emotion, era, and memory.</span></div>
-        <div class="float-card two"><strong>Patterns</strong><span>The map shows what keeps returning.</span></div>
-      </div>
-      <div class="grid" style="margin-top:18px">
-        <article class="card"><h3>Stars</h3><p>Important moments become visible points in your world.</p></article>
-        <article class="card"><h3>Threads</h3><p>Connections across time create paths you can follow.</p></article>
-        <article class="card"><h3>Portals</h3><p>Mirror, shadow, legacy, passport, and recovery become rooms in the system.</p></article>
-      </div>
-    </main>
+    <main class="hero"><section><div class="badge"><span class="dot"></span> Life-map</div><h1>Your life as a <span class="gradient">navigable world.</span></h1><p class="lead">Moments, people, places, choices, and patterns become stars, rooms, threads, and portals.</p><div class="actions"><a class="button primary" href="/replay">Open Replay</a><a class="button" href="/mirror">Open Mirror</a><a class="button" href="/passport">Open Passport</a></div></section><section class="stage"><div class="ring"></div><div class="orb"></div><div class="float-card three"><strong>People</strong><span>Relationships become constellations.</span></div><div class="float-card one"><strong>Places</strong><span>Locations hold memory and meaning.</span></div><div class="float-card two"><strong>Patterns</strong><span>The map shows what keeps returning.</span></div></section></main>
+
+    <nav class="bottom-nav" aria-label="URAI bottom navigation">
+      <a class="" href="/">Home</a>
+      <a class="active" href="/life-map">Life Map</a>
+      <a class="" href="/passport">Orb</a>
+      <a class="" href="/mirror">Mirror</a>
+      <a class="" href="/replay">Replay</a>
+    </nav>
 
     <footer class="footer">
-      <div><strong>URAI</strong> — Step inside yourself.</div>
+      <strong>URAI</strong> — Step inside yourself.
       <div style="margin-top:10px">
         <a href="/status">Status</a>
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
+        <a href="mailto:press@urai.app">Contact</a>
       </div>
-      <div style="margin-top:10px">Free static launch shell. Full AI/API product deploy is parked until paid Firebase SSR/Blaze or another backend host is available.</div>
+      <div style="margin-top:10px">Public static app mode. Full AI/API backend remains parked until Blaze billing or alternate backend hosting exists.</div>
     </footer>
   </div>
-  <script defer src="/assets/asset-manifest.js"></script>
-  <script defer src="/app.js"></script>
+  <script src="/assets/asset-manifest.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>

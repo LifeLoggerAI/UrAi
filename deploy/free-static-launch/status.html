@@ -3,56 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>URAI — Launch status</title>
+  <title>URAI | Status</title>
   <meta name="description" content="URAI is a living personal world for memory, reflection, recovery, identity, and life-mapping." />
-  <meta property="og:title" content="URAI — Launch status" />
-  <meta property="og:description" content="Step inside yourself. URAI is a living personal world for memory, reflection, recovery, identity, and life-mapping." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://urai-4dc1d.web.app" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <div class="urai-asset-live-marker" data-urai-assets="live">Genesis assets live</div>
   <div class="shell">
     <nav class="nav">
-      <a class="brand" href="/"><span class="brand-mark"></span><span>URAI</span></a>
+      <a class="brand" href="/"><span class="brand-orb"></span><span>URAI</span></a>
       <div class="nav-links">
         <a class="" href="/">Home</a>
-        <a class="" href="/demo">Demo</a>
         <a class="" href="/life-map">Life-map</a>
+        <a class="" href="/replay">Replay</a>
+        <a class="" href="/mirror">Mirror</a>
+        <a class="" href="/passport">Passport</a>
         <a class="active" href="/status">Status</a>
-        <a class="" href="/waitlist">Waitlist</a>
       </div>
     </nav>
 
-    
-    <main class="section">
-      <div class="badge"><span class="dot"></span> Launch status</div>
-      <h1>Public shell live. <span class="gradient">Full app staged.</span></h1>
-      <p class="lead">This page separates what is online today from what requires paid Firebase SSR/Functions or another backend host.</p>
-      <div class="status-table" style="margin-top:28px">
-        <div class="row"><div><strong>Public Firebase Hosting shell</strong><br><span class="note">Static site is live at the public URL.</span></div><span class="pill green">LIVE</span></div>
-        <div class="row"><div><strong>V1 main branch</strong><br><span class="note">Remote GitHub Actions and launch gates were green before this public shell push.</span></div><span class="pill green">GREEN</span></div>
-        <div class="row"><div><strong>Static pages</strong><br><span class="note">Home, demo, life-map, status, waitlist, privacy, and terms are served without paid functions.</span></div><span class="pill green">LIVE</span></div>
-        <div class="row"><div><strong>Full Firebase SSR/API product</strong><br><span class="note">Blocked by Blaze requirement because Firebase turns Next API routes into Cloud Functions/Extensions.</span></div><span class="pill parked">PARKED</span></div>
-        <div class="row"><div><strong>Companion AI / backend APIs</strong><br><span class="note">Requires paid backend lane or alternate host.</span></div><span class="pill gold">NEXT</span></div>
-        <div class="row"><div><strong>Genesis final asset/audio polish</strong><br><span class="note">The app safely hides missing layers. Final visual and sonic QA needs the real drop-in assets.</span></div><span class="pill gold">NEXT</span></div>
-      </div>
-    </main>
-  
+    <main class="section"><div class="badge"><span class="dot"></span> Launch status</div><h1>Public app live. Backend parked.</h1><p class="lead">The visual public URAI experience is live without paid Firebase Functions. Full AI/API/SSR routes require Blaze billing or an alternate backend host.</p><div class="status-table"><div class="row"><div><strong>urai.app</strong><br><span class="small">Public custom domain live.</span></div><span class="pill green">LIVE</span></div><div class="row"><div><strong>Clickable public controls</strong><br><span class="small">Enter my world, preview spark, passport, companion, life-map navigation fixed.</span></div><span class="pill green">FIXED</span></div><div class="row"><div><strong>Full AI/API backend</strong><br><span class="small">Still requires Blaze billing or another backend host.</span></div><span class="pill parked">PARKED</span></div></div></main>
+
+    <nav class="bottom-nav" aria-label="URAI bottom navigation">
+      <a class="" href="/">Home</a>
+      <a class="" href="/life-map">Life Map</a>
+      <a class="" href="/passport">Orb</a>
+      <a class="" href="/mirror">Mirror</a>
+      <a class="" href="/replay">Replay</a>
+    </nav>
 
     <footer class="footer">
-      <div><strong>URAI</strong> — Step inside yourself.</div>
+      <strong>URAI</strong> — Step inside yourself.
       <div style="margin-top:10px">
         <a href="/status">Status</a>
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
+        <a href="mailto:press@urai.app">Contact</a>
       </div>
-      <div style="margin-top:10px">Free static launch shell. Full AI/API product deploy is parked until paid Firebase SSR/Blaze or another backend host is available.</div>
+      <div style="margin-top:10px">Public static app mode. Full AI/API backend remains parked until Blaze billing or alternate backend hosting exists.</div>
     </footer>
   </div>
+  <script src="/assets/asset-manifest.js"></script>
   <script src="/app.js"></script>
-  <script defer src="/assets/asset-manifest.js"></script>
-  <script defer src="/app.js"></script>
 </body>
 </html>

@@ -10,9 +10,13 @@
         "source": "**",
         "headers": [
           { "key": "Cache-Control", "value": "public, max-age=300" },
-          { "key": "X-URAI-Launch-Mode", "value": "repo-backed-polished-free-static-shell" }
+          { "key": "X-URAI-Launch-Mode", "value": "polished-clickable-static-app" }
         ]
       }
+    ],
+    "rewrites": [
+      { "source": "/api/status", "destination": "/api/status/index.html" },
+      { "source": "**", "destination": "/index.html" }
     ]
   }
 }

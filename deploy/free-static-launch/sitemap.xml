@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://urai-4dc1d.web.app/</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/demo</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/life-map</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/status</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/waitlist</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/privacy</loc></url>
-  <url><loc>https://urai-4dc1d.web.app/terms</loc></url>
+  <url><loc>https://urai.app/</loc></url>
+  <url><loc>https://urai.app/life-map</loc></url>
+  <url><loc>https://urai.app/replay</loc></url>
+  <url><loc>https://urai.app/mirror</loc></url>
+  <url><loc>https://urai.app/focus</loc></url>
+  <url><loc>https://urai.app/passport</loc></url>
+  <url><loc>https://urai.app/status</loc></url>
 </urlset>
