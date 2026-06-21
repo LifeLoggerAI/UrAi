@@ -1,21 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-type ServiceState = "operational" | "degraded" | "outage";
+type ServiceState = "operational" | "degraded";
 
 type ServiceStatus = {
   id: string;
   label: string;
   status: ServiceState;
-  message?: string;
-  updatedAt: string;
-  docsUrl?: string;
-};
-
-type StatusResponse = {
-  services: ServiceStatus[];
-  generatedAt: string;
+  message: string;
 };
 
 const STATUS_LABELS: Record<ServiceState, { bg: string; text: string; label: string }> = {
@@ -27,63 +18,39 @@ const STATUS_LABELS: Record<ServiceState, { bg: string; text: string; label: str
   degraded: {
     bg: "bg-amber-500/10 border-amber-400/40",
     text: "text-amber-300",
-    label: "Degraded",
-  },
-  outage: {
-    bg: "bg-rose-500/10 border-rose-400/40",
-    text: "text-rose-300",
-    label: "Outage",
+    label: "Preview mode",
   },
 };
 
-const REFRESH_INTERVAL = 60_000;
+const SERVICES: ServiceStatus[] = [
+  {
+    id: "web-app",
+    label: "URAI web app",
+    status: "operational",
+    message: "Public visual routes are live on urai.app.",
+  },
+  {
+    id: "life-map",
+    label: "Life Map and mirror",
+    status: "operational",
+    message: "Life Map, replay, mirror, demo, privacy, and terms are available.",
+  },
+  {
+    id: "preview",
+    label: "Public preview",
+    status: "degraded",
+    message: "This launch is running as static pages while dynamic service wiring waits for the next backend pass.",
+  },
+  {
+    id: "private-actions",
+    label: "Private actions",
+    status: "degraded",
+    message: "Write actions and live service calls remain off on the public preview surface.",
+  },
+];
 
 export default function StatusGrid() {
-  const [data, setData] = useState<StatusResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const isMountedRef = useRef(true);
-  const hasLoadedRef = useRef(false);
-
-  const fetchStatus = useCallback(async () => {
-    if (!isMountedRef.current) return;
-    try {
-      if (!hasLoadedRef.current) {
-        setIsLoading(true);
-      }
-      setError(null);
-      const response = await fetch("/api/status", { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error(`Status check failed (${response.status})`);
-      }
-      const payload = (await response.json()) as StatusResponse;
-      if (isMountedRef.current) {
-        setData(payload);
-        hasLoadedRef.current = true;
-      }
-    } catch (err) {
-      if (isMountedRef.current) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setIsLoading(false);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    fetchStatus();
-    const timer = setInterval(fetchStatus, REFRESH_INTERVAL);
-    return () => {
-      isMountedRef.current = false;
-      clearInterval(timer);
-    };
-  }, [fetchStatus]);
-
-  const services = useMemo(() => data?.services ?? [], [data]);
-  const generatedAt = useMemo(() => data?.generatedAt ?? null, [data]);
+  const updatedAt = new Date().toLocaleTimeString();
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/20 backdrop-blur">
@@ -91,80 +58,33 @@ export default function StatusGrid() {
         <div>
           <h2 className="text-lg font-semibold text-white">Live service map</h2>
           <p className="text-sm text-white/50">
-            Auto-refreshes every minute. Tap a tile for docs or playbooks.
+            Static-safe launch heartbeat. No broken JSON feed on the public preview.
           </p>
         </div>
-        <div className="text-xs text-white/40">
-          {generatedAt ? `Updated ${new Date(generatedAt).toLocaleTimeString()}` : "Updating…"}
-        </div>
+        <div className="text-xs text-white/40">Updated {updatedAt}</div>
       </header>
 
-      {isLoading && !data ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-28 animate-pulse rounded-2xl border border-white/5 bg-white/5"
-            />
-          ))}
-        </div>
-      ) : error ? (
-        <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-100">
-          <p className="font-semibold">We couldn’t load the status feed.</p>
-          <p className="mt-1 text-rose-100/80">{error}</p>
-          <button
-            type="button"
-            onClick={() => {
-              setError(null);
-              setIsLoading(true);
-              void fetchStatus();
-            }}
-            className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold text-white hover:bg-white/20"
-          >
-            Retry
-          </button>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {services.map((service) => {
-            const tone = STATUS_LABELS[service.status];
-            return (
-              <article
-                key={service.id}
-                className={`group flex h-full flex-col justify-between rounded-2xl border px-5 py-4 transition hover:border-white/40 hover:bg-white/[0.08] ${tone.bg}`}
-              >
-                <div className="flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-white">{service.label}</h3>
-                  <span
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${tone.text}`}
-                  >
-                    <span className="h-2 w-2 rounded-full bg-current" />
-                    {tone.label}
-                  </span>
-                </div>
-                {service.message ? (
-                  <p className="mt-3 text-sm leading-relaxed text-white/70">
-                    {service.message}
-                  </p>
-                ) : null}
-                <footer className="mt-4 flex items-center justify-between text-xs text-white/40">
-                  <span>{new Date(service.updatedAt).toLocaleTimeString()}</span>
-                  {service.docsUrl ? (
-                    <a
-                      href={service.docsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-white/60 underline-offset-4 hover:text-white hover:underline"
-                    >
-                      Runbook ↗
-                    </a>
-                  ) : null}
-                </footer>
-              </article>
-            );
-          })}
-        </div>
-      )}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {SERVICES.map((service) => {
+          const tone = STATUS_LABELS[service.status];
+          return (
+            <article
+              key={service.id}
+              className={`group flex h-full flex-col justify-between rounded-2xl border px-5 py-4 transition hover:border-white/40 hover:bg-white/[0.08] ${tone.bg}`}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <h3 className="text-base font-semibold text-white">{service.label}</h3>
+                <span className={`inline-flex shrink-0 items-center gap-2 rounded-full border border-current/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide ${tone.text}`}>
+                  <span className="h-2 w-2 rounded-full bg-current" />
+                  {tone.label}
+                </span>
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-white/70">{service.message}</p>
+              <footer className="mt-4 text-xs text-white/40">{updatedAt}</footer>
+            </article>
+          );
+        })}
+      </div>
     </section>
   );
 }
