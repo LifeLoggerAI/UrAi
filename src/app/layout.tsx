@@ -18,32 +18,32 @@ import "../styles/urai-sacred-tech-system.css";
 import type { Metadata } from "next";
 import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";
-import { Genesis } from "@/components/genesis"; // Import Genesis component
+import { Genesis } from "@/components/genesis";
 
 const siteUrl = process.env.NEXT_PUBLIC_URAI_APP_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://urai.app";
-const title = "URAI Genesis — Private AI Companion + Symbolic Life Map";
-const description = "URAI is a privacy-first AI companion and symbolic life map where users control what opens, reflects, remembers, and leaves.";
+const title = "URAI Public Demo — Symbolic Life Map";
+const description = "URAI is a public demo for a privacy-gated reflection product: a symbolic life map, clear consent boundaries, and roadmap systems labeled before they go live.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: { canonical: siteUrl },
   title: {
     default: title,
-    template: "%s | URAI Genesis",
+    template: "%s | URAI",
   },
   description,
-  applicationName: "URAI Genesis",
-  keywords: ["URAI", "privacy-first AI", "symbolic life map", "AI companion", "personal reflection"],
+  applicationName: "URAI",
+  keywords: ["URAI", "public demo", "privacy-gated reflection", "symbolic life map", "personal reflection"],
   authors: [{ name: "URAI Labs" }],
   creator: "URAI Labs",
   publisher: "URAI Labs",
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "URAI Genesis",
+    siteName: "URAI",
     title,
     description,
-    images: [{ url: "/og/urai-genesis-preview.png", width: 1200, height: 630, alt: "URAI Genesis preview" }],
+    images: [{ url: "/og/urai-genesis-preview.png", width: 1200, height: 630, alt: "URAI public demo preview" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -62,7 +62,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AppProviders>
-          <Genesis /> {/* Add Genesis as the background */}
+          <Genesis />
           <OnboardingGate>{children}</OnboardingGate>
         </AppProviders>
       </body>
