@@ -23,16 +23,16 @@ export default function TermsPage() {
   return (
     <UraiRouteShell
       eyebrow="Terms"
-      title="UrAi V1 is an early-access product surface."
-      description="This page gives the public launch route a clear terms destination while the full legal terms are finalized. UrAi V1 should not be presented as medical care, diagnosis, emergency support, or a replacement for professional advice."
+      title="URAI is an early-access public demo surface."
+      description="This page gives the public launch route a clear terms destination while the full legal terms are finalized. URAI should not be presented as medical care, diagnosis, emergency support, or a replacement for professional advice."
       primaryHref="/"
-      primaryLabel="Enter UrAi"
+      primaryLabel="Enter URAI"
       secondaryHref="/privacy"
       secondaryLabel="Privacy"
       sections={[
         { title: "Early-access scope", body: "Public demo content is illustrative and public-safe. Private user data must remain behind authenticated owner-only rules." },
-        { title: "No emergency use", body: "UrAi is not an emergency response system. Crisis and safety language should direct people to appropriate local help." },
-        { title: "Changing features", body: "Features may change as UrAi completes verification, security review, deployment evidence, and product polish." },
+        { title: "No emergency use", body: "URAI is not an emergency response system. Crisis and safety language should direct people to appropriate local help." },
+        { title: "Changing features", body: "Features may change as URAI completes verification, security review, deployment evidence, and product polish." },
       ]}
     />
   );
