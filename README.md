@@ -71,6 +71,7 @@ npm run test:e2e
 | `npm run test:smoke` | Runs launch-critical Playwright smoke tests |
 | `npm run test:e2e` | Runs the full Playwright suite across configured desktop and mobile projects |
 | `npm run preflight` | Runs V1 sanity check, Firestore contract audit, typecheck, lint, unit tests, and build |
+| `npm run check:system-registry` | Verifies the canonical system registry and blocks invalid production claims |
 
 ## Important lockfile note
 
@@ -132,6 +133,17 @@ Deploy rules and indexes:
 ```bash
 firebase deploy --only firestore:rules,firestore:indexes
 ```
+
+## Canonical system docs
+
+- `docs/SYSTEM_OF_SYSTEMS_WIRING_MATRIX.md`
+- `docs/REPO_CANONICAL_STATUS.md`
+- `docs/CROSS_REPO_DEPENDENCIES.md`
+- `docs/PRODUCTION_EVIDENCE_REQUIREMENTS.md`
+- `docs/STAGING_INTEGRATION_PLAN.md`
+- `docs/DO_NOT_OVERCLAIM.md`
+- `docs/NEXT_WIRING_TASKS.md`
+- `system/urai-system-registry.json`
 
 See:
 
