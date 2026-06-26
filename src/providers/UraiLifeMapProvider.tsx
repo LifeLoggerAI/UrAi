@@ -1,5 +1,6 @@
 "use client";
 
+import type { GenesisMoodState } from "@/lib/companion/companionTypes";
 import {
   createContext,
   useCallback,
@@ -9,16 +10,47 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { GenesisMoodState } from "@/lib/companion/companionTypes";
 import type {
   LifeMapChapter,
   LifeMapData,
   LifeMapStar,
+  LifeMapStarIntensity,
   LifeMapStarType,
   LifeMapVisibility,
+  PassportDataLayerId,
 } from "@/lib/lifemap/lifeMapTypes";
 import { getUraiMemories, type UraiMemory } from "@/lib/urai-memory";
-import { PassportDataLayerId } from "@/lib/passport/passportLayerTypes";
+
+function toLifeMapStarType(type: UraiMemory["type"]): LifeMapStarType {
+  switch (type) {
+    case "milestone":
+      return "milestone";
+    case "relationship":
+      return "relationship";
+    case "ritual":
+      return "ritual";
+    case "system":
+      return "system";
+    case "reflection":
+    case "moment":
+    case "place":
+    case "dream":
+    default:
+      return "memory";
+  }
+}
+
+function toLifeMapStarIntensity(intensity: UraiMemory["glowIntensity"]): LifeMapStarIntensity {
+  switch (intensity) {
+    case "low":
+      return "soft";
+    case "high":
+      return "bright";
+    case "medium":
+    default:
+      return "quiet";
+  }
+}
 
 type UraiLifeMapContextValue = {
   lifeMapData: LifeMapData;
@@ -50,8 +82,8 @@ const transformMemoryToStar = (memory: UraiMemory): LifeMapStar => ({
   subtitle: memory.subtitle,
   summary: memory.description,
   createdAt: memory.createdAt,
-  type: memory.type,
-  intensity: memory.glowIntensity,
+  type: toLifeMapStarType(memory.type),
+  intensity: toLifeMapStarIntensity(memory.glowIntensity),
   visibility: memory.visibility as LifeMapVisibility,
   x: memory.constellationPosition.x,
   y: memory.constellationPosition.y,
@@ -65,11 +97,15 @@ const transformMemoryToStar = (memory: UraiMemory): LifeMapStar => ({
 // Initial empty state with chapter definition
 const initialLifeMapData: LifeMapData = {
   stars: [],
+  generatedAt: new Date().toISOString(),
+  permissionVersion: 1,
   chapters: [
     {
       id: "chapter-genesis",
       title: "The Beginning",
       subtitle: "Where your story unfolds",
+      startDate: new Date().toISOString(),
+      starIds: [],
       railPosition: 1, // First chapter
     },
   ],

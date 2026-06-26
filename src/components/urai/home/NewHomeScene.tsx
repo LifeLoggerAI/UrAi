@@ -1,3 +1,5 @@
+"use client";
+
 import { Canvas } from '@react-three/fiber';
 import R3FCamera, { CameraState } from './R3FCamera';
 import { CosmicSky } from './CosmicSky';

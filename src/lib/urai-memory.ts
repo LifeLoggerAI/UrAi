@@ -1,46 +1,76 @@
+import { collection, getDocs } from "firebase/firestore";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
 
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/app/firebaseConfig';
-import { UraiMemory, UraiMemoryType, UraiEmotionalState, UraiGlowIntensity, UraiMemoryVisibility } from '@/lib/urai/types';
+export type UraiMemoryType =
+  | "moment"
+  | "reflection"
+  | "milestone"
+  | "relationship"
+  | "place"
+  | "ritual"
+  | "dream"
+  | "system";
 
-// The first memory a user encounters, representing the start of their journey.
-export const thresholdGateMemory: UraiMemory = {
-  id: "genesis-threshold-gate",
-  title: "Threshold Gate",
-  subtitle: "The journey begins",
-  description: "You have arrived. A new world of memory and reflection awaits. This is the beginning of your journey with URAI.",
-  type: "milestone",
-  emotionalState: "luminous",
-  symbolicState: "threshold_gate",
-  replayAvailable: false,
-  passportAvailable: false,
-  createdAt: new Date().toISOString(),
-  constellationPosition: { x: 50, y: 50 },
-  glowIntensity: "threshold",
-  linkedRoutes: {},
-  glyph: " ", // Threshold gates are visually distinct and don't use a glyph
-  visibility: "public",
-  sourceLayerId: "system_init",
+export type UraiEmotionalState =
+  | "calm"
+  | "luminous"
+  | "heavy"
+  | "storm"
+  | "rising"
+  | "tender"
+  | "unknown";
+
+export type UraiGlowIntensity = "low" | "medium" | "high";
+
+export type UraiMemoryVisibility = "private" | "passport" | "shared";
+
+export type UraiMemory = {
+  id: string;
+  userId?: string;
+  title: string;
+  description?: string;
+  subtitle?: string;
+  sourceLayerId?: string;
+  constellationPosition: { x: number; y: number };
+  glyph?: string;
+  type: UraiMemoryType;
+  emotionalState: UraiEmotionalState;
+  glowIntensity: UraiGlowIntensity;
+  visibility: UraiMemoryVisibility;
+  createdAt: string;
+  updatedAt?: string;
+  tags?: string[];
+  metadata?: Record<string, unknown>;
 };
 
-/**
- * Fetches the user's memories from Firestore.
- * @returns A promise that resolves to an array of URAI memories.
- */
-export const getUraiMemories = async (): Promise<UraiMemory[]> => {
+function normalizeMemory(id: string, value: Record<string, unknown>): UraiMemory {
+  return {
+    id,
+    userId: typeof value.userId === "string" ? value.userId : undefined,
+    title: typeof value.title === "string" ? value.title : "Untitled memory",
+    description: typeof value.description === "string" ? value.description : undefined,
+    subtitle: typeof value.subtitle === "string" ? value.subtitle : undefined,
+    sourceLayerId: typeof value.sourceLayerId === "string" ? value.sourceLayerId : undefined,
+    constellationPosition: typeof value.constellationPosition === "object" && value.constellationPosition !== null ? value.constellationPosition as { x: number; y: number } : { x: 0, y: 0 },
+    glyph: typeof value.glyph === "string" ? value.glyph : undefined,
+    type: (typeof value.type === "string" ? value.type : "moment") as UraiMemoryType,
+    emotionalState: (typeof value.emotionalState === "string" ? value.emotionalState : "unknown") as UraiEmotionalState,
+    glowIntensity: (typeof value.glowIntensity === "string" ? value.glowIntensity : "medium") as UraiGlowIntensity,
+    visibility: (typeof value.visibility === "string" ? value.visibility : "private") as UraiMemoryVisibility,
+    createdAt: typeof value.createdAt === "string" ? value.createdAt : new Date().toISOString(),
+    updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : undefined,
+    tags: Array.isArray(value.tags) ? value.tags.filter((item): item is string => typeof item === "string") : [],
+    metadata: typeof value.metadata === "object" && value.metadata !== null ? value.metadata as Record<string, unknown> : undefined,
+  };
+}
+
+export async function getUraiMemories(userId = "demo-user"): Promise<UraiMemory[]> {
+  if (!isFirebaseConfigured()) return [];
+
   try {
-    const memoriesCollection = collection(db, 'memories');
-    const memorySnapshot = await getDocs(memoriesCollection);
-    const memories = memorySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as UraiMemory[];
-
-    // Always include the initial Threshold Gate memory
-    return [thresholdGateMemory, ...memories];
-  } catch (error) {
-    console.error("Error fetching memories from Firestore:", error);
-    // Return the default threshold gate memory in case of an error
-    return [thresholdGateMemory];
+    const snapshot = await getDocs(collection(db(), "users", userId, "memories"));
+    return snapshot.docs.map((doc) => normalizeMemory(doc.id, doc.data()));
+  } catch {
+    return [];
   }
-};
+}
