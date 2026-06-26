@@ -1,110 +1,38 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-type TranscriptionEntry = {
-    timestamp: string;
-    transcription: string;
-};
+function hasValidBearerToken(request: Request) {
+  const apiKey = process.env.TRANSCRIBE_API_KEY;
+  if (!apiKey) return true;
 
-const transcriptionsPath = path.resolve(process.cwd(), 'data/transcriptions.json');
-const journalEntriesPath = path.resolve(process.cwd(), 'data/journal-entries.json');
-const audioUploadPath = path.resolve(process.cwd(), '.uploads/audio');
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) return false;
 
-function isAuthorized(request: Request) {
-    const apiKey = process.env.TRANSCRIBE_API_KEY;
-    const authHeader = request.headers.get('authorization');
-
-    if (!apiKey) {
-        console.warn('TRANSCRIBE_API_KEY env var is not set; denying access to transcription endpoint.');
-        return false;
-    }
-
-    if (!authHeader?.startsWith('Bearer ')) {
-        return false;
-    }
-
-    const token = authHeader.slice('Bearer '.length).trim();
-    return token === apiKey;
-}
-
-async function saveTranscription(transcription: string) {
-    let transcriptions: TranscriptionEntry[] = [];
-    try {
-        const currentTranscriptions = await fs.readFile(transcriptionsPath, 'utf-8');
-        transcriptions = JSON.parse(currentTranscriptions) as TranscriptionEntry[];
-    } catch (error) {
-        // File doesn't exist yet
-    }
-
-    transcriptions.push({
-        timestamp: new Date().toISOString(),
-        transcription,
-    });
-    await fs.writeFile(transcriptionsPath, JSON.stringify(transcriptions, null, 2));
-}
-
-async function saveJournalEntry(transcription: string) {
-    let journalEntries: TranscriptionEntry[] = [];
-    try {
-        const currentJournalEntries = await fs.readFile(journalEntriesPath, 'utf-8');
-        journalEntries = JSON.parse(currentJournalEntries) as TranscriptionEntry[];
-    } catch (error) {
-        // File doesn't exist yet
-    }
-
-    journalEntries.push({
-        timestamp: new Date().toISOString(),
-        transcription,
-    });
-    await fs.writeFile(journalEntriesPath, JSON.stringify(journalEntries, null, 2));
+  return authHeader.slice("Bearer ".length).trim() === apiKey;
 }
 
 export async function POST(request: Request) {
-    if (!isAuthorized(request)) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  if (!hasValidBearerToken(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const formData = await request.formData();
-    const audio = formData.get('audio') as File | null;
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ error: "Invalid multipart audio request" }, { status: 400 });
+  }
 
-    if (!audio) {
-        return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
-    }
+  const audio = formData.get("audio");
+  if (!audio || typeof audio === "string") {
+    return NextResponse.json({ error: "No audio file provided" }, { status: 400 });
+  }
 
-    let audioFilePath: string | null = null;
-
-    try {
-        // Create the upload directory if it doesn't exist
-        try {
-            await fs.mkdir(audioUploadPath, { recursive: true });
-        } catch (error) {
-            console.error('Error creating upload directory:', error);
-            throw error;
-        }
-
-        const audioBuffer = Buffer.from(await audio.arrayBuffer());
-        const audioFileName = `${new Date().toISOString()}-${audio.name}`;
-        audioFilePath = path.join(audioUploadPath, audioFileName);
-
-        await fs.writeFile(audioFilePath, audioBuffer);
-
-        const dummyTranscription = "This is a dummy transcription of your audio recording.";
-
-        await saveTranscription(dummyTranscription);
-        await saveJournalEntry(dummyTranscription);
-
-        return NextResponse.json({ transcription: dummyTranscription });
-    } catch (error) {
-        console.error('Error processing transcription request:', error);
-        return NextResponse.json({ error: 'Failed to process audio upload' }, { status: 500 });
-    } finally {
-        if (audioFilePath) {
-            try {
-                await fs.unlink(audioFilePath);
-            } catch (cleanupError) {
-                console.error('Failed to clean up audio upload:', cleanupError);
-            }
-        }
-    }
+  return NextResponse.json(
+    {
+      error: "Transcription provider is not configured for public launch.",
+      status: "provider_not_configured",
+      next: "Keep recordings local until the privacy-gated upload, storage, retention, export/delete, and provider flow is wired.",
+    },
+    { status: 501 },
+  );
 }
