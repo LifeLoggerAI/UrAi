@@ -1,0 +1,18 @@
+{
+  "name": "URAI Public Demo",
+  "short_name": "URAI",
+  "description": "A privacy-gated public demo for a symbolic Life Map and reflection product.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
