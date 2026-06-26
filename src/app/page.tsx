@@ -1,9 +1,28 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+const title = "URAI Public Demo | Symbolic Life Map";
+const description = "Explore URAI's public demo: a privacy-gated symbolic Life Map with sample data, real CTAs, and clearly labeled roadmap systems.";
+const shareImage = "/og/urai-public-demo.svg";
+
 export const metadata: Metadata = {
-  title: "URAI | Public Demo",
-  description: "URAI public demo surface for a privacy-gated life reflection product.",
+  title,
+  description,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "URAI",
+    title,
+    description,
+    images: [{ url: shareImage, width: 1200, height: 630, alt: "URAI public demo preview" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [shareImage],
+  },
 };
 
 const demoPromises = [
