@@ -50,7 +50,7 @@ const SERVICES: ServiceStatus[] = [
 ];
 
 export default function StatusGrid() {
-  const updatedAt = new Date().toLocaleTimeString();
+  const updatedAt = "Static launch preview";
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/20 backdrop-blur">
