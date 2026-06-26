@@ -1,6 +1,7 @@
-// URAI fallback shell signal: branded-fallback-signal
-import { redirect } from "next/navigation";
+"use client";
+
+import { NewHomeScene } from "@/components/urai/home/NewHomeScene";
 
 export default function HomePage() {
-  redirect("/");
+  return <NewHomeScene />;
 }

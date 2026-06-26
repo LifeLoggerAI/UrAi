@@ -1,9 +1,56 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { buildPermissionedLifeMap } from "@/lib/lifemap/buildPermissionedLifeMap";
 import type { GenesisMoodState } from "@/lib/companion/companionTypes";
-import type { LifeMapChapter, LifeMapData, LifeMapStar, LifeMapStarType } from "@/lib/lifemap/lifeMapTypes";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import type {
+  LifeMapChapter,
+  LifeMapData,
+  LifeMapStar,
+  LifeMapStarIntensity,
+  LifeMapStarType,
+  LifeMapVisibility,
+  PassportDataLayerId,
+} from "@/lib/lifemap/lifeMapTypes";
+import { getUraiMemories, type UraiMemory } from "@/lib/urai-memory";
+
+function toLifeMapStarType(type: UraiMemory["type"]): LifeMapStarType {
+  switch (type) {
+    case "milestone":
+      return "milestone";
+    case "relationship":
+      return "relationship";
+    case "ritual":
+      return "ritual";
+    case "system":
+      return "system";
+    case "reflection":
+    case "moment":
+    case "place":
+    case "dream":
+    default:
+      return "memory";
+  }
+}
+
+function toLifeMapStarIntensity(intensity: UraiMemory["glowIntensity"]): LifeMapStarIntensity {
+  switch (intensity) {
+    case "low":
+      return "soft";
+    case "high":
+      return "bright";
+    case "medium":
+    default:
+      return "quiet";
+  }
+}
 
 type UraiLifeMapContextValue = {
   lifeMapData: LifeMapData;
@@ -28,6 +75,42 @@ const ZOOM_KEY = "urai.lifemap.zoom";
 const FILTER_KEY = "urai.lifemap.filter";
 const LAST_VIEW_KEY = "urai.lifemap.lastView";
 
+// Helper to transform UraiMemory to LifeMapStar, which the UI components expect.
+const transformMemoryToStar = (memory: UraiMemory): LifeMapStar => ({
+  id: memory.id,
+  title: memory.title,
+  subtitle: memory.subtitle,
+  summary: memory.description,
+  createdAt: memory.createdAt,
+  type: toLifeMapStarType(memory.type),
+  intensity: toLifeMapStarIntensity(memory.glowIntensity),
+  visibility: memory.visibility as LifeMapVisibility,
+  x: memory.constellationPosition.x,
+  y: memory.constellationPosition.y,
+  glyph: memory.glyph,
+  sourceLayerId: memory.sourceLayerId as PassportDataLayerId | undefined,
+  // All memories are part of the first chapter for now. This can be expanded later.
+  chapterId: "chapter-genesis",
+  railPosition: 1,
+});
+
+// Initial empty state with chapter definition
+const initialLifeMapData: LifeMapData = {
+  stars: [],
+  generatedAt: new Date().toISOString(),
+  permissionVersion: 1,
+  chapters: [
+    {
+      id: "chapter-genesis",
+      title: "The Beginning",
+      subtitle: "Where your story unfolds",
+      startDate: new Date().toISOString(),
+      starIds: [],
+      railPosition: 1, // First chapter
+    },
+  ],
+};
+
 function readStoredFilter(): LifeMapStarType | "all" {
   if (typeof window === "undefined") return "all";
   return (window.localStorage.getItem(FILTER_KEY) as LifeMapStarType | "all" | null) ?? "all";
@@ -40,9 +123,11 @@ function readStoredZoom(): number {
 }
 
 export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
-  const [lifeMapData, setLifeMapData] = useState<LifeMapData>(() => buildPermissionedLifeMap({ moodState: "luminous" }));
+  const [lifeMapData, setLifeMapData] = useState<LifeMapData>(initialLifeMapData);
   const [selectedStar, setSelectedStar] = useState<LifeMapStar | null>(null);
-  const [selectedChapter, setSelectedChapter] = useState<LifeMapChapter | null>(lifeMapData.chapters[0] ?? null);
+  const [selectedChapter, setSelectedChapter] = useState<LifeMapChapter | null>(
+    lifeMapData.chapters[0] ?? null
+  );
   const [isLifeMapOpen, setIsLifeMapOpen] = useState(false);
   const [filterByType, setFilterByTypeState] = useState<LifeMapStarType | "all">("all");
   const [showPrivateStars, setShowPrivateStars] = useState(false);
@@ -52,6 +137,25 @@ export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
     setFilterByTypeState(readStoredFilter());
     setZoomLevelState(readStoredZoom());
   }, []);
+
+  const regenerateLifeMap = useCallback(() => {
+    const fetchData = async () => {
+      const memories = await getUraiMemories();
+      const stars = memories.map(transformMemoryToStar);
+      const next: LifeMapData = {
+        ...initialLifeMapData,
+        stars,
+      };
+      setLifeMapData(next);
+      setSelectedChapter(next.chapters[0] ?? null);
+      setSelectedStar(null);
+    };
+    void fetchData();
+  }, []);
+
+  useEffect(() => {
+    regenerateLifeMap();
+  }, [regenerateLifeMap]);
 
   const openLifeMap = useCallback(() => {
     setIsLifeMapOpen(true);
@@ -63,20 +167,18 @@ export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
     setSelectedStar(null);
   }, []);
 
-  const selectStar = useCallback((starId: string) => {
-    const star = lifeMapData.stars.find((item) => item.id === starId) ?? null;
-    setSelectedStar(star);
-    setSelectedChapter(star?.chapterId ? lifeMapData.chapters.find((item) => item.id === star.chapterId) ?? null : null);
-  }, [lifeMapData]);
+  const selectStar = useCallback(
+    (starId: string) => {
+      const star = lifeMapData.stars.find((item) => item.id === starId) ?? null;
+      setSelectedStar(star);
+      setSelectedChapter(
+        star?.chapterId ? lifeMapData.chapters.find((item) => item.id === star.chapterId) ?? null : null
+      );
+    },
+    [lifeMapData]
+  );
 
   const clearSelectedStar = useCallback(() => setSelectedStar(null), []);
-
-  const regenerateLifeMap = useCallback((moodState: GenesisMoodState = "luminous") => {
-    const next = buildPermissionedLifeMap({ moodState });
-    setLifeMapData(next);
-    setSelectedChapter(next.chapters[0] ?? null);
-    setSelectedStar(null);
-  }, []);
 
   const setFilterByType = useCallback((type: LifeMapStarType | "all") => {
     setFilterByTypeState(type);
@@ -89,23 +191,41 @@ export function UraiLifeMapProvider({ children }: { children: ReactNode }) {
     if (typeof window !== "undefined") window.localStorage.setItem(ZOOM_KEY, String(next));
   }, []);
 
-  const value = useMemo<UraiLifeMapContextValue>(() => ({
-    lifeMapData,
-    selectedStar,
-    selectedChapter,
-    isLifeMapOpen,
-    zoomLevel,
-    setZoomLevel,
-    openLifeMap,
-    closeLifeMap,
-    selectStar,
-    clearSelectedStar,
-    regenerateLifeMap,
-    filterByType,
-    setFilterByType,
-    showPrivateStars,
-    setShowPrivateStars,
-  }), [clearSelectedStar, closeLifeMap, filterByType, isLifeMapOpen, lifeMapData, openLifeMap, regenerateLifeMap, selectStar, selectedChapter, selectedStar, setFilterByType, setZoomLevel, showPrivateStars, zoomLevel]);
+  const value = useMemo<UraiLifeMapContextValue>(
+    () => ({
+      lifeMapData,
+      selectedStar,
+      selectedChapter,
+      isLifeMapOpen,
+      zoomLevel,
+      setZoomLevel,
+      openLifeMap,
+      closeLifeMap,
+      selectStar,
+      clearSelectedStar,
+      regenerateLifeMap,
+      filterByType,
+      setFilterByType,
+      showPrivateStars,
+      setShowPrivateStars,
+    }),
+    [
+      clearSelectedStar,
+      closeLifeMap,
+      filterByType,
+      isLifeMapOpen,
+      lifeMapData,
+      openLifeMap,
+      regenerateLifeMap,
+      selectStar,
+      selectedChapter,
+      selectedStar,
+      setFilterByType,
+      setZoomLevel,
+      showPrivateStars,
+      zoomLevel,
+    ]
+  );
 
   return <UraiLifeMapContext.Provider value={value}>{children}</UraiLifeMapContext.Provider>;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
+import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene.new";
 import UraiHomeAccessibilityLayer from "@/components/urai/UraiHomeAccessibilityLayer";
 import { orbStateForHomeWorld } from "@/lib/home-world";
 import { useUraiHomeWorldState } from "@/lib/use-urai-home-world-state";

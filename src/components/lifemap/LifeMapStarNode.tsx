@@ -1,6 +1,7 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
+import { motion } from "framer-motion";
 import type { LifeMapStar } from "@/lib/lifemap/lifeMapTypes";
 
 type LifeMapStarNodeProps = {
@@ -17,21 +18,23 @@ const sizeByIntensity: Record<LifeMapStar["intensity"], number> = {
   threshold: 26,
 };
 
-const classByType: Record<LifeMapStar["type"], string> = {
-  memory: "bg-amber-200 shadow-amber-200/70",
-  mood: "bg-blue-200 shadow-blue-200/70",
-  relationship: "bg-violet-200 shadow-violet-200/70",
-  ritual: "bg-emerald-200 shadow-emerald-200/70",
-  milestone: "bg-yellow-100 shadow-yellow-100/80",
-  recovery: "bg-teal-200 shadow-teal-200/70",
-  shadow: "bg-indigo-300 shadow-indigo-300/60",
-  legacy: "bg-orange-200 shadow-orange-200/70",
-  passport: "bg-sky-200 shadow-sky-200/70",
-  system: "bg-white shadow-white/70",
+// New color config for a more refined, glowy look.
+const colorConfig: Record<LifeMapStar["type"], { core: string; aura: string }> = {
+  memory: { core: "#FDE68A", aura: "rgba(253, 230, 138, 0.4)" },
+  mood: { core: "#A5B4FC", aura: "rgba(165, 180, 252, 0.4)" },
+  relationship: { core: "#C4B5FD", aura: "rgba(196, 181, 253, 0.4)" },
+  ritual: { core: "#6EE7B7", aura: "rgba(110, 231, 183, 0.4)" },
+  milestone: { core: "#FCD34D", aura: "rgba(252, 211, 77, 0.5)" },
+  recovery: { core: "#5EEAD4", aura: "rgba(94, 234, 212, 0.4)" },
+  shadow: { core: "#A78BFA", aura: "rgba(167, 139, 250, 0.4)" },
+  legacy: { core: "#FDBA74", aura: "rgba(253, 186, 116, 0.4)" },
+  passport: { core: "#7DD3FC", aura: "rgba(125, 211, 252, 0.4)" },
+  system: { core: "#FFFFFF", aura: "rgba(255, 255, 255, 0.5)" },
 };
 
 export function LifeMapStarNode({ star, isSelected = false, onSelect }: LifeMapStarNodeProps) {
   const size = sizeByIntensity[star.intensity];
+  const { core, aura } = colorConfig[star.type];
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -41,26 +44,65 @@ export function LifeMapStarNode({ star, isSelected = false, onSelect }: LifeMapS
   };
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-label={`Open ${star.title}`}
       onClick={() => onSelect(star.id)}
       onKeyDown={handleKeyDown}
-      className="group absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-      style={{ left: `${star.x}%`, top: `${star.y}%`, width: size * 3, height: size * 3 }}
+      className="group absolute -translate-x-1/2 -translate-y-1/2 rounded-full outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-white/70"
+      style={{ left: `${star.x}%`, top: `${star.y}%` }}
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1, transition: { delay: 0.2 + Math.random() * 0.4, duration: 0.5, ease: "easeOut" } }}
+      whileHover={{ scale: 1.15, zIndex: 10 }}
     >
-      <span
-        aria-hidden="true"
-        className={`absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full text-[10px] text-slate-950 shadow-[0_0_28px] transition-transform duration-300 group-hover:scale-110 ${classByType[star.type]}`}
-        style={{ width: size, height: size, opacity: star.visibility === "requires_permission" ? 0.42 : 1 }}
-      >
-        {star.glyph}
-      </span>
-      {(isSelected || star.intensity === "flare" || star.intensity === "threshold") ? (
-        <span className="absolute left-1/2 top-[calc(50%+18px)] min-w-28 -translate-x-1/2 rounded-full bg-black/35 px-2 py-1 text-[0.65rem] text-white/80 backdrop-blur-sm">
-          {star.title}
-        </span>
-      ) : null}
-    </button>
+      {/* Selection Glow - more prominent and animated */}
+      {isSelected && (
+        <motion.div
+          className="absolute -inset-2.5 rounded-full"
+          style={{ boxShadow: `0 0 24px 10px ${aura}, inset 0 0 12px 4px ${core}` }}
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1, transition: { repeat: Infinity, repeatType: "mirror", duration: 2, ease: "easeInOut" } }}
+          exit={{ scale: 0.8, opacity: 0 }}
+        />
+      )}
+
+      {/* Star body: Core, Aura, and Glyph */}
+      <motion.div className="relative rounded-full" style={{ width: size, height: size }} animate={{ scale: isSelected ? 1.25 : 1 }}>
+        {/* Aura */}
+        <div
+          className="absolute inset-0 rounded-full transition-opacity"
+          style={{
+            boxShadow: `0 0 ${size * 1.5}px ${aura}`,
+            opacity: star.visibility === "requires_permission" ? 0.3 : 0.9,
+          }}
+        />
+        {/* Core light */}
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background: `radial-gradient(circle, ${core} 15%, transparent 70%)`,
+            opacity: star.visibility === "requires_permission" ? 0.4 : 1,
+          }}
+        />
+        {/* Solid center + Glyph */}
+        <div
+          className={`absolute inset-0 grid place-items-center rounded-full text-black/70`} style={{ fontSize: Math.max(8, size / 1.8) }}>
+          {star.glyph}
+        </div>
+      </motion.div>
+
+      {/* Label: Polished with glass style */}
+      {(isSelected || star.intensity === "flare" || star.intensity === "threshold") && (
+        <motion.div
+          className="absolute left-1/2 top-[calc(50%+18px)] min-w-max -translate-x-1/2"
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: 0.1 } }}
+        >
+          <div className="rounded-md bg-black/50 px-2.5 py-1 text-xs font-medium text-white/95 backdrop-blur-sm">
+            {star.title}
+          </div>
+        </motion.div>
+      )}
+    </motion.button>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -171,7 +171,7 @@ export function FocusScene({ onNavigate, onReturnHome }: FocusSceneProps) {
           </motion.div>
         </div>
 
-        <PortalNav activeScene="focus" onNavigate={onNavigate} onReturnHome={onReturnHome} />
+        <PortalNav onNavigate={(scene) => onNavigate(scene)} activeScene="life-map" />
       </div>
     </section>
   );

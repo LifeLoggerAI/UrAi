@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
-import { GenesisOrb } from './GenesisOrb';
-import { CompanionShell } from '@/components/companion';
-import { useUraiSound } from '@/providers/UraiSoundProvider';
-import './Genesis.css';
+import React, { useState } from "react";
+import { GenesisOrb } from "./GenesisOrb";
+import { CompanionShell } from "@/components/companion";
+import { useUraiSound } from "@/providers/UraiSoundProvider";
+import "./Genesis.css";
 
 /**
  * The root component for the URAI Genesis visual experience.

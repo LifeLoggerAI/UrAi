@@ -1,34 +1,34 @@
-import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { UraiAuthProvider, useUraiAuth } from '@/providers/UraiAuthProvider';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import React from "react";
+import { act, render, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { UraiAuthProvider, useUraiAuth } from "@/providers/UraiAuthProvider";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const mockSignedInUser = {
-  uid: 'test-user',
-  email: 'test@example.com',
-  displayName: 'Test User',
+  uid: "test-user",
+  email: "test@example.com",
+  displayName: "Test User",
   photoURL: null,
   isAnonymous: false,
-  getIdToken: jest.fn(async () => 'test-token'),
+  getIdToken: jest.fn(async () => "test-token"),
 };
 
 let mockAuthStateCallback: ((user: unknown) => void) | null = null;
 
 const mockAuth = {
-  app: { name: '[DEFAULT]' },
+  app: { name: "[DEFAULT]" },
   currentUser: null as unknown,
 };
 
-jest.mock('@/lib/firebase/firebaseClient', () => ({
+jest.mock("@/lib/firebase/firebaseClient", () => ({
   getUraiFirebaseClient: jest.fn(() => ({
-    state: { configured: true, reason: 'ready' },
+    state: { configured: true, reason: "ready" },
     auth: mockAuth,
     db: {},
     storage: {},
   })),
   getFirebaseClient: jest.fn(() => ({
-    state: { configured: true, reason: 'ready' },
+    state: { configured: true, reason: "ready" },
     auth: mockAuth,
     db: {},
     storage: {},
@@ -36,7 +36,7 @@ jest.mock('@/lib/firebase/firebaseClient', () => ({
   isFirebaseConfigured: jest.fn(() => true),
 }));
 
-jest.mock('firebase/auth', () => ({
+jest.mock("firebase/auth", () => ({
   GoogleAuthProvider: jest.fn(),
   browserLocalPersistence: {},
   setPersistence: jest.fn(async () => undefined),
@@ -57,13 +57,15 @@ jest.mock('firebase/auth', () => ({
   signInAnonymously: jest.fn(async () => {
     const user = {
       ...mockSignedInUser,
-      uid: 'anonymous-user',
+      uid: "anonymous-user",
       email: null,
       displayName: null,
       isAnonymous: true,
     };
+
     mockAuth.currentUser = user;
     mockAuthStateCallback?.(user);
+
     return { user };
   }),
   signInWithPopup: jest.fn(async () => {
@@ -86,21 +88,29 @@ function TestAuthStatus() {
 
   return (
     <div>
-      <button onClick={() => signInWithEmail('test@example.com', 'password')}>Sign In</button>
-      <button onClick={() => signOut({ clearLocal: true })}>Sign Out</button>
-      <div data-testid="status">{isAuthenticated ? 'Signed In' : 'Signed Out'}</div>
+      <button type="button" onClick={() => signInWithEmail("test@example.com", "password")}>
+        Sign In
+      </button>
+
+      <button type="button" onClick={() => signOut({ clearLocal: true })}>
+        Sign Out
+      </button>
+
+      <div data-testid="status">
+        {isAuthenticated ? "Signed In" : "Signed Out"}
+      </div>
     </div>
   );
 }
 
-describe('UraiAuthProvider', () => {
+describe("UraiAuthProvider", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockAuth.currentUser = null;
     mockAuthStateCallback = null;
   });
 
-  it('should allow a user to sign in and expose a safe sign-out control', async () => {
+  it("should allow a user to sign in and expose a safe sign-out control", async () => {
     const { findByTestId, getByText } = render(
       <UraiAuthProvider>
         <TestAuthStatus />
@@ -108,22 +118,30 @@ describe('UraiAuthProvider', () => {
     );
 
     await waitFor(async () => {
-      expect(await findByTestId('status')).toHaveTextContent('Signed Out');
+      expect(await findByTestId("status")).toHaveTextContent("Signed Out");
     });
 
     await act(async () => {
-      getByText('Sign In').click();
+      getByText("Sign In").click();
     });
 
     await waitFor(async () => {
-      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(mockAuth, 'test@example.com', 'password');
-      expect(await findByTestId('status')).toHaveTextContent('Signed In');
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+        mockAuth,
+        "test@example.com",
+        "password",
+      );
+      expect(await findByTestId("status")).toHaveTextContent("Signed In");
     });
 
     await act(async () => {
-      getByText('Sign Out').click();
+      getByText("Sign Out").click();
     });
 
-    expect(getByText('Sign Out')).toBeInTheDocument();
+    await waitFor(async () => {
+      expect(await findByTestId("status")).toHaveTextContent("Signed Out");
+    });
+
+    expect(getByText("Sign Out")).toBeInTheDocument();
   });
 });

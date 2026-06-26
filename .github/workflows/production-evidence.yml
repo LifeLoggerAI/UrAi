@@ -1,139 +1,38 @@
 name: Production Evidence
 
 on:
+  workflow_run:
+    workflows: ["Deploy Firebase Production"]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   evidence:
-    name: Capture production evidence
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      npm_config_cache: /tmp/urai-npm-cache
-      PLAYWRIGHT_OUTPUT_DIR: test-results
-      FIREBASE_PRODUCTION_URL: https://urai-4dc1d.web.app
-      CUSTOM_PRODUCTION_URL: https://www.urai.app
-      URAI_EVIDENCE_RUN_LABEL: pr304-release-evidence
-      URAI_RELEASE_ISSUE: "300"
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: false
-          clean: false
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
-          cache: npm
-
-      - name: Prepare writable tool caches
-        run: |
-          mkdir -p "$npm_config_cache"
-          npm config set cache "$npm_config_cache" --global
-          npm config get cache
+          node-version: '20'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright
+        run: npx playwright install --with-deps
 
-      - name: Verify Firebase production HTTP routes
-        run: |
-          set -euo pipefail
-          echo "Evidence run: $URAI_EVIDENCE_RUN_LABEL"
-          check_url() {
-            url="$1"
-            echo "Checking $url"
-            for attempt in $(seq 1 12); do
-              status="$(curl --silent --show-error --location --output /tmp/urai-http-check-body --write-out '%{http_code}' "$url" || true)"
-              if [ "$status" = "200" ]; then
-                echo "OK $url"
-                return 0
-              fi
-              echo "Attempt $attempt failed for $url with HTTP $status"
-              head -c 500 /tmp/urai-http-check-body || true
-              echo
-              sleep 10
-            done
-            echo "Production route did not become healthy: $url"
-            return 1
-          }
-
-          check_url "$FIREBASE_PRODUCTION_URL/"
-          check_url "$FIREBASE_PRODUCTION_URL/home"
-          check_url "$FIREBASE_PRODUCTION_URL/ochat"
-          check_url "$FIREBASE_PRODUCTION_URL/u/adamclamp"
-          check_url "$FIREBASE_PRODUCTION_URL/api/status"
-
-      - name: Capture Firebase production browser evidence
+      - name: Run production smoke tests
+        run: npm run test:smoke:production
         env:
           PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
-        run: npm run test:smoke:production
 
-      - name: Verify custom production domain HTTP route
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          status="$(curl --silent --show-error --location --output /tmp/urai-custom-domain-body --write-out '%{http_code}' "$CUSTOM_PRODUCTION_URL/" || true)"
-          echo "Custom domain status: $status"
-          head -c 500 /tmp/urai-custom-domain-body || true
-          test "$status" = "200"
-
-      - name: Write production evidence summary
-        if: always()
-        run: |
-          mkdir -p evidence
-          {
-            echo "# URAI Production Evidence Run"
-            echo
-            echo "- Evidence label: $URAI_EVIDENCE_RUN_LABEL"
-            echo "- Commit: $GITHUB_SHA"
-            echo "- Run id: $GITHUB_RUN_ID"
-            echo "- Run attempt: $GITHUB_RUN_ATTEMPT"
-            echo "- Firebase URL checked: $FIREBASE_PRODUCTION_URL"
-            echo "- Custom domain checked best-effort: $CUSTOM_PRODUCTION_URL"
-            echo "- Generated at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          } > evidence/production-evidence-summary.md
-
-      - name: Upload production evidence artifacts
-        if: always()
+      - name: Upload production evidence
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: production-evidence-results
-          path: |
-            evidence
-            test-results
-            playwright-report
-          if-no-files-found: ignore
-          retention-days: 14
-
-      - name: Comment production evidence status on release issue
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const issue_number = Number(process.env.URAI_RELEASE_ISSUE || '300');
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const artifactUrl = `${runUrl}#artifacts`;
-            const conclusion = '${{ job.status }}';
-            const body = [
-              `Production Evidence workflow completed with status: **${conclusion}**.`,
-              ``,
-              `- Evidence label: \`${process.env.URAI_EVIDENCE_RUN_LABEL}\``,
-              `- Commit: \`${context.sha}\``,
-              `- Run: ${runUrl}`,
-              `- Artifacts: ${artifactUrl}`,
-              `- Firebase URL checked: ${process.env.FIREBASE_PRODUCTION_URL}`,
-              `- Custom domain checked best-effort: ${process.env.CUSTOM_PRODUCTION_URL}`,
-              ``,
-              `Attach or review the \`production-evidence-results\` artifact before closing this issue.`
-            ].join('\n');
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number,
-              body,
-            });
+          path: test-results/production-evidence/

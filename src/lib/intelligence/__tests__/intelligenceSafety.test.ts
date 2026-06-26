@@ -54,14 +54,14 @@ describe('intelligenceSafety', () => {
       expect(sanitizeSymbolicSummary(summary)).toBe('My phone number is [phone number removed]');
     });
 
-    it('should redact GPS coordinates', () => {
+    it('should not redact GPS coordinates', () => {
       const summary = 'My location is 34.0522 N, 118.2437 W';
       expect(sanitizeSymbolicSummary(summary)).toBe('My location is 34.0522 N, 118.2437 W');
     });
   });
 
   describe('getSafetyBandForInput', () => {
-    it('should return "danger" for inputs with PII', () => {
+    it('should return "blocked" for inputs with PII', () => {
       const input: SymbolicInputSummary = {
         id: '1',
         layerId: 'test',

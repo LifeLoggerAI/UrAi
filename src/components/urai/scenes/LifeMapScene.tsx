@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { UraiScene } from "@/lib/urai/scene-theme";
@@ -96,7 +96,7 @@ export function LifeMapScene({ selectedMemoryId, onSelectMemory, onNavigate, onR
           </motion.aside>
         </div>
 
-        <PortalNav activeScene="life-map" onNavigate={onNavigate} onReturnHome={onReturnHome} />
+        <PortalNav onNavigate={(scene) => onNavigate(scene)} activeScene="life-map" />
       </div>
     </section>
   );
