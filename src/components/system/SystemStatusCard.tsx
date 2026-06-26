@@ -1,6 +1,12 @@
 import { CheckCircle2, CircleDashed, LockKeyhole, ShieldAlert, ShieldCheck } from "lucide-react";
 import type { SystemRepo } from "@/lib/system-registry";
-import { isProductionEvidenceBacked, isRoadmapOnly, requiresPrivacyGate } from "@/lib/system-registry";
+import {
+  getStagingEvidenceNotes,
+  getStagingEvidenceState,
+  isProductionEvidenceBacked,
+  isRoadmapOnly,
+  requiresPrivacyGate,
+} from "@/lib/system-registry";
 
 type SystemStatusCardProps = {
   repo: SystemRepo;
@@ -18,6 +24,26 @@ const labelStyles: Record<string, string> = {
   Legacy: "border-zinc-300/20 bg-zinc-300/10 text-zinc-100",
   Sandbox: "border-orange-200/30 bg-orange-200/10 text-orange-50",
   "Evidence Backed": "border-lime-200/30 bg-lime-200/10 text-lime-50",
+};
+
+const stagingStateLabels: Record<string, string> = {
+  not_checked: "Not checked",
+  local_passed: "Local passed",
+  staging_ready: "Staging ready",
+  staging_deployed: "Staging deployed",
+  staging_smoke_passed: "Staging smoke passed",
+  blocked: "Blocked",
+  deferred: "Deferred",
+};
+
+const stagingStateStyles: Record<string, string> = {
+  not_checked: "border-white/15 bg-white/[0.05] text-white/62",
+  local_passed: "border-cyan-200/25 bg-cyan-200/[0.08] text-cyan-50",
+  staging_ready: "border-sky-200/25 bg-sky-200/[0.08] text-sky-50",
+  staging_deployed: "border-emerald-200/25 bg-emerald-200/[0.08] text-emerald-50",
+  staging_smoke_passed: "border-lime-200/30 bg-lime-200/[0.1] text-lime-50",
+  blocked: "border-rose-200/30 bg-rose-200/[0.1] text-rose-50",
+  deferred: "border-zinc-300/20 bg-zinc-300/[0.08] text-zinc-100",
 };
 
 function statusLabels(repo: SystemRepo) {
@@ -65,6 +91,8 @@ function TextList({ title, values, empty }: { title: string; values: string[]; e
 
 export default function SystemStatusCard({ repo, emphasis = "standard" }: SystemStatusCardProps) {
   const labels = statusLabels(repo);
+  const stagingState = getStagingEvidenceState(repo.name);
+  const stagingNotes = getStagingEvidenceNotes(repo.name);
   const Icon = repo.classification === "canonical-product" ? ShieldCheck : repo.classification === "blocked" ? ShieldAlert : repo.canClaimProduction ? CheckCircle2 : requiresPrivacyGate(repo) ? LockKeyhole : CircleDashed;
   const border = emphasis === "primary" ? "border-cyan-200/30 bg-cyan-200/[0.075]" : emphasis === "warning" ? "border-amber-200/25 bg-amber-200/[0.055]" : "border-white/10 bg-white/[0.045]";
 
@@ -86,6 +114,9 @@ export default function SystemStatusCard({ repo, emphasis = "standard" }: System
             {label}
           </span>
         ))}
+        <span className={`rounded-md border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${stagingStateStyles[stagingState]}`}>
+          {stagingStateLabels[stagingState]}
+        </span>
       </div>
 
       <p className="mt-4 text-sm leading-6 text-white/78">{repo.status}</p>
@@ -97,6 +128,7 @@ export default function SystemStatusCard({ repo, emphasis = "standard" }: System
       </div>
 
       <div className="mt-5 grid gap-5 md:grid-cols-2">
+        <TextList title="Staging evidence" values={stagingNotes} empty="No staging evidence notes recorded" />
         <TextList title="Privacy gate" values={requiresPrivacyGate(repo) ? ["Depends on LifeLoggerAI/urai-privacy or is the gate itself"] : ["No privacy dependency listed in registry"]} empty="No privacy requirement recorded" />
         <TextList title="Evidence required" values={repo.evidenceRequired} empty="No remaining evidence listed" />
         <TextList title="Dependencies" values={repo.dependsOn} empty="No dependencies listed" />
