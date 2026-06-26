@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import UraiRouteShell from "@/components/urai/UraiRouteShell";
 
-export const metadata = {
-  title: "UrAi Terms",
-  description: "Launch-safe terms summary for the UrAi public demo and early-access product surface.",
+export const metadata: Metadata = {
+  title: "Terms | URAI",
+  description: "Launch-safe terms summary for the URAI public demo, early-access scope, safety boundaries, and gated private features.",
+  alternates: { canonical: "/terms" },
+  openGraph: {
+    title: "Terms | URAI",
+    description: "Early-access scope, safety boundaries, and gated-feature terms for the URAI public demo.",
+    url: "/terms",
+    images: [{ url: "/og/urai-public-demo.svg", width: 1200, height: 630, alt: "URAI terms summary" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms | URAI",
+    description: "Early-access scope, safety boundaries, and gated-feature terms for the URAI public demo.",
+    images: ["/og/urai-public-demo.svg"],
+  },
 };
 
 export default function TermsPage() {
