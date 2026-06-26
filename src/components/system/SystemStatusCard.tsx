@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleDashed, LockKeyhole, ShieldAlert, ShieldCheck, Workflow } from "lucide-react";
+import { CheckCircle2, CircleDashed, LockKeyhole, ShieldAlert, ShieldCheck } from "lucide-react";
 import type { SystemRepo } from "@/lib/system-registry";
 import { isProductionEvidenceBacked, isRoadmapOnly, requiresPrivacyGate } from "@/lib/system-registry";
 
@@ -8,13 +8,13 @@ type SystemStatusCardProps = {
 };
 
 const labelStyles: Record<string, string> = {
-  Canonical: "border-cyan-200/30 bg-cyan-200/12 text-cyan-50",
+  Canonical: "border-cyan-200/30 bg-cyan-200/[0.12] text-cyan-50",
   Staging: "border-sky-200/30 bg-sky-200/10 text-sky-50",
   "Privacy Gate": "border-emerald-200/30 bg-emerald-200/10 text-emerald-50",
-  "Evidence Missing": "border-amber-200/35 bg-amber-200/12 text-amber-50",
+  "Evidence Missing": "border-amber-200/35 bg-amber-200/[0.12] text-amber-50",
   "Demo Safe": "border-teal-200/30 bg-teal-200/10 text-teal-50",
   "Roadmap Only": "border-white/15 bg-white/[0.06] text-white/70",
-  Blocked: "border-rose-200/35 bg-rose-200/12 text-rose-50",
+  Blocked: "border-rose-200/35 bg-rose-200/[0.12] text-rose-50",
   Legacy: "border-zinc-300/20 bg-zinc-300/10 text-zinc-100",
   Sandbox: "border-orange-200/30 bg-orange-200/10 text-orange-50",
   "Evidence Backed": "border-lime-200/30 bg-lime-200/10 text-lime-50",
