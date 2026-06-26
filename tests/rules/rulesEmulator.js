@@ -101,6 +101,21 @@ function extractNestedUserHomeWorldRules(rules) {
   };
 }
 
+function extractNestedOwnerSubcollectionRules(rules) {
+  const pattern = /match\s+\/users\/\{([^}]+)\}\/\{([^}]+)\}\/\{([^}]+)\}\s*\{/m;
+  const match = pattern.exec(rules);
+  if (!match) return null;
+
+  const openBraceIndex = match.index + match[0].lastIndexOf('{');
+  const block = extractBlockBody(rules, openBraceIndex);
+  return {
+    key: 'users/{uid}/{privateCollection}',
+    variableName: match[3],
+    parentVariables: [match[1], match[2]],
+    operations: collectAllowOperations(block),
+  };
+}
+
 function compileExpression(functionsCode, expression) {
   const cleaned = convertRulesSyntax(expression.trim());
   const script = new vm.Script(`${functionsCode}\n(${cleaned});`);
@@ -117,6 +132,10 @@ class RulesEvaluator {
     const nestedHomeWorldRule = extractNestedUserHomeWorldRules(rules);
     if (nestedHomeWorldRule) {
       ruleMap.set(nestedHomeWorldRule.key, nestedHomeWorldRule);
+    }
+    const nestedOwnerSubcollectionRule = extractNestedOwnerSubcollectionRules(rules);
+    if (nestedOwnerSubcollectionRule) {
+      ruleMap.set(nestedOwnerSubcollectionRule.key, nestedOwnerSubcollectionRule);
     }
 
     this.compiled = new Map();
@@ -195,6 +214,9 @@ class DocumentReference {
     if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users' && this.pathSegments[2] === 'homeWorld') {
       return 'users/{uid}/homeWorld';
     }
+    if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users') {
+      return 'users/{uid}/{privateCollection}';
+    }
     return this.pathSegments.slice(0, -1).join('/');
   }
   _documentId() {
@@ -203,6 +225,9 @@ class DocumentReference {
   _matchVariables() {
     if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users' && this.pathSegments[2] === 'homeWorld') {
       return { uid: this.pathSegments[1] };
+    }
+    if (this.pathSegments.length === 4 && this.pathSegments[0] === 'users') {
+      return { uid: this.pathSegments[1], privateCollection: this.pathSegments[2] };
     }
     return {};
   }
