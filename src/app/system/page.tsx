@@ -17,7 +17,23 @@ import {
 
 export const metadata: Metadata = {
   title: "URAI System Status",
-  description: "Canonical URAI system-of-systems status backed by the release registry.",
+  description: "Registry-backed URAI launch truth for system roles, evidence gates, and blockers.",
+  alternates: { canonical: "/system" },
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
+  openGraph: {
+    title: "URAI System Status",
+    description: "Registry-backed URAI launch truth for system roles, evidence gates, and blockers.",
+    url: "/system",
+    images: [{ url: "/og/urai-public-demo.svg", width: 1200, height: 630, alt: "URAI system status" }],
+  },
 };
 
 export default function SystemPage() {
@@ -78,41 +94,3 @@ export default function SystemPage() {
 
           <div className="rounded-lg border border-amber-200/20 bg-amber-200/[0.07] p-4">
             <div className="flex items-center gap-2 text-amber-50">
-              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
-              <h2 className="text-sm font-semibold uppercase tracking-[0.16em]">Launch posture</h2>
-            </div>
-            <p className="mt-3 text-lg font-semibold">{launchEligible.length} launch-eligible repos</p>
-            <p className="mt-1 text-sm text-white/62">{productionClaimable.length} production claims; {blockedCount} systems blocked or blocked-pending-proof.</p>
-          </div>
-        </div>
-
-        <SystemStatusMatrix
-          title="Genesis Spine"
-          description="These systems define the safe V1 path: canonical product app, staging proving ground, privacy gate, operator control plane, async execution, and canonical content layer."
-          repos={getGenesisSpineRepos()}
-          emphasis="primary"
-        />
-
-        <SystemStatusMatrix
-          title="Deferred And Gated Systems"
-          description="These systems are not allowed to become live product behavior until privacy, consent, export/delete, admin audit, provider, and smoke evidence gates are satisfied."
-          repos={getDeferredSystemRepos()}
-          emphasis="warning"
-        />
-
-        <SystemStatusMatrix
-          title="External Ecosystem Surfaces"
-          description="These repos may be public surfaces, but they are not product runtime proof for the Genesis spine unless registry evidence says so."
-          repos={getExternalSurfaceRepos()}
-        />
-
-        <SystemStatusMatrix
-          title="Legacy And Sandbox Warning"
-          description="These repos are explicitly not production truth. Anything useful must be ported into the canonical product repo before it counts."
-          repos={getLegacyAndSandboxRepos()}
-          emphasis="warning"
-        />
-      </section>
-    </main>
-  );
-}
