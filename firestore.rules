@@ -100,6 +100,46 @@ service cloud.firestore {
         && isAllowedConsentSource(source);
     }
 
+    function isAllowedOwnerSubcollection(collectionId) {
+      return collectionId == "passport"
+        || collectionId == "onboarding"
+        || collectionId == "audio"
+        || collectionId == "voice"
+        || collectionId == "notifications"
+        || collectionId == "companion"
+        || collectionId == "lifemap"
+        || collectionId == "ground"
+        || collectionId == "mirror"
+        || collectionId == "shadow"
+        || collectionId == "legacy"
+        || collectionId == "rituals"
+        || collectionId == "exports"
+        || collectionId == "system"
+        || collectionId == "homeState"
+        || collectionId == "moodForecasts"
+        || collectionId == "companionState"
+        || collectionId == "visualState"
+        || collectionId == "lifeMapNodes"
+        || collectionId == "memories"
+        || collectionId == "memoryStars"
+        || collectionId == "relationshipConstellations"
+        || collectionId == "memoryBlooms"
+        || collectionId == "narratorInsights"
+        || collectionId == "socialGraph"
+        || collectionId == "recoveryArcs"
+        || collectionId == "seasonalChapters"
+        || collectionId == "emotionalStates"
+        || collectionId == "symbolicOverlays"
+        || collectionId == "scrollExports"
+        || collectionId == "lifeMapStars"
+        || collectionId == "lifeMapConstellations"
+        || collectionId == "lifeMapLayers"
+        || collectionId == "lifeMapChapters"
+        || collectionId == "relationshipThreads"
+        || collectionId == "ritualThreads"
+        || collectionId == "spatialSettings";
+    }
+
     function isPublicPublished() {
       return resource.data.visibility == "public"
         || resource.data.demoReadable == true
@@ -264,6 +304,12 @@ service cloud.firestore {
       match /dreamPlanetariumScenes/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
       match /spatialConsentZones/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if false; }
       match /spatialAssetLinks/{id} { allow read: if isSelf(uid); allow create: if isSelf(uid) && request.resource.data.uid == uid; allow update: if isSelf(uid) && resource.data.uid == uid && request.resource.data.uid == uid; allow delete: if isSelf(uid) && resource.data.uid == uid; }
+    }
+
+    match /users/{uid}/{privateCollection}/{privateDoc} {
+      allow read: if isSelf(uid) && isAllowedOwnerSubcollection(privateCollection);
+      allow create, update: if isSelf(uid) && isAllowedOwnerSubcollection(privateCollection) && hasNoProtectedUserFields();
+      allow delete: if isSelf(uid) && isAllowedOwnerSubcollection(privateCollection);
     }
 
     /* Tier 2 static policy anchors. Runtime rules above keep canonical owner/admin read behavior where required by emulator contracts.
