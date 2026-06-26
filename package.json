@@ -33,6 +33,7 @@
     "check:firebase:staging": "URAI_EXPECTED_FIREBASE_PROJECT=urai-staging URAI_EXPECTED_FIREBASE_SITE=urai-staging node scripts/check-firebase-target.mjs --config firebase.staging.json",
     "check:clean-tree": "node scripts/check-clean-working-tree.mjs",
     "check:system-registry": "node scripts/check-system-registry.mjs",
+    "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "check:types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "check:home": "node scripts/check-home-lock.mjs",
