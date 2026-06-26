@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-06-25T22:37:56-05:00",
+  "purpose": "Safe public/staging smoke targets for the URAI Genesis spine. This file contains no secrets and does not authorize production readiness claims.",
+  "allowedStates": [
+    "not_checked",
+    "local_passed",
+    "staging_ready",
+    "staging_deployed",
+    "staging_smoke_passed",
+    "blocked",
+    "deferred"
+  ],
+  "targets": [
+    {
+      "repo": "LifeLoggerAI/UrAi",
+      "evidenceState": "blocked",
+      "notes": [
+        "Public root returned HTTP 200 on 2026-06-25.",
+        "Public /system returned HTTP 200 but did not contain the new system route marker, so /system is not proven staging-visible.",
+        "Local checkout and Node validation are blocked in this environment."
+      ],
+      "urls": [
+        {
+          "label": "canonical-public-root",
+          "url": "https://urai-4dc1d.web.app/",
+          "expectedStatus": [200],
+          "required": true
+        },
+        {
+          "label": "canonical-system-route",
+          "url": "https://urai-4dc1d.web.app/system",
+          "expectedStatus": [200],
+          "required": false,
+          "marker": "URAI release truth"
+        }
+      ]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-staging",
+      "evidenceState": "staging_deployed",
+      "notes": [
+        "Root URL returned HTTP 200 on 2026-06-25.",
+        "Static system registry and /api/healthz returned 404 at checked paths, so staging smoke is not complete."
+      ],
+      "urls": [
+        {
+          "label": "staging-root",
+          "url": "https://urai-staging.web.app/",
+          "expectedStatus": [200],
+          "required": true,
+          "marker": "URAI"
+        },
+        {
+          "label": "staging-system-registry",
+          "url": "https://urai-staging.web.app/system-registry.json",
+          "expectedStatus": [200],
+          "required": false
+        },
+        {
+          "label": "staging-healthz",
+          "url": "https://urai-staging.web.app/api/healthz",
+          "expectedStatus": [200],
+          "required": false
+        }
+      ]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-privacy",
+      "evidenceState": "not_checked",
+      "notes": [
+        "https://uraiprivacy.com/ returned HTTP 200 and privacy/consent marker text on 2026-06-25.",
+        "No staging Firebase project binding was present in local repo evidence, so this is not marked staging_smoke_passed."
+      ],
+      "urls": [
+        {
+          "label": "privacy-public-root",
+          "url": "https://uraiprivacy.com/",
+          "expectedStatus": [200],
+          "required": false,
+          "marker": "privacy"
+        }
+      ]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-admin",
+      "evidenceState": "blocked",
+      "notes": [
+        "https://urai-admin.web.app/ returned HTTP 503 on 2026-06-25.",
+        "Local repo points Firebase aliases at urai-4dc1d and does not document a staging alias."
+      ],
+      "urls": [
+        {
+          "label": "admin-public-root",
+          "url": "https://urai-admin.web.app/",
+          "expectedStatus": [200],
+          "required": false
+        }
+      ]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-jobs",
+      "evidenceState": "staging_deployed",
+      "notes": [
+        "https://urai-jobs.web.app/ returned HTTP 200 on 2026-06-25.",
+        "Repo has deploy:staging script but local .firebaserc only documents the default project, so staging smoke remains incomplete."
+      ],
+      "urls": [
+        {
+          "label": "jobs-public-root",
+          "url": "https://urai-jobs.web.app/",
+          "expectedStatus": [200],
+          "required": false,
+          "marker": "URAI-JOBS"
+        }
+      ]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-content",
+      "evidenceState": "blocked",
+      "notes": [
+        "Repo package.json intentionally blocks deploy until provider, deployed smoke, E2E, observability, and rollback evidence are green.",
+        "No safe staging URL was documented in local repo evidence."
+      ],
+      "urls": []
+    }
+  ]
+}
