@@ -8,6 +8,7 @@ import {
   getDeferredSystemRepos,
   getExternalSurfaceRepos,
   getGenesisSpineRepos,
+  getLaunchEligibleRepos,
   getLegacyAndSandboxRepos,
   getProductionClaimableRepos,
   getSystemRegistry,
@@ -24,6 +25,7 @@ export default function SystemPage() {
   const canonical = getCanonicalProductRepo();
   const registryValid = validateSystemRegistryShape();
   const productionClaimable = getProductionClaimableRepos();
+  const launchEligible = getLaunchEligibleRepos();
   const blockedCount = getBlockedRepos().length;
 
   return (
@@ -41,10 +43,18 @@ export default function SystemPage() {
 
         <div className="mt-12 max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100/70">System status</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">URAI release truth, in the product.</h1>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white md:text-6xl">URAI release truth, locked before launch.</h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-white/68 md:text-lg">
-            This route is backed by the canonical registry and shows which URAI systems are demo-safe, staging-bound, privacy-gated, roadmap-only, legacy, or sandboxed. It makes no network calls and fetches no private data.
+            This route is backed by the canonical registry and shows launch mode, production eligibility, DNS/SSL proof, smoke evidence, rollback evidence, monitoring evidence, privacy gate evidence, and blockers. It makes no network calls and fetches no private data.
           </p>
+          <div className="mt-5 flex flex-wrap gap-3 text-sm">
+            <Link className="rounded-md border border-cyan-200/20 bg-cyan-200/[0.08] px-3 py-2 text-cyan-50 hover:bg-cyan-200/[0.14]" href="/docs/PRODUCTION_LOCK.md">
+              Production lock docs
+            </Link>
+            <Link className="rounded-md border border-white/10 bg-white/[0.055] px-3 py-2 text-white/76 hover:bg-white/10" href="/docs/PRIVACY_RELEASE_GATE_EVIDENCE.md">
+              Privacy gate evidence
+            </Link>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-3 md:grid-cols-3">
@@ -69,10 +79,10 @@ export default function SystemPage() {
           <div className="rounded-lg border border-amber-200/20 bg-amber-200/[0.07] p-4">
             <div className="flex items-center gap-2 text-amber-50">
               <AlertTriangle className="h-5 w-5" aria-hidden="true" />
-              <h2 className="text-sm font-semibold uppercase tracking-[0.16em]">Claim posture</h2>
+              <h2 className="text-sm font-semibold uppercase tracking-[0.16em]">Launch posture</h2>
             </div>
-            <p className="mt-3 text-lg font-semibold">{productionClaimable.length} evidence-backed production claims</p>
-            <p className="mt-1 text-sm text-white/62">{blockedCount} systems remain blocked or blocked-pending-proof.</p>
+            <p className="mt-3 text-lg font-semibold">{launchEligible.length} launch-eligible repos</p>
+            <p className="mt-1 text-sm text-white/62">{productionClaimable.length} production claims; {blockedCount} systems blocked or blocked-pending-proof.</p>
           </div>
         </div>
 
