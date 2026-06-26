@@ -7,6 +7,7 @@ This checklist is intentionally strict. A checked box requires command output, U
 ## Current Status
 
 - [ ] Production launch approved
+- [ ] Public-demo launch approved
 - [ ] Any repo genuinely launch-eligible
 - [x] Canonical product repo identified as `LifeLoggerAI/UrAi`
 - [x] `LifeLoggerAI/UrAi-Dev` locked as sandbox-only
@@ -14,9 +15,13 @@ This checklist is intentionally strict. A checked box requires command output, U
 - [x] Production-lock registry fields added
 - [x] Production-lock checker added
 - [x] Production smoke target config added
+- [x] Existing live app HTTP smoke checked for `/`, `/home`, `/system`, `/life-map`, `/privacy`, `/terms`, `/waitlist`, and `/demo`
+- [ ] Live `/system` page displays production-lock truth
 - [ ] Production-lock checker executed in Node 20 environment
 - [ ] Production smoke checker executed in Node 20 environment
+- [ ] Visual QA screenshots captured successfully
 - [ ] Local build/check/lint/test/typecheck evidence captured
+- [ ] Staging deploy evidence captured for this cutover
 - [ ] Production deploy log/release SHA captured
 - [ ] Rollback target and rollback drill captured
 - [ ] Monitoring/alert evidence captured
@@ -32,12 +37,27 @@ npm run check:system-registry
 npm run check:production-lock
 npm run smoke:production
 npm run smoke:genesis-spine
+npm run test:visual
 npm run check:v1
 npm run check:types || npm run typecheck
 npm run lint
 npm test
 npm run build
 ```
+
+## Final Cutover Attempt Evidence
+
+Date: 2026-06-25 America/Chicago
+
+- `npm run check:production-lock` failed before execution because `npm` is not recognized on PATH.
+- Other npm-based checks are blocked for the same environment reason.
+- Browser screenshot capture failed because the in-app browser runtime hit `windows sandbox failed: helper_unknown_error: apply deny-read ACLs`.
+- Direct HTTPS route checks returned HTTP 200 for `/`, `/home`, `/system`, `/life-map`, `/privacy`, `/terms`, `/waitlist`, and `/demo`.
+- Live `/system` did not contain the expected production-lock markers and appears to serve the currently deployed `URAI Spatial` root/home bundle.
+- No staging deploy was attempted.
+- No production deploy was attempted.
+
+See `docs/FINAL_LAUNCH_REPORT.md` for the full launch-blocker report.
 
 ## Manual Release Evidence Required
 
@@ -52,6 +72,8 @@ npm run build
 
 ## Cutover Decision
 
-Current decision: NO-GO.
+Current decision: NO-GO: blocked.
 
-Next valid action is to run the added checks in a clean Node 20 environment, capture their output, and close blockers. Do not deploy production from this checklist state.
+Reason: production lock and public-demo evidence are incomplete, live `/system` does not display registry truth, local checks and visual QA could not run in this environment, and rollback/monitoring/privacy gate proof is missing.
+
+Next valid action is to run the added checks in a clean Node 20 environment, deploy the registry-backed `/system` route to staging first, capture visual screenshots, then re-run final cutover preflight. Do not deploy production from this checklist state.
