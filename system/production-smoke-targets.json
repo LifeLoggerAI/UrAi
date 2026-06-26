@@ -1,0 +1,96 @@
+{
+  "generatedAt": "2026-06-25T23:10:00-05:00",
+  "purpose": "Safe public URL smoke targets for production-lock evidence. These targets do not fetch private data and do not imply production readiness.",
+  "targets": [
+    {
+      "repo": "LifeLoggerAI/UrAi",
+      "name": "Canonical app custom domain root",
+      "url": "https://urai.app/",
+      "required": true,
+      "expectedStatus": 200,
+      "launchMode": "demo-only",
+      "markers": ["URAI"],
+      "notes": ["Required because the canonical public/demo app has a documented custom domain.", "Passing this target is URL reachability only, not production launch proof."]
+    },
+    {
+      "repo": "LifeLoggerAI/UrAi",
+      "name": "Canonical app Firebase root",
+      "url": "https://urai-4dc1d.web.app/",
+      "required": true,
+      "expectedStatus": 200,
+      "launchMode": "demo-only",
+      "markers": ["URAI"],
+      "notes": ["Required Firebase host smoke for the canonical public/demo app."]
+    },
+    {
+      "repo": "LifeLoggerAI/UrAi",
+      "name": "Canonical system status route",
+      "url": "https://urai.app/system",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "demo-only",
+      "markers": ["URAI release truth"],
+      "notes": ["Optional until a new deployment proves the /system route is live."]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-staging",
+      "name": "Staging proving ground root",
+      "url": "https://urai-staging.web.app/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "staging-only",
+      "markers": ["URAI"],
+      "notes": ["Optional in production smoke because staging cannot be production truth."]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-privacy",
+      "name": "Privacy custom domain root",
+      "url": "https://uraiprivacy.com/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "blocked",
+      "markers": ["privacy"],
+      "notes": ["Optional URL proof only; workflow/legal/privacy gates remain unproven."]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-jobs",
+      "name": "Jobs Firebase root",
+      "url": "https://urai-jobs.web.app/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "staging-only",
+      "markers": ["URAI-JOBS"],
+      "notes": ["Optional URL proof only; strict production evidence is incomplete."]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-admin",
+      "name": "Admin Firebase root",
+      "url": "https://urai-admin.web.app/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "blocked",
+      "markers": [],
+      "notes": ["Optional and expected to warn until admin live route proof exists."]
+    },
+    {
+      "repo": "LifeLoggerAI/asset-factory",
+      "name": "Asset Factory apex domain root",
+      "url": "https://uraiassetfactory.com/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "roadmap-only",
+      "markers": [],
+      "notes": ["Optional deferred-system smoke; user-derived artifact privacy and provider gates remain missing."]
+    },
+    {
+      "repo": "LifeLoggerAI/urai-foundation",
+      "name": "Foundation apex domain root",
+      "url": "https://uraifoundation.org/",
+      "required": false,
+      "expectedStatus": 200,
+      "launchMode": "demo-only",
+      "markers": [],
+      "notes": ["Optional external governance-surface URL proof only."]
+    }
+  ]
+}
