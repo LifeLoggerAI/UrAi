@@ -42,7 +42,7 @@ export default function LaunchPage() {
             <a href="#waitlist" className="rounded-full bg-white/[0.08] px-5 py-3 text-sm text-white/74">Join Waitlist</a>
             <Link href="/system" className="rounded-full bg-amber-200/[0.12] px-5 py-3 text-sm text-amber-50">System Status</Link>
           </div>
-          <p className="mt-4 text-xs leading-5 text-white/42">The public demo uses sample data. It shows how URAI feels without exposing anyone's private life or claiming production readiness.</p>
+          <p className="mt-4 text-xs leading-5 text-white/42">The public demo uses sample data. It shows how URAI feels without exposing anyone&apos;s private life or claiming production readiness.</p>
         </div>
         <div id="waitlist">
           <WaitlistCapture source="launch" />
