@@ -1,5 +1,7 @@
 # URAI Master Completion Prompt
 
+Launch evidence caveat, added 2026-06-26: this is a future-scope prompt template, not a statement of current implementation or production readiness. Any capability named here is roadmap-only unless proven by current code, tests, deploy logs, screenshots, and live smoke evidence.
+
 Copy and paste this prompt into a new AI session when you want URAI fully audited, finished, architected, expanded, and productionized.
 
 ---

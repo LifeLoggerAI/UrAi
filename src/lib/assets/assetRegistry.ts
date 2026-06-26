@@ -20,8 +20,8 @@ export const assetRegistry = {
   },
   audio: {
     // UI Interaction Sounds
-    uiClick: '/assets/audio/ui-click.mp3',
-    uiHover: '/assets/audio/ui-hover.mp3',
-    orbActivate: '/assets/audio/orb-activate.mp3',
+    uiClick: '/assets/audio/ui-click.wav',
+    uiHover: '/assets/audio/ui-hover.wav',
+    orbActivate: '/assets/audio/orb-activate.wav',
   },
 };

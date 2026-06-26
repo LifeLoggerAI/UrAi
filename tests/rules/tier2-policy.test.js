@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const rulesPath = path.resolve(__dirname, '../../firestore.rules');
-const rules = fs.readFileSync(rulesPath, 'utf8');
+const rules = fs.readFileSync(rulesPath, 'utf8').replace(/\r\n/g, '\n');
 
 function expectRuleBlock(name) {
   expect(rules).toContain(name);

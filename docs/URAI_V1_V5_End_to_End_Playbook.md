@@ -1,13 +1,15 @@
 # URAI v5 – End-to-End Completion Playbook (Versions 1–5)
 
-This playbook codifies the complete path for delivering the URAI experience across five product versions with zero stubs, production-ready polish, and full launch readiness. It blends execution guidance, code-level direction, safety checks, and launch collateral so each version can ship as a self-contained milestone.
+Launch evidence caveat, added 2026-06-26: this is a roadmap playbook, not current launch proof. Any capability described here remains gated until backed by current code, tests, deploy logs, screenshots, and live smoke evidence.
+
+This playbook codifies a possible path for delivering the URAI experience across five product versions. It blends execution guidance, code-level direction, safety checks, and launch collateral so each version can be evaluated as a self-contained milestone.
 
 ---
 
 ## 🎯 North Star
 - Deliver a cinematic, emotionally intelligent “mirror” that transforms user memories into insights, rituals, dashboards, and story experiences.
 - Maintain privacy, safety, and performance guardrails from day one.
-- Reach Version 5 with all five pillars production-ready: Narrator Memory Engine, Symbolic Journey Map, Insight Marketplace & Ritual Library, Pro User Dashboard & Export Hub, and Narrator Story Mode.
+- Roadmap target: reach Version 5 with all five pillars independently evidenced before any production-ready claim.
 
 ---
 
@@ -21,7 +23,7 @@ This playbook codifies the complete path for delivering the URAI experience acro
 | **V4 – Monetization & Community** | Stripe payments, paid marketplace, referral loop, creator CMS alpha (internal) | Purchase latency < 5s; refund path works; moderation log ready | Sandbox purchase unlocks ritual; fraud/rate limiting logged | Pricing page, refund policy, creator outreach kit |
 | **V5 – Five Pillars Polished** | All pillars at GA polish, AA accessibility, localization scaffolding, press/investor-ready | Crash-free > 99%, p95 < 2.5 s, exports < 60 s; rollback rehearsed | Full regression, golden screenshots, audio timing, load test | 15s teaser + 60s demo, press deck, investor kit, store assets |
 
-Each version is frozen to the defined scope. Bugs do not roll forward—every milestone must be demoable and production-ready.
+Each version is frozen to the defined scope. Bugs do not roll forward; every milestone must be demoable and must pass evidence gates before it can be called production-ready.
 
 ---
 

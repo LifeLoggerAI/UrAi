@@ -13,8 +13,8 @@ const optionalAssets = [
   "public/assets/genesis/portals/shadow-portal.png",
   "public/assets/genesis/portals/legacy-portal.png",
   "public/assets/genesis/portals/passport-portal.png",
-  "public/assets/audio/voice/genesis/orb/tap.mp3",
-  "public/assets/audio/genesis/orb/orb-wake.mp3",
+  "public/assets/audio/voice/genesis/orb/tap.wav",
+  "public/assets/audio/genesis/orb/orb-wake.wav",
 ];
 
 const missingCritical = criticalAssets.filter((asset) => !fs.existsSync(path.resolve(asset)));
