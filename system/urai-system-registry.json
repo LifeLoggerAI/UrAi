@@ -214,7 +214,7 @@
         "rollbackEvidence": null,
         "monitoringEvidence": null,
         "privacyGateEvidence": null,
-        "blockingReasons": ["No current deploy log/release SHA was recorded in this pass.", "No rollback drill evidence was recorded.", "No monitoring/alert evidence was recorded.", "Async jobs may process user-derived data and require privacy gate evidence before production claim."]
+        "blockingReasons": ["No current deploy log/release SHA was recorded in this pass.", "No rollback drill evidence was recorded.", "No monitoring/alert evidence was recorded.", "Async jobs are gated because user-derived data processing requires privacy gate evidence before production eligibility."]
       }
     },
     {

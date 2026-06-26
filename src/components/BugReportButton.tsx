@@ -65,7 +65,7 @@ export default function BugReportButton() {
       case "idle":
         return "Report a bug";
       case "sending":
-        return "Sending…";
+        return "Sending...";
       case "success":
         return "Thanks for the report";
       case "error":
@@ -85,7 +85,7 @@ export default function BugReportButton() {
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Bug inbox offline here — email press@urai.app and we’ll jump in.");
+      setErrorMessage("Bug inbox is offline here. Email press@urai.app and we will jump in.");
       setState("error");
       return;
     }
@@ -112,7 +112,7 @@ export default function BugReportButton() {
     } catch (error) {
       console.error("Bug report failed", error);
       setState("error");
-      setErrorMessage("Couldn’t capture that. Ping press@urai.app instead.");
+      setErrorMessage("Could not capture that. Ping press@urai.app instead.");
     }
   };
 
@@ -124,16 +124,16 @@ export default function BugReportButton() {
         <AlertTriangle className="h-5 w-5 text-amber-300" aria-hidden="true" />
         <div className="font-semibold">Something feel off?</div>
       </div>
-      <p className="mt-1 text-xs text-white/50">
-        The console log and device info attach automatically so we can squash it fast.
+      <p className="mt-1 text-xs leading-5 text-white/50">
+        The console log and device info attach only when bug intake is configured and you submit a report.
       </p>
 
       {!isFirebaseConfigured ? (
-        <p className="mt-4 text-xs text-amber-300">
+        <p className="mt-4 text-xs leading-6 text-amber-300">
           Bug intake is paused here. Email
           <a
             href="mailto:press@urai.app"
-            className="mx-1 underline decoration-dashed underline-offset-4"
+            className="mx-1 inline-flex min-h-8 items-center rounded-full px-1 font-semibold underline decoration-dashed underline-offset-4"
           >
             press@urai.app
           </a>
@@ -186,7 +186,7 @@ export default function BugReportButton() {
                       disabled={state === "sending"}
                       className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/40 disabled:text-black/60"
                     >
-                      {state === "sending" ? "Uploading…" : "Send bug"}
+                      {state === "sending" ? "Uploading..." : "Send bug"}
                     </button>
                   </div>
                 </>
@@ -209,7 +209,7 @@ export default function BugReportButton() {
               {buttonLabel}
             </button>
             {state === "success" ? (
-              <span className="text-emerald-300">We’ll follow up shortly.</span>
+              <span className="text-emerald-300">We will follow up shortly.</span>
             ) : null}
           </div>
         </>

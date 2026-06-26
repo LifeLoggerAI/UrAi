@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             URAI is designed to make patterns visible without making your private life public. The Life Map should remain symbolic, consent-aware, and reversible.
           </p>
           <p className="text-sm leading-relaxed text-white/55">
-            For the broader URAI trust center, visit <a href="https://uraiprivacy.com" className="text-white underline underline-offset-4">URAI Privacy</a>.
+            For the broader URAI trust center, visit <a href="https://uraiprivacy.com" className="inline-flex min-h-9 items-center rounded-full text-white underline underline-offset-4">URAI Privacy</a>.
           </p>
         </header>
 
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
         </section>
 
         <section className="mt-6 rounded-[2rem] border border-cyan-200/10 bg-cyan-100/[0.035] p-6">
-          <h2 className="text-xl font-semibold">Controls every account should have</h2>
+          <h2 className="text-xl font-semibold">Controls required before private-account launch</h2>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {controls.map((control) => (
               <div key={control} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white/70">
@@ -80,7 +80,7 @@ export default function PrivacyPage() {
             URAI insights are reflective AI patterns. They are not medical, legal, or clinical determinations. When a signal looks sensitive, the interface should slow down, summarize gently, and point users toward real support.
           </p>
           <p className="mt-4">
-            Questions? <a href="mailto:privacy@urai.app" className="text-white underline underline-offset-4">privacy@urai.app</a>
+            Questions? <a href="mailto:privacy@urai.app" className="inline-flex min-h-9 items-center rounded-full text-white underline underline-offset-4">privacy@urai.app</a>
           </p>
         </section>
       </div>

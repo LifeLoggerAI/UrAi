@@ -132,7 +132,7 @@ export function UraiOnboardingFlow({ isOpen, onComplete, onSkip, onOpenPassport,
                         </button>
                     ))}
                 </div>
-                <button type="button" onClick={() => { onboarding.skipOnboarding(); onSkip(); }} className="mt-5 text-xs text-white/42 underline-offset-4 hover:text-white/66 hover:underline">Skip onboarding</button>
+                <button type="button" onClick={() => { onboarding.skipOnboarding(); onSkip(); }} className="mt-5 inline-flex min-h-9 items-center rounded-full px-1 text-xs text-white/42 underline-offset-4 hover:text-white/66 hover:underline">Skip onboarding</button>
             </div>
         );
     }

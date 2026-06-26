@@ -12,7 +12,7 @@ export default function DashboardGatePage() {
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/75">Gated surface</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">Dashboard access is not public yet.</h1>
         <p className="mt-5 max-w-2xl text-base leading-7 text-white/68">
-          The URAI dashboard will require private account, consent, export/delete, retention, and admin-audit evidence before it becomes a live user surface. For launch, use the public demo and waitlist only.
+          The URAI dashboard is a gated future private-account surface. Consent, export/delete, retention, and admin-audit evidence must pass before public launch use; for Genesis, use the public demo and waitlist only.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/" className="rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950">Return to demo</Link>

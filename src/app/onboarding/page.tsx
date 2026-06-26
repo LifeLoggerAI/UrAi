@@ -32,14 +32,14 @@ export default function OnboardingPage() {
         <div className="absolute left-1/2 top-20 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-300/10 blur-3xl" />
 
         <nav className="flex items-center justify-between text-sm text-white/70">
-          <Link href="/" className="font-semibold uppercase tracking-[0.35em] text-white">
+          <Link href="/" className="inline-flex min-h-9 items-center rounded-full font-semibold uppercase tracking-[0.35em] text-white">
             URAI
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/privacy" className="transition hover:text-white">
+            <Link href="/privacy" className="inline-flex min-h-9 items-center rounded-full transition hover:text-white">
               Privacy
             </Link>
-            <Link href="/system" className="transition hover:text-white">
+            <Link href="/system" className="inline-flex min-h-9 items-center rounded-full transition hover:text-white">
               System status
             </Link>
           </div>
@@ -54,7 +54,7 @@ export default function OnboardingPage() {
               Begin with consent, then build the life map.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
-              URAI starts from a simple rule: private life data should stay under user control. This launch path brings people into the app without pretending unfinished sensing, generated media, or automation systems are already live.
+              URAI starts from a simple rule: private life data should stay under user control. This launch path brings people into the app while unfinished sensing, generated media, and automation systems stay clearly gated.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link

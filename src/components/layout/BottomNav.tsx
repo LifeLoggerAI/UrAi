@@ -9,7 +9,7 @@ const BottomNav = () => {
   return (
     <nav
       aria-label="Primary URAI navigation"
-      className="fixed inset-x-3 bottom-3 z-50 mx-auto flex h-16 max-w-3xl items-center justify-around rounded-[2rem] border border-white/10 bg-black/70 px-4 shadow-2xl shadow-black/50 backdrop-blur-xl sm:bottom-5 sm:h-18"
+      className="sticky bottom-3 z-40 mx-auto mb-3 mt-8 flex h-16 w-[calc(100%-1.5rem)] max-w-3xl items-center justify-around rounded-[2rem] border border-white/10 bg-black/78 px-4 shadow-2xl shadow-black/50 backdrop-blur-xl sm:bottom-5 sm:mb-5"
     >
       <Link href="/home" className={itemClass}>
         <Home className="h-5 w-5" />

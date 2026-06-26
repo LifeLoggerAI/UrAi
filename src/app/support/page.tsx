@@ -11,15 +11,15 @@ const supportSections = [
     items: [
       {
         label: "Is URAI therapy?",
-        body: "Nope. It’s a reflective tool. We prompt for licensed help whenever things feel clinical.",
+        body: "No. URAI is a reflective demo surface, not therapy, diagnosis, emergency support, or clinical care.",
       },
       {
         label: "Do I need to log anything?",
-        body: "No manual tracking. URAI relies on passive signals and annotations you approve.",
+        body: "No manual tracking is required for the public demo. Sensitive passive signals remain gated until consent, privacy, export/delete, and live evidence requirements are proven.",
       },
       {
         label: "Can I export or delete my data?",
-        body: "Yes. Every account has a one-tap export + delete flow under Profile → Privacy.",
+        body: "Export and delete controls are required before private account features can be claimed live. The public demo keeps those flows gated until verified.",
       },
     ],
   },
@@ -39,10 +39,10 @@ export default function SupportPage() {
       <div className="mx-auto max-w-4xl space-y-12 px-6 pb-24 pt-20">
         <header className="space-y-4 text-balance">
           <p className="text-sm uppercase tracking-[0.35em] text-white/50">Support</p>
-          <h1 className="text-3xl font-semibold sm:text-4xl">We’re here to help</h1>
+          <h1 className="text-3xl font-semibold sm:text-4xl">We are here to help</h1>
           <p className="text-base leading-relaxed text-white/60">
-            If you’re seeing something off, have privacy questions, or want onboarding support, drop us a note.
-            We reply within 24 hours (often much faster during launch week).
+            If you are seeing something off, have privacy questions, or want onboarding support, drop us a note.
+            Public-demo support is human-reviewed and does not make gated systems live.
           </p>
         </header>
 
@@ -66,7 +66,7 @@ export default function SupportPage() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-white underline decoration-dashed underline-offset-4 hover:decoration-solid"
+                        className="inline-flex min-h-9 items-center rounded-full text-white underline decoration-dashed underline-offset-4 hover:decoration-solid"
                       >
                         {link.label}
                       </Link>
@@ -82,11 +82,10 @@ export default function SupportPage() {
           <h2 className="text-lg font-semibold text-white">Need a human?</h2>
           <p className="mt-2">
             Email
-            <a href="mailto:press@urai.app" className="text-white underline underline-offset-4">
-              {" "}
+            <a href="mailto:press@urai.app" className="mx-1 inline-flex min-h-9 items-center rounded-full text-white underline underline-offset-4">
               press@urai.app
             </a>
-            {" "}or DM @urai on X. For enterprise pilots, reply with “pilot” and we’ll send the setup doc.
+            for launch support or urgent corrections.
           </p>
         </section>
       </div>

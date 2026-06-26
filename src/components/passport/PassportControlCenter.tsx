@@ -1,10 +1,10 @@
 
 'use client';
 
-import { useUraiPassport } from '../../providers/UraiPassportProvider';
 import { PassportLayerGroup } from './PassportLayerGroup';
 import { PassportStatusSummary } from './PassportStatusSummary';
 import { PassportLayerId } from '../../lib/passport';
+import './Passport.css';
 
 const CORE_REFLECTION_LAYERS: PassportLayerId[] = ['lifemap', 'ground', 'mirror', 'intelligence', 'companion_context'];
 const PROTECTED_LAYERS: PassportLayerId[] = ['shadow', 'legacy', 'export'];
@@ -13,13 +13,16 @@ const EXPERIENCE_LAYERS: PassportLayerId[] = ['notifications', 'spatial', 'syste
 const ADMIN_LAYERS: PassportLayerId[] = ['admin'];
 
 export const PassportControlCenter = () => {
-  const { passportState } = useUraiPassport();
-
   return (
-    <div>
-      <h1>Passport</h1>
-      <p>URAI only opens what you choose.</p>
-      <p>Passport is your control surface for what URAI can use. Closed layers remain closed until you choose otherwise.</p>
+    <main className="passport-shell">
+      <section className="passport-hero">
+        <p className="passport-eyebrow">Consent passport</p>
+        <h1>Passport</h1>
+        <p className="passport-lede">URAI only opens what you choose.</p>
+        <p className="passport-copy">
+          Passport is your control surface for what URAI can use. Closed layers remain closed until you choose otherwise.
+        </p>
+      </section>
 
       <PassportStatusSummary />
 
@@ -28,6 +31,6 @@ export const PassportControlCenter = () => {
       <PassportLayerGroup title="Passive Sources" layerIds={PASSIVE_SOURCES_LAYERS} description="Opening a layer here does not start collection. It only records your Passport preference." />
       <PassportLayerGroup title="Experience" layerIds={EXPERIENCE_LAYERS} />
       <PassportLayerGroup title="Admin" layerIds={ADMIN_LAYERS} />
-    </div>
+    </main>
   );
 };

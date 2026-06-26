@@ -5,9 +5,9 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 const PLACEHOLDER_EXAMPLES = [
-  "Tell us where the flow felt rough…",
-  "Flag a confusing screen or a broken link…",
-  "Request a feature for your next daily recap…",
+  "Tell us where the flow felt rough...",
+  "Flag a confusing screen or a broken link...",
+  "Request a feature for your next daily recap...",
 ];
 
 export default function FeedbackBox() {
@@ -32,7 +32,7 @@ export default function FeedbackBox() {
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Feedback inbox is offline — ping press@urai.app while we bring it back.");
+      setErrorMessage("Feedback inbox is offline. Email press@urai.app while we bring it back.");
       setStatus("error");
       return;
     }
@@ -55,7 +55,7 @@ export default function FeedbackBox() {
     } catch (error) {
       console.error("Failed to send feedback", error);
       setStatus("error");
-      setErrorMessage("Couldn’t save that. Try again or email press@urai.app.");
+      setErrorMessage("Could not save that. Try again or email press@urai.app.");
     }
   };
 
@@ -64,20 +64,20 @@ export default function FeedbackBox() {
       <div className="mb-4 space-y-1">
         <h3 className="text-lg font-semibold text-white">Have notes for URAI?</h3>
         <p className="text-sm text-white/60">
-          We’re shipping daily. Leave a thought, bug, or wish and we’ll reply within 24h.
+          We are shipping daily. Leave a thought, bug, or wish and we will reply within 24h.
         </p>
       </div>
 
       {!isFirebaseConfigured ? (
-        <p className="text-sm text-amber-200">
-          Feedback capture is paused because Firebase isn’t configured in this environment. Email
+        <p className="text-sm leading-6 text-amber-200">
+          Feedback capture is paused because Firebase is not configured in this environment. Email
           <a
             href="mailto:press@urai.app"
-            className="ml-1 underline decoration-dashed underline-offset-4"
+            className="mx-1 inline-flex min-h-8 items-center rounded-full px-1 font-semibold underline decoration-dashed underline-offset-4"
           >
             press@urai.app
           </a>
-          {" "}with anything urgent.
+          with anything urgent.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -120,12 +120,12 @@ export default function FeedbackBox() {
               disabled={status === "submitting"}
               className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/40 disabled:text-black/60"
             >
-              {status === "submitting" ? "Sending…" : "Send feedback"}
+              {status === "submitting" ? "Sending..." : "Send feedback"}
             </button>
           </div>
 
           {status === "success" ? (
-            <p className="text-sm text-emerald-300">Got it. We’ll review it today.</p>
+            <p className="text-sm text-emerald-300">Got it. We will review it today.</p>
           ) : null}
           {status === "error" && errorMessage ? (
             <p className="text-sm text-rose-300">{errorMessage}</p>

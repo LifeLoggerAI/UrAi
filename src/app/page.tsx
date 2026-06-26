@@ -89,7 +89,7 @@ export default function RootPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-100/70">Launch-safe paths</p>
               <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-white">Every primary action goes somewhere real.</h2>
             </div>
-            <Link href="/privacy" className="text-sm font-semibold text-cyan-100 underline underline-offset-4">
+            <Link href="/privacy" className="inline-flex min-h-9 items-center rounded-full text-sm font-semibold text-cyan-100 underline underline-offset-4">
               Review privacy posture
             </Link>
           </div>
@@ -110,10 +110,10 @@ export default function RootPage() {
           </p>
         </section>
 
-        <footer className="mt-8 flex flex-wrap gap-4 text-sm text-white/50">
-          <Link href="/privacy" className="hover:text-white">Privacy</Link>
-          <Link href="/terms" className="hover:text-white">Terms</Link>
-          <Link href="/system" className="hover:text-white">System status</Link>
+        <footer className="mt-8 flex flex-wrap gap-3 text-sm text-white/50">
+          <Link href="/privacy" className="inline-flex min-h-9 items-center rounded-full px-1 hover:text-white">Privacy</Link>
+          <Link href="/terms" className="inline-flex min-h-9 items-center rounded-full px-1 hover:text-white">Terms</Link>
+          <Link href="/system" className="inline-flex min-h-9 items-center rounded-full px-1 hover:text-white">System status</Link>
         </footer>
       </section>
     </main>

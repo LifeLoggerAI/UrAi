@@ -8,7 +8,8 @@ Primary repository: `LifeLoggerAI/UrAi`
 
 - GitHub write access to `LifeLoggerAI/UrAi`.
 - Firebase CLI authenticated against the production Firebase project.
-- Permission to deploy Hosting, Functions, Firestore rules, Firestore indexes, and Storage rules.
+- Permission to deploy Hosting, Firestore rules, Firestore indexes, and Storage rules.
+- Functions remain gated for Genesis and must not be deployed until their package/import blockers are fixed and independently verified.
 - DNS access for `urai.app` / `www.urai.app` if domain verification or records need updates.
 
 ## Pre-deploy verification
@@ -24,15 +25,6 @@ npm run lint
 npm run test:unit
 npm run test:rules
 npm run build
-```
-
-Run Functions verification:
-
-```bash
-cd functions
-npm install
-npm run build
-cd ..
 ```
 
 Run browser smoke coverage when Chromium is available:
@@ -54,15 +46,13 @@ Verify the preview URL with the post-deploy checklist.
 
 ## Production deploy
 
-Deploy Firebase surfaces in this order:
+Deploy only the Genesis-approved Firebase surfaces:
 
 ```bash
-firebase deploy --only firestore:rules,firestore:indexes,storage
-firebase deploy --only functions
-firebase deploy --only hosting:urai-4dc1d
+npm exec --yes firebase-tools -- deploy --project urai-4dc1d --config firebase.json --only firestore:rules,firestore:indexes,storage,hosting
 ```
 
-If the Firebase CLI target alias is configured differently, use the existing project alias rather than creating a new site.
+Do not deploy Functions as part of the Genesis launch. If the Firebase CLI target alias is configured differently, use the existing project alias rather than creating a new site.
 
 ## Post-deploy checks
 
@@ -79,7 +69,7 @@ Then manually verify:
 - `https://www.urai.app/status`
 - `https://www.urai.app/privacy`
 - `https://www.urai.app/terms`
-- Firebase Function health check endpoint for `healthCheck`.
+- Functions are intentionally gated and are not part of Genesis live smoke evidence.
 
 ## Launch criteria
 
@@ -88,7 +78,7 @@ Production is ready only when:
 - All validation commands pass.
 - Hosting serves the current build.
 - Firestore and Storage rules are deployed.
-- Functions compile and deploy.
+- Functions remain gated until package/import blockers are fixed, tests pass, and a separate deploy/smoke record exists.
 - DNS resolves `www.urai.app` to Firebase Hosting.
 - No secrets are committed.
 - Demo mode works without privileged credentials.

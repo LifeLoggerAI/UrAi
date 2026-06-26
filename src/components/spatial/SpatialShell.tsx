@@ -25,11 +25,11 @@ export default function SpatialShell({ mode }: SpatialShellProps) {
           <span>Status: {readiness.status}</span>
         </div>
         <nav className="spatial-links" aria-label="Spatial routes">
-          <Link href="/spatial">Home</Link>
-          <Link href="/spatial/demo">Demo</Link>
-          <Link href="/spatial/settings">Consent</Link>
-          <Link href="/spatial/assets">Assets</Link>
-          <Link href="/api/spatial/health">Health API</Link>
+          <Link className="inline-flex min-h-9 items-center rounded-full px-2" href="/spatial">Home</Link>
+          <Link className="inline-flex min-h-9 items-center rounded-full px-2" href="/spatial/demo">Demo</Link>
+          <Link className="inline-flex min-h-9 items-center rounded-full px-2" href="/spatial/settings">Consent</Link>
+          <Link className="inline-flex min-h-9 items-center rounded-full px-2" href="/spatial/assets">Assets</Link>
+          <Link className="inline-flex min-h-9 items-center rounded-full px-2" href="/api/spatial/health">Health API</Link>
         </nav>
       </section>
 

@@ -21,7 +21,7 @@ export default async function MemoryPage({ params }: MemoryPageProps) {
         <p className="mb-4 text-sm font-semibold uppercase tracking-[0.32em] text-cyan-300">Memory Bloom</p>
         <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">Memory Star opened.</h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-          This route opens a launch-safe Memory Bloom shell for <span className="font-semibold text-cyan-100">{id}</span>. Full private memory content remains owner-only and should be loaded only after auth and Firestore rules verification.
+          This preview route opens a launch-safe Memory Bloom shell for <span className="font-semibold text-cyan-100">{id}</span>. Full private memory content remains owner-only and should be loaded only after auth and Firestore rules verification.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link className="rounded-full border border-cyan-300/40 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100" href="/life-map">

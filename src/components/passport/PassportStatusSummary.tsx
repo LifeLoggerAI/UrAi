@@ -11,11 +11,20 @@ export const PassportStatusSummary = () => {
   const blockedLayers = Object.values(passportState).filter(status => status === 'blocked').length;
 
   return (
-    <div>
-      <p>Open layers: {openLayers}</p>
-      <p>Closed layers: {closedLayers}</p>
-      <p>Blocked layers: {blockedLayers}</p>
-      <p>Closed layers stay closed until you open them.</p>
+    <div className="passport-status-summary">
+      <div>
+        <span>{openLayers}</span>
+        <p>Open layers</p>
+      </div>
+      <div>
+        <span>{closedLayers}</span>
+        <p>Closed layers</p>
+      </div>
+      <div>
+        <span>{blockedLayers}</span>
+        <p>Blocked layers</p>
+      </div>
+      <p className="passport-status-note">Closed layers stay closed until you open them.</p>
     </div>
   );
 };

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function LaunchPage() {
   const genesisWorld = [
     ["The Orb", "A calm demo doorway for seeing how URAI explains what is sample, private, or gated."],
-    ["Life Map", "A symbolic sky of chosen demo moments, not a live passive memory feed."],
+    ["Life Map", "A symbolic sky of chosen demo moments, not an active passive memory feed."],
     ["Ground", "A roadmap metaphor for real-life context that remains gated until evidence is complete."],
     ["Mirror", "Gentle pattern reflection without diagnosis, verdicts, or medical claims."],
     ["Passport", "The planned permission model for controlling what opens, exports, or stays closed."],
