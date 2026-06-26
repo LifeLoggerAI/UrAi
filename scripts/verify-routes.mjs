@@ -3,7 +3,7 @@ import fs from "node:fs";
 const routes = [
   ["/", "src/app/page.tsx"],
   ["/demo", "src/app/demo/page.tsx"],
-  ["/u/adamclamp", "src/app/u/[slug]/page.tsx"],
+  ["/u/adamclamp", "src/app/u/[handle]/page.tsx"],
   ["/launch", "src/app/launch/page.tsx"],
   ["/admin", "src/app/admin/page.tsx"],
   ["/api/companion/respond", "src/app/api/companion/respond/route.ts"],
