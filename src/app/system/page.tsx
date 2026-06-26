@@ -48,12 +48,12 @@ export default function SystemPage() {
             This route is backed by the canonical registry and shows launch mode, production eligibility, DNS/SSL proof, smoke evidence, rollback evidence, monitoring evidence, privacy gate evidence, and blockers. It makes no network calls and fetches no private data.
           </p>
           <div className="mt-5 flex flex-wrap gap-3 text-sm">
-            <Link className="rounded-md border border-cyan-200/20 bg-cyan-200/[0.08] px-3 py-2 text-cyan-50 hover:bg-cyan-200/[0.14]" href="/docs/PRODUCTION_LOCK.md">
+            <a className="rounded-md border border-cyan-200/20 bg-cyan-200/[0.08] px-3 py-2 text-cyan-50 hover:bg-cyan-200/[0.14]" href="https://github.com/LifeLoggerAI/UrAi/blob/main/docs/PRODUCTION_LOCK.md">
               Production lock docs
-            </Link>
-            <Link className="rounded-md border border-white/10 bg-white/[0.055] px-3 py-2 text-white/76 hover:bg-white/10" href="/docs/PRIVACY_RELEASE_GATE_EVIDENCE.md">
+            </a>
+            <a className="rounded-md border border-white/10 bg-white/[0.055] px-3 py-2 text-white/76 hover:bg-white/10" href="https://github.com/LifeLoggerAI/UrAi/blob/main/docs/PRIVACY_RELEASE_GATE_EVIDENCE.md">
               Privacy gate evidence
-            </Link>
+            </a>
           </div>
         </div>
 
