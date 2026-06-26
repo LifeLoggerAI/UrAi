@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata = {
-  title: "Privacy | UrAi",
-  description: "UrAi privacy controls, data rights, consent boundaries, and reflective safety posture.",
+export const metadata: Metadata = {
+  title: "Privacy | URAI",
+  description: "URAI privacy posture for the public demo: consent boundaries, data rights, export/delete expectations, and reflective safety limits.",
+  alternates: { canonical: "/privacy" },
+  openGraph: {
+    title: "Privacy | URAI",
+    description: "Consent, data-rights, and safety boundaries for the URAI public demo.",
+    url: "/privacy",
+    images: [{ url: "/og/urai-public-demo.svg", width: 1200, height: 630, alt: "URAI privacy posture" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy | URAI",
+    description: "Consent, data-rights, and safety boundaries for the URAI public demo.",
+    images: ["/og/urai-public-demo.svg"],
+  },
 };
 
 const principles = [
