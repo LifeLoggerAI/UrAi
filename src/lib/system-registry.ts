@@ -22,9 +22,36 @@ export type StagingEvidenceState =
   | "blocked"
   | "deferred";
 
+export type LaunchMode =
+  | "production"
+  | "public-demo"
+  | "staging-only"
+  | "demo-only"
+  | "roadmap-only"
+  | "blocked"
+  | "legacy-archive"
+  | "sandbox-only";
+
 export type ProductionEvidence = {
   type: string;
   details: string[];
+};
+
+export type ProductionLock = {
+  eligibleForLaunch: boolean;
+  launchMode: LaunchMode;
+  productionUrl: string | null;
+  stagingUrl: string | null;
+  customDomains: string[];
+  firebaseProject: string | null;
+  dnsVerified: boolean;
+  sslVerified: boolean;
+  deployEvidence: string | null;
+  smokeEvidence: string | null;
+  rollbackEvidence: string | null;
+  monitoringEvidence: string | null;
+  privacyGateEvidence: string | null;
+  blockingReasons: string[];
 };
 
 export type SystemRepo = {
@@ -39,6 +66,7 @@ export type SystemRepo = {
   blocks: string[];
   evidenceRequired: string[];
   productionEvidence?: ProductionEvidence;
+  productionLock: ProductionLock;
   notes: string[];
 };
 
@@ -108,7 +136,15 @@ export function validateSystemRegistryShape(candidate: SystemRegistry = registry
       candidate.stagingRepo === "LifeLoggerAI/urai-staging" &&
       candidate.privacyGateRepo === "LifeLoggerAI/urai-privacy" &&
       Array.isArray(candidate.repos) &&
-      candidate.repos.every((repo) => repo.name && repo.classification && typeof repo.canUseInV1 === "boolean"),
+      candidate.repos.every(
+        (repo) =>
+          repo.name &&
+          repo.classification &&
+          typeof repo.canUseInV1 === "boolean" &&
+          repo.productionLock &&
+          typeof repo.productionLock.eligibleForLaunch === "boolean" &&
+          typeof repo.productionLock.launchMode === "string",
+      ),
   );
 }
 
@@ -157,11 +193,15 @@ export function getRoadmapOnlyRepos() {
 }
 
 export function getBlockedRepos() {
-  return registry.repos.filter((repo) => repo.classification === "blocked" || repo.status.toLowerCase().includes("blocked"));
+  return registry.repos.filter((repo) => repo.classification === "blocked" || repo.status.toLowerCase().includes("blocked") || repo.productionLock.launchMode === "blocked");
 }
 
 export function getProductionClaimableRepos() {
-  return registry.repos.filter((repo) => repo.canClaimProduction && repo.productionEvidence);
+  return registry.repos.filter((repo) => repo.productionLock.launchMode === "production" && repo.canClaimProduction && repo.productionLock.eligibleForLaunch);
+}
+
+export function getLaunchEligibleRepos() {
+  return registry.repos.filter((repo) => repo.productionLock.eligibleForLaunch);
 }
 
 export function requiresPrivacyGate(repo: SystemRepo) {
@@ -169,9 +209,13 @@ export function requiresPrivacyGate(repo: SystemRepo) {
 }
 
 export function isRoadmapOnly(repo: SystemRepo) {
-  return !repo.canUseInV1 && !repo.canClaimProduction;
+  return repo.productionLock.launchMode === "roadmap-only" || (!repo.canUseInV1 && !repo.canClaimProduction);
 }
 
 export function isProductionEvidenceBacked(repo: SystemRepo) {
-  return repo.canClaimProduction && Boolean(repo.productionEvidence);
+  return repo.productionLock.launchMode === "production" && repo.canClaimProduction && repo.productionLock.eligibleForLaunch;
+}
+
+export function hasProductionBlockers(repo: SystemRepo) {
+  return repo.productionLock.blockingReasons.length > 0;
 }
