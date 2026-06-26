@@ -1,4 +1,5 @@
 import registryJson from "../../system/urai-system-registry.json";
+import smokeTargetsJson from "../../system/genesis-spine-smoke-targets.json";
 
 export type SystemClassification =
   | "canonical-product"
@@ -11,6 +12,15 @@ export type SystemClassification =
   | "internal-runtime"
   | "blocked"
   | "unknown";
+
+export type StagingEvidenceState =
+  | "not_checked"
+  | "local_passed"
+  | "staging_ready"
+  | "staging_deployed"
+  | "staging_smoke_passed"
+  | "blocked"
+  | "deferred";
 
 export type ProductionEvidence = {
   type: string;
@@ -40,7 +50,30 @@ export type SystemRegistry = {
   repos: SystemRepo[];
 };
 
+export type GenesisSmokeUrl = {
+  label: string;
+  url: string;
+  expectedStatus: number[];
+  required: boolean;
+  marker?: string;
+};
+
+export type GenesisSmokeTarget = {
+  repo: string;
+  evidenceState: StagingEvidenceState;
+  notes: string[];
+  urls: GenesisSmokeUrl[];
+};
+
+export type GenesisSmokeTargets = {
+  generatedAt: string;
+  purpose: string;
+  allowedStates: StagingEvidenceState[];
+  targets: GenesisSmokeTarget[];
+};
+
 const registry = registryJson as SystemRegistry;
+const smokeTargets = smokeTargetsJson as GenesisSmokeTargets;
 
 export const GENESIS_SPINE_REPOS = [
   "LifeLoggerAI/UrAi",
@@ -81,6 +114,22 @@ export function validateSystemRegistryShape(candidate: SystemRegistry = registry
 
 export function getSystemRegistry() {
   return registry;
+}
+
+export function getGenesisSmokeTargets() {
+  return smokeTargets;
+}
+
+export function getGenesisSmokeTarget(repoName: string) {
+  return smokeTargets.targets.find((target) => target.repo === repoName);
+}
+
+export function getStagingEvidenceState(repoName: string): StagingEvidenceState {
+  return getGenesisSmokeTarget(repoName)?.evidenceState ?? "not_checked";
+}
+
+export function getStagingEvidenceNotes(repoName: string) {
+  return getGenesisSmokeTarget(repoName)?.notes ?? [];
 }
 
 export function getCanonicalProductRepo() {
