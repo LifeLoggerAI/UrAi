@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "URAI Orb Companion",
-  description: "The URAI orb companion chamber for calm, privacy-safe reflection and guided return to the home world.",
+  description: "The URAI orb companion chamber for launch-safe reflection states and guided return to Genesis Home.",
 };
 
 export default function OchatPage() {
@@ -20,13 +20,13 @@ export default function OchatPage() {
         <p className="mt-8 text-xs font-semibold uppercase tracking-[0.36em] text-cyan-100/65">Orb companion</p>
         <h1 className="mt-4 max-w-3xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl">URAI is here without taking over.</h1>
         <p className="mt-5 max-w-2xl text-base leading-8 text-slate-200/75">
-          This chamber is the safe fallback for companion reflection. It only uses sourced, user-scoped state when connected, and stays calm when data is missing.
+          This chamber is the safe fallback for companion reflection. In Genesis, it shows polished preview states only; private memory access and provider-backed intelligence stay gated until proven.
         </p>
 
         <div className="mt-8 grid w-full gap-3 text-left sm:grid-cols-3">
           {[
             ["Privacy", "No raw private logs appear here."],
-            ["Fallback", "If live companion state is unavailable, the orb remains calm."],
+            ["Fallback", "If live companion state is unavailable, the orb remains calm and explicit."],
             ["Return", "The user can always unwind home."],
           ].map(([label, value]) => (
             <article key={label} className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 backdrop-blur-xl">
@@ -36,8 +36,23 @@ export default function OchatPage() {
           ))}
         </div>
 
+        <div className="mt-4 grid w-full gap-3 text-left sm:grid-cols-4">
+          {[
+            ["Empty", "No private messages loaded. Start remains gated."],
+            ["Loading", "Orb can wait without a permanent spinner."],
+            ["Disabled", "Provider chat stays locked until privacy proof."],
+            ["Error", "Errors resolve to calm fallback copy."],
+          ].map(([label, value]) => (
+            <article key={label} className="rounded-2xl border border-cyan-100/12 bg-cyan-100/[0.035] p-4">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-cyan-100/55">{label}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-100/70">{value}</p>
+            </article>
+          ))}
+        </div>
+
         <nav aria-label="Orb companion navigation" className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/home" className="rounded-full border border-cyan-100/30 bg-cyan-100/10 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-50">Return home</Link>
+          <Link href="/orb" className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-100">Orb identity</Link>
           <Link href="/life-map" className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.22em] text-slate-100">Open life map</Link>
         </nav>
       </section>

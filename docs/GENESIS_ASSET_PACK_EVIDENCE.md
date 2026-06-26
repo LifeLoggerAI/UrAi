@@ -60,11 +60,13 @@ Final QA evidence: `C:/tmp/urai-genesis-asset-pack-final-qa/report.json` with 70
 - Sample/preview visual cards and thumbnails can be shown as demo, preview, sample, fallback, or empty-state assets.
 - Optional ambient/UI audio placeholders are present and non-blocking when audio is unavailable.
 - Spatial/XR, narrator, memory film, replay, export, companion, and Council media surfaces are safe only as preview/gated/fallback surfaces in this pass.
+- Real branded launch videos are not proven present or wired. Current video inventory is limited to ambient sky/ground MP4 container assets that are not route-wired and were not proven browser-playable during selected metadata checks; route-specific onboarding, walkthrough, memory-film, narrator, privacy, and spatial videos remain gated until exported and verified. See `docs/URAI_REAL_VIDEO_ASSET_AUDIT.md` and `docs/VIDEO_ASSET_PRODUCTION_MANIFEST.md`.
 
 ## Claims Still Gated
 
 - Real user-generated life movies or private memory films.
 - Provider-backed production media generation.
+- Branded launch video loops, onboarding videos, product walkthroughs, memory-film preview clips, and spatial/XR preview videos until the files named in `docs/VIDEO_ASSET_PRODUCTION_MANIFEST.md` exist, are wired, and pass browser route QA.
 - AR/VR/XR worlds as live production systems.
 - Passive sensing or inferred private intelligence from user data.
 - Autonomous jobs, outbound communications, or monetized user-derived media flows.

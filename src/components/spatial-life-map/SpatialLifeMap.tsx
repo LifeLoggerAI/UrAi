@@ -8,6 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLifeMapData } from "./useLifeMapData";
 import { useGalaxyCamera } from "./useGalaxyCamera";
@@ -134,12 +135,12 @@ function FocusChamber({
         onClick={onClose}
         aria-label="Return to full galaxy"
       >
-        ×
+        x
       </button>
 
       <div className="spatial-focus-copy">
         <p>
-          {star.type.replace(/([A-Z])/g, " $1").trim()} · {star.archetype}
+          {star.type.replace(/([A-Z])/g, " $1").trim()} / {star.archetype}
         </p>
         <h2>{star.title}</h2>
         <span>{bloom?.whyThisMatters ?? star.narratorReflection}</span>
@@ -312,7 +313,7 @@ export default function SpatialLifeMap({
     camera.resetCamera();
 
     window.setTimeout(() => {
-      router.push("/");
+      router.push("/home");
     }, HOME_UNWIND_MS);
   }
 
@@ -409,11 +410,16 @@ export default function SpatialLifeMap({
         type="button"
         className="spatial-home-gate"
         onClick={returnHome}
-        aria-label="Return to the Inner Sky Shrine"
+        aria-label="Return to Genesis Home"
       >
-        <span>↩</span>
+        <span>&lt;</span>
         <strong>Home</strong>
       </button>
+
+      <nav className="spatial-route-gates" aria-label="Genesis route shortcuts">
+        <Link href="/focus">Open Focus</Link>
+        <Link href="/replay">Open Replay</Link>
+      </nav>
 
       <section className="spatial-stage" {...camera.bind}>
         {!sceneReady && (
@@ -440,7 +446,7 @@ export default function SpatialLifeMap({
       <header className="spatial-title-card">
         <p>
           {isReturningHome
-            ? "UNWINDING TO INNER SKY"
+            ? "UNWINDING TO GENESIS HOME"
             : mode === "galaxy"
               ? "URAI SPATIAL LIFE MAP"
               : mode === "focus"
@@ -460,12 +466,12 @@ export default function SpatialLifeMap({
 
         <span>
           {mode === "galaxy"
-            ? `${visibleStars.length} active stars · ${data.constellations.length} constellations · drag space · scroll to zoom · click a star · Esc returns home`
+            ? `${visibleStars.length} active stars / ${data.constellations.length} constellations / drag space / scroll to zoom / click a star / Esc returns home`
             : mode === "focus"
-              ? "Focus held · replay or open bloom · Esc returns to galaxy"
+              ? "Focus held / replay or open bloom / Esc returns to galaxy"
               : mode === "bloom"
-                ? "Symbolic bloom open · Esc returns to focus"
-                : "Spatial replay active · Esc returns to focus"}
+                ? "Symbolic bloom open / Esc returns to focus"
+                : "Spatial replay active / Esc returns to focus"}
         </span>
       </header>
 
@@ -549,7 +555,7 @@ export default function SpatialLifeMap({
               }}
             />
 
-            <p>REPLAY THREAD · SPATIALLY ANCHORED</p>
+            <p>REPLAY THREAD / SAMPLE MEMORY PREVIEW</p>
             <h2>{selectedStar.title}</h2>
             <span>
               {selectedReplayBloom?.narratorScript ??
@@ -575,7 +581,7 @@ export default function SpatialLifeMap({
       {isReturningHome && (
         <div className="spatial-return-veil" aria-live="polite">
           <div className="spatial-return-orb" />
-          <span>Returning to the Inner Sky Shrine</span>
+          <span>Returning to Genesis Home</span>
         </div>
       )}
     </main>

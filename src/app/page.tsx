@@ -41,7 +41,15 @@ const demoPromises = [
 ];
 
 const launchLinks = [
-  { href: "/life-map", label: "Open Life Map demo", note: "Symbolic demo surface" },
+  { href: "/home", label: "Enter Genesis home", note: "Cinematic demo entry" },
+  { href: "/life-map", label: "Open Life Map demo", note: "Symbolic memory map" },
+  { href: "/focus", label: "Enter Focus", note: "Reflection surface" },
+  { href: "/replay", label: "Open Replay", note: "Cinematic preview" },
+  { href: "/ground", label: "Touch Ground", note: "Calm preview" },
+  { href: "/orb", label: "Meet Orb", note: "Companion identity" },
+  { href: "/orb-chat", label: "Open Orb Chat", note: "Safe fallback" },
+  { href: "/sky", label: "Open Sky", note: "Reflection field" },
+  { href: "/horizon", label: "See Horizon", note: "Future-path preview" },
   { href: "/waitlist", label: "Join early access", note: "Real public CTA" },
   { href: "/system", label: "View system status", note: "Registry and production-lock truth" },
 ];
@@ -93,7 +101,7 @@ export default function RootPage() {
               Review privacy posture
             </Link>
           </div>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {launchLinks.map((item) => (
               <Link key={item.href} href={item.href} className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/72 hover:border-cyan-200/30 hover:bg-cyan-200/[0.06]">
                 <span className="block font-semibold text-white">{item.label}</span>

@@ -2,7 +2,7 @@ import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
   title: "URAI Focus",
-  description: "Focus mode inside the URAI life-map field.",
+  description: "A launch-safe Genesis focus preview inside the URAI Life Map field.",
 };
 
 export default function FocusPage() {

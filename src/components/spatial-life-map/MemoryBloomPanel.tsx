@@ -13,9 +13,9 @@ export default function MemoryBloomPanel({ star, bloom, onClose }: MemoryBloomPa
 
   return (
     <section className="spatial-memory-bloom" role="dialog" aria-modal="true" aria-label={`${star.title} memory bloom`}>
-      <button type="button" className="spatial-bloom-close" onClick={onClose} aria-label="Close memory bloom">×</button>
+      <button type="button" className="spatial-bloom-close" onClick={onClose} aria-label="Close memory bloom">x</button>
       <div className="spatial-bloom-orb" style={{ background: `radial-gradient(circle at 32% 26%, white, ${star.auraColor} 36%, #020617 78%)`, boxShadow: `0 0 80px ${star.auraColor}80` }} />
-      <p>{star.layer} · {star.archetype}</p>
+      <p>{star.layer} / {star.archetype}</p>
       <h2>{star.title}</h2>
       <h3>{star.emotionalTone}</h3>
       <blockquote>{bloom.narratorScript}</blockquote>
@@ -26,11 +26,11 @@ export default function MemoryBloomPanel({ star, bloom, onClose }: MemoryBloomPa
         </article>
         <article>
           <span>Timeline fragments</span>
-          <strong>{bloom.timelineFragments.join(" · ")}</strong>
+          <strong>{bloom.timelineFragments.join(" / ")}</strong>
         </article>
         <article>
           <span>Symbolic tags</span>
-          <strong>{bloom.symbolicTags.join(" · ")}</strong>
+          <strong>{bloom.symbolicTags.join(" / ")}</strong>
         </article>
         <article>
           <span>Ritual prompt</span>

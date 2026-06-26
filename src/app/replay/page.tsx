@@ -2,7 +2,7 @@ import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
   title: "URAI Replay",
-  description: "Replay mode inside the URAI life-map field.",
+  description: "A cinematic Genesis replay preview using sample memory-map state, not production generated user media.",
 };
 
 export default function ReplayPage() {

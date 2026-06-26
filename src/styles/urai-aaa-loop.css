@@ -273,6 +273,43 @@
   font-size: .95rem;
 }
 
+.spatial-route-gates {
+  position: fixed;
+  left: max(18px, env(safe-area-inset-left));
+  top: max(76px, calc(env(safe-area-inset-top) + 76px));
+  z-index: 74;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spatial-route-gates a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border: 1px solid rgba(220, 246, 255, .16);
+  border-radius: 999px;
+  padding: .64rem .9rem;
+  color: rgba(240,253,255,.92);
+  background: rgba(4, 10, 24, .58);
+  box-shadow: 0 18px 60px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(20px) saturate(1.16);
+  font-size: .78rem;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: transform .2s var(--urai-aaa-ease), border-color .2s ease, background .2s ease;
+}
+
+.spatial-route-gates a:hover,
+.spatial-route-gates a:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(220,246,255,.34);
+  background: rgba(10, 18, 40, .72);
+  outline: none;
+}
+
 .spatial-star-preview {
   z-index: 46 !important;
   top: max(106px, calc(env(safe-area-inset-top) + 106px)) !important;
@@ -474,6 +511,7 @@
 .spatial-life-map.return-returning .spatial-star-preview,
 .spatial-life-map.return-returning .spatial-controls,
 .spatial-life-map.return-returning .spatial-chapter-rail,
+.spatial-life-map.return-returning .spatial-route-gates,
 .spatial-life-map.return-returning .spatial-home-gate {
   opacity: .26 !important;
   filter: blur(2px) brightness(.62) !important;
@@ -524,6 +562,21 @@
     width: calc(100vw - 1rem) !important;
     overflow-x: auto;
     justify-content: flex-start;
+  }
+
+  .spatial-route-gates {
+    top: auto;
+    bottom: 5.75rem;
+    left: max(.5rem, env(safe-area-inset-left));
+    right: max(.5rem, env(safe-area-inset-right));
+    flex-direction: row;
+  }
+
+  .spatial-route-gates a {
+    flex: 1;
+    min-height: 44px;
+    padding-inline: .7rem;
+    font-size: .7rem;
   }
 
   .spatial-memory-bloom,
