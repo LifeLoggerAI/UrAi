@@ -1,0 +1,58 @@
+.unifiedNav {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px;
+    border-radius: 99px;
+    background: rgba(10, 20, 30, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 14px;
+    animation: navFadeIn 1s ease-out;
+}
+
+.uraiMark {
+    font-weight: 600;
+    color: #fff;
+    padding: 0 8px;
+}
+
+.navLinks {
+    display: flex;
+    gap: 8px;
+}
+
+.navLinks a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 99px;
+    transition: all 0.2s ease;
+}
+
+.navLinks a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.navLinks a.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes navFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}

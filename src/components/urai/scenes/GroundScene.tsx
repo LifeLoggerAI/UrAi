@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -105,7 +105,7 @@ export function GroundScene({ onNavigate, onReturnHome }: GroundSceneProps) {
           </motion.div>
         </div>
 
-        <PortalNav activeScene="ground" onNavigate={onNavigate} onReturnHome={onReturnHome} />
+        <PortalNav onNavigate={onNavigate} activeScene="life-map" />
       </div>
     </section>
   );

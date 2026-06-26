@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { GenesisSceneShell } from "@/components/urai/GenesisSceneShell";
@@ -14,7 +14,9 @@ export function PublicDemoShell({ founder = false }: { founder?: boolean }) {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <DemoModeBadge />
-      <GenesisSceneShell />
+      <GenesisSceneShell activeScene="home" onNavigate={() => {}} onOpenOrbChat={() => {}}>
+        <div />
+      </GenesisSceneShell>
       {!entered ? (
         <section className="absolute inset-0 z-[80] grid place-items-center bg-black/42 p-5 backdrop-blur-md">
           <div className="w-full max-w-2xl rounded-[2rem] border border-white/10 bg-black/48 p-6 text-center shadow-2xl backdrop-blur-xl">

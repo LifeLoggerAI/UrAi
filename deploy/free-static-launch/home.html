@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>URAI | Inner Sky Shrine</title>
+  <meta name="description" content="URAI is a living personal world for memory, reflection, recovery, identity, and life-mapping." />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav">
+      <a class="brand" href="/"><span class="brand-orb"></span><span>URAI</span></a>
+      <div class="nav-links">
+        <a class="active" href="/">Home</a>
+        <a class="" href="/life-map">Life-map</a>
+        <a class="" href="/replay">Replay</a>
+        <a class="" href="/mirror">Mirror</a>
+        <a class="" href="/passport">Passport</a>
+        <a class="" href="/status">Status</a>
+      </div>
+    </nav>
+
+    
+    <main class="hero">
+      <section>
+        <div class="badge"><span class="dot"></span> Inner Sky Shrine • public app mode</div>
+        <h1>Your world is already <span class="gradient">forming.</span></h1>
+        <p class="lead">URAI turns the patterns of your life into a living world you can enter, reflect on, and grow from. A memory is only a spark — not a requirement.</p>
+        <div class="actions">
+          <a class="button primary" href="/life-map" data-go="/life-map">Enter my world</a>
+          <a class="button" href="/passport" data-go="/passport">Open URAI orb companion</a>
+          <a class="button" href="/passport" data-go="/passport">Open URAI Passport</a>
+        </div>
+      </section>
+      <section class="stage" aria-label="URAI living world preview">
+        <div class="ring"></div>
+        <div class="orb"></div>
+        <div class="float-card three"><strong>Private by design</strong><span>Your memory world starts local and consent-first.</span></div>
+        <div class="float-card one"><strong>First spark</strong><span>A moment can become the first star in your world.</span></div>
+        <div class="float-card two"><strong>Life-map</strong><span>People, places, and patterns become navigable.</span></div>
+      </section>
+    </main>
+
+    <section class="section">
+      <h2>The Life Movie starts <span class="gradient">quietly.</span></h2>
+      <p class="kicker">No forced signup. No empty dashboard. Start with a world, a tone, and a first spark only when you want one.</p>
+      <div class="grid">
+        <article class="card"><h3>First spark</h3><p>This memory can become the first star in your world.</p></article>
+        <article class="card"><h3>Quiet world</h3><p>A soft home field loads before anything private is opened. Nothing is required yet.</p></article>
+        <article class="card"><h3>Hopeful tone</h3><p>Move toward the next version of your life without pretending the past disappeared.</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Optional first <span class="gradient">spark.</span></h2>
+      <p class="kicker">This control now works in static mode. It saves locally on this device until backend hosting is available.</p>
+      <div class="world-panel">
+        <form class="form-grid" data-spark-form>
+          <label>Optional first spark<textarea name="memory" placeholder="I moved to a new city and started rebuilding my life."></textarea></label>
+          <label>World tone
+            <select name="tone">
+              <option>hopeful</option>
+              <option>calm</option>
+              <option>focused</option>
+              <option>recovering</option>
+              <option>threshold</option>
+            </select>
+          </label>
+          <button class="button primary" type="submit">Preview optional spark</button>
+        </form>
+        <div class="notice" data-spark-output>Nothing saved yet. Preview a spark when ready.</div>
+      </div>
+      <div class="actions">
+        <a class="button" href="/passport" data-go="/passport">Open URAI orb companion</a>
+        <a class="button" href="/passport" data-go="/passport">Open URAI Passport</a>
+        <a class="button" href="/life-map" data-go="/life-map">Open Life Map</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Genesis assets <span class="gradient">live.</span></h2>
+      <p class="kicker">Curated URAI media is staged through Firebase Hosting for the public shell.</p>
+      <div class="asset-strip" data-asset-strip></div>
+    </section>
+  
+
+    <nav class="bottom-nav" aria-label="URAI bottom navigation">
+      <a class="active" href="/">Home</a>
+      <a class="" href="/life-map">Life Map</a>
+      <a class="" href="/passport">Orb</a>
+      <a class="" href="/mirror">Mirror</a>
+      <a class="" href="/replay">Replay</a>
+    </nav>
+
+    <footer class="footer">
+      <strong>URAI</strong> — Step inside yourself.
+      <div style="margin-top:10px">
+        <a href="/status">Status</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="mailto:press@urai.app">Contact</a>
+      </div>
+      <div style="margin-top:10px">Public static app mode. Full AI/API backend remains parked until Blaze billing or alternate backend hosting exists.</div>
+    </footer>
+  </div>
+  <script src="/assets/asset-manifest.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

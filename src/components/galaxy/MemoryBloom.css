@@ -1,0 +1,131 @@
+:root {
+  --bloom-bg-color: rgba(1, 4, 13, 0.7);
+  --bloom-border-color: rgba(255, 255, 255, 0.1);
+}
+
+.memoryBloomOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: var(--bloom-bg-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: bloomFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.memoryBloomContent {
+  position: relative;
+  text-align: center;
+  color: #fff;
+  max-width: 600px;
+  padding: 40px;
+  isolation: isolate;
+}
+
+.bloomCloseButton {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.bloomCloseButton:hover {
+  transform: scale(1.1);
+  background: rgba(255,255,255,0.2);
+}
+
+.bloomAura {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    z-index: -1;
+}
+
+.bloomAura .ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid;
+    border-radius: 50%;
+    opacity: 0;
+    animation: bloomRingPulse 4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+.bloomAura .ring:nth-child(1) { animation-delay: 0s; }
+.bloomAura .ring:nth-child(2) { animation-delay: -1s; }
+.bloomAura .ring:nth-child(3) { animation-delay: -2s; }
+.bloomAura .ring:nth-child(4) { animation-delay: -3s; }
+
+.bloomState {
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.bloomTitle {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-shadow: 0 0 20px var(--bloom-glow-color, #000);
+}
+
+.bloomNarratorLine {
+  font-size: 16px;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 450px;
+  margin: 0 auto 24px;
+}
+
+.bloomMetadata {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bloomMetadata .metaItem strong {
+    display: block;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* State Colors */
+.memoryBloomContent[data-state="recovery"] { --bloom-glow-color: #2dd4bf; }
+.memoryBloomContent[data-state="bond"] { --bloom-glow-color: #fbbf24; } 
+.memoryBloomContent[data-state="threshold"] { --bloom-glow-color: #c084fc; }
+.memoryBloomContent[data-state="blueFog"] { --bloom-glow-color: #60a5fa; }
+.memoryBloomContent[data-state="reflection"] { --bloom-glow-color: #f4f4f5; }
+
+.bloomState { color: var(--bloom-glow-color); }
+.bloomAura .ring { border-color: var(--bloom-glow-color); }
+
+@keyframes bloomFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bloomRingPulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: scale(1.5); opacity: 0; }
+}

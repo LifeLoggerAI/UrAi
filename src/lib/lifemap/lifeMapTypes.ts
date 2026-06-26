@@ -64,6 +64,7 @@ export type LifeMapStar = {
   glyph?: string;
   colorHint?: string;
   opened?: boolean;
+  railPosition?: number;
 };
 
 export type LifeMapChapter = {
@@ -75,6 +76,7 @@ export type LifeMapChapter = {
   dominantMood?: GenesisMoodState;
   starIds: string[];
   constellationStyle?: "thread" | "spiral" | "arc" | "bloom" | "storm";
+  railPosition?: number;
 };
 
 export type LifeMapData = {

@@ -1,0 +1,22 @@
+{
+  "hosting": {
+    "site": "urai-4dc1d",
+    "public": "deploy/free-static-launch",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=300" },
+          { "key": "X-URAI-Launch-Mode", "value": "polished-clickable-static-app" }
+        ]
+      }
+    ],
+    "rewrites": [
+      { "source": "/api/status", "destination": "/api/status/index.html" },
+      { "source": "**", "destination": "/index.html" }
+    ]
+  }
+}

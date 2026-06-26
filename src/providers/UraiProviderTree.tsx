@@ -12,8 +12,9 @@ import { UraiOnboardingProvider } from "@/providers/UraiOnboardingProvider";
 import { UraiRitualProvider } from "@/providers/UraiRitualProvider";
 import { UraiSettingsProvider } from "@/providers/UraiSettingsProvider";
 import { UraiShadowProvider } from "@/providers/UraiShadowProvider";
+import { UraiSceneProvider } from "./UraiSceneProvider";
 
-export default function ClientHome() {
+export default function UraiProviderTree({ children }: { children: React.ReactNode }) {
   return (
     <UraiAudioProvider>
       <UraiNotificationProvider>
@@ -26,7 +27,9 @@ export default function ClientHome() {
                     <UraiShadowProvider>
                       <UraiLegacyProvider>
                         <UraiRitualProvider>
-                          <HomeScene onNavigate={() => {}} />
+                          <UraiSceneProvider>
+                            {children}
+                          </UraiSceneProvider>
                         </UraiRitualProvider>
                       </UraiLegacyProvider>
                     </UraiShadowProvider>

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { GenesisSceneShell } from "@/components/urai/GenesisSceneShell";
 import { createDefaultGenesisHomeState } from "@/lib/urai/genesis";
@@ -19,13 +19,13 @@ void genesisContractAnchors;
 export default function HomeView() {
   return (
     <>
-      <GenesisSceneShell />
-
-      <div className="sr-only" aria-hidden="true">
-        <span>Bloom Moment</span>
-        <span>Passport</span>
-        <span>Permissions</span>
-      </div>
+      <GenesisSceneShell onNavigate={() => {}} onOpenOrbChat={() => {}} activeScene="home">
+        <div className="sr-only" aria-hidden="true">
+            <span>Bloom Moment</span>
+            <span>Passport</span>
+            <span>Permissions</span>
+        </div>
+      </GenesisSceneShell>
     </>
   );
 }

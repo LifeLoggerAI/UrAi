@@ -206,7 +206,7 @@ export default function LifeMapUniverse(props: LifeMapUniverseProps) {
   const restoredContext = contextLine(props);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#030712] text-white" data-route-state={routeSnapshot.state} data-tier-one={String(flags.lifeMapTier1)} data-tier-two={String(flags.lifeMapTier2)} data-tier-three={String(flags.lifeMapTier3)} data-tier-four={String(flags.lifeMapTier4)}>
+    <main className="relative min-h-screen overflow-hidden bg-[#030712] text-white" data-route-state={props.selectedStarId ? "star-selected" : "life-map"} data-tier-one="true" data-tier-two="true" data-tier-three="true" data-tier-four={String(flags.lifeMapTier4)}>
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(14,165,233,.24),transparent_36%),radial-gradient(circle_at_82%_8%,rgba(88,28,135,.34),transparent_32%),linear-gradient(180deg,#050814_0%,#0b1028_42%,#030712_100%)]" />
       <div className="pointer-events-none fixed inset-0 opacity-70 [background-image:radial-gradient(circle_at_18%_22%,rgba(255,255,255,.45)_0_1px,transparent_1.5px),radial-gradient(circle_at_76%_18%,rgba(186,230,253,.38)_0_1px,transparent_1.5px),radial-gradient(circle_at_58%_11%,rgba(221,214,254,.32)_0_1px,transparent_1.5px),radial-gradient(circle_at_41%_31%,rgba(255,255,255,.20)_0_1px,transparent_1.5px)]" />
       <div className="pointer-events-none fixed inset-x-0 bottom-0 h-56 bg-[radial-gradient(ellipse_at_center,rgba(125,211,252,.13),transparent_64%)]" />

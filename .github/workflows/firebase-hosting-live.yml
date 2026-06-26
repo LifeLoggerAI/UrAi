@@ -1,7 +1,5 @@
 name: Deploy to Firebase Hosting (live)
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:

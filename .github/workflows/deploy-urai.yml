@@ -3,10 +3,6 @@ name: Deploy URAI to Firebase
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   deploy:
     name: Deploy canonical URAI app

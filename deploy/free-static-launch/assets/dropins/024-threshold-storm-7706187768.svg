@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1440" viewBox="0 0 1440 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Threshold Storm demo memory</title>
+  <desc id="desc">Privacy-safe abstract threshold storm placeholder for URAI Spatial demo memory rendering.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="68%">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="38%" stop-color="#a855f7"/>
+      <stop offset="72%" stop-color="#172554"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="1440" height="1440" fill="url(#bg)"/>
+  <path d="M720 170 L940 630 L742 600 L870 1260 L500 700 L694 724 Z" fill="#fef9c3" opacity="0.72"/>
+  <circle cx="720" cy="720" r="420" fill="none" stroke="#c4b5fd" stroke-width="18" opacity="0.5"/>
+  <circle cx="720" cy="720" r="260" fill="#1e1b4b" opacity="0.32" filter="url(#glow)"/>
+</svg>

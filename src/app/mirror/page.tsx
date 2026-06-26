@@ -1,3 +1,4 @@
+// URAI fallback shell signal: branded-fallback-signal
 import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
 
 export const metadata = {

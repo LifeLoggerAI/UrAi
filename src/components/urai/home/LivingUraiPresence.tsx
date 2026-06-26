@@ -9,43 +9,45 @@ function OrbParticleField() {
   const particleRef = useRef<THREE.Points>(null);
   const count = 500;
 
-  const [positions] = useMemo(() => {
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
+  const positions = useMemo(() => {
+    const nextPositions = new Float32Array(count * 3);
+
+    for (let i = 0; i < count; i += 1) {
       const theta = Math.random() * 2 * Math.PI;
       const phi = Math.acos(2 * Math.random() - 1);
-      const r = 0.8 + Math.random() * 0.4;
-      positions.set(
+      const radius = 0.8 + Math.random() * 0.4;
+
+      nextPositions.set(
         [
-          r * Math.sin(phi) * Math.cos(theta),
-          r * Math.sin(phi) * Math.sin(theta),
-          r * Math.cos(phi),
+          radius * Math.sin(phi) * Math.cos(theta),
+          radius * Math.sin(phi) * Math.sin(theta),
+          radius * Math.cos(phi),
         ],
-        i * 3
+        i * 3,
       );
     }
-    return [positions];
+
+    return nextPositions;
   }, []);
 
   useFrame(({ clock }) => {
-    if (particleRef.current) {
-      particleRef.current.rotation.y = clock.getElapsedTime() * 0.05;
-      particleRef.current.rotation.x = clock.getElapsedTime() * 0.03;
-    }
+    if (!particleRef.current) return;
+
+    const elapsedTime = clock.getElapsedTime();
+    particleRef.current.rotation.y = elapsedTime * 0.05;
+    particleRef.current.rotation.x = elapsedTime * 0.03;
   });
 
   return (
     <points ref={particleRef}>
-      <bufferGeometry attach="geometry">
+      <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
+
       <pointsMaterial
-        attach="material"
         size={0.005}
         color="#c0c0ff"
         transparent
@@ -68,32 +70,34 @@ export function LivingUraiPresence() {
     const breathing = Math.sin(elapsedTime * 0.5);
 
     if (groupRef.current) {
-      // Subtle vertical bobbing
       groupRef.current.position.y = 0.5 + breathing * 0.05;
     }
 
-    // Organic scaling for the core and shells
     const scaleFactor = 1 + breathing * 0.05;
+
     if (coreRef.current) {
       coreRef.current.scale.set(scaleFactor, scaleFactor, scaleFactor);
     }
+
     if (shellRef.current) {
       const shellScale = 1 + breathing * 0.03;
       shellRef.current.scale.set(shellScale, shellScale, shellScale);
-      (shellRef.current.material as THREE.ShaderMaterial).opacity =
-        0.3 + breathing * 0.1;
+
+      const material = shellRef.current.material as THREE.MeshStandardMaterial;
+      material.opacity = 0.3 + breathing * 0.1;
     }
+
     if (haloRef.current) {
       const haloScale = 1 + breathing * 0.02;
       haloRef.current.scale.set(haloScale, haloScale, haloScale);
-       (haloRef.current.material as THREE.ShaderMaterial).opacity =
-        0.1 + breathing * 0.05;
+
+      const material = haloRef.current.material as THREE.MeshBasicMaterial;
+      material.opacity = 0.1 + breathing * 0.05;
     }
   });
 
   return (
     <group ref={groupRef} position={[0, 0.5, 0]}>
-      {/* Vertical Light Column */}
       <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.02, 0.02, 4, 32]} />
         <meshBasicMaterial
@@ -104,8 +108,7 @@ export function LivingUraiPresence() {
           depthWrite={false}
         />
       </mesh>
-      
-      {/* Inner Glowing Core */}
+
       <mesh ref={coreRef}>
         <sphereGeometry args={[0.3, 32, 32]} />
         <meshBasicMaterial
@@ -115,7 +118,6 @@ export function LivingUraiPresence() {
         />
       </mesh>
 
-      {/* Primary Translucent Shell */}
       <mesh ref={shellRef}>
         <sphereGeometry args={[0.6, 64, 64]} />
         <meshStandardMaterial
@@ -128,7 +130,6 @@ export function LivingUraiPresence() {
         />
       </mesh>
 
-      {/* Outer Volumetric Halo */}
       <mesh ref={haloRef}>
         <sphereGeometry args={[1.2, 64, 64]} />
         <meshBasicMaterial
@@ -142,7 +143,6 @@ export function LivingUraiPresence() {
 
       <OrbParticleField />
 
-      {/* Grounded Reflection/Glow */}
       <mesh position={[0, -0.48, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[2.5, 2.5]} />
         <meshBasicMaterial
@@ -153,7 +153,7 @@ export function LivingUraiPresence() {
           depthWrite={false}
         />
       </mesh>
-       {/* Soft Contact Shadow */}
+
       <mesh position={[0, -0.49, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.5, 32]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.3} />
@@ -161,4 +161,3 @@ export function LivingUraiPresence() {
     </group>
   );
 }
-

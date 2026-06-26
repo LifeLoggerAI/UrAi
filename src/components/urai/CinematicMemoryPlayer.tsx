@@ -25,8 +25,10 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   {
     id: `${memory.id}-asset`,
     kind: "photo",
-    title: memory.imageUrl ? "Real memory image" : "Real memory image slot",
-    caption: memory.imageUrl ? "This star is rendering the attached image asset." : "Attach imageUrl to make the clicked star open a real photo, screenshot, or imported memory image.",
+    title: memory.imageUrl ? "Memory image" : "Image slot not connected",
+    caption: memory.imageUrl
+      ? "This scene is using a connected user-owned image asset."
+      : "No image is attached to this preview star yet. Add a photo, screenshot, or chosen memory image before calling it a real memory film.",
     timestamp: "00:00",
     durationSeconds: 8,
     assetUrl: memory.imageUrl,
@@ -35,8 +37,8 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   {
     id: `${memory.id}-bridge`,
     kind: "generated-scene",
-    title: "AI reconstructed scene",
-    caption: "URAI fills missing motion between media using context, messages, audio tone, time, place, and relationship signals.",
+    title: "Story bridge preview",
+    caption: "A generated bridge has not been rendered for this star yet. URAI is showing a safe cinematic placeholder instead of inventing a finished scene.",
     timestamp: "00:08",
     durationSeconds: 12,
     fallbackGradient: `linear-gradient(135deg, rgba(255,255,255,0.18), ${memory.color}55 34%, rgba(17,22,48,0.94) 64%, black)`,
@@ -44,8 +46,10 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   {
     id: `${memory.id}-voice`,
     kind: "voice",
-    title: memory.audioUrl ? "Narrator audio" : "Narrator beat",
-    caption: memory.narratorLine,
+    title: memory.audioUrl ? "Narrator audio" : "Narration slot not rendered",
+    caption: memory.audioUrl
+      ? "This beat can play connected narrator audio for the selected memory."
+      : "No narrator audio has been rendered for this star. Written reflection remains visible without pretending a voice track exists.",
     timestamp: "00:20",
     durationSeconds: 10,
     assetUrl: memory.audioUrl,
@@ -54,8 +58,10 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   {
     id: `${memory.id}-movie`,
     kind: "video",
-    title: memory.videoUrl ? "Playable memory movie" : "Life movie chapter slot",
-    caption: memory.videoUrl ? "This star is rendering the attached memory video or chapter film." : "Attach videoUrl to make the star play an actual movie clip or rendered chapter film.",
+    title: memory.videoUrl ? "Playable memory clip" : "Film render slot not ready",
+    caption: memory.videoUrl
+      ? "This scene is using a connected movie clip or rendered chapter file."
+      : "No movie file has been rendered for this memory. The player stays ready, but this is still a preview state.",
     timestamp: "00:30",
     durationSeconds: 12,
     assetUrl: memory.videoUrl,
@@ -64,19 +70,34 @@ const buildFilmFrames = (memory: MemoryStar): FilmFrame[] => [
   },
 ];
 
-const getFilmBeats = (memory: MemoryStar) => memory.filmBeats?.length ? memory.filmBeats : [
-  "Open on the strongest real asset inside the star.",
-  "Reconstruct missing context as a cinematic bridge.",
-  "Let the narrator explain why the moment matters.",
-  "Pull back into the galaxy with the chapter saved inside the star.",
+const previewBeats = [
+  "Choose the source moments that are safe to include.",
+  "Attach real media or generated metadata before rendering a film.",
+  "Keep narration text visible until a voice track actually exists.",
+  "Show a clean empty state when no movie file has been produced.",
 ];
+
+const getFilmBeats = (memory: MemoryStar, hasConnectedMedia: boolean) => {
+  if (!hasConnectedMedia) return previewBeats;
+  return memory.filmBeats?.length ? memory.filmBeats : [
+    "Open on the strongest connected asset inside the star.",
+    "Bridge missing motion only when generated metadata exists.",
+    "Let the narrator explain what the user chose to preserve.",
+    "Pull back into the galaxy with the chapter saved inside the star.",
+  ];
+};
 
 export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
   const shouldReduceMotion = useReducedMotion();
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
+  const [failedMedia, setFailedMedia] = useState<Record<string, boolean>>({});
   const frames = useMemo(() => buildFilmFrames(memory), [memory]);
   const activeFrame = frames[activeFrameIndex] ?? frames[0];
-  const beats = getFilmBeats(memory);
+  const activeFrameFailed = Boolean(failedMedia[activeFrame.id]);
+  const connectedAssetCount = frames.filter((frame) => Boolean(frame.assetUrl)).length;
+  const hasConnectedMedia = connectedAssetCount > 0;
+  const beats = getFilmBeats(memory, hasConnectedMedia);
+  const markMediaFailed = (frameId: string) => setFailedMedia((current) => ({ ...current, [frameId]: true }));
 
   return (
     <div className="relative grid w-full max-w-6xl gap-5 lg:grid-cols-[1fr_22rem]">
@@ -88,16 +109,25 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
-        {activeFrame.kind === "photo" && activeFrame.assetUrl ? (
+        {activeFrame.kind === "photo" && activeFrame.assetUrl && !activeFrameFailed ? (
           <motion.img
             src={activeFrame.assetUrl}
             alt={activeFrame.title}
             className="absolute inset-0 h-full w-full object-cover"
+            onError={() => markMediaFailed(activeFrame.id)}
             animate={shouldReduceMotion ? undefined : { scale: [1, 1.08, 1.03] }}
             transition={{ duration: activeFrame.durationSeconds, repeat: Infinity, ease: "easeInOut" }}
           />
-        ) : activeFrame.kind === "video" && activeFrame.assetUrl ? (
-          <video className="absolute inset-0 h-full w-full object-cover" src={activeFrame.assetUrl} poster={activeFrame.posterUrl} controls playsInline />
+        ) : activeFrame.kind === "video" && activeFrame.assetUrl && !activeFrameFailed ? (
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src={activeFrame.assetUrl}
+            poster={activeFrame.posterUrl}
+            controls
+            playsInline
+            preload="metadata"
+            onError={() => markMediaFailed(activeFrame.id)}
+          />
         ) : (
           <motion.div
             className="absolute inset-0"
@@ -111,7 +141,7 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
           {activeFrame.kind} / {activeFrame.timestamp}
         </div>
         <div className="absolute right-6 top-6 rounded-full border border-white/15 bg-black/35 px-4 py-2 text-[0.65rem] uppercase tracking-[0.28em] text-white/70 backdrop-blur-xl">
-          {activeFrame.assetUrl ? "asset live" : `${activeFrame.durationSeconds}s scene`}
+          {activeFrame.assetUrl && !activeFrameFailed ? "asset connected" : activeFrameFailed ? "asset unavailable" : "preview fallback"}
         </div>
         {activeFrame.kind !== "photo" && activeFrame.kind !== "video" && (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -120,25 +150,42 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
             </motion.div>
           </div>
         )}
-        {activeFrame.kind === "voice" && activeFrame.assetUrl && (
+        {activeFrame.kind === "voice" && activeFrame.assetUrl && !activeFrameFailed && (
           <div className="absolute inset-x-8 top-24 rounded-2xl border border-white/12 bg-black/40 p-4 backdrop-blur-xl">
-            <audio className="w-full" src={activeFrame.assetUrl} controls />
+            <audio className="w-full" src={activeFrame.assetUrl} controls preload="metadata" onError={() => markMediaFailed(activeFrame.id)} />
           </div>
         )}
+        {!activeFrame.assetUrl || activeFrameFailed ? (
+          <div className="absolute inset-x-6 top-20 max-w-md rounded-3xl border border-white/12 bg-black/38 p-4 text-sm leading-6 text-white/70 backdrop-blur-xl">
+            {activeFrameFailed
+              ? "The media file for this scene could not be loaded. URAI is showing the safe visual fallback instead."
+              : "No user-owned media is attached to this scene yet. This is a preview frame, not a rendered personal memory film."}
+          </div>
+        ) : null}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/72 to-transparent p-8">
-          <p className="text-xs uppercase tracking-[0.28em]" style={{ color: memory.color }}>Star movie generator</p>
+          <p className="text-xs uppercase tracking-[0.28em]" style={{ color: memory.color }}>
+            {hasConnectedMedia ? "Memory film" : "Preview film"}
+          </p>
           <h2 className="mt-3 text-4xl font-light text-white">{activeFrame.title}</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70">{activeFrame.caption}</p>
         </div>
       </motion.div>
 
       <aside className="rounded-[2rem] border border-white/12 bg-black/30 p-5 shadow-2xl backdrop-blur-2xl">
-        <p className="text-xs uppercase tracking-[0.28em]" style={{ color: memory.color }}>Now playing</p>
+        <p className="text-xs uppercase tracking-[0.28em]" style={{ color: memory.color }}>
+          {hasConnectedMedia ? "Now playing" : "Sample preview"}
+        </p>
         <h3 className="mt-3 text-2xl font-light text-white">{memory.filmTitle ?? memory.label}</h3>
         <p className="mt-2 text-sm leading-6 text-white/62">{memory.filmLogline ?? memory.subtitle}</p>
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.05] p-3 text-xs leading-5 text-white/55">
+          {hasConnectedMedia
+            ? `${connectedAssetCount} media asset${connectedAssetCount === 1 ? "" : "s"} connected. Missing scenes fall back safely.`
+            : "No personal photo, video, narration, or generated movie file is connected. This surface is a launch preview with safe empty states."}
+        </div>
         <div className="mt-5 space-y-2">
           {frames.map((frame, index) => {
             const isActive = frame.id === activeFrame.id;
+            const isFailed = Boolean(failedMedia[frame.id]);
             return (
               <button
                 key={frame.id}
@@ -149,7 +196,9 @@ export function CinematicMemoryPlayer({ memory }: CinematicMemoryPlayerProps) {
               >
                 <span className="block text-[0.65rem] uppercase tracking-[0.22em] text-white/42">{frame.timestamp} / {frame.kind}</span>
                 <span className="mt-1 block text-sm text-white/82">{frame.title}</span>
-                <span className="mt-1 block text-xs text-white/38">{frame.assetUrl ? "Real asset connected" : "Fallback generator scene"}</span>
+                <span className="mt-1 block text-xs text-white/38">
+                  {isFailed ? "Asset unavailable; fallback shown" : frame.assetUrl ? "User-owned asset connected" : "Preview fallback"}
+                </span>
               </button>
             );
           })}

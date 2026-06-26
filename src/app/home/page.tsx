@@ -1,5 +1,7 @@
-import UraiResolvedHomeScene from '@/components/urai/UraiResolvedHomeScene';
+"use client";
+
+import { NewHomeScene } from "@/components/urai/home/NewHomeScene";
 
 export default function HomePage() {
-  return <UraiResolvedHomeScene />;
+  return <NewHomeScene />;
 }
