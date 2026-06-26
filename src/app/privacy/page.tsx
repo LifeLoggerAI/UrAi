@@ -22,15 +22,15 @@ export const metadata: Metadata = {
 const principles = [
   {
     title: "Private by default",
-    body: "UrAi turns raw signals into symbolic summaries. The product should help you understand patterns without exposing private content in the map.",
+    body: "URAI's public demo uses public-safe sample surfaces. Private inputs and future signal types must stay gated behind consent, owner-only access, export/delete, retention, and audit proof before they become live features.",
   },
   {
     title: "User-controlled memory",
-    body: "Every surfaced star should be hideable, correctable, exportable, or removable. Sensitive signals should stay summarized unless you choose otherwise.",
+    body: "Every surfaced star should be hideable, correctable, exportable, or removable. Sensitive data paths remain roadmap-only until those controls are implemented and verified.",
   },
   {
     title: "Reflective, not diagnostic",
-    body: "UrAi describes patterns and emotional weather. It does not diagnose, replace care, or make fixed claims about who you are.",
+    body: "URAI describes patterns and emotional weather. It does not diagnose, replace care, or make fixed claims about who you are.",
   },
 ];
 
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
           <p className="text-sm uppercase tracking-[0.35em] text-white/45">Privacy field</p>
           <h1 className="text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">Your map belongs to you.</h1>
           <p className="text-base leading-relaxed text-white/65 sm:text-lg">
-            UrAi is designed to make patterns visible without making your private life public. The Life Map should remain symbolic, consent-aware, and reversible.
+            URAI is designed to make patterns visible without making your private life public. The Life Map should remain symbolic, consent-aware, and reversible.
           </p>
           <p className="text-sm leading-relaxed text-white/55">
             For the broader URAI trust center, visit <a href="https://uraiprivacy.com" className="text-white underline underline-offset-4">URAI Privacy</a>.
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
         <section className="mt-6 rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-6 text-sm leading-relaxed text-white/65">
           <h2 className="text-xl font-semibold text-white">Safety note</h2>
           <p className="mt-3">
-            UrAi insights are reflective AI patterns. They are not medical, legal, or clinical determinations. When a signal looks sensitive, the interface should slow down, summarize gently, and point users toward real support.
+            URAI insights are reflective AI patterns. They are not medical, legal, or clinical determinations. When a signal looks sensitive, the interface should slow down, summarize gently, and point users toward real support.
           </p>
           <p className="mt-4">
             Questions? <a href="mailto:privacy@urai.app" className="text-white underline underline-offset-4">privacy@urai.app</a>
