@@ -2,13 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const criticalAssets = [
-  "public/assets/genesis/sky/sky-background.png",
-  "public/assets/genesis/body/body-silhouette-base.png",
-  "public/assets/genesis/body/aura-field.png",
-  "public/assets/genesis/orb/orb-core.png",
-  "public/assets/genesis/orb/orb-glow.png",
-  "public/assets/genesis/ground/ground-base.png",
-  "public/assets/genesis/vignette/foreground-vignette.png",
+  "public/assets/sky/bloom/fallback-sky-bloom-12.webp",
+  "public/assets/images/genesis-orb-placeholder.svg",
+  "public/assets/ground/bloom/fallback-ground-bloom-12.png",
 ];
 
 const optionalAssets = [

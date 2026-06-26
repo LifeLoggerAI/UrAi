@@ -1,22 +1,23 @@
 "use client";
 
-import {
-  useMemo,
-  useState,
-} from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLifeMapData } from "./useLifeMapData";
 import { useGalaxyCamera } from "./useGalaxyCamera";
 import { useStarSelection } from "./useStarSelection";
 import LifeGalaxyScene from "./LifeGalaxyScene";
-import type {
-  LifeMapStar,
-} from "@/lib/spatial-life-map/lifeMap.types";
+import type { LifeMapStar } from "@/lib/spatial-life-map/lifeMap.types";
 import "../../styles/NewLifeMap.css";
 
 type LifeMapInteractionMode = "galaxy" | "focus" | "replay";
 
-const FocusCard = ({ star, onReplay, onPassport }) => {
+type FocusCardProps = {
+  star: LifeMapStar | null;
+  onReplay: () => void;
+  onPassport: () => void;
+};
+
+const FocusCard = ({ star, onReplay, onPassport }: FocusCardProps) => {
   if (!star) return null;
 
   return (
@@ -24,21 +25,44 @@ const FocusCard = ({ star, onReplay, onPassport }) => {
       <h1>{star.title}</h1>
       <p>{star.narratorReflection}</p>
       <div className="buttons">
-        <button className="button" onClick={onReplay}>Enter Replay</button>
-        <button className="button" onClick={onPassport}>Open Passport</button>
+        <button className="button" onClick={onReplay}>
+          Enter Replay
+        </button>
+        <button className="button" onClick={onPassport}>
+          Open Passport
+        </button>
       </div>
     </div>
   );
 };
 
-const TopNav = ({ active }) => {
+type TopNavProps = {
+  active: "home" | "life-map" | "replay";
+};
+
+const TopNav = ({ active }: TopNavProps) => {
   const router = useRouter();
 
   return (
     <div className="top-nav">
-      <button className={`nav-button ${active === 'home' ? 'active' : ''}`} onClick={() => router.push('/home')}>HOME</button>
-      <button className={`nav-button ${active === 'life-map' ? 'active' : ''}`} onClick={() => router.push('/life-map')}>LIFE MAP</button>
-      <button className={`nav-button ${active === 'replay' ? 'active' : ''}`} onClick={() => router.push('/replay')}>REPLAY</button>
+      <button
+        className={`nav-button ${active === "home" ? "active" : ""}`}
+        onClick={() => router.push("/home")}
+      >
+        HOME
+      </button>
+      <button
+        className={`nav-button ${active === "life-map" ? "active" : ""}`}
+        onClick={() => router.push("/life-map")}
+      >
+        LIFE MAP
+      </button>
+      <button
+        className={`nav-button ${active === "replay" ? "active" : ""}`}
+        onClick={() => router.push("/replay")}
+      >
+        REPLAY
+      </button>
     </div>
   );
 };
@@ -54,7 +78,10 @@ export default function SpatialLifeMap({
   const { data, loading, error } = useLifeMapData(userId);
 
   const visibleStars = useMemo(() => data.stars, [data.stars]);
-  const activeLayerIds = useMemo(() => data.layers.map(l => l.id), [data.layers]);
+  const activeLayerIds = useMemo(
+    () => data.layers.map((layer) => layer.id),
+    [data.layers],
+  );
 
   const selection = useStarSelection(visibleStars);
   const camera = useGalaxyCamera(
@@ -69,12 +96,26 @@ export default function SpatialLifeMap({
     setMode("focus");
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  const handleReplay = () => {
+    setMode("replay");
+  };
+
+  const handlePassport = () => {
+    // Passport route can be wired here when the production route is finalized.
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <main className={`spatial-life-map is-${mode}`}>
       <TopNav active="life-map" />
+
       <div className="spatial-stage" {...camera.bind}>
         <LifeGalaxyScene
           stars={visibleStars}
@@ -90,11 +131,12 @@ export default function SpatialLifeMap({
           onSceneReady={() => {}}
         />
       </div>
-      {mode === 'focus' && (
+
+      {mode === "focus" && (
         <FocusCard
           star={selectedStar}
-          onReplay={() => {}}
-          onPassport={() => {}}
+          onReplay={handleReplay}
+          onPassport={handlePassport}
         />
       )}
     </main>

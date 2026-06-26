@@ -1,0 +1,47 @@
+# URAI System Of Systems Wiring Matrix
+
+Updated: 2026-06-25
+
+This file is the canonical release and wiring matrix for visible URAI repositories. It is intentionally strict: if live evidence is missing, the repo must not be treated as production-ready.
+
+| Repo | Classification | Canonical role | Current status | Live URL | Firebase project | Deploy command | Verification commands | Missing evidence | Wiring dependencies | Privacy/security gate | Can `UrAi` use now | Roadmap only |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `LifeLoggerAI/UrAi` | `canonical-product` | canonical public/demo product app | repo-side complete but missing full Genesis live proof | `https://urai-4dc1d.web.app` | `urai-4dc1d` | `npm run ship:urai` | `npm run check:system-registry`, `npm run check:v1`, `npm run check:types`, `npm run build`, `npm run test:smoke` | final Genesis release evidence | `urai-content`, `urai-staging`, `urai-privacy`, `urai-admin`, `urai-jobs` | no passive/live risky features without privacy gate | yes | no |
+| `LifeLoggerAI/UrAi-Dev` | `sandbox` | development and staging sandbox | sandbox/dev only | none canonical | `urai-staging` | none canonical | `npm run typecheck`, `npm run test:e2e`, `npm run test:genesis` | any production proof is invalid here | staging-only prototypes | must never be treated as production | no | yes |
+| `LifeLoggerAI/UrAiProd` | `legacy-archive` | archive and migration reference | legacy/archive | none canonical | `urai-4dc1d` legacy references exist | none canonical | `npm run typecheck`, `npm run test:smoke` | reintegration into `UrAi` | migration source only | must not be deployed directly | no | yes |
+| `LifeLoggerAI/urai-staging` | `staging` | integration proving ground | staging-ready with partial evidence | `https://urai-staging.web.app` | `urai-staging` | `npm run deploy:staging` | `npm run check:deploy`, `npm run test:e2e`, `npm run smoke:staging` | final staging approval and evidence log completion | `UrAi`, `urai-privacy`, `urai-admin`, `urai-jobs` | staging-safe only, no production data | yes | no |
+| `LifeLoggerAI/urai-privacy` | `governance` | privacy/release gate | blocked on live production proof | `https://uraiprivacy.com` documented but not verified in this pass | not fixed in repo docs | `npm run deploy` | `npm run verify:release`, `npm run test:emulators`, `npm run test:smoke:live` | live domain, env verification, legal/counsel signoff | gates `UrAi`, `urai-admin`, `urai-jobs`, `urai-analytics`, `urai-communications`, `urai-content`, `urai-spatial`, `urai-storytime` | required for user data, inference, export, delete, consent, monetization, admin access | yes | no |
+| `LifeLoggerAI/urai-admin` | `internal-runtime` | operator control plane | blocked | `https://www.uraiadmin.com` documented but not verified in this pass | `urai-4dc1d` | `pnpm deploy` | `pnpm release:lock`, `pnpm test:smoke`, `pnpm verify:production` | live route proof, seeded owner proof, DNS/SSL proof | observes `UrAi`, `urai-jobs`, later `urai-analytics`, `urai-communications` | admin access must stay claim-gated and audited | yes | no |
+| `LifeLoggerAI/urai-jobs` | `service` | async execution layer | production-live with evidence | `https://urai-jobs.web.app` | `urai-jobs` | `pnpm deploy:firebase:prod`, `pnpm deploy:workers` | `pnpm prod:precheck`, `pnpm prod:verify-workers`, `pnpm prod:smoke` | custom-domain completion only | `UrAi`, `urai-admin`, later `asset-factory`, `urai-analytics` | background work must remain privacy-audited | yes | no |
+| `LifeLoggerAI/urai-content` | `service` | canonical content/template layer | repo-side complete but standalone runtime still blocked | none canonical | not finalized | deploy intentionally blocked | `npm run check`, `npm run smoke`, `npm run web:smoke:routes` | standalone hosting, DNS, Stripe, rollback proof | provides content to `UrAi`, `urai-storytime`, `urai-studio`, `urai-spatial` | privacy review required before user-linked content telemetry | yes | no |
+| `LifeLoggerAI/urai-spatial` | `service` | spatial and LifeMap experience layer | partial | none verified in this pass | `urai-spatial` | `corepack pnpm deploy:staging` | `corepack pnpm launch:check`, `corepack pnpm smoke:deployed` | live deploy proof, signoffs, safe data proof | `UrAi`, `urai-content`, later `asset-factory`, `urai-analytics`, `urai-storytime` | no passive/private sensing without privacy gate | no | yes |
+| `LifeLoggerAI/urai-analytics` | `blocked` | derived intelligence service | blocked | none verified in this pass | env-driven | no canonical deploy command captured | `npm run full:check`, `npm run smoke:live`, `npm run production:lock` | deploy URL, monitoring, rollback, durable storage proof | later `UrAi`, `urai-admin`, `B2Bportal`, `urai-communications` | passive/derived signals require `urai-privacy` dependency | no | yes |
+| `LifeLoggerAI/asset-factory` | `service` | media and artifact generation layer | partial | verified Firebase front door is `https://urai-4dc1d.web.app` | `urai-4dc1d` | `npm run deploy:studio` | `npm run verify:local`, `npm run deploy:verify`, `npm run smoke:prod` | custom domain, provider proof, final production lock | later `urai-jobs`, `urai-studio`, `urai-storytime`, `UrAi` | generated artifacts touching user data require privacy review | no | yes |
+| `LifeLoggerAI/urai-storytime` | `blocked` | narrative/session engine | blocked | none verified in this pass | env-driven | `npm run deploy` | `npm run test:production-readiness`, `npm run test:production-smoke` | child-safety, consent, provider proof, live deploy | `urai-content`, `asset-factory`, `urai-jobs`, `urai-privacy` | sharing, narration, and sensitive stories require privacy gate | no | yes |
+| `LifeLoggerAI/urai-communications` | `blocked` | communications/call/SMS/email layer | partial and pilot-only | none verified in this pass | `urai-communications-dev` in example | no single production command declared | `npm run preflight`, `npm run verify:staging:webhooks`, `npm run verify:staging:delivery` | provider staging evidence, legal/privacy signoff, delete/export workflows | later `urai-admin`, `urai-analytics`, `B2Bportal` | cannot go live without `urai-privacy` and explicit consent/export/delete gates | no | yes |
+| `LifeLoggerAI/urai-marketing` | `public-surface` | external marketing surface | production-live with scoped evidence | `https://urai-marketing.web.app` | `urai-marketing` | `npm run release` | `npm run preflight`, `npm run live-check` | custom domain and counsel review | external surface only, links to `UrAi` | keep copy non-clinical | no | no |
+| `LifeLoggerAI/urai-investors` | `public-surface` | investor portal | partial | `https://urai-investors.web.app` | App Hosting backend `urai-investors` | `pnpm deploy:backend` | `pnpm verify`, `pnpm qa:live` | root parity proof, invite rollout proof | external surface, not app runtime | gated investor data must stay protected | no | no |
+| `LifeLoggerAI/B2Bportal` | `public-surface` | enterprise and partner portal | partial | none verified in this pass | env-driven | none canonical in this pass | `npm run verify:release`, `npm run audit:production` | production evidence doc, seeded admins, legal/DPA proof | depends on `urai-analytics`, `urai-communications`, `urai-privacy`, `urai-admin` | B2B data handling must stay privacy-gated | no | yes |
+| `LifeLoggerAI/urai-labs-llc` | `public-surface` | corporate/public company surface | blocked | `https://www.urailabs.com` documented but not verified in this pass | `urai-labs-llc` | not finalized in this pass | `pnpm test`, `pnpm build`, `pnpm smoke` | live deploy, DNS/SSL, route checks | external truth boundary only | no overclaiming of ecosystem runtime status | no | no |
+| `LifeLoggerAI/urai-foundation` | `governance` | public-interest governance anchor | blocked on DNS cutover | `https://uraifoundation.org` documented but not verified in this pass | GitHub Pages style hosting | external GitHub Pages publish | `make check`, `make verify-live` | DNS cutover from Squarespace | referenced by `B2Bportal`, `urai-privacy`, `urai-admin`, `urai-analytics` | governance source, not runtime | no | no |
+| `LifeLoggerAI/urai-studio` | `public-surface` | creator/admin studio | blocked | `https://www.uraistudio.com` documented but not verified in this pass | env-driven | no final production command captured | `pnpm release:check`, `pnpm studio:smoke` | release evidence ledger completion | later `asset-factory`, `urai-spatial`, `urai-jobs`, `urai-content` | no dependency from `UrAi` before proof | no | yes |
+
+## Canonical Decisions
+
+- `LifeLoggerAI/UrAi` is the only canonical public/demo product repo.
+- `LifeLoggerAI/UrAi-Dev` is sandbox only.
+- `LifeLoggerAI/UrAiProd` is legacy/archive only.
+- `LifeLoggerAI/urai-staging` is the only staging proving ground.
+- `LifeLoggerAI/urai-privacy` is the privacy and release gate.
+- `LifeLoggerAI/urai-admin` is the operator control plane.
+- `LifeLoggerAI/urai-jobs` is the approved async execution layer.
+
+## Must Not Be Claimed Yet
+
+- `urai-spatial` as production-live
+- `urai-analytics` as production-live
+- `asset-factory` custom-domain production lock
+- `urai-storytime` live production launch
+- `urai-communications` broad production communications
+- `B2Bportal` production readiness
+- `urai-admin`, `urai-privacy`, `urai-foundation`, and `urai-labs-llc` final domains as live until domain evidence is current

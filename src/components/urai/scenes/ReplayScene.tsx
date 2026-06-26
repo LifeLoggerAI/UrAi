@@ -31,6 +31,8 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
     return mockMemoryStars.filter((memory) => memory.id !== selectedMemory.id).slice(0, 4);
   }, [selectedMemory.id]);
 
+  const hasConnectedMedia = Boolean(selectedMemory.imageUrl || selectedMemory.videoUrl || selectedMemory.audioUrl || selectedMemory.posterUrl);
+
   return (
     <section className="relative z-10 min-h-screen w-full overflow-hidden px-6 py-10">
       <div className="pointer-events-none absolute inset-0">
@@ -45,11 +47,19 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
       {mode === "constellation" && <ConstellationLayer scene="replay" stars={[selectedMemory, ...relatedMemories]} selectedMemoryId={selectedMemory.id} />}
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col">
-        <div className="flex items-start justify-between gap-6 pt-6">
-          <div className="max-w-xl">
-            <div></div>
+        <div className="flex flex-col gap-5 pt-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-2xl rounded-[2rem] border border-white/10 bg-black/24 p-5 shadow-2xl backdrop-blur-2xl">
+            <p className="text-xs uppercase tracking-[0.28em]" style={{ color: theme.accent }}>
+              {hasConnectedMedia ? "Memory film" : "Preview memory film"}
+            </p>
+            <h1 className="mt-3 text-3xl font-light tracking-[-0.04em] text-white sm:text-5xl">
+              Replay turns chosen moments into a film only when real media is connected.
+            </h1>
+            <p className="mt-4 text-sm leading-6 text-white/64">
+              This launch surface is cinematic and safe by default. Sample stars are labeled as preview, missing video/audio falls back cleanly, and URAI does not claim a personal memory movie until user-owned media or generated metadata exists.
+            </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button type="button" onClick={onReturnToLifeMap} className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 backdrop-blur-xl transition hover:border-white/30 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40">Life Map</button>
             <button type="button" onClick={onReturnHome} className="rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-xs uppercase tracking-[0.22em] text-white/75 backdrop-blur-xl transition hover:border-white/30 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40">Home</button>
           </div>
@@ -66,7 +76,9 @@ export function ReplayScene({ selectedMemoryId, onNavigate, onReturnToLifeMap, o
             <div className="relative w-full max-w-5xl rounded-[2rem] border border-white/12 bg-black/20 p-8 text-center shadow-2xl backdrop-blur-2xl">
               <p className="text-xs uppercase tracking-[0.28em]" style={{ color: theme.accent }}>Timeline Replay</p>
               <h2 className="mt-3 text-3xl font-light text-white">{selectedMemory.label}</h2>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/64">{selectedMemory.subtitle}</p>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-white/64">
+                Timeline mode is ready for owner-scoped memory events. No generated timeline movie is shown until real events or render metadata are present.
+              </p>
             </div>
           )}
         </div>

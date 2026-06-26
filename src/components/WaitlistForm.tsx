@@ -63,7 +63,7 @@ export default function WaitlistForm({ source, handle }: Props) {
         <span className="urai-orb-artifact urai-orb-artifact--gold urai-orb-artifact--small" aria-hidden="true" />
       </div>
       <p className="mt-4 text-sm leading-6 text-white/70">
-        Be first to explore URAI&apos;s private Life Map, companion reflections, and emotional constellation preview.
+        Get launch updates for the URAI public demo and the evidence-gated path toward private Life Map features.
       </p>
       <form className="mt-4 flex flex-col gap-2 sm:flex-row" onSubmit={(event) => { event.preventDefault(); void joinWaitlist(); }}>
         <label className="sr-only" htmlFor={`waitlist-email-${source}`}>Email address</label>
@@ -86,13 +86,13 @@ export default function WaitlistForm({ source, handle }: Props) {
           aria-invalid={status === "error"}
         />
         <button type="submit" disabled={!canSubmit} className="urai-premium-cta min-h-11 disabled:cursor-not-allowed disabled:opacity-40">
-          {status === "sending" ? "Gathering signal" : status === "joined" ? "Signal received" : "Request Access"}
+          {status === "sending" ? "Submitting" : status === "joined" ? "Joined" : "Request Access"}
         </button>
       </form>
       <p className="mt-3 text-xs leading-5 text-white/45">No spam. Launch updates only. You control your data.</p>
       <div id={statusId} aria-live="polite">
-        {status === "sending" && <p className="urai-loading-signal mt-3 text-sm">Gathering signal...</p>}
-        {status === "joined" && <p className="urai-success-signal mt-3 text-sm">You are on the list. Launch access will arrive here.</p>}
+        {status === "sending" && <p className="urai-loading-signal mt-3 text-sm">Submitting your request...</p>}
+        {status === "joined" && <p className="urai-success-signal mt-3 text-sm">You are on the list. Launch access updates will arrive here.</p>}
         {status === "error" && <p className="urai-error-signal mt-3 text-sm">{errorMessage}</p>}
       </div>
     </section>

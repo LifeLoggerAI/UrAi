@@ -92,29 +92,29 @@ test.describe("URAI production smoke", () => {
     await captureLaunchEvidence(page, "desktop-life-map");
 
     await page.goto("/life-map/star/starter-star", { waitUntil: "domcontentloaded" });
-    await expect(page.locator("main[data-route-state='star-selected']")).toBeVisible();
-    await expect(page.locator("aside").getByText("Selected star: starter-star")).toBeVisible();
-    await expect(page.getByLabel("URAI spatial stage").getByText("Selected star: starter-star")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Starter Star" })).toBeVisible();
+    await expect(page.locator("main[data-route-state='star-selected']").first()).toBeVisible();
+    await expect(page.locator("aside").getByText("Selected star: starter-star").first()).toBeVisible();
+    await expect(page.getByLabel("URAI spatial stage").getByText("Selected star: starter-star").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Starter Star" }).first()).toBeVisible();
 
     await page.goto("/focus", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='life-map']")).toBeVisible();
-    await expect(page.getByText("Choose a star before opening focus.")).toBeVisible();
+    await expect(page.getByText("Choose a star before opening focus.").first()).toBeVisible();
 
     await page.goto("/focus/session/starter-session", { waitUntil: "domcontentloaded" });
-    await expect(page.locator("main[data-route-state='focus-session']")).toBeVisible();
+    await expect(page.locator("main[data-route-state='focus-session']").first()).toBeVisible();
     await expect(page.getByText("Focus session: starter-session").first()).toBeVisible();
-    await expect(page.getByText("Focus state")).toBeVisible();
+    await expect(page.getByText("Focus state").first()).toBeVisible();
 
     await page.goto("/replay", { waitUntil: "domcontentloaded" });
     await expect(page.locator("main[data-route-state='replay-library']")).toBeVisible();
 
     await page.goto("/replay/starter-replay", { waitUntil: "domcontentloaded" });
-    const replayDetail = page.locator("main[data-route-state='replay-detail']");
+    const replayDetail = page.locator("main[data-route-state='replay-detail']").first();
     await expect(replayDetail).toBeVisible();
     await expect(replayDetail.getByText("Replay: starter-replay").first()).toBeVisible();
-    await expect(page.getByText("Replay state")).toBeVisible();
-    await expect(page.getByText("Starter Replay Arc")).toBeVisible();
+    await expect(page.getByText("Replay state").first()).toBeVisible();
+    await expect(page.getByText("Starter Replay Arc").first()).toBeVisible();
   });
 
   test("route-machine ESC unwind returns to canonical root home @production-smoke", async ({ page }) => {

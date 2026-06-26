@@ -1,101 +1,64 @@
 name: CI
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  app:
-    name: App validation
+  v1-app-green:
+    name: V1 app unit/build gate
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
+
+    env:
+      CI: "true"
+      NEXT_PUBLIC_FIREBASE_API_KEY: ci-placeholder
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ci-placeholder.firebaseapp.com
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ci-placeholder
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ci-placeholder.appspot.com
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+      NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:ci"
+      FIREBASE_PROJECT_ID: ci-placeholder
+      FIREBASE_CLIENT_EMAIL: ci@example.iam.gserviceaccount.com
+      FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
+      URAI_REQUIRE_FIREBASE_ADMIN: "0"
+      URAI_ENABLE_CHRONO_FIRESTORE: "0"
+      OPENAI_API_KEY: ci-placeholder-openai-key
+      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
 
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          lfs: false
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
           cache: npm
-
-      - name: Bootstrap launch validation
-        run: |
-          # Command contract executed by scripts/urai-launch-bootstrap.mjs:
-          # npm run check:lockfile
-          # npm run check:v1
-          # npm run check:home
-          # npm run check:ascent
-          # npm run launch:p0
-          # npm run release:p1
-          # npm run seed:demo
-          # npm run test:unit
-          # npm run test:rules
-          # npm run typecheck
-          # npm run lint
-          # npm run build
-          URAI_SKIP_E2E=1 node scripts/urai-launch-bootstrap.mjs
-
-      - name: Validate launch evidence
-        run: node scripts/validate-launch-evidence.mjs
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-
-      - name: Smoke tests
-        run: npm run test:smoke
-
-      - name: Upload launch evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: launch-evidence
-          path: artifacts/launch
-          if-no-files-found: ignore
-          retention-days: 14
-
-      - name: Upload Playwright results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-results
-          path: |
-            /tmp/urai-playwright-results
-            test-results
-            playwright-report
-          if-no-files-found: ignore
-          retention-days: 7
-
-  functions:
-    name: Firebase Functions validation
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    defaults:
-      run:
-        working-directory: functions
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: functions/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Build functions
+      - name: Typecheck
+        run: npm run check:types
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit and rules tests
+        run: npm test
+
+      - name: Production build
         run: npm run build

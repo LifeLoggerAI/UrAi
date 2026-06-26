@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1440" viewBox="0 0 1440 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Dream Signal demo memory</title>
+  <desc id="desc">Privacy-safe abstract dream signal placeholder for URAI Spatial demo memory rendering.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#f5d0fe"/>
+      <stop offset="38%" stop-color="#8b5cf6"/>
+      <stop offset="72%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="14"/></filter>
+  </defs>
+  <rect width="1440" height="1440" fill="url(#bg)"/>
+  <path d="M840 290 C650 350 548 540 590 740 C628 920 782 1058 970 1090 C780 1210 500 1110 390 860 C250 540 500 250 840 290Z" fill="#f8fafc" opacity="0.72"/>
+  <circle cx="430" cy="410" r="18" fill="#fff" opacity="0.8"/>
+  <circle cx="1010" cy="520" r="13" fill="#fff" opacity="0.72"/>
+  <circle cx="760" cy="920" r="170" fill="#c4b5fd" opacity="0.2" filter="url(#blur)"/>
+</svg>

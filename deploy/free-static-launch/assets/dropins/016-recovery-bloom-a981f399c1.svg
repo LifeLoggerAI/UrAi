@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1440" viewBox="0 0 1440 1440" role="img" aria-labelledby="title desc">
+  <title id="title">Recovery Bloom demo memory</title>
+  <desc id="desc">Privacy-safe abstract recovery bloom placeholder for URAI Spatial demo memory rendering.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="48%" r="62%">
+      <stop offset="0%" stop-color="#dffcff"/>
+      <stop offset="35%" stop-color="#67e8f9"/>
+      <stop offset="72%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <rect width="1440" height="1440" fill="url(#bg)"/>
+  <circle cx="720" cy="720" r="260" fill="#a7f3d0" opacity="0.28" filter="url(#soft)"/>
+  <circle cx="720" cy="720" r="146" fill="#ecfeff" opacity="0.72"/>
+  <path d="M720 318 C810 470 1032 520 940 735 C860 920 598 920 500 735 C390 528 626 470 720 318Z" fill="none" stroke="#fef3c7" stroke-width="18" opacity="0.72"/>
+</svg>

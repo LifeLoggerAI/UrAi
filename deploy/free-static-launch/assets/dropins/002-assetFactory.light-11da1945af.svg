@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="640" viewBox="0 0 100 125" role="img" aria-labelledby="title desc" data-urai-product="assetFactory" data-mode="light">
+<title id="title">Asset Factory</title>
+<desc id="desc">URAI master symbol system logo variant for Asset Factory</desc>
+
+<circle cx="50" cy="50" r="36" fill="none" stroke="#0B0F1A" stroke-width="2"/>
+<circle cx="50" cy="50" r="8" fill="#5DDCFF"/>
+<g data-modifier="modular-block-assembly" fill="#5DDCFF" opacity="0.75"><rect x="30" y="30" width="6" height="6" rx="1"/><rect x="64" y="30" width="6" height="6" rx="1"/><rect x="30" y="64" width="6" height="6" rx="1"/><rect x="64" y="64" width="6" height="6" rx="1"/></g>
+<text x="50" y="105" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="8" font-weight="700" letter-spacing="1.6" fill="#0B0F1A">URAI</text>
+<text x="50" y="116" text-anchor="middle" font-family="Inter, Sora, Arial, sans-serif" font-size="4.2" font-weight="500" letter-spacing="0.9" fill="#0B0F1A" opacity="0.72">Asset Factory</text>
+</svg>

@@ -5,26 +5,34 @@ on:
     workflows: ["Deploy Firebase Production"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   evidence:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
       - name: Install dependencies
         run: npm install
+
       - name: Install Playwright
-        run: npx playwright install
+        run: npx playwright install --with-deps
+
       - name: Run production smoke tests
         run: npm run test:smoke:production
         env:
           PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
+
       - name: Upload production evidence
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: production-evidence-results
           path: test-results/production-evidence/
