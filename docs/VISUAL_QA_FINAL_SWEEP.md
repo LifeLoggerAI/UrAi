@@ -1,12 +1,13 @@
 # URAI Visual QA Final Sweep
 
 Generated: 2026-06-25 America/Chicago
+Updated: 2026-06-25T23:54:00-05:00
 
 ## Decision
 
 Visual QA final sweep: BLOCKED.
 
-No final visual pass can be claimed because screenshots could not be captured in this environment.
+No final visual pass can be claimed because staging deploy did not complete and screenshots were not captured in this environment.
 
 ## Intended Coverage
 
@@ -19,7 +20,6 @@ Required viewports:
 Required launch-critical routes:
 
 - `/`
-- `/home`
 - `/system`
 - `/life-map`
 - `/dashboard`
@@ -28,57 +28,30 @@ Required launch-critical routes:
 - `/waitlist`
 - `/privacy`
 - `/terms`
-- `/demo`
 
-## Environment Blocker
+## Evidence Captured Instead
 
-The in-app browser/runtime failed during screenshot capture with:
+- Local direct Next build passed and emitted `.next/server/app/system.html`.
+- Built `/system` contains `URAI release truth`, registry timestamp, production lock fields, Genesis Spine, and deferred/gated system sections.
+- Existing staging `/system` returns 404 and cannot be visually accepted.
+- Existing production `/system` returns 200 but serves the stale Spatial root/home bundle and cannot be visually accepted.
 
-```text
-windows sandbox failed: helper_unknown_error: apply deny-read ACLs
-```
+## Environment And Evidence Blockers
 
-A minimal browser retry failed with the same sandbox error. Therefore no screenshot evidence is claimed for this pass.
-
-## HTTP-Level Route Evidence
-
-The following routes returned HTTP 200 during the final sweep:
-
-| Route | HTTP status | Visual readiness |
-| --- | --- | --- |
-| `/` | 200 | Not visually verified in this pass |
-| `/home` | 200 | Not visually verified in this pass |
-| `/system` | 200 | Blocking content mismatch; does not show production-lock truth live |
-| `/life-map` | 200 | Not visually verified in this pass |
-| `/dashboard` | 200 | Repo-side gated route added after live smoke; needs deploy and screenshot proof |
-| `/login` | 200 | Repo-side gated route added after live smoke; needs deploy and screenshot proof |
-| `/signup` | 200 | Repo-side gated route added after live smoke; needs deploy and screenshot proof |
-| `/waitlist` | 200 | Repo-side copy fixed; needs deploy and screenshot proof |
-| `/privacy` | 200 | Not visually verified in this pass |
-| `/terms` | 200 | Not visually verified in this pass |
-| `/demo` | 200 | Not visually verified in this pass |
-
-## Repo-Side Visual / UX Fixes Made
-
-| Route / file | Fix |
-| --- | --- |
-| `/` / `src/app/page.tsx` | Replaced prototype/dead-button surface with launch-safe public demo hero, clear CTAs, privacy/system links, and gated-system warning |
-| `/waitlist` / `src/app/waitlist/page.tsx` | Reframed waitlist as public demo and evidence-gated roadmap updates |
-| `src/components/WaitlistForm.tsx` | Removed vague `signal` status language and private-feature overclaim copy |
-| `/dashboard` / `src/app/dashboard/page.tsx` | Added explicit gated dashboard page |
-| `/login` / `src/app/login/page.tsx` | Added explicit gated login page |
-| `/signup` / `src/app/signup/page.tsx` | Added explicit waitlist-first signup page |
+- Firebase staging deploy failed before deployment with `Failed to authenticate, have you run firebase login?`.
+- The in-app browser/runtime previously failed screenshot capture with `windows sandbox failed: helper_unknown_error: apply deny-read ACLs`.
+- No `test:visual` npm script exists in `package.json`.
+- Existing staging routes `/signup`, `/login`, and `/dashboard` return 404 and need the latest commit deployed before visual QA.
 
 ## Remaining Visual Launch Blockers
 
-- Capture desktop/tablet/mobile screenshots after the repo-side fixes are deployed to staging.
+- Deploy commit `f6931174fd4bf81f8a57a624fa080b542938c179` to `urai-staging`.
 - Verify `/system` visually shows registry and production-lock truth.
-- Verify `/life-map` does not look like an unfinished prototype on mobile.
-- Verify `/dashboard`, `/login`, and `/signup` show the new gated pages, not a fallback shell.
+- Verify `/life-map` is clearly demo/gated where appropriate.
+- Verify `/dashboard`, `/login`, and `/signup` show gated/demo-safe pages, not fallback shells.
 - Verify `/waitlist` form loading/success/error states visually.
-- Verify no top-nav/homepage CTA points to `/ground` or any missing/deferred live route.
 - Verify privacy and terms remain readable on mobile.
 
 ## Final Visual QA Recommendation
 
-NO-GO until screenshots exist and the registry-backed `/system` route is live in staging.
+NO-GO until staging screenshots or equivalent browser evidence exist and the registry-backed `/system` route is live in staging.
