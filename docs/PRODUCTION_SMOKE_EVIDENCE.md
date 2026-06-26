@@ -1,70 +1,78 @@
 # URAI Production Smoke Evidence
 
 Generated: 2026-06-25
+Updated: 2026-06-25T23:54:00-05:00
 
 Smoke evidence is URL reachability evidence only. It does not prove production readiness without deploy, rollback, monitoring, Firebase target, and privacy gate evidence.
 
-## Safe Smoke Targets
+## Latest Production Decision
 
-Configured in `system/production-smoke-targets.json` and executed by:
+Production smoke is still BLOCKED for launch approval.
 
-```bash
-npm run smoke:production
-```
+No production deploy was attempted in the latest blocker pass because staging deploy did not complete and staging `/system` was not proven.
 
-This command was added in this pass, but could not be executed here because `node` and `npm` were not available on PATH.
+## Latest Local Evidence
 
-## Final Cutover Route Smoke
+| Check | Result |
+| --- | --- |
+| Node/npm | Portable Node `v20.19.4`, npm `10.8.2` |
+| `npm ci` | Passed |
+| `npm run check:system-registry` | Passed |
+| `npm run check:production-lock` | Passed internal consistency; `eligibleForLaunch=false` remains correct |
+| `npm run typecheck` | Passed |
+| `npm run lint` | Passed after `src/app/launch/page.tsx` apostrophe escape fix; warnings remain |
+| `npm test` | Passed, 50 suites and 319 tests |
+| `npm run build` | Failed before Next build because POSIX `rm`/`mkdir -p` are unavailable on Windows |
+| Direct Next build | Passed with `node ./node_modules/next/dist/bin/next build` |
+| Built `/system` | Contains registry truth markers locally |
 
-Date: 2026-06-25 America/Chicago
+## Latest Live Route Smoke
 
-Command shape: `curl.exe -L -s -o NUL -w ... <url>`.
+Date: 2026-06-25T23:54:00-05:00
 
 | URL | HTTP status | Result | Launch claim |
 | --- | --- | --- | --- |
-| https://urai.app/ | 200 | Existing live root responds | Reachability only |
-| https://urai.app/home | 200 | Existing live route responds | Reachability only |
-| https://urai.app/system | 200 | Responds, but does not show production-lock `/system` truth | Launch blocker |
-| https://urai.app/life-map | 200 | Existing live route responds | Reachability only |
-| https://urai.app/privacy | 200 | Existing live route responds | Reachability only |
-| https://urai.app/terms | 200 | Existing live route responds | Reachability only |
-| https://urai.app/waitlist | 200 | Existing live route responds | Reachability only |
-| https://urai.app/demo | 200 | Existing live route responds | Reachability only |
+| `https://urai.app/` | 200 | Existing live root responds | Reachability only |
+| `https://urai.app/system` | 200 | Responds, but serves stale Spatial root/home bundle instead of registry truth | Launch blocker |
+| `https://urai.app/privacy` | 200 | Existing live route responds | Reachability only |
+| `https://urai.app/terms` | 200 | Existing live route responds | Reachability only |
+| `https://urai.app/waitlist` | 200 | Existing live route responds with same root bundle length as `/` | Reachability only; content needs post-deploy proof |
 
-## `/system` Marker Check
+## Staging Gate Before Production
 
-`https://urai.app/system` did not contain these expected strings in the saved HTML:
+| URL | HTTP status | Result |
+| --- | --- | --- |
+| `https://urai-staging.web.app/` | 200 | Existing staging root responds |
+| `https://urai-staging.web.app/system` | 404 | Blocking: registry-backed `/system` is not live in staging |
+| `https://urai-staging.web.app/life-map` | 200 | Existing route responds |
+| `https://urai-staging.web.app/privacy` | 200 | Existing route responds |
+| `https://urai-staging.web.app/terms` | 200 | Existing route responds |
+| `https://urai-staging.web.app/waitlist` | 200 | Existing route responds |
+| `https://urai-staging.web.app/signup` | 404 | Blocking for requested public-demo route set |
+| `https://urai-staging.web.app/login` | 404 | Blocking for requested public-demo route set |
+| `https://urai-staging.web.app/dashboard` | 404 | Blocking for requested public-demo route set |
 
-- `URAI release truth`
-- `Production lock`
-- `launch mode`
-- `demo-only`
-- `launch-eligible`
+## Deploy Blocker
 
-The saved HTML contained the deployed `URAI Spatial` root/home bundle and title. This means the latest registry-backed `/system` page is not live yet.
+Attempted staging deploy command:
 
-## Earlier Manual URL Evidence Captured
+```bash
+npm exec firebase-tools -- deploy --project urai-staging --only hosting --config firebase.staging.json
+```
 
-| URL | Result | Meaning | Launch claim |
-| --- | --- | --- | --- |
-| https://urai.app/ | HTTP 200 | Canonical custom domain responds | Demo reachability only |
-| https://www.urai.app/ | HTTP 200 | Canonical www domain responds | Demo reachability only |
-| https://urai-4dc1d.web.app/ | HTTP 200 | Canonical Firebase host responds | Demo reachability only |
-| https://urai-staging.web.app/ | HTTP 200 | Staging root responds | Staging-only |
-| https://uraiprivacy.com/ | HTTP 200 | Privacy custom domain responds; DNS resolved to Squarespace | Not privacy gate pass |
-| https://www.uraiprivacy.com/ | HTTP 200 | Privacy www domain responds; DNS resolved to Squarespace | Not privacy gate pass |
-| https://urai-jobs.web.app/ | HTTP 200 | Jobs Firebase host responds | Not production-ready without strict evidence |
-| https://urai-admin.web.app/ | HTTP 503 | Admin Firebase host is unavailable | Launch blocker |
-| https://uraiassetfactory.com/ | HTTP 200 | Asset Factory apex responds | Deferred only |
-| https://www.uraiassetfactory.com/ | HTTPS failed; HTTP 404 | Asset Factory www is not ready | Domain blocker |
-| https://uraifoundation.org/ | HTTP 200 | Foundation external surface responds | External/governance surface only |
-| https://www.uraifoundation.org/ | HTTP 200 | Foundation www responds | External/governance surface only |
+Result:
+
+```text
+Error: Failed to authenticate, have you run firebase login?
+```
+
+No secrets were added. No production deploy was attempted.
 
 ## Required Before Production Smoke Counts
 
-- Run `npm run smoke:production` from a clean Node 20 environment.
-- Save command output, timestamp, branch, commit SHA, and operator.
-- Capture visual screenshots for desktop, tablet, and mobile.
-- Deploy and verify the registry-backed `/system` route in staging first.
-- Attach failed optional target warnings without treating them as launch pass.
-- Re-run after production deployment and after rollback drill.
+- Authenticate Firebase CLI with an operator account authorized for `urai-staging`.
+- Deploy commit `f6931174fd4bf81f8a57a624fa080b542938c179` to staging first.
+- Verify staging `/system` shows registry and production-lock truth.
+- Capture desktop/tablet/mobile visual evidence or equivalent browser DOM evidence.
+- Only after staging passes, deploy public-demo target and re-run production smoke.
+- Do not call the system production-ready until production lock, rollback, monitoring, DNS/SSL, privacy gate, and smoke evidence all pass.
