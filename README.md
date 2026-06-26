@@ -1,20 +1,34 @@
 # URAI
 
-URAI V1 is a public demo for the simplest version of the product promise: give URAI one memory, and it turns that memory into the first scene of a living world.
+URAI V1 is a public demo for the simplest version of the product promise: show how one sample memory can become the first scene of a symbolic world.
 
-This repository is launch-focused and intentionally conservative. Full passive sensing, therapy/diagnosis, marketplace, AR/VR, B2B, studio/export systems, and automated life-logging are **not live in V1** unless they are explicitly implemented, consent-gated, tested, and documented.
+This repository is launch-focused and intentionally conservative. Full passive sensing, therapy/diagnosis, marketplace, AR/VR, B2B, studio/export systems, autonomous jobs, outbound communications, provider integrations, user-derived intelligence, and automated life-logging are **not live in V1** unless they are explicitly implemented, consent-gated, tested, deployed, and documented with production evidence.
 
-The current V1 repo focus is the **memory-to-world demo spine**:
+The current V1 repo focus is the **sample memory-to-world demo spine**:
 
-- `/` memory-world entry scene
-- `/system` product-facing system status route backed by `system/urai-system-registry.json`
-- `/` cinematic home scene compatibility marker for the P0 launch gate
-- `/home` deeper URAI home experience with symbolic ground, orb, companion chat, reflection, and waitlist capture
+- `/` public demo entry scene with launch-safe copy and real CTAs
+- `/system` product-facing system status route backed by `system/urai-system-registry.json` once deployed
+- `/home` redirect/compatibility route for the public demo shell
+- `/life-map` symbolic Life Map demo surface
+- `/dashboard`, `/login`, and `/signup` gated pages until private-account evidence passes
+- `/waitlist` early-access capture page
+- `/privacy` and `/terms` public trust pages
 - `/u/adamclamp` public constellation demo
 - `/api/companion` deterministic mocked companion narrator endpoint with safety boundaries
 - `/api/waitlist` early-access capture endpoint
 - seeded demo data for memory blooms, timeline stars, mood forecast, and weekly reflection
 - Firebase rules/index scaffolding for V1 launch collections
+
+## Current launch posture
+
+The repo contains production-lock and launch evidence docs, but the app must not be called production-ready until checks, deploy evidence, smoke evidence, visual screenshots, rollback evidence, monitoring evidence, and privacy gate evidence pass.
+
+The latest evidence state is tracked in:
+
+- `docs/FINAL_LAUNCH_REPORT.md`
+- `docs/URAI_FINAL_DONE_DONE_STATUS.md`
+- `docs/PRODUCTION_LOCK.md`
+- `system/urai-system-registry.json`
 
 ## Quick start
 
@@ -42,6 +56,9 @@ Run the V1 validation path before deploying or sharing the demo:
 
 ```bash
 npm run check:system-registry
+npm run check:production-lock
+npm run smoke:production
+npm run smoke:genesis-spine
 npm run check:v1
 npm run check:firestore-contract
 npm run seed:demo
@@ -68,6 +85,8 @@ npm run test:e2e
 | --- | --- |
 | `npm run check:v1` | Verifies the required V1 files, scripts, dependencies, and Firebase config exist |
 | `npm run check:system-registry` | Verifies the canonical system registry and blocks invalid production, staging, sandbox, legacy, and privacy-gate claims |
+| `npm run check:production-lock` | Verifies launch modes, production claims, custom domains, blockers, and evidence gates |
+| `npm run smoke:production` | Checks only configured safe public URLs and does not imply production readiness by itself |
 | `npm run check:firestore-contract` | Verifies required Firestore rule matches and server-only waitlist posture; warns on remaining `userId` index drift |
 | `npm run seed:demo` | Writes `tmp/urai-demo-seed.json` |
 | `npm run seed:firestore` | Writes demo seed data to Firestore when Firebase Admin env vars are configured |
@@ -123,9 +142,14 @@ The waitlist route works in local dry-run mode without Admin credentials. With A
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Launch entry where one memory becomes the first scene of a living world |
-| `/system` | Public/demo-safe URAI system status surface backed by the canonical registry |
-| `/home` | Deeper URAI home experience with symbolic ground, orb, reflection, companion chat, and waitlist form |
+| `/` | Public demo entry where sample memory/world language is framed as launch-safe and evidence-gated |
+| `/system` | Public/demo-safe URAI system status surface backed by the canonical registry once deployed |
+| `/home` | Redirect/compatibility route for the public demo shell |
+| `/life-map` | Symbolic Life Map demo surface |
+| `/dashboard` | Gated page until private dashboard evidence passes |
+| `/login` | Gated page until private account release evidence passes |
+| `/signup` | Waitlist-first signup gate |
+| `/waitlist` | Early-access waitlist capture |
 | `/u/adamclamp` | Public constellation demo with blooms, timeline stars, forecast, reflection, and waitlist CTA |
 | `/api/companion` | POST endpoint for deterministic mocked companion narrator responses with safety boundaries |
 | `/api/waitlist` | POST endpoint for early-access signups |
@@ -140,7 +164,7 @@ firebase deploy --only firestore:rules,firestore:indexes
 
 ## Canonical system docs
 
-URAI production claims must be backed by registry evidence, passing checks, live deploy proof, privacy gate proof, and smoke evidence.
+URAI production claims must be backed by registry evidence, passing checks, live deploy proof, privacy gate proof, rollback proof, monitoring proof, visual QA, and smoke evidence.
 
 - `/system`
 - `docs/SYSTEM_OF_SYSTEMS_WIRING_MATRIX.md`
