@@ -2,125 +2,100 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "URAI | Inner Sky Shrine",
-  description: "URAI launch-safe sanctuary shell for a passive magical life OS.",
+  title: "URAI | Public Demo",
+  description: "URAI public demo surface for a privacy-gated life reflection product.",
 };
+
+const demoPromises = [
+  {
+    title: "Public demo first",
+    body: "This surface shows the URAI direction without opening private data, passive sensing, provider integrations, or production-only systems.",
+  },
+  {
+    title: "Your map stays yours",
+    body: "Life Map language is reflective and symbolic. Consent, export, deletion, retention, and admin audit gates must pass before private data features go live.",
+  },
+  {
+    title: "Roadmap is labeled",
+    body: "Spatial, analytics, communications, jobs, generated assets, and story systems remain demo, staging, roadmap, or gated until evidence proves otherwise.",
+  },
+];
+
+const launchLinks = [
+  { href: "/life-map", label: "Open Life Map demo", note: "Symbolic demo surface" },
+  { href: "/waitlist", label: "Join early access", note: "Real public CTA" },
+  { href: "/system", label: "View system status", note: "Registry and production-lock truth" },
+];
 
 export default function RootPage() {
   return (
-    <main className="min-h-screen bg-[#030712] px-6 py-10 text-white">
-      <section className="mx-auto flex min-h-[80vh] max-w-5xl flex-col justify-center gap-8">
-        <p className="text-sm uppercase tracking-[0.4em] text-cyan-200/80">Inner Sky Shrine</p>
+    <main className="min-h-screen overflow-hidden bg-[#030712] text-white">
+      <section className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-12 sm:px-8">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(45,212,191,0.12),transparent_26%),linear-gradient(180deg,rgba(15,23,42,0),rgba(3,7,18,0.95))]" />
 
-        <h1 className="text-5xl font-semibold tracking-tight md:text-7xl">
-          Your world is already forming.
-        </h1>
-
-        <p className="text-lg text-white/72">URAI</p>
-        <p className="text-sm text-cyan-100/80">Sky · Orb · Ground</p>
-
-        <p className="max-w-2xl text-base text-white/72">
-          URAI quietly turns the patterns of your life into a living world you can enter, reflect on, and grow from.
-        </p>
-
-        <p className="max-w-2xl text-base text-white/72">
-          A memory is only a spark -- not a requirement.
-        </p>
-
-        <a
-          href="/home?mode=quiet"
-          className="inline-flex w-fit rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950"
-        >
-          Enter my world
-        </a>
-
-        <div className="grid gap-4 rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 text-sm text-white/78 md:grid-cols-3">
-          <article>
-            <h2 className="text-base font-semibold text-white">First spark</h2>
-            <p>This memory can become the first star in your world.</p>
-          </article>
-
-          <article>
-            <h2 className="text-base font-semibold text-white">Quiet world</h2>
-            <p>A soft home field that loads before anything private is opened.</p>
-            <p>The sky is quiet for now.</p>
-            <p>Nothing is required yet.</p>
-            <p>URAI will let the first patterns appear gently.</p>
-          </article>
-
-          <article>
-            <h2 className="text-base font-semibold text-white">First spark · hopeful</h2>
-            <p>I moved to a new city and started rebuilding my life.</p>
-          </article>
+        <div className="max-w-4xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-cyan-200/75">URAI public demo</p>
+          <h1 className="mt-5 text-5xl font-semibold tracking-[-0.055em] text-white sm:text-7xl">
+            A quieter way to see your life take shape.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">
+            URAI is a privacy-gated reflection product. The public demo introduces the Home field, Life Map, and trust posture without claiming unsafe systems are live.
+          </p>
         </div>
 
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5">
-          <h2 className="text-base font-semibold text-white">The World After</h2>
-          <p>First spark</p>
-          <p>First spark · hopeful</p>
-          <p>This memory can become the first star in your world.</p>
-          <p>I moved to a new city and started rebuilding my life.</p>
-          <p>This is where your life stops being a note and starts becoming a world.</p>
-          <Link
-            href="/memory/demo-star?memory=I-moved-to-a-new-city-and-started-rebuilding-my-life&vibe=hopeful"
-            className="mt-4 inline-flex w-fit rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950"
-          >
-            Let it bloom
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/home" className="rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-950/30">
+            Enter demo
           </Link>
+          <Link href="/waitlist" className="rounded-full border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white hover:bg-white/[0.1]">
+            Join waitlist
+          </Link>
+          <Link href="/system" className="rounded-full border border-amber-200/25 bg-amber-200/[0.08] px-5 py-3 text-sm font-semibold text-amber-50 hover:bg-amber-200/[0.12]">
+            Check launch truth
+          </Link>
+        </div>
+
+        <section className="mt-12 grid gap-4 md:grid-cols-3">
+          {demoPromises.map((item) => (
+            <article key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/20">
+              <h2 className="text-base font-semibold text-white">{item.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-white/64">{item.body}</p>
+            </article>
+          ))}
         </section>
 
-        <form className="rounded-[2rem] border border-cyan-200/15 bg-cyan-200/[0.05] p-5">
-          <label className="block text-sm text-white/75">
-            Optional first spark
-            <textarea
-              aria-label="Optional first spark"
-              className="mt-2 min-h-24 w-full rounded-2xl bg-black/40 p-3 text-white"
-              defaultValue=""
-            />
-          </label>
+        <section className="mt-5 rounded-[2rem] border border-cyan-200/15 bg-cyan-200/[0.045] p-5">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-100/70">Launch-safe paths</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-white">Every primary action goes somewhere real.</h2>
+            </div>
+            <Link href="/privacy" className="text-sm font-semibold text-cyan-100 underline underline-offset-4">
+              Review privacy posture
+            </Link>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {launchLinks.map((item) => (
+              <Link key={item.href} href={item.href} className="rounded-2xl border border-white/10 bg-black/25 p-4 text-sm text-white/72 hover:border-cyan-200/30 hover:bg-cyan-200/[0.06]">
+                <span className="block font-semibold text-white">{item.label}</span>
+                <span className="mt-1 block text-white/52">{item.note}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
-          <label className="mt-4 block text-sm text-white/75">
-            World tone
-            <select
-              aria-label="World tone"
-              className="mt-2 w-full rounded-2xl bg-black/40 p-3 text-white"
-              defaultValue="hopeful"
-            >
-              <option value="hopeful">hopeful</option>
-              <option value="quiet">quiet</option>
-            </select>
-          </label>
+        <section className="mt-5 rounded-[2rem] border border-amber-200/20 bg-amber-200/[0.07] p-5 text-sm leading-6 text-amber-50/78">
+          <h2 className="text-base font-semibold text-amber-50">Safety boundary</h2>
+          <p className="mt-2">
+            URAI does not claim production readiness from this page. Passive sensing, outbound communications, therapy-adjacent behavior, monetization, live provider integrations, and user-derived intelligence remain gated until privacy, evidence, monitoring, rollback, and launch checks pass.
+          </p>
+        </section>
 
-          <button type="button" className="mt-4 rounded-full border border-cyan-200/30 px-4 py-2 text-sm">
-            Preview optional spark
-          </button>
-        </form>
-
-        <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            aria-label="Open URAI orb companion"
-            className="rounded-full border border-cyan-200/30 px-4 py-2 text-sm text-cyan-50"
-          >
-            Open URAI orb companion
-          </button>
-
-          <button
-            type="button"
-            aria-label="Open URAI Passport"
-            className="rounded-full border border-cyan-200/30 px-4 py-2 text-sm text-cyan-50"
-          >
-            Open URAI Passport
-          </button>
-
-          <button
-            type="button"
-            aria-label="Open Life Map"
-            className="rounded-full border border-cyan-200/30 px-4 py-2 text-sm text-cyan-50"
-          >
-            Open Life Map
-          </button>
-        </div>
+        <footer className="mt-8 flex flex-wrap gap-4 text-sm text-white/50">
+          <Link href="/privacy" className="hover:text-white">Privacy</Link>
+          <Link href="/terms" className="hover:text-white">Terms</Link>
+          <Link href="/system" className="hover:text-white">System status</Link>
+        </footer>
       </section>
     </main>
   );
