@@ -28,7 +28,7 @@ Actual final MP4/WebM video segments and WAV/MP3 voice/music renders were not ge
 | passport-ownership | passport-ownership-poster.svg | passport-ownership-loop.svg | needs_external_render | do-not-claim-marketplace-payouts-are-live-licens |
 | global-emotional-map | global-emotional-map-poster.svg | global-emotional-map-loop.svg | needs_external_render | global-signal-is-roadmap-permissioned-no-live-da |
 | accessibility-legacy | accessibility-legacy-poster.svg | accessibility-legacy-loop.svg | needs_external_render | accessibility-and-legacy-are-aspirational-produc |
-| final-home-return | final-home-return-poster.svg | final-home-return-loop.svg | needs_external_render | genesis-preview |
+| final-home-return | final-home-return-poster.svg | final-home-return-loop.svg | needs_external_render | genesis-preview-final |
 
 ## Files
 

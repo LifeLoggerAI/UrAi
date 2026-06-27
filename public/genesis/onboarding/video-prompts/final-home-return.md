@@ -10,7 +10,7 @@
 
 URAI is your home. Your sky. Your ground. Your orb. Your council. Your map. Your films. Your worlds. Your memories. Your data. Your future. You do not have to feed another app. Just live. You live. URAI remembers. You choose what becomes real.
 
-Create a premium cinematic URAI Genesis shot. All layers return to the orb and resolve into the URAI Genesis logo and the final Life Map CTA. Slow cinematic parallax with gentle UI light and safe preview labels. 8-12 second cinematic shot for Final Return Home: composed as a premium memory-world trailer moment, with restrained motion and no fake private user data. Lighting: Volumetric Genesis lighting using #a5f3fc and #facc15, deep sky contrast, warm human highlights, and a soft trusted vignette. Emotional tone: huge but intimate resolve. UI overlay text: .
+Create a premium cinematic URAI Genesis shot. All layers return to the orb and resolve into the URAI Genesis logo and the final Life Map CTA. Every layer collapses into the orb; final CTA appears after a calm pause. 8-12 second cinematic shot for Final Return Home: composed as a premium memory-world trailer moment, with restrained motion and no fake private user data. Lighting: Volumetric Genesis lighting using #a5f3fc and #facc15, deep sky contrast, warm human highlights, and a soft trusted vignette. Emotional tone: huge but intimate resolve. UI overlay text: URAI Genesis / Your life is a living world. / You live. URAI remembers. You choose what becomes real.
 
 Keep all humans symbolic and abstract. Do not show real private user data, readable private messages, real-person clones, medical claims, surveillance UI, production-live life movie claims, passive sensing proof, marketplace payouts, or autonomous agent claims.
 

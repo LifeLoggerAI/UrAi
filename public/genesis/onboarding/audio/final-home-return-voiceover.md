@@ -12,7 +12,7 @@ URAI is your home. Your sky. Your ground. Your orb. Your council. Your map. Your
 
 ## Caption
 
-
+URAI Genesis. You live. URAI remembers. You choose what becomes real.
 
 ## Sound Design
 

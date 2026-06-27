@@ -137,6 +137,8 @@ describe("Genesis onboarding film", () => {
       expect(asset.videoPath).toBeNull();
       expect(asset.audioPath).toBeNull();
       expect(asset.safeClaimTag.length).toBeGreaterThan(4);
+      expect(asset.captionText.length).toBeGreaterThan(0);
+      expect(asset.uiOverlayText.length).toBeGreaterThan(0);
 
       for (const assetPath of [
         asset.posterFramePath,
@@ -144,6 +146,7 @@ describe("Genesis onboarding film", () => {
         asset.videoPromptPath,
         asset.audioSpecPath,
         asset.captionPath,
+        asset.fallbackAsset,
       ]) {
         expect(assetPath).toMatch(/^\/genesis\/onboarding\//);
         expect(fs.existsSync(path.join(process.cwd(), "public", assetPath))).toBe(true);

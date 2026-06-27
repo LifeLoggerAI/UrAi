@@ -604,19 +604,23 @@ export const genesisOnboardingFinalAssets: GenesisOnboardingFinalAsset[] = [
     "captionPath": "/genesis/onboarding/captions/final-home-return.vtt",
     "videoPath": null,
     "audioPath": null,
-    "fallbackAsset": "",
+    "fallbackAsset": "/genesis/onboarding/final-home-return.svg",
     "assetStatus": "needs_external_render",
     "posterStatus": "final_svg_poster",
     "loopStatus": "final_svg_loop_background",
-    "safeClaimTag": "genesis-preview",
-    "motionDirection": "Slow cinematic parallax with gentle UI light and safe preview labels.",
+    "safeClaimTag": "genesis-preview-final",
+    "motionDirection": "Every layer collapses into the orb; final CTA appears after a calm pause.",
     "cameraDirection": "8-12 second cinematic shot for Final Return Home: composed as a premium memory-world trailer moment, with restrained motion and no fake private user data.",
     "lightingDirection": "Volumetric Genesis lighting using #a5f3fc and #facc15, deep sky contrast, warm human highlights, and a soft trusted vignette.",
     "emotionalTone": "huge but intimate resolve",
-    "uiOverlayText": [],
+    "uiOverlayText": [
+      "URAI Genesis",
+      "Your life is a living world.",
+      "You live. URAI remembers. You choose what becomes real."
+    ],
     "audioCue": "Full score resolves: piano, low brass, arpeggios, heartbeat, final breath.",
     "voiceoverLine": "URAI is your home. Your sky. Your ground. Your orb. Your council. Your map. Your films. Your worlds. Your memories. Your data. Your future. You do not have to feed another app. Just live. You live. URAI remembers. You choose what becomes real.",
-    "captionText": "",
+    "captionText": "URAI Genesis. You live. URAI remembers. You choose what becomes real.",
     "altText": "Final Return Home cinematic Genesis preview poster. Symbolic visual only; no private user media."
   }
 ];

@@ -129,9 +129,9 @@ function getGenesisDemoGuide({
       title: selectedStar ? `${selectedStar.title} becomes a preview reel` : "A memory becomes a preview reel",
       body:
         "Replay is a Genesis preview of memory-to-cinema: pacing, narration, and emotional framing. It is not a rendered personal life movie and does not use private user media.",
-      primary: { href: "/waitlist", label: "Join Waitlist" },
+      primary: { href: "/passport", label: "Open Passport" },
       secondary: { href: "/focus", label: "Back to Focus" },
-      facts: ["Genesis preview", "sample memory only", "real generation gated"],
+      facts: ["Genesis preview", "sample memory only", "Passport before real data"],
     };
   }
 
@@ -485,6 +485,7 @@ export default function SpatialLifeMap({
         <Link href="/life-map">Life Map</Link>
         <Link href="/focus">Open Focus</Link>
         <Link href="/replay">Open Replay</Link>
+        <Link href="/passport">Passport</Link>
         <Link href="/waitlist">Waitlist</Link>
       </nav>
 
@@ -655,6 +656,9 @@ export default function SpatialLifeMap({
               <button type="button" onClick={returnToGalaxy}>
                 Back to galaxy
               </button>
+              <Link href="/passport">
+                Open Passport
+              </Link>
               <Link href="/waitlist">
                 Join waitlist
               </Link>

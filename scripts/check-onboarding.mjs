@@ -173,17 +173,25 @@ for (const asset of finalManifest.assets ?? []) {
     fail(`Final media asset has invalid status: ${asset.sceneId}`);
   }
 
-  if (!asset.posterFramePath || !asset.finalAssetPath || !asset.videoPromptPath || !asset.audioSpecPath || !asset.captionPath) {
+  if (!asset.posterFramePath || !asset.finalAssetPath || !asset.videoPromptPath || !asset.audioSpecPath || !asset.captionPath || !asset.fallbackAsset) {
     fail(`Final media asset is missing required production paths: ${asset.sceneId}`);
     continue;
   }
 
-  for (const field of ["posterFramePath", "finalAssetPath", "videoPromptPath", "audioSpecPath", "captionPath"]) {
+  for (const field of ["posterFramePath", "finalAssetPath", "videoPromptPath", "audioSpecPath", "captionPath", "fallbackAsset"]) {
     const relativePath = asset[field].replace(/^\//, "");
     const absolutePath = path.join(root, "public", relativePath);
     if (!fs.existsSync(absolutePath)) {
       fail(`Final media path missing for ${asset.sceneId}: ${asset[field]}`);
     }
+  }
+
+  if (!asset.captionText || !asset.captionText.trim()) {
+    fail(`Final media asset is missing caption text: ${asset.sceneId}`);
+  }
+
+  if (!Array.isArray(asset.uiOverlayText) || asset.uiOverlayText.length === 0) {
+    fail(`Final media asset is missing UI overlay text: ${asset.sceneId}`);
   }
 
   if (status === "final" && (!asset.videoPath || !asset.audioPath)) {
