@@ -1,3 +1,4 @@
+import { genesisOnboardingSeedMemory } from "@/data/genesisOnboardingFilm";
 import type { LifeMapChapter, LifeMapConstellation, LifeMapDataset, LifeMapLayer, LifeMapLayerId, LifeMapStar, MemoryBloom, RelationshipThread, RitualThread, SpatialSettings } from "./lifeMap.types";
 
 const layer = (id: LifeMapLayerId, name: string, icon: string, color: string, depth: number, description: string): LifeMapLayer => ({ id, name, icon, color, enabled: true, opacity: 1, depth, description });
@@ -40,6 +41,33 @@ const star = (partial: Partial<LifeMapStar> & Pick<LifeMapStar, "id" | "title" |
 });
 
 export const spatialLifeMapStars: LifeMapStar[] = [
+  star({
+    id: genesisOnboardingSeedMemory.id,
+    title: genesisOnboardingSeedMemory.title,
+    date: genesisOnboardingSeedMemory.dateLabel,
+    type: "memory",
+    layer: "memories",
+    position3D: { x: -0.4, y: 0.6, z: 0.4 },
+    auraColor: "#f8d28f",
+    constellationId: "threshold-thread",
+    chapterId: "crossing",
+    emotionalTone: genesisOnboardingSeedMemory.emotionLabels.join(" / "),
+    intensity: 0.88,
+    size: 1.8,
+    glyph: "*",
+    relatedStarIds: ["threshold-door", "mirror-self", "soft-return"],
+    sourceSignals: [
+      genesisOnboardingSeedMemory.type,
+      genesisOnboardingSeedMemory.mode,
+      genesisOnboardingSeedMemory.privacy,
+    ],
+    narratorReflection:
+      "Genesis seed memory only: a symbolic replay preview with no private user data.",
+    archetype: "First Light",
+    relationshipIds: genesisOnboardingSeedMemory.relationshipLabels,
+    isMilestone: true,
+    privacyLevel: "localOnly",
+  }),
   star({ id: "blue-fog-memory", title: "Blue Fog Memory", type: "memory", layer: "memories", position3D: { x: -3.8, y: 0.4, z: 0.2 }, auraColor: "#bfe9ff", constellationId: "grief-thread", chapterId: "winter-becoming", emotionalTone: "quiet grief", intensity: 0.82, size: 1.6, glyph: "*", relatedStarIds: ["soft-return", "winter-thread"], archetype: "The Witness" }),
   star({ id: "winter-thread", title: "Winter Thread", type: "season", layer: "seasons", position3D: { x: -5.9, y: 1.6, z: -2.8 }, auraColor: "#93c5fd", constellationId: "grief-thread", chapterId: "winter-becoming", emotionalTone: "seasonal memory", intensity: 0.6, size: 1.1, glyph: "◐" }),
   star({ id: "soft-return", title: "Soft Return", type: "recovery", layer: "recoveryBlooms", position3D: { x: -1.8, y: -1.1, z: -0.7 }, auraColor: "#86efac", constellationId: "recovery-thread", chapterId: "winter-becoming", emotionalTone: "relief", intensity: 0.74, size: 1.35, glyph: "✺", isRecoveryBloom: true }),
@@ -76,12 +104,27 @@ export const spatialMemoryBlooms: MemoryBloom[] = spatialLifeMapStars.map((item)
   id: `${item.id}-bloom`,
   starId: item.id,
   auraAnimation: "breathing bloom, halo expansion, thread trace",
-  narratorScript: item.narratorReflection,
-  timelineFragments: ["signal gathered", "pattern softened", "memory placed in the sky"],
-  symbolicTags: [item.glyph, item.archetype, item.emotionalTone],
+  narratorScript:
+    item.id === genesisOnboardingSeedMemory.id
+      ? "Memory Replay Created. Source: onboarding seed memory. Mode: Genesis symbolic replay. Privacy: no private data used."
+      : item.narratorReflection,
+  timelineFragments:
+    item.id === genesisOnboardingSeedMemory.id
+      ? ["seed memory selected", "Focus image opened", "Replay preview prepared", "Passport receipt available"]
+      : ["signal gathered", "pattern softened", "memory placed in the sky"],
+  symbolicTags:
+    item.id === genesisOnboardingSeedMemory.id
+      ? [
+          genesisOnboardingSeedMemory.meaningLabel,
+          ...genesisOnboardingSeedMemory.outputsAvailable,
+        ]
+      : [item.glyph, item.archetype, item.emotionalTone],
   relationshipContext: item.relationshipIds,
   ritualPrompts: item.ritualIds.length ? ["Breathe once and let this ritual anchor settle."] : ["Name what this star is asking you to notice."],
-  whyThisMatters: "URAI surfaced this because its intensity, recurrence, and relationship to nearby stars made it meaningful.",
+  whyThisMatters:
+    item.id === genesisOnboardingSeedMemory.id
+      ? "This is the launch-safe onboarding seed: symbolic, consent-based, and not built from private user data."
+      : "URAI surfaced this because its intensity, recurrence, and relationship to nearby stars made it meaningful.",
 }));
 
 export const spatialRelationshipThreads: RelationshipThread[] = [{ id: "close-friend", title: "Close Friend Orbit", starIds: ["close-orbit", "body-rhythm"], tone: "warm trust", orbitStrength: 0.82 }];

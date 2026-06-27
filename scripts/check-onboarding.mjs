@@ -7,6 +7,7 @@ const root = process.cwd();
 const filmPath = path.join(root, "src/data/genesisOnboardingFilm.ts");
 const assetPath = path.join(root, "src/data/genesisOnboardingAssets.ts");
 const manifestPath = path.join(root, "public/genesis/onboarding/manifest.json");
+const lifeMapMockPath = path.join(root, "src/lib/spatial-life-map/lifeMap.mockData.ts");
 
 const requiredSceneIds = [
   "scattered-life",
@@ -73,6 +74,7 @@ function readRequired(filePath) {
 const filmSource = readRequired(filmPath);
 const assetSource = readRequired(assetPath);
 const manifestSource = readRequired(manifestPath);
+const lifeMapMockSource = readRequired(lifeMapMockPath);
 
 let manifest = { assets: [] };
 try {
@@ -103,6 +105,12 @@ if (voiceoverCount < requiredSceneIds.length) {
 for (const phrase of requiredTrustPhrases) {
   if (!filmSource.includes(phrase) && !assetSource.includes(phrase) && !manifestSource.includes(phrase)) {
     fail(`Missing required trust phrase: ${phrase}`);
+  }
+}
+
+for (const phrase of ["genesisOnboardingSeedMemory.id", "Memory Replay Created", "no private data used"]) {
+  if (!lifeMapMockSource.includes(phrase)) {
+    fail(`Life Map mock data is missing onboarding seed wiring phrase: ${phrase}`);
   }
 }
 

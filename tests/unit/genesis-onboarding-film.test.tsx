@@ -7,6 +7,10 @@ import {
   genesisOnboardingSeedMemory,
 } from "@/data/genesisOnboardingFilm";
 import { genesisOnboardingAssets } from "@/data/genesisOnboardingAssets";
+import {
+  spatialLifeMapStars,
+  spatialMemoryBlooms,
+} from "@/lib/spatial-life-map/lifeMap.mockData";
 
 const requiredSceneIds = [
   "scattered-life",
@@ -69,6 +73,29 @@ describe("Genesis onboarding film", () => {
       "delete",
       "keep",
     ]);
+  });
+
+  it("wires the onboarding seed into the Life Map sample spine", () => {
+    const seedStar = spatialLifeMapStars.find(
+      (star) => star.id === genesisOnboardingSeedMemory.id,
+    );
+    const seedBloom = spatialMemoryBlooms.find(
+      (bloom) => bloom.starId === genesisOnboardingSeedMemory.id,
+    );
+
+    expect(seedStar).toMatchObject({
+      title: "The Night Everything Changed",
+      privacyLevel: "localOnly",
+    });
+    expect(seedStar?.sourceSignals).toEqual(
+      expect.arrayContaining([
+        "onboarding_seed",
+        "genesis_symbolic_replay",
+        "no_private_user_data",
+      ]),
+    );
+    expect(seedBloom?.narratorScript).toContain("Memory Replay Created");
+    expect(seedBloom?.narratorScript).toContain("no private data used");
   });
 
   it("maps every scene to a manifest asset whose fallback exists", () => {
