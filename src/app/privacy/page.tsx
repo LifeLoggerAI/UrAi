@@ -31,13 +31,13 @@ export const metadata: Metadata = {
 
 const navLinks = [
   { href: "/home", label: "Home" },
+  { href: "/demo", label: "Demo" },
   { href: "/passport", label: "Passport" },
   { href: "/status", label: "Status" },
   { href: "/system", label: "System" },
   { href: "/support", label: "Support" },
   { href: "/waitlist", label: "Waitlist" },
 ];
-
 const principles = [
   {
     title: "Private by default",

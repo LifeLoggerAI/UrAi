@@ -30,7 +30,7 @@ const gateRows = [
 ] as const;
 
 const exploreCards = [
-  ["Public Demo", "Demo", "Enter the cinematic Genesis demo path with sample data only.", "/home", "Explore demo"],
+  ["Public Demo", "Demo", "Enter the cinematic Genesis demo path with sample data only.", "/demo", "Explore demo"],
   ["Life Map", "Preview", "Open the symbolic sky of demo moments, not a passive memory feed.", "/life-map", "Open Life Map"],
   ["Passport", "Consent-first", "Review the control model for what may open, export, or stay closed.", "/passport", "View Passport"],
   ["Status", "Public status", "Check which systems are live, preview, gated, or blocked.", "/status", "View Status"],
@@ -59,7 +59,7 @@ export default function LoginGatePage() {
           </Link>
           <div className="flex flex-wrap justify-end gap-2">
             <Link href="/launch" className={navLink}>Launch</Link>
-            <Link href="/home" className={navLink}>Demo</Link>
+            <Link href="/demo" className={navLink}>Demo</Link>
             <Link href="/passport" className={navLink}>Passport</Link>
             <Link href="/status" className={navLink}>Status</Link>
           </div>
@@ -80,7 +80,7 @@ export default function LoginGatePage() {
               Private systems stay closed until the gate is ready. That is intentional protection, not a broken login flow.
             </p>
             <div className="mt-8 flex flex-wrap gap-3" aria-label="Login gate actions">
-              <Link href="/home" className="inline-flex min-h-12 items-center justify-center rounded-full border border-teal-100/40 bg-gradient-to-br from-teal-300 to-cyan-200 px-6 text-sm font-extrabold text-teal-950 shadow-[0_18px_44px_rgba(20,184,166,0.25)] transition hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Explore the public URAI demo">
+              <Link href="/demo" className="inline-flex min-h-12 items-center justify-center rounded-full border border-teal-100/40 bg-gradient-to-br from-teal-300 to-cyan-200 px-6 text-sm font-extrabold text-teal-950 shadow-[0_18px_44px_rgba(20,184,166,0.25)] transition hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Explore the public URAI demo walkthrough">
                 Explore public demo
               </Link>
               <a href="#waitlist" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/[0.075] px-6 text-sm font-bold text-white/82 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-white/12 hover:text-white active:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Join the URAI waitlist">

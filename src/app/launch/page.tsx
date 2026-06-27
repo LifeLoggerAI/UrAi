@@ -37,7 +37,7 @@ const trustCards = [
 ] as const;
 
 const demoSteps = [
-  ["Enter Demo", "/home", "start in the Genesis home world"],
+  ["Demo Walkthrough", "/demo", "start with the public-safe guided tour"],
   ["Open Life Map", "/life-map", "see the symbolic demo sky"],
   ["Focus a memory star", "/focus", "narrow attention gently"],
   ["Replay the sample thread", "/replay", "view cinematic preview states"],
@@ -65,7 +65,7 @@ export default function LaunchPage() {
             URAI
           </Link>
           <div className="flex flex-wrap justify-end gap-2">
-            <Link href="/home" className={navLink}>Enter Demo</Link>
+            <Link href="/demo" className={navLink}>Demo</Link>
             <Link href="/life-map" className={navLink}>Life Map</Link>
             <Link href="/passport" className={navLink}>Passport</Link>
             <Link href="/status" className={navLink}>Status</Link>
@@ -78,7 +78,7 @@ export default function LaunchPage() {
             <p className="mt-6 max-w-3xl text-[clamp(1.35rem,3vw,2.25rem)] leading-[1.08] tracking-[-0.045em] text-teal-100">URAI turns chosen memories into a private symbolic Life Map, then lets you focus, replay, and protect each layer through consent.</p>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/68">The public demo uses sample data. Private systems stay gated until consent, privacy, and launch evidence gates pass.</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/home" className="inline-flex min-h-12 items-center justify-center rounded-full border border-teal-100/40 bg-gradient-to-br from-teal-300 to-cyan-200 px-6 text-sm font-extrabold text-teal-950 shadow-[0_18px_44px_rgba(20,184,166,0.25)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Enter the URAI public demo">Enter Demo</Link>
+              <Link href="/demo" className="inline-flex min-h-12 items-center justify-center rounded-full border border-teal-100/40 bg-gradient-to-br from-teal-300 to-cyan-200 px-6 text-sm font-extrabold text-teal-950 shadow-[0_18px_44px_rgba(20,184,166,0.25)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Enter the URAI public demo walkthrough">Enter Demo</Link>
               <a href="#waitlist" className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/12 bg-white/8 px-6 text-sm font-bold text-white/82 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-white/12 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Join the URAI waitlist">Join Waitlist</a>
               <Link href="/status" className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-200/25 bg-amber-200/10 px-6 text-sm font-bold text-amber-50 transition hover:-translate-y-0.5 hover:bg-amber-200/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200" aria-label="Open URAI system status">System Status</Link>
             </div>

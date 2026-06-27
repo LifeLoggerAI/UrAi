@@ -25,7 +25,7 @@ const actions = [
   ["Review Privacy Field", "/privacy", "Check consent and data-boundary language for private systems.", "Privacy"],
   ["Open system registry", "/system", "Inspect canonical release truth, blockers, and evidence gaps.", "Registry"],
   ["Contact support", `mailto:${supportEmail}`, "Email the configured support contact for public demo issues.", "Email"],
-  ["Return to demo", "/home", "Go back to the safe Genesis public demo path.", "Demo"],
+  ["Open demo walkthrough", "/demo", "Go to the safe Genesis public demo walkthrough.", "Demo"],
 ] as const;
 
 const beforeReporting = [
@@ -69,6 +69,7 @@ export default function SupportPage() {
           </Link>
           <div className="flex flex-wrap justify-end gap-2">
             <Link href="/launch" className={navLink}>Launch</Link>
+            <Link href="/demo" className={navLink}>Demo</Link>
             <Link href="/home" className={navLink}>Home</Link>
             <Link href="/life-map" className={navLink}>Life Map</Link>
             <Link href="/passport" className={navLink}>Passport</Link>
@@ -92,7 +93,7 @@ export default function SupportPage() {
             <div className="mt-7 flex flex-wrap gap-3">
               <a href="#report" className="inline-flex min-h-12 items-center rounded-full border border-cyan-100/40 bg-gradient-to-br from-cyan-100 via-teal-200 to-emerald-200 px-6 text-sm font-black text-slate-950 shadow-[0_20px_54px_rgba(45,212,191,0.24)] transition hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200">Report a bug</a>
               <Link href="/status" className="inline-flex min-h-12 items-center rounded-full border border-white/12 bg-white/[0.075] px-6 text-sm font-bold text-white/82 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-white/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200">Check status</Link>
-              <Link href="/home" className="inline-flex min-h-12 items-center rounded-full border border-white/12 bg-white/[0.075] px-6 text-sm font-bold text-white/82 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-white/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200">Return to demo</Link>
+              <Link href="/demo" className="inline-flex min-h-12 items-center rounded-full border border-white/12 bg-white/[0.075] px-6 text-sm font-bold text-white/82 transition hover:-translate-y-0.5 hover:border-cyan-200/40 hover:bg-white/12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200">Open demo</Link>
             </div>
           </section>
           <aside className="relative z-10 mt-8 min-h-[330px] overflow-hidden rounded-[2rem] border border-cyan-100/15 bg-[radial-gradient(circle_at_50%_24%,rgba(125,211,252,0.2),transparent_12rem),linear-gradient(180deg,rgba(15,23,42,0.38),rgba(2,6,23,0.9))] p-5 lg:mt-0" aria-label="Support trust preview">

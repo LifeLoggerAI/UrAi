@@ -86,7 +86,7 @@ export default function OnboardingPage() {
             URAI
           </Link>
           <div className="flex flex-wrap justify-end gap-2">
-            <Link href="/home" className={navLink}>Enter Demo</Link>
+            <Link href="/demo" className={navLink}>Demo</Link>
             <Link href="/passport" className={navLink}>Passport</Link>
             <Link href="/privacy" className={navLink}>Privacy</Link>
             <Link href="/status" className={navLink}>Status</Link>

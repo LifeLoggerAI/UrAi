@@ -67,6 +67,7 @@ export default function StatusPage() {
           </Link>
           <div className={styles.navLinks}>
             <Link href="/home">Home</Link>
+            <Link href="/demo">Demo</Link>
             <Link href="/life-map">Life Map</Link>
             <Link href="/passport">Passport</Link>
             <Link href="/privacy">Privacy</Link>

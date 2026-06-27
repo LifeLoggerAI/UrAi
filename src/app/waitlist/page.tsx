@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import WaitlistForm from "@/components/WaitlistForm";
 
 export const metadata = {
@@ -22,13 +22,13 @@ export const metadata = {
 
 const navItems = [
   { href: "/launch", label: "Launch" },
-  { href: "/home", label: "Demo" },
+  { href: "/demo", label: "Demo" },
   { href: "/passport", label: "Passport" },
   { href: "/status", label: "Status" },
 ] as const;
 
 const accessPath = [
-  { label: "Public Demo", status: "Available", href: "/home", detail: "Sample-safe Genesis path." },
+  { label: "Public Demo", status: "Available", href: "/demo", detail: "Sample-safe Genesis path." },
   { label: "Life Map", status: "Preview", href: "/life-map", detail: "Symbolic sample memory world." },
   { label: "Orb", status: "Preview", href: "/orb", detail: "Living interface bridge." },
   { label: "Passport", status: "Consent-first", href: "/passport", detail: "Boundaries before access." },
@@ -59,7 +59,7 @@ const trustCards = [
 ] as const;
 
 const actions = [
-  { href: "/home", label: "Explore Public Demo", tone: "primary" },
+  { href: "/demo", label: "Explore Public Demo", tone: "primary" },
   { href: "/life-map", label: "Open Life Map", tone: "secondary" },
   { href: "/passport", label: "Review Passport", tone: "secondary" },
   { href: "/status", label: "Check System Status", tone: "secondary" },
