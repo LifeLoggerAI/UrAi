@@ -1,0 +1,522 @@
+/* URAI Genesis AAA+++ Focus screen completion polish. Loaded after Life Map polish. */
+
+body:has(.spatial-life-map.urai-life-map-screen.is-focus),
+body:has(.spatial-life-map.urai-life-map-screen.is-bloom) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  background: #00030a !important;
+}
+
+.spatial-life-map.urai-life-map-screen.is-focus,
+.spatial-life-map.urai-life-map-screen.is-bloom {
+  background:
+    radial-gradient(circle at 24% 50%, rgba(191, 233, 255, .2), transparent 22%),
+    radial-gradient(circle at 58% 44%, rgba(85, 127, 226, .16), transparent 34%),
+    radial-gradient(circle at 70% 58%, rgba(189, 166, 255, .09), transparent 31%),
+    linear-gradient(180deg, #00020a 0%, #040816 52%, #000106 100%) !important;
+}
+
+.spatial-life-map.urai-life-map-screen.is-focus::after,
+.spatial-life-map.urai-life-map-screen.is-bloom::after {
+  z-index: 74 !important;
+  background:
+    radial-gradient(circle at 26% 51%, transparent 0 18%, rgba(1, 6, 18, .28) 45%, rgba(0,0,0,.72) 100%),
+    radial-gradient(ellipse at 56% 51%, transparent 0 30%, rgba(0,0,0,.5) 78%, rgba(0,0,0,.88) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.58), transparent 24%, transparent 76%, rgba(0,0,0,.68)) !important;
+}
+
+.spatial-life-map.is-focus .spatial-stage,
+.spatial-life-map.is-bloom .spatial-stage {
+  filter: saturate(.78) brightness(.52) blur(.7px) !important;
+  transform: scale(1.018) !important;
+}
+
+.spatial-life-map.is-focus .spatial-title-card,
+.spatial-life-map.is-bloom .spatial-title-card {
+  top: max(.9rem, env(safe-area-inset-top)) !important;
+  left: 50% !important;
+  right: auto !important;
+  min-width: 0 !important;
+  width: min(430px, calc(100vw - 2rem)) !important;
+  max-width: min(430px, calc(100vw - 2rem)) !important;
+  transform: translateX(-50%) scale(.94) !important;
+  opacity: .92 !important;
+  pointer-events: none !important;
+  padding: .72rem 1rem .78rem !important;
+  border-radius: 1.35rem !important;
+  border-color: rgba(217, 245, 255, .18) !important;
+  background: linear-gradient(180deg, rgba(7, 17, 38, .62), rgba(2, 7, 20, .48)) !important;
+  box-shadow: 0 18px 76px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.055) !important;
+  backdrop-filter: blur(22px) saturate(1.08) !important;
+}
+
+.spatial-life-map.is-focus .spatial-title-card p,
+.spatial-life-map.is-bloom .spatial-title-card p {
+  font-size: .56rem !important;
+  letter-spacing: .28em !important;
+  color: rgba(191,233,255,.62) !important;
+}
+
+.spatial-life-map.is-focus .spatial-title-card h1,
+.spatial-life-map.is-bloom .spatial-title-card h1 {
+  margin: .16rem 0 .1rem !important;
+  font-size: clamp(1.15rem, 2.2vw, 1.72rem) !important;
+  line-height: .98 !important;
+  letter-spacing: -.04em !important;
+}
+
+.spatial-life-map.is-focus .spatial-title-card span,
+.spatial-life-map.is-bloom .spatial-title-card span {
+  font-size: .66rem !important;
+  line-height: 1.25 !important;
+  color: rgba(223,247,255,.62) !important;
+}
+
+.spatial-life-map.is-focus .spatial-route-gates,
+.spatial-life-map.is-bloom .spatial-route-gates {
+  top: max(5.2rem, calc(env(safe-area-inset-top) + 5.2rem)) !important;
+  left: max(1rem, env(safe-area-inset-left)) !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 8.75rem !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: .48rem !important;
+  z-index: 96 !important;
+}
+
+.spatial-life-map.is-focus .spatial-route-gates a,
+.spatial-life-map.is-bloom .spatial-route-gates a {
+  min-width: 0 !important;
+  min-height: 2.7rem !important;
+  justify-content: flex-start !important;
+  padding: .58rem .72rem !important;
+  border-radius: 1rem !important;
+  font-size: .68rem !important;
+  letter-spacing: .12em !important;
+  color: rgba(240,253,255,.82) !important;
+}
+
+.spatial-life-map.is-focus .spatial-route-gates a[aria-current="page"],
+.spatial-life-map.is-bloom .spatial-route-gates a[aria-current="page"] {
+  border-color: rgba(191,233,255,.52) !important;
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(191,233,255,.22), transparent 46%),
+    linear-gradient(135deg, rgba(15, 56, 90, .82), rgba(4, 11, 27, .76)) !important;
+}
+
+.spatial-life-map.is-focus .spatial-layer-wheel,
+.spatial-life-map.is-bloom .spatial-layer-wheel,
+.spatial-life-map.is-focus .spatial-chapter-rail,
+.spatial-life-map.is-bloom .spatial-chapter-rail,
+.spatial-life-map.is-focus .spatial-star-preview,
+.spatial-life-map.is-bloom .spatial-star-preview,
+.spatial-life-map.is-focus .spatial-genesis-guide,
+.spatial-life-map.is-bloom .spatial-genesis-guide,
+.spatial-life-map.is-focus .spatial-zoom-hud,
+.spatial-life-map.is-bloom .spatial-zoom-hud {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.spatial-life-map.is-focus .spatial-controls,
+.spatial-life-map.is-bloom .spatial-controls {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  bottom: max(1.05rem, calc(env(safe-area-inset-bottom) + 1.05rem)) !important;
+  left: 50% !important;
+  right: auto !important;
+  width: min(760px, calc(100vw - 2rem)) !important;
+  max-width: min(760px, calc(100vw - 2rem)) !important;
+  padding: .55rem !important;
+  opacity: .98 !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+  z-index: 98 !important;
+  border: 1px solid rgba(217,245,255,.2) !important;
+  border-radius: 1.35rem !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(191,233,255,.1), transparent 36%),
+    linear-gradient(180deg, rgba(8,18,40,.82), rgba(2,7,20,.72)) !important;
+  box-shadow: 0 26px 92px rgba(0,0,0,.46), inset 0 1px 0 rgba(255,255,255,.07) !important;
+  backdrop-filter: blur(26px) saturate(1.12) !important;
+}
+
+.spatial-life-map.is-focus .spatial-controls button,
+.spatial-life-map.is-bloom .spatial-controls button {
+  min-height: 3rem !important;
+  border-radius: .95rem !important;
+  padding: .58rem .72rem !important;
+  font-size: .78rem !important;
+  font-weight: 850 !important;
+  color: rgba(245,251,255,.94) !important;
+}
+
+.spatial-life-map.is-focus .spatial-controls button:disabled,
+.spatial-life-map.is-bloom .spatial-controls button:disabled {
+  opacity: .42 !important;
+  color: rgba(223,247,255,.42) !important;
+  cursor: not-allowed !important;
+}
+
+.spatial-focus-chamber {
+  z-index: 86 !important;
+  place-items: center !important;
+  background:
+    radial-gradient(circle at 25% 50%, rgba(191,233,255,.16), transparent 18%),
+    radial-gradient(circle at 52% 49%, rgba(95,159,255,.1), transparent 30%);
+}
+
+.spatial-focus-chamber::before {
+  background:
+    radial-gradient(circle at 24% 50%, transparent 0 15%, rgba(191,233,255,.06) 16%, transparent 31%),
+    radial-gradient(ellipse at 56% 50%, rgba(0,0,0,.1) 0 24%, rgba(0,0,0,.46) 76%, rgba(0,0,0,.82) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.62), transparent 22%, transparent 74%, rgba(0,0,0,.72)) !important;
+}
+
+.spatial-focus-weather {
+  left: 34% !important;
+  top: 51% !important;
+  width: min(54vw, 760px) !important;
+  height: min(36vw, 500px) !important;
+  opacity: .9 !important;
+  border-color: rgba(217,245,255,.09) !important;
+  box-shadow: inset 0 0 96px rgba(191,233,255,.045), 0 0 120px rgba(125,211,252,.06) !important;
+}
+
+.spatial-focus-orb {
+  left: clamp(2.3rem, 16vw, 15rem) !important;
+  top: 51% !important;
+  width: clamp(210px, 23vw, 350px) !important;
+  height: clamp(210px, 23vw, 350px) !important;
+  transform: translateY(-50%) !important;
+  filter: saturate(1.24) brightness(1.12) drop-shadow(0 0 36px rgba(191,233,255,.16)) !important;
+  opacity: .98 !important;
+}
+
+.spatial-focus-orb::before {
+  inset: -58% !important;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.24), rgba(191,233,255,.16) 26%, rgba(125,211,252,.08) 47%, transparent 72%) !important;
+  filter: blur(20px) !important;
+}
+
+.spatial-focus-copy {
+  width: min(600px, calc(100vw - 22rem)) !important;
+  min-height: auto !important;
+  max-height: calc(100dvh - 10.5rem) !important;
+  margin-left: clamp(15rem, 24vw, 24rem) !important;
+  align-content: center !important;
+  padding: clamp(1.35rem, 2.6vw, 2.35rem) !important;
+  border-radius: 2rem !important;
+  border-color: rgba(217,245,255,.26) !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(191,233,255,.16), transparent 38%),
+    radial-gradient(circle at 92% 14%, rgba(189,166,255,.1), transparent 42%),
+    linear-gradient(180deg, rgba(7,17,38,.86), rgba(2,7,20,.78)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.095),
+    0 44px 150px rgba(0,0,0,.62),
+    0 0 120px rgba(125,211,252,.1) !important;
+  backdrop-filter: blur(34px) saturate(1.18) !important;
+}
+
+.spatial-focus-copy p {
+  color: rgba(191,233,255,.74) !important;
+  font-size: .7rem !important;
+  letter-spacing: .32em !important;
+}
+
+.spatial-focus-copy h2 {
+  margin: .42rem 0 0 !important;
+  font-size: clamp(2.7rem, 5.1vw, 5.1rem) !important;
+  line-height: .88 !important;
+  letter-spacing: -.075em !important;
+}
+
+.spatial-focus-copy > span {
+  max-width: 34rem !important;
+  margin-top: .92rem !important;
+  color: rgba(240,253,255,.82) !important;
+  font-size: clamp(.98rem, 1.18vw, 1.1rem) !important;
+  line-height: 1.58 !important;
+}
+
+.spatial-focus-signals {
+  gap: .5rem !important;
+  margin-top: 1.1rem !important;
+}
+
+.spatial-focus-signals small {
+  padding: .48rem .68rem !important;
+  border-color: rgba(217,245,255,.2) !important;
+  background: rgba(191,233,255,.075) !important;
+  color: rgba(223,247,255,.72) !important;
+  font-size: .72rem !important;
+}
+
+.spatial-focus-actions {
+  gap: .62rem !important;
+  margin-top: 1.2rem !important;
+}
+
+.spatial-focus-actions button,
+.spatial-focus-close {
+  min-height: 2.9rem !important;
+  border-color: rgba(217,245,255,.24) !important;
+  background: rgba(7, 18, 40, .72) !important;
+  color: rgba(245,251,255,.9) !important;
+  font-size: .82rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .04em !important;
+}
+
+.spatial-focus-action-primary {
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255,255,255,.18), transparent 46%),
+    linear-gradient(135deg, rgba(191,233,255,.92), rgba(103,232,249,.62)) !important;
+  border-color: rgba(255,255,255,.46) !important;
+  color: #04111f !important;
+  box-shadow: 0 18px 50px rgba(103,232,249,.18), inset 0 1px 0 rgba(255,255,255,.38) !important;
+}
+
+.spatial-focus-action-secondary,
+.spatial-focus-action-quiet {
+  background: rgba(191,233,255,.08) !important;
+}
+
+.spatial-focus-actions button:hover,
+.spatial-focus-actions button:focus-visible,
+.spatial-focus-close:hover,
+.spatial-focus-close:focus-visible {
+  transform: translateY(-2px) !important;
+  outline: 2px solid rgba(191,233,255,.42) !important;
+  outline-offset: 3px !important;
+  border-color: rgba(217,245,255,.46) !important;
+}
+
+.spatial-focus-actions button:active,
+.spatial-focus-close:active {
+  transform: translateY(0) scale(.98) !important;
+}
+
+.spatial-focus-close {
+  right: max(1rem, env(safe-area-inset-right)) !important;
+  top: max(.9rem, env(safe-area-inset-top)) !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  padding: .62rem .9rem !important;
+  border-radius: 999px !important;
+  text-transform: uppercase !important;
+  font-size: .66rem !important;
+  z-index: 99 !important;
+}
+
+@media (max-width: 1180px) {
+  .spatial-focus-copy {
+    width: min(560px, calc(100vw - 15rem)) !important;
+    margin-left: clamp(11rem, 22vw, 17rem) !important;
+  }
+
+  .spatial-focus-orb {
+    width: clamp(180px, 22vw, 280px) !important;
+    height: clamp(180px, 22vw, 280px) !important;
+  }
+}
+
+@media (max-height: 820px) and (min-width: 861px) {
+  .spatial-life-map.is-focus .spatial-title-card,
+  .spatial-life-map.is-bloom .spatial-title-card {
+    transform: translateX(-50%) scale(.88) !important;
+    top: .62rem !important;
+  }
+
+  .spatial-focus-copy {
+    max-height: calc(100dvh - 8.8rem) !important;
+    padding: 1.25rem 1.45rem !important;
+  }
+
+  .spatial-focus-copy h2 {
+    font-size: clamp(2.35rem, 4.3vw, 4.4rem) !important;
+  }
+
+  .spatial-focus-copy > span {
+    font-size: .95rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .spatial-focus-actions,
+  .spatial-focus-signals {
+    margin-top: .75rem !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-controls,
+  .spatial-life-map.is-bloom .spatial-controls {
+    bottom: .7rem !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .spatial-life-map.is-focus .spatial-title-card,
+  .spatial-life-map.is-bloom .spatial-title-card {
+    left: .75rem !important;
+    right: .75rem !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    padding: .62rem .74rem !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-title-card span,
+  .spatial-life-map.is-bloom .spatial-title-card span {
+    display: none !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-route-gates,
+  .spatial-life-map.is-bloom .spatial-route-gates {
+    left: .75rem !important;
+    right: .75rem !important;
+    bottom: max(.65rem, calc(env(safe-area-inset-bottom) + .65rem)) !important;
+    top: auto !important;
+    width: auto !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-route-gates a,
+  .spatial-life-map.is-bloom .spatial-route-gates a {
+    min-height: 2.45rem !important;
+    justify-content: center !important;
+    padding: .34rem .22rem !important;
+    font-size: .54rem !important;
+    letter-spacing: .05em !important;
+  }
+
+  .spatial-focus-chamber {
+    padding: .75rem !important;
+    padding-top: 5.5rem !important;
+    padding-bottom: max(8.35rem, calc(env(safe-area-inset-bottom) + 7.8rem)) !important;
+    place-items: center !important;
+  }
+
+  .spatial-focus-orb {
+    left: 50% !important;
+    top: 24% !important;
+    width: clamp(130px, 38vw, 190px) !important;
+    height: clamp(130px, 38vw, 190px) !important;
+    transform: translate(-50%, -50%) !important;
+    opacity: .82 !important;
+  }
+
+  .spatial-focus-weather {
+    left: 50% !important;
+    top: 35% !important;
+    width: 92vw !important;
+    height: 46vh !important;
+  }
+
+  .spatial-focus-copy {
+    width: min(100%, 34rem) !important;
+    max-height: none !important;
+    min-height: auto !important;
+    margin-left: 0 !important;
+    padding: 1rem !important;
+    border-radius: 1.45rem !important;
+  }
+
+  .spatial-focus-copy h2 {
+    font-size: clamp(2.25rem, 12vw, 3.7rem) !important;
+  }
+
+  .spatial-focus-copy > span {
+    font-size: .88rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .spatial-focus-actions button {
+    flex: 1 1 8.5rem !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-controls,
+  .spatial-life-map.is-bloom .spatial-controls {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    bottom: max(3.65rem, calc(env(safe-area-inset-bottom) + 3.5rem)) !important;
+    width: calc(100vw - 1.5rem) !important;
+    padding: .42rem !important;
+  }
+
+  .spatial-life-map.is-focus .spatial-controls button,
+  .spatial-life-map.is-bloom .spatial-controls button {
+    min-height: 2.32rem !important;
+    padding: .38rem .28rem !important;
+    font-size: .58rem !important;
+    border-radius: .78rem !important;
+  }
+
+  .spatial-focus-close {
+    top: .75rem !important;
+    right: .75rem !important;
+    padding: .52rem .72rem !important;
+    font-size: .56rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-focus-chamber,
+  .spatial-focus-orb,
+  .spatial-focus-actions button,
+  .spatial-focus-close {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}
+.spatial-replay-overlay {
+  pointer-events: none !important;
+}
+.spatial-replay-card {
+  pointer-events: none !important;
+}
+
+.spatial-replay-actions {
+  position: relative !important;
+  z-index: 20 !important;
+  pointer-events: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: .56rem !important;
+  width: 100% !important;
+  margin-top: 1.2rem !important;
+}
+
+.spatial-replay-actions button,
+.spatial-replay-actions a {
+  position: relative !important;
+  inset: auto !important;
+  display: inline-flex !important;
+  min-height: 2.86rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  border-radius: .96rem !important;
+  pointer-events: auto !important;
+  z-index: 21 !important;
+  font-size: clamp(.58rem, .72vw, .68rem) !important;
+  line-height: 1.08 !important;
+  text-align: center !important;
+  white-space: normal !important;
+}
+
+.spatial-replay-actions button:hover,
+.spatial-replay-actions button:focus-visible,
+.spatial-replay-actions a:hover,
+.spatial-replay-actions a:focus-visible {
+  outline: 2px solid rgba(191,233,255,.42) !important;
+  outline-offset: 3px !important;
+}
+
+@media (max-width: 860px) {
+  .spatial-replay-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

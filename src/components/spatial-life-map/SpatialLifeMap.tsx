@@ -193,7 +193,7 @@ function FocusChamber({
         onClick={onClose}
         aria-label="Return to full galaxy"
       >
-        x
+        Back to galaxy
       </button>
 
       <div className="spatial-focus-copy">
@@ -210,13 +210,13 @@ function FocusChamber({
         </div>
 
         <div className="spatial-focus-actions">
-          <button type="button" onClick={onReplay}>
+          <button type="button" className="spatial-focus-action-primary" onClick={onReplay} aria-label={`Open replay preview for ${star.title}`}>
             Open replay
           </button>
-          <button type="button" onClick={onBloom}>
+          <button type="button" className="spatial-focus-action-secondary" onClick={onBloom} aria-label={`Open symbolic bloom for ${star.title}`}>
             Open bloom
           </button>
-          <button type="button" onClick={onClose}>
+          <button type="button" className="spatial-focus-action-quiet" onClick={onClose} aria-label="Return to the full Life Map galaxy">
             Back to galaxy
           </button>
         </div>
