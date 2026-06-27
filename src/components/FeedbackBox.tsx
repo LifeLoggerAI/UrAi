@@ -26,13 +26,13 @@ export default function FeedbackBox() {
     event.preventDefault();
 
     if (!message.trim()) {
-      setErrorMessage("Drop at least a sentence so we can jump on it.");
+      setErrorMessage("Add at least a sentence so the note can be reviewed safely.");
       setStatus("error");
       return;
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Feedback inbox is offline. Email press@urai.app while we bring it back.");
+      setErrorMessage("Feedback capture is unavailable in this environment. Use the configured support email for public demo issues.");
       setStatus("error");
       return;
     }
@@ -52,10 +52,9 @@ export default function FeedbackBox() {
       setStatus("success");
       setMessage("");
       setEmail("");
-    } catch (error) {
-      console.error("Failed to send feedback", error);
+    } catch {
       setStatus("error");
-      setErrorMessage("Could not save that. Try again or email press@urai.app.");
+      setErrorMessage("Could not save that report. Use the configured support email instead.");
     }
   };
 
@@ -64,20 +63,20 @@ export default function FeedbackBox() {
       <div className="mb-4 space-y-1">
         <h3 className="text-lg font-semibold text-white">Have notes for URAI?</h3>
         <p className="text-sm text-white/60">
-          We are shipping daily. Leave a thought, bug, or wish and we will reply within 24h.
+          Leave a product note, bug, or wish without sending secrets or sensitive private memories.
         </p>
       </div>
 
       {!isFirebaseConfigured ? (
         <p className="text-sm leading-6 text-amber-200">
-          Feedback capture is paused because Firebase is not configured in this environment. Email
+          Feedback capture is unavailable in this environment. Email
           <a
-            href="mailto:press@urai.app"
+            href="mailto:support@urai.app"
             className="mx-1 inline-flex min-h-8 items-center rounded-full px-1 font-semibold underline decoration-dashed underline-offset-4"
           >
-            press@urai.app
+            support@urai.app
           </a>
-          with anything urgent.
+          for time-sensitive public demo issues.
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -125,7 +124,7 @@ export default function FeedbackBox() {
           </div>
 
           {status === "success" ? (
-            <p className="text-sm text-emerald-300">Got it. We will review it today.</p>
+            <p className="text-sm text-emerald-300">Got it. The report is queued for review.</p>
           ) : null}
           {status === "error" && errorMessage ? (
             <p className="text-sm text-rose-300">{errorMessage}</p>

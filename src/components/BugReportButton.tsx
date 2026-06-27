@@ -22,8 +22,7 @@ function gatherLocalStorageKeys() {
       }
     }
     return keys.join(", ");
-  } catch (error) {
-    console.warn("Unable to read localStorage keys", error);
+  } catch {
     return "";
   }
 }
@@ -85,7 +84,7 @@ export default function BugReportButton() {
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Bug inbox is offline here. Email press@urai.app and we will jump in.");
+      setErrorMessage("Bug capture is unavailable in this environment. Use the configured support email for public demo issues.");
       setState("error");
       return;
     }
@@ -109,10 +108,9 @@ export default function BugReportButton() {
       setState("success");
       setDescription("");
       setEmail("");
-    } catch (error) {
-      console.error("Bug report failed", error);
+    } catch {
       setState("error");
-      setErrorMessage("Could not capture that. Ping press@urai.app instead.");
+      setErrorMessage("Could not capture that report. Use the configured support email instead.");
     }
   };
 
@@ -132,12 +130,12 @@ export default function BugReportButton() {
         <p className="mt-4 text-xs leading-6 text-amber-300">
           Bug intake is paused here. Email
           <a
-            href="mailto:press@urai.app"
+            href="mailto:support@urai.app"
             className="mx-1 inline-flex min-h-8 items-center rounded-full px-1 font-semibold underline decoration-dashed underline-offset-4"
           >
-            press@urai.app
+            support@urai.app
           </a>
-          if you spot something urgent.
+          for time-sensitive public demo issues.
         </p>
       ) : (
         <>
@@ -186,7 +184,7 @@ export default function BugReportButton() {
                       disabled={state === "sending"}
                       className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:bg-white/40 disabled:text-black/60"
                     >
-                      {state === "sending" ? "Uploading..." : "Send bug"}
+                      {state === "sending" ? "Submitting..." : "Send bug"}
                     </button>
                   </div>
                 </>
@@ -209,7 +207,7 @@ export default function BugReportButton() {
               {buttonLabel}
             </button>
             {state === "success" ? (
-              <span className="text-emerald-300">We will follow up shortly.</span>
+              <span className="text-emerald-300">Report queued for review.</span>
             ) : null}
           </div>
         </>

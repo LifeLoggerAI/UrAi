@@ -17,8 +17,7 @@ const MainLayout = ({ children }) => {
               <p className="text-xs uppercase tracking-[0.35em] text-white/40">Build with us</p>
               <h2 className="mt-2 text-2xl font-semibold text-white">Help us tune URAI.</h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/60">
-                Spot a rough edge? Drop a note or fire off a bug report. We ship
-                daily and reply within 24 hours.
+                Spot a rough edge? Leave a product note or bug report without sending secrets or sensitive private memories.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 text-xs text-white/40">
@@ -35,10 +34,10 @@ const MainLayout = ({ children }) => {
                 Support docs
               </Link>
               <a
-                href="mailto:press@urai.app"
+                href="mailto:support@urai.app"
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-semibold uppercase tracking-wide text-white hover:border-white/40 hover:text-white"
               >
-                Email us
+                Email support
               </a>
             </div>
           </div>
