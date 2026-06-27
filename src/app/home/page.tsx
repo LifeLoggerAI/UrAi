@@ -2,36 +2,37 @@ import type { Metadata } from "next";
 import GenesisLaunchShell from "@/components/genesis/GenesisLaunchShell";
 
 export const metadata: Metadata = {
-  title: "Home Orb | URAI Genesis",
-  description: "URAI Genesis home preview with launch-safe paths into Life Map, Focus, Replay, Ground, Orb, Sky, and Horizon.",
+  title: "Genesis Home | URAI",
+  description: "Start the URAI Genesis friend-demo path with a cinematic Home field, sample-only Life Map, Focus, Replay, and Waitlist flow.",
 };
 
 export default function HomePage() {
   return (
     <GenesisLaunchShell
-      eyebrow="Genesis home preview"
-      title="The home field opens before anything private does."
-      description="URAI Home is the calm launch doorway: a cinematic public demo that points to the Life Map, Focus, Replay, Ground, Sky, and Horizon surfaces without claiming private data systems are live."
+      eyebrow="Genesis Home / sample-only demo"
+      title="The orb wakes the map before anything private opens."
+      description="This is the premium public doorway for URAI Genesis: sky, ground, orb, and horizon as a launch-safe path into Life Map, Focus, Replay, and the waitlist. Private memories and personalized generation remain gated."
       accent="cyan"
-      visualLabel="Home Orb field"
+      visualLabel="Home Orb / sky field"
       visualAsset="/assets/genesis/hero/urai-genesis-hero-1600x1000.png"
       supportingAssets={["/assets/genesis/orb/orb-core.png", "/assets/genesis/overlays/starfield.png"]}
       actions={[
-        { href: "/life-map", label: "Open Life Map", note: "memory map preview" },
-        { href: "/replay", label: "Open Replay", note: "sample preview" },
+        { href: "/life-map", label: "Open Life Map", note: "sample memory world" },
+        { href: "/focus", label: "Enter Focus", note: "what matters now" },
+        { href: "/replay", label: "Open Replay", note: "Genesis preview reel" },
+        { href: "/waitlist", label: "Join Waitlist", note: "real early access" },
         { href: "/passport", label: "Open Passport", note: "privacy boundary" },
         { href: "/ground", label: "Touch Ground", note: "calm return" },
         { href: "/orb", label: "Meet Orb", note: "companion preview" },
         { href: "/orb-chat", label: "Open Orb Chat", note: "safe fallback" },
-        { href: "/focus", label: "Enter Focus", note: "reflection surface" },
         { href: "/horizon", label: "See Horizon", note: "future path preview" },
       ]}
       cards={[
-        { title: "Public demo first", body: "This page shows the Genesis feel while keeping private account data, passive signals, and provider systems closed." },
-        { title: "One coherent path", body: "Home, Life Map, Focus, Replay, Ground, Orb, Sky, and Horizon now share the same launch-safe visual language." },
-        { title: "No fake memories", body: "Sample surfaces are cinematic previews only. Real generated media stays gated until owner-scoped proof exists." },
+        { title: "Friend-demo path", body: "Start here, move through Life Map, narrow into Focus, watch Replay, then join the waitlist. Every button goes somewhere real." },
+        { title: "Orb-first identity", body: "The orb stays central as URAI's calm guide, while the map and replay show the product's cinematic direction." },
+        { title: "No fake private life", body: "All memory stars and replay moments are clearly sample previews. Real generated media stays gated until owner-scoped proof exists." },
       ]}
-      safetyNote="Home is a launch demo and does not unlock passive sensing, production generated media, autonomous jobs, or private data access."
+      safetyNote="Home is a Genesis launch demo. It does not unlock passive sensing, production generated media, autonomous jobs, therapy claims, or private data access."
     />
   );
 }

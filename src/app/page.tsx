@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
-const title = "URAI Public Demo | Symbolic Life Map";
-const description = "Explore URAI's public demo: a privacy-gated symbolic Life Map with sample data, real CTAs, and clearly labeled roadmap systems.";
+const title = "URAI Genesis | Cinematic Life Map Demo";
+const description = "Walk the URAI Genesis friend-demo path: Home, Life Map, Focus, Replay, and Waitlist with sample data only and clearly gated future systems.";
 const shareImage = "/og/urai-public-demo.svg";
 
 export const metadata: Metadata = {
@@ -27,31 +27,39 @@ export const metadata: Metadata = {
 
 const demoPromises = [
   {
-    title: "Public demo first",
-    body: "This surface shows the URAI direction without opening private data, passive sensing, provider integrations, or production-only systems.",
+    title: "A living world, safely staged",
+    body: "Genesis shows the feeling of URAI as an orb, sky, memory galaxy, focus chamber, and cinematic replay path without opening private user data.",
   },
   {
-    title: "Your map stays yours",
-    body: "Life Map language is reflective and symbolic. Consent, export, deletion, retention, and admin audit gates must pass before private data features go live.",
+    title: "Sample memories are labeled",
+    body: "The Life Map uses demo-safe stars for moments, places, people, time, and meaning. Nothing here is presented as a real private account.",
   },
   {
-    title: "Roadmap is labeled",
-    body: "Spatial, analytics, communications, jobs, generated assets, and story systems remain demo, staging, roadmap, or gated until evidence proves otherwise.",
+    title: "The future stays gated",
+    body: "Personalized films, provider media generation, passive sensing, agents, and marketplace systems remain roadmap-gated until evidence proves them.",
   },
 ];
 
 const launchLinks = [
-  { href: "/home", label: "Enter Genesis home", note: "Cinematic demo entry" },
-  { href: "/life-map", label: "Open Life Map demo", note: "Symbolic memory map" },
-  { href: "/focus", label: "Enter Focus", note: "Reflection surface" },
-  { href: "/replay", label: "Open Replay", note: "Cinematic preview" },
+  { href: "/home", label: "Enter Genesis Home", note: "Orb / sky / ground" },
+  { href: "/life-map", label: "Open Life Map", note: "Sample memory world" },
+  { href: "/focus", label: "Enter Focus", note: "What matters now" },
+  { href: "/replay", label: "Open Replay", note: "Genesis preview reel" },
+  { href: "/waitlist", label: "Join Waitlist", note: "Real early-access CTA" },
   { href: "/ground", label: "Touch Ground", note: "Calm preview" },
   { href: "/orb", label: "Meet Orb", note: "Companion identity" },
   { href: "/orb-chat", label: "Open Orb Chat", note: "Safe fallback" },
   { href: "/sky", label: "Open Sky", note: "Reflection field" },
   { href: "/horizon", label: "See Horizon", note: "Future-path preview" },
-  { href: "/waitlist", label: "Join early access", note: "Real public CTA" },
   { href: "/system", label: "View system status", note: "Registry and production-lock truth" },
+];
+
+const demoPath = [
+  { step: "01", title: "Home", body: "The orb opens the field before anything private unlocks." },
+  { step: "02", title: "Life Map", body: "Sample stars show moments, people, places, time, and meaning." },
+  { step: "03", title: "Focus", body: "URAI narrows the galaxy into one humane next step." },
+  { step: "04", title: "Replay", body: "A cinematic preview shows where memory-to-film can go later." },
+  { step: "05", title: "Waitlist", body: "Friends have a real place to raise their hand." },
 ];
 
 export default function RootPage() {
@@ -60,19 +68,34 @@ export default function RootPage() {
       <section className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-12 sm:px-8">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_18%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_82%_10%,rgba(45,212,191,0.12),transparent_26%),linear-gradient(180deg,rgba(15,23,42,0),rgba(3,7,18,0.95))]" />
 
-        <div className="max-w-4xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.38em] text-cyan-200/75">URAI public demo</p>
-          <h1 className="mt-5 text-5xl font-semibold tracking-[-0.055em] text-white sm:text-7xl">
-            A quieter way to see your life take shape.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">
-            URAI is a privacy-gated reflection product. The public demo introduces the Home field, Life Map, and trust posture without claiming unsafe systems are live.
-          </p>
+        <div className="grid gap-10 lg:grid-cols-[1fr_24rem] lg:items-end">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.38em] text-cyan-200/75">URAI Genesis friend demo</p>
+            <h1 className="mt-5 text-5xl font-semibold tracking-[-0.065em] text-white sm:text-7xl">
+              Walk through a living memory world.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/70">
+              URAI Genesis is a cinematic, privacy-safe demo path from Home to Life Map to Focus to Replay. It shows the product direction without pretending private data, personalized films, passive sensing, or provider generation are live.
+            </p>
+          </div>
+
+          <div className="relative min-h-80 overflow-hidden rounded-[2.5rem] border border-cyan-100/15 bg-white/[0.045] p-5 shadow-2xl shadow-cyan-950/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(191,233,255,.26),transparent_32%),radial-gradient(circle_at_50%_74%,rgba(45,212,191,.14),transparent_32%),linear-gradient(180deg,rgba(2,6,23,.2),rgba(0,0,0,.82))]" />
+            <div className="absolute left-1/2 top-[42%] h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-100/20 bg-cyan-100/10 shadow-[0_0_110px_rgba(125,211,252,.28)]" />
+            <div className="absolute left-1/2 top-[42%] h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/80 shadow-[0_0_70px_rgba(255,255,255,.42)]" />
+            <div className="absolute inset-x-8 bottom-8 rounded-[1.5rem] border border-white/10 bg-black/34 p-4 backdrop-blur-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-cyan-100/70">Friend-demo route</p>
+              <p className="mt-2 text-sm leading-6 text-white/72">Home to Life Map to Focus to Replay to Waitlist. Every step is real, sample-only, and launch-safe.</p>
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/home" className="rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-950/30">
-            Enter demo
+            Start the Genesis path
+          </Link>
+          <Link href="/life-map" className="rounded-full border border-cyan-200/25 bg-cyan-200/[0.08] px-5 py-3 text-sm font-semibold text-cyan-50 hover:bg-cyan-200/[0.12]">
+            Jump to Life Map
           </Link>
           <Link href="/waitlist" className="rounded-full border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white hover:bg-white/[0.1]">
             Join waitlist
@@ -87,6 +110,16 @@ export default function RootPage() {
             <article key={item.title} className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-2xl shadow-black/20">
               <h2 className="text-base font-semibold text-white">{item.title}</h2>
               <p className="mt-3 text-sm leading-6 text-white/64">{item.body}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="mt-5 grid gap-3 lg:grid-cols-5">
+          {demoPath.map((item) => (
+            <article key={item.step} className="rounded-[1.5rem] border border-white/10 bg-black/24 p-4">
+              <span className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100/52">{item.step}</span>
+              <h2 className="mt-2 text-lg font-semibold tracking-[-0.03em] text-white">{item.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-white/58">{item.body}</p>
             </article>
           ))}
         </section>

@@ -88,6 +88,7 @@
 .spatial-chapter-rail,
 .spatial-loading,
 .spatial-error,
+.spatial-genesis-guide,
 .spatial-memory-bloom {
   position: fixed;
   z-index: 20;
@@ -111,6 +112,84 @@
 .spatial-title-card p { margin: 0; font-size: 11px; letter-spacing: .32em; color: rgba(191,233,255,.58); font-weight: 800; }
 .spatial-title-card h1 { margin: 4px 0 2px; font-size: clamp(1.6rem, 3vw, 2.55rem); letter-spacing: -.05em; }
 .spatial-title-card span { font-size: 12px; color: rgba(219,245,255,.64); }
+
+.spatial-genesis-guide {
+  right: max(18px, env(safe-area-inset-right));
+  top: 50%;
+  width: min(360px, calc(100vw - 36px));
+  transform: translateY(-50%);
+  border-radius: 30px;
+  padding: 20px;
+  animation: spatialGuideArrival .82s cubic-bezier(.16,1,.3,1) both;
+}
+.spatial-genesis-guide p {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(191,233,255,.62);
+}
+.spatial-genesis-guide h2 {
+  margin: 9px 0 0;
+  font-size: clamp(1.45rem, 2.3vw, 2.05rem);
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+.spatial-genesis-guide span {
+  display: block;
+  margin-top: 12px;
+  color: rgba(240,253,255,.72);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.spatial-genesis-guide-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 15px;
+}
+.spatial-genesis-guide-facts small {
+  border: 1px solid rgba(190,215,255,.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,.045);
+  padding: 6px 8px;
+  color: rgba(219,245,255,.62);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.spatial-genesis-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+.spatial-genesis-guide-actions a {
+  min-height: 38px;
+  border: 1px solid rgba(190,215,255,.18);
+  border-radius: 999px;
+  padding: 10px 13px;
+  background: rgba(15,23,42,.66);
+  color: rgba(240,253,255,.92);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+.spatial-genesis-guide-actions a:first-child {
+  border-color: rgba(191,233,255,.32);
+  background: rgba(191,233,255,.14);
+  color: white;
+}
+.spatial-genesis-guide-actions a:hover {
+  transform: translateY(-1px);
+  border-color: rgba(191,233,255,.34);
+  background: rgba(191,233,255,.12);
+}
+.spatial-life-map.is-replay .spatial-genesis-guide {
+  display: none;
+}
 
 .spatial-zoom-hud {
   left: max(18px, env(safe-area-inset-left));
@@ -345,18 +424,34 @@ button.spatial-star-preview:hover {
   background: rgba(240,253,255,.84);
   animation: spatialReplayPath 4.8s ease-in-out infinite;
 }
-.spatial-replay-overlay button {
+.spatial-replay-overlay button,
+.spatial-replay-overlay a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 28px;
   border: 1px solid rgba(190,215,255,.2);
   border-radius: 999px;
   background: rgba(15,23,42,.72);
   color: white;
   padding: 12px 18px;
+  text-decoration: none;
+}
+.spatial-replay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.spatial-replay-actions a {
+  border-color: rgba(191,233,255,.36);
+  background: rgba(191,233,255,.14);
 }
 
 @keyframes spatialStarBreath { 50% { opacity: .92; filter: drop-shadow(0 0 18px rgba(125,211,252,.54)); } }
 @keyframes spatialAtmosphereDrift { to { transform: translate3d(1.2%, -1.8%, 0) scale(1.02); } }
 @keyframes spatialPanelArrival { from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(.98); filter: blur(8px); } to { opacity: 1; filter: none; } }
+@keyframes spatialGuideArrival { from { opacity: 0; transform: translateY(-48%) translateX(14px) scale(.98); filter: blur(10px); } to { opacity: 1; transform: translateY(-50%); filter: none; } }
 @keyframes spatialBloomOpen { from { opacity: 0; transform: translateY(-46%) scale(.96); filter: blur(12px); } to { opacity: 1; transform: translateY(-50%) scale(1); filter: none; } }
 @keyframes spatialReplayPulse {
   0%, 100% { transform: scale(.94); opacity: .72; }
@@ -384,6 +479,21 @@ button.spatial-star-preview:hover {
 @media (max-width: 860px) {
   .spatial-title-card { top: 14px; min-width: auto; width: calc(100vw - 128px); padding: 12px 16px; }
   .spatial-title-card h1 { font-size: 1.4rem; }
+  .spatial-genesis-guide {
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 218px;
+    width: auto;
+    transform: none;
+    padding: 14px;
+    border-radius: 24px;
+  }
+  .spatial-genesis-guide h2 { font-size: 1.18rem; }
+  .spatial-genesis-guide span { font-size: 12px; line-height: 1.5; }
+  .spatial-genesis-guide-facts { display: none; }
+  .spatial-genesis-guide-actions { margin-top: 11px; }
+  .spatial-genesis-guide-actions a { min-height: 34px; padding: 8px 10px; font-size: 11px; }
   .spatial-star-preview { top: auto; bottom: 172px; right: 12px; left: 12px; width: auto; padding: 14px; }
   .spatial-zoom-hud { display: none; }
   .spatial-layer-wheel { transform: scale(.72); transform-origin: left bottom; bottom: 142px; }
@@ -391,6 +501,9 @@ button.spatial-star-preview:hover {
   .spatial-chapter-rail { bottom: 8px; width: calc(100vw - 16px); }
   .spatial-memory-bloom { left: 12px; right: 12px; top: auto; bottom: 12px; transform: none; width: auto; max-height: 86vh; overflow-y: auto; }
   .spatial-bloom-grid { grid-template-columns: 1fr; }
+  .spatial-life-map.is-focus .spatial-genesis-guide,
+  .spatial-life-map.is-replay .spatial-genesis-guide,
+  .spatial-life-map.is-bloom .spatial-genesis-guide { display: none; }
   @keyframes spatialBloomOpen { from { opacity: 0; transform: translateY(10px) scale(.96); filter: blur(12px); } to { opacity: 1; transform: none; filter: none; } }
 }
 
@@ -402,6 +515,7 @@ button.spatial-star-preview:hover {
   .spatial-controls button,
   .spatial-star-preview,
   .spatial-title-card,
+  .spatial-genesis-guide,
   .spatial-memory-bloom { transition: none !important; animation: none !important; }
   .spatial-replay-orb, .spatial-replay-path i, .spatial-replay-overlay span { animation: none !important; }
 }

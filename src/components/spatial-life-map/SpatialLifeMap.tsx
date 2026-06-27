@@ -100,6 +100,64 @@ function SpatialSceneFallback({
   );
 }
 
+function getGenesisDemoGuide({
+  mode,
+  selectedStar,
+  starCount,
+  constellationCount,
+}: {
+  mode: LifeMapInteractionMode;
+  selectedStar: LifeMapStar | null;
+  starCount: number;
+  constellationCount: number;
+}) {
+  if (mode === "focus") {
+    return {
+      step: "03 / Focus",
+      title: selectedStar ? `Hold ${selectedStar.title}` : "Hold one signal at a time",
+      body:
+        "Focus turns the sample galaxy into one humane next step: what matters, what it connects to, and what URAI would help you notice before anything private is opened.",
+      primary: { href: "/replay", label: "Open Replay" },
+      secondary: { href: "/life-map", label: "Back to Life Map" },
+      facts: ["sample focus card", "companion-style guidance", "no private analysis"],
+    };
+  }
+
+  if (mode === "replay") {
+    return {
+      step: "04 / Replay",
+      title: selectedStar ? `${selectedStar.title} becomes a preview reel` : "A memory becomes a preview reel",
+      body:
+        "Replay is a Genesis preview of memory-to-cinema: pacing, narration, and emotional framing. It is not a rendered personal life movie and does not use private user media.",
+      primary: { href: "/waitlist", label: "Join Waitlist" },
+      secondary: { href: "/focus", label: "Back to Focus" },
+      facts: ["Genesis preview", "sample memory only", "real generation gated"],
+    };
+  }
+
+  if (mode === "bloom") {
+    return {
+      step: "03B / Bloom",
+      title: selectedStar ? `${selectedStar.title} opens as a bloom` : "A star opens as a bloom",
+      body:
+        "Bloom shows how URAI could unpack a chosen moment into meaning, tags, and a ritual prompt. This remains sample content in the public demo.",
+      primary: { href: "/replay", label: "Open Replay" },
+      secondary: { href: "/waitlist", label: "Join Waitlist" },
+      facts: ["symbolic bloom", "sample tags", "owner data gated"],
+    };
+  }
+
+  return {
+    step: "02 / Life Map",
+    title: "A sample memory world, not a dashboard",
+    body:
+      "The Life Map connects sample moments, relationships, rituals, seasons, body signals, dreams, legacy, and future weather into one cinematic field.",
+    primary: { href: "/focus", label: "Enter Focus" },
+    secondary: { href: "/waitlist", label: "Join Waitlist" },
+    facts: [`${starCount} sample stars`, `${constellationCount} constellations`, "private data closed"],
+  };
+}
+
 function FocusChamber({
   star,
   bloom,
@@ -202,6 +260,12 @@ export default function SpatialLifeMap({
 
   const selectedStar = selection.selectedStar;
   const previewStar = selection.hoveredStar ?? (mode === "galaxy" ? selectedStar : null);
+  const genesisGuide = getGenesisDemoGuide({
+    mode,
+    selectedStar,
+    starCount: visibleStars.length,
+    constellationCount: data.constellations.length,
+  });
 
   const bloomPanelData =
     data.memoryBlooms.find((bloom) => bloom.starId === selection.bloomStarId) ??
@@ -417,9 +481,27 @@ export default function SpatialLifeMap({
       </button>
 
       <nav className="spatial-route-gates" aria-label="Genesis route shortcuts">
+        <Link href="/home">Home</Link>
+        <Link href="/life-map">Life Map</Link>
         <Link href="/focus">Open Focus</Link>
         <Link href="/replay">Open Replay</Link>
+        <Link href="/waitlist">Waitlist</Link>
       </nav>
+
+      <aside className="spatial-genesis-guide" aria-label="Genesis friend-demo guide">
+        <p>{genesisGuide.step}</p>
+        <h2>{genesisGuide.title}</h2>
+        <span>{genesisGuide.body}</span>
+        <div className="spatial-genesis-guide-facts" aria-label="Demo safety facts">
+          {genesisGuide.facts.map((fact) => (
+            <small key={fact}>{fact}</small>
+          ))}
+        </div>
+        <div className="spatial-genesis-guide-actions">
+          <Link href={genesisGuide.primary.href}>{genesisGuide.primary.label}</Link>
+          <Link href={genesisGuide.secondary.href}>{genesisGuide.secondary.label}</Link>
+        </div>
+      </aside>
 
       <section className="spatial-stage" {...camera.bind}>
         {!sceneReady && (
@@ -573,6 +655,9 @@ export default function SpatialLifeMap({
               <button type="button" onClick={returnToGalaxy}>
                 Back to galaxy
               </button>
+              <Link href="/waitlist">
+                Join waitlist
+              </Link>
             </div>
           </div>
         </section>
