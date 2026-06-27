@@ -1,86 +1,128 @@
-"use client";
+import Link from "next/link";
+import styles from "@/app/status/status.module.css";
 
-type ServiceState = "operational" | "degraded";
+type ServiceState = "operational" | "preview" | "needs-verification" | "offline";
 
 type ServiceStatus = {
   id: string;
   label: string;
+  summary: string;
+  evidence: string;
   status: ServiceState;
-  message: string;
+  action?: { label: string; href: string };
 };
 
-const STATUS_LABELS: Record<ServiceState, { bg: string; text: string; label: string }> = {
+const STATUS_LABELS: Record<ServiceState, { label: string; intent: string }> = {
   operational: {
-    bg: "bg-emerald-500/10 border-emerald-400/40",
-    text: "text-emerald-300",
     label: "Operational",
+    intent: "Confirmed public route surface",
   },
-  degraded: {
-    bg: "bg-amber-500/10 border-amber-400/40",
-    text: "text-amber-300",
-    label: "Preview mode",
+  preview: {
+    label: "Preview Mode",
+    intent: "Launch-safe static preview",
+  },
+  "needs-verification": {
+    label: "Needs Verification",
+    intent: "Waiting on deploy or smoke evidence",
+  },
+  offline: {
+    label: "Offline",
+    intent: "Not available on public preview",
   },
 };
 
 const SERVICES: ServiceStatus[] = [
   {
     id: "web-app",
-    label: "URAI web app",
+    label: "URAI Web App",
     status: "operational",
-    message: "Public visual routes are live on urai.app.",
+    summary: "Public visual routes are available on the Genesis web surface.",
+    evidence: "Static route and hosting evidence required before broader production claims.",
+    action: { label: "Open Home", href: "/home" },
   },
   {
     id: "life-map",
-    label: "Life Map and mirror",
+    label: "Life Map & Mirror",
     status: "operational",
-    message: "Life Map, replay, mirror, demo, privacy, and terms are available.",
+    summary: "Life Map, Focus, Replay, Passport, privacy, and terms routes are part of the public preview.",
+    evidence: "Visual and route smoke evidence must remain current for launch readiness.",
+    action: { label: "Open Life Map", href: "/life-map" },
   },
   {
     id: "preview",
-    label: "Public preview",
-    status: "degraded",
-    message: "This launch is running as static pages while dynamic service wiring waits for the next backend pass.",
+    label: "Public Preview",
+    status: "preview",
+    summary: "Genesis is presented as a static launch-safe preview with demo/sample boundaries.",
+    evidence: "Dynamic service wiring awaits the next backend proof pass.",
+    action: { label: "View Launch", href: "/launch" },
   },
   {
     id: "private-actions",
-    label: "Private actions",
-    status: "degraded",
-    message: "Write actions and live service calls remain off on the public preview surface.",
+    label: "Private Actions",
+    status: "needs-verification",
+    summary: "Write actions, provider-backed generation, and private service calls remain off the public preview surface.",
+    evidence: "Requires auth, consent, owner-scoped storage, tests, deploy logs, and smoke evidence.",
+    action: { label: "Open Passport", href: "/passport" },
   },
 ];
 
+const SUMMARY = [
+  { label: "Public Web App", status: "Operational", state: "operational" },
+  { label: "Life Map / Mirror", status: "Operational", state: "operational" },
+  { label: "Public Preview", status: "Preview Mode", state: "preview" },
+  { label: "Private Actions", status: "Needs Verification", state: "needs-verification" },
+] satisfies Array<{ label: string; status: string; state: ServiceState }>;
+
+const updatedAt = "Static launch preview - updated when release evidence changes";
+
 export default function StatusGrid() {
-  const updatedAt = "Static launch preview";
-
   return (
-    <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/20 backdrop-blur">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold text-white">Live service map</h2>
-          <p className="text-sm text-white/50">
-            Static-safe launch heartbeat. No broken JSON feed on the public preview.
-          </p>
-        </div>
-        <div className="text-xs text-white/40">Updated {updatedAt}</div>
-      </header>
+    <section className={styles.statusGridSection} aria-labelledby="service-map-title">
+      <div className={styles.summaryStrip} aria-label="Top readiness summary">
+        {SUMMARY.map((item) => (
+          <div key={item.label} className={styles.summaryItem} data-state={item.state}>
+            <span>{item.label}</span>
+            <strong>{item.status}</strong>
+          </div>
+        ))}
+      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className={styles.sectionHeader}>
+        <p className={styles.eyebrow}>Live Service Map</p>
+        <h2 id="service-map-title">What is available right now</h2>
+        <p>
+          A static-safe launch heartbeat for public visitors. This page does not claim external
+          monitoring, uptime percentages, or private backend health.
+        </p>
+        <p className={styles.updatedAt}>{updatedAt}</p>
+      </div>
+
+      <div className={styles.serviceGrid}>
         {SERVICES.map((service) => {
           const tone = STATUS_LABELS[service.status];
           return (
-            <article
-              key={service.id}
-              className={`group flex h-full flex-col justify-between rounded-2xl border px-5 py-4 transition hover:border-white/40 hover:bg-white/[0.08] ${tone.bg}`}
-            >
-              <div className="flex items-center justify-between gap-4">
-                <h3 className="text-base font-semibold text-white">{service.label}</h3>
-                <span className={`inline-flex shrink-0 items-center gap-2 rounded-full border border-current/30 px-3 py-1 text-xs font-semibold uppercase tracking-wide ${tone.text}`}>
-                  <span className="h-2 w-2 rounded-full bg-current" />
+            <article key={service.id} className={styles.serviceCard} data-state={service.status}>
+              <div className={styles.serviceCardHeader}>
+                <div>
+                  <p className={styles.serviceIntent}>{tone.intent}</p>
+                  <h3>{service.label}</h3>
+                </div>
+                <span className={styles.statusBadge} data-state={service.status}>
+                  <span aria-hidden="true" />
                   {tone.label}
                 </span>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-white/70">{service.message}</p>
-              <footer className="mt-4 text-xs text-white/40">{updatedAt}</footer>
+              <p className={styles.serviceSummary}>{service.summary}</p>
+              <p className={styles.serviceEvidence}>
+                <strong>Evidence:</strong> {service.evidence}
+              </p>
+              {service.action ? (
+                <Link href={service.action.href} className={styles.cardAction}>
+                  {service.action.label}
+                </Link>
+              ) : (
+                <span className={styles.cardActionDisabled}>No public action configured</span>
+              )}
             </article>
           );
         })}
