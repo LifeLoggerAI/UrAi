@@ -14,6 +14,50 @@ function sceneImage(scene: GenesisOnboardingScene) {
   return `linear-gradient(180deg, rgba(2, 6, 23, .04), rgba(2, 6, 23, .76)), url("${scene.fallbackAssetPath}")`;
 }
 
+function assetStatusLabel(status?: string) {
+  if (status === "final") return "Final visual";
+  if (status === "generated") return "Generated visual";
+  return "Genesis preview visual";
+}
+
+function sceneSystemLabel(scene: GenesisOnboardingScene) {
+  if (scene.requiredLayers.includes("ground") || scene.requiredLayers.includes("council")) {
+    return "Ground / AI Council";
+  }
+  if (scene.requiredLayers.includes("passport")) return "Passport / Ownership";
+  if (scene.requiredLayers.includes("replay") || scene.requiredLayers.includes("life-films")) {
+    return "Replay / Memory Cinema";
+  }
+  if (scene.requiredLayers.includes("spatial")) return "Spatial / XR Preview";
+  if (scene.requiredLayers.includes("orb")) return "Orb / Interface Bridge";
+  if (scene.requiredLayers.includes("sky") || scene.requiredLayers.includes("life-map")) {
+    return "Sky / Life Map";
+  }
+  return "Home / Living World";
+}
+
+function sceneArtifacts(scene: GenesisOnboardingScene) {
+  if (scene.id === "ground-council") {
+    return ["Archivist", "Guardian", "Narrator", "Worldbuilder"];
+  }
+  if (scene.id === "passport-ownership") {
+    return ["Private", "Export", "Delete", "Consent"];
+  }
+  if (scene.id === "symbolic-people") {
+    return ["Symbolic", "Consent", "Mirror", "Not a clone"];
+  }
+  if (scene.id === "ar-vr-xr") {
+    return ["AR preview", "VR preview", "XR gated", "Worlds"];
+  }
+  if (scene.requiredLayers.includes("replay") || scene.requiredLayers.includes("life-films")) {
+    return ["Scene", "Film", "World", "Gated proof"];
+  }
+  if (scene.requiredLayers.includes("sky") || scene.requiredLayers.includes("life-map")) {
+    return ["Stars", "Weather", "Threads", "Patterns"];
+  }
+  return ["Home", "Sky", "Ground", "Orb"];
+}
+
 export default function GenesisOnboardingFilm() {
   const [sceneIndex, setSceneIndex] = useState(0);
 
@@ -63,7 +107,7 @@ export default function GenesisOnboardingFilm() {
         <div className={styles.stage}>
           <div className={styles.copy}>
             <span className={styles.pill}>
-              {scene.timestampRange} / {asset?.assetStatus ?? "placeholder"} asset
+              {scene.timestampRange} / {assetStatusLabel(asset?.assetStatus)}
             </span>
             <h1 id="genesis-onboarding-title">{scene.title}</h1>
             <p className={styles.subtitle}>{genesisOnboardingFilm.subtitle}</p>
@@ -78,12 +122,32 @@ export default function GenesisOnboardingFilm() {
 
           <article
             className={styles.visualCard}
+            data-scene-id={scene.id}
             role="img"
             aria-label={asset?.altText ?? scene.visualDirection}
             style={{ "--scene-image": sceneImage(scene) } as CSSProperties}
           >
+            <div className={styles.worldSystem} aria-hidden="true">
+              <span className={styles.skyThread} />
+              <span className={styles.skyThread} />
+              <span className={styles.skyThread} />
+              <span className={styles.orbPulse} />
+              <span className={styles.groundHorizon} />
+              <span className={styles.memoryStar} />
+              <span className={styles.memoryStar} />
+              <span className={styles.memoryStar} />
+              {sceneArtifacts(scene).map((label, index) => (
+                <span
+                  key={`${label}-${index}`}
+                  className={styles.systemChip}
+                  style={{ "--chip-index": index } as CSSProperties}
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
             <div className={styles.visualOverlay}>
-              <p>Genesis onboarding film</p>
+              <p>{sceneSystemLabel(scene)} / Genesis preview</p>
               <h2>{scene.onScreenText[0]}</h2>
               <div className={styles.screenText}>
                 {scene.onScreenText.slice(1, 5).map((line) => (
@@ -125,6 +189,14 @@ export default function GenesisOnboardingFilm() {
         </section>
 
         <footer className={styles.controls} aria-label="Onboarding film controls">
+          <div className={styles.spine} aria-label="Genesis product spine">
+            <span>Home</span>
+            <span>Life Map</span>
+            <span>Focus</span>
+            <span>Replay</span>
+            <span>Passport</span>
+          </div>
+
           <div className={styles.timeline} aria-label="Scene timeline">
             {genesisOnboardingFilm.scenes.map((timelineScene, index) => (
               <button

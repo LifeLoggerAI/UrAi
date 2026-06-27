@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { getSpatialRuntimeContract, type UraiSpatialMode } from '@/lib/urai-canon/spatial-runtime';
 import { URAI_ROUTE_CONTRACTS, type UraiRouteId } from '@/lib/urai-canon/system';
 import SpatialUniverseShell from './SpatialUniverseShell';
@@ -85,7 +85,25 @@ export function resolveSpatialUniverseState(pathname: string | null, qualityProf
 
 export function SpatialUniverseProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const qualityProfile = detectQualityProfile();
+  const [qualityProfile, setQualityProfile] = useState<UraiQualityProfile>('desktop-cinematic');
+
+  useEffect(() => {
+    const updateQualityProfile = () => setQualityProfile(detectQualityProfile());
+    const reduceMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+    const coarsePointerQuery = window.matchMedia?.('(pointer: coarse)');
+
+    updateQualityProfile();
+    window.addEventListener('resize', updateQualityProfile);
+    reduceMotionQuery?.addEventListener('change', updateQualityProfile);
+    coarsePointerQuery?.addEventListener('change', updateQualityProfile);
+
+    return () => {
+      window.removeEventListener('resize', updateQualityProfile);
+      reduceMotionQuery?.removeEventListener('change', updateQualityProfile);
+      coarsePointerQuery?.removeEventListener('change', updateQualityProfile);
+    };
+  }, []);
+
   const state = useMemo(() => resolveSpatialUniverseState(pathname, qualityProfile), [pathname, qualityProfile]);
 
   return (
