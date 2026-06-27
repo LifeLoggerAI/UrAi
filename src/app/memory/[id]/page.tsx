@@ -1,37 +1,79 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import SystemRoutePage from "@/components/SystemRoutePage";
+import { isPublicDemoMemoryId } from "@/lib/publicDeepRoutes";
 
-type MemoryPageProps = {
-  params: Promise<{ id: string }>;
+export const metadata: Metadata = {
+  title: "Memory Star Preview | URAI",
+  description: "Public-safe URAI memory-star route with unavailable private-memory fallback.",
 };
 
-export async function generateMetadata({ params }: MemoryPageProps) {
-  const { id } = await params;
-  return {
-    title: `URAI Memory ${id}`,
-    description: "A URAI Memory Bloom route for opening a Memory Star from the Life Map.",
-  };
-}
+type MemoryPageProps = {
+  params: Promise<{ id: string }> | { id: string };
+};
+
+const navigation = [
+  { href: "/life-map", label: "Life Map" },
+  { href: "/home", label: "Home" },
+  { href: "/passport", label: "Passport" },
+  { href: "/status", label: "Status" },
+] as const;
 
 export default async function MemoryPage({ params }: MemoryPageProps) {
-  const { id } = await params;
+  const resolvedParams = await Promise.resolve(params);
+  const isDemoMemory = isPublicDemoMemoryId(resolvedParams.id);
+
+  if (!isDemoMemory) {
+    return (
+      <SystemRoutePage
+        eyebrow="Memory star boundary"
+        title="This memory star is unavailable in the public demo."
+        description="The requested memory may be private, deleted, locked, or simply not part of the Genesis sample set. URAI closes the route without revealing identifiers or private content."
+        status="guarded"
+      >
+        <DeepRouteNav />
+      </SystemRoutePage>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-10 text-slate-100 sm:px-8">
-      <section className="mx-auto flex min-h-[80vh] max-w-4xl flex-col justify-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.32em] text-cyan-300">Memory Bloom</p>
-        <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">Memory Star opened.</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-          This preview route opens a launch-safe Memory Bloom shell for <span className="font-semibold text-cyan-100">{id}</span>. Full private memory content remains owner-only and should be loaded only after auth and Firestore rules verification.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link className="rounded-full border border-cyan-300/40 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100" href="/life-map">
-            Return to Life Map
-          </Link>
-          <Link className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-100" href="/settings/privacy">
-            Privacy Controls
-          </Link>
-        </div>
-      </section>
-    </main>
+    <SystemRoutePage
+      eyebrow="Genesis memory star"
+      title="A sample memory star is open."
+      description="This launch-safe route shows the shape of a Memory Star without exposing private user data. Real owner memories, evidence, generated media, and exports remain gated behind consent, auth, and production proof."
+      status="demo"
+    >
+      <div className="grid gap-4 md:grid-cols-3">
+        <SamplePanel title="Signal" body="A symbolic sample moment, not a real private memory." />
+        <SamplePanel title="Focus" body="Use the public Life Map to move from this sample star into a safe reflection path." />
+        <SamplePanel title="Replay" body="Replay remains a Genesis preview until real owner-approved artifacts exist." />
+      </div>
+      <DeepRouteNav />
+    </SystemRoutePage>
+  );
+}
+
+function SamplePanel({ title, body }: { title: string; body: string }) {
+  return (
+    <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-5">
+      <h2 className="text-xl font-semibold tracking-[-0.04em] text-white">{title}</h2>
+      <p className="mt-3 text-sm leading-6 text-white/62">{body}</p>
+    </section>
+  );
+}
+
+function DeepRouteNav() {
+  return (
+    <nav className="mt-7 flex flex-wrap gap-3" aria-label="Deep route safety navigation">
+      {navigation.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          className="inline-flex min-h-11 items-center rounded-full border border-cyan-100/20 bg-cyan-100/[0.08] px-4 text-sm font-bold text-cyan-50 transition hover:border-cyan-100/44 hover:bg-cyan-100/[0.14] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-200"
+        >
+          {item.label}
+        </Link>
+      ))}
+    </nav>
   );
 }

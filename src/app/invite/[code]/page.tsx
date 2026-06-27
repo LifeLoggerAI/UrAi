@@ -1,16 +1,17 @@
 import SystemRoutePage from "@/components/SystemRoutePage";
 
 type InvitePageProps = {
-  params: Promise<{ code: string }>;
+  params: Promise<{ code: string }> | { code: string };
 };
 
 export default async function InvitePage({ params }: InvitePageProps) {
-  const { code } = await params;
+  await Promise.resolve(params);
 
   return (
     <SystemRoutePage
-      title="URAI Invite"
-      description={`Invite ${code} is ready for the URAI early access flow, companion onboarding, and Life Map activation.`}
+      eyebrow="Invite boundary"
+      title="This invite is guarded."
+      description="URAI invite links are verified before any private onboarding opens. The public route never echoes invite codes, account state, or access decisions."
       status="guarded"
     />
   );
