@@ -24,7 +24,7 @@ const surfaces = [
   ["The Orb", "Demo doorway", "A calm demo doorway for seeing how URAI explains what is sample, private, or gated.", "/orb", "Open Orb"],
   ["Life Map", "Public demo", "A symbolic sky of chosen demo moments, not an active passive memory feed.", "/life-map", "Open Life Map"],
   ["Ground", "Preview metaphor", "A roadmap metaphor for real-life context that remains gated until evidence is complete.", "/ground", "Open Ground"],
-  ["Mirror", "Gentle preview", "Gentle pattern reflection without diagnosis, verdicts, or medical claims.", "/cognitive-mirror", "Open Mirror"],
+  ["Mirror", "Gentle preview", "Gentle pattern reflection without diagnosis, verdicts, or medical claims.", "/mirror", "Open Mirror"],
   ["Passport", "Consent-first", "The consent model for controlling what opens, exports, or stays closed.", "/passport", "Review Passport"],
   ["Legacy", "Gated future", "Future user-chosen moments, not an active data marketplace or automated archive.", "", "No public unlock yet"],
 ] as const;
