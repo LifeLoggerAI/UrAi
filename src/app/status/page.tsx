@@ -69,6 +69,7 @@ export default function StatusPage() {
             <Link href="/home">Home</Link>
             <Link href="/life-map">Life Map</Link>
             <Link href="/passport">Passport</Link>
+            <Link href="/privacy">Privacy</Link>
             <Link href="/system">System</Link>
             <Link href="/support">Support</Link>
           </div>
@@ -93,6 +94,9 @@ export default function StatusPage() {
               </Link>
               <Link href="/system" className={styles.secondaryAction}>
                 Open full system registry
+              </Link>
+              <Link href="/privacy" className={styles.secondaryAction}>
+                Review Privacy Field
               </Link>
             </div>
           </section>
@@ -173,6 +177,7 @@ export default function StatusPage() {
           <div className={styles.supportActions}>
             <Link href="/support">Support Docs</Link>
             <Link href="/passport">Open Passport</Link>
+            <Link href="/privacy">Privacy Field</Link>
             <a href="mailto:support@urai.app">Email Support</a>
           </div>
         </section>

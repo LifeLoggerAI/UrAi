@@ -59,6 +59,8 @@ export const PassportControlCenter = () => {
           <Link href="/life-map">Life Map</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/status">Status</Link>
+          <Link href="/system">System</Link>
+          <Link href="/support">Support</Link>
         </div>
       </nav>
 
@@ -189,13 +191,13 @@ export const PassportControlCenter = () => {
           <p className="passport-eyebrow">Trust and support</p>
           <h2 id="passport-support-title">Need help reading a boundary?</h2>
           <p>
-            Passport is designed to be reversible, conservative, and owner-controlled. If feedback capture is unavailable in this environment, email support for urgent help.
+            Passport is designed to be reversible, conservative, and owner-controlled. If feedback capture is unavailable in this environment, use Support for time-sensitive public demo questions.
           </p>
         </div>
         <div className="passport-support-panel__actions">
           <Link href="/status">Status Board</Link>
           <Link href="/support">Support Docs</Link>
-          <a href="mailto:support@urai.app">Email Us</a>
+          <a href="mailto:support@urai.app">Email support</a>
         </div>
       </section>
     </main>

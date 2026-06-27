@@ -22,7 +22,7 @@ const panel = "border border-white/10 bg-slate-950/62 shadow-2xl shadow-black/35
 const actions = [
   ["Report a bug", "#report", "Use the support report panel without sending secrets or private memories.", "Issue report"],
   ["Check system status", "/status", "See the lightweight public launch posture before filing a report.", "Status"],
-  ["Review Passport/privacy", "/passport", "Check consent and data-boundary language for private systems.", "Passport"],
+  ["Review Privacy Field", "/privacy", "Check consent and data-boundary language for private systems.", "Privacy"],
   ["Open system registry", "/system", "Inspect canonical release truth, blockers, and evidence gaps.", "Registry"],
   ["Contact support", `mailto:${supportEmail}`, "Email the configured support contact for public demo issues.", "Email"],
   ["Return to demo", "/home", "Go back to the safe Genesis public demo path.", "Demo"],
@@ -31,7 +31,7 @@ const actions = [
 const beforeReporting = [
   ["Public status", "/status", "Check whether the issue is already reflected in the public posture."],
   ["System registry", "/system", "Use the registry for deeper release truth, blockers, and evidence status."],
-  ["Passport", "/passport", "Review privacy, consent, export, delete, and data ownership boundaries."],
+  ["Privacy Field", "/privacy", "Review privacy, consent, export, delete, and data ownership boundaries."],
 ] as const;
 
 const faqs = [
