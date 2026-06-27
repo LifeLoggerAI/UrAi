@@ -69,6 +69,7 @@ export default function StatusPage() {
             <Link href="/home">Home</Link>
             <Link href="/life-map">Life Map</Link>
             <Link href="/passport">Passport</Link>
+            <Link href="/system">System</Link>
             <Link href="/support">Support</Link>
           </div>
         </nav>
@@ -89,6 +90,9 @@ export default function StatusPage() {
               </Link>
               <Link href="/life-map" className={styles.secondaryAction}>
                 Open Life Map
+              </Link>
+              <Link href="/system" className={styles.secondaryAction}>
+                Open full system registry
               </Link>
             </div>
           </section>
