@@ -27,13 +27,13 @@ export interface UraiConsentState {
   lastUpdatedAt: string;
 }
 
-export interface UraiPassportState {
+export type UraiPassportState = {
   userId: string;
   version: UraiGenesisVersion;
   shareMode: 'private' | 'public';
   allowedCategories: UraiConsentCategory[];
   updatedAt: string;
-}
+};
 
 export type UraiMoodWeatherState =
   | 'clear'
@@ -69,7 +69,7 @@ export type UraiPassiveSignalKind =
   | 'manual'
   | 'system';
 
-export interface UraiPassiveSignal {
+export type UraiPassiveSignal = {
   id: string;
   userId: string;
   source?: string;
@@ -86,9 +86,9 @@ export interface UraiPassiveSignal {
   privacyLevel?: string;
   metadata?: Record<string, unknown>;
   [key: string]: unknown;
-}
+};
 
-export interface UraiGenesisHomeState {
+export type UraiGenesisHomeState = {
   userId: string;
   consent?: UraiConsentState;
   passport?: UraiPassportState;
@@ -103,7 +103,7 @@ export interface UraiGenesisHomeState {
   lastUpdated?: string;
   narratorLine?: string;
   [key: string]: unknown;
-}
+};
 
 export interface UserFieldState {
   userId: string;
@@ -160,7 +160,7 @@ export type UraiNarratorTone =
   | 'celebratory'
   | 'mythic';
 
-export interface UraiNarratorReflection {
+export type UraiNarratorReflection = {
   id: string;
   userId: string;
   createdAt: string;
@@ -170,9 +170,9 @@ export interface UraiNarratorReflection {
   tone: UraiNarratorTone;
   visibleToUser: boolean;
   [key: string]: unknown;
-}
+};
 
-export interface UraiMemoryStar {
+export type UraiMemoryStar = {
   id: string;
   userId: string;
   createdAt: string;
@@ -186,7 +186,7 @@ export interface UraiMemoryStar {
   y: number;
   z: number;
   [key: string]: unknown;
-}
+};
 
 /* Signal pipeline compatibility exports */
 export type UraiPassiveSignalSource =
