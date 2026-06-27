@@ -385,6 +385,26 @@
   font-size: .75rem;
 }
 
+.assetDebug {
+  position: absolute;
+  top: .85rem;
+  right: .85rem;
+  display: grid;
+  gap: .28rem;
+  max-width: min(20rem, calc(100% - 1.7rem));
+  border: 1px solid rgba(250, 204, 21, .24);
+  border-radius: 1rem;
+  background: rgba(2, 6, 23, .72);
+  padding: .65rem .75rem;
+  color: rgba(254, 243, 199, .88);
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  backdrop-filter: blur(18px);
+}
+
 .caption {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(16rem, .42fr);
@@ -593,6 +613,12 @@
     max-width: 7rem;
     padding: .38rem .48rem;
     font-size: .58rem;
+  }
+
+  .assetDebug {
+    left: .65rem;
+    right: .65rem;
+    max-width: none;
   }
 
   .visualOverlay {

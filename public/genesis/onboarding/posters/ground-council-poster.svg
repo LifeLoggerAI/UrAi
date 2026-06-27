@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">URAI Genesis cinematic poster frame for Ground Layer / AI Council</title>
+  <desc id="desc">Symbolic launch-safe poster frame. No private user media, no real-person clone, no production generated life movie claim.</desc>
+  <defs>
+    <radialGradient id="orb" cx="50%" cy="42%" r="44%"><stop offset="0" stop-color="#f59e0b" stop-opacity=".8"/><stop offset=".32" stop-color="#22c55e" stop-opacity=".22"/><stop offset="1" stop-color="#020617" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#020617"/><stop offset=".5" stop-color="#071626"/><stop offset="1" stop-color="#000106"/></linearGradient>
+    <linearGradient id="thread" x1="0" x2="1"><stop offset="0" stop-color="#f59e0b" stop-opacity="0"/><stop offset=".45" stop-color="#f59e0b" stop-opacity=".82"/><stop offset="1" stop-color="#22c55e" stop-opacity="0"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#orb)" opacity=".72"/>
+  <ellipse cx="810" cy="812" rx="790" ry="185" fill="#22c55e" opacity=".08"/>
+  <ellipse cx="810" cy="784" rx="640" ry="118" fill="none" stroke="#22c55e" stroke-opacity=".24" stroke-width="2"/>
+  <circle cx="82" cy="336" r="2.8" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="195" cy="407" r="1.2" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="308" cy="478" r="1.2" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="421" cy="549" r="1.9" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="534" cy="620" r="1.2" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="647" cy="51" r="1.2" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="760" cy="122" r="1.9" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="873" cy="193" r="2.8" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="986" cy="264" r="1.2" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="1099" cy="335" r="1.9" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="1212" cy="406" r="1.2" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="1325" cy="477" r="1.2" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="1438" cy="548" r="1.9" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="1551" cy="619" r="1.2" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="134" cy="50" r="2.8" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="247" cy="121" r="1.9" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="360" cy="192" r="1.2" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="473" cy="263" r="1.2" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="586" cy="334" r="1.9" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="699" cy="405" r="1.2" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="812" cy="476" r="1.2" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="925" cy="547" r="2.8" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="1038" cy="618" r="1.2" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="1151" cy="49" r="1.2" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="1264" cy="120" r="1.9" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="1377" cy="191" r="1.2" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="1490" cy="262" r="1.2" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="73" cy="333" r="1.9" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="186" cy="404" r="2.8" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="299" cy="475" r="1.2" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="412" cy="546" r="1.9" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="525" cy="617" r="1.2" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="638" cy="48" r="1.2" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="751" cy="119" r="1.9" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="864" cy="190" r="1.2" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="977" cy="261" r="2.8" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="1090" cy="332" r="1.9" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="1203" cy="403" r="1.2" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="1316" cy="474" r="1.2" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="1429" cy="545" r="1.9" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="1542" cy="616" r="1.2" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="125" cy="47" r="1.2" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="238" cy="118" r="2.8" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="351" cy="189" r="1.2" fill="#f8fdff" opacity="0.43"/>
+    <circle cx="464" cy="260" r="1.2" fill="#f8fdff" opacity="0.50"/>
+    <circle cx="577" cy="331" r="1.9" fill="#f8fdff" opacity="0.57"/>
+    <circle cx="690" cy="402" r="1.2" fill="#f8fdff" opacity="0.64"/>
+    <circle cx="803" cy="473" r="1.2" fill="#f8fdff" opacity="0.71"/>
+    <circle cx="916" cy="544" r="1.9" fill="#f8fdff" opacity="0.22"/>
+    <circle cx="1029" cy="615" r="2.8" fill="#f8fdff" opacity="0.29"/>
+    <circle cx="1142" cy="46" r="1.2" fill="#f8fdff" opacity="0.36"/>
+    <circle cx="1255" cy="117" r="1.9" fill="#f8fdff" opacity="0.43"/>
+  <path d="M70 230 C 360 120, 820 555, 1510 210" fill="none" stroke="url(#thread)" stroke-width="1.2" opacity="0.2"/>
+    <path d="M105 302 C 390 142, 788 509, 1456 274" fill="none" stroke="url(#thread)" stroke-width="1.38" opacity="0.26"/>
+    <path d="M140 374 C 420 164, 756 463, 1402 338" fill="none" stroke="url(#thread)" stroke-width="1.56" opacity="0.32"/>
+    <path d="M175 446 C 450 186, 724 417, 1348 402" fill="none" stroke="url(#thread)" stroke-width="1.74" opacity="0.38"/>
+    <path d="M210 518 C 480 208, 692 371, 1294 466" fill="none" stroke="url(#thread)" stroke-width="1.92" opacity="0.44"/>
+    <path d="M245 590 C 510 230, 660 325, 1240 530" fill="none" stroke="url(#thread)" stroke-width="2.0999999999999996" opacity="0.5"/>
+  <rect x="230" y="560" width="150" height="92" rx="22" fill="rgba(248,253,255,.045)" stroke="#22c55e" stroke-opacity=".22" transform="rotate(-10 305 606)"/>
+    <rect x="340" y="534" width="150" height="92" rx="22" fill="rgba(248,253,255,.045)" stroke="#f59e0b" stroke-opacity=".22" transform="rotate(-5 415 580)"/>
+    <rect x="450" y="508" width="150" height="92" rx="22" fill="rgba(248,253,255,.045)" stroke="#22c55e" stroke-opacity=".22" transform="rotate(0 525 554)"/>
+    <rect x="560" y="482" width="150" height="92" rx="22" fill="rgba(248,253,255,.045)" stroke="#f59e0b" stroke-opacity=".22" transform="rotate(5 635 528)"/>
+    <rect x="670" y="456" width="150" height="92" rx="22" fill="rgba(248,253,255,.045)" stroke="#22c55e" stroke-opacity=".22" transform="rotate(10 745 502)"/>
+  <circle cx="805" cy="404" r="176" fill="none" stroke="#f59e0b" stroke-opacity=".16" stroke-width="2"/>
+  <circle cx="805" cy="404" r="104" fill="#f59e0b" opacity=".12" filter="url(#soft)"/>
+  <circle cx="805" cy="404" r="68" fill="#f59e0b" opacity=".18"/>
+  <circle cx="805" cy="404" r="28" fill="#f8fdff" opacity=".86"/>
+  <path d="M470 705 C 655 625, 920 650, 1110 560 C 1185 524, 1270 506, 1450 518" fill="none" stroke="#22c55e" stroke-opacity=".32" stroke-width="9" stroke-linecap="round"/>
+  <g opacity=".72"><rect x="1190" y="718" width="266" height="44" rx="22" fill="rgba(2,6,23,.58)" stroke="rgba(240,253,255,.2)"/><text x="1214" y="746" fill="#dff8ff" font-family="Arial,sans-serif" font-size="14" font-weight="800" letter-spacing="3">GENESIS PREVIEW</text></g>
+</svg>

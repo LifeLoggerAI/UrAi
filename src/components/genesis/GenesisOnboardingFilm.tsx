@@ -8,15 +8,18 @@ import {
   type GenesisOnboardingScene,
 } from "@/data/genesisOnboardingFilm";
 import { genesisOnboardingAssets } from "@/data/genesisOnboardingAssets";
+import { genesisOnboardingFinalAssets } from "@/data/genesisOnboardingFinalAssets";
 import styles from "./GenesisOnboardingFilm.module.css";
 
-function sceneImage(scene: GenesisOnboardingScene) {
-  return `linear-gradient(180deg, rgba(2, 6, 23, .04), rgba(2, 6, 23, .76)), url("${scene.fallbackAssetPath}")`;
+function sceneImage(scene: GenesisOnboardingScene, posterFramePath?: string) {
+  return `linear-gradient(180deg, rgba(2, 6, 23, .04), rgba(2, 6, 23, .76)), url("${posterFramePath ?? scene.fallbackAssetPath}")`;
 }
 
 function assetStatusLabel(status?: string) {
   if (status === "final") return "Final visual";
   if (status === "generated") return "Generated visual";
+  if (status === "fallback") return "Cinematic fallback visual";
+  if (status === "needs_external_render") return "Final poster / render spec ready";
   return "Genesis preview visual";
 }
 
@@ -66,7 +69,12 @@ export default function GenesisOnboardingFilm() {
     () => genesisOnboardingAssets.find((entry) => entry.sceneId === scene.id),
     [scene.id],
   );
+  const finalAsset = useMemo(
+    () => genesisOnboardingFinalAssets.find((entry) => entry.sceneId === scene.id),
+    [scene.id],
+  );
   const isFinalScene = sceneIndex === genesisOnboardingFilm.scenes.length - 1;
+  const safeClaimTag = finalAsset?.safeClaimTag ?? asset?.safeClaimTag ?? "launch-safe";
 
   function nextScene() {
     setSceneIndex((current) =>
@@ -107,7 +115,7 @@ export default function GenesisOnboardingFilm() {
         <div className={styles.stage}>
           <div className={styles.copy}>
             <span className={styles.pill}>
-              {scene.timestampRange} / {assetStatusLabel(asset?.assetStatus)}
+              {scene.timestampRange} / {assetStatusLabel(finalAsset?.assetStatus ?? asset?.assetStatus)}
             </span>
             <h1 id="genesis-onboarding-title">{scene.title}</h1>
             <p className={styles.subtitle}>{genesisOnboardingFilm.subtitle}</p>
@@ -116,7 +124,7 @@ export default function GenesisOnboardingFilm() {
               {scene.requiredLayers.map((layer) => (
                 <span key={layer}>{layer}</span>
               ))}
-              <span>{asset?.safeClaimTag ?? "launch-safe"}</span>
+              <span>{safeClaimTag}</span>
             </div>
           </div>
 
@@ -124,8 +132,8 @@ export default function GenesisOnboardingFilm() {
             className={styles.visualCard}
             data-scene-id={scene.id}
             role="img"
-            aria-label={asset?.altText ?? scene.visualDirection}
-            style={{ "--scene-image": sceneImage(scene) } as CSSProperties}
+            aria-label={finalAsset?.altText ?? asset?.altText ?? scene.visualDirection}
+            style={{ "--scene-image": sceneImage(scene, finalAsset?.posterFramePath) } as CSSProperties}
           >
             <div className={styles.worldSystem} aria-hidden="true">
               <span className={styles.skyThread} />
@@ -155,6 +163,15 @@ export default function GenesisOnboardingFilm() {
                 ))}
               </div>
             </div>
+            {process.env.NODE_ENV !== "production" && finalAsset && (
+              <aside className={styles.assetDebug} aria-label="Development asset status">
+                <span>{finalAsset.sceneId}</span>
+                <span>asset: {finalAsset.assetStatus}</span>
+                <span>poster: present</span>
+                <span>video: {finalAsset.videoPath ? "present" : "external render pending"}</span>
+                <span>audio: {finalAsset.audioPath ? "present" : "external render pending"}</span>
+              </aside>
+            )}
           </article>
         </div>
 

@@ -20,7 +20,14 @@ This is not proof that private generated life movies, passive sensing, AR/VR/XR 
 
 - Film model: `src/data/genesisOnboardingFilm.ts`
 - Asset prompt manifest: `src/data/genesisOnboardingAssets.ts`
+- Final media manifest: `src/data/genesisOnboardingFinalAssets.ts`
 - Public placeholder manifest: `public/genesis/onboarding/manifest.json`
+- Public final media manifest: `public/genesis/onboarding/final-manifest.json`
+- Poster frames: `public/genesis/onboarding/posters/`
+- Loop backgrounds: `public/genesis/onboarding/final/`
+- Video prompts: `public/genesis/onboarding/video-prompts/`
+- Audio specs: `public/genesis/onboarding/audio/`
+- Captions: `public/genesis/onboarding/captions/`
 - UI component: `src/components/genesis/GenesisOnboardingFilm.tsx`
 - Route: `src/app/onboarding/page.tsx`
 - Validation script: `scripts/check-onboarding.mjs`
@@ -83,12 +90,26 @@ Do not claim as live unless separately proven by code, tests, deploy logs, scree
 - Passport must show: Private by default, User-owned data, Consent receipts, Export anytime, Delete anytime, Share by permission, License by consent.
 - Replay and Life Films remain preview/gated until provider-backed generation, owner-scoped storage, delete/export controls, tests, and live smoke proof exist.
 
-## Placeholder Asset Replacement
+## Final Media Production Pack
 
-Current assets in `public/genesis/onboarding/` are SVG placeholders. To replace them with final generated assets:
+The onboarding route now uses final launch-safe SVG poster frames when available and falls back to the original SVG scene assets if needed. The generated in-repo assets are cinematic symbolic previews, not rendered private user media.
 
-1. Keep the same filename or update both `src/data/genesisOnboardingFilm.ts` and `public/genesis/onboarding/manifest.json`.
-2. Preserve the `assetStatus` field and move it from `placeholder` to `generated` or `final` only when generation provenance and rights are documented.
+Actual MP4/WebM video segments, final voiceover, and final music were not generated in this environment. They remain marked as `needs_external_render` in `public/genesis/onboarding/final-manifest.json` and `src/data/genesisOnboardingFinalAssets.ts`.
+
+Production docs:
+
+- `docs/asset-generation/genesis-final-media-production.md`
+- `docs/asset-generation/genesis-video-prompts.md`
+- `docs/asset-generation/genesis-audio-voiceover.md`
+- `docs/asset-generation/genesis-music-direction.md`
+
+## Fallback Asset Replacement
+
+Current fallback assets in `public/genesis/onboarding/` remain available for graceful degradation. To replace render-pending media with final generated assets:
+
+1. Export final videos under `public/genesis/onboarding/final/` and final audio under `public/genesis/onboarding/audio/`.
+2. Update both `src/data/genesisOnboardingFinalAssets.ts` and `public/genesis/onboarding/final-manifest.json`.
+3. Preserve the `assetStatus` field and move it from `needs_external_render` to `generated` or `final` only when generation provenance and rights are documented.
 3. Keep sample/demo/preview labels unless the scene is proven live with owner-scoped input and smoke evidence.
 4. Run `npm run check:onboarding`, `npm run check:types`, `npm test -- --runInBand`, and `npm run build`.
 
@@ -113,4 +134,3 @@ The onboarding check validates:
 - every fallback asset path exists
 - required trust language appears
 - disallowed unsupported claims do not appear
-

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">URAI Genesis loop background: A Life Is Scattered</title>
+  <desc id="desc">Loopable symbolic background for A Life Is Scattered. External video render still required for final motion.</desc>
+  <defs>
+    <radialGradient id="orb" cx="50%" cy="42%" r="46%"><stop offset="0" stop-color="#7dd3fc" stop-opacity=".72"/><stop offset=".28" stop-color="#fef3c7" stop-opacity=".22"/><stop offset="1" stop-color="#020617" stop-opacity="0"/></radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#020617"/><stop offset="1" stop-color="#061626"/></linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#orb)" opacity=".72"><animate attributeName="opacity" values=".54;.82;.54" dur="10s" repeatCount="indefinite"/></rect>
+  <path d="M80 330 C 330 180, 720 460, 1520 240" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-opacity=".55"><animate attributeName="stroke-opacity" values=".2;.72;.2" dur="8s" repeatCount="indefinite"/></path>
+  <path d="M120 590 C 420 720, 930 450, 1460 625" fill="none" stroke="#fef3c7" stroke-width="3" stroke-opacity=".4"><animate attributeName="stroke-opacity" values=".18;.58;.18" dur="11s" repeatCount="indefinite"/></path>
+  <circle cx="800" cy="405" r="70" fill="#7dd3fc" opacity=".22"><animate attributeName="r" values="56;86;56" dur="9s" repeatCount="indefinite"/><animate attributeName="opacity" values=".16;.32;.16" dur="9s" repeatCount="indefinite"/></circle>
+  <circle cx="800" cy="405" r="22" fill="#f8fdff" opacity=".9"/>
+  <ellipse cx="800" cy="790" rx="660" ry="118" fill="#fef3c7" opacity=".08"/>
+  <text x="96" y="812" fill="#dff8ff" opacity=".7" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="4">A LIFE IS SCATTERED / LOOPABLE BACKGROUND / EXTERNAL RENDER READY</text>
+</svg>

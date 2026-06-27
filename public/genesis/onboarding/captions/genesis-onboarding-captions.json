@@ -1,0 +1,125 @@
+{
+  "title": "URAI Genesis Onboarding Captions",
+  "claimBoundary": "Captions describe a Genesis preview only. They are not proof of production generated private media.",
+  "captions": [
+    {
+      "sceneId": "scattered-life",
+      "start": "00:00:00.000",
+      "end": "00:00:15.000",
+      "caption": "A life is not one thing. Most of it gets scattered.",
+      "voiceover": "A life is not one thing. It is moments. People. Places. Pain. Joy. Work. Love. Loss. Dreams. Almosts. Again-and-agains. But most of it gets scattered. Across apps. Across years. Across your body. Across the parts of you nobody sees."
+    },
+    {
+      "sceneId": "urai-appears",
+      "start": "00:00:15.000",
+      "end": "00:00:25.000",
+      "caption": "Not another feed. A living world for your life.",
+      "voiceover": "URAI brings the pieces home. Not another feed. Not another dashboard. A living world for your life."
+    },
+    {
+      "sceneId": "you-live",
+      "start": "00:00:25.000",
+      "end": "00:00:38.000",
+      "caption": "You do not build the map. You live.",
+      "voiceover": "You do not have to build the map. You live. URAI keeps up with you. It notices moments. Connects patterns. Protects context. And helps your life become visible to you."
+    },
+    {
+      "sceneId": "life-map-sky",
+      "start": "00:00:38.000",
+      "end": "00:00:52.000",
+      "caption": "Every star is a moment. Every cluster is a chapter.",
+      "voiceover": "Above you is your Life Map. Every star is a moment. Every cluster is a chapter. Every storm is a signal. Every thread is a relationship. Every path is a pattern."
+    },
+    {
+      "sceneId": "orb-speaks",
+      "start": "00:00:52.000",
+      "end": "00:01:00.000",
+      "caption": "I found the moment. But I also found what it became.",
+      "voiceover": "I found the moment. But I also found what it became."
+    },
+    {
+      "sceneId": "focus-image",
+      "start": "00:01:00.000",
+      "end": "00:01:12.000",
+      "caption": "Focus reveals the meaning of a moment. The Night Everything Changed",
+      "voiceover": "Tap a star, and the moment comes into Focus. Not just what happened. What it meant."
+    },
+    {
+      "sceneId": "replay-begins",
+      "start": "00:01:12.000",
+      "end": "00:01:26.000",
+      "caption": "Replay preview A moment becomes a scene.",
+      "voiceover": "Enter the memory, and Focus becomes Replay. A moment becomes a scene. A scene becomes a film. A film becomes a world you can walk through."
+    },
+    {
+      "sceneId": "ground-council",
+      "start": "00:01:26.000",
+      "end": "00:01:44.000",
+      "caption": "Archivist Narrator",
+      "voiceover": "Below the sky is the ground. This is where URAI's models work. A council of agents, each with a job. Some remember. Some protect. Some create. Some guide. Some translate. Some help you move. Not one assistant. A life system."
+    },
+    {
+      "sceneId": "private-nudges",
+      "start": "00:01:44.000",
+      "end": "00:01:56.000",
+      "caption": "You usually crash after days like this. Drink water. Text your person. Do not make the big decision tonight. You have circled this for 11 days. Want the first step?",
+      "voiceover": "URAI does not only replay your life. It helps you live it."
+    },
+    {
+      "sceneId": "life-films",
+      "start": "00:01:56.000",
+      "end": "00:02:07.000",
+      "caption": "Life Film preview A cinematic map of becoming.",
+      "voiceover": "One memory can become a Replay. Many memories can become a Life Film. Not a slideshow. A cinematic map of becoming."
+    },
+    {
+      "sceneId": "memory-music-videos",
+      "start": "00:02:07.000",
+      "end": "00:02:18.000",
+      "caption": "I was not lost. I was becoming.",
+      "voiceover": "Some memories become films. Some become music. Some become something you can finally feel without explaining."
+    },
+    {
+      "sceneId": "symbolic-people",
+      "start": "00:02:18.000",
+      "end": "00:02:38.000",
+      "caption": "User: You made it farther than you knew. Younger self: Then why did it feel like I was losing?",
+      "voiceover": "Some memories are places. Some are people. Some are conversations you still carry. URAI can create symbolic people and living memories: emotional mirrors to help you understand, remember, prepare, forgive, and heal."
+    },
+    {
+      "sceneId": "ar-vr-xr",
+      "start": "00:02:38.000",
+      "end": "00:02:50.000",
+      "caption": "AR preview VR preview",
+      "voiceover": "In AR, memories can live in your real space. In VR, memories become worlds. In XR, your outer world and inner world can finally speak."
+    },
+    {
+      "sceneId": "passport-ownership",
+      "start": "00:02:50.000",
+      "end": "00:03:06.000",
+      "caption": "Private by default User-owned data",
+      "voiceover": "And none of this matters if it is not yours. Your memories. Your emotional map. Your Life Films. Your signals. Your permissions. Your data. Private by default. Shared only with permission. Licensed only with consent. If your life creates value, you should have a say in that value."
+    },
+    {
+      "sceneId": "global-emotional-map",
+      "start": "00:03:06.000",
+      "end": "00:03:18.000",
+      "caption": "Anonymized. Permissioned.",
+      "voiceover": "With permission, human signal can help us understand loneliness, stress, recovery, belonging, grief, joy, and hope. Built for care. Not exploitation."
+    },
+    {
+      "sceneId": "accessibility-legacy",
+      "start": "00:03:18.000",
+      "end": "00:03:34.000",
+      "caption": "Speak it. Show it.",
+      "voiceover": "For people who cannot see it, URAI can speak it. For people who cannot hear it, URAI can show it. For people carrying trauma, URAI can soften the doorway. For families, it can preserve what time tries to take."
+    },
+    {
+      "sceneId": "final-home-return",
+      "start": "00:03:34.000",
+      "end": "00:03:50.000",
+      "caption": "",
+      "voiceover": "URAI is your home. Your sky. Your ground. Your orb. Your council. Your map. Your films. Your worlds. Your memories. Your data. Your future. You do not have to feed another app. Just live. You live. URAI remembers. You choose what becomes real."
+    }
+  ]
+}

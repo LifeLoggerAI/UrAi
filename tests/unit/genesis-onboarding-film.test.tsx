@@ -8,6 +8,10 @@ import {
 } from "@/data/genesisOnboardingFilm";
 import { genesisOnboardingAssets } from "@/data/genesisOnboardingAssets";
 import {
+  genesisOnboardingFinalAssetManifest,
+  genesisOnboardingFinalAssets,
+} from "@/data/genesisOnboardingFinalAssets";
+import {
   spatialLifeMapStars,
   spatialMemoryBlooms,
 } from "@/lib/spatial-life-map/lifeMap.mockData";
@@ -113,6 +117,37 @@ describe("Genesis onboarding film", () => {
         asset.fallbackImagePath.replace(/^\//, ""),
       );
       expect(fs.existsSync(absoluteFallback)).toBe(true);
+    }
+  });
+
+  it("maps every scene to final media production assets without claiming rendered video/audio", () => {
+    expect(genesisOnboardingFinalAssetManifest.actualVideoFilesGenerated).toBe(false);
+    expect(genesisOnboardingFinalAssetManifest.actualAudioFilesGenerated).toBe(false);
+    expect(genesisOnboardingFinalAssetManifest.claimBoundary).toContain(
+      "needs_external_render",
+    );
+    expect(genesisOnboardingFinalAssets.map((asset) => asset.sceneId)).toEqual(
+      requiredSceneIds,
+    );
+
+    for (const asset of genesisOnboardingFinalAssets) {
+      expect(asset.assetStatus).toBe("needs_external_render");
+      expect(asset.posterStatus).toBe("final_svg_poster");
+      expect(asset.loopStatus).toBe("final_svg_loop_background");
+      expect(asset.videoPath).toBeNull();
+      expect(asset.audioPath).toBeNull();
+      expect(asset.safeClaimTag.length).toBeGreaterThan(4);
+
+      for (const assetPath of [
+        asset.posterFramePath,
+        asset.finalAssetPath,
+        asset.videoPromptPath,
+        asset.audioSpecPath,
+        asset.captionPath,
+      ]) {
+        expect(assetPath).toMatch(/^\/genesis\/onboarding\//);
+        expect(fs.existsSync(path.join(process.cwd(), "public", assetPath))).toBe(true);
+      }
     }
   });
 

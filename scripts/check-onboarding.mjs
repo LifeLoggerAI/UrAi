@@ -6,7 +6,11 @@ import path from "node:path";
 const root = process.cwd();
 const filmPath = path.join(root, "src/data/genesisOnboardingFilm.ts");
 const assetPath = path.join(root, "src/data/genesisOnboardingAssets.ts");
+const finalAssetPath = path.join(root, "src/data/genesisOnboardingFinalAssets.ts");
 const manifestPath = path.join(root, "public/genesis/onboarding/manifest.json");
+const finalManifestPath = path.join(root, "public/genesis/onboarding/final-manifest.json");
+const masterVttPath = path.join(root, "public/genesis/onboarding/captions/genesis-onboarding.vtt");
+const masterCaptionJsonPath = path.join(root, "public/genesis/onboarding/captions/genesis-onboarding-captions.json");
 const lifeMapMockPath = path.join(root, "src/lib/spatial-life-map/lifeMap.mockData.ts");
 
 const requiredSceneIds = [
@@ -73,14 +77,25 @@ function readRequired(filePath) {
 
 const filmSource = readRequired(filmPath);
 const assetSource = readRequired(assetPath);
+const finalAssetSource = readRequired(finalAssetPath);
 const manifestSource = readRequired(manifestPath);
+const finalManifestSource = readRequired(finalManifestPath);
+const masterVttSource = readRequired(masterVttPath);
+const masterCaptionJsonSource = readRequired(masterCaptionJsonPath);
 const lifeMapMockSource = readRequired(lifeMapMockPath);
 
 let manifest = { assets: [] };
+let finalManifest = { assets: [] };
 try {
   manifest = JSON.parse(manifestSource);
 } catch (error) {
   fail(`Manifest is not valid JSON: ${error.message}`);
+}
+
+try {
+  finalManifest = JSON.parse(finalManifestSource);
+} catch (error) {
+  fail(`Final media manifest is not valid JSON: ${error.message}`);
 }
 
 for (const sceneId of requiredSceneIds) {
@@ -92,8 +107,20 @@ for (const sceneId of requiredSceneIds) {
     fail(`Missing scene in TypeScript asset manifest: ${sceneId}`);
   }
 
+  if (!finalAssetSource.includes(`sceneId: "${sceneId}"`) && !finalAssetSource.includes(`"sceneId": "${sceneId}"`)) {
+    fail(`Missing scene in TypeScript final asset manifest: ${sceneId}`);
+  }
+
   if (!manifest.assets?.some((asset) => asset.sceneId === sceneId)) {
     fail(`Missing scene in public asset manifest: ${sceneId}`);
+  }
+
+  if (!finalManifest.assets?.some((asset) => asset.sceneId === sceneId)) {
+    fail(`Missing scene in public final media manifest: ${sceneId}`);
+  }
+
+  if (!masterVttSource.includes(sceneId) && !masterCaptionJsonSource.includes(sceneId)) {
+    fail(`Missing scene caption coverage: ${sceneId}`);
   }
 }
 
@@ -121,13 +148,15 @@ for (const phrase of disallowedPhrases) {
   }
 }
 
+const allowedAssetStatuses = ["placeholder", "generated", "final", "fallback", "needs_external_render"];
+
 for (const asset of manifest.assets ?? []) {
   if (!asset.altText || !asset.fallbackImagePath || !asset.safeClaimTag || !asset.productLayerTag) {
     fail(`Manifest asset is missing required fields: ${asset.sceneId}`);
     continue;
   }
 
-  if (!["placeholder", "generated", "final"].includes(asset.assetStatus)) {
+  if (!allowedAssetStatuses.includes(asset.assetStatus)) {
     fail(`Manifest asset has invalid status: ${asset.sceneId}`);
   }
 
@@ -136,6 +165,42 @@ for (const asset of manifest.assets ?? []) {
   if (!fs.existsSync(absoluteFallback)) {
     fail(`Fallback asset missing for ${asset.sceneId}: ${asset.fallbackImagePath}`);
   }
+}
+
+for (const asset of finalManifest.assets ?? []) {
+  const status = asset.asset_status ?? asset.assetStatus;
+  if (!allowedAssetStatuses.includes(status)) {
+    fail(`Final media asset has invalid status: ${asset.sceneId}`);
+  }
+
+  if (!asset.posterFramePath || !asset.finalAssetPath || !asset.videoPromptPath || !asset.audioSpecPath || !asset.captionPath) {
+    fail(`Final media asset is missing required production paths: ${asset.sceneId}`);
+    continue;
+  }
+
+  for (const field of ["posterFramePath", "finalAssetPath", "videoPromptPath", "audioSpecPath", "captionPath"]) {
+    const relativePath = asset[field].replace(/^\//, "");
+    const absolutePath = path.join(root, "public", relativePath);
+    if (!fs.existsSync(absolutePath)) {
+      fail(`Final media path missing for ${asset.sceneId}: ${asset[field]}`);
+    }
+  }
+
+  if (status === "final" && (!asset.videoPath || !asset.audioPath)) {
+    fail(`Final media asset is marked final without video/audio proof: ${asset.sceneId}`);
+  }
+
+  if (!asset.safe_claim_tag && !asset.safeClaimTag) {
+    fail(`Final media asset is missing safe claim tag: ${asset.sceneId}`);
+  }
+}
+
+if (finalManifest.actualVideoFilesGenerated !== false || finalManifest.actualAudioFilesGenerated !== false) {
+  fail("Final media manifest must not claim generated video/audio unless proof files are wired.");
+}
+
+if (!finalManifestSource.includes("needs_external_render")) {
+  fail("Final media manifest must mark unrendered video/audio as needs_external_render.");
 }
 
 if (!filmSource.includes("Home experience stalled") && !filmSource.includes("Life map is out of orbit")) {
