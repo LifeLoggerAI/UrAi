@@ -1,4 +1,3 @@
-
 import { PassportLayerId, PassportLayerStatus, PassportLayerSensitivity } from './keys';
 
 export interface PassportLayerDefinition {
@@ -15,7 +14,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   passive_data: {
     id: 'passive_data',
     title: 'Passive Data',
-    summary: 'Collects data from your device sensors and app usage.',
+    summary: 'Records whether future passive sources may be reviewed. Collection stays off until separate consent and device/account permission are complete.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -24,7 +23,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   intelligence: {
     id: 'intelligence',
     title: 'Intelligence',
-    summary: 'Provides personalized insights and recommendations.',
+    summary: 'Allows approved URAI reflection layers to use consented signals for guidance. It does not unlock private data by itself.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -33,7 +32,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   companion_context: {
     id: 'companion_context',
     title: 'Companion Context',
-    summary: 'Allows your companion to understand your context and provide relevant assistance.',
+    summary: 'Lets the companion use only the context you explicitly open. Closed or protected sources remain unavailable.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -41,8 +40,8 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   },
   lifemap: {
     id: 'lifemap',
-    title: 'Lifemap',
-    summary: 'Visualizes your life and experiences.',
+    title: 'Life Map',
+    summary: 'Turns approved memories and sample stars into the Life Map experience. Private memories require owner approval before use.',
     sensitivity: 'medium',
     defaultStatus: 'closed',
     requiresExplicitApproval: false,
@@ -51,7 +50,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   ground: {
     id: 'ground',
     title: 'Ground',
-    summary: 'Connects you with your physical environment.',
+    summary: 'Controls grounded reflection and action cues. Device, location, or health data require separate permission before use.',
     sensitivity: 'medium',
     defaultStatus: 'closed',
     requiresExplicitApproval: false,
@@ -60,7 +59,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   mirror: {
     id: 'mirror',
     title: 'Mirror',
-    summary: 'Reflects your emotions and well-being.',
+    summary: 'Shows reflection prompts and emotional-weather language without diagnosis or hidden sensing.',
     sensitivity: 'medium',
     defaultStatus: 'closed',
     requiresExplicitApproval: false,
@@ -69,7 +68,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   shadow: {
     id: 'shadow',
     title: 'Shadow',
-    summary: 'Handles sensitive and private data.',
+    summary: 'A sealed protected layer for sensitive reflection. It stays closed until a separate review flow is available.',
     sensitivity: 'protected',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -78,7 +77,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   legacy: {
     id: 'legacy',
     title: 'Legacy',
-    summary: 'Manages your digital legacy.',
+    summary: 'A sealed legacy layer for long-term memory and sharing decisions. It requires explicit review before anything is revealed.',
     sensitivity: 'protected',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -87,7 +86,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   export: {
     id: 'export',
     title: 'Export',
-    summary: 'Exports your data.',
+    summary: 'A protected export boundary. Exports require verification, scope review, and owner approval before files are created.',
     sensitivity: 'protected',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -96,7 +95,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   notifications: {
     id: 'notifications',
     title: 'Notifications',
-    summary: 'Sends you notifications.',
+    summary: 'Records whether URAI may prepare notification preferences. Browser or device permission remains a separate step.',
     sensitivity: 'low',
     defaultStatus: 'closed',
     requiresExplicitApproval: false,
@@ -105,7 +104,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   spatial: {
     id: 'spatial',
     title: 'Spatial',
-    summary: 'Accesses your spatial data.',
+    summary: 'Controls spatial preview preferences. Real XR/device access remains gated until provider, device, and privacy proof exists.',
     sensitivity: 'medium',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -114,7 +113,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   audio: {
     id: 'audio',
     title: 'Audio',
-    summary: 'Accesses your microphone.',
+    summary: 'Records an audio preference only. Microphone capture requires an explicit browser/device permission step and live gates.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -123,7 +122,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   location: {
     id: 'location',
     title: 'Location',
-    summary: 'Accesses your location data.',
+    summary: 'Records a location preference only. Location collection requires separate device permission and explicit consent.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -132,7 +131,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   health: {
     id: 'health',
     title: 'Health',
-    summary: 'Accesses your health data.',
+    summary: 'Records a health-adjacent preference only. Health data remains unavailable without explicit source authorization.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -141,7 +140,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   gmail: {
     id: 'gmail',
     title: 'Gmail',
-    summary: 'Accesses your Gmail data.',
+    summary: 'Records a Gmail preference only. OAuth connection and scope review are required before any mailbox data could be used.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -150,7 +149,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   calendar: {
     id: 'calendar',
     title: 'Calendar',
-    summary: 'Accesses your calendar data.',
+    summary: 'Records a calendar preference only. Account authorization is required before any calendar data could be used.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -159,7 +158,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   contacts: {
     id: 'contacts',
     title: 'Contacts',
-    summary: 'Accesses your contacts.',
+    summary: 'Records a contacts preference only. Contact access requires separate account or device permission.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -168,7 +167,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   motion: {
     id: 'motion',
     title: 'Motion',
-    summary: 'Accesses your motion data.',
+    summary: 'Records a motion preference only. Motion or device activity collection is off until explicit permission is completed.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -177,7 +176,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   camera: {
     id: 'camera',
     title: 'Camera',
-    summary: 'Accesses your camera.',
+    summary: 'Records a camera preference only. Camera use requires explicit browser/device permission and a live capture flow.',
     sensitivity: 'high',
     defaultStatus: 'closed',
     requiresExplicitApproval: true,
@@ -186,7 +185,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   admin: {
     id: 'admin',
     title: 'Admin',
-    summary: 'Provides administrative access.',
+    summary: 'Restricted operational controls. This cannot be opened by a public user and does not expose private data.',
     sensitivity: 'protected',
     defaultStatus: 'blocked',
     requiresExplicitApproval: true,
@@ -195,7 +194,7 @@ export const PASSPORT_LAYER_DEFINITIONS: Record<PassportLayerId, PassportLayerDe
   system: {
     id: 'system',
     title: 'System',
-    summary: 'Provides system-level access.',
+    summary: 'Keeps launch-safe system status visible without granting device, account, or private-data access.',
     sensitivity: 'low',
     defaultStatus: 'open',
     requiresExplicitApproval: false,
