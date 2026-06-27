@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import React from "react";
@@ -9,7 +9,7 @@ import BottomNav from "@/components/layout/BottomNav";
 const MainLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-black text-white">
-      <main>{children}</main>
+      <main className="pb-24 sm:pb-28">{children}</main>
       <footer className="border-t border-white/10 bg-black/80 px-6 py-12 text-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-col gap-10 lg:flex-row lg:items-start">
           <div className="flex-1 space-y-4">

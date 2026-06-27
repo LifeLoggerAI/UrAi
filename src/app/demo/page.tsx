@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { Metadata } from "next";
 
 const description =
@@ -81,7 +81,7 @@ const previewNodes = [
 const guaranteeItems = [
   "Uses sample and safe preview states only.",
   "No private account data is opened from this route.",
-  "No passive sensing is live in the public demo.",
+  "Passive sensing remains closed in the public demo.",
   "No provider access is opened from the walkthrough.",
   "No hidden private memory collection runs here.",
   "Private systems remain gated until evidence and consent gates pass.",
