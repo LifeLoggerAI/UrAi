@@ -4,6 +4,14 @@
     "prod": "urai-4dc1d",
     "staging": "urai-staging"
   },
-  "targets": {},
+  "targets": {
+    "urai-staging": {
+      "hosting": {
+        "urai-staging": [
+          "urai-staging"
+        ]
+      }
+    }
+  },
   "etags": {}
 }
