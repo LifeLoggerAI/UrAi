@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">You live placeholder</title><desc id="desc">A symbolic person living while the map forms behind them.</desc>
+  <rect width="1600" height="1000" fill="#030712"/>
+  <path d="M0 740C280 590 480 710 760 610s520-200 840-40v430H0z" fill="#082f49" opacity=".55"/>
+  <g fill="none" stroke="#93c5fd" stroke-opacity=".22"><path d="M520 680C650 520 860 520 1030 370"/><path d="M600 760c250-250 460-100 700-360"/></g>
+  <circle cx="690" cy="430" r="70" fill="#bae6fd" opacity=".74"/><path d="M690 506c-82 70-110 150-108 260h216c2-110-26-190-108-260z" fill="#bae6fd" opacity=".42"/>
+  <text x="120" y="170" fill="#eff6ff" font-family="Arial, sans-serif" font-size="72" font-weight="700">You do not build the map.</text>
+  <text x="120" y="255" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="72" font-weight="700">You live.</text>
+</svg>

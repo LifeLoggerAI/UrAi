@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Global emotional map placeholder</title><desc id="desc">An anonymized permissioned global emotional map preview.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <ellipse cx="800" cy="500" rx="560" ry="300" fill="#0f766e" opacity=".16" stroke="#7dd3fc" stroke-opacity=".22"/>
+  <g fill="#e0f2fe" opacity=".75"><circle cx="500" cy="420" r="12"/><circle cx="700" cy="540" r="10"/><circle cx="900" cy="380" r="14"/><circle cx="1080" cy="600" r="9"/><circle cx="1180" cy="460" r="12"/></g>
+  <text x="800" y="780" fill="#eff6ff" font-family="Arial, sans-serif" font-size="54" font-weight="700" text-anchor="middle">Anonymized. Permissioned. Human-centered.</text>
+</svg>

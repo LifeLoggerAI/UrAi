@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Final home return placeholder</title><desc id="desc">URAI Genesis final home return with orb, sky, ground, map, and Passport layers.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <circle cx="800" cy="430" r="170" fill="#67e8f9" opacity=".28"/><circle cx="800" cy="430" r="86" fill="#a5f3fc" opacity=".82"/>
+  <g fill="none" stroke="#bae6fd" stroke-opacity=".24"><ellipse cx="800" cy="430" rx="450" ry="160"/><path d="M230 720C500 610 630 780 800 650s360 20 560-90"/></g>
+  <text x="800" y="760" fill="#eff6ff" font-family="Arial, sans-serif" font-size="86" font-weight="700" text-anchor="middle">URAI Genesis</text>
+  <text x="800" y="835" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="42" text-anchor="middle">Your life is a living world.</text>
+</svg>

@@ -17,6 +17,7 @@ export default function HomePage() {
       visualAsset="/assets/genesis/hero/urai-genesis-hero-1600x1000.png"
       supportingAssets={["/assets/genesis/orb/orb-core.png", "/assets/genesis/overlays/starfield.png"]}
       actions={[
+        { href: "/onboarding", label: "Watch URAI Genesis", note: "YOU LIVE trailer" },
         { href: "/life-map", label: "Open Life Map", note: "sample memory world" },
         { href: "/focus", label: "Enter Focus", note: "what matters now" },
         { href: "/replay", label: "Open Replay", note: "Genesis preview reel" },

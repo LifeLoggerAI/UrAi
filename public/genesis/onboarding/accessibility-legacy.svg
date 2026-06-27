@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Accessibility legacy placeholder</title><desc id="desc">Accessibility and legacy preview with captions, audio waves, and archive stars.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <path d="M800 750V360M620 520l180-160 180 160M560 650l240-210 240 210" stroke="#bae6fd" stroke-opacity=".35" stroke-width="8" fill="none"/>
+  <g fill="#67e8f9" opacity=".6"><circle cx="800" cy="350" r="34"/><circle cx="620" cy="520" r="22"/><circle cx="980" cy="520" r="22"/><circle cx="560" cy="650" r="18"/><circle cx="1040" cy="650" r="18"/></g>
+  <text x="800" y="180" fill="#eff6ff" font-family="Arial, sans-serif" font-size="60" font-weight="700" text-anchor="middle">Speak it. Show it. Preserve it.</text>
+</svg>

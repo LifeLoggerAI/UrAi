@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Memory music video placeholder</title><desc id="desc">A sample memory music video waveform and lyric card.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <path d="M140 520c80-180 160 180 240 0s160 180 240 0 160 180 240 0 160 180 240 0 160 180 240 0" fill="none" stroke="#67e8f9" stroke-width="10" stroke-opacity=".7"/>
+  <rect x="320" y="650" width="960" height="150" rx="42" fill="#0f172a" stroke="#bae6fd" stroke-opacity=".24"/>
+  <text x="800" y="742" fill="#eff6ff" font-family="Arial, sans-serif" font-size="52" font-weight="700" text-anchor="middle">I was not lost. I was becoming.</text>
+</svg>

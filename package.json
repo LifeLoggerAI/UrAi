@@ -24,6 +24,7 @@
     "codemod:apply": "node scripts/replace-demo-user.mjs",
     "check:v1": "node scripts/check-v1.mjs",
     "check:genesis": "node scripts/check-genesis-contract.mjs",
+    "check:onboarding": "node scripts/check-onboarding.mjs",
     "check:genesis:assets": "node scripts/check-genesis-assets.mjs",
     "check:genesis:audio": "node scripts/check-genesis-audio.mjs",
     "check:lockfile": "node scripts/check-lockfile.mjs",

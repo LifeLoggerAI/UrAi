@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Symbolic people placeholder</title><desc id="desc">Abstract symbolic people in a memory mirror with consent boundary.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <rect x="260" y="120" width="1080" height="720" rx="80" fill="#0f172a" stroke="#7dd3fc" stroke-opacity=".22"/>
+  <circle cx="620" cy="430" r="80" fill="#bae6fd" opacity=".65"/><path d="M500 720c40-170 200-170 240 0z" fill="#bae6fd" opacity=".28"/>
+  <circle cx="980" cy="430" r="80" fill="#c4b5fd" opacity=".55"/><path d="M860 720c40-170 200-170 240 0z" fill="#c4b5fd" opacity=".24"/>
+  <text x="800" y="875" fill="#fef3c7" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle">Symbolic. Consent-based. Not a replacement for real people.</text>
+</svg>

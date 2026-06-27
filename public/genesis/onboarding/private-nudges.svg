@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Private nudges placeholder</title><desc id="desc">Consent-bound private nudge examples with permission locks.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <g fill="#0f172a" stroke="#fde68a" stroke-opacity=".28"><rect x="170" y="220" width="520" height="190" rx="34"/><rect x="540" y="450" width="540" height="180" rx="34"/><rect x="900" y="250" width="530" height="190" rx="34"/></g>
+  <g fill="#fef3c7" font-family="Arial, sans-serif" font-size="28"><text x="220" y="300">Drink water. Text your person.</text><text x="585" y="530">Want the first step?</text><text x="945" y="330">Permissioned nudge example.</text></g>
+  <text x="120" y="830" fill="#eff6ff" font-family="Arial, sans-serif" font-size="64" font-weight="700">URAI helps you live it.</text>
+</svg>

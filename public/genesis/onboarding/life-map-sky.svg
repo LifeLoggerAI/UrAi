@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Life Map sky placeholder</title><desc id="desc">A symbolic constellation Life Map with stars, clusters, and paths.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <g stroke="#bae6fd" stroke-opacity=".2" fill="none"><path d="M210 630 480 360 780 520 1120 290 1390 460"/><path d="M300 260 650 300 920 210 1320 330"/></g>
+  <g fill="#e0f2fe"><circle cx="210" cy="630" r="14"/><circle cx="480" cy="360" r="22"/><circle cx="780" cy="520" r="18"/><circle cx="1120" cy="290" r="24"/><circle cx="1390" cy="460" r="15"/></g>
+  <g fill="#67e8f9" opacity=".28"><circle cx="500" cy="365" r="90"/><circle cx="1130" cy="290" r="120"/><circle cx="790" cy="520" r="75"/></g>
+  <text x="105" y="850" fill="#eff6ff" font-family="Arial, sans-serif" font-size="64" font-weight="700">Every star is a moment.</text>
+</svg>

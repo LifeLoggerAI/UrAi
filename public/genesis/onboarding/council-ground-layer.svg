@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Council ground layer placeholder</title><desc id="desc">A symbolic council of agent roles around a Guardian boundary.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <circle cx="800" cy="500" r="210" fill="#0f766e" opacity=".22"/><circle cx="800" cy="500" r="94" fill="#a5f3fc" opacity=".72"/>
+  <g fill="#e0f2fe" font-family="Arial, sans-serif" font-size="28" font-weight="700" text-anchor="middle">
+    <text x="800" y="190">Guardian</text><text x="1120" y="310">Narrator</text><text x="1220" y="560">Worldbuilder</text><text x="980" y="790">Translator</text><text x="610" y="790">Legacy Keeper</text><text x="380" y="560">Archivist</text><text x="470" y="310">Pattern Model</text>
+  </g>
+  <text x="120" y="900" fill="#eff6ff" font-family="Arial, sans-serif" font-size="60" font-weight="700">Below the sky is the ground.</text>
+</svg>

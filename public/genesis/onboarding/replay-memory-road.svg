@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Replay memory road placeholder</title><desc id="desc">A symbolic memory road opening into a Replay preview.</desc>
+  <rect width="1600" height="1000" fill="#030712"/>
+  <path d="M640 1000 760 460h80l140 540z" fill="#bae6fd" opacity=".18"/>
+  <path d="M800 460C620 560 520 700 480 1000M800 460c210 120 320 300 370 540" fill="none" stroke="#f8fafc" stroke-opacity=".28" stroke-width="8"/>
+  <circle cx="800" cy="410" r="120" fill="#67e8f9" opacity=".26"/>
+  <text x="120" y="170" fill="#eff6ff" font-family="Arial, sans-serif" font-size="72" font-weight="700">Replay preview</text>
+  <text x="120" y="250" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="36">A moment becomes a scene.</text>
+</svg>

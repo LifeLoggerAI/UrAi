@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Passport ownership placeholder</title><desc id="desc">A Passport receipt with user-owned data controls.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <rect x="420" y="120" width="760" height="760" rx="58" fill="#0f172a" stroke="#67e8f9" stroke-opacity=".32"/>
+  <text x="500" y="235" fill="#eff6ff" font-family="Arial, sans-serif" font-size="58" font-weight="700">Passport</text>
+  <g fill="#bae6fd" font-family="Arial, sans-serif" font-size="34"><text x="500" y="340">Private by default</text><text x="500" y="410">User-owned data</text><text x="500" y="480">Consent receipts</text><text x="500" y="550">Export anytime</text><text x="500" y="620">Delete anytime</text><text x="500" y="690">Share by permission</text><text x="500" y="760">License by consent</text></g>
+</svg>

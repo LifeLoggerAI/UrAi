@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">URAI home world placeholder</title><desc id="desc">The URAI orb gathering memory fragments into a home world.</desc>
+  <rect width="1600" height="1000" fill="#020617"/>
+  <circle cx="800" cy="430" r="210" fill="#67e8f9" opacity=".16"/><circle cx="800" cy="430" r="104" fill="#a5f3fc" opacity=".72"/><circle cx="760" cy="382" r="38" fill="#fff" opacity=".82"/>
+  <g fill="none" stroke="#67e8f9" stroke-opacity=".24"><ellipse cx="800" cy="430" rx="430" ry="150"/><ellipse cx="800" cy="430" rx="590" ry="230"/><ellipse cx="800" cy="430" rx="740" ry="320"/></g>
+  <g fill="#e0f2fe" opacity=".72"><circle cx="430" cy="360" r="8"/><circle cx="1120" cy="300" r="10"/><circle cx="1230" cy="610" r="7"/><circle cx="560" cy="680" r="9"/></g>
+  <text x="120" y="825" fill="#eff6ff" font-family="Arial, sans-serif" font-size="64" font-weight="700">URAI brings the pieces home.</text>
+</svg>
