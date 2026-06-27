@@ -303,11 +303,19 @@ export default function SpatialLifeMap({
 
     if (!shouldOpenInitialView) return;
 
+    const requestedStarId =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("starId")
+        : null;
+
     const targetStar =
-      initialOverlay === "mirror"
+      (requestedStarId
+        ? visibleStars.find((star) => star.id === requestedStarId)
+        : null) ??
+      (initialOverlay === "mirror"
         ? visibleStars.find((star) => star.isShadowMoment || star.type === "shadow") ??
           visibleStars[0]
-        : visibleStars[0];
+        : visibleStars[0]);
 
     initialSelectionApplied.current = true;
 
@@ -337,10 +345,24 @@ export default function SpatialLifeMap({
     camera.focusPosition(star.position3D, 3.55);
   }
 
+  function replayHrefFor(star: LifeMapStar) {
+    return `/replay?starId=${encodeURIComponent(star.id)}`;
+  }
+
+  function focusHrefFor(star: LifeMapStar | null) {
+    return star ? `/focus?starId=${encodeURIComponent(star.id)}` : "/focus";
+  }
+
   function openReplay() {
     if (!selectedStar || mode === "replay" || isReturningHome) return;
 
     selection.closeBloom();
+
+    if (typeof window !== "undefined" && window.location.pathname !== "/replay") {
+      router.push(replayHrefFor(selectedStar));
+      return;
+    }
+
     setMode("replay");
     camera.focusPosition(selectedStar.position3D, 2.55);
   }
@@ -363,6 +385,11 @@ export default function SpatialLifeMap({
 
   function returnToGalaxy() {
     if (isReturningHome) return;
+
+    if (typeof window !== "undefined" && window.location.pathname !== "/life-map") {
+      router.push("/life-map");
+      return;
+    }
 
     selection.closeBloom();
     selection.setHoveredStarId(null);
@@ -390,6 +417,13 @@ export default function SpatialLifeMap({
     if (isReturningHome) return;
 
     if (mode === "replay") {
+      setIsReplayPreviewPlaying(false);
+
+      if (typeof window !== "undefined" && window.location.pathname === "/replay") {
+        router.push(focusHrefFor(selectedStar));
+        return;
+      }
+
       setMode(selectedStar ? "focus" : "galaxy");
       return;
     }
