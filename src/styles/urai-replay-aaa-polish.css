@@ -1,0 +1,748 @@
+/* URAI Genesis AAA+++ Replay screen completion polish. Loaded after Focus polish. */
+
+body:has(.spatial-life-map.urai-life-map-screen.is-replay) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  background: #00020a !important;
+}
+
+.spatial-life-map.urai-life-map-screen.is-replay {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow: hidden !important;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(191, 233, 255, .18), transparent 20%),
+    radial-gradient(circle at 32% 55%, rgba(86, 163, 255, .13), transparent 28%),
+    radial-gradient(circle at 72% 48%, rgba(189, 166, 255, .12), transparent 30%),
+    linear-gradient(180deg, #00020a 0%, #050919 48%, #000106 100%) !important;
+}
+
+.spatial-life-map.urai-life-map-screen.is-replay::after {
+  z-index: 72 !important;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(0,0,0,.03) 0 22%, rgba(0,0,0,.48) 72%, rgba(0,0,0,.9) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.72), transparent 23%, transparent 77%, rgba(0,0,0,.72)),
+    linear-gradient(180deg, rgba(0,0,0,.68), transparent 21%, transparent 70%, rgba(0,0,0,.82)) !important;
+}
+
+.spatial-life-map.is-replay .spatial-stage {
+  filter: saturate(.74) brightness(.46) blur(1.8px) !important;
+  transform: scale(1.055) !important;
+  opacity: .68 !important;
+}
+
+.spatial-life-map.is-replay .spatial-cinematic-vignette {
+  opacity: .86 !important;
+}
+
+.spatial-life-map.is-replay .spatial-title-card,
+.spatial-life-map.is-replay .spatial-genesis-guide,
+.spatial-life-map.is-replay .spatial-layer-wheel,
+.spatial-life-map.is-replay .spatial-chapter-rail,
+.spatial-life-map.is-replay .spatial-star-preview,
+.spatial-life-map.is-replay .spatial-zoom-hud,
+.spatial-life-map.is-replay .spatial-controls,
+.spatial-life-map.is-replay .spatial-memory-bloom {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.spatial-life-map.is-replay .spatial-home-gate {
+  z-index: 112 !important;
+  border-color: rgba(217, 245, 255, .2) !important;
+  background: rgba(3, 10, 24, .58) !important;
+  color: rgba(240,253,255,.78) !important;
+  box-shadow: 0 18px 64px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(18px) saturate(1.06) !important;
+}
+
+.spatial-life-map.is-replay .spatial-route-gates {
+  top: max(5.4rem, calc(env(safe-area-inset-top) + 5.4rem)) !important;
+  left: max(1rem, env(safe-area-inset-left)) !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 112 !important;
+  width: 8.25rem !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: .5rem !important;
+  pointer-events: auto !important;
+}
+
+.spatial-life-map.is-replay .spatial-route-gates a[href="/passport"] {
+  display: none !important;
+}
+
+.spatial-life-map.is-replay .spatial-route-gates a {
+  min-width: 0 !important;
+  min-height: 2.62rem !important;
+  justify-content: flex-start !important;
+  padding: .58rem .72rem !important;
+  border-radius: 1rem !important;
+  border-color: rgba(217,245,255,.14) !important;
+  background: linear-gradient(135deg, rgba(7,18,40,.54), rgba(3,8,22,.36)) !important;
+  color: rgba(240,253,255,.72) !important;
+  font-size: .66rem !important;
+  letter-spacing: .14em !important;
+  box-shadow: 0 16px 50px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+.spatial-life-map.is-replay .spatial-route-gates a:hover,
+.spatial-life-map.is-replay .spatial-route-gates a:focus-visible {
+  transform: translateY(-1px) !important;
+  border-color: rgba(191,233,255,.46) !important;
+  color: white !important;
+}
+
+.spatial-life-map.is-replay .spatial-route-gates a[aria-current="page"] {
+  border-color: rgba(191,233,255,.62) !important;
+  background:
+    radial-gradient(circle at 22% 50%, rgba(191,233,255,.26), transparent 48%),
+    linear-gradient(135deg, rgba(16, 68, 106, .82), rgba(4, 11, 29, .76)) !important;
+  color: #fff !important;
+}
+
+.spatial-replay-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 104 !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  padding: max(5.4rem, env(safe-area-inset-top)) clamp(1rem, 3vw, 2.8rem) max(1.2rem, env(safe-area-inset-bottom)) !important;
+  pointer-events: none !important;
+  text-align: left !important;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(191,233,255,.13), transparent 18%),
+    radial-gradient(circle at 36% 58%, rgba(76, 152, 255, .11), transparent 30%),
+    radial-gradient(circle at 72% 52%, rgba(189, 166, 255, .11), transparent 31%),
+    linear-gradient(180deg, rgba(0,2,10,.36), rgba(0,2,10,.72)) !important;
+  backdrop-filter: blur(7px) saturate(1.1) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(1.1) !important;
+}
+
+.spatial-replay-overlay::before,
+.spatial-replay-overlay::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.spatial-replay-overlay::before {
+  inset: -18%;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(191,233,255,.1), transparent 18%),
+    conic-gradient(from 145deg at 50% 52%, transparent, rgba(191,233,255,.12), transparent 28%, rgba(189,166,255,.1), transparent 58%);
+  opacity: .88;
+  animation: uraiReplayAtmosphereDrift 18s ease-in-out infinite alternate;
+}
+
+.spatial-replay-overlay::after {
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(180deg, rgba(255,255,255,.026) 0 1px, transparent 1px 9px),
+    linear-gradient(90deg, rgba(0,0,0,.55), transparent 28%, transparent 72%, rgba(0,0,0,.62));
+  opacity: .32;
+  mix-blend-mode: screen;
+}
+
+.spatial-replay-film-light {
+  position: absolute;
+  inset: 11% 7%;
+  border-radius: 999px;
+  background:
+    linear-gradient(115deg, transparent 0 30%, rgba(191,233,255,.12) 45%, transparent 62%),
+    radial-gradient(ellipse at 50% 50%, rgba(191,233,255,.12), transparent 62%);
+  filter: blur(10px);
+  opacity: .66;
+  transform: rotate(-5deg);
+  animation: uraiReplayLightSweep 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.spatial-replay-hud {
+  position: fixed;
+  top: max(.9rem, env(safe-area-inset-top));
+  left: 50%;
+  z-index: 114;
+  width: min(430px, calc(100vw - 2rem));
+  transform: translateX(-50%);
+  border: 1px solid rgba(217,245,255,.16);
+  border-radius: 1.2rem;
+  padding: .66rem .9rem .72rem;
+  background: linear-gradient(180deg, rgba(7,17,38,.62), rgba(2,7,20,.44));
+  box-shadow: 0 18px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.055);
+  text-align: center;
+  backdrop-filter: blur(22px) saturate(1.08);
+  pointer-events: none;
+}
+
+.spatial-replay-hud p {
+  margin: 0;
+  color: rgba(191,233,255,.64);
+  font-size: .56rem;
+  font-weight: 900;
+  letter-spacing: .28em;
+}
+
+.spatial-replay-hud strong {
+  display: block;
+  margin-top: .12rem;
+  color: rgba(255,255,255,.96);
+  font-size: clamp(1rem, 1.7vw, 1.42rem);
+  line-height: 1.02;
+  letter-spacing: -.04em;
+}
+
+.spatial-replay-hud span {
+  display: block;
+  margin-top: .12rem;
+  color: rgba(223,247,255,.6);
+  font-size: .64rem;
+  line-height: 1.25;
+}
+
+.spatial-replay-card {
+  position: relative !important;
+  z-index: 108 !important;
+  display: grid !important;
+  grid-template-columns: minmax(220px, .9fr) minmax(0, 1.22fr) !important;
+  gap: clamp(1rem, 2.4vw, 2.1rem) !important;
+  align-items: stretch !important;
+  width: min(980px, calc(100vw - 13.5rem)) !important;
+  min-height: clamp(410px, 66vh, 620px) !important;
+  max-height: calc(100dvh - 8rem) !important;
+  margin: 0 !important;
+  border: 1px solid rgba(217,245,255,.18) !important;
+  border-radius: clamp(1.35rem, 2.4vw, 2.45rem) !important;
+  padding: clamp(1rem, 2vw, 1.7rem) !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(circle at 26% 20%, rgba(191,233,255,.13), transparent 29%),
+    radial-gradient(circle at 78% 75%, rgba(189,166,255,.11), transparent 36%),
+    linear-gradient(140deg, rgba(9,21,48,.86), rgba(3,8,23,.78) 45%, rgba(0,3,12,.9)) !important;
+  box-shadow:
+    0 34px 120px rgba(0,0,0,.58),
+    0 0 130px rgba(62,151,255,.13),
+    inset 0 1px 0 rgba(255,255,255,.07),
+    inset 0 0 90px rgba(191,233,255,.04) !important;
+  backdrop-filter: blur(30px) saturate(1.12) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(1.12) !important;
+}
+
+.spatial-replay-card::before,
+.spatial-replay-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.spatial-replay-card::before {
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.12), transparent 24%, transparent 72%, rgba(191,233,255,.12)),
+    linear-gradient(180deg, rgba(255,255,255,.05), transparent 45%);
+  opacity: .7;
+}
+
+.spatial-replay-card::after {
+  inset: 0;
+  background: linear-gradient(115deg, transparent 0 33%, rgba(255,255,255,.065) 46%, transparent 58%);
+  opacity: .56;
+  transform: translateX(-24%);
+  animation: uraiReplayCardSweep 7.2s ease-in-out infinite;
+}
+
+.spatial-replay-visual,
+.spatial-replay-copy {
+  position: relative;
+  z-index: 2;
+}
+
+.spatial-replay-visual {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(217,245,255,.14);
+  border-radius: clamp(1.1rem, 2vw, 1.85rem);
+  background:
+    radial-gradient(circle at 50% 44%, rgba(191,233,255,.14), transparent 24%),
+    radial-gradient(circle at 50% 65%, rgba(2,6,23,.08), rgba(2,6,23,.66) 74%),
+    linear-gradient(180deg, rgba(14,29,62,.62), rgba(0,3,12,.78));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 -30px 80px rgba(0,0,0,.34);
+}
+
+.spatial-replay-visual::before,
+.spatial-replay-visual::after {
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border: 1px solid rgba(191,233,255,.09);
+  border-radius: 999px;
+  animation: uraiReplayPulseRing 4.8s ease-in-out infinite;
+}
+
+.spatial-replay-visual::after {
+  inset: 22%;
+  animation-delay: -1.6s;
+  opacity: .5;
+}
+
+.spatial-replay-orb {
+  position: relative !important;
+  z-index: 2 !important;
+  width: clamp(120px, 17vw, 210px) !important;
+  height: clamp(120px, 17vw, 210px) !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  opacity: .95 !important;
+  filter: saturate(1.08) brightness(1.04);
+  animation: uraiReplayOrbBreathe 4s ease-in-out infinite !important;
+}
+
+.spatial-replay-aperture {
+  position: absolute;
+  z-index: 1;
+  width: clamp(180px, 25vw, 320px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    conic-gradient(from 22deg, transparent 0 13%, rgba(255,255,255,.09) 14% 15%, transparent 16% 30%, rgba(191,233,255,.11) 31% 32%, transparent 33% 100%);
+  opacity: .74;
+  filter: blur(.2px);
+  animation: uraiReplayAperture 18s linear infinite;
+}
+
+.spatial-replay-frame-strip {
+  position: absolute;
+  right: clamp(.7rem, 1.4vw, 1rem);
+  top: clamp(.7rem, 1.4vw, 1rem);
+  display: grid;
+  gap: .38rem;
+}
+
+.spatial-replay-frame-strip i {
+  display: block;
+  width: clamp(2.2rem, 4vw, 3rem);
+  height: clamp(1.25rem, 2.2vw, 1.65rem);
+  border: 1px solid rgba(217,245,255,.16);
+  border-radius: .42rem;
+  background:
+    radial-gradient(circle at 42% 45%, rgba(191,233,255,.24), transparent 42%),
+    rgba(255,255,255,.045);
+}
+
+.spatial-replay-preview-state {
+  position: absolute;
+  left: clamp(.75rem, 1.5vw, 1.1rem);
+  bottom: clamp(.75rem, 1.5vw, 1.1rem);
+  border: 1px solid rgba(191,233,255,.22);
+  border-radius: 999px;
+  padding: .5rem .7rem;
+  background: rgba(2,7,20,.58);
+  color: rgba(240,253,255,.78);
+  font-size: .62rem;
+  font-weight: 850;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+
+.spatial-replay-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(.1rem, 1vw, .6rem) clamp(.1rem, 1vw, .4rem);
+}
+
+.spatial-replay-copy p,
+.spatial-replay-card p {
+  margin: 0 !important;
+  color: rgba(191,233,255,.72) !important;
+  font-size: clamp(.58rem, .78vw, .72rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: .28em !important;
+  text-transform: uppercase;
+}
+
+.spatial-replay-copy h2,
+.spatial-replay-card h2 {
+  margin: .62rem 0 0 !important;
+  color: rgba(255,255,255,.98) !important;
+  font-size: clamp(3rem, 6vw, 6.4rem) !important;
+  line-height: .88 !important;
+  letter-spacing: -.085em !important;
+  text-wrap: balance;
+}
+
+.spatial-replay-copy > span,
+.spatial-replay-card > span {
+  display: block !important;
+  max-width: 640px !important;
+  margin-top: .9rem !important;
+  color: rgba(240,253,255,.8) !important;
+  font-size: clamp(.94rem, 1.2vw, 1.1rem) !important;
+  line-height: 1.58 !important;
+}
+
+.spatial-replay-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .48rem;
+  margin-top: 1rem;
+}
+
+.spatial-replay-meta small {
+  border: 1px solid rgba(217,245,255,.14);
+  border-radius: 999px;
+  padding: .45rem .62rem;
+  background: rgba(255,255,255,.045);
+  color: rgba(223,247,255,.68);
+  font-size: .62rem;
+  font-weight: 780;
+  letter-spacing: .08em;
+}
+
+.spatial-replay-path {
+  position: relative;
+  width: min(100%, 620px) !important;
+  height: .42rem !important;
+  margin-top: 1.05rem !important;
+  overflow: hidden !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.075) !important;
+  box-shadow: inset 0 0 0 1px rgba(217,245,255,.08);
+}
+
+.spatial-replay-path i {
+  width: 42% !important;
+  background: linear-gradient(90deg, rgba(191,233,255,.32), rgba(255,255,255,.96), rgba(189,166,255,.34)) !important;
+  box-shadow: 0 0 24px rgba(191,233,255,.36);
+  animation: uraiReplayProgress 5.4s ease-in-out infinite !important;
+}
+
+.spatial-replay-overlay.is-playing .spatial-replay-path i {
+  animation-duration: 2.8s !important;
+}
+
+.spatial-replay-actions {
+  position: relative !important;
+  z-index: 30 !important;
+  display: grid !important;
+  grid-template-columns: minmax(9rem, 1.1fr) repeat(2, minmax(7.4rem, .9fr)) !important;
+  gap: .62rem !important;
+  width: 100% !important;
+  margin-top: 1.05rem !important;
+  pointer-events: auto !important;
+}
+
+.spatial-replay-actions button,
+.spatial-replay-actions a,
+.spatial-replay-secondary-actions a {
+  position: relative !important;
+  z-index: 31 !important;
+  display: inline-flex !important;
+  min-height: 3rem !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  border: 1px solid rgba(217,245,255,.18) !important;
+  border-radius: 1rem !important;
+  padding: .72rem .9rem !important;
+  background: rgba(8,18,40,.62) !important;
+  color: rgba(240,253,255,.86) !important;
+  font-size: clamp(.62rem, .76vw, .76rem) !important;
+  font-weight: 880 !important;
+  letter-spacing: .1em !important;
+  line-height: 1.08 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  text-transform: uppercase;
+  pointer-events: auto !important;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+.spatial-replay-actions .spatial-replay-action-primary {
+  border-color: rgba(191,233,255,.5) !important;
+  background:
+    radial-gradient(circle at 22% 50%, rgba(191,233,255,.3), transparent 48%),
+    linear-gradient(135deg, rgba(33, 99, 147, .9), rgba(8, 22, 48, .82)) !important;
+  color: #fff !important;
+  box-shadow: 0 18px 64px rgba(45, 153, 255, .22), inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+
+.spatial-replay-actions button:hover,
+.spatial-replay-actions button:focus-visible,
+.spatial-replay-secondary-actions a:hover,
+.spatial-replay-secondary-actions a:focus-visible {
+  transform: translateY(-1px) !important;
+  border-color: rgba(191,233,255,.52) !important;
+  color: #fff !important;
+  outline: 2px solid rgba(191,233,255,.38) !important;
+  outline-offset: 3px !important;
+}
+
+.spatial-replay-actions button:active,
+.spatial-replay-secondary-actions a:active {
+  transform: translateY(0) scale(.99) !important;
+}
+
+.spatial-replay-actions button:disabled,
+.spatial-replay-actions button[aria-disabled="true"] {
+  opacity: .48 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.spatial-replay-secondary-actions {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .6rem;
+  pointer-events: auto;
+}
+
+.spatial-replay-secondary-actions a {
+  min-height: 2.38rem !important;
+  padding: .54rem .72rem !important;
+  border-color: rgba(217,245,255,.12) !important;
+  background: rgba(255,255,255,.045) !important;
+  color: rgba(223,247,255,.62) !important;
+  font-size: .58rem !important;
+}
+
+.spatial-replay-overlay.is-playing .spatial-replay-orb {
+  animation-duration: 2.4s !important;
+  filter: saturate(1.2) brightness(1.12);
+}
+
+.spatial-replay-overlay.is-playing .spatial-replay-film-light {
+  opacity: .84;
+  animation-duration: 5.6s;
+}
+
+@media (max-width: 1180px) {
+  .spatial-life-map.is-replay .spatial-route-gates {
+    width: 7.4rem !important;
+  }
+
+  .spatial-replay-card {
+    width: min(900px, calc(100vw - 11.5rem)) !important;
+    grid-template-columns: minmax(190px, .8fr) minmax(0, 1.2fr) !important;
+  }
+
+  .spatial-replay-copy h2,
+  .spatial-replay-card h2 {
+    font-size: clamp(2.72rem, 6vw, 5.2rem) !important;
+  }
+}
+
+@media (max-height: 820px) {
+  .spatial-replay-overlay {
+    padding-top: max(4.65rem, env(safe-area-inset-top)) !important;
+    padding-bottom: .8rem !important;
+  }
+
+  .spatial-replay-hud {
+    padding: .52rem .78rem .58rem;
+  }
+
+  .spatial-replay-hud span {
+    display: none;
+  }
+
+  .spatial-replay-card {
+    min-height: 0 !important;
+    height: min(610px, calc(100dvh - 5.6rem)) !important;
+    padding: .9rem !important;
+  }
+
+  .spatial-replay-copy > span,
+  .spatial-replay-card > span {
+    font-size: .9rem !important;
+    line-height: 1.42 !important;
+    margin-top: .72rem !important;
+  }
+
+  .spatial-replay-meta {
+    margin-top: .72rem;
+  }
+
+  .spatial-replay-path {
+    margin-top: .78rem !important;
+  }
+
+  .spatial-replay-actions {
+    margin-top: .82rem !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .spatial-life-map.is-replay .spatial-route-gates {
+    top: max(4.2rem, calc(env(safe-area-inset-top) + 4.2rem)) !important;
+    left: .75rem !important;
+    width: calc(100vw - 1.5rem) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: .38rem !important;
+  }
+
+  .spatial-life-map.is-replay .spatial-route-gates a {
+    min-height: 2.2rem !important;
+    justify-content: center !important;
+    padding: .42rem .35rem !important;
+    border-radius: .78rem !important;
+    font-size: .56rem !important;
+    letter-spacing: .08em !important;
+  }
+
+  .spatial-replay-overlay {
+    align-items: end !important;
+    padding: max(7.1rem, calc(env(safe-area-inset-top) + 7.1rem)) .75rem max(.75rem, env(safe-area-inset-bottom)) !important;
+  }
+
+  .spatial-replay-hud {
+    top: .68rem !important;
+    width: calc(100vw - 1.5rem) !important;
+    padding: .54rem .72rem;
+  }
+
+  .spatial-replay-card {
+    width: calc(100vw - 1.5rem) !important;
+    height: calc(100dvh - 8.35rem) !important;
+    min-height: 0 !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(140px, .82fr) auto !important;
+    gap: .8rem !important;
+    padding: .72rem !important;
+    border-radius: 1.35rem !important;
+  }
+
+  .spatial-replay-visual {
+    min-height: 0;
+  }
+
+  .spatial-replay-orb {
+    width: clamp(96px, 31vw, 150px) !important;
+    height: clamp(96px, 31vw, 150px) !important;
+  }
+
+  .spatial-replay-copy {
+    justify-content: start;
+    padding: 0 .1rem .1rem;
+  }
+
+  .spatial-replay-copy h2,
+  .spatial-replay-card h2 {
+    font-size: clamp(2.2rem, 11vw, 3.7rem) !important;
+  }
+
+  .spatial-replay-copy > span,
+  .spatial-replay-card > span {
+    font-size: .86rem !important;
+    line-height: 1.38 !important;
+  }
+
+  .spatial-replay-meta small:nth-child(2) {
+    display: none;
+  }
+
+  .spatial-replay-actions {
+    grid-template-columns: 1fr !important;
+    gap: .44rem !important;
+  }
+
+  .spatial-replay-actions button,
+  .spatial-replay-secondary-actions a {
+    min-height: 2.5rem !important;
+    padding: .55rem .62rem !important;
+    border-radius: .82rem !important;
+    font-size: .58rem !important;
+  }
+
+  .spatial-replay-secondary-actions {
+    display: none !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .spatial-life-map.is-replay .spatial-home-gate {
+    display: none !important;
+  }
+
+  .spatial-replay-hud strong {
+    font-size: 1rem;
+  }
+
+  .spatial-replay-hud span {
+    display: none;
+  }
+
+  .spatial-replay-meta {
+    gap: .32rem;
+  }
+
+  .spatial-replay-meta small {
+    padding: .32rem .45rem;
+    font-size: .54rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-replay-overlay::before,
+  .spatial-replay-card::after,
+  .spatial-replay-film-light,
+  .spatial-replay-orb,
+  .spatial-replay-aperture,
+  .spatial-replay-visual::before,
+  .spatial-replay-visual::after,
+  .spatial-replay-path i {
+    animation: none !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@keyframes uraiReplayAtmosphereDrift {
+  from { transform: translate3d(-1.2%, .8%, 0) rotate(-2deg) scale(1.01); }
+  to { transform: translate3d(1.4%, -1%, 0) rotate(2deg) scale(1.04); }
+}
+
+@keyframes uraiReplayLightSweep {
+  0%, 100% { transform: translateX(-4%) rotate(-6deg); opacity: .42; }
+  45%, 60% { transform: translateX(5%) rotate(-3deg); opacity: .82; }
+}
+
+@keyframes uraiReplayCardSweep {
+  0%, 100% { transform: translateX(-42%); opacity: .18; }
+  50% { transform: translateX(42%); opacity: .56; }
+}
+
+@keyframes uraiReplayOrbBreathe {
+  0%, 100% { transform: scale(.97); opacity: .86; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+@keyframes uraiReplayAperture {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes uraiReplayPulseRing {
+  0%, 100% { transform: scale(.92); opacity: .16; }
+  50% { transform: scale(1.04); opacity: .42; }
+}
+
+@keyframes uraiReplayProgress {
+  0%, 100% { transform: translateX(-8%); }
+  50% { transform: translateX(150%); }
+}

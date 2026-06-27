@@ -16,6 +16,7 @@ import "../styles/urai-home-world-composition.css";
 import "../styles/urai-sacred-tech-system.css";
 import "../styles/urai-lifemap-aaa-polish.css";
 import "../styles/urai-focus-aaa-polish.css";
+import "../styles/urai-replay-aaa-polish.css";
 import type { Metadata, Viewport } from "next";
 import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";

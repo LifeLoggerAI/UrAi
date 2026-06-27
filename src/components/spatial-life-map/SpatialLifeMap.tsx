@@ -238,6 +238,7 @@ export default function SpatialLifeMap({
   );
   const [returnPhase, setReturnPhase] = useState<ReturnPhase>("idle");
   const [sceneReady, setSceneReady] = useState(false);
+  const [isReplayPreviewPlaying, setIsReplayPreviewPlaying] = useState(false);
 
   const initialSelectionApplied = useRef(false);
 
@@ -288,6 +289,10 @@ export default function SpatialLifeMap({
   useEffect(() => {
     setSceneReady(false);
   }, [sceneResetKey]);
+
+  useEffect(() => {
+    if (mode !== "replay") setIsReplayPreviewPlaying(false);
+  }, [mode]);
 
   useEffect(() => {
     if (initialSelectionApplied.current || visibleStars.length === 0) return;
@@ -636,44 +641,79 @@ export default function SpatialLifeMap({
 
       {mode === "replay" && selectedStar && (
         <section
-          className="spatial-replay-overlay"
+          className={`spatial-replay-overlay ${isReplayPreviewPlaying ? "is-playing" : "is-ready"}`}
           role="dialog"
           aria-modal="true"
           aria-label={`${selectedStar.title} replay`}
         >
+          <div className="spatial-replay-hud" aria-label="Replay route status">
+            <p>URAI REPLAY</p>
+            <strong>{selectedStar.title}</strong>
+            <span>Preview thread / Esc returns to focus</span>
+          </div>
+
+          <div className="spatial-replay-film-light" aria-hidden />
+
           <div className="spatial-replay-card">
-            <div
-              className="spatial-replay-orb"
-              style={{
-                background: selectedStar.auraColor,
-                boxShadow: `0 0 140px ${selectedStar.auraColor}99`,
-              }}
-            />
-
-            <p>REPLAY THREAD / SAMPLE MEMORY PREVIEW</p>
-            <h2>{selectedStar.title}</h2>
-            <span>
-              {selectedReplayBloom?.narratorScript ??
-                selectedStar.narratorReflection}
-            </span>
-
-            <div className="spatial-replay-path" aria-hidden>
-              <i />
+            <div className="spatial-replay-visual" aria-hidden="true">
+              <div
+                className="spatial-replay-orb"
+                style={{
+                  background: selectedStar.auraColor,
+                  boxShadow: `0 0 140px ${selectedStar.auraColor}99`,
+                }}
+              />
+              <div className="spatial-replay-aperture" />
+              <div className="spatial-replay-frame-strip">
+                <i />
+                <i />
+                <i />
+              </div>
+              <span className="spatial-replay-preview-state">
+                {isReplayPreviewPlaying ? "Preview playing" : "Preview ready"}
+              </span>
             </div>
 
-            <div className="spatial-replay-actions">
-              <button type="button" onClick={unwind}>
-                Back to focus
-              </button>
-              <button type="button" onClick={returnToGalaxy}>
-                Back to galaxy
-              </button>
-              <Link href="/passport">
-                Open Passport
-              </Link>
-              <Link href="/waitlist">
-                Join waitlist
-              </Link>
+            <div className="spatial-replay-copy">
+              <p>REPLAY THREAD / SAMPLE MEMORY PREVIEW</p>
+              <h2>{selectedStar.title}</h2>
+              <span>
+                {selectedReplayBloom?.narratorScript ??
+                  selectedStar.narratorReflection}
+              </span>
+
+              <div className="spatial-replay-meta" aria-label="Replay preview safety status">
+                <small>Preview mode</small>
+                <small>Private memory thread</small>
+                <small>Generated-safe fallback</small>
+              </div>
+
+              <div className="spatial-replay-path" aria-hidden>
+                <i />
+              </div>
+
+              <div className="spatial-replay-actions">
+                <button
+                  type="button"
+                  className="spatial-replay-action-primary"
+                  onClick={() => setIsReplayPreviewPlaying((playing) => !playing)}
+                  aria-pressed={isReplayPreviewPlaying}
+                  aria-label={isReplayPreviewPlaying ? `Pause preview for ${selectedStar.title}` : `Play preview for ${selectedStar.title}`}
+                >
+                  {isReplayPreviewPlaying ? "Pause preview" : "Play preview"}
+                </button>
+                <button type="button" onClick={unwind} aria-label="Back to focus from Replay">
+                  Back to focus
+                </button>
+                <button type="button" onClick={returnToGalaxy} aria-label="Back to galaxy from Replay">
+                  Back to galaxy
+                </button>
+              </div>
+
+              <div className="spatial-replay-secondary-actions" aria-label="Replay safety and access links">
+                <Link href="/passport">Passport boundary</Link>
+                <Link href="/waitlist">Join waitlist</Link>
+              </div>
             </div>
           </div>
         </section>
