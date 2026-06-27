@@ -1,0 +1,496 @@
+/* URAI Genesis AAA+++ Life Map final product polish. Loaded last on purpose. */
+
+
+body:has(.spatial-life-map.urai-life-map-screen) footer,
+body:has(.spatial-life-map.urai-life-map-screen) nav[aria-label="Primary URAI navigation"] {
+  display: none !important;
+  pointer-events: none !important;
+}
+body:has(.spatial-life-map.urai-life-map-screen) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  background: #00030a !important;
+}
+
+.spatial-life-map.urai-life-map-screen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden !important;
+  color: rgba(245, 251, 255, 0.98) !important;
+  background:
+    radial-gradient(circle at 50% 43%, rgba(117, 213, 255, .19), transparent 25%),
+    radial-gradient(circle at 36% 54%, rgba(55, 99, 190, .2), transparent 35%),
+    radial-gradient(circle at 72% 38%, rgba(189, 166, 255, .13), transparent 33%),
+    radial-gradient(ellipse at 50% 104%, rgba(252, 211, 77, .075), transparent 44%),
+    linear-gradient(180deg, #00020a 0%, #030817 52%, #000106 100%) !important;
+  isolation: isolate;
+}
+
+.spatial-life-map.urai-life-map-screen::before {
+  opacity: .5 !important;
+  filter: drop-shadow(0 0 8px rgba(125, 211, 252, .28)) !important;
+}
+
+.spatial-life-map.urai-life-map-screen::after {
+  z-index: 17 !important;
+  background:
+    radial-gradient(ellipse at 50% 47%, transparent 0 38%, rgba(0,0,0,.18) 64%, rgba(0,0,0,.82) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.56), transparent 24%, transparent 76%, rgba(0,0,0,.56)),
+    linear-gradient(180deg, rgba(0,0,0,.5), transparent 17%, transparent 72%, rgba(0,0,0,.76)) !important;
+  mix-blend-mode: normal !important;
+}
+
+.spatial-life-map .spatial-stage {
+  inset: 0 !important;
+  z-index: 8 !important;
+  touch-action: none;
+}
+
+.spatial-life-map .spatial-canvas,
+.spatial-life-map .spatial-stage canvas {
+  width: 100vw !important;
+  height: 100dvh !important;
+  display: block !important;
+}
+
+.spatial-title-card {
+  top: max(1rem, env(safe-area-inset-top)) !important;
+  min-width: min(560px, calc(100vw - 2rem)) !important;
+  max-width: min(640px, calc(100vw - 2rem)) !important;
+  border-radius: 2rem !important;
+  padding: 1.05rem 1.65rem 1.15rem !important;
+  border-color: rgba(217, 245, 255, .24) !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(191, 233, 255, .13), transparent 42%),
+    linear-gradient(180deg, rgba(8, 18, 40, .78), rgba(2, 7, 20, .66)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    0 34px 120px rgba(0,0,0,.48),
+    0 0 76px rgba(125,211,252,.08) !important;
+  text-align: center !important;
+}
+
+.spatial-title-card p {
+  font-size: .67rem !important;
+  letter-spacing: .34em !important;
+  color: rgba(191, 233, 255, .7) !important;
+}
+
+.spatial-title-card h1 {
+  margin: .22rem 0 .18rem !important;
+  font-size: clamp(2.25rem, 4.2vw, 4.1rem) !important;
+  line-height: .9 !important;
+  font-weight: 640 !important;
+  letter-spacing: -.075em !important;
+}
+
+.spatial-title-card span {
+  display: block !important;
+  color: rgba(223, 247, 255, .7) !important;
+  font-size: .78rem !important;
+  line-height: 1.45 !important;
+}
+
+.spatial-home-gate,
+.spatial-route-gates a,
+.spatial-controls button,
+.spatial-chapter-rail button,
+.spatial-layer-core,
+.spatial-layer-glyph {
+  outline-offset: 4px;
+}
+
+.spatial-home-gate:focus-visible,
+.spatial-route-gates a:focus-visible,
+.spatial-controls button:focus-visible,
+.spatial-chapter-rail button:focus-visible,
+.spatial-layer-core:focus-visible,
+.spatial-layer-glyph:focus-visible {
+  outline: 2px solid rgba(191, 233, 255, .68) !important;
+}
+
+.spatial-home-gate {
+  min-height: 46px !important;
+  padding: .65rem .95rem !important;
+  border-color: rgba(217, 245, 255, .24) !important;
+  background: rgba(3, 8, 21, .72) !important;
+}
+
+.spatial-route-gates {
+  top: max(5.25rem, calc(env(safe-area-inset-top) + 5.25rem)) !important;
+  gap: .55rem !important;
+}
+
+.spatial-route-gates a {
+  min-width: 7.2rem;
+  justify-content: flex-start !important;
+  border-color: rgba(217, 245, 255, .16) !important;
+  background:
+    linear-gradient(135deg, rgba(10, 22, 48, .7), rgba(2, 7, 20, .54)) !important;
+  color: rgba(240, 253, 255, .86) !important;
+  box-shadow: 0 18px 70px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+
+.spatial-route-gates a[aria-current="page"] {
+  border-color: rgba(191, 233, 255, .46) !important;
+  color: #fff !important;
+  background:
+    radial-gradient(circle at 16% 50%, rgba(191,233,255,.2), transparent 42%),
+    linear-gradient(135deg, rgba(20, 64, 98, .74), rgba(5, 13, 32, .68)) !important;
+  box-shadow: 0 18px 70px rgba(0,0,0,.34), 0 0 32px rgba(125,211,252,.12) !important;
+}
+
+.spatial-genesis-guide {
+  right: max(1.25rem, env(safe-area-inset-right)) !important;
+  width: min(330px, calc(100vw - 2rem)) !important;
+  border-radius: 1.6rem !important;
+  padding: 1rem !important;
+  opacity: .88;
+}
+
+.spatial-genesis-guide:hover,
+.spatial-genesis-guide:focus-within {
+  opacity: 1;
+}
+
+.spatial-genesis-guide h2 {
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem) !important;
+}
+
+.spatial-genesis-guide span {
+  font-size: .78rem !important;
+  line-height: 1.55 !important;
+}
+
+.spatial-star-preview {
+  top: max(6.7rem, calc(env(safe-area-inset-top) + 6.7rem)) !important;
+  width: min(340px, calc(100vw - 2rem)) !important;
+  border-radius: 1.55rem !important;
+  padding: 1rem !important;
+  border-color: rgba(217,245,255,.2) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(191,233,255,.12), transparent 42%),
+    linear-gradient(180deg, rgba(8, 18, 40, .76), rgba(2, 7, 20, .68)) !important;
+}
+
+.spatial-star-preview h2 {
+  font-size: clamp(1.35rem, 2vw, 1.85rem) !important;
+  line-height: 1.02 !important;
+}
+
+.spatial-preview-action {
+  border-color: rgba(191,233,255,.28) !important;
+  background: rgba(191,233,255,.1) !important;
+  color: rgba(240,253,255,.94) !important;
+}
+
+.spatial-layer-wheel {
+  left: max(1rem, env(safe-area-inset-left)) !important;
+  bottom: max(7.2rem, calc(env(safe-area-inset-bottom) + 7.2rem)) !important;
+  width: min(252px, calc(100vw - 2rem)) !important;
+  height: auto !important;
+  border: 1px solid rgba(217,245,255,.14) !important;
+  border-radius: 1.45rem !important;
+  padding: .78rem !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(191,233,255,.1), transparent 48%),
+    linear-gradient(180deg, rgba(8,18,40,.72), rgba(2,7,20,.62)) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06) !important;
+  opacity: .72 !important;
+  transform: none !important;
+  backdrop-filter: blur(24px) saturate(1.16) !important;
+}
+
+.spatial-layer-wheel:hover,
+.spatial-layer-wheel:focus-within {
+  opacity: 1 !important;
+}
+
+.spatial-layer-core {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: .55rem .72rem !important;
+  border-radius: 999px !important;
+}
+
+.spatial-layer-orbit {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: .45rem !important;
+  margin-top: .65rem !important;
+}
+
+.spatial-layer-glyph {
+  position: relative !important;
+  width: auto !important;
+  height: 2.25rem !important;
+  margin: 0 !important;
+  transform: none !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: .9rem !important;
+}
+
+.spatial-layer-glyph em {
+  left: 50% !important;
+  top: auto !important;
+  bottom: calc(100% + .45rem) !important;
+  z-index: 4;
+  border: 1px solid rgba(217,245,255,.14);
+  border-radius: 999px;
+  background: rgba(2, 7, 20, .88);
+  padding: .25rem .5rem;
+}
+
+.spatial-controls {
+  bottom: max(1rem, calc(env(safe-area-inset-bottom) + 1rem)) !important;
+  max-width: min(760px, calc(100vw - 2rem)) !important;
+  border-radius: 1.45rem !important;
+  padding: .55rem !important;
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: .45rem !important;
+  opacity: .98 !important;
+}
+
+.spatial-controls button {
+  min-width: 0 !important;
+  min-height: 46px !important;
+  border-radius: 1rem !important;
+  padding: .55rem .75rem !important;
+  font-size: .78rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  white-space: normal !important;
+}
+
+.spatial-controls button:disabled {
+  opacity: .34 !important;
+  cursor: not-allowed !important;
+}
+
+.spatial-chapter-rail {
+  bottom: max(5rem, calc(env(safe-area-inset-bottom) + 5rem)) !important;
+  width: min(900px, calc(100vw - 2rem)) !important;
+  border-radius: 1.55rem !important;
+  padding: .55rem !important;
+  opacity: .74 !important;
+  transform: translateX(-50%) !important;
+  scrollbar-width: none;
+}
+
+.spatial-chapter-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.spatial-chapter-rail:hover,
+.spatial-chapter-rail:focus-within {
+  opacity: 1 !important;
+  transform: translateX(-50%) !important;
+}
+
+.spatial-chapter-rail button {
+  min-width: 164px !important;
+  max-width: 190px !important;
+  border-radius: 1.1rem !important;
+  padding: .72rem .85rem !important;
+}
+
+.spatial-chapter-rail button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+
+.spatial-chapter-rail span {
+  font-size: .55rem !important;
+  color: rgba(191,233,255,.58) !important;
+}
+
+.spatial-chapter-rail strong {
+  font-size: .9rem !important;
+  line-height: 1.12 !important;
+}
+
+.spatial-chapter-rail em {
+  font-size: .72rem !important;
+}
+
+.spatial-loading,
+.spatial-error,
+.spatial-empty,
+.spatial-scene-fallback {
+  border: 1px solid rgba(217,245,255,.18) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(191,233,255,.12), transparent 45%),
+    linear-gradient(180deg, rgba(8,18,40,.82), rgba(2,7,20,.78)) !important;
+  box-shadow: 0 30px 110px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07) !important;
+  backdrop-filter: blur(28px) saturate(1.15) !important;
+  color: rgba(240,253,255,.92) !important;
+}
+
+.spatial-loading,
+.spatial-error,
+.spatial-empty {
+  position: fixed;
+  z-index: 90;
+  left: 50%;
+  top: 50%;
+  width: min(420px, calc(100vw - 2rem));
+  transform: translate(-50%, -50%);
+  border-radius: 1.75rem;
+  padding: 1.15rem 1.25rem;
+  text-align: center;
+}
+
+.spatial-loading strong,
+.spatial-error strong,
+.spatial-empty strong {
+  display: block;
+  color: #fff;
+  font-size: 1.12rem;
+  letter-spacing: -.02em;
+}
+
+.spatial-loading span,
+.spatial-error span,
+.spatial-empty span {
+  display: block;
+  margin-top: .45rem;
+  color: rgba(223,247,255,.7);
+  font-size: .88rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .spatial-genesis-guide {
+    display: none !important;
+  }
+
+  .spatial-star-preview {
+    right: 1rem !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .spatial-title-card {
+    top: max(.75rem, env(safe-area-inset-top)) !important;
+    left: auto !important;
+    right: .75rem !important;
+    width: min(18rem, calc(100vw - 5.7rem)) !important;
+    min-width: 0 !important;
+    transform: none !important;
+    padding: .72rem .82rem !important;
+    border-radius: 1.25rem !important;
+  }
+
+  .spatial-title-card p {
+    font-size: .52rem !important;
+    letter-spacing: .18em !important;
+  }
+
+  .spatial-title-card h1 {
+    font-size: clamp(1.25rem, 7.8vw, 1.9rem) !important;
+  }
+
+  .spatial-title-card span {
+    font-size: .62rem !important;
+    line-height: 1.28 !important;
+  }
+
+  .spatial-route-gates {
+    left: .75rem !important;
+    right: .75rem !important;
+    bottom: max(.75rem, calc(env(safe-area-inset-bottom) + .75rem)) !important;
+    top: auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: .36rem !important;
+  }
+
+  .spatial-route-gates a {
+    min-width: 0 !important;
+    min-height: 2.55rem !important;
+    justify-content: center !important;
+    padding: .35rem .25rem !important;
+    font-size: .58rem !important;
+    letter-spacing: .06em !important;
+  }
+
+  .spatial-star-preview {
+    left: .75rem !important;
+    right: .75rem !important;
+    top: auto !important;
+    bottom: max(6.2rem, calc(env(safe-area-inset-bottom) + 5.7rem)) !important;
+    width: auto !important;
+    max-height: 34vh;
+    overflow: hidden;
+  }
+
+  .spatial-layer-wheel,
+  .spatial-chapter-rail,
+  .spatial-controls {
+    display: none !important;
+  }
+}
+
+@media (max-height: 780px) and (min-width: 861px) {
+  .spatial-title-card {
+    padding: .8rem 1.25rem !important;
+  }
+
+  .spatial-title-card h1 {
+    font-size: clamp(1.95rem, 3.2vw, 3.2rem) !important;
+  }
+
+  .spatial-star-preview {
+    width: min(310px, calc(100vw - 2rem)) !important;
+  }
+
+  .spatial-genesis-guide {
+    display: none !important;
+  }
+
+  .spatial-chapter-rail {
+    bottom: max(4.6rem, calc(env(safe-area-inset-bottom) + 4.6rem)) !important;
+  }
+
+  .spatial-controls {
+    max-width: min(720px, calc(100vw - 2rem)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spatial-life-map *,
+  .spatial-life-map::before,
+  .spatial-life-map::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .spatial-life-map.urai-life-map-screen .spatial-title-card {
+    left: .75rem !important;
+    right: .75rem !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    transform: none !important;
+  }
+}

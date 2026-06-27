@@ -93,8 +93,8 @@ function SpatialSceneFallback({
       <div className="spatial-fallback-orb" aria-hidden />
       <div className="spatial-fallback-ring spatial-fallback-ring-a" aria-hidden />
       <div className="spatial-fallback-ring spatial-fallback-ring-b" aria-hidden />
-      <p>3D renderer fallback</p>
-      <h2>Memory Galaxy is still online.</h2>
+      <p>Spatial renderer fallback</p>
+      <h2>Life Map preview is still safe.</h2>
       <span>{message}</span>
     </div>
   );
@@ -476,17 +476,16 @@ export default function SpatialLifeMap({
         onClick={returnHome}
         aria-label="Return to Genesis Home"
       >
-        <span>&lt;</span>
+        <span aria-hidden="true">&lt;</span>
         <strong>Home</strong>
       </button>
 
       <nav className="spatial-route-gates" aria-label="Genesis route shortcuts">
         <Link href="/home">Home</Link>
-        <Link href="/life-map">Life Map</Link>
-        <Link href="/focus">Open Focus</Link>
-        <Link href="/replay">Open Replay</Link>
+        <Link href="/life-map" aria-current={mode === "galaxy" ? "page" : undefined}>Life Map</Link>
+        <Link href="/focus" aria-current={mode === "focus" || mode === "bloom" ? "page" : undefined}>Focus</Link>
+        <Link href="/replay" aria-current={mode === "replay" ? "page" : undefined}>Replay</Link>
         <Link href="/passport">Passport</Link>
-        <Link href="/waitlist">Waitlist</Link>
       </nav>
 
       <aside className="spatial-genesis-guide" aria-label="Genesis friend-demo guide">
@@ -560,11 +559,24 @@ export default function SpatialLifeMap({
 
       {loading && (
         <div className="spatial-loading">
-          URAI is arranging your living galaxy...
+          <strong>Life Map preview is loading</strong>
+          <span>URAI is arranging the sample memory galaxy.</span>
         </div>
       )}
 
-      {error && <div className="spatial-error">{error}</div>}
+      {error && (
+        <div className="spatial-error" role="alert">
+          <strong>Spatial memory field unavailable on this device</strong>
+          <span>{error}</span>
+        </div>
+      )}
+
+      {!loading && !error && visibleStars.length === 0 && (
+        <div className="spatial-empty" role="status" aria-live="polite">
+          <strong>No memory stars available yet</strong>
+          <span>This Genesis preview uses sample stars only. Private memory systems remain gated until you choose to open them.</span>
+        </div>
+      )}
 
       <LayerWheel
         layers={activeLayers}

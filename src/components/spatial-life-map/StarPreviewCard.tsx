@@ -18,12 +18,12 @@ export default function StarPreviewCard({
   const body = (
     <>
       <div className="spatial-preview-orb" style={{ background: star.auraColor, boxShadow: `0 0 42px ${star.auraColor}88` }} />
-      <p>{star.type} / {star.archetype}</p>
+      <p>{star.emotionalTone} / {star.archetype}</p>
       <h2>{star.title}</h2>
-      <span>{star.emotionalTone}</span>
+      <span>{star.type.replace(/([A-Z])/g, " $1").trim()} star / constellation {star.constellationId}</span>
       <em>{star.narratorReflection}</em>
       <small>{star.sourceSignals.join(" / ")} / {star.privacyLevel}</small>
-      {onActivate && <strong className="spatial-preview-action">{actionLabel}</strong>}
+      <strong className="spatial-preview-action">{onActivate ? actionLabel : "Click star to focus"}</strong>
     </>
   );
 

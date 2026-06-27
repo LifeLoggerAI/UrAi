@@ -28,7 +28,7 @@ export default function LifeStar({ star, selected, hovered, dimmed = false, onHo
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const pulse = 1 + Math.sin(t * star.twinkleSpeed + star.position3D.x) * 0.055;
-    const focus = selected ? 1.42 : hovered ? 1.2 : 1;
+    const focus = selected ? 1.68 : hovered ? 1.28 : 1;
 
     if (groupRef.current) {
       groupRef.current.scale.setScalar(star.size * pulse * focus);
@@ -44,7 +44,7 @@ export default function LifeStar({ star, selected, hovered, dimmed = false, onHo
 
     if (coreRef.current) {
       const material = coreRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = selected ? 5.2 : hovered ? 3.2 : 2.05;
+      material.emissiveIntensity = selected ? 6.4 : hovered ? 3.7 : 1.85;
       material.opacity = dimmed ? 0.38 : 1;
     }
 
@@ -90,7 +90,7 @@ export default function LifeStar({ star, selected, hovered, dimmed = false, onHo
       }}
     >
       <mesh ref={glowRef} renderOrder={1}>
-        <sphereGeometry args={[0.18, 24, 24]} />
+        <sphereGeometry args={[0.24, 28, 28]} />
         <meshBasicMaterial color={color} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
 

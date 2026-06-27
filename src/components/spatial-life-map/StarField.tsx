@@ -26,9 +26,9 @@ export default function StarField({ reducedMotion = false }: { reducedMotion?: b
   const dustRef = useRef<THREE.Points>(null);
 
   const fields = useMemo(() => {
-    const nearCount = 2200;
-    const farCount = 2600;
-    const dustCount = 3000;
+    const nearCount = 1550;
+    const farCount = 1750;
+    const dustCount = 1900;
 
     const nearPositions = new Float32Array(nearCount * 3);
     const nearColors = new Float32Array(nearCount * 3);
@@ -97,21 +97,21 @@ export default function StarField({ reducedMotion = false }: { reducedMotion?: b
           <bufferAttribute attach="attributes-position" args={[fields.farPositions, 3]} />
           <bufferAttribute attach="attributes-color" args={[fields.farColors, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.04} vertexColors transparent opacity={0.74} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial size={0.034} vertexColors transparent opacity={0.52} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
       <points ref={dustRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[fields.dustPositions, 3]} />
           <bufferAttribute attach="attributes-color" args={[fields.dustColors, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.085} vertexColors transparent opacity={0.22} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial size={0.064} vertexColors transparent opacity={0.14} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
       <points ref={nearRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[fields.nearPositions, 3]} />
           <bufferAttribute attach="attributes-color" args={[fields.nearColors, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.07} vertexColors transparent opacity={0.95} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+        <pointsMaterial size={0.056} vertexColors transparent opacity={0.72} depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
       </points>
     </group>
   );

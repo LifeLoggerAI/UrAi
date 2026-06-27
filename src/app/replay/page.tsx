@@ -1,4 +1,6 @@
 import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
+import { Suspense } from "react";
+import LifeMovieReplayGateway from "@/components/replay/LifeMovieReplayGateway";
 
 export const metadata = {
   title: "URAI Replay",
@@ -6,5 +8,12 @@ export const metadata = {
 };
 
 export default function ReplayPage() {
-  return <SpatialLifeMap initialMode="replay" />;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <LifeMovieReplayGateway />
+      </Suspense>
+      <SpatialLifeMap initialMode="replay" />
+    </>
+  );
 }
