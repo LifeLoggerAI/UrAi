@@ -89,6 +89,11 @@ export default function LifeStar({ star, selected, hovered, dimmed = false, onHo
         onOpen(star);
       }}
     >
+      <mesh userData={{ lifeMapStarId: star.id }} renderOrder={0}>
+        <sphereGeometry args={[0.34, 24, 24]} />
+        <meshBasicMaterial color={color} transparent opacity={0} depthWrite={false} />
+      </mesh>
+
       <mesh ref={glowRef} renderOrder={1}>
         <sphereGeometry args={[0.18, 24, 24]} />
         <meshBasicMaterial color={color} transparent opacity={0.12} depthWrite={false} blending={THREE.AdditiveBlending} />
