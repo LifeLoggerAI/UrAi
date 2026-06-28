@@ -79,7 +79,7 @@ jobs:
         run: npm run smoke:genesis-spine
 
   home-xr-smoke:
-    name: Home XR Playwright smoke
+    name: Home and Life Map XR Playwright smoke
     runs-on: ubuntu-latest
     timeout-minutes: 35
     needs: v1-app-green
@@ -122,10 +122,13 @@ jobs:
       - name: Run Home XR smoke checks
         run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
 
+      - name: Run Life Map XR smoke checks
+        run: npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome
+
       - name: Upload Playwright output
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: home-xr-playwright-output
+          name: xr-playwright-output
           path: /tmp/urai-playwright-results
           if-no-files-found: ignore
