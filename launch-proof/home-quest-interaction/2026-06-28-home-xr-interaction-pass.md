@@ -53,8 +53,14 @@ The same in-world target meshes retain React Three Fiber pointer handlers, so mo
 
 - Unit smoke check for required in-world Home XR target registry.
 - Playwright smoke coverage for desktop `/home` load, mobile `/home` load, canvas presence, no console/page errors, truthful unsupported-device fallback copy, and no visible fake VR button when immersive-vr is unsupported.
-- `check:production-claims` script to fail unqualified XR/VR/AR/Quest production claims.
+- Mocked immersive-vr Playwright smoke coverage proving the real WebXR affordance appears only when browser capability detection reports support.
+- Screenshot capture is wired into the Home XR smoke test for:
+  - `/tmp/urai-playwright-results/home-xr-proof/home-desktop.png`
+  - `/tmp/urai-playwright-results/home-xr-proof/home-mobile.png`
+  - `/tmp/urai-playwright-results/home-xr-proof/home-xr-affordance-mocked.png`
+- `check:production-claims` script to fail unqualified XR/VR/AR/Quest production claims on public surfaces.
 - CI now runs typecheck, lint, unit/rules tests, build, route verification, asset verification, public copy check, production claims check, genesis spine smoke, and Home XR Playwright smoke.
+- CI uploads the Home XR Playwright proof directory as `home-xr-playwright-output` when the smoke job runs.
 
 ## Verification status
 
@@ -78,11 +84,7 @@ A GitHub Actions workflow was expanded to run the requested command set plus Hom
 
 ## Screenshots
 
-Not captured in this environment for the same reason above. Required follow-up proof:
-
-- desktop `/home`
-- mobile `/home`
-- `/home` with XR affordance visible on supported or mocked WebXR environment
+Screenshot capture is now wired into the smoke suite and CI artifact path, but screenshots were not produced in this environment because the test suite could not be executed here.
 
 ## Honest status
 
@@ -93,4 +95,4 @@ Warnings:
 - implementation is committed, but not locally typechecked or built in this environment
 - CI has been wired, but no run result was visible through the available connector yet
 - not verified on physical Quest hardware in this environment
-- screenshots were not captured in this environment
+- screenshots are wired for CI/local capture but were not generated in this environment
