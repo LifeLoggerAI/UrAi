@@ -108,6 +108,16 @@ export default function SpatialLifeMap({
     router.push("/passport");
   };
 
+  const handleCloseStarPanel = () => {
+    selection.setHoveredStarId(null);
+    selection.setSelectedStarId(null);
+    setMode("galaxy");
+  };
+
+  const handleNavigate = (href: string) => {
+    router.push(href);
+  };
+
   const activeNav = mode === "focus" ? "focus" : mode === "replay" ? "replay" : "life-map";
 
   return (
@@ -130,10 +140,14 @@ export default function SpatialLifeMap({
           cameraState={camera.cameraState}
           selectedStarId={selection.selectedStarId ?? selectedStar?.id ?? null}
           hoveredStarId={selection.hoveredStarId}
+          xrPanelStar={selection.selectedStar}
+          activePath="/life-map"
           reducedMotion={false}
           onHoverStar={selection.setHoveredStarId}
           onSelectStar={handleSelectStar}
           onOpenStar={() => setMode("focus")}
+          onCloseStarPanel={handleCloseStarPanel}
+          onNavigate={handleNavigate}
           onSceneReady={() => {}}
         />
       </div>
