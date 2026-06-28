@@ -6,17 +6,24 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
 
       - name: Install dependencies
         run: npm install
@@ -24,12 +31,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+      - name: Deploy to Firebase Hosting live
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          action: deploy
-          firebase_token: ${{ secrets.FIREBASE_TOKEN }}
-          project_id: urai-4dc1d
-          channel_id: live
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_URAI }}
+          projectId: urai-4dc1d
+          channelId: live
