@@ -5,101 +5,7 @@ import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-
-type HomeTargetId =
-  | "life-map"
-  | "ground"
-  | "sky"
-  | "horizon"
-  | "replay"
-  | "orb-chat"
-  | "mirror"
-  | "xr-preview";
-
-type HomeXRTarget = {
-  id: HomeTargetId;
-  label: string;
-  helper: string;
-  href: string;
-  position: [number, number, number];
-  scale: [number, number, number];
-  color: string;
-};
-
-const homeTargets: HomeXRTarget[] = [
-  {
-    id: "life-map",
-    label: "Life Map",
-    helper: "Open the memory galaxy.",
-    href: "/life-map",
-    position: [-2.7, 2.45, -2.2],
-    scale: [1.25, 0.42, 0.08],
-    color: "#67e8f9",
-  },
-  {
-    id: "ground",
-    label: "Ground",
-    helper: "Enter real-life support.",
-    href: "/ground",
-    position: [0, -0.32, -2.6],
-    scale: [1.5, 0.42, 0.08],
-    color: "#86efac",
-  },
-  {
-    id: "sky",
-    label: "Sky",
-    helper: "Ascend through the upper world.",
-    href: "/life-map",
-    position: [0, 2.72, -3.15],
-    scale: [1.45, 0.42, 0.08],
-    color: "#bae6fd",
-  },
-  {
-    id: "horizon",
-    label: "Horizon",
-    helper: "See the route spine.",
-    href: "/location-map",
-    position: [2.7, 1.22, -2.35],
-    scale: [1.35, 0.42, 0.08],
-    color: "#fde68a",
-  },
-  {
-    id: "replay",
-    label: "Replay",
-    helper: "Open life replay.",
-    href: "/replay",
-    position: [-2.8, 1.32, -2.25],
-    scale: [1.18, 0.38, 0.08],
-    color: "#c4b5fd",
-  },
-  {
-    id: "orb-chat",
-    label: "Orb Chat",
-    helper: "Talk to the orb companion.",
-    href: "/ochat",
-    position: [0, 1.35, -2.05],
-    scale: [1.28, 0.38, 0.08],
-    color: "#a5f3fc",
-  },
-  {
-    id: "mirror",
-    label: "Mirror",
-    helper: "Open reflection mode.",
-    href: "/mirror",
-    position: [2.82, 2.2, -2.18],
-    scale: [1.16, 0.38, 0.08],
-    color: "#f0abfc",
-  },
-  {
-    id: "xr-preview",
-    label: "XR Preview",
-    helper: "Check headset capability.",
-    href: "/xr",
-    position: [0, 0.42, -1.95],
-    scale: [1.32, 0.38, 0.08],
-    color: "#93c5fd",
-  },
-];
+import { HomeTargetId, HomeXRTarget, homeXRTargets } from "./HomeXRTargets";
 
 function TargetButton({
   target,
@@ -215,15 +121,14 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
         VR session is active, but no XR controllers are connected yet.
       </Text>
       <Text position={[0, -0.12, 0.06]} fontSize={0.058} anchorX="center" anchorY="middle" maxWidth={1.9} color="#fde68a">
-        Wake your Quest controllers. Desktop and touch interaction remain available.
+        Wake controllers. Desktop and touch interaction remain available.
       </Text>
     </group>
   );
 }
 
 function addControllerRay(controller: THREE.Group, color: number) {
-  const existing = controller.getObjectByName("home-xr-controller-ray");
-  if (existing) return;
+  if (controller.getObjectByName("home-xr-controller-ray")) return;
 
   const geometry = new THREE.BufferGeometry().setFromPoints([
     new THREE.Vector3(0, 0, 0),
@@ -239,12 +144,11 @@ export function HomeXRInteractionLayer() {
   const router = useRouter();
   const { gl, scene } = useThree();
   const targetsByMesh = useRef(new Map<THREE.Mesh, HomeXRTarget>());
-  const targetsById = useMemo(() => new Map(homeTargets.map((target) => [target.id, target])), []);
+  const targetsById = useMemo(() => new Map(homeXRTargets.map((target) => [target.id, target])), []);
   const controllers = useRef<THREE.Group[]>([]);
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
   const controllerMatrix = useMemo(() => new THREE.Matrix4(), []);
   const hoveredRef = useRef<HomeTargetId | null>(null);
-  const selectedRef = useRef<HomeTargetId | null>(null);
   const [hoveredId, setHoveredId] = useState<HomeTargetId | null>(null);
   const [selectedId, setSelectedId] = useState<HomeTargetId | null>(null);
   const [isPresenting, setIsPresenting] = useState(false);
@@ -257,7 +161,6 @@ export function HomeXRInteractionLayer() {
 
   const selectTarget = useCallback(
     (target: HomeXRTarget) => {
-      selectedRef.current = target.id;
       setSelectedId(target.id);
       router.push(target.href);
     },
@@ -270,22 +173,17 @@ export function HomeXRInteractionLayer() {
       if (!target) return;
 
       for (const [registeredMesh, registeredTarget] of targetsByMesh.current.entries()) {
-        if (registeredTarget.id === id) {
-          targetsByMesh.current.delete(registeredMesh);
-        }
+        if (registeredTarget.id === id) targetsByMesh.current.delete(registeredMesh);
       }
 
-      if (mesh) {
-        targetsByMesh.current.set(mesh, target);
-      }
+      if (mesh) targetsByMesh.current.set(mesh, target);
     },
     [targetsById],
   );
 
   useEffect(() => {
     const renderer = gl as THREE.WebGLRenderer;
-    const xr = renderer.xr;
-    const nextControllers = [xr.getController(0), xr.getController(1)];
+    const nextControllers = [renderer.xr.getController(0), renderer.xr.getController(1)];
     controllers.current = nextControllers;
 
     function updateConnectedCount() {
@@ -294,8 +192,7 @@ export function HomeXRInteractionLayer() {
 
     function handleConnected(this: THREE.Group, event: THREE.Event & { data?: { handedness?: string } }) {
       this.userData.homeXRConnected = true;
-      const handedness = event.data?.handedness;
-      addControllerRay(this, handedness === "left" ? 0x67e8f9 : 0xf0abfc);
+      addControllerRay(this, event.data?.handedness === "left" ? 0x67e8f9 : 0xf0abfc);
       updateConnectedCount();
     }
 
@@ -310,7 +207,6 @@ export function HomeXRInteractionLayer() {
     }
 
     function handleSqueezeStart() {
-      selectedRef.current = null;
       setSelectedId(null);
       setHovered(null);
     }
@@ -361,10 +257,7 @@ export function HomeXRInteractionLayer() {
       }
     }
 
-    if (nextHovered !== hoveredRef.current) {
-      hoveredRef.current = nextHovered;
-      setHoveredId(nextHovered);
-    }
+    if (nextHovered !== hoveredRef.current) setHovered(nextHovered);
   });
 
   const selectedTarget = selectedId ? targetsById.get(selectedId) ?? null : null;
@@ -374,7 +267,7 @@ export function HomeXRInteractionLayer() {
       <InfoPanel selectedTarget={selectedTarget} />
       <ControllerFallbackPanel visible={isPresenting && connectedControllerCount === 0} />
       <group name="home-xr-floating-navigation">
-        {homeTargets.map((target) => (
+        {homeXRTargets.map((target) => (
           <TargetButton
             key={target.id}
             target={target}
@@ -393,5 +286,3 @@ export function HomeXRInteractionLayer() {
     </group>
   );
 }
-
-export const homeXRInteractiveTargetLabels = homeTargets.map((target) => target.label);
