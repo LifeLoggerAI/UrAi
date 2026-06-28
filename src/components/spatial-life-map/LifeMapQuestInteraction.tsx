@@ -2,7 +2,7 @@
 
 import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import * as THREE from "three";
 import type { LifeMapStar } from "@/lib/spatial-life-map/lifeMap.types";
@@ -121,7 +121,7 @@ function StarDetailsPanel({ selectedStar, onClosePanel }: { selectedStar: LifeMa
   const presenting = useXRPresenting();
   const title = selectedStar?.title ?? "Choose a Life Map star";
   const body = selectedStar?.narratorReflection ?? "Point either Quest controller at a glowing star and press trigger to select it. Your selected memory opens here inside VR.";
-  const detail = selectedStar ? `${selectedStar.emotionalTone} · ${selectedStar.archetype} · ${selectedStar.date}` : "No selected node yet";
+  const detail = selectedStar ? `${selectedStar.emotionalTone} - ${selectedStar.archetype} - ${selectedStar.date}` : "No selected node yet";
 
   return (
     <CameraLockedGroup visible={presenting} position={[0.78, 0.12, -2.35]}>
@@ -220,18 +220,18 @@ function QuestControllerRaycaster({ stars, onHoverStar, onSelectStar, onClosePan
   const starsById = useMemo(() => new Map(stars.map((star) => [star.id, star])), [stars]);
   const controllers = useMemo(() => [gl.xr.getController(0), gl.xr.getController(1)], [gl]);
 
-  const setStatus = (status: string) => {
+  const setStatus = useCallback((status: string) => {
     if (statusRef.current === status) return;
     statusRef.current = status;
     onStatusChange(status);
-  };
+  }, [onStatusChange]);
 
-  const activateTarget = (target: LifeMapXRTarget | null) => {
+  const activateTarget = useCallback((target: LifeMapXRTarget | null) => {
     if (!target) return;
     if (target.kind === "star") onSelectStar(target.star);
     if (target.kind === "route") onNavigate(target.href);
     if (target.kind === "close") onClosePanel();
-  };
+  }, [onClosePanel, onNavigate, onSelectStar]);
 
   useEffect(() => {
     const lines: THREE.Line[] = [];
@@ -271,7 +271,7 @@ function QuestControllerRaycaster({ stars, onHoverStar, onSelectStar, onClosePan
         else material.dispose();
       });
     };
-  }, [controllers, onClosePanel, onNavigate, onSelectStar]);
+  }, [activateTarget, controllers, onClosePanel]);
 
   useFrame(() => {
     if (!gl.xr.enabled || !gl.xr.isPresenting) {
@@ -321,7 +321,7 @@ function QuestControllerRaycaster({ stars, onHoverStar, onSelectStar, onClosePan
         const material = line.material as THREE.LineBasicMaterial;
         material.color.set(target ? "#fef9c3" : "#7dd3fc");
         material.opacity = target ? 1 : 0.72;
-        line.scale.z = target ? Math.max(0.08, hit.distance / 7.5) : 1;
+        line.scale.z = hit ? Math.max(0.08, hit.distance / 7.5) : 1;
       }
 
       if (!firstHoveredStar && target?.kind === "star") {
