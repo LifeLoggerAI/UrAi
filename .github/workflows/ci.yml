@@ -20,7 +20,7 @@ jobs:
   v1-app-green:
     name: V1 app unit/build gate
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     env:
       CI: "true"
@@ -62,3 +62,70 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+      - name: Verify routes
+        run: npm run verify:routes
+
+      - name: Verify assets
+        run: npm run verify:assets
+
+      - name: Check public copy
+        run: npm run check:public-copy
+
+      - name: Check production claims
+        run: npm run check:production-claims
+
+      - name: Genesis spine smoke
+        run: npm run smoke:genesis-spine
+
+  home-xr-smoke:
+    name: Home XR Playwright smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: v1-app-green
+
+    env:
+      CI: "true"
+      NEXT_PUBLIC_FIREBASE_API_KEY: ci-placeholder
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ci-placeholder.firebaseapp.com
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ci-placeholder
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ci-placeholder.appspot.com
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+      NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:ci"
+      FIREBASE_PROJECT_ID: ci-placeholder
+      FIREBASE_CLIENT_EMAIL: ci@example.iam.gserviceaccount.com
+      FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
+      URAI_REQUIRE_FIREBASE_ADMIN: "0"
+      URAI_ENABLE_CHRONO_FIRESTORE: "0"
+      OPENAI_API_KEY: ci-placeholder-openai-key
+      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build app for smoke
+        run: npm run build
+
+      - name: Run Home XR smoke checks
+        run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
+
+      - name: Upload Playwright output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-xr-playwright-output
+          path: /tmp/urai-playwright-results
+          if-no-files-found: ignore
