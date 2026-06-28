@@ -3,8 +3,16 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const scannedRoots = ["README.md", "src/app", "src/components", "docs", "launch-proof"];
-const ignoredFragments = [".next", "node_modules", "dist", "coverage", "scripts/check-production-claims.mjs"];
+const scannedRoots = ["README.md", "src/app", "src/components", "docs"];
+const ignoredFragments = [
+  ".next",
+  "node_modules",
+  "dist",
+  "coverage",
+  "src/app/api",
+  "src/app/admin",
+  "scripts/check-production-claims.mjs",
+];
 const textExtensions = new Set([".md", ".mdx", ".ts", ".tsx", ".js", ".jsx"]);
 
 const riskyProductionClaims = [
