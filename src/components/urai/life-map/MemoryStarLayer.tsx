@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { Point, Points } from '@react-three/drei';
+import { Points } from '@react-three/drei';
 import type { MemoryCategory } from '@/components/urai/data/emotionPalette';
 import { emotionPalette } from '@/components/urai/data/emotionPalette';
 import type { MemoryStar as MemoryStarData } from '@/components/urai/data/memoryStars';
@@ -11,24 +11,38 @@ import type { MemoryStar as MemoryStarData } from '@/components/urai/data/memory
 const vertexShader = `
   attribute vec3 color;
   attribute float size;
+  attribute float importance;
   varying vec3 vColor;
+  varying float vImportance;
+
   void main() {
     vColor = color;
+    vImportance = importance;
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-    gl_PointSize = size * (300.0 / -mvPosition.z);
+    float depthScale = clamp(360.0 / max(60.0, -mvPosition.z), 0.68, 3.4);
+    gl_PointSize = size * depthScale;
     gl_Position = projectionMatrix * mvPosition;
   }
 `;
 
 const fragmentShader = `
   varying vec3 vColor;
+  varying float vImportance;
   uniform float time;
+
   void main() {
     float d = distance(gl_PointCoord, vec2(0.5, 0.5));
     if (d > 0.5) discard;
-    float alpha = 1.0 - d * 2.0;
-    alpha *= 0.5 + 0.5 * sin(time * 2.0);
-    gl_FragColor = vec4(vColor, alpha);
+
+    float core = smoothstep(0.18, 0.0, d);
+    float halo = smoothstep(0.5, 0.12, d) * 0.42;
+    float ring = smoothstep(0.34, 0.30, d) * smoothstep(0.21, 0.27, d) * 0.34;
+    float pulse = 0.78 + 0.22 * sin(time * (1.15 + vImportance * 0.38) + vImportance * 4.0);
+    float alpha = clamp((core + halo + ring) * pulse, 0.0, 1.0);
+
+    vec3 hotCore = mix(vColor, vec3(1.0), 0.72);
+    vec3 finalColor = mix(vColor, hotCore, core + ring * 0.4);
+    gl_FragColor = vec4(finalColor, alpha);
   }
 `;
 
@@ -56,6 +70,7 @@ export function MemoryStarLayer({
     const positions = new Float32Array(stars.length * 3);
     const colors = new Float32Array(stars.length * 3);
     const sizes = new Float32Array(stars.length);
+    const importance = new Float32Array(stars.length);
 
     stars.forEach((star, i) => {
       positions[i * 3] = star.x;
@@ -69,27 +84,32 @@ export function MemoryStarLayer({
 
       const isSelected = star.id === selectedId;
       const filteredOut = activeCategory !== 'all' && star.category !== activeCategory;
-      const dimmed = selectedActive && !relatedIds.has(star.id);
+      const isRelated = relatedIds.has(star.id);
+      const dimmed = selectedActive && !isRelated && !isSelected;
+      const depthBoost = Math.max(0.8, 1.45 - Math.abs(star.z) / 860);
+      const categoryBoost = star.category === 'milestone' ? 1.3 : star.category === 'family' ? 1.18 : 1;
+      const selectedBoost = isSelected ? 4.6 : isRelated ? 2.25 : 1;
+
+      importance[i] = isSelected ? 3 : isRelated ? 2 : categoryBoost;
 
       if (filteredOut) {
-        sizes[i] = 0.1;
-      } else if (isSelected) {
-        sizes[i] = 2.0;
+        sizes[i] = 1.6;
       } else if (dimmed) {
-        sizes[i] = 0.3;
+        sizes[i] = 4.8 * depthBoost;
       } else {
-        sizes[i] = 1.0;
+        sizes[i] = 12.5 * depthBoost * categoryBoost * selectedBoost;
       }
     });
 
-    return { positions, colors, sizes };
+    return { positions, colors, sizes, importance };
   }, [stars, selectedId, selectedActive, relatedIds, activeCategory]);
 
   return (
     <Points positions={starData.positions} stride={3} onClick={(e: any) => onSelect(stars[e.index].id)} frustumCulled={false}>
-      <shaderMaterial vertexShader={vertexShader} fragmentShader={fragmentShader} uniforms={uniforms} transparent>
+      <shaderMaterial vertexShader={vertexShader} fragmentShader={fragmentShader} uniforms={uniforms} transparent depthWrite={false} blending={THREE.AdditiveBlending}>
         <bufferAttribute attach="attributes-color" args={[starData.colors, 3]} />
         <bufferAttribute attach="attributes-size" args={[starData.sizes, 1]} />
+        <bufferAttribute attach="attributes-importance" args={[starData.importance, 1]} />
       </shaderMaterial>
     </Points>
   );
