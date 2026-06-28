@@ -31,6 +31,8 @@ Implemented:
 - `src/components/spatial-life-map/LifeStar.tsx`
 - `src/components/spatial-life-map/SpatialLifeMap.tsx`
 - `src/components/spatial-life-map/__tests__/LifeMapQuestInteraction.test.ts`
+- `tests/e2e/life-map-quest-interaction.spec.ts`
+- `.github/workflows/ci.yml`
 - `launch-proof/life-map-quest-interaction/2026-06-28-quest-interaction-lock.md`
 
 ## Verification status
@@ -40,6 +42,8 @@ GitHub API verification completed:
 - Confirmed package set: `three`, `@react-three/fiber`, and `@react-three/drei` are installed.
 - Confirmed no `@react-three/xr` dependency currently exists in `package.json`; this implementation therefore uses the already-active Three.js WebXR layer and `VRButton` foundation.
 - Confirmed `/life-map` and `/app/life-map` both render `SpatialLifeMap`.
+- Confirmed `check:production-claims` now exists in `package.json`.
+- Confirmed CI now includes the requested automated command set and Life Map Playwright smoke coverage.
 - Confirmed no GitHub Actions workflow run was attached to the latest commit through the available workflow lookup.
 
 Added smoke coverage for:
@@ -48,11 +52,16 @@ Added smoke coverage for:
 - raycast target existence,
 - Quest controller selection hooks,
 - in-world panel/menu copy,
-- unsupported-controller fallback copy.
+- unsupported-controller fallback copy,
+- `/life-map` desktop route load,
+- `/life-map` mobile route load,
+- canvas count,
+- non-XR DOM navigation preservation,
+- Playwright screenshot artifact paths.
 
-## Commands requested but not executed in this environment
+## Commands requested but not executed in this connector environment
 
-The following commands still need to be run in a real checkout because this ChatGPT GitHub connector can edit and inspect repository files but does not provide a live npm execution environment for this repo:
+The following commands are now wired in CI but still need a real npm runner or a successful GitHub Actions run for completed proof:
 
 ```bash
 npm run check:types
@@ -61,10 +70,10 @@ npm run build
 npm run verify:routes
 npm run verify:assets
 npm run check:public-copy
+npm run check:production-claims
 npm run smoke:genesis-spine
+npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome
 ```
-
-The requested `npm run check:production-claims` command is not currently defined in `package.json`, so it cannot be honestly reported as executable until the script exists or the requested command is corrected.
 
 ## Physical Quest Browser verification still required
 
@@ -88,6 +97,6 @@ LIFE MAP QUEST INTERACTION READY WITH WARNINGS
 
 Warnings:
 
-- Automated npm pipeline was not run from this connector environment.
+- Automated npm pipeline is wired but was not executed from this connector environment.
+- No workflow run was visible for the latest commit through the available workflow lookup.
 - Physical Quest Browser controller behavior is implemented but not physically verified here.
-- `check:production-claims` is not present in `package.json`.
