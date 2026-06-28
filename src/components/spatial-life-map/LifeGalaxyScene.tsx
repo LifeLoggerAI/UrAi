@@ -1,7 +1,7 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { VRButton } from "three/examples/jsm/webxr/VRButton.js";
 import type { GalaxyCameraState, LifeMapConstellation, LifeMapLayerId, LifeMapStar } from "@/lib/spatial-life-map/lifeMap.types";
@@ -33,6 +33,28 @@ function SceneReadyBeacon({ onReady }: { onReady?: () => void }) {
     didSignal.current = true;
     onReady();
   });
+
+  return null;
+}
+
+function WebXREntryButton() {
+  const { gl } = useThree();
+
+  useEffect(() => {
+    gl.xr.enabled = true;
+
+    const existing = document.querySelector(".urai-xr-entry-button");
+    if (existing) existing.remove();
+
+    const button = VRButton.createButton(gl);
+    button.classList.add("urai-xr-entry-button");
+    button.setAttribute("aria-label", "Enter spatial Life Map");
+    document.body.appendChild(button);
+
+    return () => {
+      button.remove();
+    };
+  }, [gl]);
 
   return null;
 }
@@ -80,14 +102,8 @@ export default function LifeGalaxyScene({ stars, constellations, activeLayerIds,
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, outputColorSpace: THREE.SRGBColorSpace }}
       camera={{ position: [0, 2.2, cameraState.zoom], fov: 47, near: 0.03, far: 120 }}
       className="spatial-canvas"
-      onCreated={({ gl }) => {
-        gl.xr.enabled = true;
-        const button = VRButton.createButton(gl);
-        button.classList.add("urai-xr-entry-button");
-        button.setAttribute("aria-label", "Enter spatial Life Map");
-        document.body.appendChild(button);
-      }}
     >
+      <WebXREntryButton />
       <SceneReadyBeacon onReady={onSceneReady} />
       <color attach="background" args={["#00030b"]} />
       <fog attach="fog" args={["#030b18", 5.5, 38]} />
