@@ -2,9 +2,9 @@
 
 import { PerspectiveCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useRef } from "react";
 import * as THREE from "three";
 import { CinematicWorld } from "./CinematicWorld";
+import { HomeXRInteractionLayer } from "./HomeXRInteractionLayer";
 
 export function HomeWorldCanvas() {
   const { camera, size } = useThree();
@@ -23,6 +23,7 @@ export function HomeWorldCanvas() {
     <>
       <PerspectiveCamera makeDefault position={[0, 1.5, 8]} fov={50} />
       <CinematicWorld />
+      <HomeXRInteractionLayer />
     </>
   );
 }
