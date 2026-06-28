@@ -1,0 +1,613 @@
+.shell {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #02050d;
+  color: #f8fbff;
+  isolation: isolate;
+}
+
+.backdrop,
+.starfield,
+.horizonGlow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+}
+
+.backdrop {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(117, 213, 255, 0.24), transparent 26rem),
+    radial-gradient(circle at 78% 18%, rgba(250, 204, 21, 0.14), transparent 24rem),
+    radial-gradient(circle at 48% 92%, rgba(20, 184, 166, 0.16), transparent 30rem),
+    linear-gradient(180deg, #030813 0%, #071525 45%, #02050d 100%);
+}
+
+.starfield {
+  z-index: -2;
+  opacity: 0.72;
+  background-image:
+    radial-gradient(circle at 14% 24%, rgba(255,255,255,.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 68%, rgba(125,211,252,.55) 0 1px, transparent 2px),
+    radial-gradient(circle at 42% 18%, rgba(255,255,255,.45) 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 48%, rgba(250,204,21,.48) 0 1px, transparent 2px),
+    radial-gradient(circle at 86% 30%, rgba(255,255,255,.6) 0 1px, transparent 2px),
+    linear-gradient(115deg, transparent 0 42%, rgba(190,232,255,.18) 42.1% 42.25%, transparent 42.35% 100%);
+}
+
+.horizonGlow {
+  z-index: -1;
+  inset: auto -14% -16rem;
+  height: 34rem;
+  border-radius: 50% 50% 0 0;
+  border-top: 1px solid rgba(252, 211, 77, 0.2);
+  background: radial-gradient(ellipse at 50% 0%, rgba(252, 211, 77, 0.2), transparent 60%);
+  filter: blur(0.2px);
+}
+
+.hero {
+  min-height: 100vh;
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 70px;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(216, 249, 255, 0.32);
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.9), rgba(125,211,252,.3) 42%, rgba(2,6,23,.7) 72%);
+  color: #06111e;
+  font-weight: 900;
+  box-shadow: 0 0 42px rgba(125, 211, 252, 0.26);
+}
+
+.brand strong,
+.brand small {
+  display: block;
+  line-height: 1;
+}
+
+.brand strong {
+  letter-spacing: 0.2em;
+  font-size: 0.82rem;
+}
+
+.brand small {
+  margin-top: 5px;
+  color: rgba(226, 243, 255, 0.62);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.navLinks a {
+  color: rgba(241, 248, 255, 0.66);
+  font-size: 0.84rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.navLinks a:hover {
+  color: #ffffff;
+}
+
+.heroGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+  align-items: center;
+  gap: clamp(34px, 6vw, 82px);
+  padding-top: 44px;
+}
+
+.copyColumn {
+  max-width: 620px;
+}
+
+.kicker {
+  display: inline-flex;
+  margin: 0 0 18px;
+  border: 1px solid rgba(125, 211, 252, 0.24);
+  border-radius: 999px;
+  background: rgba(125, 211, 252, 0.08);
+  padding: 9px 13px;
+  color: rgba(207, 250, 254, 0.82);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.copyColumn h1 {
+  margin: 0;
+  max-width: 780px;
+  color: #ffffff;
+  font-size: clamp(4rem, 8vw, 7.6rem);
+  font-weight: 780;
+  line-height: 0.86;
+  letter-spacing: -0.085em;
+  text-wrap: balance;
+}
+
+.subhead {
+  max-width: 540px;
+  margin: 24px 0 0;
+  color: rgba(241, 248, 255, 0.76);
+  font-size: clamp(1.12rem, 1.7vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 34px;
+}
+
+.primaryCta,
+.secondaryCta {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 24px;
+  font-size: 0.96rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.primaryCta {
+  background: #f8fdff;
+  color: #06111e;
+  box-shadow: 0 22px 70px rgba(125, 211, 252, 0.24);
+}
+
+.secondaryCta {
+  border: 1px solid rgba(216, 249, 255, 0.24);
+  background: rgba(255, 255, 255, 0.07);
+  color: #f8fbff;
+}
+
+.primaryCta:hover,
+.secondaryCta:hover {
+  transform: translateY(-2px);
+}
+
+.secondaryCta:hover {
+  border-color: rgba(216, 249, 255, 0.46);
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.trustLine {
+  max-width: 610px;
+  margin: 22px 0 0;
+  color: rgba(254, 243, 199, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.visualColumn {
+  min-width: 0;
+}
+
+.cinematicFrame {
+  position: relative;
+  min-height: clamp(520px, 62vh, 720px);
+  overflow: hidden;
+  border: 1px solid rgba(216, 249, 255, 0.18);
+  border-radius: clamp(32px, 5vw, 58px);
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255,255,255,.16), transparent 24%),
+    radial-gradient(circle at 50% 72%, rgba(250,204,21,.14), transparent 28%),
+    linear-gradient(180deg, #09162b, #02050d 76%);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.skyLayer,
+.constellationLayer,
+.orbLayer,
+.groundLayer {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.skyLayer {
+  opacity: 0.88;
+  background-image:
+    linear-gradient(180deg, rgba(2,5,13,0.02), rgba(2,5,13,0.78)),
+    url("/assets/genesis/sky/sky-background.png"),
+    radial-gradient(circle at 50% 22%, rgba(125,211,252,.28), transparent 34%),
+    linear-gradient(180deg, #071426, #02050d);
+  background-size: cover, cover, auto, auto;
+}
+
+.constellationLayer {
+  opacity: 0.82;
+  background-image:
+    url("/assets/genesis/overlays/starfield.png"),
+    linear-gradient(115deg, transparent 0 35%, rgba(216,249,255,.22) 35.1% 35.25%, transparent 35.35% 100%),
+    linear-gradient(34deg, transparent 0 56%, rgba(250,204,21,.16) 56.1% 56.24%, transparent 56.34% 100%);
+  background-size: cover, auto, auto;
+  mix-blend-mode: screen;
+}
+
+.orbLayer {
+  inset: 7% 10% 24%;
+  opacity: 0.95;
+  background-image:
+    url("/assets/genesis/orb/orb-core.png"),
+    url("/assets/genesis/orb/orb-glow.png"),
+    radial-gradient(circle at 50% 48%, rgba(240,253,255,.72), rgba(125,211,252,.2) 18%, transparent 38%);
+  background-size: min(36vw, 330px), min(62vw, 560px), auto;
+  filter: drop-shadow(0 0 52px rgba(125,211,252,.34));
+}
+
+.groundLayer {
+  top: auto;
+  height: 47%;
+  opacity: 0.94;
+  background-image:
+    linear-gradient(180deg, transparent 0%, rgba(2,5,13,.18) 18%, rgba(2,5,13,.9) 100%),
+    url("/assets/genesis/ground/ground-bloom.png"),
+    url("/assets/genesis/ground/ground-foreground.png"),
+    radial-gradient(ellipse at 50% 0%, rgba(250,204,21,.2), transparent 60%);
+  background-size: auto, cover, cover, auto;
+  background-position: center top, center bottom, center bottom, center top;
+}
+
+.visualBadge {
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  border: 1px solid rgba(187, 247, 208, 0.22);
+  border-radius: 999px;
+  background: rgba(20, 83, 45, 0.3);
+  padding: 9px 12px;
+  color: rgba(220, 252, 231, 0.88);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(18px);
+}
+
+.visualCaption {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  background: rgba(2, 5, 13, 0.68);
+  padding: 18px;
+  backdrop-filter: blur(22px);
+}
+
+.visualCaption span,
+.visualCaption strong {
+  display: block;
+}
+
+.visualCaption span {
+  color: rgba(207, 250, 254, 0.78);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.visualCaption strong {
+  margin-top: 8px;
+  max-width: 480px;
+  color: #ffffff;
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: 1.18;
+  letter-spacing: -0.04em;
+}
+
+.features,
+.explore {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 46px 0 84px;
+}
+
+.explore {
+  padding-top: 10px;
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.32fr) minmax(0, 0.68fr);
+  align-items: end;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.sectionHeader p {
+  margin: 0;
+  color: rgba(125, 211, 252, 0.74);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.sectionHeader h2 {
+  max-width: 720px;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 0.96;
+  letter-spacing: -0.064em;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.featureCard {
+  position: relative;
+  min-height: 370px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.045);
+  padding: 22px;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+.featureCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0 34%, rgba(2, 5, 13, 0.12) 52%, rgba(2, 5, 13, 0.92) 100%);
+  pointer-events: none;
+}
+
+.featureArt {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.78;
+  transition: transform 350ms ease, opacity 350ms ease;
+}
+
+.featureCard:hover .featureArt {
+  opacity: 0.92;
+  transform: scale(1.035);
+}
+
+.lifeMapArt {
+  background-image: linear-gradient(180deg, rgba(2,5,13,.08), rgba(2,5,13,.7)), url("/assets/genesis/life-map/life-map-background-1600x1000.png");
+}
+
+.replayArt {
+  background-image: linear-gradient(180deg, rgba(2,5,13,.08), rgba(2,5,13,.75)), url("/assets/genesis/memory-film/memory-film-preview-sample.png");
+}
+
+.passportArt {
+  background-image: linear-gradient(180deg, rgba(2,5,13,.08), rgba(2,5,13,.75)), url("/assets/genesis/passport/passport-privacy-card.png");
+}
+
+.orbArt {
+  background-image: linear-gradient(180deg, rgba(2,5,13,.08), rgba(2,5,13,.75)), url("/assets/genesis/companion/companion-preview-card.png");
+}
+
+.featureEyebrow,
+.featureCard strong,
+.featureCard > span:last-child {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.featureEyebrow {
+  margin-top: 182px;
+  color: rgba(207, 250, 254, 0.78);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.featureCard strong {
+  margin-top: 8px;
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.featureCard > span:last-child {
+  margin-top: 12px;
+  color: rgba(241, 248, 255, 0.68);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.exploreGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.exploreLink {
+  min-height: 132px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 18px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.exploreLink:hover {
+  transform: translateY(-2px);
+  border-color: rgba(125, 211, 252, 0.32);
+  background: rgba(125, 211, 252, 0.075);
+}
+
+.exploreLink strong,
+.exploreLink span {
+  display: block;
+}
+
+.exploreLink strong {
+  font-size: 1.03rem;
+  letter-spacing: -0.025em;
+}
+
+.exploreLink span {
+  margin-top: 10px;
+  color: rgba(241, 248, 255, 0.62);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 1020px) {
+  .heroGrid,
+  .sectionHeader {
+    grid-template-columns: 1fr;
+  }
+
+  .heroGrid {
+    padding-top: 64px;
+  }
+
+  .copyColumn {
+    max-width: 760px;
+  }
+
+  .visualColumn {
+    order: 2;
+  }
+
+  .featureGrid,
+  .exploreGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .hero,
+  .features,
+  .explore {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 20px;
+  }
+
+  .nav {
+    align-items: flex-start;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .heroGrid {
+    gap: 32px;
+    padding-top: 48px;
+  }
+
+  .copyColumn h1 {
+    font-size: clamp(3.45rem, 18vw, 4.55rem);
+  }
+
+  .subhead {
+    font-size: 1.03rem;
+  }
+
+  .primaryCta,
+  .secondaryCta {
+    width: 100%;
+  }
+
+  .trustLine {
+    font-size: 0.84rem;
+  }
+
+  .cinematicFrame {
+    min-height: 470px;
+    border-radius: 32px;
+  }
+
+  .visualBadge {
+    left: 18px;
+    right: auto;
+    top: 18px;
+  }
+
+  .visualCaption {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    border-radius: 24px;
+  }
+
+  .features {
+    padding-top: 36px;
+  }
+
+  .featureGrid,
+  .exploreGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .featureCard {
+    min-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryCta,
+  .secondaryCta,
+  .featureArt,
+  .featureCard,
+  .exploreLink {
+    transition: none;
+  }
+}
