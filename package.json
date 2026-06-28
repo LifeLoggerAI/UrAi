@@ -85,7 +85,7 @@
     "urai:tier2": "npm run urai:tier2:polish",
     "urai:tier3": "npm run urai:tier3:audit",
     "urai:tier4": "npm run urai:tier4:deploy-check",
-    "urai:tier5": "npm run urai:tier5-launch-lock"
+    "urai:tier5": "npm run urai:tier5:launch-lock"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
