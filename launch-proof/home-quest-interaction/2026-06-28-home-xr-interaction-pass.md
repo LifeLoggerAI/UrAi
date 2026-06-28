@@ -10,6 +10,10 @@ Implemented a native Three.js/WebXR interaction layer for `/home` without replac
 - `src/components/urai/home/HomeXRInteractionLayer.tsx`
 - `src/components/urai/home/HomeXRTargets.ts`
 - `tests/unit/home-xr-interaction-layer.test.ts`
+- `tests/e2e/home-xr-interaction.spec.ts`
+- `scripts/check-production-claims.mjs`
+- `package.json`
+- `.github/workflows/ci.yml`
 
 ## Architecture
 
@@ -45,6 +49,13 @@ The layer adds:
 
 The same in-world target meshes retain React Three Fiber pointer handlers, so mouse and touch clicks continue to work outside a headset. The existing DOM route navigation, WebGL fallback, and WebXR support gate were not removed.
 
+## Added checks
+
+- Unit smoke check for required in-world Home XR target registry.
+- Playwright smoke coverage for desktop `/home` load, mobile `/home` load, canvas presence, no console/page errors, truthful unsupported-device fallback copy, and no visible fake VR button when immersive-vr is unsupported.
+- `check:production-claims` script to fail unqualified XR/VR/AR/Quest production claims.
+- CI now runs typecheck, lint, unit/rules tests, build, route verification, asset verification, public copy check, production claims check, genesis spine smoke, and Home XR Playwright smoke.
+
 ## Verification status
 
 Not run in this environment:
@@ -57,8 +68,13 @@ Not run in this environment:
 - `npm run check:public-copy`
 - `npm run check:production-claims`
 - `npm run smoke:genesis-spine`
+- `npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome`
 
 Reason: the execution container could not resolve `github.com`, so the repo could not be cloned locally for command execution or Playwright screenshots.
+
+## CI status
+
+A GitHub Actions workflow was expanded to run the requested command set plus Home XR Playwright smoke. No workflow run was visible through the available connector for this latest push at the time of this note.
 
 ## Screenshots
 
@@ -75,5 +91,6 @@ HOME QUEST INTERACTION READY WITH WARNINGS
 Warnings:
 
 - implementation is committed, but not locally typechecked or built in this environment
+- CI has been wired, but no run result was visible through the available connector yet
 - not verified on physical Quest hardware in this environment
 - screenshots were not captured in this environment
