@@ -3,6 +3,7 @@ import AppProviders from "./providers";
 import OnboardingGate from "@/components/layout/OnboardingGate";
 import { Genesis } from "@/components/genesis";
 import "@/app/globals.css";
+import "@/app/life-map-polish.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_URAI_APP_URL ??
