@@ -1,0 +1,144 @@
+/* Large Life Map polish pass: hero focal point, cinematic entry, cleaner live hierarchy. */
+.urai-life-map-screen {
+  animation: uraiLifeMapSceneEnter 1200ms ease-out both;
+}
+
+.urai-life-map-screen::before {
+  background:
+    radial-gradient(circle at 50% 43%, rgba(255,255,255,0.18), rgba(186,230,253,0.12) 6%, rgba(59,130,246,0.08) 16%, transparent 28%),
+    radial-gradient(ellipse at 50% 48%, transparent 0%, transparent 28%, rgba(0,0,0,0.28) 58%, rgba(0,0,0,0.86) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.24) 0%, transparent 33%, rgba(0,0,0,0.46) 72%, rgba(0,0,0,0.94) 100%) !important;
+}
+
+.urai-life-map-screen::after {
+  box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.86), inset 0 -120px 180px rgba(0, 0, 0, 0.88) !important;
+}
+
+.urai-life-map-screen .urai-galaxy-bg-pass-one::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: clamp(190px, 23vw, 360px);
+  height: clamp(190px, 23vw, 360px);
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255,255,255,0.95), rgba(224,242,254,0.72) 14%, rgba(125,211,252,0.32) 31%, rgba(59,130,246,0.16) 48%, transparent 70%),
+    radial-gradient(circle, rgba(196,181,253,0.18), transparent 72%);
+  box-shadow:
+    0 0 60px rgba(224,242,254,0.42),
+    0 0 160px rgba(125,211,252,0.28),
+    0 0 300px rgba(196,181,253,0.14);
+  filter: saturate(1.35);
+  opacity: 0.86;
+  animation: uraiLifeCorePulse 5.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.urai-life-map-screen .urai-galaxy-bg-pass-one::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: clamp(390px, 52vw, 820px);
+  height: clamp(130px, 17vw, 260px);
+  transform: translate(-50%, -50%) rotate(-10deg);
+  border-radius: 999px;
+  border: 1px solid rgba(186,230,253,0.18);
+  box-shadow: 0 0 50px rgba(125,211,252,0.14), inset 0 0 44px rgba(125,211,252,0.06);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.urai-life-map-screen .webgl-life-map-field,
+.urai-life-map-screen canvas.webgl-life-map-field {
+  opacity: 0.38 !important;
+  filter: saturate(1.08) contrast(0.96) brightness(0.62) blur(0.18px) !important;
+}
+
+.urai-life-map-screen canvas:not(.webgl-life-map-field) {
+  filter: saturate(1.2) contrast(1.02) brightness(0.78) !important;
+}
+
+.urai-life-map-screen .urai-galaxy-core {
+  transform: translate(-50%, -50%) rotate(-8deg) scale(1.08) !important;
+  opacity: 0.95 !important;
+}
+
+.urai-life-map-screen .urai-galaxy-band,
+.urai-life-map-screen .urai-galaxy-band-secondary {
+  opacity: 0.54 !important;
+}
+
+.urai-life-map-screen .urai-galaxy-star-layer,
+.urai-life-map-screen .urai-galaxy-dust-layer {
+  opacity: 0.2 !important;
+}
+
+.urai-life-map-screen .urai-orbit-rings {
+  opacity: 0.3 !important;
+}
+
+.urai-life-map-screen .urai-life-title {
+  animation: uraiLifeMapUiEnter 900ms ease-out 450ms both;
+}
+
+.urai-life-map-screen .urai-galaxy-actions,
+.urai-life-map-screen .urai-category-dock,
+.urai-life-map-screen nav,
+.urai-life-map-screen [class*="nav"] {
+  animation: uraiLifeMapUiEnter 900ms ease-out 650ms both;
+}
+
+.urai-life-map-screen .urai-life-title strong {
+  text-shadow: 0 0 28px rgba(186,230,253,0.45), 0 0 80px rgba(125,211,252,0.18) !important;
+}
+
+.urai-life-map-screen .urai-memory-star,
+.urai-life-map-screen .memory-star {
+  transform-origin: center !important;
+  transition: filter 220ms ease, opacity 220ms ease, transform 220ms ease !important;
+}
+
+.urai-life-map-screen .urai-memory-star:hover,
+.urai-life-map-screen .memory-star:hover {
+  filter: brightness(1.35) drop-shadow(0 0 32px rgba(186,230,253,0.44)) !important;
+}
+
+@keyframes uraiLifeMapSceneEnter {
+  0% { filter: brightness(0.28) blur(10px); transform: scale(1.018); }
+  60% { filter: brightness(1.06) blur(0); transform: scale(1); }
+  100% { filter: brightness(1) blur(0); transform: scale(1); }
+}
+
+@keyframes uraiLifeMapUiEnter {
+  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes uraiLifeCorePulse {
+  0%, 100% { opacity: 0.72; transform: translate(-50%, -50%) scale(0.94); }
+  50% { opacity: 0.98; transform: translate(-50%, -50%) scale(1.06); }
+}
+
+@media (max-width: 760px) {
+  .urai-life-map-screen .urai-galaxy-bg-pass-one::after {
+    width: 210px;
+    height: 210px;
+    top: 43%;
+  }
+
+  .urai-life-map-screen .urai-galaxy-bg-pass-one::before {
+    width: 82vw;
+    height: 130px;
+    top: 43%;
+  }
+
+  .urai-life-map-screen .webgl-life-map-field,
+  .urai-life-map-screen canvas.webgl-life-map-field {
+    opacity: 0.26 !important;
+  }
+}
