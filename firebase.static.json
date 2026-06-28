@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "public": ".next",
+    "target": "urai-staging",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}
