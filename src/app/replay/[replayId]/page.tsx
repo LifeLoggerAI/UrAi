@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Link from "next/link";
 import LifeMapUniverse from "@/components/life-map/LifeMapUniverse";
-import LifeMovieReplayGateway from "@/components/replay/LifeMovieReplayGateway";
 import SystemRoutePage from "@/components/SystemRoutePage";
 import { isPublicDemoReplayId } from "@/lib/publicDeepRoutes";
 
@@ -55,9 +53,6 @@ export default async function ReplayDetailPage({ params }: PageProps) {
           <h1>Sample Replay Arc</h1>
         </div>
       </main>
-      <Suspense fallback={null}>
-        <LifeMovieReplayGateway requestedLifeMovieId={resolvedParams.replayId} />
-      </Suspense>
       <LifeMapUniverse initialView="replay" routeNotice="Genesis sample replay preview" />
     </>
   );
