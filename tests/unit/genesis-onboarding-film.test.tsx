@@ -107,7 +107,7 @@ describe("Genesis onboarding film", () => {
     expect(assetIds).toEqual(requiredSceneIds);
 
     for (const asset of genesisOnboardingAssets) {
-      expect(asset.assetStatus).toBe("placeholder");
+      expect(asset.assetStatus).toBe("fallback");
       expect(asset.negativePrompt).toContain("no real person cloning");
       expect(asset.altText.length).toBeGreaterThan(20);
 
