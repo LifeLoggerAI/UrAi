@@ -29,6 +29,7 @@
     "check:lockfile": "node scripts/check-lockfile.mjs",
     "check:firestore-contract": "node scripts/check-firestore-contract.mjs",
     "check:public-copy": "node scripts/check-public-copy.mjs",
+    "check:production-claims": "node scripts/check-production-claims.mjs",
     "check:firebase": "node scripts/check-firebase-target.mjs",
     "check:firebase:staging": "URAI_EXPECTED_FIREBASE_PROJECT=urai-staging URAI_EXPECTED_FIREBASE_SITE=urai-staging node scripts/check-firebase-target.mjs --config firebase.staging.json",
     "check:clean-tree": "node scripts/check-clean-working-tree.mjs",
@@ -45,7 +46,7 @@
     "check:tier-freeze:strict": "node scripts/tier-lock/tier-freeze-ledger.mjs --strict",
     "validate": "npm run validate:completion",
     "validate:completion": "node scripts/urai-completion-audit.mjs",
-    "preflight": "npm run doctor && npm run check:firebase && npm run check:v1 && npm run check:genesis && npm run check:firestore-contract && npm run check:public-copy && npm run validate:completion && npm run check:types && npm run lint && npm run test:unit && npm run build",
+    "preflight": "npm run doctor && npm run check:firebase && npm run check:v1 && npm run check:genesis && npm run check:firestore-contract && npm run check:public-copy && npm run check:production-claims && npm run validate:completion && npm run check:types && npm run lint && npm run test:unit && npm run build",
     "verify:routes": "node scripts/verify-routes.mjs",
     "verify:assets": "node scripts/verify-assets.mjs",
     "verify:privacy": "node scripts/verify-privacy-defaults.mjs",
@@ -84,7 +85,7 @@
     "urai:tier2": "npm run urai:tier2:polish",
     "urai:tier3": "npm run urai:tier3:audit",
     "urai:tier4": "npm run urai:tier4:deploy-check",
-    "urai:tier5": "npm run urai:tier5:launch-lock"
+    "urai:tier5": "npm run urai:tier5-launch-lock"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
