@@ -1,21 +1,7 @@
 {
   "hosting": {
     "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "target": "urai-staging"
-  },
-  "functions": {
-    "source": "functions"
-  },
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  },
-  "storage": {
-    "rules": "storage.rules"
+    "site": "urai-4dc1d",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   }
 }
