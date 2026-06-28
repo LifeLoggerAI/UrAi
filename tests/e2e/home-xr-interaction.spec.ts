@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-async function collectPageProblems(page: import("@playwright/test").Page) {
+function collectPageProblems(page: import("@playwright/test").Page) {
   const problems: string[] = [];
 
   page.on("console", (message) => {
-    if (["error"].includes(message.type())) {
+    if (message.type() === "error") {
       problems.push(`console ${message.type()}: ${message.text()}`);
     }
   });
@@ -18,7 +18,7 @@ async function collectPageProblems(page: import("@playwright/test").Page) {
 
 test.describe("Home WebXR interaction smoke", () => {
   test("/home desktop loads with truthful XR gate and canvas @smoke", async ({ page }) => {
-    const problems = await collectPageProblems(page);
+    const problems = collectPageProblems(page);
 
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
@@ -26,7 +26,8 @@ test.describe("Home WebXR interaction smoke", () => {
     await expect(page.getByTestId("xr-ready-canvas")).toBeVisible();
     await expect(page.locator("canvas").first()).toBeVisible();
     await expect(page.getByText(/Headset entry appears only when the browser proves support/i)).toBeVisible();
-    await expect(page.getByText(/Enter VR is hidden because this browser\/device does not currently report immersive-vr support/i)).toBeVisible();
+    await expect(page.getByText(/WebXR foundation/i)).toBeVisible();
+    await expect(page.getByText(/3D Home stays normal until real VR is supported/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /^Enter VR$/ })).toHaveCount(0);
 
     expect(problems).toEqual([]);
@@ -35,7 +36,7 @@ test.describe("Home WebXR interaction smoke", () => {
   test("/home mobile loads without losing the safe WebXR fallback @smoke", async ({ page, isMobile }) => {
     test.skip(!isMobile, "mobile project only");
 
-    const problems = await collectPageProblems(page);
+    const problems = collectPageProblems(page);
 
     await page.goto("/home", { waitUntil: "domcontentloaded" });
 
