@@ -44,6 +44,24 @@
   height: 100% !important;
 }
 
+.urai-xr-entry-button {
+  position: fixed !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  z-index: 1000 !important;
+  min-width: 188px !important;
+  min-height: 52px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(155, 231, 255, 0.55) !important;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.92), rgba(124, 58, 237, 0.92)) !important;
+  color: #fff !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+}
+
 .focus-card {
   position: fixed;
   top: 50%;
