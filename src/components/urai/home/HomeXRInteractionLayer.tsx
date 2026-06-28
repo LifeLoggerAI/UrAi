@@ -304,7 +304,7 @@ export function HomeXRInteractionLayer() {
       updateConnectedCount();
     }
 
-    function handleSelectStart(this: THREE.Group) {
+    function handleSelectStart() {
       const target = hoveredRef.current ? targetsById.get(hoveredRef.current) : null;
       if (target) selectTarget(target);
     }
@@ -370,7 +370,7 @@ export function HomeXRInteractionLayer() {
   const selectedTarget = selectedId ? targetsById.get(selectedId) ?? null : null;
 
   return (
-    <group data-testid="home-xr-interaction-layer">
+    <group name="home-xr-interaction-layer">
       <InfoPanel selectedTarget={selectedTarget} />
       <ControllerFallbackPanel visible={isPresenting && connectedControllerCount === 0} />
       <group name="home-xr-floating-navigation">
