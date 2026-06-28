@@ -32,7 +32,7 @@ jobs:
       NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:ci"
       FIREBASE_PROJECT_ID: ci-placeholder
       FIREBASE_CLIENT_EMAIL: ci@example.iam.gserviceaccount.com
-      FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
+      FIREBASE_PRIVATE_KEY: ci-placeholder-private-key
       URAI_REQUIRE_FIREBASE_ADMIN: "0"
       URAI_ENABLE_CHRONO_FIRESTORE: "0"
       OPENAI_API_KEY: ci-placeholder-openai-key
@@ -62,3 +62,4 @@ jobs:
 
       - name: Production build
         run: npm run build
+

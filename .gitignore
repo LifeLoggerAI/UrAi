@@ -25,6 +25,10 @@ tsconfig.tsbuildinfo
 .firebase/
 firebase-debug.log
 firestore-debug.log
+serviceAccount*.json
+*service-account*.json
+*service_account*.json
+scripts/serviceAccountKey.json
 
 # Heavy media assets stay in CDN/storage, not Git
 public/assets/sky/**/*.mp4
@@ -42,3 +46,4 @@ Thumbs.db
 .env*
 !env.local.template
 .vercel
+
