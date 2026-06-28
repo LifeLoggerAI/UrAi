@@ -10,6 +10,7 @@ import StarField from "./StarField";
 import NebulaBackdrop from "./NebulaBackdrop";
 import LifeStar from "./LifeStar";
 import ConstellationLines from "./ConstellationLines";
+import LifeMapQuestInteractionLayer from "./LifeMapQuestInteraction";
 
 interface LifeGalaxySceneProps {
   stars: LifeMapStar[];
@@ -18,10 +19,14 @@ interface LifeGalaxySceneProps {
   cameraState: GalaxyCameraState;
   selectedStarId: string | null;
   hoveredStarId: string | null;
+  xrPanelStar?: LifeMapStar | null;
+  activePath?: string;
   reducedMotion?: boolean;
   onHoverStar: (starId: string | null) => void;
   onSelectStar: (star: LifeMapStar) => void;
   onOpenStar: (star: LifeMapStar) => void;
+  onCloseStarPanel?: () => void;
+  onNavigate?: (href: string) => void;
   onSceneReady?: () => void;
 }
 
@@ -92,7 +97,23 @@ function DepthReferencePlanes() {
   );
 }
 
-export default function LifeGalaxyScene({ stars, constellations, activeLayerIds, cameraState, selectedStarId, hoveredStarId, reducedMotion = false, onHoverStar, onSelectStar, onOpenStar, onSceneReady }: LifeGalaxySceneProps) {
+export default function LifeGalaxyScene({
+  stars,
+  constellations,
+  activeLayerIds,
+  cameraState,
+  selectedStarId,
+  hoveredStarId,
+  xrPanelStar = null,
+  activePath = "/life-map",
+  reducedMotion = false,
+  onHoverStar,
+  onSelectStar,
+  onOpenStar,
+  onCloseStarPanel,
+  onNavigate,
+  onSceneReady,
+}: LifeGalaxySceneProps) {
   const visibleStars = stars.filter((star) => activeLayerIds.includes(star.layer));
   const selectedStar = stars.find((star) => star.id === selectedStarId) ?? null;
 
@@ -125,6 +146,15 @@ export default function LifeGalaxyScene({ stars, constellations, activeLayerIds,
           onOpen={onOpenStar}
         />
       ))}
+      <LifeMapQuestInteractionLayer
+        stars={visibleStars}
+        selectedStar={xrPanelStar}
+        activePath={activePath}
+        onHoverStar={onHoverStar}
+        onSelectStar={onSelectStar}
+        onClosePanel={onCloseStarPanel ?? (() => {})}
+        onNavigate={onNavigate ?? (() => {})}
+      />
     </Canvas>
   );
 }
