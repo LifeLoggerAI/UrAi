@@ -8,9 +8,13 @@ import type { WebGLRenderer } from "three";
 type XRMode = "immersive-vr" | "immersive-ar";
 type CapabilityState = "checking" | "supported" | "unsupported" | "unavailable";
 
+type XRSessionLike = {
+  addEventListener: (type: "end", listener: () => void) => void;
+};
+
 type BrowserXR = {
   isSessionSupported?: (mode: XRMode) => Promise<boolean>;
-  requestSession?: (mode: XRMode, options?: XRSessionInit) => Promise<XRSession>;
+  requestSession?: (mode: XRMode, options?: { optionalFeatures?: string[]; requiredFeatures?: string[] }) => Promise<XRSessionLike>;
 };
 
 type NavigatorWithXR = Navigator & {
@@ -228,7 +232,7 @@ export function XRSessionButton({ renderer }: { renderer: WebGLRenderer | null }
         setMessage("VR session ended. Desktop and mobile preview remain available.");
       });
 
-      await renderer.xr.setSession(session);
+      await renderer.xr.setSession(session as never);
       setSessionState("active");
       setMessage("VR session is active through the browser WebXR API.");
     } catch (error) {
