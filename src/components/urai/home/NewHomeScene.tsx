@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { HomeWorldCanvas } from "@/components/urai/home/HomeWorldCanvas";
+import { HomeXREntryCard } from "@/components/xr/XRSessionFoundation";
 
 const navItems = [
   { href: "/home", label: "Home" },
+  { href: "/xr", label: "XR" },
   { href: "/ground", label: "Ground" },
   { href: "/life-map", label: "Life Map" },
   { href: "/focus", label: "Focus" },
@@ -116,8 +119,8 @@ export function NewHomeScene() {
             <Link href="/life-map" className="rounded-full border border-white/15 bg-white/7 px-5 py-3 text-sm font-bold text-white backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/12 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-100">
               Ascend to Life Map
             </Link>
-            <Link href="/replay" className="rounded-full border border-cyan-100/20 bg-cyan-100/8 px-5 py-3 text-sm font-bold text-cyan-50 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-cyan-100/12 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-100">
-              Open Replay
+            <Link href="/xr" className="rounded-full border border-cyan-100/20 bg-cyan-100/8 px-5 py-3 text-sm font-bold text-cyan-50 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-cyan-100/12 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-100">
+              Check XR
             </Link>
           </div>
         </div>
@@ -138,6 +141,12 @@ export function NewHomeScene() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="relative z-20 mx-auto max-w-7xl px-5 pb-8 md:px-8">
+        <HomeXREntryCard>
+          <HomeWorldCanvas />
+        </HomeXREntryCard>
       </section>
 
       <section className="relative z-20 mx-auto grid max-w-7xl gap-4 px-5 pb-8 md:grid-cols-3 md:px-8">
@@ -169,7 +178,7 @@ export function NewHomeScene() {
         </div>
 
         <div className="mt-4 rounded-[1.6rem] border border-amber-100/18 bg-amber-100/[0.06] p-4 text-sm leading-6 text-amber-50/76">
-          <strong className="text-amber-50">Launch safety:</strong> Home is route-true and public-safe. Live sensing, private account access, health inference, generated private media, and autonomous actions remain gated until proof exists.
+          <strong className="text-amber-50">Launch safety:</strong> Home is route-true and public-safe. Live sensing, private account access, health inference, generated private media, autonomous actions, and headset entry remain gated until the current browser proves support.
         </div>
       </section>
     </main>
