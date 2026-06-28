@@ -1,4 +1,4 @@
-import { homeXRInteractiveTargetLabels } from "../../src/components/urai/home/HomeXRInteractionLayer";
+import { homeXRInteractiveTargetLabels } from "../../src/components/urai/home/HomeXRTargets";
 
 describe("Home XR interaction layer", () => {
   it("exposes the required in-world Home targets", () => {
