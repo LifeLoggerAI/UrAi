@@ -55,6 +55,11 @@ const launchLinks = [
     note: "Genesis home experience",
   },
   {
+    href: "/xr",
+    label: "Check XR gate",
+    note: "Real WebXR detection; no headset claim",
+  },
+  {
     href: "/life-map",
     label: "Open Life Map demo",
     note: "Symbolic demo surface",
@@ -99,6 +104,13 @@ export default function RootPage() {
             className="rounded-full bg-cyan-200 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-950/30"
           >
             Enter demo
+          </Link>
+
+          <Link
+            href="/xr"
+            className="rounded-full border border-cyan-200/25 bg-cyan-200/[0.08] px-5 py-3 text-sm font-semibold text-cyan-50 hover:bg-cyan-200/[0.12]"
+          >
+            Check XR gate
           </Link>
 
           <Link
@@ -151,7 +163,7 @@ export default function RootPage() {
             </Link>
           </div>
 
-          <div className="mt-5 grid gap-3 md:grid-cols-4">
+          <div className="mt-5 grid gap-3 md:grid-cols-5">
             {launchLinks.map((item) => (
               <Link
                 key={item.href}
@@ -174,7 +186,7 @@ export default function RootPage() {
           <p className="mt-2">
             URAI does not claim production readiness from this page. Passive
             sensing, outbound communications, therapy-adjacent behavior,
-            monetization, live provider integrations, and user-derived
+            monetization, live provider integrations, headset entry, and user-derived
             intelligence remain gated until privacy, evidence, monitoring,
             rollback, and launch checks pass.
           </p>
