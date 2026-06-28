@@ -7,6 +7,7 @@ import type { MemoryCategory } from "@/components/urai/data/emotionPalette";
 import { useGalaxyCamera } from "@/components/urai/hooks/useGalaxyCamera";
 import { useStarSelection } from "@/components/urai/hooks/useStarSelection";
 import ImmersiveWorld3D from "@/components/urai/world/ImmersiveWorld3D";
+import MomLifeMapPolishOverlay from "@/components/urai/world/MomLifeMapPolishOverlay";
 import { ConstellationThreadLayer } from "./ConstellationThreadLayer";
 import { GalaxyBackground } from "./GalaxyBackground";
 import { GalaxyCamera } from "./GalaxyCamera";
@@ -128,6 +129,7 @@ export default function LifeMapPage() {
         }
         selectedLabel={selected?.title}
       />
+      <MomLifeMapPolishOverlay />
 
       <GalaxyBackground />
 
