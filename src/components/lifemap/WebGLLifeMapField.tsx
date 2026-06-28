@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const STAR_COUNT = 220;
+const STAR_COUNT = 96;
 const FLOATS_PER_STAR = 7;
 const VERTEX_SHADER = `
 attribute vec3 a_position;
@@ -12,19 +12,21 @@ uniform float u_time;
 uniform vec2 u_resolution;
 varying vec3 v_color;
 varying float v_alpha;
+varying float v_depth;
 
 void main() {
-  float drift = sin(u_time * 0.00012 + a_position.z * 0.008) * 0.035;
+  float drift = sin(u_time * 0.000075 + a_position.z * 0.01) * 0.018;
   vec3 position = a_position;
   position.x += drift;
-  position.y += cos(u_time * 0.00010 + a_position.x * 2.0) * 0.025;
+  position.y += cos(u_time * 0.000055 + a_position.x * 2.0) * 0.012;
 
-  float depth = 1.0 / (1.85 - position.z);
+  float depth = 1.0 / (2.05 - position.z);
   vec2 projected = position.xy * depth;
-  gl_Position = vec4(projected, position.z * 0.34, 1.0);
-  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.010;
+  gl_Position = vec4(projected, position.z * 0.26, 1.0);
+  gl_PointSize = a_size * depth * min(u_resolution.x, u_resolution.y) * 0.0065;
   v_color = a_color;
-  v_alpha = clamp(depth * 0.22, 0.04, 0.36);
+  v_depth = depth;
+  v_alpha = clamp(depth * 0.12, 0.015, 0.18);
 }
 `;
 
@@ -32,15 +34,17 @@ const FRAGMENT_SHADER = `
 precision mediump float;
 varying vec3 v_color;
 varying float v_alpha;
+varying float v_depth;
 
 void main() {
   vec2 uv = gl_PointCoord - vec2(0.5);
   float d = length(uv);
-  float core = smoothstep(0.12, 0.0, d);
-  float halo = smoothstep(0.44, 0.10, d) * 0.16;
+  float core = smoothstep(0.10, 0.0, d);
+  float halo = smoothstep(0.48, 0.12, d) * 0.24;
   float alpha = (core + halo) * v_alpha;
-  if (alpha < 0.012) discard;
-  gl_FragColor = vec4(v_color, alpha);
+  if (alpha < 0.01) discard;
+  vec3 color = mix(v_color, vec3(1.0, 0.96, 0.82), core * 0.45);
+  gl_FragColor = vec4(color, alpha);
 }
 `;
 
@@ -96,15 +100,17 @@ function createStarData() {
     const depthNoise = seededNoise(i + 59);
     const sizeNoise = seededNoise(i + 73);
     const colorShift = seededNoise(i + 97);
-    const radius = 0.12 + Math.sqrt(ring) * (0.9 + radiusNoise * 0.12);
+    const spiralArm = i % 3;
+    const armAngle = angle + spiralArm * 0.34;
+    const radius = 0.18 + Math.sqrt(ring) * (0.78 + radiusNoise * 0.08);
 
-    data[offset] = Math.cos(angle) * radius + wobbleNoise * 0.16;
-    data[offset + 1] = Math.sin(angle) * radius * 0.58 + yNoise * 0.16;
-    data[offset + 2] = -1.0 + depthNoise * 1.72;
-    data[offset + 3] = 2.0 + sizeNoise * 3.2;
-    data[offset + 4] = 0.42 + colorShift * 0.22;
-    data[offset + 5] = 0.62 + colorShift * 0.18;
-    data[offset + 6] = 0.95;
+    data[offset] = Math.cos(armAngle) * radius + wobbleNoise * 0.07;
+    data[offset + 1] = Math.sin(armAngle) * radius * 0.34 + yNoise * 0.055;
+    data[offset + 2] = -1.08 + depthNoise * 1.54;
+    data[offset + 3] = 2.0 + sizeNoise * 2.1;
+    data[offset + 4] = 0.50 + colorShift * 0.18;
+    data[offset + 5] = 0.68 + colorShift * 0.13;
+    data[offset + 6] = 0.92;
   }
 
   return data;
@@ -148,7 +154,7 @@ export default function WebGLLifeMapField() {
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     gl.useProgram(program);
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.disable(gl.DEPTH_TEST);
 
     gl.enableVertexAttribArray(positionLocation);
@@ -161,7 +167,7 @@ export default function WebGLLifeMapField() {
     gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, stride, 4 * Float32Array.BYTES_PER_ELEMENT);
 
     const resize = () => {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       const rect = canvas.getBoundingClientRect();
       canvas.width = Math.max(1, Math.floor(rect.width * ratio));
       canvas.height = Math.max(1, Math.floor(rect.height * ratio));
