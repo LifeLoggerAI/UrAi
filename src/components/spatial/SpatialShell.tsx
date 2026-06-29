@@ -16,12 +16,13 @@ export default function SpatialShell({ mode }: SpatialShellProps) {
         <p className="spatial-eyebrow">URAI Spatial</p>
         <h1>{mode === "demo" ? "Moonlit Spatial Demo" : "Spatial Home, safely staged for production"}</h1>
         <p className="spatial-lede">
-          URAI Spatial is staged as a cohesive moonlit orb-platform world. Authenticated production access stays behind gates until consent, device QA, Asset Factory materialization, and smoke tests are green.
+          URAI Spatial is staged as a cohesive moonlit orb-platform world. Authenticated production access stays behind gates until consent, device QA, Asset Factory materialization, and smoke tests are green. AR is gated/roadmap until a verified supported-device AR entry and compatible model asset path exist.
         </p>
         <div className="spatial-status-grid" aria-label="Spatial readiness flags">
           <span>Demo: {isSpatialDemoEnabled() ? "enabled" : "disabled"}</span>
           <span>Private beta: {isSpatialPrivateBetaEnabled() ? "enabled" : "blocked"}</span>
           <span>XR runtime: {isSpatialXrEnabled() ? "enabled" : "blocked"}</span>
+          <span>AR: gated/roadmap</span>
           <span>Status: {readiness.status}</span>
         </div>
         <nav className="spatial-links" aria-label="Spatial routes">
@@ -48,11 +49,11 @@ export default function SpatialShell({ mode }: SpatialShellProps) {
         </article>
         <article>
           <h2>Consent-first Spatial Data</h2>
-          <p>Blocks capture, room semantics, XR anchors, and asset generation behind explicit consent contracts.</p>
+          <p>Blocks capture, room semantics, XR anchors, AR, and asset generation behind explicit consent contracts.</p>
         </article>
         <article>
           <h2>Asset Factory Pipeline</h2>
-          <p>Connects spatial-scene-v1 to a worker-backed materialization path for glTF, GLB, USDZ, previews, and manifests.</p>
+          <p>Connects spatial-scene-v1 to a worker-backed materialization path for glTF, GLB, USDZ, previews, and manifests before any AR production claim.</p>
         </article>
       </section>
 
