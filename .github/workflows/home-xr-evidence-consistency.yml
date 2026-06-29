@@ -1,0 +1,49 @@
+name: Home XR Evidence Consistency
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/write-webxr-audit-summary.mjs"
+      - "scripts/write-home-xr-deploy-proof-summary.mjs"
+      - "launch-proof/home-quest-interaction/**"
+      - "docs/release-evidence/**"
+      - ".github/workflows/home-xr-evidence-consistency.yml"
+      - ".github/workflows/webxr-foundation-audit.yml"
+      - ".github/workflows/deploy-home-xr.yml"
+  pull_request:
+    paths:
+      - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/write-webxr-audit-summary.mjs"
+      - "scripts/write-home-xr-deploy-proof-summary.mjs"
+      - "launch-proof/home-quest-interaction/**"
+      - "docs/release-evidence/**"
+      - ".github/workflows/home-xr-evidence-consistency.yml"
+      - ".github/workflows/webxr-foundation-audit.yml"
+      - ".github/workflows/deploy-home-xr.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-xr-evidence-consistency-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  consistency:
+    name: Verify Home XR evidence consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check launch evidence consistency
+        run: node scripts/check-home-xr-launch-evidence-consistency.mjs
