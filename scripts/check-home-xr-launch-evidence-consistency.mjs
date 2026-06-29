@@ -11,6 +11,7 @@ const files = {
   deployWriter: "scripts/write-home-xr-deploy-proof-summary.mjs",
   auditWorkflow: ".github/workflows/webxr-foundation-audit.yml",
   deployWorkflow: ".github/workflows/deploy-home-xr.yml",
+  consistencyWorkflow: ".github/workflows/home-xr-evidence-consistency.yml",
 };
 
 function read(file) {
@@ -67,9 +68,11 @@ check(
 );
 
 check(
-  "audit workflow verifies launch evidence consistency",
-  contents.auditWorkflow.includes("node scripts/check-home-xr-launch-evidence-consistency.mjs"),
-  "WebXR audit workflow must run this consistency verifier.",
+  "consistency workflow verifies launch evidence consistency",
+  contents.consistencyWorkflow.includes("node scripts/check-home-xr-launch-evidence-consistency.mjs") &&
+    contents.consistencyWorkflow.includes("Home XR Evidence Consistency") &&
+    contents.consistencyWorkflow.includes("workflow_dispatch:"),
+  "Home XR evidence consistency workflow must run this verifier and support manual dispatch.",
 );
 
 check(
