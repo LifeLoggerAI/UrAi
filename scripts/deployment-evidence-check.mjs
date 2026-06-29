@@ -8,6 +8,7 @@ const requiredSections = [
   "### UrAi CI/CD",
   "### Firebase Hosting live",
   "## Production smoke checklist",
+  "## Genesis XR/AR evidence",
   "## Data and safety checks",
   "## Release decision",
   "## Known blockers",
@@ -33,7 +34,8 @@ console.log("[deployment-evidence] Evidence template is present and structurally
 console.log("[deployment-evidence] Remaining manual/deployment checks:");
 console.log("  1. Confirm UrAi CI/CD passes on main.");
 console.log("  2. Confirm Firebase Hosting live deploy passes on main.");
-console.log("  3. Record deployed URL.");
-console.log("  4. Smoke deployed /, /u/adamclamp, waitlist, companion fallback, and /home -> / redirect.");
-console.log("  5. Attach desktop/mobile evidence to issue #300.");
-console.log("  6. Record rollback SHA before declaring production complete.");
+console.log("  3. Record deployed URL and commit SHA served by /xr.");
+console.log("  4. Smoke deployed /, /u/adamclamp, waitlist, companion fallback, /home -> / redirect, and /xr.");
+console.log("  5. Attach desktop/mobile /xr evidence, including AR supported-device or explicit unsupported fallback proof.");
+console.log("  6. Attach desktop/mobile evidence to issue #300.");
+console.log("  7. Record rollback SHA before declaring production complete.");
