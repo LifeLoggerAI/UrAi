@@ -59,11 +59,16 @@ assertArrayIncludes(manifest, "test_files", [
   "src/components/spatial-life-map/__tests__/LifeMapQuestInteraction.test.ts",
   "tests/e2e/life-map-quest-interaction.spec.ts",
   "scripts/check-life-map-quest-interaction.mjs",
+  "scripts/check-life-map-quest-proof-manifest.mjs",
+  "scripts/check-life-map-quest-live-deploy-proof.mjs",
+  "scripts/smoke-life-map-quest-live-url.mjs",
 ]);
 
 assertArrayIncludes(manifest, "proof_files", [
   "launch-proof/life-map-quest-interaction/2026-06-28-quest-interaction-lock.md",
   "launch-proof/life-map-quest-interaction/2026-06-28-static-verifier-addendum.md",
+  "launch-proof/life-map-quest-interaction/2026-06-28-live-route-reachability-addendum.md",
+  "launch-proof/life-map-quest-interaction/LIFE_MAP_QUEST_LIVE_DEPLOY_VERIFICATION.md",
   manifestPath,
 ]);
 
@@ -84,8 +89,15 @@ assertArrayIncludes(manifest, "required_local_commands", [
   "npm run check:public-copy",
   "npm run check:production-claims",
   "npm run smoke:life-map-quest",
+  "npm run smoke:life-map-quest-proof",
+  "npm run smoke:life-map-quest-live-proof",
   "npm run smoke:genesis-spine",
   "npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome",
+]);
+
+assertArrayIncludes(manifest, "optional_live_commands", [
+  "LIFE_MAP_QUEST_LIVE_URL=<production-url> npm run smoke:life-map-quest-live",
+  "URAI_LIVE_URL=<production-url> npm run smoke:life-map-quest-live",
 ]);
 
 assertArrayIncludes(manifest, "required_ci_jobs", [
@@ -114,7 +126,9 @@ assertArrayIncludes(manifest, "allowed_final_statuses", [
   "LIFE MAP QUEST INTERACTION IMPLEMENTED",
   "LIFE MAP QUEST INTERACTION PROOF-WIRED",
   "LIFE MAP QUEST INTERACTION CI-GREEN",
-  "LIFE MAP QUEST INTERACTION VERIFIED",
+  "LIFE MAP QUEST ROUTE-REACHABLE",
+  "LIFE MAP QUEST LIVE-SMOKE-PASSED",
+  "LIFE MAP QUEST LIVE-QUEST-VERIFIED",
 ]);
 
 assertArrayIncludes(manifest, "blocked_claims_until_verified", [
