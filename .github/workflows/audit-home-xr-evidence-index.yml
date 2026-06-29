@@ -1,0 +1,35 @@
+name: Audit Home XR Evidence Index
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-home-xr-evidence-index-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-home-xr-evidence-index:
+    name: Audit Home XR evidence index
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check Home XR evidence index
+        run: node scripts/check-home-xr-evidence-index.mjs
