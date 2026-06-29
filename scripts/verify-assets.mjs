@@ -5,6 +5,7 @@ const criticalAssets = [
   "public/assets/sky/bloom/fallback-sky-bloom-12.webp",
   "public/assets/images/genesis-orb-placeholder.svg",
   "public/assets/ground/bloom/fallback-ground-bloom-12.png",
+  "public/assets/ar/urai-genesis-orb.gltf",
 ];
 
 const optionalAssets = [
