@@ -40,12 +40,18 @@ const requiredFiles = [
   "scripts/check-home-xr-proof-manifest.mjs",
   "scripts/check-home-xr-live-deploy-proof.mjs",
   "scripts/check-home-xr-deploy-workflow.mjs",
+  "scripts/check-home-xr-evidence-index.mjs",
+  "scripts/check-home-xr-completion-summary.mjs",
+  "scripts/check-home-xr-proof-chain.mjs",
   "scripts/smoke-home-xr-live-url.mjs",
   ".github/workflows/ci.yml",
   ".github/workflows/audit-home-xr-deploy-workflow.yml",
+  ".github/workflows/audit-home-xr-evidence-index.yml",
+  ".github/workflows/audit-home-xr-proof-chain.yml",
   ".github/workflows/deploy-home-xr.yml",
   "launch-proof/home-quest-interaction/QUEST_MANUAL_VALIDATION_CHECKLIST.md",
   "launch-proof/home-quest-interaction/HOME_XR_VERIFICATION_SIGNOFF_TEMPLATE.md",
+  "launch-proof/home-quest-interaction/RUNTIME_EXECUTION_RECORD_TEMPLATE.md",
 ];
 
 for (const file of requiredFiles) {
@@ -84,11 +90,19 @@ const runtimeGaps = [
   "screenshot artifacts",
   "real Quest hardware validation",
   "completed signoff template",
+  "completed runtime execution record",
 ];
 
 for (const gap of runtimeGaps) {
   check(`runtime gap listed: ${gap}`, index.includes(gap), `Evidence index must list unresolved gap: ${gap}.`);
 }
+
+check(
+  "runtime execution record is required",
+  index.includes("runtime execution record is completed") &&
+    index.includes("runtime execution record captures final device validation decision"),
+  "Evidence index must require the runtime execution record for deployment and device validation proof."
+);
 
 check(
   "live verified boundary is explicit",
