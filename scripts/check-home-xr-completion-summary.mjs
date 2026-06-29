@@ -21,6 +21,7 @@ const requiredSections = [
   "## Verification files",
   "## Workflows",
   "## Proof documents",
+  "## One-command repository proof chain",
   "## Promotion path",
   "## Claim boundary",
 ];
@@ -39,6 +40,8 @@ const requiredReferences = [
   "scripts/check-home-xr-live-deploy-proof.mjs",
   "scripts/check-home-xr-deploy-workflow.mjs",
   "scripts/check-home-xr-evidence-index.mjs",
+  "scripts/check-home-xr-completion-summary.mjs",
+  "scripts/check-home-xr-proof-chain.mjs",
   "scripts/smoke-home-xr-live-url.mjs",
   "tests/unit/home-xr-interaction-layer.test.ts",
   "tests/e2e/home-xr-interaction.spec.ts",
@@ -51,6 +54,8 @@ const requiredReferences = [
   "launch-proof/home-quest-interaction/DEPLOY_WORKFLOW_RUNBOOK.md",
   "launch-proof/home-quest-interaction/HOME_XR_LIVE_DEPLOY_VERIFICATION.md",
   "launch-proof/home-quest-interaction/HOME_XR_VERIFICATION_SIGNOFF_TEMPLATE.md",
+  "launch-proof/home-quest-interaction/OPERATOR_NEXT_STEP.md",
+  "launch-proof/home-quest-interaction/PROOF_CHAIN_COMMAND.md",
   "launch-proof/home-quest-interaction/QUEST_MANUAL_VALIDATION_CHECKLIST.md",
   "launch-proof/home-quest-interaction/VALIDATION_RUNBOOK.md",
   "launch-proof/home-quest-interaction/home-xr-proof-manifest.json",
@@ -59,6 +64,14 @@ const requiredReferences = [
 for (const reference of requiredReferences) {
   check(`reference present: ${reference}`, summary.includes(reference), `Missing reference: ${reference}`);
 }
+
+check(
+  "one-command proof chain is explicit",
+  summary.includes("node scripts/check-home-xr-proof-chain.mjs") &&
+    summary.includes("repository proof path only") &&
+    summary.includes("does not replace runtime deployment"),
+  "Completion summary must include the local proof-chain command and its boundary."
+);
 
 check(
   "promotion path includes deploy and device validation",
