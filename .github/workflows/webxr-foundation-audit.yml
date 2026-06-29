@@ -11,6 +11,7 @@ on:
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
+      - "scripts/write-webxr-audit-summary.mjs"
       - "scripts/check-home-xr-*.mjs"
       - "launch-proof/home-quest-interaction/**"
       - "docs/release-evidence/**"
@@ -25,6 +26,7 @@ on:
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
+      - "scripts/write-webxr-audit-summary.mjs"
       - "scripts/check-home-xr-*.mjs"
       - "launch-proof/home-quest-interaction/**"
       - "docs/release-evidence/**"
@@ -59,6 +61,7 @@ jobs:
       URAI_ENABLE_CHRONO_FIRESTORE: "0"
       OPENAI_API_KEY: "ci-placeholder-openai-key"
       PLAYWRIGHT_SKIP_BROWSER_GC: "1"
+      WEBXR_AUDIT_OUTPUT_DIR: "/tmp/urai-webxr-audit-summary"
 
     steps:
       - name: Check out repository
@@ -113,3 +116,15 @@ jobs:
 
       - name: Home XR browser smoke
         run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
+
+      - name: Write WebXR audit summary
+        if: always()
+        run: node scripts/write-webxr-audit-summary.mjs
+
+      - name: Upload WebXR audit summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webxr-foundation-audit-summary
+          path: /tmp/urai-webxr-audit-summary
+          if-no-files-found: error
