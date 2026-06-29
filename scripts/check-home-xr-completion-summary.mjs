@@ -22,6 +22,7 @@ const requiredSections = [
   "## Workflows",
   "## Proof documents",
   "## One-command repository proof chain",
+  "## Runtime execution record",
   "## Promotion path",
   "## Claim boundary",
 ];
@@ -57,6 +58,7 @@ const requiredReferences = [
   "launch-proof/home-quest-interaction/OPERATOR_NEXT_STEP.md",
   "launch-proof/home-quest-interaction/PROOF_CHAIN_COMMAND.md",
   "launch-proof/home-quest-interaction/QUEST_MANUAL_VALIDATION_CHECKLIST.md",
+  "launch-proof/home-quest-interaction/RUNTIME_EXECUTION_RECORD_TEMPLATE.md",
   "launch-proof/home-quest-interaction/VALIDATION_RUNBOOK.md",
   "launch-proof/home-quest-interaction/home-xr-proof-manifest.json",
 ];
@@ -74,19 +76,30 @@ check(
 );
 
 check(
+  "runtime execution record is explicit",
+  summary.includes("RUNTIME_EXECUTION_RECORD_TEMPLATE.md") &&
+    summary.includes("dated execution record") &&
+    summary.includes("actual run URLs") &&
+    summary.includes("device validation results"),
+  "Completion summary must require a dated runtime execution record with real runtime evidence."
+);
+
+check(
   "promotion path includes deploy and device validation",
   summary.includes("manual Firebase Hosting deploy workflow") &&
     summary.includes("live URL smoke") &&
     summary.includes("Quest/browser validation") &&
+    summary.includes("runtime execution record") &&
     summary.includes("signoff template"),
-  "Promotion path must include deploy, live smoke, device validation, and signoff."
+  "Promotion path must include deploy, live smoke, device validation, runtime record, and signoff."
 );
 
 check(
   "claim boundary is explicit",
   summary.includes("Use repository completion language") &&
-    summary.includes("Use live verification language only after deploy"),
-  "Completion summary must preserve the live verification boundary."
+    summary.includes("Use live verification language only after deploy") &&
+    summary.includes("runtime execution record"),
+  "Completion summary must preserve the live verification boundary and runtime record requirement."
 );
 
 const failed = checks.filter((item) => !item.passed);
