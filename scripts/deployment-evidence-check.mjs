@@ -4,6 +4,7 @@ import path from "node:path";
 const repoRoot = process.cwd();
 const evidencePath = path.join(repoRoot, "docs", "URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md");
 const lifeMapQuestEvidencePath = path.join(repoRoot, "docs", "URAI_LIFE_MAP_QUEST_DEPLOYMENT_EVIDENCE.md");
+const lifeMapQuestWorkflowPath = path.join(repoRoot, ".github", "workflows", "life-map-quest-production-evidence.yml");
 const requiredSections = [
   "## Deployment workflow evidence",
   "### UrAi CI/CD",
@@ -36,6 +37,10 @@ if (!fs.existsSync(evidencePath)) {
 
 if (!fs.existsSync(lifeMapQuestEvidencePath)) {
   fail(`Missing Life Map Quest evidence template: ${path.relative(repoRoot, lifeMapQuestEvidencePath)}`);
+}
+
+if (!fs.existsSync(lifeMapQuestWorkflowPath)) {
+  fail(`Missing Life Map Quest production evidence workflow: ${path.relative(repoRoot, lifeMapQuestWorkflowPath)}`);
 }
 
 const evidence = fs.readFileSync(evidencePath, "utf8");
@@ -75,8 +80,29 @@ if (missingLifeMapQuestTerms.length > 0) {
   fail(`Life Map Quest evidence template is missing required terms: ${missingLifeMapQuestTerms.join(", ")}`);
 }
 
+const lifeMapQuestWorkflow = fs.readFileSync(lifeMapQuestWorkflowPath, "utf8");
+const requiredLifeMapQuestWorkflowTerms = [
+  "Life Map Quest Production Evidence",
+  "workflow_run",
+  "Deploy Firebase Production",
+  "npm run smoke:life-map-quest",
+  "npm run smoke:life-map-quest-proof",
+  "npm run smoke:life-map-quest-live-proof",
+  "npm run smoke:life-map-quest-live",
+  "tests/e2e/life-map-quest-interaction.spec.ts",
+  "life-map-quest-production-evidence",
+];
+const missingLifeMapQuestWorkflowTerms = requiredLifeMapQuestWorkflowTerms.filter(
+  (term) => !lifeMapQuestWorkflow.includes(term),
+);
+
+if (missingLifeMapQuestWorkflowTerms.length > 0) {
+  fail(`Life Map Quest production evidence workflow is missing required terms: ${missingLifeMapQuestWorkflowTerms.join(", ")}`);
+}
+
 console.log("[deployment-evidence] Evidence template is present and structurally complete.");
 console.log("[deployment-evidence] Life Map Quest deployment evidence template is present and structurally complete.");
+console.log("[deployment-evidence] Life Map Quest production evidence workflow is present and structurally complete.");
 console.log("[deployment-evidence] Remaining manual/deployment checks:");
 console.log("  1. Confirm UrAi CI/CD passes on main.");
 console.log("  2. Confirm Firebase Hosting live deploy passes on main.");
