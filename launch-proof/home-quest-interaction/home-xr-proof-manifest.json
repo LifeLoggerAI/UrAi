@@ -1,0 +1,71 @@
+{
+  "id": "home-quest-xr-proof-manifest",
+  "status": "HOME QUEST/XR PROOF-WIRED",
+  "status_date": "2026-06-28",
+  "route": "/home",
+  "claim_boundary": "Progressive WebXR enhancement only. Do not claim verified Quest/XR until CI artifacts and real headset validation are complete.",
+  "implementation_files": [
+    "src/components/urai/home/HomeWorldCanvas.tsx",
+    "src/components/urai/home/HomeXRInteractionLayer.tsx",
+    "src/components/urai/home/HomeXRTargets.ts",
+    "src/components/xr/XRSessionFoundation.tsx"
+  ],
+  "test_files": [
+    "tests/unit/home-xr-interaction-layer.test.ts",
+    "tests/e2e/home-xr-interaction.spec.ts",
+    "scripts/check-home-xr-lock.mjs",
+    "scripts/check-production-claims.mjs"
+  ],
+  "proof_files": [
+    "launch-proof/home-quest-interaction/2026-06-28-home-xr-interaction-pass.md",
+    "launch-proof/home-quest-interaction/QUEST_MANUAL_VALIDATION_CHECKLIST.md",
+    "launch-proof/home-quest-interaction/VALIDATION_RUNBOOK.md",
+    "launch-proof/home-quest-interaction/home-xr-proof-manifest.json"
+  ],
+  "required_local_commands": [
+    "npm run check:types",
+    "npm run lint",
+    "npm test",
+    "npm run build",
+    "npm run verify:routes",
+    "npm run verify:assets",
+    "npm run check:public-copy",
+    "npm run check:production-claims",
+    "node scripts/check-home-xr-lock.mjs",
+    "npm run smoke:genesis-spine",
+    "npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome"
+  ],
+  "required_ci_jobs": [
+    "V1 app unit/build gate",
+    "Home and Life Map XR Playwright smoke"
+  ],
+  "required_artifacts": [
+    "xr-playwright-output",
+    "home-xr-proof/home-desktop.png",
+    "home-xr-proof/home-mobile.png",
+    "home-xr-proof/home-xr-affordance-mocked.png"
+  ],
+  "required_manual_validation": [
+    "Open /home on Quest Browser or another WebXR immersive-vr capable browser.",
+    "Confirm Enter VR appears only when immersive-vr is supported.",
+    "Confirm VR session starts through the browser WebXR API.",
+    "Confirm controller ray or laser is visible.",
+    "Confirm hover on every Home target.",
+    "Confirm trigger selects every safe target.",
+    "Confirm grip/back clears or closes selection state.",
+    "Confirm no-controller fallback appears during active VR session when controllers are unavailable."
+  ],
+  "allowed_final_statuses": [
+    "HOME QUEST/XR IMPLEMENTED",
+    "HOME QUEST/XR PROOF-WIRED",
+    "HOME QUEST/XR CI-GREEN",
+    "HOME QUEST/XR VERIFIED"
+  ],
+  "blocked_claims_until_verified": [
+    "DONE DONE",
+    "Quest ready",
+    "VR ready",
+    "production XR",
+    "full Quest support"
+  ]
+}
