@@ -59,3 +59,8 @@ jobs:
             echo "$status $url"
             test "$status" = "200"
           done
+
+      - name: Verify live Genesis XR AR contract
+        env:
+          URAI_LIVE_BASE_URL: https://urai-4dc1d.web.app
+        run: npm run smoke:genesis-xr-ar-live
