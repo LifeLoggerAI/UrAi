@@ -40,6 +40,17 @@ Required CI steps:
 - Run Life Map XR smoke checks
 - Optional deployed Life Map Quest URL smoke
 
+## Production evidence workflow
+
+Required workflow:
+
+- `.github/workflows/life-map-quest-production-evidence.yml`
+- Workflow name: `Life Map Quest Production Evidence`
+- Trigger: after `Deploy Firebase Production` completes, plus manual dispatch
+- Required artifact: `life-map-quest-production-evidence`
+
+The workflow must run the repo proof gates, deployed route checks, deployed Life Map URL smoke, and deployed Life Map Playwright smoke before this feature can move beyond proof-wired status.
+
 ## Deployment evidence required
 
 Fill these only after deployment is verified:
@@ -50,6 +61,7 @@ Fill these only after deployment is verified:
 - Deployment workflow run URL:
 - CI workflow run URL:
 - Production evidence workflow run URL:
+- Life Map Quest production evidence workflow run URL:
 - Playwright artifact URL:
 - Browser console evidence URL:
 - Quest Browser evidence URL:
