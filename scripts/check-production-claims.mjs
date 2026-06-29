@@ -18,7 +18,7 @@ const textExtensions = new Set([".md", ".mdx", ".ts", ".tsx", ".js", ".jsx"]);
 const riskyProductionClaims = [
   {
     pattern: /\b(full|real|production|live|complete|done done)\s+(VR|AR|XR|WebXR|headset|Quest)\b/i,
-    allowed: /\b(gated|supported|unsupported|capability|if supported|when supported|proof|warning|not verified|not live|fallback|browser proves support|WebXR API|immersive-vr support)\b/i,
+    allowed: /\b(gated|supported|unsupported|capability|if supported|when supported|proof|warning|not verified|not live|fallback|browser proves support|WebXR API|immersive-vr support|evidence-required)\b/i,
     reason: "XR production claims must be support-gated or proof-qualified.",
   },
   {
@@ -28,8 +28,13 @@ const riskyProductionClaims = [
   },
   {
     pattern: /\b(Quest ready|headset ready|VR ready|AR ready|XR ready)\b/i,
-    allowed: /\b(with warnings|not verified|requires|supported|if supported|capability|proof|physical Quest validation|browser proves support)\b/i,
+    allowed: /\b(with warnings|not verified|requires|supported|if supported|capability|proof|physical Quest validation|browser proves support|evidence-required)\b/i,
     reason: "Readiness claims must include warnings, support gates, or proof.",
+  },
+  {
+    pattern: /\b(iOS Quick Look|quick-look|USDZ|\.usdz)\b/i,
+    allowed: /\b(gated|not claimed|not present|not verified|until|requires|after|before|evidence-required|no verified)\b/i,
+    reason: "iOS Quick Look/USDZ claims must stay gated until a verified USDZ asset exists.",
   },
 ];
 
