@@ -5,6 +5,7 @@ const repoRoot = process.cwd();
 const evidencePath = path.join(repoRoot, "docs", "URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md");
 const lifeMapQuestEvidencePath = path.join(repoRoot, "docs", "URAI_LIFE_MAP_QUEST_DEPLOYMENT_EVIDENCE.md");
 const lifeMapQuestWorkflowPath = path.join(repoRoot, ".github", "workflows", "life-map-quest-production-evidence.yml");
+const lifeMapQuestLaunchEnforcementPath = path.join(repoRoot, "docs", "URAI_LIFE_MAP_QUEST_LAUNCH_ENFORCEMENT.md");
 const requiredSections = [
   "## Deployment workflow evidence",
   "### UrAi CI/CD",
@@ -42,6 +43,10 @@ if (!fs.existsSync(lifeMapQuestEvidencePath)) {
 
 if (!fs.existsSync(lifeMapQuestWorkflowPath)) {
   fail(`Missing Life Map Quest production evidence workflow: ${path.relative(repoRoot, lifeMapQuestWorkflowPath)}`);
+}
+
+if (!fs.existsSync(lifeMapQuestLaunchEnforcementPath)) {
+  fail(`Missing Life Map Quest launch enforcement evidence: ${path.relative(repoRoot, lifeMapQuestLaunchEnforcementPath)}`);
 }
 
 const evidence = fs.readFileSync(evidencePath, "utf8");
@@ -106,9 +111,29 @@ if (missingLifeMapQuestWorkflowTerms.length > 0) {
   fail(`Life Map Quest production evidence workflow is missing required terms: ${missingLifeMapQuestWorkflowTerms.join(", ")}`);
 }
 
+const lifeMapQuestLaunchEnforcement = fs.readFileSync(lifeMapQuestLaunchEnforcementPath, "utf8");
+const requiredLifeMapQuestLaunchTerms = [
+  "URAI Life Map Quest Launch Enforcement",
+  "node scripts/deployment-evidence-check.mjs",
+  "npm run smoke:life-map-quest",
+  "npm run smoke:life-map-quest-proof",
+  "npm run smoke:life-map-quest-live-proof",
+  "npm run launch:check",
+  "npm run deploy",
+  "physical Meta Quest Browser controller proof",
+];
+const missingLifeMapQuestLaunchTerms = requiredLifeMapQuestLaunchTerms.filter(
+  (term) => !lifeMapQuestLaunchEnforcement.includes(term),
+);
+
+if (missingLifeMapQuestLaunchTerms.length > 0) {
+  fail(`Life Map Quest launch enforcement evidence is missing required terms: ${missingLifeMapQuestLaunchTerms.join(", ")}`);
+}
+
 console.log("[deployment-evidence] Evidence template is present and structurally complete.");
 console.log("[deployment-evidence] Life Map Quest deployment evidence template is present and structurally complete.");
 console.log("[deployment-evidence] Life Map Quest production evidence workflow is present and structurally complete.");
+console.log("[deployment-evidence] Life Map Quest launch enforcement evidence is present and structurally complete.");
 console.log("[deployment-evidence] Remaining manual/deployment checks:");
 console.log("  1. Confirm UrAi CI/CD passes on main.");
 console.log("  2. Confirm Firebase Hosting live deploy passes on main.");
