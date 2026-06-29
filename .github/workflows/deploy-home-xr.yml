@@ -1,0 +1,130 @@
+name: Deploy Home XR Firebase Hosting
+
+on:
+  workflow_dispatch:
+    inputs:
+      live_url:
+        description: "Deployed URL to smoke after deploy, for example https://urai-4dc1d.web.app"
+        required: true
+        default: "https://urai-4dc1d.web.app"
+      firebase_project:
+        description: "Firebase project id"
+        required: true
+        default: "urai-4dc1d"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-home-xr-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify-deploy-smoke:
+    name: Verify, deploy, and smoke Home XR
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      CI: "true"
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY || 'ci-placeholder' }}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'ci-placeholder.firebaseapp.com' }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ inputs.firebase_project }}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'ci-placeholder.appspot.com' }}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '000000000000' }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID || '1:000000000000:web:ci' }}
+      FIREBASE_PROJECT_ID: ${{ inputs.firebase_project }}
+      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL || 'ci@example.iam.gserviceaccount.com' }}
+      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY || '-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n' }}
+      URAI_REQUIRE_FIREBASE_ADMIN: "0"
+      URAI_ENABLE_CHRONO_FIRESTORE: "0"
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'ci-placeholder-openai-key' }}
+      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
+      HOME_XR_LIVE_URL: ${{ inputs.live_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck
+        run: npm run check:types
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit and rules tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Verify routes
+        run: npm run verify:routes
+
+      - name: Verify assets
+        run: npm run verify:assets
+
+      - name: Check public copy
+        run: npm run check:public-copy
+
+      - name: Check production claims
+        run: npm run check:production-claims
+
+      - name: Check Home XR static lock
+        run: node scripts/check-home-xr-lock.mjs
+
+      - name: Check Home XR proof manifest
+        run: node scripts/check-home-xr-proof-manifest.mjs
+
+      - name: Check Home XR live deploy proof gate
+        run: node scripts/check-home-xr-live-deploy-proof.mjs
+
+      - name: Genesis spine smoke
+        run: npm run smoke:genesis-spine
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Home XR smoke checks
+        run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
+
+      - name: Require Firebase deploy token
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "Missing FIREBASE_TOKEN repository secret. Create it with firebase login:ci or replace this workflow with workload identity."
+            exit 1
+          fi
+
+      - name: Deploy Firebase Hosting
+        run: npx firebase-tools deploy --only hosting --project "${{ inputs.firebase_project }}" --token "${{ secrets.FIREBASE_TOKEN }}"
+
+      - name: Smoke deployed Home XR URL
+        run: node scripts/smoke-home-xr-live-url.mjs
+
+      - name: Write deploy evidence summary
+        run: |
+          mkdir -p /tmp/urai-playwright-results/home-xr-deploy-proof
+          {
+            echo "commit=${GITHUB_SHA}"
+            echo "live_url=${HOME_XR_LIVE_URL}"
+            echo "firebase_project=${{ inputs.firebase_project }}"
+            echo "workflow_run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "status=deployed-and-live-smoked"
+          } > /tmp/urai-playwright-results/home-xr-deploy-proof/deploy-summary.txt
+
+      - name: Upload deploy and smoke proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: home-xr-deploy-proof
+          path: /tmp/urai-playwright-results
+          if-no-files-found: ignore
