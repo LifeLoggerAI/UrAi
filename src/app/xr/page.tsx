@@ -20,7 +20,7 @@ export default function XRPage() {
           ← Home
         </Link>
         <p className="rounded-full border border-cyan-100/15 bg-cyan-100/[0.07] px-4 py-2 text-[0.64rem] font-black uppercase tracking-[0.3em] text-cyan-100/72">
-          XR gated · AR supported-device preview · no fake headset claims
+          XR gated · AR gated to supported-device preview · no fake headset claims
         </p>
       </header>
 
@@ -30,10 +30,10 @@ export default function XRPage() {
             Real WebXR gate
           </p>
           <h1 className="mt-6 max-w-4xl text-5xl font-black leading-[0.9] tracking-[-0.07em] text-white sm:text-6xl lg:text-7xl">
-            3D preview first. VR only when the browser proves it. AR only on supported mobile paths.
+            3D preview first. VR only when the browser proves it. AR gated to supported mobile paths.
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-8 text-white/70 sm:text-lg">
-            This route keeps the public Home 3D scene available on desktop and mobile while checking real WebXR capability. The Enter VR action is not rendered unless immersive-vr is reported by the browser and a real Three.js WebGL renderer is ready. The AR preview uses a real glTF model and delegates AR launch to supported mobile browser paths instead of faking AR inside a normal canvas.
+            This route keeps the public Home 3D scene available on desktop and mobile while checking real WebXR capability. The Enter VR action is not rendered unless immersive-vr is reported by the browser and a real Three.js WebGL renderer is ready. The AR preview is gated to a real glTF model and delegates AR launch to supported mobile browser paths instead of faking AR inside a normal canvas.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -59,7 +59,7 @@ export default function XRPage() {
             <strong className="text-amber-50">Launch truth:</strong> This is a WebXR-capable foundation, not a claim of universal VR/AR support. Unsupported browsers keep the safe 3D or non-WebGL fallback instead of seeing a broken headset button.
           </div>
           <div className="rounded-[1.6rem] border border-white/12 bg-white/[0.045] p-4 text-sm leading-6 text-white/68">
-            <strong className="text-white">AR status:</strong> AR Preview on supported mobile devices. 3D Preview available everywhere the model viewer loads. Unsupported devices remain truthful fallback/preview only.
+            <strong className="text-white">AR status:</strong> AR preview is gated to supported mobile devices. 3D preview remains available everywhere the model viewer loads. Unsupported devices remain truthful fallback/preview only.
           </div>
         </div>
       </section>
