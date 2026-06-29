@@ -12,6 +12,7 @@ on:
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
       - "scripts/write-webxr-audit-summary.mjs"
+      - "scripts/write-home-xr-deploy-proof-summary.mjs"
       - "scripts/check-home-xr-*.mjs"
       - "launch-proof/home-quest-interaction/**"
       - "docs/release-evidence/**"
@@ -27,6 +28,7 @@ on:
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
       - "scripts/write-webxr-audit-summary.mjs"
+      - "scripts/write-home-xr-deploy-proof-summary.mjs"
       - "scripts/check-home-xr-*.mjs"
       - "launch-proof/home-quest-interaction/**"
       - "docs/release-evidence/**"
@@ -107,6 +109,7 @@ jobs:
           node scripts/check-home-xr-proof-manifest.mjs
           node scripts/check-home-xr-live-deploy-proof.mjs
           node scripts/check-home-xr-deploy-workflow.mjs
+          node scripts/check-home-xr-structured-deploy-proof.mjs
 
       - name: Genesis spine smoke
         run: npm run smoke:genesis-spine
