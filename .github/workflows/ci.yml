@@ -144,6 +144,10 @@ jobs:
         if: ${{ env.HOME_XR_LIVE_URL != '' || env.PLAYWRIGHT_BASE_URL != '' || env.URAI_LIVE_URL != '' }}
         run: node scripts/smoke-home-xr-live-url.mjs
 
+      - name: Optional deployed Life Map Quest URL smoke
+        if: ${{ env.LIFE_MAP_QUEST_LIVE_URL != '' || env.PLAYWRIGHT_BASE_URL != '' || env.URAI_LIVE_URL != '' }}
+        run: npm run smoke:life-map-quest-live
+
       - name: Upload Playwright output
         if: always()
         uses: actions/upload-artifact@v4
