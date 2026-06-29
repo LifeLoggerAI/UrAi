@@ -43,6 +43,7 @@ The `/home` XR path is implemented and proof-wired in the repository. The deploy
 - `launch-proof/home-quest-interaction/OPERATOR_NEXT_STEP.md`
 - `launch-proof/home-quest-interaction/PROOF_CHAIN_COMMAND.md`
 - `launch-proof/home-quest-interaction/QUEST_MANUAL_VALIDATION_CHECKLIST.md`
+- `launch-proof/home-quest-interaction/RUNTIME_EXECUTION_RECORD_TEMPLATE.md`
 - `launch-proof/home-quest-interaction/VALIDATION_RUNBOOK.md`
 - `launch-proof/home-quest-interaction/home-xr-proof-manifest.json`
 
@@ -56,6 +57,10 @@ node scripts/check-home-xr-proof-chain.mjs
 
 This validates the repository proof path only. It does not replace runtime deployment, live smoke, artifact review, or headset validation.
 
+## Runtime execution record
+
+After CI, deployment, live smoke, and device validation run, copy `launch-proof/home-quest-interaction/RUNTIME_EXECUTION_RECORD_TEMPLATE.md` into a dated execution record and fill in the actual run URLs, artifacts, screenshots, live URL results, device validation results, blockers, and signoff.
+
 ## Promotion path
 
 1. Run the one-command repository proof chain.
@@ -65,8 +70,9 @@ This validates the repository proof path only. It does not replace runtime deplo
 5. Confirm the deploy proof artifact exists.
 6. Run or review the live URL smoke result.
 7. Complete real Quest/browser validation.
-8. Complete the signoff template.
+8. Complete the runtime execution record.
+9. Complete the signoff template.
 
 ## Claim boundary
 
-Use repository completion language until runtime proof exists. Use live verification language only after deploy, live smoke, artifacts, and device validation are complete.
+Use repository completion language until runtime proof exists. Use live verification language only after deploy, live smoke, artifacts, runtime execution record, and device validation are complete.
