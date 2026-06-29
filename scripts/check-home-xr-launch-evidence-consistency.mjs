@@ -7,6 +7,7 @@ const files = {
   releaseEvidence: "docs/release-evidence/2026-06-28-webxr-foundation-status.md",
   liveProof: "launch-proof/home-quest-interaction/HOME_XR_LIVE_DEPLOY_VERIFICATION.md",
   handoff: "launch-proof/home-quest-interaction/FINAL_LIVE_DEPLOY_HANDOFF.md",
+  statusManifest: "launch-proof/home-quest-interaction/home-xr-launch-status.json",
   auditWriter: "scripts/write-webxr-audit-summary.mjs",
   deployWriter: "scripts/write-home-xr-deploy-proof-summary.mjs",
   auditWorkflow: ".github/workflows/webxr-foundation-audit.yml",
@@ -26,9 +27,20 @@ function check(name, passed, detail) {
   checks.push({ name, passed, detail });
 }
 
+function parseJson(text) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
 for (const [key, file] of Object.entries(files)) {
   check(`${key} exists`, Boolean(contents[key]), `${file} must exist.`);
 }
+
+const statusManifest = parseJson(contents.statusManifest);
+check("status manifest is valid JSON", Boolean(statusManifest), "home-xr-launch-status.json must parse as JSON.");
 
 const requiredBoundaries = [
   "WEBXR FOUNDATION READY WITH WARNINGS",
@@ -43,7 +55,43 @@ for (const boundary of requiredBoundaries) {
     contents.handoff.includes(boundary),
     `FINAL_LIVE_DEPLOY_HANDOFF.md must include ${boundary}.`,
   );
+  check(
+    `status manifest includes ${boundary}`,
+    contents.statusManifest.includes(boundary),
+    `home-xr-launch-status.json must include ${boundary}.`,
+  );
 }
+
+check(
+  "status manifest pins current warning status",
+  statusManifest?.current_status === "WEBXR FOUNDATION READY WITH WARNINGS" &&
+    statusManifest?.allowed_current_label === "HOME QUEST/XR DEPLOY-CONFIGURED" &&
+    statusManifest?.repo_side_complete === true,
+  "Status manifest must keep current status warning-only while recording repo-side completion.",
+);
+
+check(
+  "status manifest records target live URL and Firebase project",
+  statusManifest?.live_url === "https://urai-4dc1d.web.app" && statusManifest?.firebase_project === "urai-4dc1d",
+  "Status manifest must pin the expected Firebase live URL and project.",
+);
+
+check(
+  "status manifest records required artifacts",
+  statusManifest?.audit_artifact_name === "webxr-foundation-audit-summary" &&
+    statusManifest?.deploy_artifact_name === "home-xr-deploy-proof",
+  "Status manifest must record audit and deploy artifact names.",
+);
+
+check(
+  "status manifest blocks live and Quest claims",
+  Array.isArray(statusManifest?.blocked_claims_until_live_smoke) &&
+    statusManifest.blocked_claims_until_live_smoke.includes("live deployed working") &&
+    Array.isArray(statusManifest?.blocked_claims_until_quest_proof) &&
+    statusManifest.blocked_claims_until_quest_proof.includes("Quest ready") &&
+    statusManifest.blocked_claims_until_quest_proof.includes("full XR live"),
+  "Status manifest must explicitly block live and Quest claims until evidence exists.",
+);
 
 check(
   "live proof blocks configuration-only claims",
@@ -63,8 +111,9 @@ check(
   "issue 348 is linked from proof surfaces",
   contents.handoff.includes("#348") &&
     contents.auditWriter.includes("https://github.com/LifeLoggerAI/UrAi/issues/348") &&
-    contents.deployWriter.includes("https://github.com/LifeLoggerAI/UrAi/issues/348"),
-  "Final handoff, audit summary, and deploy summary must all point to issue #348.",
+    contents.deployWriter.includes("https://github.com/LifeLoggerAI/UrAi/issues/348") &&
+    statusManifest?.tracking_issue === "https://github.com/LifeLoggerAI/UrAi/issues/348",
+  "Final handoff, audit summary, deploy summary, and status manifest must all point to issue #348.",
 );
 
 check(
