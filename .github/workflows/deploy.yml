@@ -28,6 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify release gates
+        run: |
+          npm run check:ar-preview
+          npm run verify:routes
+          npm run verify:assets
+          npm run check:public-copy
+          npm run check:production-claims
+
       - name: Build
         run: npm run build
 
@@ -38,3 +46,16 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_URAI }}
           projectId: urai-4dc1d
           channelId: live
+
+      - name: Verify live Genesis routes and AR asset
+        env:
+          BASE_URL: https://urai-4dc1d.web.app
+        run: |
+          set -euo pipefail
+          routes=("/" "/home" "/xr" "/assets/ar/urai-genesis-orb.gltf" "/u/adamclamp" "/api/status")
+          for route in "${routes[@]}"; do
+            url="${BASE_URL}${route}"
+            status=$(curl -L -s -o /tmp/urai-route-body -w "%{http_code}" "$url")
+            echo "$status $url"
+            test "$status" = "200"
+          done
