@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const repoRoot = process.cwd();
+const packagePath = path.join(repoRoot, "package.json");
+const launchChecksPath = path.join(repoRoot, "scripts", "run-launch-checks.mjs");
 const evidencePath = path.join(repoRoot, "docs", "URAI_POST_MERGE_DEPLOYMENT_EVIDENCE.md");
 const lifeMapQuestEvidencePath = path.join(repoRoot, "docs", "URAI_LIFE_MAP_QUEST_DEPLOYMENT_EVIDENCE.md");
 const lifeMapQuestWorkflowPath = path.join(repoRoot, ".github", "workflows", "life-map-quest-production-evidence.yml");
@@ -33,20 +35,48 @@ function fail(message) {
   process.exit(1);
 }
 
-if (!fs.existsSync(evidencePath)) {
-  fail(`Missing evidence template: ${path.relative(repoRoot, evidencePath)}`);
+for (const requiredPath of [
+  packagePath,
+  launchChecksPath,
+  evidencePath,
+  lifeMapQuestEvidencePath,
+  lifeMapQuestWorkflowPath,
+  lifeMapQuestLaunchEnforcementPath,
+]) {
+  if (!fs.existsSync(requiredPath)) {
+    fail(`Missing required release evidence file: ${path.relative(repoRoot, requiredPath)}`);
+  }
 }
 
-if (!fs.existsSync(lifeMapQuestEvidencePath)) {
-  fail(`Missing Life Map Quest evidence template: ${path.relative(repoRoot, lifeMapQuestEvidencePath)}`);
+const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+const scripts = packageJson.scripts ?? {};
+if (scripts["launch:check"] !== "node scripts/run-launch-checks.mjs") {
+  fail("package.json launch:check must run scripts/run-launch-checks.mjs");
+}
+if (!String(scripts.deploy ?? "").includes("npm run launch:check")) {
+  fail("package.json deploy must run npm run launch:check before deployment");
+}
+for (const scriptName of [
+  "deploy:evidence",
+  "smoke:life-map-quest",
+  "smoke:life-map-quest-proof",
+  "smoke:life-map-quest-live-proof",
+  "smoke:life-map-quest-live",
+]) {
+  if (!scripts[scriptName]) fail(`package.json missing required script ${scriptName}`);
 }
 
-if (!fs.existsSync(lifeMapQuestWorkflowPath)) {
-  fail(`Missing Life Map Quest production evidence workflow: ${path.relative(repoRoot, lifeMapQuestWorkflowPath)}`);
-}
-
-if (!fs.existsSync(lifeMapQuestLaunchEnforcementPath)) {
-  fail(`Missing Life Map Quest launch enforcement evidence: ${path.relative(repoRoot, lifeMapQuestLaunchEnforcementPath)}`);
+const launchChecks = fs.readFileSync(launchChecksPath, "utf8");
+const requiredLaunchTerms = [
+  "scripts/deployment-evidence-check.mjs",
+  "smoke:life-map-quest",
+  "smoke:life-map-quest-proof",
+  "smoke:life-map-quest-live-proof",
+  "npm",
+  "build",
+];
+for (const term of requiredLaunchTerms) {
+  if (!launchChecks.includes(term)) fail(`scripts/run-launch-checks.mjs missing ${term}`);
 }
 
 const evidence = fs.readFileSync(evidencePath, "utf8");
@@ -131,6 +161,8 @@ if (missingLifeMapQuestLaunchTerms.length > 0) {
 }
 
 console.log("[deployment-evidence] Evidence template is present and structurally complete.");
+console.log("[deployment-evidence] Package deploy path is wired through launch:check.");
+console.log("[deployment-evidence] Launch checks include deployment evidence and Life Map Quest proof gates.");
 console.log("[deployment-evidence] Life Map Quest deployment evidence template is present and structurally complete.");
 console.log("[deployment-evidence] Life Map Quest production evidence workflow is present and structurally complete.");
 console.log("[deployment-evidence] Life Map Quest launch enforcement evidence is present and structurally complete.");
