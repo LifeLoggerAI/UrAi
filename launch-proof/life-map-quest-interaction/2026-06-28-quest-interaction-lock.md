@@ -3,6 +3,7 @@
 Date: 2026-06-28
 Repo: LifeLoggerAI/UrAi
 Route: /life-map
+Latest verification-boundary commit: 49f445345017e82fe3229d9f57901e8d5bfb0893
 
 ## Scope completed
 
@@ -23,6 +24,7 @@ Implemented:
 - Controller-unavailable fallback copy in-world.
 - Desktop pointer/touch handlers preserved on the original LifeStar component.
 - Existing scene visuals preserved: NebulaBackdrop, StarField, ConstellationLines, LifeStar.
+- Life Map VR entry button gated on secure context plus real `navigator.xr.isSessionSupported("immersive-vr")` support before `VRButton.createButton(gl)` is appended.
 
 ## Files changed
 
@@ -44,7 +46,8 @@ GitHub API verification completed:
 - Confirmed `/life-map` and `/app/life-map` both render `SpatialLifeMap`.
 - Confirmed `check:production-claims` now exists in `package.json`.
 - Confirmed CI now includes the requested automated command set and Life Map Playwright smoke coverage.
-- Confirmed no GitHub Actions workflow run was attached to the latest commit through the available workflow lookup.
+- Confirmed Life Map VR entry is support-gated before the Three.js VR button is appended.
+- Confirmed no GitHub Actions workflow run or status context was attached to the latest commit through the available workflow/status lookups.
 
 Added smoke coverage for:
 
@@ -57,7 +60,8 @@ Added smoke coverage for:
 - `/life-map` mobile route load,
 - canvas count,
 - non-XR DOM navigation preservation,
-- Playwright screenshot artifact paths.
+- Playwright screenshot artifact paths,
+- Life Map VR entry support gating.
 
 ## Commands requested but not executed in this connector environment
 
@@ -82,14 +86,15 @@ This pass cannot truthfully mark actual headset behavior verified because no phy
 Required headset proof checklist:
 
 1. Open `https://urai.app/life-map` in Meta Quest Browser.
-2. Enter VR through the real browser-rendered VR button.
-3. Confirm left and right controller rays are visible.
-4. Aim at multiple stars and confirm hover highlight changes.
-5. Press trigger and confirm the focused star becomes selected.
-6. Confirm the in-world selected-node panel updates with the selected star title and reflection.
-7. Press grip/back and confirm the panel closes or clears selection.
-8. Aim at VR menu buttons and press trigger to confirm navigation.
-9. Exit VR and confirm desktop/mobile DOM overlay behavior remains intact.
+2. Confirm no VR entry appears if the browser/device does not report `immersive-vr` support.
+3. Enter VR through the real browser-rendered VR button on Quest Browser.
+4. Confirm left and right controller rays are visible.
+5. Aim at multiple stars and confirm hover highlight changes.
+6. Press trigger and confirm the focused star becomes selected.
+7. Confirm the in-world selected-node panel updates with the selected star title and reflection.
+8. Press grip/back and confirm the panel closes or clears selection.
+9. Aim at VR menu buttons and press trigger to confirm navigation.
+10. Exit VR and confirm desktop/mobile DOM overlay behavior remains intact.
 
 ## Honest status
 
@@ -98,5 +103,5 @@ LIFE MAP QUEST INTERACTION READY WITH WARNINGS
 Warnings:
 
 - Automated npm pipeline is wired but was not executed from this connector environment.
-- No workflow run was visible for the latest commit through the available workflow lookup.
+- No workflow run or status context was visible for the latest commit through the available workflow/status lookups.
 - Physical Quest Browser controller behavior is implemented but not physically verified here.
