@@ -1,0 +1,50 @@
+{
+  "repo": "LifeLoggerAI/UrAi",
+  "scope": "Home WebXR foundation and live deploy proof",
+  "tracking_issue": "https://github.com/LifeLoggerAI/UrAi/issues/348",
+  "current_status": "WEBXR FOUNDATION READY WITH WARNINGS",
+  "allowed_current_label": "HOME QUEST/XR DEPLOY-CONFIGURED",
+  "live_smoke_label": "HOME QUEST/XR LIVE-SMOKE-PASSED",
+  "quest_verified_label": "HOME QUEST/XR LIVE-QUEST-VERIFIED",
+  "live_url": "https://urai-4dc1d.web.app",
+  "firebase_project": "urai-4dc1d",
+  "repo_side_complete": true,
+  "audit_workflow": ".github/workflows/webxr-foundation-audit.yml",
+  "evidence_consistency_workflow": ".github/workflows/home-xr-evidence-consistency.yml",
+  "deploy_workflow": ".github/workflows/deploy-home-xr.yml",
+  "audit_artifact_name": "webxr-foundation-audit-summary",
+  "deploy_artifact_name": "home-xr-deploy-proof",
+  "required_before_live_smoke_passed": [
+    "WebXR Foundation Audit workflow passes",
+    "Deploy Home XR Firebase Hosting workflow passes",
+    "home-xr-deploy-proof artifact exists",
+    "deployed / returns HTTP 200",
+    "deployed /home returns HTTP 200",
+    "deployed /xr returns HTTP 200",
+    "deployed /life-map returns HTTP 200",
+    "desktop /home screenshot exists",
+    "mobile /home screenshot exists",
+    "unsupported-browser WebXR fallback screenshot exists",
+    "/xr capability panel screenshot exists"
+  ],
+  "required_before_quest_verified": [
+    "Quest Browser can reach deployed /home",
+    "Enter VR appears only when Quest Browser reports immersive-vr support",
+    "real WebXR session starts from deployed URL",
+    "controller ray or laser appears",
+    "target hover works",
+    "trigger selection works",
+    "grip/back clear behavior works",
+    "controller-unavailable fallback works"
+  ],
+  "blocked_claims_until_live_smoke": [
+    "live deployed working",
+    "HOME QUEST/XR LIVE-SMOKE-PASSED"
+  ],
+  "blocked_claims_until_quest_proof": [
+    "HOME QUEST/XR LIVE-QUEST-VERIFIED",
+    "Quest ready",
+    "full VR ready",
+    "full XR live"
+  ]
+}
