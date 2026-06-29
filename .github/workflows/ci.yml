@@ -137,6 +137,10 @@ jobs:
       - name: Run Life Map XR smoke checks
         run: npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome
 
+      - name: Optional deployed Home XR URL smoke
+        if: ${{ env.HOME_XR_LIVE_URL != '' || env.PLAYWRIGHT_BASE_URL != '' || env.URAI_LIVE_URL != '' }}
+        run: node scripts/smoke-home-xr-live-url.mjs
+
       - name: Upload Playwright output
         if: always()
         uses: actions/upload-artifact@v4
