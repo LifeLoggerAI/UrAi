@@ -81,6 +81,9 @@ jobs:
       - name: Check Home XR proof manifest
         run: node scripts/check-home-xr-proof-manifest.mjs
 
+      - name: Check Home XR live deploy proof gate
+        run: node scripts/check-home-xr-live-deploy-proof.mjs
+
       - name: Check Life Map Quest static lock
         run: npm run smoke:life-map-quest
 
