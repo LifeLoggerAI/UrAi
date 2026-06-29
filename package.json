@@ -41,6 +41,7 @@
     "smoke:life-map-quest": "node scripts/check-life-map-quest-interaction.mjs",
     "smoke:life-map-quest-proof": "node scripts/check-life-map-quest-proof-manifest.mjs",
     "smoke:life-map-quest-live": "node scripts/smoke-life-map-quest-live-url.mjs",
+    "smoke:life-map-quest-live-proof": "node scripts/check-life-map-quest-live-deploy-proof.mjs",
     "check:types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "check:home": "node scripts/check-home-lock.mjs",
