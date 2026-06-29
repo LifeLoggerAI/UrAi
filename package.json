@@ -38,6 +38,7 @@
     "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "smoke:production": "node scripts/smoke-production-targets.mjs",
     "smoke:life-map-quest": "node scripts/check-life-map-quest-interaction.mjs",
+    "smoke:life-map-quest-proof": "node scripts/check-life-map-quest-proof-manifest.mjs",
     "check:types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "check:home": "node scripts/check-home-lock.mjs",
