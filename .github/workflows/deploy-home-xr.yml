@@ -41,6 +41,7 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'ci-placeholder-openai-key' }}
       PLAYWRIGHT_SKIP_BROWSER_GC: "1"
       HOME_XR_LIVE_URL: ${{ inputs.live_url }}
+      HOME_XR_DEPLOY_PROOF_DIR: "/tmp/urai-playwright-results/home-xr-deploy-proof"
 
     steps:
       - name: Check out repository
@@ -110,16 +111,9 @@ jobs:
       - name: Smoke deployed Home XR URL
         run: node scripts/smoke-home-xr-live-url.mjs
 
-      - name: Write deploy evidence summary
-        run: |
-          mkdir -p /tmp/urai-playwright-results/home-xr-deploy-proof
-          {
-            echo "commit=${GITHUB_SHA}"
-            echo "live_url=${HOME_XR_LIVE_URL}"
-            echo "firebase_project=${{ inputs.firebase_project }}"
-            echo "workflow_run=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-            echo "status=deployed-and-live-smoked"
-          } > /tmp/urai-playwright-results/home-xr-deploy-proof/deploy-summary.txt
+      - name: Write structured deploy evidence summary
+        if: always()
+        run: node scripts/write-home-xr-deploy-proof-summary.mjs
 
       - name: Upload deploy and smoke proof
         if: always()
@@ -127,4 +121,4 @@ jobs:
         with:
           name: home-xr-deploy-proof
           path: /tmp/urai-playwright-results
-          if-no-files-found: ignore
+          if-no-files-found: error
