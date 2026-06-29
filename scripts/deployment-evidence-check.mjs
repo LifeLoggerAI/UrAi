@@ -18,6 +18,7 @@ const requiredSections = [
 const requiredLifeMapQuestSections = [
   "## Claim boundary",
   "## Repo proof gates",
+  "## Production evidence workflow",
   "## Deployment evidence required",
   "## Route smoke checklist",
   "## Playwright evidence required",
@@ -68,6 +69,11 @@ const requiredLifeMapQuestTerms = [
   "npm run smoke:life-map-quest-proof",
   "npm run smoke:life-map-quest-live-proof",
   "npm run smoke:life-map-quest-live",
+  ".github/workflows/life-map-quest-production-evidence.yml",
+  "Life Map Quest Production Evidence",
+  "Deploy Firebase Production",
+  "life-map-quest-production-evidence",
+  "Life Map Quest production evidence workflow run URL",
   "Meta Quest Browser reaches deployed `/life-map`",
   "Do not mark this feature live-working",
 ];
