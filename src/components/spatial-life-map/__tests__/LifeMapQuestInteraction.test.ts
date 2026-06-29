@@ -42,4 +42,13 @@ describe("Life Map Quest interaction wiring", () => {
     expect(sceneSource).toContain("<LifeStar");
     expect(sceneSource).toContain("<LifeMapQuestInteractionLayer");
   });
+
+  it("does not append the Life Map VR entry until immersive-vr support is proven", () => {
+    const sceneSource = readSource("src/components/spatial-life-map/LifeGalaxyScene.tsx");
+
+    expect(sceneSource).toContain('xr.isSessionSupported("immersive-vr")');
+    expect(sceneSource).toContain("if (cancelled || !immersiveVrSupported) return");
+    expect(sceneSource).toContain("VRButton.createButton(gl)");
+    expect(sceneSource).toContain("Enter spatial Life Map");
+  });
 });
