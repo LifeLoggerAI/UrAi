@@ -37,6 +37,7 @@
     "check:production-lock": "node scripts/check-production-lock.mjs",
     "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "smoke:production": "node scripts/smoke-production-targets.mjs",
+    "smoke:life-map-quest": "node scripts/check-life-map-quest-interaction.mjs",
     "check:types": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "check:home": "node scripts/check-home-lock.mjs",
@@ -85,7 +86,7 @@
     "urai:tier2": "npm run urai:tier2:polish",
     "urai:tier3": "npm run urai:tier3:audit",
     "urai:tier4": "npm run urai:tier4:deploy-check",
-    "urai:tier5": "npm run urai:tier5:launch-lock"
+    "urai:tier5": "npm run urai:tier5-launch-lock"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
