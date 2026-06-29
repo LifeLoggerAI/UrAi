@@ -78,6 +78,9 @@ jobs:
       - name: Check Home XR static lock
         run: node scripts/check-home-xr-lock.mjs
 
+      - name: Check Home XR proof manifest
+        run: node scripts/check-home-xr-proof-manifest.mjs
+
       - name: Genesis spine smoke
         run: npm run smoke:genesis-spine
 
