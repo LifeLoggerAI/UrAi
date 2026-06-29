@@ -12,6 +12,14 @@ import LifeStar from "./LifeStar";
 import ConstellationLines from "./ConstellationLines";
 import LifeMapQuestInteractionLayer from "./LifeMapQuestInteraction";
 
+type BrowserXR = {
+  isSessionSupported?: (mode: "immersive-vr") => Promise<boolean>;
+};
+
+type NavigatorWithXR = Navigator & {
+  xr?: BrowserXR;
+};
+
 interface LifeGalaxySceneProps {
   stars: LifeMapStar[];
   constellations: LifeMapConstellation[];
@@ -58,12 +66,13 @@ function WebXREntryButton() {
     const mountSupportedButton = async () => {
       removeExistingButton();
 
-      if (!window.isSecureContext || !("xr" in navigator) || !navigator.xr?.isSessionSupported) {
+      const xr = (navigator as NavigatorWithXR).xr;
+      if (!window.isSecureContext || !xr?.isSessionSupported) {
         return;
       }
 
       try {
-        const immersiveVrSupported = await navigator.xr.isSessionSupported("immersive-vr");
+        const immersiveVrSupported = await xr.isSessionSupported("immersive-vr");
         if (cancelled || !immersiveVrSupported) return;
 
         button = VRButton.createButton(gl);
