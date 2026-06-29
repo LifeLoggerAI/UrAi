@@ -28,7 +28,11 @@ const riskyClaims = [
   { pattern: rx("XFwoYXVkbyBjdXB0dXJlfGxvY2F0aW9uIHRyYWNraW5nfGdwcyB0cmFja2luZ3xkZXZpY2Ugc2Vuc2luZylcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8Y29uc2VudHxkZW1vfHNjYWZmb2xkfGJlZm9yZSBlbmFibGluZ3xub3QgcmVxdWlyZWR8Z2F0ZWR8b2ZmIGJ5IGRlZmF1bHQ="), reason: "passive-data claim must be future, demo, or consent-gated in V1" },
   { pattern: rx("XFwoZG9jdG9yfG1lZGljYWwgYWR2aWNlfHByZXNjcmliZXxwcmVzY3JpcHRpb24pXGI="), allowedNearby: rx("bm90IGF8bm90IGxpdmV8Y2Fubm90fG5vIGRpYWdub3Npc3xkb2VzIG5vdHxkbyBub3R8YXZvaWR8c2FmZXR5fGJvdW5kYXJ5fGZ1dHVyZXxub3QgcmVxdWlyZWR8cmVwbGFjZSBwcm9mZXNzaW9uYWwgY2FyZQ=="), reason: "care claim must remain boundary-only in V1" },
   { pattern: rx("XFwobWFya2V0cGxhY2V8c2VsbCBkYXRhfGRhdGEgc2FsZXxkYXRhIG1vbmV0aXphdGlvbilcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8Y29uc2VudHxiZWZvcmV8bm90IHJlcXVpcmVkfGRlZmVyfGdhdGVkfG9mZiBieSBkZWZhdWx0fGZyZWUgY2F0YWxvZw=="), reason: "market claim must be future or consent-gated in V1" },
-  { pattern: rx("XFwoQVIvVlJ8QVJ8VlJ8c3BhdGlhbClcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8bm90IHBhcnQgb2YgVjF8ZGVmZXJ8bm90IHJlcXVpcmVkfGdhdGVkfHN0YWdlZHxzdGFnaW5nfGZlYXR1cmUtZ2F0ZWR8cHJvdGVjdGVkfGRlbW98c2NhZmZvbGR8c3VwcG9ydGVkfHVuc3VwcG9ydGVkfGNhcGFiaWxpdHl8YnJvd3NlciBwcm92ZXMgc3VwcG9ydHximmVhbCBXZWJYUiBnYXRlfGltbWVyc2l2ZS12ciBzdXBwb3J0"), reason: "immersive claim must be future-only, capability-gated, support-gated, or fallback-qualified in V1" },
+  {
+    pattern: /\b(AR\/VR|AR|VR|spatial)\b/i,
+    allowedNearby: /\b(not live|future|roadmap|not part of V1|defer|not required|gated|staged|staging|feature-gated|protected|demo|scaffold|supported|unsupported|capability|browser proves support|Real WebXR gate|immersive-vr support|fallback)\b/i,
+    reason: "immersive claim must be future-only, capability-gated, support-gated, or fallback-qualified in V1",
+  },
   { pattern: rx("XFwoQjJCfGFkbWluIGRhc2hib2FyZHxlbnRlcnByaXNlIHBvcnRhbClcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8bm90IHBhcnQgb2YgVjF8ZGVmZXJ8bm90IHJlcXVpcmVkfG9mZiBieSBkZWZhdWx0"), reason: "business/admin claim must be future-only in V1" },
   { pattern: rx("XFwoc3R1ZGlvIGV4cG9ydHxzdHVkaW8vZXhwb3J0fG1lZGlhIHBpcGVsaW5lfGFzc2V0IGZhY3RvcnkpXGI="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8bm90IHBhcnQgb2YgVjF8ZGVmZXJ8bm90IHJlcXVpcmVkfGdhdGVkfHNlcnZlci1zaWRlfGJlZm9yZQ=="), reason: "studio/export claim must be future-only in V1" }
 ];
