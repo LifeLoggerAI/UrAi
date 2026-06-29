@@ -75,6 +75,9 @@ jobs:
       - name: Check production claims
         run: npm run check:production-claims
 
+      - name: Check Home XR static lock
+        run: node scripts/check-home-xr-lock.mjs
+
       - name: Genesis spine smoke
         run: npm run smoke:genesis-spine
 
