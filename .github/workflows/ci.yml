@@ -87,6 +87,9 @@ jobs:
       - name: Check Life Map Quest static lock
         run: npm run smoke:life-map-quest
 
+      - name: Check Life Map Quest proof manifest
+        run: npm run smoke:life-map-quest-proof
+
       - name: Genesis spine smoke
         run: npm run smoke:genesis-spine
 
