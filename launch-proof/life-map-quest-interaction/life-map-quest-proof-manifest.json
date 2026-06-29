@@ -1,0 +1,67 @@
+{
+  "id": "life-map-quest-proof-manifest",
+  "route": "/life-map",
+  "status": "LIFE MAP QUEST INTERACTION PROOF-WIRED",
+  "claim_boundary": "Progressive WebXR enhancement only. Do not claim Quest ready, VR ready, production XR, or DONE DONE until automated pipeline and physical Quest Browser proof pass.",
+  "implementation_files": [
+    "src/components/spatial-life-map/SpatialLifeMap.tsx",
+    "src/components/spatial-life-map/LifeGalaxyScene.tsx",
+    "src/components/spatial-life-map/LifeMapQuestInteraction.tsx",
+    "src/components/spatial-life-map/LifeStar.tsx"
+  ],
+  "test_files": [
+    "src/components/spatial-life-map/__tests__/LifeMapQuestInteraction.test.ts",
+    "tests/e2e/life-map-quest-interaction.spec.ts",
+    "scripts/check-life-map-quest-interaction.mjs"
+  ],
+  "proof_files": [
+    "launch-proof/life-map-quest-interaction/2026-06-28-quest-interaction-lock.md",
+    "launch-proof/life-map-quest-interaction/2026-06-28-static-verifier-addendum.md",
+    "launch-proof/life-map-quest-interaction/life-map-quest-proof-manifest.json"
+  ],
+  "required_local_commands": [
+    "npm run check:types",
+    "npm run lint",
+    "npm test",
+    "npm run build",
+    "npm run verify:routes",
+    "npm run verify:assets",
+    "npm run check:public-copy",
+    "npm run check:production-claims",
+    "npm run smoke:life-map-quest",
+    "npm run smoke:genesis-spine",
+    "npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome"
+  ],
+  "required_ci_jobs": [
+    "V1 app unit/build gate",
+    "Home and Life Map XR Playwright smoke"
+  ],
+  "required_artifacts": [
+    "xr-playwright-output",
+    "life-map-xr-proof/life-map-desktop.png",
+    "life-map-xr-proof/life-map-mobile.png"
+  ],
+  "required_manual_quest_checks": [
+    "Open /life-map in Meta Quest Browser",
+    "Confirm unsupported browsers do not show a fake VR entry",
+    "Enter VR only through real immersive-vr support",
+    "Confirm left and right controller rays are visible",
+    "Confirm trigger selects a focused Life Map star",
+    "Confirm grip/back closes or clears the selected panel",
+    "Confirm VR menu trigger navigation works",
+    "Confirm desktop and mobile controls still work after exiting VR"
+  ],
+  "allowed_final_statuses": [
+    "LIFE MAP QUEST INTERACTION IMPLEMENTED",
+    "LIFE MAP QUEST INTERACTION PROOF-WIRED",
+    "LIFE MAP QUEST INTERACTION CI-GREEN",
+    "LIFE MAP QUEST INTERACTION VERIFIED"
+  ],
+  "blocked_claims_until_verified": [
+    "DONE DONE",
+    "Quest ready",
+    "VR ready",
+    "production XR",
+    "full Quest support"
+  ]
+}
