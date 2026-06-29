@@ -90,6 +90,9 @@ jobs:
       - name: Check Life Map Quest proof manifest
         run: npm run smoke:life-map-quest-proof
 
+      - name: Check Life Map Quest live deploy proof gate
+        run: npm run smoke:life-map-quest-live-proof
+
       - name: Genesis spine smoke
         run: npm run smoke:genesis-spine
 
