@@ -46,18 +46,40 @@ function WebXREntryButton() {
   const { gl } = useThree();
 
   useEffect(() => {
+    let cancelled = false;
+    let button: HTMLElement | null = null;
     gl.xr.enabled = true;
 
-    const existing = document.querySelector(".urai-xr-entry-button");
-    if (existing) existing.remove();
+    const removeExistingButton = () => {
+      const existing = document.querySelector(".urai-xr-entry-button");
+      if (existing) existing.remove();
+    };
 
-    const button = VRButton.createButton(gl);
-    button.classList.add("urai-xr-entry-button");
-    button.setAttribute("aria-label", "Enter spatial Life Map");
-    document.body.appendChild(button);
+    const mountSupportedButton = async () => {
+      removeExistingButton();
+
+      if (!window.isSecureContext || !("xr" in navigator) || !navigator.xr?.isSessionSupported) {
+        return;
+      }
+
+      try {
+        const immersiveVrSupported = await navigator.xr.isSessionSupported("immersive-vr");
+        if (cancelled || !immersiveVrSupported) return;
+
+        button = VRButton.createButton(gl);
+        button.classList.add("urai-xr-entry-button");
+        button.setAttribute("aria-label", "Enter spatial Life Map");
+        document.body.appendChild(button);
+      } catch {
+        removeExistingButton();
+      }
+    };
+
+    void mountSupportedButton();
 
     return () => {
-      button.remove();
+      cancelled = true;
+      button?.remove();
     };
   }, [gl]);
 
