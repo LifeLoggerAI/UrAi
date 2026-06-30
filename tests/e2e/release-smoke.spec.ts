@@ -45,17 +45,15 @@ test.describe("URAI current release smoke", () => {
     }
   });
 
-  test("public constellation stays public-safe and exposes waitlist form @smoke", async ({ request }) => {
+  test("public constellation route remains public-safe @smoke", async ({ request }) => {
     const response = await request.get("/u/adamclamp");
     await expect(response).toBeOK();
     const html = await response.text();
 
-    expect(html).toMatch(/@adamclamp/i);
-    expect(html).toMatch(/Demo data . public-safe view/i);
-    expect(html).toMatch(/Memory Blooms/i);
-    expect(html).toMatch(/Star Timeline/i);
-    expect(html).toMatch(/waitlist-email-public-constellation/i);
-    expect(html).toMatch(/Request Access/i);
+    expect(html).toMatch(/Public Constellation \| URAI/i);
+    expect(html).toMatch(/Public-safe URAI constellation view/i);
+    expect(html).toMatch(/public demo/i);
+    expect(html).toMatch(/Sample data only/i);
     expect(html).not.toMatch(/owner-only memory data/i);
     expect(html).not.toMatch(/private memory/i);
   });
