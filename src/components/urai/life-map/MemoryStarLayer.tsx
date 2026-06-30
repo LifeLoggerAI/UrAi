@@ -46,6 +46,11 @@ const fragmentShader = `
   }
 `;
 
+const categoryBoosts: Partial<Record<MemoryCategory, number>> = {
+  threshold: 1.3,
+  relationship: 1.18,
+};
+
 export function MemoryStarLayer({
   stars,
   selectedId,
@@ -87,7 +92,7 @@ export function MemoryStarLayer({
       const isRelated = relatedIds.has(star.id);
       const dimmed = selectedActive && !isRelated && !isSelected;
       const depthBoost = Math.max(0.8, 1.45 - Math.abs(star.z) / 860);
-      const categoryBoost = star.category === 'milestone' ? 1.3 : star.category === 'family' ? 1.18 : 1;
+      const categoryBoost = categoryBoosts[star.category] ?? 1;
       const selectedBoost = isSelected ? 4.6 : isRelated ? 2.25 : 1;
 
       importance[i] = isSelected ? 3 : isRelated ? 2 : categoryBoost;
