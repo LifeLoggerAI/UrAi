@@ -213,6 +213,16 @@ export const generateWeeklyRecap = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const generateDailyInsights = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "generateDailyInsights");
+  optionalStringField(request.data as CallableRequestData, "dayId", 128);
+  logger.info("urai.function.gated", {functionName: "generateDailyInsights", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "generateDailyInsights is intentionally gated until daily source data, consent checks, insight safety, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
