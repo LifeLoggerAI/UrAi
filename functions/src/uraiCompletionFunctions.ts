@@ -111,6 +111,15 @@ export const cleanupExpiredExports = onCall({region: REGION}, async (request) =>
   );
 });
 
+export const rollupDailyMetrics = onCall({region: REGION}, async (request) => {
+  requireAdmin(request.auth, "rollupDailyMetrics");
+  logger.info("urai.function.gated", {functionName: "rollupDailyMetrics", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "rollupDailyMetrics is intentionally gated until metrics schemas and dry-run aggregation tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
