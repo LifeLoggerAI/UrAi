@@ -1,10 +1,10 @@
 # Deployment And Live Proof
 
 Generated: 2026-06-30T01:30:00-05:00
-Updated: 2026-06-30 after status-copy source fix
+Updated: 2026-06-30 after deploy workflow hardening
 Repo: LifeLoggerAI/UrAi
 Starting SHA: 409dda09c0381510ee95923a5851eade5e6733ea
-Latest source SHA observed in this pass: 58bbbadbd873bfd23c61de04bd58a59c2a6c6825
+Latest source SHA observed in this pass: bbf1f6f5d9beb6a72f56c808b83adda255082fc4
 
 ## Live domain checks
 
@@ -26,14 +26,26 @@ Latest source SHA observed in this pass: 58bbbadbd873bfd23c61de04bd58a59c2a6c682
 
 Source `src/app/status/page.tsx` was fixed in commit `7b14614d59c0f79ccf13f0f8347a19c69d0623ec` to say preview/demo status only and to avoid claiming full production monitoring, backend uptime, provider health, or private-service availability.
 
+Source `src/components/StatusGrid.tsx` was fixed in commit `333e6a3c8c468cce4a4947f02b50bdec90684564` to remove `Operational`, `Live service map`, and other unproven health language.
+
 Live `https://urai.app/status` still returned the old copy:
 
 - `Platform health`
 - `This dashboard reflects the current heartbeat...`
+- `Live service map`
+- `Operational`
 - `How we track uptime`
 - Firebase and narrator service monitoring language
 
 This proves the live site is stale relative to the latest source. The repo cannot be marked production-ready until the current source commit is deployed and live route smoke confirms the new preview-health copy.
+
+## Deploy workflow state
+
+`.github/workflows/deploy.yml` is configured to run on push to `main` and manual dispatch. It installs dependencies, runs release gates, builds, deploys Firebase Hosting live with `FIREBASE_SERVICE_ACCOUNT_URAI`, and verifies Firebase-hosted routes.
+
+Commit `bbf1f6f5d9beb6a72f56c808b83adda255082fc4` hardened the deploy workflow by adding `npm run smoke:linked-routes:live` against `https://urai.app` after the Firebase Hosting deploy. This means the next successful production deploy must verify the custom-domain linked routes and markers.
+
+The GitHub connector did not expose a successful workflow run or combined status for commit `bbf1f6f5d9beb6a72f56c808b83adda255082fc4`, and live `/status` remained stale after the push. Therefore publish/deploy is NOT VERIFIED.
 
 ## Firebase deployment proof
 
@@ -48,6 +60,18 @@ Rollback release: not captured.
 PARTIAL live proof: `/ground` parity improved and root/home/status respond, but deployment is not production-proven because `/status` is stale, deployed SHA is missing, release ID is missing, `/system` truth markers are unproven, rollback proof is missing, and monitoring proof is missing.
 
 ## Required external actions
+
+If GitHub Actions did not auto-run or failed because the Firebase secret is missing, run one of these paths:
+
+### GitHub Actions path
+
+1. Open Actions > `Deploy Firebase Production`.
+2. Run workflow on `main`.
+3. Confirm `FIREBASE_SERVICE_ACCOUNT_URAI` is configured.
+4. Confirm the new custom-domain linked route smoke step passes.
+5. Capture workflow run URL, Firebase release ID, and deployed SHA.
+
+### Firebase CLI path
 
 ```bash
 npm run preflight
