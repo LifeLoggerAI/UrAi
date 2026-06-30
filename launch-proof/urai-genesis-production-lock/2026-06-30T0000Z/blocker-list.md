@@ -18,11 +18,11 @@ Repo: LifeLoggerAI/UrAi
 
 ## P1 release blockers
 
-1. env.local.template sets `FIREBASE_PROJECT_ID=urai-42390883` while production hosting config uses `urai-4dc1d`; either correct this or clearly mark it as non-production/example.
-2. Verify `/api/waitlist` real persistence with Firebase Admin credentials in deployed environment.
-3. Smoke every internal route linked from the home dock and footer.
-4. Capture screenshots for primary surfaces.
-5. Update live status/system pages after deploy so public truth matches repo truth.
+1. Verify `/api/waitlist` real persistence with Firebase Admin credentials in deployed environment.
+2. Smoke every internal route linked from the home dock and footer.
+3. Capture screenshots for primary surfaces.
+4. Update live status/system pages after deploy so public truth matches repo truth.
+5. Confirm env.local.template, firebase.json, .firebaserc, registry, Firebase CLI target, and deploy logs all agree on `urai-4dc1d` before production deploy.
 
 ## P2 polish blockers
 
