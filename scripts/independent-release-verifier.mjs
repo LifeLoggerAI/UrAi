@@ -82,6 +82,7 @@ const firestoreDomains = [
 ];
 
 const requiredScripts = ['lint', 'check:types', 'test', 'test:unit', 'test:integration', 'test:e2e', 'test:rules', 'test:smoke', 'build', 'deploy:evidence'];
+const commandMaxBuffer = 1024 * 1024 * 50;
 const checks = [];
 
 function walk(dir, out = []) {
@@ -132,6 +133,14 @@ function hasFile(path) { return existsSync(join(root, path)); }
 function findText(pattern, paths) {
   const searchSpace = paths ? corpus.filter(({ file }) => paths.some(p => file.includes(p))) : corpus;
   return searchSpace.filter(({ text }) => pattern.test(text)).map(({ file }) => relative(root, file));
+}
+
+function commandEvidence(result) {
+  const output = `${result.stdout || ''}\n${result.stderr || ''}`.slice(-4000);
+  const meta = [`exit=${result.status ?? 'null'}`];
+  if (result.signal) meta.push(`signal=${result.signal}`);
+  if (result.error) meta.push(`error=${result.error.code || result.error.message}`);
+  return `${meta.join(' ')}\n${output}`.trim();
 }
 
 for (const report of requiredReports) {
@@ -216,8 +225,8 @@ if (packageJson?.scripts) {
 for (const command of commands) {
   if (process.env.URAI_VERIFIER_RUN_COMMANDS === '1') {
     const [bin, ...args] = command.split(' ');
-    const result = spawnSync(bin, args, { cwd: root, encoding: 'utf8', stdio: 'pipe' });
-    add(`Command passes: ${command}`, result.status === 0 ? 'pass' : 'fail', `${result.stdout}\n${result.stderr}`.slice(-2000), `Fix failing command: ${command}`);
+    const result = spawnSync(bin, args, { cwd: root, encoding: 'utf8', stdio: 'pipe', maxBuffer: commandMaxBuffer });
+    add(`Command passes: ${command}`, result.status === 0 ? 'pass' : 'fail', commandEvidence(result), `Fix failing command: ${command}`);
   } else {
     add(`Command declared, not executed in static mode: ${command}`, 'unverified', command, `Run URAI_VERIFIER_RUN_COMMANDS=1 npm run verify:release to execute ${command}.`);
   }
