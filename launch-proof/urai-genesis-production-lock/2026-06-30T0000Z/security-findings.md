@@ -5,48 +5,45 @@ Repo: LifeLoggerAI/UrAi
 
 ## Executive summary
 
-The public demo routes are generally honest and gated, and Firestore rules include owner/admin boundaries. The highest source-level security issue found in this continuation pass is the admin status API access pattern.
+The public demo routes are generally honest and gated, and Firestore rules include owner/admin boundaries. This continuation pass found and mitigated one source-level admin API risk: `/api/admin/status` no longer trusts a caller-supplied admin email header in production unless an explicit local/demo escape hatch is enabled.
 
-## Finding S1: `/api/admin/status` trusts caller-supplied admin email header
+## Finding S1: `/api/admin/status` previously trusted caller-supplied admin email header
 
-Severity: P0 before production admin use / P1 if kept demo-only and not linked publicly
+Severity before fix: P0 before production admin use / P1 if kept demo-only and not linked publicly
+Current status: mitigated in source, still requires tests and deployed smoke proof
 
 Source files:
 
 - `src/app/api/admin/status/route.ts`
 - `src/lib/admin/adminAccess.ts`
+- `env.local.template`
 
-Observed behavior:
+Original observed behavior:
 
-- `adminUserFromRequest(request)` returns `{ email: request.headers.get("x-urai-admin-email") }`.
-- `GET` passes that email into `requireAdminAccess`.
-- `requireAdminAccess` checks the supplied email against `URAI_ADMIN_EMAILS` or `NEXT_PUBLIC_URAI_FOUNDER_EMAILS`.
-- There is no verified Firebase ID token, session cookie, custom claim, signed request, or server-authenticated identity check in this source path.
+- `adminUserFromRequest(request)` returned `{ email: request.headers.get("x-urai-admin-email") }`.
+- `GET` passed that email into `requireAdminAccess`.
+- `requireAdminAccess` checked the supplied email against `URAI_ADMIN_EMAILS` or `NEXT_PUBLIC_URAI_FOUNDER_EMAILS`.
+- There was no verified Firebase ID token, session cookie, custom claim, signed request, or server-authenticated identity check in this source path.
 
-Risk:
+Risk before fix:
 
-If this API route is reachable publicly and an attacker knows or guesses a configured admin/founder email, the attacker could spoof `x-urai-admin-email` and receive admin status/config details. The endpoint currently returns feature flags and environment configuration booleans.
+If this API route were reachable publicly and an attacker knew or guessed a configured admin/founder email, the attacker could spoof `x-urai-admin-email` and receive admin status/config details. The endpoint did not mutate data, but it exposed internal status and confirmed configured capabilities.
 
-Current exposure impact:
+Source mitigation applied:
 
-The route does not appear to mutate data, but it exposes internal status and confirms configured capabilities. It must not be treated as production admin security.
+- Added `allowHeaderAdminStatus()`.
+- Header-based admin status is now allowed only when `URAI_ENABLE_HEADER_ADMIN_STATUS=1` or `NODE_ENV !== "production"`.
+- Production default ignores `x-urai-admin-email` and returns 403 unless a future verified-auth path is implemented.
+- Added `authMode` response field to show when the local/demo header gate is active.
+- Documented `URAI_ENABLE_HEADER_ADMIN_STATUS=0` in `env.local.template` with production warning.
 
-Required fix before production:
+Remaining required proof before production:
 
-1. Remove trust in `x-urai-admin-email` for production.
-2. Verify Firebase ID token or session cookie server-side through Firebase Admin.
-3. Require custom claim such as `admin: true` or a server-side admin allowlist after identity verification.
-4. Return 401 for missing/invalid auth and 403 for authenticated non-admin.
-5. Add tests proving spoofed headers fail.
-6. Add deployment smoke proving unauthorized public requests return 401/403.
-7. Keep admin routes hidden/gated until this passes.
-
-Safe interim mitigation:
-
-- Keep `/api/admin/status` undocumented for public users.
-- Do not link it from public pages.
-- Treat `/admin` as demo/gated only.
-- If possible, add an environment guard such as `URAI_ENABLE_HEADER_ADMIN_STATUS=1` for local/demo only, default off in production.
+1. Add automated tests proving spoofed `x-urai-admin-email` fails in production mode unless the explicit demo env gate is enabled.
+2. Add deployment smoke proving unauthorized public requests return 403.
+3. Replace demo header gate with verified Firebase ID token or session cookie before any production admin use.
+4. Require custom claim such as `admin: true` or server-side admin allowlist after identity verification.
+5. Keep admin routes hidden/gated until real auth passes.
 
 ## Finding S2: Public/private route claims depend on deployment parity
 
@@ -108,4 +105,4 @@ Required fix:
 
 ## Current security verdict
 
-Security posture is acceptable for a clearly-labeled public demo if private/admin/user-data behavior stays gated. It is not production-ready for admin, private account, provider AI, analytics, communications, jobs, or user-derived memory features until auth, rules, deployment, privacy, and monitoring evidence pass.
+Security posture is acceptable for a clearly-labeled public demo if private/admin/user-data behavior stays gated. The admin header spoof risk has been reduced in source, but production is still not ready for admin, private account, provider AI, analytics, communications, jobs, or user-derived memory features until auth, rules, deployment, privacy, monitoring, and smoke evidence pass.
