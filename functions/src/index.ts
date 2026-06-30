@@ -29,6 +29,7 @@ export {
   generateRitualSuggestion,
   generateWeeklyRecap,
   health,
+  ingestEvent,
   jobApplicationSubmit,
   marketplaceUnlock,
   notificationDispatch,
