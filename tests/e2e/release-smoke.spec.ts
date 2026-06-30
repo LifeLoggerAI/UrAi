@@ -54,7 +54,7 @@ test.describe("URAI current release smoke", () => {
     expect(html).toMatch(/Public-safe URAI constellation view/i);
     expect(html).toMatch(/public demo/i);
     expect(html).toMatch(/Sample data only/i);
-    expect(html).not.toMatch(/owner-only memory data/i);
+    expect(html).toMatch(/without exposing owner-only memory data/i);
     expect(html).not.toMatch(/private memory/i);
   });
 
