@@ -16,6 +16,7 @@ export {
   contactSubmit,
   dailyGenerateInsights,
   dataExportRequest,
+  deleteUserData,
   exportGC,
   exportWorker,
   health,
