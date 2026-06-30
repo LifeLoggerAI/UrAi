@@ -1,10 +1,10 @@
 # Deployment And Live Proof
 
 Generated: 2026-06-30T01:30:00-05:00
-Updated: 2026-06-30 after deploy workflow hardening
+Updated: 2026-06-30 after production evidence workflow hardening
 Repo: LifeLoggerAI/UrAi
 Starting SHA: 409dda09c0381510ee95923a5851eade5e6733ea
-Latest source SHA observed in this pass: bbf1f6f5d9beb6a72f56c808b83adda255082fc4
+Latest source SHA observed in this pass: 11334d84bd6985523bdbd8bd001efab4b72f1856
 
 ## Live domain checks
 
@@ -45,7 +45,9 @@ This proves the live site is stale relative to the latest source. The repo canno
 
 Commit `bbf1f6f5d9beb6a72f56c808b83adda255082fc4` hardened the deploy workflow by adding `npm run smoke:linked-routes:live` against `https://urai.app` after the Firebase Hosting deploy. This means the next successful production deploy must verify the custom-domain linked routes and markers.
 
-The GitHub connector did not expose a successful workflow run or combined status for commit `bbf1f6f5d9beb6a72f56c808b83adda255082fc4`, and live `/status` remained stale after the push. Therefore publish/deploy is NOT VERIFIED.
+Commit `11334d84bd6985523bdbd8bd001efab4b72f1856` hardened `.github/workflows/production-evidence.yml` so post-deploy evidence checks the custom domain too. It now requires `npm run smoke:linked-routes:live` and captures `https://urai.app/status`, failing unless the new preview-health and preview-service-map copy is live.
+
+The GitHub connector did not expose a successful workflow run or combined status for connector-created publish commits, and live `/status` remained stale after the push. Therefore publish/deploy is NOT VERIFIED.
 
 ## Firebase deployment proof
 
@@ -69,7 +71,8 @@ If GitHub Actions did not auto-run or failed because the Firebase secret is miss
 2. Run workflow on `main`.
 3. Confirm `FIREBASE_SERVICE_ACCOUNT_URAI` is configured.
 4. Confirm the new custom-domain linked route smoke step passes.
-5. Capture workflow run URL, Firebase release ID, and deployed SHA.
+5. Confirm `Production Evidence` runs after deploy or run it manually.
+6. Capture workflow run URL, Firebase release ID, deployed SHA, and evidence artifact.
 
 ### Firebase CLI path
 
