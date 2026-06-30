@@ -130,6 +130,19 @@ export const processExportJob = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const deleteUserData = onCall({region: REGION}, async (request) => {
+  const uid = requireAuth(request.auth, "deleteUserData");
+  const confirmation = stringField(request.data as CallableRequestData, "confirmation", 128);
+  if (confirmation !== "DELETE MY URAI DATA") {
+    throw new HttpsError("invalid-argument", "deleteUserData requires the exact confirmation phrase.");
+  }
+  logger.info("urai.function.gated", {functionName: "deleteUserData", uid});
+  throw new HttpsError(
+    "failed-precondition",
+    "deleteUserData is intentionally gated until deletion inventory, audit logging, retention exceptions, and restore tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
