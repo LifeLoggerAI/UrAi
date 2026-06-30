@@ -11,7 +11,7 @@ PARTIAL / NOT READY for public production launch.
 
 The repo is a real Next.js/Firebase URAI Genesis front-door app with a public demo surface, route implementations, Firebase hosting configuration, Firebase rules, deterministic companion API, waitlist API, XR capability-gated foundation, and strict production-lock documentation. It is not production-ready because the registry marks the canonical repo as demo-only and not launch eligible; deploy, rollback, monitoring, and privacy-gate evidence remain missing; local install/lint/typecheck/test/build commands were not executable from this connector-only audit; and live hosting shows route/deploy drift including a live /ground 404 despite source code existing for /ground.
 
-Readiness score: 62/100 source-side, 38/100 launch-side.
+Readiness score: 63/100 source-side, 38/100 launch-side.
 
 ## Repo identity and purpose
 
@@ -28,7 +28,7 @@ LifeLoggerAI/UrAi is the canonical public/demo product app for the URAI Genesis 
 - Source includes /dashboard, /login, and /signup gated pages.
 - Source includes /api/companion deterministic mocked narrator endpoint with safety boundaries.
 - Source includes /api/waitlist with validation, rate limit hook, dry-run mode, and Firebase Admin write path when configured.
-- Firebase hosting is configured for site urai-4dc1d, and .firebaserc points default/production to urai-4dc1d.
+- Firebase hosting is configured for site urai-4dc1d, .firebaserc points default/production to urai-4dc1d, and env.local.template now documents FIREBASE_PROJECT_ID=urai-4dc1d.
 - Firestore rules contain owner/admin boundaries for many user-owned/private collections and admin-only control collections.
 - Live https://urai.app redirects to /home and returns public-demo copy.
 
@@ -64,7 +64,6 @@ LifeLoggerAI/UrAi is the canonical public/demo product app for the URAI Genesis 
 - Live /ground returned 404 despite source route existing.
 - Registry marks LifeLoggerAI/UrAi launchMode demo-only and eligibleForLaunch false.
 - Prior final launch report records NO-GO, no staging deploy, no production deploy, no rollback proof, no monitoring evidence, no privacy gate pass, and /system live mismatch.
-- env.local.template has FIREBASE_PROJECT_ID=urai-42390883 while .firebaserc and registry point production to urai-4dc1d. This should be corrected or explicitly documented as non-production/example to avoid target confusion.
 
 ## Security/privacy risks
 
@@ -109,11 +108,10 @@ LifeLoggerAI/UrAi is the canonical public/demo product app for the URAI Genesis 
 
 ### P1
 
-1. Correct or clarify env.local.template FIREBASE_PROJECT_ID mismatch.
-2. Verify Firestore/Storage rules deployed and tested.
-3. Verify waitlist API persistence in the deployed environment.
-4. Add live URL smoke for every route linked from the home dock.
-5. Capture screenshots for root/home/system/life-map/ground/xr/privacy/waitlist/dashboard/login/signup.
+1. Verify Firestore/Storage rules deployed and tested.
+2. Verify waitlist API persistence in the deployed environment.
+3. Add live URL smoke for every route linked from the home dock.
+4. Capture screenshots for root/home/system/life-map/ground/xr/privacy/waitlist/dashboard/login/signup.
 
 ### P2
 
@@ -143,7 +141,7 @@ LifeLoggerAI/UrAi is the canonical public/demo product app for the URAI Genesis 
 
 ## Commits made in this pass
 
-This audit report file was added in launch-proof/urai-genesis-production-lock/2026-06-30T0000Z/.
+This audit report file was added in launch-proof/urai-genesis-production-lock/2026-06-30T0000Z/ and refreshed after env target evidence showed the Firebase project template now matches urai-4dc1d.
 
 ## Final verdict
 
