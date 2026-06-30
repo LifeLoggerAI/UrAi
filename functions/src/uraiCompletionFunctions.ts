@@ -120,6 +120,16 @@ export const rollupDailyMetrics = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const processExportJob = onCall({region: REGION}, async (request) => {
+  requireAdmin(request.auth, "processExportJob");
+  stringField(request.data as CallableRequestData, "exportId", 256);
+  logger.info("urai.function.gated", {functionName: "processExportJob", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "processExportJob is intentionally gated until export job storage, privacy audit logging, and dry-run tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
