@@ -94,6 +94,7 @@ export const storyOutline = makeUserCallable("storyOutline", (data) => optionalS
 export const storyAssemble = makeUserCallable("storyAssemble", (data) => stringField(data, "storyProjectId", 256));
 export const ttsRender = makeUserCallable("ttsRender", (data) => stringField(data, "storyAssetId", 256));
 export const purchaseWebhook = makeAdminCallable("purchaseWebhook", (data) => optionalStringField(data, "eventId", 256));
+export const syncEntitlements = makeUserCallable("syncEntitlements");
 export const marketplaceUnlock = makeUserCallable("marketplaceUnlock", (data) => stringField(data, "marketplaceItemId", 256));
 export const referralTrack = makeUserCallable("referralTrack", (data) => optionalStringField(data, "code", 128));
 export const dataExportRequest = makeUserCallable("dataExportRequest", (data) => optionalStringField(data, "reason", 500));
