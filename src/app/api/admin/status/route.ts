@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { requireAdminAccess } from "@/lib/admin/adminAccess";
 import { DEFAULT_LAUNCH_STATUS, getDefaultFeatureFlags } from "@/lib/admin/featureFlags";
 
+function allowHeaderAdminStatus() {
+  return process.env.URAI_ENABLE_HEADER_ADMIN_STATUS === "1" || process.env.NODE_ENV !== "production";
+}
+
 function adminUserFromRequest(request: Request) {
+  if (!allowHeaderAdminStatus()) return null;
   return { email: request.headers.get("x-urai-admin-email") };
 }
 
@@ -12,6 +17,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     ok: true,
     role: access.role,
+    authMode: allowHeaderAdminStatus() ? "header-demo-gate" : "disabled",
     launchStatus: DEFAULT_LAUNCH_STATUS,
     flags: getDefaultFeatureFlags().map(({ id, label, enabled, safetyCritical, updatedAt }) => ({ id, label, enabled, safetyCritical, updatedAt })),
     environment: {
