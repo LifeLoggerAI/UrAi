@@ -124,3 +124,16 @@ export const health = onRequest({region: REGION}, (_request, response) => {
     status: "healthy"
   });
 });
+
+export const systemStatusCheck = onCall({region: REGION}, async (request) => {
+  requireAdmin(request.auth, "systemStatusCheck");
+  logger.info("urai.function.accepted", {functionName: "systemStatusCheck", mode: "callable"});
+  return {
+    ok: true,
+    service: "urai-functions",
+    functionName: "systemStatusCheck",
+    status: "healthy",
+    scope: "operator",
+    generatedAt: new Date().toISOString(),
+  };
+});
