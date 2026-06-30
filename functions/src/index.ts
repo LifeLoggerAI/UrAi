@@ -22,6 +22,7 @@ export {
   exportUserData,
   exportWorker,
   generateConstellation,
+  generateDailyInsights,
   generateLifeMapStar,
   generateMoodForecast,
   generateRitualSuggestion,
