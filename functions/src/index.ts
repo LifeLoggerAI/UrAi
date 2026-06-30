@@ -13,6 +13,7 @@ export {
   accountDeletionRequest,
   adminAuditLog,
   cleanupExpiredExports,
+  completeRitual,
   contactSubmit,
   dailyGenerateInsights,
   dataExportRequest,
