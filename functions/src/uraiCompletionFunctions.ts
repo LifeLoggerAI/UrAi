@@ -102,6 +102,15 @@ export const accountDeletionRequest = makeUserCallable("accountDeletionRequest",
 export const adminAuditLog = makeAdminCallable("adminAuditLog", (data) => stringField(data, "action", 256));
 export const safetyEventCreate = makeUserCallable("safetyEventCreate", (data) => stringField(data, "safetyLevel", 64));
 
+export const cleanupExpiredExports = onCall({region: REGION}, async (request) => {
+  requireAdmin(request.auth, "cleanupExpiredExports");
+  logger.info("urai.function.gated", {functionName: "cleanupExpiredExports", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "cleanupExpiredExports is intentionally gated until export retention rules and dry-run tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
