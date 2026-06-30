@@ -1,9 +1,8 @@
-import Link from "next/link";
 import StatusGrid from "@/components/StatusGrid";
 
 export const metadata = {
   title: "Status | URAI",
-  description: "Live service health for the URAI platform.",
+  description: "Preview service status for the URAI public demo.",
 };
 
 export default function StatusPage() {
@@ -12,16 +11,16 @@ export default function StatusPage() {
       <div className="mx-auto max-w-5xl px-6 pb-24 pt-20 space-y-12">
         <header className="space-y-4 text-balance">
           <p className="text-sm uppercase tracking-[0.35em] text-white/50">
-            Platform health
+            Preview health
           </p>
           <h1 className="text-3xl font-semibold sm:text-4xl">
             URAI status &amp; reliability
           </h1>
           <p className="text-base leading-relaxed text-white/60">
-            This dashboard reflects the current heartbeat of the URAI experience —
-            from the web app to Firebase services. It updates automatically, and
-            you can always report anything strange via the feedback tools in the
-            footer.
+            This page reports the public demo posture for URAI. It does not claim
+            full production monitoring, backend uptime, provider health, or
+            private-service availability until deployment, rollback, and alerting
+            evidence is published.
           </p>
         </header>
 
@@ -29,21 +28,23 @@ export default function StatusPage() {
 
         <section className="rounded-2xl border border-white/10 bg-white/5 p-6 text-sm leading-relaxed text-white/70">
           <h2 className="mb-3 text-base font-semibold text-white">
-            How we track uptime
+            What this status page proves now
           </h2>
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <span className="text-white">Web app</span>: verifies the Next.js
-              build, CDN edge responses, and onboarding flow health.
+              <span className="text-white">Public routes</span>: the source
+              includes route and smoke-test coverage for the main public demo
+              surfaces; live route parity still needs release evidence.
             </li>
             <li>
-              <span className="text-white">Firebase</span>: watches Firestore,
-              Functions, and Storage connectivity used for demos, pilots, and
-              creator instances.
+              <span className="text-white">Firebase</span>: configuration points
+              at the intended project, but deployed rules, write persistence, and
+              release metadata must be proven before production claims.
             </li>
             <li>
-              <span className="text-white">Narrator services</span>: ensures the
-              realtime narration and recovery bloom generator are reachable.
+              <span className="text-white">Narrator and companion services</span>:
+              local/demo behavior and provider-capable source paths exist, but
+              deployed provider smoke and monitoring evidence are still required.
             </li>
           </ul>
           <p className="mt-4">
