@@ -18,6 +18,7 @@ export {
   dataExportRequest,
   deleteUserData,
   exportGC,
+  exportUserData,
   exportWorker,
   health,
   jobApplicationSubmit,
