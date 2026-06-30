@@ -22,6 +22,7 @@ export {
   jobApplicationSubmit,
   marketplaceUnlock,
   notificationDispatch,
+  processExportJob,
   purchaseWebhook,
   referralTrack,
   requestExport,
