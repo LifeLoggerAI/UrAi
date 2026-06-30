@@ -193,6 +193,16 @@ export const generateLifeMapStar = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const generateMoodForecast = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "generateMoodForecast");
+  optionalStringField(request.data as CallableRequestData, "window", 64);
+  logger.info("urai.function.gated", {functionName: "generateMoodForecast", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "generateMoodForecast is intentionally gated until mood data consent, safety copy, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
