@@ -1,6 +1,6 @@
 "use client";
 
-type ServiceState = "operational" | "degraded";
+type ServiceState = "source_present" | "preview_only";
 
 type ServiceStatus = {
   id: string;
@@ -10,12 +10,12 @@ type ServiceStatus = {
 };
 
 const STATUS_LABELS: Record<ServiceState, { bg: string; text: string; label: string }> = {
-  operational: {
-    bg: "bg-emerald-500/10 border-emerald-400/40",
-    text: "text-emerald-300",
-    label: "Operational",
+  source_present: {
+    bg: "bg-sky-500/10 border-sky-400/40",
+    text: "text-sky-300",
+    label: "Source present",
   },
-  degraded: {
+  preview_only: {
     bg: "bg-amber-500/10 border-amber-400/40",
     text: "text-amber-300",
     label: "Preview mode",
@@ -26,39 +26,43 @@ const SERVICES: ServiceStatus[] = [
   {
     id: "web-app",
     label: "URAI web app",
-    status: "operational",
-    message: "Public visual routes are live on urai.app.",
+    status: "source_present",
+    message:
+      "Public demo routes exist in source and must be smoke-tested after each deploy before production claims.",
   },
   {
     id: "life-map",
     label: "Life Map and mirror",
-    status: "operational",
-    message: "Life Map, replay, mirror, demo, privacy, and terms are available.",
+    status: "preview_only",
+    message:
+      "Life Map, replay, mirror, demo, privacy, and terms are preview surfaces until live route and release evidence is captured.",
   },
   {
     id: "preview",
     label: "Public preview",
-    status: "degraded",
-    message: "This launch is running as static pages while dynamic service wiring waits for the next backend pass.",
+    status: "preview_only",
+    message:
+      "This launch is a public preview while dynamic service wiring, persistence, monitoring, and rollback proof remain gated.",
   },
   {
     id: "private-actions",
     label: "Private actions",
-    status: "degraded",
-    message: "Write actions and live service calls remain off on the public preview surface.",
+    status: "preview_only",
+    message:
+      "Write actions, private account behavior, and provider-backed service calls remain off on the public preview surface.",
   },
 ];
 
 export default function StatusGrid() {
-  const updatedAt = "Static launch preview";
+  const updatedAt = "Static preview truth";
 
   return (
     <section className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/20 backdrop-blur">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-white">Live service map</h2>
+          <h2 className="text-lg font-semibold text-white">Preview service map</h2>
           <p className="text-sm text-white/50">
-            Static-safe launch heartbeat. No broken JSON feed on the public preview.
+            Static-safe launch posture. No uptime, backend, provider, or rollback claim is made here.
           </p>
         </div>
         <div className="text-xs text-white/40">Updated {updatedAt}</div>
