@@ -26,6 +26,7 @@ export {
   referralTrack,
   requestExport,
   rollupDaily,
+  rollupDailyMetrics,
   safetyEventCreate,
   storyAssemble,
   storyOutline,
