@@ -143,6 +143,16 @@ export const deleteUserData = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const exportUserData = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "exportUserData");
+  optionalStringField(request.data as CallableRequestData, "format", 64);
+  logger.info("urai.function.gated", {functionName: "exportUserData", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "exportUserData is intentionally gated until data inventory, file generation, secure delivery, expiry, and audit tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
