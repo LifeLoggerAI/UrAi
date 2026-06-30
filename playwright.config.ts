@@ -3,6 +3,10 @@ import { defineConfig, devices } from "@playwright/test";
 const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ?? "/tmp/urai-playwright-results";
 const webServerCommand = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? "npm run start";
 const shouldStartWebServer = !process.env.PLAYWRIGHT_BASE_URL;
+const chromiumExecutablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+const launchOptions = chromiumExecutablePath
+  ? { executablePath: chromiumExecutablePath }
+  : undefined;
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -17,6 +21,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: process.env.CI ? "on-first-retry" : "off",
     video: "off",
+    launchOptions,
   },
   webServer: shouldStartWebServer
     ? {
