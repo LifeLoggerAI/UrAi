@@ -12,6 +12,7 @@ export {renderStoryMovieMP4} from "./storyMovieRenderer";
 export {
   accountDeletionRequest,
   adminAuditLog,
+  cleanupExpiredExports,
   contactSubmit,
   dailyGenerateInsights,
   dataExportRequest,
