@@ -60,6 +60,11 @@ jobs:
             test "$status" = "200"
           done
 
+      - name: Verify custom-domain linked route parity
+        env:
+          URAI_LIVE_BASE_URL: https://urai.app
+        run: npm run smoke:linked-routes:live
+
       - name: Verify live Genesis XR AR contract
         env:
           URAI_LIVE_BASE_URL: https://urai-4dc1d.web.app
