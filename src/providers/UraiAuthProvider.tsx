@@ -266,16 +266,24 @@ export function UraiAuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async (options?: { clearLocal?: boolean }) => {
     setAuthLoading(true);
     setAuthError(null);
+    let signOutError: string | null = null;
     try {
-      if (profile?.userId && user) await createOrUpdateUserProfile(profile.userId, { accountStatus: "signed_out", cloudSyncEnabled: false });
+      if (profile?.userId && user) {
+        try {
+          await createOrUpdateUserProfile(profile.userId, { accountStatus: "signed_out", cloudSyncEnabled: false });
+        } catch {
+          signOutError = "Signed out locally. Cloud profile status will sync again later.";
+        }
+      }
       if (client.auth?.currentUser) await firebaseSignOut(client.auth);
+    } catch {
+      signOutError = "Signed out locally. Cloud sign-out needs another check when Firebase is reachable.";
+    } finally {
       setUser(null);
       if (options?.clearLocal) clearLocalIdentity();
       loadLocalProfile();
-    } catch {
-      setAuthError("Could not sign out right now. URAI is still safe on this device.");
-    } finally {
       setAuthLoading(false);
+      setAuthError(signOutError);
     }
   }, [client.auth, loadLocalProfile, profile?.userId, user]);
 
