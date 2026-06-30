@@ -129,7 +129,10 @@ function add(name, status, evidence = '', remediation = '') {
 }
 
 function hasFile(path) { return existsSync(join(root, path)); }
-function findText(pattern) { return corpus.filter(({ text }) => pattern.test(text)).map(({ file }) => relative(root, file)); }
+function findText(pattern, paths) {
+  const searchSpace = paths ? corpus.filter(({ file }) => paths.some(p => file.includes(p))) : corpus;
+  return searchSpace.filter(({ text }) => pattern.test(text)).map(({ file }) => relative(root, file));
+}
 
 for (const report of requiredReports) {
   add(`Required report exists: ${report}`, hasFile(report) || hasFile(`docs/${report}`) ? 'pass' : 'fail', hasFile(report) ? report : hasFile(`docs/${report}`) ? `docs/${report}` : '', `Create or update ${report}.`);
@@ -156,8 +159,9 @@ for (const route of canonicalRoutes) {
   add(`Canonical route implemented: ${route}`, candidates.some(hasFile) ? 'pass' : 'fail', candidates.find(hasFile) || '', `Add a real route for ${route} or document blocker.`);
 }
 
+const functionImplementationPaths = ['functions/src', 'functions/lib'];
 for (const fn of firebaseFunctions) {
-  const refs = findText(new RegExp(`\b${fn}\b`));
+  const refs = findText(new RegExp(`\\b${fn}\\b`), functionImplementationPaths);
   add(`Firebase function present/referenceable: ${fn}`, refs.length ? 'pass' : 'fail', refs.slice(0, 5).join(', '), `Implement/export Cloud Function '${fn}' or document why it is blocked.`);
 }
 
