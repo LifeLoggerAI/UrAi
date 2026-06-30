@@ -183,6 +183,16 @@ export const generateConstellation = onCall({region: REGION}, async (request) =>
   );
 });
 
+export const generateLifeMapStar = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "generateLifeMapStar");
+  optionalStringField(request.data as CallableRequestData, "sourceId", 256);
+  logger.info("urai.function.gated", {functionName: "generateLifeMapStar", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "generateLifeMapStar is intentionally gated until life map schema, consent checks, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
