@@ -1,20 +1,21 @@
 # Live Route Parity — URAI Genesis
 
 Audit timestamp: 2026-06-30T01:00:00-05:00
+Updated: 2026-06-30T01:25:00-05:00
 Repo: LifeLoggerAI/UrAi
 
-## Live route checks attempted
+## Live route checks
 
-| Live URL | Result in this pass | Evidence / limitation | Verdict |
+| Live URL | Result in this pass | Evidence | Verdict |
 | --- | --- | --- | --- |
-| `https://urai.app/` | Opened with web checker; redirected to `/home`; returned public demo content. | Page exposed Ground/Life Map/XR links and launch-safety copy. | Live root exists, demo-safe. |
-| `https://urai.app/home` | Direct open through the web checker was limited by tool URL-safety restrictions after root redirect. | Root redirect showed `/home` content. | Partial proof only. |
-| `https://urai.app/ground` | Direct live status not fully re-proven in this pass. | Source route exists; root page exposed Ground route link. Local container curl failed due DNS resolution limitation. | Needs external/current live smoke. |
-| `https://urai.app/system` | Direct live status not fully re-proven in this pass. | Source route exists and is registry-backed; direct checker was limited. | Needs external/current live smoke. |
-| `https://urai.app/status` | Direct live status not fully re-proven in this pass. | Source route exists. | Needs external/current live smoke. |
-| `https://urai.app/life-map` | Direct live status not fully re-proven in this pass. | Root page exposed Life Map link. | Needs external/current live smoke. |
-| `https://urai.app/xr` | Direct live status not fully re-proven in this pass. | Root page exposed XR support link and browser-safe WebXR copy. | Needs external/current live smoke. |
-| `https://urai.app/privacy-controls` | Direct live status not fully re-proven in this pass. | Root page linked privacy/safety concepts; prior pass said route loaded. | Needs external/current live smoke. |
+| `https://urai.app/` | Opened with web checker; redirected to `/home`; returned public demo content. | Page exposed Ground/Life Map/XR links and launch-safety copy. | PASS for public demo root. |
+| `https://urai.app/home` | Proven indirectly by root redirect to `/home`. | Root response content was home experience. | PASS for redirect/home shell. |
+| `https://urai.app/ground` | Opened through live root link; rendered Ground page. | Page title/content included `URAI Ground World`, `Your private world helps your real life`, workforce helpers, world zones, inspectable objects, and launch-safety copy. | PASS; prior 404 drift appears fixed live. |
+| `https://urai.app/status` | Opened through live root Status board link; rendered status page. | Page included `URAI status & reliability`, static-safe launch heartbeat, public preview mode, and private actions off. | PASS with copy caution. |
+| `https://urai.app/life-map` | Opened through live root Life Map link; rendered Life Map preview. | Page included `Life Map galaxy`, `12 stars awake`, and owner-gated Replay/Passport copy. | PASS for public demo route. |
+| `https://urai.app/xr` | Attempted through live root XR support link; web checker returned cache miss. | Root page says Enter VR is hidden because current browser/device does not report immersive-vr support. | NEEDS RETRY / not production proof. |
+| `https://urai.app/system` | Direct live status still not proven in this pass because the web checker did not expose a root link to `/system` and direct open was blocked by URL-safety constraints. | Source route exists and is registry-backed. | BLOCKER for READY until direct receipt captured. |
+| `https://urai.app/privacy-controls` | Not directly re-proven in this pass. | Source/prior proof indicate route exists; direct receipt still needed. | NEEDS RETRY. |
 
 ## Root live observations
 
@@ -27,18 +28,30 @@ The live root redirected to `/home` and displayed public-safe copy including:
 - WebXR entry hidden because the browser/device does not report immersive-vr support.
 - Launch safety copy says private account access, live sensing, generated private media, health inference, autonomous actions, and headset entry remain gated.
 
+## Ground live receipt
+
+`/ground` is no longer known-broken in this pass. It rendered the Ground page live with explicit launch-safety copy:
+
+> Ground is a public, sample-data world preview. It does not claim autonomous action, passive sensing, medical inference, or private account access. It proves the route and product shape are live.
+
+## Status live receipt
+
+`/status` rendered live and included static preview language:
+
+- Static-safe launch heartbeat.
+- Public preview mode.
+- Write actions and live service calls remain off on the public preview surface.
+
+This is directionally safe, but `/status` also includes language about Firebase/Functions/Storage/narrator monitoring. That copy remains a P1 caution until real monitoring receipts exist.
+
 ## Drift analysis
 
-If `/ground` still returns 404 in an external/live smoke test, this is live/source route drift. Source contains `src/app/ground/page.tsx`, so the 404 would most likely come from stale deployment, wrong Firebase hosting target, wrong App Hosting bundle, build output mismatch, or a deployed bundle that predates the Ground route.
+The previous `/ground` 404 issue appears resolved on the current live surface. The remaining critical route-parity blocker is `/system`: source contains `src/app/system/page.tsx`, but direct live truth-marker proof still needs an external/browser/curl receipt.
 
-If `/system` does not show the registry truth markers live, this is also live/source route drift. Source contains `src/app/system/page.tsx`, which explicitly renders registry-generated status, canonical app, registry shape, launch posture, deferred systems, external surfaces, and legacy/sandbox warnings.
+## Required acceptance criteria before READY
 
-## Required acceptance criteria
-
-Before READY:
-
-1. `curl -I https://urai.app/ground` returns 200 or an intentional non-404 route behavior.
-2. Browser/smoke screenshot of `/ground` shows `URAI Ground World` and launch safety copy.
-3. `curl -I https://urai.app/system` returns 200.
-4. Browser/smoke screenshot of `/system` shows `URAI release truth, locked before launch`, `Registry shape`, and blocked/deferred system sections.
-5. Firebase release/deploy evidence maps the live site to the audited commit SHA.
+1. Browser/smoke screenshot of `/ground` shows `URAI Ground World` and launch safety copy. Current text receipt is positive; screenshot still helpful.
+2. `https://urai.app/system` returns 200.
+3. Browser/smoke screenshot of `/system` shows `URAI release truth, locked before launch`, `Registry shape`, and blocked/deferred system sections.
+4. Firebase release/deploy evidence maps the live site to the audited commit SHA.
+5. Current CI/local validation logs pass for the latest source commit.
