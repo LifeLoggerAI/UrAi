@@ -11,6 +11,8 @@ The normal launch gate must run these checks before production deployment can be
 - `npm run smoke:life-map-quest`
 - `npm run smoke:life-map-quest-proof`
 - `npm run smoke:life-map-quest-live-proof`
+- `npm run launch:check`
+- `npm run deploy`
 
 ## Required deploy path
 
