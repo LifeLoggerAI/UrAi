@@ -223,6 +223,16 @@ export const generateDailyInsights = onCall({region: REGION}, async (request) =>
   );
 });
 
+export const enrichEvent = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "enrichEvent");
+  stringField(request.data as CallableRequestData, "eventId", 256);
+  logger.info("urai.function.gated", {functionName: "enrichEvent", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "enrichEvent is intentionally gated until event schema, consent checks, enrichment safety, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
