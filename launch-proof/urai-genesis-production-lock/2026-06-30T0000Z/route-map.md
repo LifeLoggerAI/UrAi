@@ -17,6 +17,12 @@ Repo: LifeLoggerAI/UrAi
 | `/signup` | `src/app/signup/page.tsx` | gated | Waitlist-first signup gate. |
 | `/api/waitlist` | `src/app/api/waitlist/route.ts` | partial | Validates email, has rate-limit hook, dry-run mode, and Firebase Admin write when configured. |
 | `/api/companion` | `src/app/api/companion/route.ts` | mocked/demo | Deterministic companion reply, not real provider-backed AI. |
+| `/api/companion/respond` | `src/app/api/companion/respond/route.ts` | provider-capable / not live-proven | Can call OpenAI through `generateAIReply` when server env is configured; falls back locally. Requires deployed provider proof before AI launch claim. |
+| `/api/admin/status` | `src/app/api/admin/status/route.ts` | source route listed by verifier / not inspected in this route-map pass | Must remain admin/operator-safe and smoke-tested before production use. |
+
+## Existing route verifier inventory
+
+`scripts/verify-routes.mjs` currently checks 21 critical routes, including `/`, `/home`, `/launch`, `/demo`, `/early-access`, `/login`, `/life-map`, `/mirror`, `/orb-chat`, `/ground`, `/sky`, `/horizon`, `/passport`, `/status`, `/xr`, `/u/adamclamp`, `/admin`, `/api/companion/respond`, `/api/waitlist`, and `/api/admin/status`.
 
 ## Live routes checked through web/browser fetch in this pass
 
@@ -36,3 +42,4 @@ Repo: LifeLoggerAI/UrAi
 3. Smoke every internal href on the deployed domain.
 4. Block launch if any linked source route returns 404/500/redirect loop.
 5. Confirm `/system` live HTML contains registry markers: `URAI release truth`, `Production lock`, `launch mode`, `demo-only`, and `launch-eligible`.
+6. Confirm `/api/companion/respond` provider path only claims live AI after safe deployed provider smoke evidence exists.
