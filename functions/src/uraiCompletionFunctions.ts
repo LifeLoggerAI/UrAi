@@ -117,11 +117,10 @@ export const waitlistSubmit = makeUserCallable("waitlistSubmit", (data) => {
   return optionalStringField(data, "source", 256);
 });
 
-export const healthCheck = onRequest({region: REGION}, (_request, response) => {
+export const health = onRequest({region: REGION}, (_request, response) => {
   response.status(200).json({
     ok: true,
     service: "urai-functions",
-    status: "healthy",
-    generatedAt: new Date().toISOString(),
+    status: "healthy"
   });
 });

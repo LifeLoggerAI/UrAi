@@ -17,7 +17,7 @@ export {
   dataExportRequest,
   exportGC,
   exportWorker,
-  healthCheck,
+  health,
   jobApplicationSubmit,
   marketplaceUnlock,
   notificationDispatch,
