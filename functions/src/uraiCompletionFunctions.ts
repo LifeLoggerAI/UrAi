@@ -233,6 +233,17 @@ export const enrichEvent = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const ingestEvent = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "ingestEvent");
+  stringField(request.data as CallableRequestData, "eventType", 128);
+  optionalStringField(request.data as CallableRequestData, "clientEventId", 256);
+  logger.info("urai.function.gated", {functionName: "ingestEvent", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "ingestEvent is intentionally gated until event schema, consent checks, write path, audit logging, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
