@@ -31,20 +31,34 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
-      - name: Verify deployed production routes and AR/XR assets
+      - name: Verify deployed Firebase routes and AR/XR assets
         env:
           BASE_URL: https://urai-4dc1d.web.app
         run: |
           set -euo pipefail
           mkdir -p test-results/production-evidence
           routes=("/" "/home" "/xr" "/life-map" "/assets/ar/urai-genesis-orb.gltf" "/ochat" "/u/adamclamp" "/api/status")
-          : > test-results/production-evidence/live-route-checks.txt
+          : > test-results/production-evidence/firebase-live-route-checks.txt
           for route in "${routes[@]}"; do
             url="${BASE_URL}${route}"
             status=$(curl -L -s -o /tmp/urai-route-body -w "%{http_code}" "$url")
-            echo "$status $url" | tee -a test-results/production-evidence/live-route-checks.txt
+            echo "$status $url" | tee -a test-results/production-evidence/firebase-live-route-checks.txt
             test "$status" = "200"
           done
+
+      - name: Verify custom-domain linked route markers
+        env:
+          URAI_LIVE_BASE_URL: https://urai.app
+        run: npm run smoke:linked-routes:live
+
+      - name: Capture custom-domain status copy
+        run: |
+          set -euo pipefail
+          mkdir -p test-results/production-evidence
+          curl -L -s https://urai.app/status > test-results/production-evidence/urai-app-status.html
+          grep -q "Preview health" test-results/production-evidence/urai-app-status.html
+          grep -q "Preview service map" test-results/production-evidence/urai-app-status.html
+          grep -q "No uptime, backend, provider, or rollback claim is made here" test-results/production-evidence/urai-app-status.html
 
       - name: Run Life Map Quest live URL smoke
         env:
