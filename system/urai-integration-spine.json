@@ -1,0 +1,246 @@
+{
+  "generatedAt": "2026-06-29T00:00:00-05:00",
+  "canonicalProductRepo": "LifeLoggerAI/UrAi",
+  "purpose": "Single source of truth for moving the URAI ecosystem from static/demo surfaces to production-grade connected systems without overclaiming.",
+  "rules": [
+    "LifeLoggerAI/UrAi is the canonical product spine.",
+    "No external repo may be called production until deploy, smoke, rollback, monitoring, and privacy evidence are recorded.",
+    "Sensitive systems must depend on LifeLoggerAI/urai-privacy before V1 use.",
+    "Roadmap-only systems may be visible only as honest gated surfaces, never as live claims.",
+    "All launch gates require evidence, not vibes."
+  ],
+  "spineRepos": [
+    {
+      "name": "LifeLoggerAI/UrAi",
+      "tier": "P0",
+      "role": "canonical public product and integration shell",
+      "launchMode": "demo-only",
+      "canUseInV1": true,
+      "requiresPrivacyGate": true,
+      "connects": ["urai-staging", "urai-privacy", "urai-admin", "urai-jobs", "urai-content", "urai-spatial"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-privacy",
+      "tier": "P0",
+      "role": "privacy, consent, export, delete, retention, legal release gate",
+      "launchMode": "blocked",
+      "canUseInV1": true,
+      "requiresPrivacyGate": false,
+      "connects": ["UrAi", "urai-admin", "urai-jobs", "urai-analytics", "urai-communications", "urai-storytime"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-staging",
+      "tier": "P0",
+      "role": "isolated release-candidate proof environment",
+      "launchMode": "staging-only",
+      "canUseInV1": true,
+      "requiresPrivacyGate": true,
+      "connects": ["UrAi", "urai-admin", "urai-jobs"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-admin",
+      "tier": "P1",
+      "role": "operator control plane and audit surface",
+      "launchMode": "blocked",
+      "canUseInV1": true,
+      "requiresPrivacyGate": true,
+      "connects": ["urai-jobs", "urai-privacy", "UrAi"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-jobs",
+      "tier": "P1",
+      "role": "async execution, retry, idempotency, scheduled work",
+      "launchMode": "staging-only",
+      "canUseInV1": true,
+      "requiresPrivacyGate": true,
+      "connects": ["urai-admin", "urai-privacy", "urai-content", "asset-factory"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-content",
+      "tier": "P1",
+      "role": "canonical content templates and output definitions",
+      "launchMode": "demo-only",
+      "canUseInV1": true,
+      "requiresPrivacyGate": true,
+      "connects": ["UrAi", "urai-jobs", "urai-storytime", "asset-factory"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-spatial",
+      "tier": "P2",
+      "role": "spatial/Life Map feature source to port into canonical app after privacy proof",
+      "launchMode": "roadmap-only",
+      "canUseInV1": false,
+      "requiresPrivacyGate": true,
+      "connects": ["UrAi", "urai-content", "urai-privacy"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-analytics",
+      "tier": "P2",
+      "role": "event ingestion and aggregate insight, disabled until privacy proof",
+      "launchMode": "blocked",
+      "canUseInV1": false,
+      "requiresPrivacyGate": true,
+      "connects": ["UrAi", "urai-privacy", "urai-admin"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-communications",
+      "tier": "P2",
+      "role": "opt-in outbound/inbound messaging and notification layer",
+      "launchMode": "blocked",
+      "canUseInV1": false,
+      "requiresPrivacyGate": true,
+      "connects": ["urai-privacy", "urai-admin", "urai-jobs"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-storytime",
+      "tier": "P3",
+      "role": "narrative/session engine, blocked until safety and privacy proof",
+      "launchMode": "blocked",
+      "canUseInV1": false,
+      "requiresPrivacyGate": true,
+      "connects": ["urai-content", "urai-jobs", "asset-factory", "urai-privacy"]
+    },
+    {
+      "name": "LifeLoggerAI/urai-marketing",
+      "tier": "P3",
+      "role": "external public marketing/waitlist surface",
+      "launchMode": "demo-only",
+      "canUseInV1": false,
+      "requiresPrivacyGate": false,
+      "connects": ["UrAi"]
+    }
+  ],
+  "launchGates": [
+    {
+      "id": "P0-CANONICAL-BUILD",
+      "ownerRepo": "LifeLoggerAI/UrAi",
+      "requiredFor": "public launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "npm ci succeeds on Node 20",
+        "npm run preflight succeeds",
+        "npm run launch:check succeeds",
+        "production deployment SHA is recorded"
+      ]
+    },
+    {
+      "id": "P0-PRIVACY-FLOWS",
+      "ownerRepo": "LifeLoggerAI/urai-privacy",
+      "requiredFor": "any authenticated/private-data launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "consent categories are versioned and auditable",
+        "export flow produces a user-owned archive",
+        "delete flow purges Firestore and Storage paths for the requesting user",
+        "admin access is audited",
+        "legal signoff date and policy version are recorded"
+      ]
+    },
+    {
+      "id": "P0-STAGING-PARITY",
+      "ownerRepo": "LifeLoggerAI/urai-staging",
+      "requiredFor": "release candidate approval",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "staging deploy uses isolated Firebase/project targets",
+        "staging smoke covers root, health, auth, privacy, admin, and jobs routes",
+        "release candidate SHA is recorded",
+        "rollback SHA is recorded"
+      ]
+    },
+    {
+      "id": "P1-ADMIN-BOOTSTRAP",
+      "ownerRepo": "LifeLoggerAI/urai-admin",
+      "requiredFor": "operator launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "superadmin bootstrap is documented and proven",
+        "admin URL returns 200 for authorized users and rejects unauthorized users",
+        "operator actions write audit records",
+        "monitoring and rollback evidence are recorded"
+      ]
+    },
+    {
+      "id": "P1-JOBS-RUNTIME",
+      "ownerRepo": "LifeLoggerAI/urai-jobs",
+      "requiredFor": "async execution launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "a real job can be submitted, processed, retried, and completed",
+        "idempotency key prevents duplicate execution",
+        "failed job path is visible in admin",
+        "monitoring alert fires on forced failure"
+      ]
+    },
+    {
+      "id": "P1-CONTENT-SAFE-SOURCE",
+      "ownerRepo": "LifeLoggerAI/urai-content",
+      "requiredFor": "content layer consumption",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "demo content is separated from private/user content",
+        "provider configuration is recorded without secrets",
+        "exports/downloads are privacy gated",
+        "content contracts are consumed by canonical app or jobs layer"
+      ]
+    },
+    {
+      "id": "P2-SPATIAL-PORT",
+      "ownerRepo": "LifeLoggerAI/urai-spatial",
+      "requiredFor": "Life Map / XR expansion",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "spatial branch/source is ported into LifeLoggerAI/UrAi or documented as deferred",
+        "desktop/mobile fallbacks are intact",
+        "WebXR entry is shown only after real immersive-vr support detection",
+        "headset proof is recorded before any VR claim"
+      ]
+    },
+    {
+      "id": "P2-ANALYTICS-PRIVACY",
+      "ownerRepo": "LifeLoggerAI/urai-analytics",
+      "requiredFor": "event and insight launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "event taxonomy is approved",
+        "PII and sensitive signals are excluded or explicitly consented",
+        "durable storage and dashboard proof are recorded",
+        "delete/export implications are documented and tested"
+      ]
+    },
+    {
+      "id": "P2-COMMS-OPT-IN",
+      "ownerRepo": "LifeLoggerAI/urai-communications",
+      "requiredFor": "outbound messaging launch",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "provider staging proof is recorded",
+        "user opt-in and opt-out are enforced",
+        "templates are versioned",
+        "admin send path is audited"
+      ]
+    },
+    {
+      "id": "P3-PUBLIC-SURFACES",
+      "ownerRepo": "LifeLoggerAI/urai-marketing",
+      "requiredFor": "external launch support",
+      "status": "blocked",
+      "evidence": [],
+      "acceptanceCriteria": [
+        "marketing surface matches current product truth",
+        "waitlist/contact form has privacy notice",
+        "no unproven production, VR, AI, health, or automation claims remain",
+        "rollback and monitoring evidence are recorded if called production"
+      ]
+    }
+  ]
+}
