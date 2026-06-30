@@ -21,6 +21,7 @@ export {
   exportGC,
   exportUserData,
   exportWorker,
+  generateConstellation,
   generateRitualSuggestion,
   health,
   jobApplicationSubmit,
