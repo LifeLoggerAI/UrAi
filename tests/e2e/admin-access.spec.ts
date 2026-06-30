@@ -17,3 +17,12 @@ test("admin API foundation is not public", async ({ request }) => {
   const csv = await request.get("/api/admin/waitlist/export");
   expect(csv.status()).toBe(403);
 });
+
+test("admin status rejects spoofed admin email header by default", async ({ request }) => {
+  const status = await request.get("/api/admin/status", {
+    headers: {
+      "x-urai-admin-email": "founder@example.com",
+    },
+  });
+  expect(status.status()).toBe(403);
+});
