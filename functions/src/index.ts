@@ -18,6 +18,7 @@ export {
   dailyGenerateInsights,
   dataExportRequest,
   deleteUserData,
+  enrichEvent,
   exportGC,
   exportUserData,
   exportWorker,
