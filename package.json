@@ -38,6 +38,8 @@
     "check:production-lock": "node scripts/check-production-lock.mjs",
     "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "smoke:genesis-xr-ar-live": "node scripts/check-genesis-xr-ar-live-url.mjs",
+    "smoke:linked-routes": "node scripts/smoke-linked-routes.mjs",
+    "smoke:linked-routes:live": "URAI_LIVE_BASE_URL=https://urai.app node scripts/smoke-linked-routes.mjs",
     "smoke:production": "node scripts/smoke-production-targets.mjs",
     "smoke:life-map-quest": "node scripts/check-life-map-quest-interaction.mjs",
     "smoke:life-map-quest-proof": "node scripts/check-life-map-quest-proof-manifest.mjs",
