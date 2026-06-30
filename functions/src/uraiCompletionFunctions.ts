@@ -203,6 +203,16 @@ export const generateMoodForecast = onCall({region: REGION}, async (request) => 
   );
 });
 
+export const generateWeeklyRecap = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "generateWeeklyRecap");
+  optionalStringField(request.data as CallableRequestData, "weekId", 128);
+  logger.info("urai.function.gated", {functionName: "generateWeeklyRecap", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "generateWeeklyRecap is intentionally gated until weekly source data, consent checks, summary safety, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
