@@ -25,6 +25,7 @@ export {
   generateLifeMapStar,
   generateMoodForecast,
   generateRitualSuggestion,
+  generateWeeklyRecap,
   health,
   jobApplicationSubmit,
   marketplaceUnlock,
