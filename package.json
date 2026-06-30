@@ -35,6 +35,7 @@
     "check:firebase:staging": "URAI_EXPECTED_FIREBASE_PROJECT=urai-staging URAI_EXPECTED_FIREBASE_SITE=urai-staging node scripts/check-firebase-target.mjs --config firebase.staging.json",
     "check:clean-tree": "node scripts/check-clean-working-tree.mjs",
     "check:system-registry": "node scripts/check-system-registry.mjs",
+    "check:system-of-systems": "node scripts/check-system-of-systems-readiness.mjs",
     "check:production-lock": "node scripts/check-production-lock.mjs",
     "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "smoke:genesis-xr-ar-live": "node scripts/check-genesis-xr-ar-live-url.mjs",
