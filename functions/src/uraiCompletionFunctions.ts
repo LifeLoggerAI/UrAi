@@ -163,6 +163,16 @@ export const completeRitual = onCall({region: REGION}, async (request) => {
   );
 });
 
+export const generateRitualSuggestion = onCall({region: REGION}, async (request) => {
+  requireAuth(request.auth, "generateRitualSuggestion");
+  optionalStringField(request.data as CallableRequestData, "contextId", 256);
+  logger.info("urai.function.gated", {functionName: "generateRitualSuggestion", mode: "callable"});
+  throw new HttpsError(
+    "failed-precondition",
+    "generateRitualSuggestion is intentionally gated until consent checks, prompt safety, persistence, and replay tests are production-verified."
+  );
+});
+
 export const jobApplicationSubmit = makeUserCallable("jobApplicationSubmit", (data) => {
   stringField(data, "jobId", 256);
   stringField(data, "applicantEmail", 320);
