@@ -28,6 +28,7 @@ export {
   safetyEventCreate,
   storyAssemble,
   storyOutline,
+  syncEntitlements,
   systemStatusCheck,
   ttsRender,
   waitlistSubmit,
