@@ -4,15 +4,23 @@ const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ?? "/tmp/urai-playwright-res
 const webServerCommand = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND ?? "npm run start";
 const shouldStartWebServer = !process.env.PLAYWRIGHT_BASE_URL;
 const chromiumExecutablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+const constrainedChromiumArgs = [
+  "--disable-dev-shm-usage",
+  "--disable-gpu",
+  "--disable-software-rasterizer",
+  "--no-sandbox",
+  "--no-zygote",
+];
 const launchOptions = chromiumExecutablePath
-  ? { executablePath: chromiumExecutablePath }
+  ? { executablePath: chromiumExecutablePath, args: constrainedChromiumArgs }
   : undefined;
 
 export default defineConfig({
   testDir: "./tests/e2e",
   outputDir,
-  timeout: 30_000,
-  fullyParallel: true,
+  timeout: 45_000,
+  fullyParallel: false,
+  workers: process.env.PLAYWRIGHT_WORKERS ? Number(process.env.PLAYWRIGHT_WORKERS) : 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
