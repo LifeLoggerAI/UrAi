@@ -1,22 +1,34 @@
-name: Deploy Firebase Production
+name: Legacy UrAi Firebase Deploy (Manual Override Only)
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      legacy_override:
+        description: Type DEPLOY_LEGACY_URAI to acknowledge this repository shares the canonical production target
+        required: true
+        type: string
 
 permissions:
   contents: read
   checks: write
   pull-requests: write
 
+concurrency:
+  group: legacy-urai-production-deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
+    if: ${{ inputs.legacy_override == 'DEPLOY_LEGACY_URAI' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
+      - name: Display legacy-target warning
+        run: |
+          echo "::warning::This legacy repository targets Firebase project/site urai-4dc1d, which is also used by the canonical urai-spatial application."
+          echo "::warning::Do not continue unless an intentional rollback or migration has been approved."
+
       - uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -25,8 +37,8 @@ jobs:
           node-version: '20'
           cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies reproducibly
+        run: npm ci
 
       - name: Verify release gates
         run: |
@@ -39,7 +51,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to Firebase Hosting live
+      - name: Deploy legacy app to shared Firebase Hosting live target
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
