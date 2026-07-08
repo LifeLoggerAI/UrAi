@@ -1,3 +1,4 @@
+import { AssetFactoryRoutePanel } from "@/components/urai/assets/AssetFactoryRoutePanel";
 import SpatialLifeMap from "@/components/spatial-life-map/SpatialLifeMap";
 
 export const metadata = {
@@ -6,5 +7,10 @@ export const metadata = {
 };
 
 export default function FocusPage() {
-  return <SpatialLifeMap initialMode="focus" />;
+  return (
+    <>
+      <SpatialLifeMap initialMode="focus" />
+      <AssetFactoryRoutePanel route="/focus" title="Focus Asset Factory" />
+    </>
+  );
 }
