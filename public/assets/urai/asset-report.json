@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-07-07T00:00:00.000Z",
+  "manifest_version": "0.1.0",
+  "total_assets": 12,
+  "ready_assets": 0,
+  "placeholder_assets": 12,
+  "missing_assets": 0,
+  "launch_critical_missing_assets": 0,
+  "errors": [],
+  "next_assets_to_generate": [
+    { "asset_id": "urai_world_home_core_001", "name": "URAI Home World Core Environment", "route": "/", "recommended_reason": "First spend bucket. Needs navigable terrain, sky framing, branded hero composition." },
+    { "asset_id": "urai_world_ground_terrain_001", "name": "Walkable Ground Terrain", "route": "/ground", "recommended_reason": "Must feel physically reachable from Home, not a separate page." },
+    { "asset_id": "urai_world_sky_lifemap_001", "name": "Galaxy / Life Map Sky Dome", "route": "/life-map", "recommended_reason": "Must read as looking up into the life-map sky." },
+    { "asset_id": "urai_world_portals_core_001", "name": "Portal System: Ground, Life Map, Focus, Replay", "route": "/", "recommended_reason": "Portal interaction must feel like spatial travel, not a flat button." },
+    { "asset_id": "urai_lifemap_memory_star_001", "name": "Memory Star Node Model", "route": "/life-map", "recommended_reason": "Needs hover, tap, selected, and opened states." },
+    { "asset_id": "urai_focus_star_entry_tunnel_001", "name": "Focus Star-Entry Tunnel", "route": "/focus", "recommended_reason": "Must connect from selected star to memory chamber." },
+    { "asset_id": "urai_replay_film_object_001", "name": "Replay Film Object", "route": "/replay", "recommended_reason": "Should feel like opening a memory film, not pressing play on a normal page." }
+  ],
+  "recommended_spend_order": [
+    "1. Core world kit: Home world, Ground terrain, sky dome, portals.",
+    "2. Interaction kit: memory stars, hover/tap FX, focus tunnel, particles.",
+    "3. Cinematic kit: replay film object, memory chamber, loading world, passport/status room.",
+    "4. Polish variants: upgraded materials, biomes, avatars, room props, texture replacements."
+  ]
+}
