@@ -1,0 +1,67 @@
+{
+  "version": "0.1.0",
+  "updated": "2026-07-07",
+  "purpose": "Fallback references for launch-critical URAI spatial assets. These are placeholder records, not final models.",
+  "placeholders": {
+    "urai_world_home_core_001": {
+      "type": "procedural-reference",
+      "route": "/",
+      "visual_intent": "Premium spatial threshold world with galaxy above, walkable Ground below, portal affordances, and mobile-safe hero composition."
+    },
+    "urai_world_ground_terrain_001": {
+      "type": "procedural-reference",
+      "route": "/ground",
+      "visual_intent": "Reachable terrain surface below Home with real-life world staging, helper zones, and cinematic depth."
+    },
+    "urai_world_sky_lifemap_001": {
+      "type": "procedural-reference",
+      "route": "/life-map",
+      "visual_intent": "Deep galaxy sky dome with memory stars, constellation depth, and upward-looking navigation."
+    },
+    "urai_world_portals_core_001": {
+      "type": "procedural-reference",
+      "route": "/",
+      "visual_intent": "Reusable route portals that feel like world travel instead of buttons."
+    },
+    "urai_lifemap_memory_star_001": {
+      "type": "procedural-reference",
+      "route": "/life-map",
+      "visual_intent": "Selectable memory star that opens into Focus and Replay."
+    },
+    "urai_lifemap_star_feedback_fx_001": {
+      "type": "procedural-config",
+      "route": "/life-map",
+      "visual_intent": "Hover/tap/selected star glow, pulse, label reveal, and camera target feedback."
+    },
+    "urai_focus_star_entry_tunnel_001": {
+      "type": "procedural-reference",
+      "route": "/focus",
+      "visual_intent": "Camera fly-in tunnel from selected star into memory chamber."
+    },
+    "urai_focus_memory_chamber_001": {
+      "type": "procedural-reference",
+      "route": "/focus",
+      "visual_intent": "Interior chamber inside a memory star."
+    },
+    "urai_replay_film_object_001": {
+      "type": "procedural-reference",
+      "route": "/replay",
+      "visual_intent": "Spatial memory-film object inside the star world."
+    },
+    "urai_ui_cinematic_loading_001": {
+      "type": "procedural-config",
+      "route": "/",
+      "visual_intent": "Cinematic branded loading state with no blank/generic frame."
+    },
+    "urai_ui_passport_status_room_001": {
+      "type": "procedural-reference",
+      "route": "/passport",
+      "visual_intent": "Passport and Status as world-layer rooms/control surfaces."
+    },
+    "urai_particles_light_trails_001": {
+      "type": "procedural-config",
+      "route": "/life-map",
+      "visual_intent": "Reusable light trails connecting stars, portals, focus fly-ins, and replay motion."
+    }
+  }
+}
