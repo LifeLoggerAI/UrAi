@@ -1,5 +1,3 @@
-"use client";
-
 import { AssetFactoryRoutePanel } from "@/components/urai/assets/AssetFactoryRoutePanel";
 import { NewHomeScene } from "@/components/urai/home/NewHomeScene";
 
