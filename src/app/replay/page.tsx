@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AssetFactoryRoutePanel } from "@/components/urai/assets/AssetFactoryRoutePanel";
 
 export const metadata = {
   title: "URAI Replay Preview",
@@ -111,6 +112,8 @@ export default function ReplayPage() {
           </ol>
         </div>
       </section>
+
+      <AssetFactoryRoutePanel route="/replay" title="Replay Asset Factory" />
     </main>
   );
 }
