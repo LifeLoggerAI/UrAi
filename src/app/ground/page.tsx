@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AssetFactoryRoutePanel } from "@/components/urai/assets/AssetFactoryRoutePanel";
 
 export const metadata = {
   title: "URAI Ground World",
@@ -144,6 +145,8 @@ export default function GroundPage() {
           </section>
         </div>
       </section>
+
+      <AssetFactoryRoutePanel route="/ground" title="Ground Asset Factory" />
 
       <section className="relative z-20 mx-auto grid max-w-7xl gap-4 px-5 pb-10 md:grid-cols-[0.9fr_1.1fr] md:px-8">
         <div className="rounded-[2rem] border border-cyan-100/14 bg-cyan-100/[0.05] p-5 backdrop-blur-2xl">
