@@ -29,7 +29,7 @@ const riskyClaims = [
   { pattern: rx("XFwoZG9jdG9yfG1lZGljYWwgYWR2aWNlfHByZXNjcmliZXxwcmVzY3JpcHRpb24pXGI="), allowedNearby: rx("bm90IGF8bm90IGxpdmV8Y2Fubm90fG5vIGRpYWdub3Npc3xkb2VzIG5vdHxkbyBub3R8YXZvaWR8c2FmZXR5fGJvdW5kYXJ5fGZ1dHVyZXxub3QgcmVxdWlyZWR8cmVwbGFjZSBwcm9mZXNzaW9uYWwgY2FyZQ=="), reason: "care claim must remain boundary-only in V1" },
   { pattern: rx("XFwobWFya2V0cGxhY2V8c2VsbCBkYXRhfGRhdGEgc2FsZXxkYXRhIG1vbmV0aXphdGlvbilcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8Y29uc2VudHxiZWZvcmV8bm90IHJlcXVpcmVkfGRlZmVyfGdhdGVkfG9mZiBieSBkZWZhdWx0fGZyZWUgY2F0YWxvZw=="), reason: "market claim must be future or consent-gated in V1" },
   {
-    pattern: /\b(AR\/VR|AR|VR|spatial)\b/i,
+    pattern: /\b(AR\/VR|AR|VR|WebXR|immersive-vr)\b/i,
     allowedNearby: /\b(not live|future|roadmap|not part of V1|defer|not required|gated|staged|staging|feature-gated|protected|demo|scaffold|supported|unsupported|capability|browser proves support|Real WebXR gate|immersive-vr support|fallback)\b/i,
     reason: "immersive claim must be future-only, capability-gated, support-gated, or fallback-qualified in V1",
   },
