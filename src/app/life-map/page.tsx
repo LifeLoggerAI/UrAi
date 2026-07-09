@@ -5,7 +5,7 @@ export default function LifeMapPage() {
   return (
     <>
       <SpatialLifeMap />
-      <AssetFactoryRoutePanel route="/life-map" title="Life Map Asset Factory" />
+      <AssetFactoryRoutePanel route="/life-map" title="Life Map Launch Asset Pipeline" />
     </>
   );
 }
