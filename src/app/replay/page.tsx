@@ -113,7 +113,7 @@ export default function ReplayPage() {
         </div>
       </section>
 
-      <AssetFactoryRoutePanel route="/replay" title="Replay Asset Factory" />
+      <AssetFactoryRoutePanel route="/replay" title="Replay Launch Asset Pipeline" />
     </main>
   );
 }
