@@ -1,0 +1,1471 @@
+# URAI Domain Probe Results
+DATE: 2026-07-09
+
+===== urai.app =====
+--- DNS A ---
+199.36.158.100
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  3237    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  3237    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+cache-control: max-age=3600
+content-type: text/html; charset=utf-8
+etag: "cfe30fc3f0946a43d304ee05ffc90d29720ca569dc1bd1050f5581233e981244"
+last-modified: Thu, 09 Jul 2026 10:21:43 GMT
+strict-transport-security: max-age=31556926
+accept-ranges: bytes
+date: Thu, 09 Jul 2026 16:04:25 GMT
+x-served-by: cache-chi-kigq8000178-CHI
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1783613066.508618,VS0,VE107
+vary: x-fh-requested-host, accept-encoding
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+content-length: 3237
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0  3237    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 301 Moved Permanently
+Connection: close
+Content-Length: 0
+Server: Varnish
+Retry-After: 0
+Location: https://urai.app/
+Accept-Ranges: bytes
+Date: Thu, 09 Jul 2026 16:04:25 GMT
+X-Served-By: cache-chi-klot8100113-CHI
+X-Cache: HIT
+X-Cache-Hits: 0
+X-Timer: S1783613066.651865,VS0,VE0
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+
+HTTP/2 200 
+cache-control: max-age=3600
+
+===== www.urai.app =====
+--- DNS A ---
+urai-4dc1d.web.app.
+199.36.158.100
+--- DNS CNAME ---
+urai-4dc1d.web.app.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  3237    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+cache-control: max-age=3600
+content-type: text/html; charset=utf-8
+etag: "cfe30fc3f0946a43d304ee05ffc90d29720ca569dc1bd1050f5581233e981244"
+last-modified: Thu, 09 Jul 2026 10:21:43 GMT
+strict-transport-security: max-age=31556926
+accept-ranges: bytes
+date: Thu, 09 Jul 2026 16:04:25 GMT
+x-served-by: cache-chi-kigq8000097-CHI
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1783613066.870233,VS0,VE57
+vary: x-fh-requested-host, accept-encoding
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+content-length: 3237
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0  3237    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 301 Moved Permanently
+Connection: close
+Content-Length: 0
+Server: Varnish
+Retry-After: 0
+Location: https://www.urai.app/
+Accept-Ranges: bytes
+Date: Thu, 09 Jul 2026 16:04:25 GMT
+X-Served-By: cache-chi-klot8100107-CHI
+X-Cache: HIT
+X-Cache-Hits: 0
+X-Timer: S1783613066.964680,VS0,VE0
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+
+HTTP/2 200 
+cache-control: max-age=3600
+
+===== uraimarketing.com =====
+--- DNS A ---
+198.185.159.144
+198.49.23.144
+198.49.23.145
+198.185.159.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:26 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BU7ROIcCtHzHYzU0NDU3ZmUxMzc3NDJmMTY2NDI1ZGNmYjdiZTdj;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 9SUnUhNe/QmutNzq8
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1100    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 26589
+Content-Length: 1100
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 06:27:31 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BVzvOLqlxSNDMzA3ZWI3MTAxNDk2MDkxYWQxYjM3NzY5NGNjY2Y2;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: zOWZSlmV/EW0CWWjm
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraimarketing.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:26 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BYJv0WVZCA9iYjQ4OGQwMTIzODdhOWNmZTY0NWExNDFhYjk3ZTlm;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: EGRAIZxv/H8SziLCk
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1101    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1101
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 15:52:22 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BYj/gXC/ymjDNThmZjk4YzU0N2I3YjE5Y2FjMTRhMzBiYWZhMDg3;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: HVbwwbct/IlSmp7PI
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraiassetfactory.com =====
+--- DNS A ---
+199.36.158.100
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  8533    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+cache-control: max-age=3600
+content-type: text/html; charset=utf-8
+etag: "a5180224ec14b4093b02c7b0e9736ce5d7354f7a495b6b99edb04774b9bdcff7"
+last-modified: Tue, 07 Jul 2026 18:56:26 GMT
+strict-transport-security: max-age=31556926
+accept-ranges: bytes
+date: Thu, 09 Jul 2026 16:04:27 GMT
+x-served-by: cache-chi-kigq8000151-CHI
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1783613067.969592,VS0,VE166
+vary: x-fh-requested-host, accept-encoding
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+content-length: 8533
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0  8533    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 301 Moved Permanently
+Connection: close
+Content-Length: 0
+Server: Varnish
+Retry-After: 0
+Location: https://uraiassetfactory.com/
+Accept-Ranges: bytes
+Date: Thu, 09 Jul 2026 16:04:27 GMT
+X-Served-By: cache-chi-klot8100071-CHI
+X-Cache: HIT
+X-Cache-Hits: 0
+X-Timer: S1783613067.172430,VS0,VE0
+alt-svc: h3=":443";ma=86400,h3-29=":443";ma=86400,h3-27=":443";ma=86400
+
+HTTP/2 200 
+cache-control: max-age=3600
+
+===== www.uraiassetfactory.com =====
+--- DNS A ---
+ghs.googlehosted.com.
+192.178.210.121
+--- DNS CNAME ---
+ghs.googlehosted.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to www.uraiassetfactory.com:443 
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1561    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 404 Not Found
+Date: Thu, 09 Jul 2026 16:04:27 GMT
+Content-Type: text/html; charset=UTF-8
+Server: ghs
+Content-Length: 1561
+X-XSS-Protection: 0
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraispatial.com =====
+--- DNS A ---
+198.49.23.145
+198.185.159.145
+198.185.159.144
+198.49.23.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:27 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BcoNewTzLzsWYTAyYjE4NGJiMTEzNWI0OWI5ODJjNzM4OGM3OTZm;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: DCyCOboR/UoZCZ9d1
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:27 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BUNjfqpkHQQhNjMzZTExYjBjYzA0NjYyNTk3OWEzNmVlMzBlNjZh;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: JhZfzAD8/glAErDHl
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraispatial.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1100    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 13:18:38 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BTwwWq4zN2eyNzdhM2YxNWI5NjllMTRkN2IyMmE2ZWFhZWFkZGY1;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: oRt1kXHL/Hv9j8VPU
+x-frame-options: SAMEORIGIN
+content-length: 1100
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1100    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 10749
+Content-Length: 1100
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 11:27:11 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BZKBcEgk3RPNNzMyMGIwMGVkNjI2MDRiYTAwOGMwMzEzZmRmMDRj;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: AvPyTf4Z/RX36KPlP
+X-Frame-Options: SAMEORIGIN
+
+
+===== urailabs.com =====
+--- DNS A ---
+198.49.23.144
+198.49.23.145
+198.185.159.145
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 9153
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 13:19:44 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BQIrJjaQ7R8fZDljOTU5ZjBkZDk2ODhiNDdiOWRjMGM5NWE5Nzky;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 0v2t4QuG/HhgnE3un
+x-frame-options: SAMEORIGIN
+content-length: 1098
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1097    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1097
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 14:04:38 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BRF2VtqSQgGkNTIzNTA2OThhNDQ5NjcyOWVlNTA3MmIxMzlmYTE1;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: 6LrWPIjo/p7H4TypF
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.urailabs.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:28 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=Bbyzyx1+FXqYN2UzMmE2YzYxNTIyMjdjZmZjM2Q0NDIzN2RhMjkx;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: UoXa6kch/FyNcK93a
+x-frame-options: SAMEORIGIN
+content-length: 1098
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1098
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:29 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BSQJ7IYDQdGFYWMxNmM1OWFiYjgwN2ZlMDQ0ZmFmYTY2MjM1ZGYy;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: qQYqgIXB/anrfVG3f
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraicontent.com =====
+--- DNS A ---
+198.185.159.144
+198.49.23.144
+198.185.159.145
+198.49.23.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1097    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 3584
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 14:27:19 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BYdH22pfnmf7ZjZkYWFiMGQ0MDg2NDE2Yjk0Y2I0MWI4YjhlYWRl;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: xUu39PBb/lYTJmgYS
+x-frame-options: SAMEORIGIN
+content-length: 1097
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1097    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1097
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 15:04:42 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BX5hW1E7yHZXMGIwOTgzZDZlMTI0YjgzNGVjYjk0YzRmYTgwYjgz;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: TjfQR3xm/x68lpQwc
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraicontent.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:29 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BQEI9MmnQmPyNjYxYzkwNTViY2EwY2I4Yjg1MjYzNDVkNDU2Mjgw;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: IvuDDhu7/n1oKc7Zo
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:29 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BWg417ADCaqdNjQxNTM2YmYwYmFhMmE4Y2I3MzZmYjhjN2U1YTM2;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: Ttd08lWJ/BTqZQ7Sg
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraiprivacy.com =====
+--- DNS A ---
+198.185.159.145
+198.49.23.144
+198.49.23.145
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:30 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BZC9mUPkc70jZDY1MGRmMTJiMjMxODFhY2Q2ZDdlODFhMWVmMzUz;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: VYdXrWHt/Mvg7CaTg
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:30 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BWEDd2hFMbwuZDUwZWJiNzI3YzMxMDg0Nzg2ODAwNTAyODg5NGU5;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: 3hBQhfeG/OsFBueQ8
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraiprivacy.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:30 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BXCELxIywDaMNmNiMWQyM2I4ZTQ1YjY3ZmU2OWE5Mjk4ZjljMTZm;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: VAOvgYs6/wC0l8Rwl
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1101    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1101
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 14:59:01 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BabphlJ69xxTYjU2OTA2OTIwM2NmMWMwMGIyM2Q1Mjc5OWZmNmQy;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: SKLgDQ3O/bq8IXtG3
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraiinvestors.com =====
+--- DNS A ---
+198.185.159.145
+198.185.159.144
+198.49.23.144
+198.49.23.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:30 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BeETPaQtrE58ZDkxZjM5NzY3ODM5YTRjZGU1MjllYzBjMDc2ODE1;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: uMoYppIE/7OZY1iC2
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1101    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1101
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 15:57:50 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BUHH5fVsCjhwMzdhYjE2MWVmOTRjN2NhNTZiMjgyYjJmMGU3Y2Zj;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: qU2lwxHh/9c8Ned0M
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraiinvestors.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:31 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BXDFmbA943frNGNmYWZhOTQ2NjQ5Y2Y1MmQxNTc3NDQ1MDQ0YzAw;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: YBPQRFWs/Sesm8tuQ
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1101    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1101
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 12:29:08 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BWT9I5VYdW79MTRmMDQ0NzVhZjFhNzQyZDkwM2MwNWQyNGU4NTQ5;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: PKcjvsUH/abdmHyJA
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraiadmin.com =====
+--- DNS A ---
+198.49.23.144
+198.49.23.145
+198.185.159.145
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:31 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=Ba4/rsQdby3nN2RmYjRjZjIzNTg1YmU0MzhiOTM5MThiMGNiM2U4;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 9pNJli0Z/r6s23Ppr
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:31 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BVrlo8S+K1x0YzM1MGY2OTQ3OWM0NmQxYTYxNzBiYTQzMTFjZjQx;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: I3Saelsy/HZyipKBv
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraiadmin.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:32 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BerRpQ8/3obBOTFmNWQ0MDM3NTU5ZTM5YjhkMzNmY2E3MjQ0N2I1;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: sfLKBd2i/hc9F8hMC
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 24326
+Content-Length: 1098
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 06:15:41 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BRFnvcW+ZKm6NDAxNDRhMWUyMjg2MGNjMjY4MDFkYzlhYmMxM2I0;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: ZqN926he/lifXcHUX
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraijobs.com =====
+--- DNS A ---
+198.49.23.145
+198.49.23.144
+198.185.159.145
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:32 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BT+NujIHXz3yZTI1OTI5ZDZiNDAyMzU0YWJiZjA1MmM2MjA0MThk;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 0Wwtq0r1/8J0i9cJH
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 17130
+Content-Length: 1098
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 08:49:28 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BUwhmKTuAFcjM2ExZDRkYjU1Njg5MWNjZmFkZTE4NmYzOTFkZmJh;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: y0LQGyxE/tCEtRSh5
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraijobs.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:33 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BXr/WqAq2JMIMTkwMTk4ODVkMGU0Y2FlNTRkOTAwNjY2MWRkYjQz;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: yuvWM3om/aA8mm3wG
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 14161
+Content-Length: 1098
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 10:34:20 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BRdvNspsFheOZmNhZWQ4MWVlYTE2MGJjYWNlNTMwYTRjZTcxY2Ix;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: SY2ur1oP/AkdtonVq
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraib2bportal.com =====
+--- DNS A ---
+198.49.23.144
+198.185.159.144
+198.185.159.145
+198.49.23.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 3610
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 15:04:22 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BSbE4Hx+kd6FMDI5ZWE4M2Y1NTE5ODdkZGM3Mjc5ZWZiYjNhMDJm;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: TY166gSj/CUVCQxDU
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1100    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 44147
+Content-Length: 1100
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 00:33:25 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BT+sq10RaByjYThiYzJmODg2MzdiNjQ0NjE5ZDcxZGViNzc1ODll;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: BRXsJbAw/rdN5Q1Qm
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraib2bportal.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:34 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BYBaCTq/V4kwNmE3NTc2YmMzYjMzOTZhYTZkYjc5NWFkMzc4NTcx;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 8eU9yKBh/jNHiUtIe
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:34 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BcSXG0hl9j6HNjZiNDE2OThiYzY0OWYxMzNjNTVhYmE5ZTIyODQ2;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: WtJ6uWey/MY0eiHlv
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraianalytics.com =====
+--- DNS A ---
+198.185.159.145
+198.49.23.145
+198.49.23.144
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:34 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BeWnrCoychDPNjQwOTk3NDcyOTA4ZDhkOTUyNDVlYTdlN2VhOWI2;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: OWLjaVro/vNDyIGOB
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:34 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BWwrsh1rJTNKZjlmZjFkYzQzNTA5ZThiZWNiZWQwZjZiN2M2M2E3;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: kbIzYkKd/LMimUcBa
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraianalytics.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:35 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BfjNeSgaKO92NzM2OTY0N2ZlMDdjN2QyZWIyZDkzNGQ5NGJmNmY0;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: Pg9HsL1b/Wiva1voQ
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:35 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BUIUCLcabz+8ODU4ZDMxNDcyZTUzY2E1YTEyZjcwNmFhMzYyNWMy;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: nsEtooYQ/Sp8qUihb
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraistudio.com =====
+--- DNS A ---
+198.49.23.145
+198.185.159.145
+198.49.23.144
+198.185.159.144
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1098    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 127315
+content-type: text/html;charset=utf-8
+date: Wed, 08 Jul 2026 03:16:47 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BcaSXz684cBGZGE3ZGY3NDJlZTFkZDdiZDA1YzJkYjBiMDg0YjM4;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: KJAkYD6R/71EmBNF9
+x-frame-options: SAMEORIGIN
+content-length: 1098
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1099    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1099
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 11:50:03 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=Bejo9rhwNuuQZjhlMWEwMzU5YjM3MzRkY2MyNmRiM2NjNzMwYzJh;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: w8Bz7Cfs/M9p12eTK
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraistudio.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:35 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BQoy5Zcf+2aeMTJhZTYwNWNhYTQ4MjE4MzRhNGEyYTIxZjFlOTBl;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: mhHyRwXn/dc0NqY0u
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:35 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=Be/rxNdPs56OZjQyNGJlMzdhYzVlY2RkNjYwOTFkYzY5MTMzMTA3;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: gVD2t1Vq/tiDaYGTD
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraifoundation.org =====
+--- DNS A ---
+198.185.159.144
+198.49.23.144
+198.49.23.145
+198.185.159.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1099    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 142347
+content-type: text/html;charset=utf-8
+date: Tue, 07 Jul 2026 20:35:30 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=Bd0rWiWPQcv5ZTg1YTU3OGZhNDVjZDQ0NTU4ODA1NmU1ODBlOGRj;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: IzwSmyJ6/Ktl908IL
+x-frame-options: SAMEORIGIN
+content-length: 1099
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1099    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 41184
+Content-Length: 1099
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 04:27:08 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BU+1YioMOFhsMWMyZjJlZjVjZGVjMTkwZGQ5MzI5MTY1NTVlMGIw;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: gQko8tXm/Ns6a9lfe
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraifoundation.org =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:36 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BYG9ESLGHRr3NzJkYmNkZWM4NzRhMGI2MDViNWUxMTVjNWYwMDFi;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 4S9yUC1t/Rg78Csri
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:36 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BXv/iJbm1Qs2MzMzNjI5MWZlYTlmZjVjNDZhMzYxNWZjNzU4NjYz;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: EUkpwwDp/FBjtpbTO
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraicommunications.com =====
+--- DNS A ---
+198.49.23.144
+198.49.23.145
+198.185.159.144
+198.185.159.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:37 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BSk5qhCEbG78ZTY5OTlhYjc1MDdjYzA5NTA3N2E3MWZjZmJhMGI2;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: ZW1LFmRd/1SVFyI6M
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1103    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 59644
+Content-Length: 1103
+Content-Type: text/html;charset=utf-8
+Date: Wed, 08 Jul 2026 20:46:12 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BeFepOLcTWqOZWQzYjUxZWZkNmU3ZDk1ZGE1YzVjM2YzOWZkNDE3;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: 4Fks7qCr/AS8F5c4y
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraicommunications.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:37 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BVmQj4JAY/J5MTA0ODM0MWRlMTZhYTZjNTJjZmM3NGJhMDU3ZTE2;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: 1epf1Qgr/j4vyCXUn
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1103    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 58213
+Content-Length: 1103
+Content-Type: text/html;charset=utf-8
+Date: Wed, 08 Jul 2026 20:13:07 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BeawQNCQQCyAZjJkNGY5Y2FmMDE2YzA4YmU2OTQ1ZWVkOGY1ZDJj;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: E2ji7OxY/LZoqvdky
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraistaging.com =====
+--- DNS A ---
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: uraistaging.com
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: uraistaging.com
+
+===== www.uraistaging.com =====
+--- DNS A ---
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: www.uraistaging.com
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: www.uraistaging.com
+
+===== uraistorytime.com =====
+--- DNS A ---
+198.49.23.144
+198.185.159.144
+198.185.159.145
+198.49.23.145
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:38 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BSjDlSInaTZpYWQ0YWYwODBiMWIwZjA3NWRhMzdiZjBiNDdmYjk1;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: GbGdC0Lb/Yw5TKa0Y
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 16:04:38 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BQwAa1p/NtDzMDdjZjYzOGE5ZTZiNTE2MjdhNjk0MzM0ZjRiYmIy;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: ILx9EEt3/KnEd9KdO
+X-Frame-Options: SAMEORIGIN
+
+
+===== www.uraistorytime.com =====
+--- DNS A ---
+ext-sq.squarespace.com.
+198.185.159.144
+198.49.23.145
+198.185.159.145
+198.49.23.144
+--- DNS CNAME ---
+ext-sq.squarespace.com.
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/2 200 
+accept-ranges: bytes
+age: 0
+content-type: text/html;charset=utf-8
+date: Thu, 09 Jul 2026 16:04:38 GMT
+expires: Thu, 01 Jan 1970 00:00:00 GMT
+server: Squarespace
+set-cookie: crumb=BbzQlJbZEV72YjMyNDE4ZjI0OTA4NzA0NzVhODMyNGNhN2JiNDA4;Secure;Path=/
+strict-transport-security: max-age=15552000
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-contextid: nug8qN7i/bDyYSBFb
+x-frame-options: SAMEORIGIN
+
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  1101    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Age: 0
+Content-Length: 1101
+Content-Type: text/html;charset=utf-8
+Date: Thu, 09 Jul 2026 14:43:20 GMT
+Expires: Thu, 01 Jan 1970 00:00:00 GMT
+Server: Squarespace
+Set-Cookie: crumb=BT+dUxaqxQPnMGVlNzc1YWQ0N2MyMDljYzk5MDIxMWYwMDdiODE4;Path=/
+Vary: Accept-Encoding
+X-Content-Type-Options: nosniff
+X-Contextid: o5NHp9tR/ZPVEVyZl
+X-Frame-Options: SAMEORIGIN
+
+
+===== uraiipholdings.com =====
+--- DNS A ---
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: uraiipholdings.com
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: uraiipholdings.com
+
+===== www.uraiipholdings.com =====
+--- DNS A ---
+--- DNS CNAME ---
+--- HTTPS ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: www.uraiipholdings.com
+--- HTTP ---
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0curl: (6) Could not resolve host: www.uraiipholdings.com
+
