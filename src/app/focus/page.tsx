@@ -10,7 +10,7 @@ export default function FocusPage() {
   return (
     <>
       <SpatialLifeMap initialMode="focus" />
-      <AssetFactoryRoutePanel route="/focus" title="Focus Asset Factory" />
+      <AssetFactoryRoutePanel route="/focus" title="Focus Launch Asset Pipeline" />
     </>
   );
 }
