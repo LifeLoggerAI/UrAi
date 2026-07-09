@@ -8,7 +8,7 @@ Status: conditional public demo readiness; not production-live readiness.
 
 URAI Spatial should be treated as a staged V1 spatial shell, not a fully live XR, sensing, clinical, marketplace, enterprise, or studio/export product. The public V1 must preserve the magical home experience while keeping every unsupported capability behind clear gates.
 
-The main repo contains V1 launch checks, public-copy checks, Firebase contract checks, type/lint/test/build scripts, and release gates. The standalone `urai-spatial` repo confirms the intended Spatial architecture: a runtime app rooted in `urai-tier1`, explicit fallback/demo mode, future provider seams, and live-provider requirements before claiming AR/WebXR, biometric, wearable, memory-grounded, Firebase, Stripe, or Asset Factory production readiness.
+The main repo contains V1 launch checks, public-copy checks, Firebase contract checks, type/lint/test/build scripts, and release gates. The standalone `urai-spatial` repo confirms the intended Spatial architecture: a runtime app rooted in `urai-tier1`, explicit fallback/demo mode, future provider seams, and live-provider requirements before claiming AR/WebXR, biometric, wearable, memory-grounded, Firebase, Stripe, or private asset pipeline production readiness.
 
 ## Launch-readiness score
 
@@ -83,10 +83,10 @@ The public demo path is substantially closer because it can ship with staged cop
 ### Finding 7
 
 - Severity: Medium
-- Exact file or area: Asset Factory / export pipeline
-- What is wrong or incomplete: Asset generation/export should remain server-gated and not publicly claimed as live unless credentials, base URL, auth, queue/worker checks, and smoke tests pass.
+- Exact file or area: Private asset pipeline and export gates
+- What is wrong or incomplete: Asset generation/export should remain server-gated and not live in V1 unless credentials, base URL, auth, queue/worker checks, and smoke tests pass.
 - Why it matters: Broken asset promises undermine launch and may expose privileged endpoints.
-- Recommended fix: Keep asset pipeline private-beta or deferred in V1.
+- Recommended fix: Keep the private asset pipeline and export features gated or deferred in V1.
 - Action taken: Added to V1 safety language.
 - Blocks launch: Blocks studio/export claims, not public demo.
 
@@ -111,4 +111,4 @@ If a command fails because of missing external secrets or provider services, kee
 
 URAI Spatial can move toward **public-demo-ready** only after the public-copy checker is fixed, the V1 gates pass, and `/spatial` plus `/api/spatial/health` smoke-test successfully.
 
-URAI Spatial is **not production-live-ready** until real provider, consent, Firestore, Firebase deploy, XR, Asset Factory, and smoke-test evidence exists.
+URAI Spatial is **not production-live-ready** until real provider, consent, Firestore, Firebase deploy, XR, private asset pipeline, and smoke-test evidence exists.
