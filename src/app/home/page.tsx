@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <>
       <NewHomeScene />
-      <AssetFactoryRoutePanel route="/home" title="Home Asset Factory" />
+      <AssetFactoryRoutePanel route="/home" title="Home Launch Asset Pipeline" />
     </>
   );
 }
