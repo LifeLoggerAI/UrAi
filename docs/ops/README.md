@@ -3,6 +3,7 @@
 This folder is the permanent operating source of truth for URAI Labs.
 
 It exists to prevent:
+
 - wrong repo to wrong domain deployments
 - duplicate systems
 - overclaimed production status
@@ -20,7 +21,7 @@ It exists to prevent:
 - `AUDIT_RECEIPTS.md`
 - `NEXT_ACTIONS.md`
 
-## Rule
+## Production Rule
 
 No repo, domain, feature, or service may be called production unless it has:
 
