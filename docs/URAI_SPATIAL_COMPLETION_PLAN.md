@@ -13,7 +13,7 @@ Status: V1 hardening plan.
 
 1. Define public demo, private beta, and production-live modes.
 2. Ensure `/api/spatial/health` reports current mode, enabled providers, disabled providers, blockers, and next checks.
-3. Ensure XR, room semantics, sensing, location, Asset Factory, export, marketplace, and enterprise/admin surfaces stay disabled unless flags plus server checks pass.
+3. Ensure XR, room semantics, sensing, location, private asset pipeline, export, marketplace, and enterprise/admin surfaces stay disabled unless flags plus server checks pass; these are not live in V1.
 4. Keep public copy aligned with staged capability status.
 
 ## Priority 3: Secure auth, consent, and data boundaries
@@ -79,4 +79,4 @@ Ship as `public-demo-ready` when V1 checks pass and staged features are visibly 
 
 Ship as `private-beta-ready` only when gated providers pass server-side and smoke-test checks.
 
-Ship as `production-live-ready` only after Firebase, Firestore rules, deploy targets, XR/device validation, Asset Factory, consent, export/delete, and public-copy evidence all pass.
+Ship as `production-live-ready` only after Firebase, Firestore rules, deploy targets, XR/device validation, private asset pipeline, consent, export/delete, and public-copy evidence all pass.
