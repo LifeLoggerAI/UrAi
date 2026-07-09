@@ -13,7 +13,7 @@ function statusCopy(status: string) {
   return status;
 }
 
-export function AssetFactoryRoutePanel({ route, title = "Asset Factory", compact = false }: AssetFactoryRoutePanelProps) {
+export function AssetFactoryRoutePanel({ route, title = "Launch Asset Pipeline", compact = false }: AssetFactoryRoutePanelProps) {
   const assets = getUraiRouteAssets(route);
   const ready = assets.filter((asset) => asset.status === "ready").length;
   const placeholders = assets.filter((asset) => asset.status === "placeholder").length;
