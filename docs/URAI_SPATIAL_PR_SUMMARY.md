@@ -17,7 +17,7 @@ This change adds launch-owner documentation for URAI Spatial V1 and defines the 
 
 - URAI Spatial V1 must ship as a truthful public demo unless live-provider proof exists.
 - Ground, orb, sky, portal, companion/chat, and memory/spatial previews are V1 requirements.
-- XR, passive sensing, location/audio/device capture, biometrics/wearables, Asset Factory/export, marketplace, enterprise/admin, and clinical claims are not public-live V1 features.
+- XR, passive sensing, location/audio/device capture, biometrics/wearables, private asset pipeline/export, marketplace, enterprise/admin, and clinical claims are not live in V1.
 - `/api/spatial/health` must report readiness and blockers honestly.
 - Public copy must remain gated and safe.
 
