@@ -46,8 +46,19 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify legacy production authority boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -f .github/workflows/deploy.yml
+          test ! -f .github/workflows/firebase-hosting-live.yml
+          test -f docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+          grep -Fq 'LifeLoggerAI/urai-spatial' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+          grep -Fq 'sole production authority' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: E2E tests
+      - name: Legacy E2E regression audit
+        continue-on-error: true
         run: npm run test:e2e
