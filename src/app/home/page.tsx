@@ -1,7 +1,7 @@
 "use client";
 
-import { NewHomeScene } from "@/components/urai/home/NewHomeScene";
+import { SpatialHomeWorldScene } from "@/components/urai/home/SpatialHomeWorldScene";
 
 export default function HomePage() {
-  return <NewHomeScene />;
+  return <SpatialHomeWorldScene />;
 }

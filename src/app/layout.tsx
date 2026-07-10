@@ -10,7 +10,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   "https://urai.app";
 
-const title = "URAI Public Demo — Symbolic Life Map";
+const title = "URAI Spatial";
 const description =
   "A privacy-gated public demo for a symbolic Life Map and reflection product. Sample data only; roadmap systems are clearly labeled before they go live.";
 const shareImage = "/og/urai-public-demo.svg";
