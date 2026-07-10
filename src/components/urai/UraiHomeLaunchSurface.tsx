@@ -1,7 +1,6 @@
 "use client";
 
 import UraiResolvedHomeScene from "@/components/urai/UraiResolvedHomeScene";
-import UraiHomeAccessibilityLayer from "@/components/urai/UraiHomeAccessibilityLayer";
 import { orbStateForHomeWorld } from "@/lib/home-world";
 import { useUraiHomeWorldState } from "@/lib/use-urai-home-world-state";
 
@@ -23,9 +22,22 @@ export default function UraiHomeLaunchSurface() {
       data-sky-weather-intensity={homeWorld.skyWeatherIntensity.toFixed(2)}
       data-ground-growth-intensity={homeWorld.groundGrowthIntensity.toFixed(2)}
       aria-label="URAI Home World"
+      className="urai-home-world-cinematic"
     >
       <UraiResolvedHomeScene />
-      <UraiHomeAccessibilityLayer />
+      <style jsx global>{`
+        .urai-home-world-cinematic .minimal-orbit-nav,
+        .urai-home-world-cinematic .field-whisper,
+        .urai-home-world-cinematic .return-home,
+        .urai-home-world-cinematic [data-urai-home-accessibility],
+        .urai-home-world-cinematic [class*="accessibility"],
+        .urai-home-world-cinematic [class*="whisper"],
+        .urai-home-world-cinematic [class*="copy"],
+        .urai-home-world-cinematic [class*="caption"],
+        .urai-home-world-cinematic [class*="label"] {
+          display: none !important;
+        }
+      `}</style>
     </main>
   );
 }
