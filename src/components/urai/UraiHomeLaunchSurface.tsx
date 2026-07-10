@@ -27,6 +27,9 @@ export default function UraiHomeLaunchSurface() {
       <UraiResolvedHomeScene />
       <style jsx global>{`
         .urai-home-world-cinematic .minimal-orbit-nav,
+        .urai-home-world-cinematic nav,
+        .urai-home-world-cinematic [class*="nav"],
+        .urai-home-world-cinematic [class*="dock"],
         .urai-home-world-cinematic .field-whisper,
         .urai-home-world-cinematic .return-home,
         .urai-home-world-cinematic [data-urai-home-accessibility],
