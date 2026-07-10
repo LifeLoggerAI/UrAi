@@ -1,0 +1,37 @@
+name: Deploy urai.app
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FIREBASE_CLI_DISABLE_UPDATE_CHECK: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      URAI_MIN_INSTALL_FREE_MB: "1000"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Verify app
+        run: |
+          npm run check:firebase
+          npm run check:v1
+          npm run check:types
+          npm run build
+
+      - name: Deploy urai.app
+        run: npx firebase-tools@15.22.1 deploy --only hosting --project urai-4dc1d --non-interactive
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
