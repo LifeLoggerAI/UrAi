@@ -32,6 +32,8 @@ jobs:
           npm run build
 
       - name: Deploy urai.app
-        run: npx firebase-tools@15.22.1 deploy --only hosting --project urai-4dc1d --non-interactive
+        run: |
+          npx firebase-tools@15.22.1 experiments:enable webframeworks
+          npx firebase-tools@15.22.1 deploy --only hosting --project urai-4dc1d --non-interactive
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
