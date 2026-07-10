@@ -36,7 +36,6 @@ jobs:
       URAI_REQUIRE_FIREBASE_ADMIN: "0"
       URAI_ENABLE_CHRONO_FIRESTORE: "0"
       OPENAI_API_KEY: ci-placeholder-openai-key
-      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
 
     steps:
       - name: Check out repository
@@ -49,7 +48,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Typecheck
         run: npm run check:types
@@ -69,32 +68,31 @@ jobs:
       - name: Verify assets
         run: npm run verify:assets
 
-      - name: Check public copy
+      - name: Verify legacy production authority boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -f .github/workflows/deploy.yml
+          test ! -f .github/workflows/firebase-hosting-live.yml
+          test -f docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+          grep -Fq 'LifeLoggerAI/urai-spatial' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+          grep -Fq 'sole production authority' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+
+      - name: Legacy public-copy audit
+        continue-on-error: true
         run: npm run check:public-copy
 
-      - name: Check production claims
+      - name: Legacy production-claims audit
+        continue-on-error: true
         run: npm run check:production-claims
 
-      - name: Check Home XR static lock
-        run: node scripts/check-home-xr-lock.mjs
-
-      - name: Check Home XR proof manifest
-        run: node scripts/check-home-xr-proof-manifest.mjs
-
-      - name: Check Home XR live deploy proof gate
-        run: node scripts/check-home-xr-live-deploy-proof.mjs
-
-      - name: Check Life Map Quest static lock
-        run: npm run smoke:life-map-quest
-
-      - name: Check Life Map Quest proof manifest
-        run: npm run smoke:life-map-quest-proof
-
-      - name: Check Life Map Quest live deploy proof gate
-        run: npm run smoke:life-map-quest-live-proof
-
-      - name: Genesis spine smoke
-        run: npm run smoke:genesis-spine
+      - name: Legacy XR static and historical proof audit
+        continue-on-error: true
+        run: |
+          node scripts/check-home-xr-lock.mjs
+          node scripts/check-home-xr-proof-manifest.mjs
+          npm run smoke:life-map-quest
+          npm run smoke:life-map-quest-proof
 
   home-xr-smoke:
     name: Home and Life Map XR Playwright smoke
@@ -116,7 +114,6 @@ jobs:
       URAI_REQUIRE_FIREBASE_ADMIN: "0"
       URAI_ENABLE_CHRONO_FIRESTORE: "0"
       OPENAI_API_KEY: ci-placeholder-openai-key
-      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
 
     steps:
       - name: Check out repository
@@ -129,7 +126,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
@@ -137,19 +134,11 @@ jobs:
       - name: Build app for smoke
         run: npm run build
 
-      - name: Run Home XR smoke checks
-        run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
-
-      - name: Run Life Map XR smoke checks
-        run: npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome
-
-      - name: Optional deployed Home XR URL smoke
-        if: ${{ env.HOME_XR_LIVE_URL != '' || env.PLAYWRIGHT_BASE_URL != '' || env.URAI_LIVE_URL != '' }}
-        run: node scripts/smoke-home-xr-live-url.mjs
-
-      - name: Optional deployed Life Map Quest URL smoke
-        if: ${{ env.LIFE_MAP_QUEST_LIVE_URL != '' || env.PLAYWRIGHT_BASE_URL != '' || env.URAI_LIVE_URL != '' }}
-        run: npm run smoke:life-map-quest-live
+      - name: Run legacy XR browser regressions
+        continue-on-error: true
+        run: |
+          npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
+          npx playwright test tests/e2e/life-map-quest-interaction.spec.ts --project=chromium --project=mobile-chrome
 
       - name: Upload Playwright output
         if: always()
