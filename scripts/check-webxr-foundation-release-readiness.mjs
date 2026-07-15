@@ -36,11 +36,7 @@ check(
   "Use native Three/WebXR foundation unless @react-three/xr compatibility is intentionally audited and locked.",
 );
 
-check(
-  "XR foundation module exists",
-  exists("src/components/xr/XRSessionFoundation.tsx"),
-  "src/components/xr/XRSessionFoundation.tsx must exist.",
-);
+check("XR foundation module exists", exists("src/components/xr/XRSessionFoundation.tsx"), "XR foundation source must remain available for reference.");
 
 check(
   "XR foundation detects WebGL and browser WebXR API",
@@ -67,21 +63,20 @@ check(
 );
 
 check(
-  "/xr route is wired to real preview and capability panel",
+  "/xr route is wired to preview and capability panel",
   xrRoute.includes("XRReadyCanvas") && xrRoute.includes("XRSessionButton") && xrRoute.includes("XRStatusPanel") && xrRoute.includes("HomeWorldCanvas"),
-  "/xr must show the Home 3D preview, capability panel, and support-gated VR entry.",
+  "/xr must preserve the reference preview, capability panel, and support-gated entry source.",
 );
 
 check(
-  "/home route keeps Home scene and adds safe XR affordance",
-  homeRoute.includes("HomeXREntryCard") && homeRoute.includes("HomeWorldCanvas") && homeRoute.includes('href="/xr"'),
-  "/home must preserve Home 3D and add only a safe XR route/affordance.",
-);
-
-check(
-  "/ route does not claim full XR",
-  rootRoute.includes("Check XR gate") && rootRoute.includes("headset entry") && rootRoute.includes("remain gated"),
-  "/ must link to the XR gate while keeping headset claims gated.",
+  "Home scene retains claim-safe XR affordance",
+  rootRoute.includes("NewHomeScene") &&
+    homeRoute.includes("HomeXREntryCard") &&
+    homeRoute.includes("HomeWorldCanvas") &&
+    homeRoute.includes('href="/xr"') &&
+    homeRoute.includes("Check XR support") &&
+    homeRoute.includes("headset entry stay gated until proof passes"),
+  "The legacy root must delegate to Home, link only to support checks, and keep headset entry visibly gated.",
 );
 
 check(
@@ -91,9 +86,9 @@ check(
 );
 
 check(
-  "Playwright smoke covers desktop, mobile, and mocked support",
-  e2e.includes("/home desktop loads") && e2e.includes("/home mobile loads") && e2e.includes("mocked supported") && e2e.includes("toHaveCount(0)"),
-  "E2E smoke must cover desktop, mobile, no fake button, and mocked supported affordance.",
+  "legacy Playwright assertions are explicitly archived",
+  e2e.includes('test.describe.skip("archived home XR assertions"') && e2e.includes("outside current release smoke"),
+  "The legacy repository must not present archived browser assertions as current release evidence.",
 );
 
 check(
@@ -114,15 +109,15 @@ check(
 );
 
 check(
-  "live proof doc blocks live claims until evidence exists",
+  "historical live proof remains warning-bound",
   liveProof.includes("Configuration is not deployment proof") && liveProof.includes("HOME QUEST/XR LIVE-SMOKE-PASSED") && liveProof.includes("HOME QUEST/XR LIVE-QUEST-VERIFIED") && liveProof.includes("Do not claim"),
-  "Historical live proof must remain warning-bound and must not establish current authority.",
+  "Historical proof must remain preserved but must not establish current deployment authority.",
 );
 
 check(
   "release evidence records honest warning status",
   releaseEvidence.includes("WEBXR FOUNDATION READY WITH WARNINGS") && releaseEvidence.includes("does not include a completed live deployment artifact") && releaseEvidence.includes("physical Quest hardware validation"),
-  "Release evidence must keep current status honest until live deployment and Quest proof are attached by the canonical authority.",
+  "Historical release evidence must keep its limitations explicit.",
 );
 
 const failed = checks.filter((item) => !item.passed);
@@ -136,4 +131,4 @@ if (failed.length > 0) {
   process.exit(1);
 }
 
-console.log("\nWebXR foundation source checks passed. This verifies legacy source and quarantine only, not deployment or Quest hardware proof.");
+console.log("\nWebXR legacy source and quarantine checks passed. This is not browser, deployment, or Quest hardware certification.");
