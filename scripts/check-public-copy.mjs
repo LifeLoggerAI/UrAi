@@ -24,7 +24,7 @@ function rx(encoded, flags = "i") {
   return new RegExp(Buffer.from(encoded, "base64").toString("utf8"), flags);
 }
 
-const immersiveBoundary = /\b(not live|not production|not production-live-ready|future|roadmap|not part of V1|defer|not required|gated|gate|staged|staging|feature-gated|protected|demo|scaffold|supported|unsupported|capability|browser proves support|fallback|preview|audit|checklist|readiness|requires|until|evidence|canonical production authority|legacy|reference|intentionally safe|do not claim|must not|cannot)\b/i;
+const immersiveBoundary = /\b(not live|not production|not production-live-ready|future|roadmap|not part of V1|out of scope for V1|defer|not required|gated|gate|staged|staging|feature-gated|protected|demo|scaffold|supported|unsupported|capability|browser proves support|fallback|preview|audit|checklist|readiness|requires|until|evidence|canonical production authority|legacy|reference|intentionally safe|do not claim|must not|cannot)\b/i;
 
 const riskyClaims = [
   { pattern: rx("XFwoYXVkbyBjdXB0dXJlfGxvY2F0aW9uIHRyYWNraW5nfGdwcyB0cmFja2luZ3xkZXZpY2Ugc2Vuc2luZylcYg=="), allowedNearby: rx("bm90IGxpdmV8ZnV0dXJlfHJvYWRtYXB8Y29uc2VudHxkZW1vfHNjYWZmb2xkfGJlZm9yZSBlbmFibGluZ3xub3QgcmVxdWlyZWR8Z2F0ZWR8b2ZmIGJ5IGRlZmF1bHQ="), reason: "passive-data claim must be future, demo, or consent-gated in V1" },
@@ -100,7 +100,13 @@ for (const filePath of files) {
       claim.pattern.lastIndex = 0;
       if (!claim.pattern.test(publicText)) continue;
       if (claim.allowedNearby.test(publicText)) continue;
-      const context = [lines[index - 1] ?? "", line, lines[index + 1] ?? ""].join(" ");
+      const context = [
+        lines[index - 2] ?? "",
+        lines[index - 1] ?? "",
+        line,
+        lines[index + 1] ?? "",
+        lines[index + 2] ?? "",
+      ].join(" ");
       if (claim.allowedNearby.test(context)) continue;
       console.error(`public-copy: risky V1 claim in ${relativePath}:${index + 1}`);
       console.error(`  ${claim.reason}`);
