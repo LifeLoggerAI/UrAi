@@ -61,6 +61,14 @@ function publicTextFromLine(line) {
   return fragments.length > 0 ? fragments.join(" ") : line;
 }
 
+function nearestMarkdownHeading(lines, index) {
+  for (let cursor = index; cursor >= 0; cursor -= 1) {
+    const candidate = lines[cursor].trim();
+    if (/^#{1,6}\s+/.test(candidate)) return candidate;
+  }
+  return "";
+}
+
 const files = scannedRoots
   .flatMap(listFiles)
   .filter((filePath) => textExtensions.has(path.extname(filePath)))
@@ -71,10 +79,18 @@ let failed = false;
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+  const isMarkdown = relativePath.endsWith(".md") || relativePath.endsWith(".mdx");
 
   lines.forEach((line, index) => {
     const publicText = publicTextFromLine(line);
-    const context = [lines[index - 2] ?? "", lines[index - 1] ?? "", publicText, lines[index + 1] ?? "", lines[index + 2] ?? ""].join(" ");
+    const context = [
+      isMarkdown ? nearestMarkdownHeading(lines, index) : "",
+      lines[index - 2] ?? "",
+      lines[index - 1] ?? "",
+      publicText,
+      lines[index + 1] ?? "",
+      lines[index + 2] ?? "",
+    ].join(" ");
 
     for (const claim of riskyProductionClaims) {
       claim.pattern.lastIndex = 0;
