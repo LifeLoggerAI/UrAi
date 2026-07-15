@@ -93,19 +93,35 @@ jobs:
       - name: Install frozen dependencies
         run: npm ci
 
-      - name: Verify source and quarantine contracts
+      - name: Verify WebXR release-readiness source contract
+        run: node scripts/check-webxr-foundation-release-readiness.mjs
+
+      - name: Verify Home XR deployment quarantine
+        run: node scripts/check-home-xr-deploy-workflow.mjs
+
+      - name: Verify Home XR evidence quarantine
+        run: node scripts/check-home-xr-launch-evidence-consistency.mjs
+
+      - name: Verify TypeScript and lint
         run: |
-          node scripts/check-webxr-foundation-release-readiness.mjs
-          node scripts/check-home-xr-deploy-workflow.mjs
-          node scripts/check-home-xr-launch-evidence-consistency.mjs
           npm run check:types
           npm run lint
-          npm test -- --runInBand src/components/xr/__tests__/XRSessionFoundation.test.tsx
-          npm run build
+
+      - name: Verify focused XR unit contract
+        run: npm test -- --runInBand src/components/xr/__tests__/XRSessionFoundation.test.tsx
+
+      - name: Build source candidate
+        run: npm run build
+
+      - name: Verify route asset copy and claim contracts
+        run: |
           npm run verify:routes
           npm run verify:assets
           npm run check:public-copy
           npm run check:production-claims
+
+      - name: Verify Home XR lock and historical proof manifest
+        run: |
           node scripts/check-home-xr-lock.mjs
           node scripts/check-home-xr-proof-manifest.mjs
           npm run smoke:genesis-spine
