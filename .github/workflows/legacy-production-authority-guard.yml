@@ -30,7 +30,7 @@ jobs:
           show-progress: false
           lfs: false
 
-      - name: Verify exact clean head
+      - name: Verify exact clean head and LFS boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -47,6 +47,12 @@ jobs:
           test "$index_tree" = "$commit_tree"
           test -z "$untracked"
           test -z "$non_lfs_changes"
+
+          lfs_files="$(git lfs ls-files --name-only)"
+          test "$lfs_files" = "public/assets/orb/orb_images_lottie.json"
+          test "$(grep -c 'filter=lfs' .gitattributes)" = "1"
+          grep -Fxq 'public/assets/orb/orb_images_lottie.json filter=lfs diff=lfs merge=lfs -text' .gitattributes
+          ! grep -Eq '^public/assets/\*\*' .gitattributes
 
       - name: Verify legacy production denial
         shell: bash
