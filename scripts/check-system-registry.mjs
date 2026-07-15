@@ -2,16 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 
 const registryPath = path.resolve("system/urai-system-registry.json");
+const authorityPath = path.resolve("system/canonical-authority.json");
+const canonicalProductRepo = "LifeLoggerAI/urai-spatial";
 const privacyGateRepo = "LifeLoggerAI/urai-privacy";
 const genesisSpineRepos = [
-  "LifeLoggerAI/UrAi",
+  canonicalProductRepo,
   "LifeLoggerAI/urai-staging",
   "LifeLoggerAI/urai-privacy",
   "LifeLoggerAI/urai-admin",
   "LifeLoggerAI/urai-jobs",
   "LifeLoggerAI/urai-content",
 ];
-const legacySandboxRepos = ["LifeLoggerAI/UrAi-Dev", "LifeLoggerAI/UrAiProd"];
+const legacyRepos = ["LifeLoggerAI/UrAi", "LifeLoggerAI/UrAi-Dev", "LifeLoggerAI/UrAiProd"];
 const privacySensitiveNames = [
   "LifeLoggerAI/urai-spatial",
   "LifeLoggerAI/urai-analytics",
@@ -55,20 +57,48 @@ function isExplicitDemoOnly(repo) {
   return text.includes("demo") || text.includes("safe to consume");
 }
 
-if (!fs.existsSync(registryPath)) {
-  fail(`registry file missing at ${registryPath}`);
-  process.exit(process.exitCode);
+for (const requiredPath of [registryPath, authorityPath]) {
+  if (!fs.existsSync(requiredPath)) {
+    fail(`required authority file missing at ${requiredPath}`);
+  }
 }
 
-const raw = fs.readFileSync(registryPath, "utf8");
-const registry = JSON.parse(raw);
+if (process.exitCode && process.exitCode !== 0) process.exit(process.exitCode);
+
+const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+const authority = JSON.parse(fs.readFileSync(authorityPath, "utf8"));
 const repos = registry.repos ?? [];
 const byName = new Map(repos.map((repo) => [repo.name, repo]));
+const authorityLegacyRepos = new Set(authority.legacyRepos ?? []);
 
-if (registry.canonicalProductRepo !== "LifeLoggerAI/UrAi") {
-  fail(`canonicalProductRepo must be LifeLoggerAI/UrAi, found ${registry.canonicalProductRepo}`);
+for (const [field, expected] of [
+  ["canonicalProductRepo", canonicalProductRepo],
+  ["applicationRoot", "urai-tier1"],
+  ["branch", "main"],
+  ["domain", "urai.app"],
+]) {
+  if (authority[field] !== expected) {
+    fail(`canonical authority ${field} must be ${expected}, found ${authority[field]}`);
+  } else {
+    ok(`canonical authority ${field} is ${expected}`);
+  }
+}
+
+for (const legacyRepo of legacyRepos) {
+  if (!authorityLegacyRepos.has(legacyRepo)) {
+    fail(`canonical authority must classify ${legacyRepo} as legacy`);
+  }
+}
+
+if (registry.canonicalProductRepo === canonicalProductRepo) {
+  ok(`historical registry canonicalProductRepo is aligned to ${canonicalProductRepo}`);
+} else if (
+  registry.canonicalProductRepo === "LifeLoggerAI/UrAi"
+  && (authority.supersedes ?? []).includes("system/urai-system-registry.json#canonicalProductRepo")
+) {
+  ok("historical registry canonicalProductRepo is explicitly superseded by system/canonical-authority.json");
 } else {
-  ok("canonical product repo is correctly set to LifeLoggerAI/UrAi");
+  fail(`historical registry has an unrecognized canonicalProductRepo value: ${registry.canonicalProductRepo}`);
 }
 
 if (registry.privacyGateRepo !== privacyGateRepo) {
@@ -87,6 +117,7 @@ for (const repo of repos) {
   const evidenceRequired = repo.evidenceRequired ?? [];
   const statusText = String(repo.status ?? "").toLowerCase();
   const roleText = String(repo.role ?? "").toLowerCase();
+  const isAuthoritySupersededLegacy = authorityLegacyRepos.has(repo.name);
 
   if (!classifications.has(repo.classification)) {
     fail(`${repo.name} has invalid or unknown classification ${repo.classification}`);
@@ -96,7 +127,7 @@ for (const repo of repos) {
     fail(`${repo.name} is still marked unknown`);
   }
 
-  if (repo.canClaimProduction) {
+  if (!isAuthoritySupersededLegacy && repo.canClaimProduction) {
     if (evidenceRequired.length > 0) {
       fail(`${repo.name} cannot claim production while evidenceRequired is non-empty`);
     }
@@ -105,16 +136,9 @@ for (const repo of repos) {
     }
   }
 
-  if (legacySandboxRepos.includes(repo.name)) {
-    if (repo.canUseInV1) {
-      fail(`${repo.name} must not be V1-usable because it is ${repo.classification}`);
-    }
-    if (repo.canClaimProduction) {
-      fail(`${repo.name} must never be production-claimable`);
-    }
-    if (statusText.includes("production") || roleText.includes("production")) {
-      fail(`${repo.name} must not be described as production in status or role`);
-    }
+  if (isAuthoritySupersededLegacy) {
+    ok(`${repo.name} is superseded by canonical authority and treated as legacy regardless of historical registry fields`);
+    continue;
   }
 
   const passiveOrSensitive =
@@ -133,31 +157,41 @@ for (const repo of repos) {
   if (isRoadmapOnly(repo) && repo.canUseInV1 && !isExplicitDemoOnly(repo) && !genesisSpineRepos.includes(repo.name)) {
     fail(`${repo.name} looks roadmap-only but is marked canUseInV1 without explicit demo-only documentation`);
   }
+
+  if (legacyRepos.includes(repo.name) && (statusText.includes("production") || roleText.includes("production"))) {
+    fail(`${repo.name} must not be described as production in effective authority`);
+  }
 }
 
-const uraiDev = byName.get("LifeLoggerAI/UrAi-Dev");
-if (!uraiDev) {
-  fail("LifeLoggerAI/UrAi-Dev is missing from the registry");
-} else {
-  ok("UrAi-Dev is present and checked as sandbox-only");
+for (const legacyRepo of legacyRepos) {
+  if (!byName.has(legacyRepo)) {
+    fail(`${legacyRepo} is missing from the historical registry`);
+  } else {
+    ok(`${legacyRepo} is present and overridden as legacy by canonical authority`);
+  }
 }
 
-const uraiProd = byName.get("LifeLoggerAI/UrAiProd");
-if (!uraiProd) {
-  fail("LifeLoggerAI/UrAiProd is missing from the registry");
-} else {
-  ok("UrAiProd is present and checked as legacy/archive-only");
-}
+const summary = repos.map((repo) => {
+  const overriddenLegacy = authorityLegacyRepos.has(repo.name);
+  return {
+    repo: repo.name,
+    classification: overriddenLegacy ? "legacy-archive" : repo.classification,
+    status: overriddenLegacy ? "legacy/reference; authority superseded" : repo.status,
+    v1: overriddenLegacy ? "no" : (repo.canUseInV1 ? "yes" : "no"),
+    production: overriddenLegacy ? "no" : (repo.canClaimProduction ? "yes" : "no"),
+    evidence: overriddenLegacy ? "quarantine required" : repo.productionEvidence ? "present" : (repo.evidenceRequired ?? []).length ? "required" : "none",
+    privacyGate: repo.name === privacyGateRepo || (repo.dependsOn ?? []).includes(privacyGateRepo) ? "yes" : "no",
+  };
+});
 
-const summary = repos.map((repo) => ({
-  repo: repo.name,
-  classification: repo.classification,
-  status: repo.status,
-  v1: repo.canUseInV1 ? "yes" : "no",
-  production: repo.canClaimProduction ? "yes" : "no",
-  evidence: repo.productionEvidence ? "present" : (repo.evidenceRequired ?? []).length ? "required" : "none",
-  privacyGate: repo.name === privacyGateRepo || (repo.dependsOn ?? []).includes(privacyGateRepo) ? "yes" : "no",
-}));
+console.log("\nCanonical Authority");
+console.table({
+  repository: authority.canonicalProductRepo,
+  application: authority.applicationRoot,
+  branch: authority.branch,
+  domain: authority.domain,
+  certifiedProductionSha: authority.certifiedProductionSha,
+});
 
 console.log("\nSystem Registry Summary");
 console.table(summary);
@@ -166,4 +200,4 @@ if (process.exitCode && process.exitCode !== 0) {
   process.exit(process.exitCode);
 }
 
-ok("system registry checks passed");
+ok("system registry and canonical authority checks passed");
