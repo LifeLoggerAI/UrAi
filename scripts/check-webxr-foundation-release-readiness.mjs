@@ -56,7 +56,7 @@ check(
 
 check(
   "real WebXR session request is gated",
-  xrFoundation.includes('xr.requestSession("immersive-vr"') && xrFoundation.includes("renderer.xr.setSession") && xrFoundation.includes("capabilities.immersiveVr !== \"supported\""),
+  xrFoundation.includes('xr.requestSession("immersive-vr"') && xrFoundation.includes("renderer.xr.setSession") && xrFoundation.includes('capabilities.immersiveVr !== "supported"'),
   "Enter VR must request a real browser WebXR session only after capability support is detected.",
 );
 
@@ -97,35 +97,32 @@ check(
 );
 
 check(
-  "manual deploy workflow exists and runs pre-deploy gates",
+  "legacy Home XR deploy workflow is quarantined",
   deployWorkflow.includes("workflow_dispatch:") &&
-    deployWorkflow.includes("npm run check:types") &&
-    deployWorkflow.includes("npm run lint") &&
-    deployWorkflow.includes("npm run build") &&
-    deployWorkflow.includes("npm run verify:routes") &&
-    deployWorkflow.includes("npm run verify:assets") &&
-    deployWorkflow.includes("npm run check:public-copy") &&
-    deployWorkflow.includes("npm run check:production-claims") &&
-    deployWorkflow.includes("npx playwright test tests/e2e/home-xr-interaction.spec.ts"),
-  "Deploy workflow must remain manual and run the full verification gate before Firebase deploy.",
+    /quarantined|disabled|deny/i.test(deployWorkflow) &&
+    deployWorkflow.includes("exit 1") &&
+    deployWorkflow.includes("LifeLoggerAI/urai-spatial") &&
+    deployWorkflow.includes("urai-tier1") &&
+    deployWorkflow.includes("urai.app"),
+  "Legacy Home XR workflow must remain manual, fail closed, and name the canonical Spatial authority.",
 );
 
 check(
-  "manual deploy workflow requires Firebase token before deploy",
-  deployWorkflow.includes("Missing FIREBASE_TOKEN") && deployWorkflow.includes("npx firebase-tools deploy --only hosting"),
-  "Firebase deploy must require an explicit repository secret and deploy Hosting only after checks pass.",
+  "legacy Home XR workflow cannot authenticate or deploy",
+  !/secrets\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|google-github-actions\/auth|firebase(?:-tools)?\s+deploy|gcloud\s+(?:run|app)\s+deploy/i.test(deployWorkflow),
+  "Legacy Home XR workflow must be credential-free and contain no cloud deployment command.",
 );
 
 check(
   "live proof doc blocks live claims until evidence exists",
   liveProof.includes("Configuration is not deployment proof") && liveProof.includes("HOME QUEST/XR LIVE-SMOKE-PASSED") && liveProof.includes("HOME QUEST/XR LIVE-QUEST-VERIFIED") && liveProof.includes("Do not claim"),
-  "Live proof doc must block live/Quest claims until URL, screenshot, smoke, and Quest evidence are linked.",
+  "Historical live proof must remain warning-bound and must not establish current authority.",
 );
 
 check(
   "release evidence records honest warning status",
   releaseEvidence.includes("WEBXR FOUNDATION READY WITH WARNINGS") && releaseEvidence.includes("does not include a completed live deployment artifact") && releaseEvidence.includes("physical Quest hardware validation"),
-  "Release evidence must keep current status honest until live deployment and Quest proof are attached.",
+  "Release evidence must keep current status honest until live deployment and Quest proof are attached by the canonical authority.",
 );
 
 const failed = checks.filter((item) => !item.passed);
@@ -135,8 +132,8 @@ for (const item of checks) {
 }
 
 if (failed.length > 0) {
-  console.error(`\nWebXR foundation release readiness failed: ${failed.length} failing check(s).`);
+  console.error(`\nWebXR foundation source readiness failed: ${failed.length} failing check(s).`);
   process.exit(1);
 }
 
-console.log("\nWebXR foundation release readiness checks passed. This verifies repository readiness, not live deployment or Quest hardware proof.");
+console.log("\nWebXR foundation source checks passed. This verifies legacy source and quarantine only, not deployment or Quest hardware proof.");
