@@ -14,6 +14,7 @@ permissions:
 
 env:
   TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_LFS_SKIP_SMUDGE: "1"
 
 jobs:
   guard:
@@ -24,16 +25,26 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
           show-progress: false
+          lfs: false
 
       - name: Verify exact clean head
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git status --porcelain --untracked-files=all)"
+          if command -v git-lfs >/dev/null 2>&1; then
+            git lfs install --local --skip-smudge
+          fi
+          actual_head="$(git rev-parse HEAD)"
+          status="$(git status --porcelain=v1 --untracked-files=all)"
+          printf 'expected_head=%s\nactual_head=%s\n' "$TARGET_SHA" "$actual_head"
+          if [[ -n "$status" ]]; then
+            printf 'dirty_paths:\n%s\n' "$status"
+          fi
+          test "$actual_head" = "$TARGET_SHA"
+          test -z "$status"
 
       - name: Verify legacy production denial
         shell: bash
