@@ -93,8 +93,37 @@ jobs:
       - name: Install frozen dependencies
         run: npm ci
 
-      - name: Verify WebXR release-readiness source contract
-        run: node scripts/check-webxr-foundation-release-readiness.mjs
+      - name: Capture WebXR source readiness contract
+        id: readiness
+        shell: bash
+        run: |
+          set -uo pipefail
+          evidence="$RUNNER_TEMP/webxr-source-readiness"
+          mkdir -p "$evidence"
+          set +e
+          node scripts/check-webxr-foundation-release-readiness.mjs 2>&1 | tee "$evidence/readiness.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$evidence/readiness.exit"
+          {
+            echo "head_sha=$TARGET_SHA"
+            echo "credentialed=false"
+            echo "deployment=false"
+            echo "production_data_mutation=false"
+          } > "$evidence/authority.env"
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+
+      - name: Upload WebXR source readiness evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: legacy-webxr-source-readiness-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/webxr-source-readiness
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce WebXR source readiness result
+        run: test "${{ steps.readiness.outputs.exit_code }}" = "0"
 
       - name: Verify Home XR deployment quarantine
         run: node scripts/check-home-xr-deploy-workflow.mjs
