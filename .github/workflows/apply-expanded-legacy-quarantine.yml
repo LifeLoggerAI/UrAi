@@ -1,0 +1,357 @@
+name: Apply Expanded Legacy Production Quarantine
+
+on:
+  push:
+    branches:
+      - chore/quarantine-legacy-production-authority-20260715
+    paths:
+      - .github/workflows/apply-expanded-legacy-quarantine.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact quarantine branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: chore/quarantine-legacy-production-authority-20260715
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Prove exact starting authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "chore/quarantine-legacy-production-authority-20260715"
+          test "$(git rev-parse HEAD^)" = "c27229e49d43edffc06c900ce397e188ee3a508e"
+          test -z "$(git status --porcelain --untracked-files=all)"
+
+      - name: Write expanded quarantine
+        shell: python
+        run: |
+          from pathlib import Path
+
+          canonical = "LifeLoggerAI/urai-spatial -> urai-tier1 -> main -> urai.app"
+
+          def quarantine(name: str, message: str) -> str:
+              return f'''name: {name} — Quarantined
+
+          on:
+            workflow_dispatch:
+
+          permissions:
+            contents: read
+
+          jobs:
+            deny-legacy-production:
+              name: Deny legacy production authority
+              runs-on: ubuntu-24.04
+              timeout-minutes: 5
+              steps:
+                - name: Record canonical authority and fail closed
+                  shell: bash
+                  run: |
+                    cat <<'EOF'
+                    This workflow is intentionally quarantined.
+
+                    {message}
+
+                    Canonical production authority:
+                      {canonical}
+
+                    Historical receipts remain in Git history for audit only.
+                    No secrets are read and no infrastructure or production evidence is mutated here.
+                    EOF
+                    exit 1
+          '''
+
+          quarantined = {
+              ".github/workflows/firebase-production-deploy.yml": quarantine(
+                  "Legacy Firebase Production Deploy",
+                  "LifeLoggerAI/UrAi is a legacy/reference repository and must not deploy Firebase Hosting, Firestore, Functions, App Hosting, or any other production resource.",
+              ),
+              ".github/workflows/deploy-home-xr.yml": quarantine(
+                  "Legacy Home XR Deploy",
+                  "LifeLoggerAI/UrAi must not use tokens, service accounts, or repository secrets to deploy any public Home or XR surface.",
+              ),
+              ".github/workflows/deploy-urai-app.yml": quarantine(
+                  "Legacy urai.app Deploy",
+                  "LifeLoggerAI/UrAi must not deploy the Firebase Hosting target or custom domain that serves urai.app.",
+              ),
+              ".github/workflows/deploy-urai.yml": quarantine(
+                  "Legacy URAI Firebase Deploy",
+                  "LifeLoggerAI/UrAi must not authenticate Firebase or execute the historical ship:urai production path.",
+              ),
+              ".github/workflows/p1-release-gate.yml": quarantine(
+                  "Legacy P1 Production Release Gate",
+                  "LifeLoggerAI/UrAi must not accept production project IDs, promotion approvals, or release authority for the canonical product.",
+              ),
+              ".github/workflows/production-evidence.yml": quarantine(
+                  "Legacy Production Evidence",
+                  "LifeLoggerAI/UrAi must not produce current deployment evidence for canonical production. Only urai-spatial may certify its protected releases.",
+              ),
+              ".github/workflows/life-map-quest-production-evidence.yml": quarantine(
+                  "Legacy Life Map Production Evidence",
+                  "LifeLoggerAI/UrAi must not certify current Life Map deployment or browser evidence against canonical production.",
+              ),
+              ".github/workflows/post-deploy-verify.yml": quarantine(
+                  "Legacy Post Deploy Verification",
+                  "LifeLoggerAI/UrAi must not act as the post-deploy verifier for canonical production or accept arbitrary production origins.",
+              ),
+          }
+          for path, content in quarantined.items():
+              Path(path).write_text(content)
+
+          Path(".github/workflows/webxr-foundation-audit.yml").write_text('''name: Legacy WebXR Source Audit
+
+          on:
+            workflow_dispatch:
+            push:
+              paths:
+                - "src/components/xr/**"
+                - "src/app/xr/**"
+                - "src/components/urai/home/**"
+                - "tests/e2e/home-xr-interaction.spec.ts"
+                - "src/components/xr/__tests__/**"
+                - "scripts/check-webxr-foundation-release-readiness.mjs"
+                - "scripts/check-home-xr-deploy-workflow.mjs"
+                - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+                - ".github/workflows/webxr-foundation-audit.yml"
+                - ".github/workflows/deploy-home-xr.yml"
+            pull_request:
+              paths:
+                - "src/components/xr/**"
+                - "src/app/xr/**"
+                - "src/components/urai/home/**"
+                - "tests/e2e/home-xr-interaction.spec.ts"
+                - "src/components/xr/__tests__/**"
+                - "scripts/check-webxr-foundation-release-readiness.mjs"
+                - "scripts/check-home-xr-deploy-workflow.mjs"
+                - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+                - ".github/workflows/webxr-foundation-audit.yml"
+                - ".github/workflows/deploy-home-xr.yml"
+
+          permissions:
+            contents: read
+
+          concurrency:
+            group: legacy-webxr-source-audit-${{ github.event.pull_request.head.sha || github.sha }}
+            cancel-in-progress: true
+
+          env:
+            TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+            CI: "true"
+            NEXT_PUBLIC_FIREBASE_API_KEY: "ci-placeholder"
+            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "legacy-reference-ci.invalid"
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID: "legacy-reference-ci"
+            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "legacy-reference-ci.invalid"
+            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+            NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:legacy-reference"
+            FIREBASE_PROJECT_ID: "legacy-reference-ci"
+            FIREBASE_CLIENT_EMAIL: "ci@example.invalid"
+            FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
+            URAI_REQUIRE_FIREBASE_ADMIN: "0"
+            URAI_ENABLE_CHRONO_FIRESTORE: "0"
+            PLAYWRIGHT_SKIP_BROWSER_GC: "1"
+
+          jobs:
+            source-audit:
+              name: Verify legacy WebXR source without deploy claims
+              runs-on: ubuntu-24.04
+              timeout-minutes: 35
+              steps:
+                - name: Checkout exact reviewed head
+                  uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+                  with:
+                    ref: ${{ env.TARGET_SHA }}
+                    fetch-depth: 0
+                    persist-credentials: false
+                - name: Prove exact clean head
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+                    test -z "$(git status --porcelain --untracked-files=all)"
+                - name: Setup Node
+                  uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+                  with:
+                    node-version: 20
+                    cache: npm
+                - name: Install frozen dependencies
+                  run: npm ci
+                - name: Verify source and quarantine contracts
+                  run: |
+                    node scripts/check-webxr-foundation-release-readiness.mjs
+                    node scripts/check-home-xr-deploy-workflow.mjs
+                    node scripts/check-home-xr-launch-evidence-consistency.mjs
+                    npm run check:types
+                    npm run lint
+                    npm test -- --runInBand src/components/xr/__tests__/XRSessionFoundation.test.tsx
+                    npm run build
+                    npm run verify:routes
+                    npm run verify:assets
+                    npm run check:public-copy
+                    npm run check:production-claims
+                    node scripts/check-home-xr-lock.mjs
+                    node scripts/check-home-xr-proof-manifest.mjs
+                    npm run smoke:genesis-spine
+                - name: Install Playwright Chromium
+                  run: npx playwright install --with-deps chromium
+                - name: Run source-only Home XR browser smoke
+                  run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
+          ''')
+
+          Path("scripts/check-home-xr-deploy-workflow.mjs").write_text('''#!/usr/bin/env node
+          import fs from "node:fs";
+          import path from "node:path";
+
+          const root = process.cwd();
+          const workflowPath = ".github/workflows/deploy-home-xr.yml";
+          const workflow = fs.readFileSync(path.join(root, workflowPath), "utf8");
+          const checks = [];
+          const check = (name, passed, detail) => checks.push({ name, passed, detail });
+
+          check("workflow is manual only", workflow.includes("workflow_dispatch:") && !workflow.includes("\\n  push:") && !workflow.includes("\\n  pull_request:"), "Quarantined workflow must be manual-only.");
+          check("workflow fails closed", workflow.includes("intentionally quarantined") && workflow.includes("exit 1"), "Quarantined workflow must explicitly deny and exit nonzero.");
+          check("canonical authority is exact", workflow.includes("LifeLoggerAI/urai-spatial -> urai-tier1 -> main -> urai.app"), "Canonical authority must name urai-spatial/urai-tier1/main/urai.app.");
+          check("no credential access", !/secrets\\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|google-github-actions\\/auth/i.test(workflow), "Quarantined workflow must not reference credentials.");
+          check("no deploy command", !/firebase(?:-tools)?\\s+deploy|gcloud\\s+(?:run|app)\\s+deploy|apphosting/i.test(workflow), "Quarantined workflow must not contain cloud deployment commands.");
+          check("contents read only", workflow.includes("contents: read") && !workflow.includes("contents: write"), "Quarantined workflow must have read-only contents permission.");
+
+          const failed = checks.filter((item) => !item.passed);
+          for (const item of checks) console.log(`[${item.passed ? "PASS" : "FAIL"}] ${item.name}${item.passed ? "" : `: ${item.detail}`}`);
+          if (failed.length) {
+            console.error(`Home XR quarantine check failed: ${failed.length} failing check(s).`);
+            process.exit(1);
+          }
+          console.log("Home XR deployment authority is quarantined.");
+          ''')
+
+          Path("scripts/check-home-xr-launch-evidence-consistency.mjs").write_text('''#!/usr/bin/env node
+          import fs from "node:fs";
+          import path from "node:path";
+
+          const root = process.cwd();
+          const read = (file) => fs.existsSync(path.join(root, file)) ? fs.readFileSync(path.join(root, file), "utf8") : "";
+          const files = {
+            historicalStatus: "launch-proof/home-quest-interaction/home-xr-launch-status.json",
+            historicalProof: "launch-proof/home-quest-interaction/HOME_XR_LIVE_DEPLOY_VERIFICATION.md",
+            historicalHandoff: "launch-proof/home-quest-interaction/FINAL_LIVE_DEPLOY_HANDOFF.md",
+            auditWorkflow: ".github/workflows/webxr-foundation-audit.yml",
+            deployWorkflow: ".github/workflows/deploy-home-xr.yml",
+            authority: "docs/LEGACY_QUARANTINE_AUTHORITY.md",
+            consistencyWorkflow: ".github/workflows/home-xr-evidence-consistency.yml",
+          };
+          const contents = Object.fromEntries(Object.entries(files).map(([key, file]) => [key, read(file)]));
+          const checks = [];
+          const check = (name, passed, detail) => checks.push({ name, passed, detail });
+
+          for (const [key, file] of Object.entries(files)) check(`${key} exists`, Boolean(contents[key]), `${file} must remain available.`);
+          check("historical receipts stay warning-bound", contents.historicalProof.includes("Configuration is not deployment proof") && contents.historicalProof.includes("Do not claim"), "Historical proof must retain its warning boundary.");
+          check("historical handoff remains preserved", contents.historicalHandoff.includes("HOME QUEST/XR"), "Historical handoff must remain in Git history/source for audit.");
+          check("current deploy workflow is quarantined", contents.deployWorkflow.includes("intentionally quarantined") && contents.deployWorkflow.includes("exit 1"), "Current workflow must deny deployment.");
+          check("current deploy workflow has no credential or deploy command", !/secrets\\.|FIREBASE_TOKEN|firebase(?:-tools)?\\s+deploy|gcloud\\s+(?:run|app)\\s+deploy/i.test(contents.deployWorkflow), "Current workflow must be credential-free and mutation-free.");
+          check("source audit has no canonical project identity", contents.auditWorkflow.includes("legacy WebXR source without deploy claims") && !contents.auditWorkflow.includes("urai-4dc1d") && !contents.auditWorkflow.includes("live-deploy-proof"), "Source audit must not certify or target canonical production.");
+          check("canonical authority is recorded", contents.authority.includes("LifeLoggerAI/urai-spatial") && contents.authority.includes("urai-tier1") && contents.authority.includes("urai.app"), "Authority document must name the canonical path.");
+          check("consistency workflow runs this checker", contents.consistencyWorkflow.includes("check-home-xr-launch-evidence-consistency.mjs"), "Consistency workflow must run this checker.");
+
+          const failed = checks.filter((item) => !item.passed);
+          for (const item of checks) console.log(`[${item.passed ? "PASS" : "FAIL"}] ${item.name}${item.passed ? "" : `: ${item.detail}`}`);
+          if (failed.length) {
+            console.error(`Home XR evidence quarantine consistency failed: ${failed.length} failing check(s).`);
+            process.exit(1);
+          }
+          console.log("Historical Home XR evidence is preserved and current deployment authority is quarantined.");
+          ''')
+
+          Path(".github/workflows/legacy-production-authority-guard.yml").write_text('''name: Legacy Production Authority Guard
+
+          on:
+            push:
+              branches: [main]
+            pull_request:
+              branches: [main]
+            workflow_dispatch:
+
+          permissions:
+            contents: read
+
+          env:
+            TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+          jobs:
+            guard:
+              runs-on: ubuntu-24.04
+              timeout-minutes: 10
+              steps:
+                - name: Checkout exact reviewed head
+                  uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+                  with:
+                    ref: ${{ env.TARGET_SHA }}
+                    fetch-depth: 0
+                    persist-credentials: false
+                - name: Verify legacy authority denial
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+                    test -z "$(git status --porcelain --untracked-files=all)"
+                    files=(
+                      .github/workflows/firebase-production-deploy.yml
+                      .github/workflows/deploy-home-xr.yml
+                      .github/workflows/deploy-urai-app.yml
+                      .github/workflows/deploy-urai.yml
+                      .github/workflows/p1-release-gate.yml
+                      .github/workflows/production-evidence.yml
+                      .github/workflows/life-map-quest-production-evidence.yml
+                      .github/workflows/post-deploy-verify.yml
+                    )
+                    for file in "${files[@]}"; do
+                      grep -Fq "intentionally quarantined" "$file"
+                      grep -Fq "LifeLoggerAI/urai-spatial -> urai-tier1 -> main -> urai.app" "$file"
+                      grep -Fq "exit 1" "$file"
+                      ! grep -Eqi 'secrets\\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|firebase(-tools)?[[:space:]]+deploy|gcloud[[:space:]]+(run|app)[[:space:]]+deploy|urai-4dc1d' "$file"
+                    done
+                    ! grep -R -n 'urai-4dc1d' .github/workflows
+                    node scripts/check-home-xr-deploy-workflow.mjs
+                    node scripts/check-home-xr-launch-evidence-consistency.mjs
+                    grep -Fq '"deploy": "node scripts/block-legacy-production-deploy.mjs deploy"' package.json
+                    grep -Fq '"ship:urai": "node scripts/block-legacy-production-deploy.mjs ship:urai"' package.json
+                    grep -Fq '"ship:urai:prod": "node scripts/block-legacy-production-deploy.mjs ship:urai:prod"' package.json
+                    grep -Fq 'EXPECTED_PROJECT="urai-staging"' scripts/deploy-urai-firebase.sh
+                    grep -Fq 'EXPECTED_SITE="urai-staging"' scripts/deploy-urai-firebase.sh
+                    ! grep -Fq 'urai-4dc1d' scripts/deploy-urai-firebase.sh
+          ''')
+
+          authority_path = Path("docs/LEGACY_QUARANTINE_AUTHORITY.md")
+          authority = authority_path.read_text()
+          marker = "## Expanded production and evidence quarantine"
+          if marker not in authority:
+              authority += f'''\n\n{marker}\n\nCurrent production deploy, promotion, post-deploy, and production-evidence workflows are fail-closed. Historical receipts remain preserved for audit but are not current certification. The WebXR workflow is source-only and must not name or probe the canonical Firebase project. A permanent authority guard rejects regression.\n'''
+              authority_path.write_text(authority)
+
+          Path(".github/workflows/apply-expanded-legacy-quarantine.yml").unlink()
+
+      - name: Verify expanded quarantine before commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/check-home-xr-deploy-workflow.mjs
+          node scripts/check-home-xr-launch-evidence-consistency.mjs
+          ! grep -R -n 'urai-4dc1d' .github/workflows
+          git diff --check
+          test ! -e .github/workflows/apply-expanded-legacy-quarantine.yml
+
+      - name: Commit exact expanded quarantine
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "LifeLoggerAI"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: complete legacy production authority quarantine"
+          git push origin HEAD:chore/quarantine-legacy-production-authority-20260715
