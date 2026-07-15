@@ -1,80 +1,17 @@
-name: Production Evidence
+name: Legacy Production Evidence — Quarantined
 
 on:
-  workflow_run:
-    workflows: ["Deploy Firebase Production"]
-    types:
-      - completed
   workflow_dispatch:
 
 permissions:
   contents: read
-  actions: read
 
 jobs:
-  evidence:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+  deny:
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      - name: Verify deployed Firebase routes and AR/XR assets
-        env:
-          BASE_URL: https://urai-4dc1d.web.app
+      - name: Deny legacy production evidence authority
         run: |
-          set -euo pipefail
-          mkdir -p test-results/production-evidence
-          routes=("/" "/home" "/xr" "/life-map" "/assets/ar/urai-genesis-orb.gltf" "/ochat" "/u/adamclamp" "/api/status")
-          : > test-results/production-evidence/firebase-live-route-checks.txt
-          for route in "${routes[@]}"; do
-            url="${BASE_URL}${route}"
-            status=$(curl -L -s -o /tmp/urai-route-body -w "%{http_code}" "$url")
-            echo "$status $url" | tee -a test-results/production-evidence/firebase-live-route-checks.txt
-            test "$status" = "200"
-          done
-
-      - name: Verify custom-domain linked route markers
-        env:
-          URAI_LIVE_BASE_URL: https://urai.app
-        run: npm run smoke:linked-routes:live
-
-      - name: Capture custom-domain status copy
-        run: |
-          set -euo pipefail
-          mkdir -p test-results/production-evidence
-          curl -L -s https://urai.app/status > test-results/production-evidence/urai-app-status.html
-          grep -q "Preview health" test-results/production-evidence/urai-app-status.html
-          grep -q "Preview service map" test-results/production-evidence/urai-app-status.html
-          grep -q "No uptime, backend, provider, or rollback claim is made here" test-results/production-evidence/urai-app-status.html
-
-      - name: Run Life Map Quest live URL smoke
-        env:
-          LIFE_MAP_QUEST_LIVE_URL: https://urai-4dc1d.web.app
-        run: npm run smoke:life-map-quest-live
-
-      - name: Run production smoke tests
-        run: npm run test:smoke:production
-        env:
-          PLAYWRIGHT_BASE_URL: https://urai-4dc1d.web.app
-
-      - name: Upload production evidence
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: production-evidence-results
-          path: |
-            test-results/production-evidence/
-            playwright-report/
+          echo "This legacy repository cannot generate current production evidence." >&2
+          echo "Use the canonical urai-spatial protected release evidence." >&2
+          exit 1
