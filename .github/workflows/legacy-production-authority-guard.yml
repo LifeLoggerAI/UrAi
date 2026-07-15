@@ -34,17 +34,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if command -v git-lfs >/dev/null 2>&1; then
-            git lfs install --local --skip-smudge
-          fi
           actual_head="$(git rev-parse HEAD)"
-          status="$(git status --porcelain=v1 --untracked-files=all)"
-          printf 'expected_head=%s\nactual_head=%s\n' "$TARGET_SHA" "$actual_head"
-          if [[ -n "$status" ]]; then
-            printf 'dirty_paths:\n%s\n' "$status"
-          fi
+          commit_tree="$(git rev-parse 'HEAD^{tree}')"
+          index_tree="$(git write-tree)"
+          untracked="$(git ls-files --others --exclude-standard)"
+          non_lfs_changes="$(git diff --name-only -- . ':(exclude)public/assets/**')"
+          printf 'expected_head=%s\nactual_head=%s\ncommit_tree=%s\nindex_tree=%s\n' \
+            "$TARGET_SHA" "$actual_head" "$commit_tree" "$index_tree"
+          if [[ -n "$untracked" ]]; then printf 'untracked_paths:\n%s\n' "$untracked"; fi
+          if [[ -n "$non_lfs_changes" ]]; then printf 'non_lfs_changes:\n%s\n' "$non_lfs_changes"; fi
           test "$actual_head" = "$TARGET_SHA"
-          test -z "$status"
+          test "$index_tree" = "$commit_tree"
+          test -z "$untracked"
+          test -z "$non_lfs_changes"
 
       - name: Verify legacy production denial
         shell: bash
