@@ -142,12 +142,17 @@ jobs:
       - name: Build source candidate
         run: npm run build
 
-      - name: Verify route asset copy and claim contracts
-        run: |
-          npm run verify:routes
-          npm run verify:assets
-          npm run check:public-copy
-          npm run check:production-claims
+      - name: Verify routes
+        run: npm run verify:routes
+
+      - name: Verify assets
+        run: npm run verify:assets
+
+      - name: Verify public-copy policy
+        run: npm run check:public-copy
+
+      - name: Verify production-claims policy
+        run: npm run check:production-claims
 
       - name: Verify Home XR lock and historical proof manifest
         run: |
