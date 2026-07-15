@@ -1,0 +1,69 @@
+name: Read-Only Route and Claim Diagnostic
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/read-only-route-claim-diagnostic.yml
+      - scripts/verify-routes.mjs
+      - scripts/verify-assets.mjs
+      - scripts/check-public-copy.mjs
+      - scripts/check-production-claims.mjs
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+  GIT_LFS_SKIP_SMUDGE: "1"
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+          lfs: false
+
+      - name: Capture independent checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          evidence="$RUNNER_TEMP/route-claim-diagnostic"
+          mkdir -p "$evidence"
+          run_case() {
+            name="$1"
+            shift
+            set +e
+            "$@" >"$evidence/$name.log" 2>&1
+            status=$?
+            set -e
+            printf '%s\n' "$status" >"$evidence/$name.exit"
+          }
+          run_case routes node scripts/verify-routes.mjs
+          run_case assets node scripts/verify-assets.mjs
+          run_case public-copy node scripts/check-public-copy.mjs
+          run_case production-claims node scripts/check-production-claims.mjs
+          {
+            echo "head_sha=$TARGET_SHA"
+            echo "credentialed=false"
+            echo "deployment=false"
+            echo "production_data_mutation=false"
+          } > "$evidence/authority.env"
+
+      - name: Upload diagnostic
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: legacy-route-claim-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/route-claim-diagnostic
+          if-no-files-found: error
+          retention-days: 30
