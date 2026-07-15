@@ -76,6 +76,14 @@ function publicTextFromLine(line) {
   return fragments.length > 0 ? fragments.join(" ") : line;
 }
 
+function nearestMarkdownHeading(lines, index) {
+  for (let cursor = index; cursor >= 0; cursor -= 1) {
+    const candidate = lines[cursor].trim();
+    if (/^#{1,6}\s+/.test(candidate)) return candidate;
+  }
+  return "";
+}
+
 const files = scannedRoots
   .flatMap(listFiles)
   .filter((filePath) => textExtensions.has(path.extname(filePath)))
@@ -93,6 +101,7 @@ for (const phrase of requiredBoundaryPhrases) {
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+  const isMarkdown = relativePath.endsWith(".md") || relativePath.endsWith(".mdx");
   lines.forEach((line, index) => {
     if (isImplementationLine(line)) return;
     const publicText = publicTextFromLine(line);
@@ -101,6 +110,7 @@ for (const filePath of files) {
       if (!claim.pattern.test(publicText)) continue;
       if (claim.allowedNearby.test(publicText)) continue;
       const context = [
+        isMarkdown ? nearestMarkdownHeading(lines, index) : "",
         lines[index - 2] ?? "",
         lines[index - 1] ?? "",
         line,
