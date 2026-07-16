@@ -1,11 +1,22 @@
-# WebXR Route Handoff (UrAi -> urai-spatial)
+# WebXR Route Handoff — Legacy Reference
 
-UrAi remains the launch-facing memory entry app. Immersive WebXR routes are delegated to `urai-spatial`.
+Status: **QUARANTINED LEGACY / FEATURE-EXTRACTION REFERENCE**
 
-## Contract
-- UrAi emits memory, node, and scene references compatible with `docs/contracts/URAI_ECOSYSTEM_SCHEMA_V1.json`.
-- UrAi does not claim production WebXR rendering ownership.
-- UrAi links/redirects immersive session flows to spatial runtime routes (`/spatial`, `/life-map`).
+`LifeLoggerAI/UrAi` does not own any production WebXR route, renderer, deployment, browser certification, or rollback authority.
 
-## Blockers
-- Live WebXR verification requires production secrets and deployment credentials not available in this workspace.
+Canonical production authority is exclusively:
+
+`LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `urai.app`
+
+## Historical contract
+
+- UrAi retains historical memory, node, and scene-reference structures compatible with `docs/contracts/URAI_ECOSYSTEM_SCHEMA_V1.json`.
+- These structures are reference material only and do not authorize production rendering or deployment.
+- Any immersive flow extracted from this repository must be reviewed, imported into `urai-spatial`, tested at an exact head, and certified through the protected Spatial release path.
+
+## Current boundary
+
+- Do not redirect public traffic from this repository.
+- Do not use legacy deployment workflows or credentials.
+- Do not claim current WebXR browser, headset, Quest, AR, or VR certification from historical source or evidence.
+- Current live verification, monitoring, recovery, and rollback proof belong to the canonical Spatial release process.
