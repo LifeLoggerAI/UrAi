@@ -16,6 +16,7 @@ const ignoredFragments = [
 const textExtensions = new Set([".md", ".mdx", ".ts", ".tsx", ".js", ".jsx"]);
 
 const negativeOrEvidenceContext = /\b(do not claim|must not claim|not allowed|not a claim|not an?\s+[^.]{0,40}claim|not verified|not live|not production|not marketed|not certified|future proof|future|until|before|requires?|required|remaining|missing|validation|verification|evidence|warning|gated|gate|supported|unsupported|capability|if supported|when supported|fallback|browser proves support|WebXR API|immersive-vr support|legacy|reference|archived|historical)\b/i;
+const explicitNegativePreamble = /^(?:do not\b|must not\b|not\b|blocked\b|unsupported\b|out of scope\b|pending\b|missing\b)/i;
 
 const riskyProductionClaims = [
   {
@@ -105,9 +106,11 @@ for (const filePath of files) {
 
   lines.forEach((line, index) => {
     const publicText = publicTextFromLine(line);
+    const markdownHeading = isMarkdown ? nearestMarkdownHeading(lines, index) : "";
+    const markdownPreamble = isMarkdown ? nearestMarkdownListPreamble(lines, index) : "";
     const context = [
-      isMarkdown ? nearestMarkdownHeading(lines, index) : "",
-      isMarkdown ? nearestMarkdownListPreamble(lines, index) : "",
+      markdownHeading,
+      markdownPreamble,
       lines[index - 2] ?? "",
       lines[index - 1] ?? "",
       publicText,
@@ -118,6 +121,7 @@ for (const filePath of files) {
     for (const claim of riskyProductionClaims) {
       claim.pattern.lastIndex = 0;
       if (!claim.pattern.test(publicText)) continue;
+      if (markdownPreamble && explicitNegativePreamble.test(markdownPreamble)) continue;
       if (claim.allowed.test(context)) continue;
 
       console.error(`production-claims: risky unqualified claim in ${relativePath}:${index + 1}`);
