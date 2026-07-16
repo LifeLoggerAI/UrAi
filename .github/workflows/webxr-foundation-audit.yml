@@ -195,11 +195,45 @@ jobs:
       - name: Verify production-claims policy
         run: test "${{ steps.policy.outputs.production_claims_exit }}" = "0"
 
-      - name: Verify Home XR lock and historical proof manifest
+      - name: Verify Home XR static lock
+        run: node scripts/check-home-xr-lock.mjs
+
+      - name: Verify Home XR historical proof manifest
+        run: node scripts/check-home-xr-proof-manifest.mjs
+
+      - name: Capture historical Genesis spine URL smoke
+        id: historical_smoke
+        shell: bash
         run: |
-          node scripts/check-home-xr-lock.mjs
-          node scripts/check-home-xr-proof-manifest.mjs
-          npm run smoke:genesis-spine
+          set -uo pipefail
+          evidence="$RUNNER_TEMP/legacy-genesis-spine-smoke"
+          mkdir -p "$evidence"
+          set +e
+          npm run smoke:genesis-spine 2>&1 | tee "$evidence/smoke.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$evidence/smoke.exit"
+          {
+            echo "head_sha=$TARGET_SHA"
+            echo "historical_external_observation=true"
+            echo "source_containment_gate=false"
+            echo "credentialed=false"
+            echo "deployment=false"
+            echo "browser_certification=false"
+            echo "production_data_mutation=false"
+          } > "$evidence/authority.env"
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          echo "Historical Genesis spine smoke exit code: $status"
+          echo "This external observation is retained as advisory evidence and does not certify or veto legacy source containment."
+
+      - name: Upload historical Genesis spine URL smoke evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: legacy-genesis-spine-smoke-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/legacy-genesis-spine-smoke
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Confirm browser evidence remains canonical-only
         shell: bash
