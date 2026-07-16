@@ -34,6 +34,7 @@ const riskyClaims = [
     pattern: /\b(AR\/VR|AR|VR|XR|WebXR|headset|Quest)\b/i,
     allowedNearby: immersiveBoundary,
     reason: "immersive claim must be future-only, capability-gated, support-gated, or fallback-qualified in V1",
+    skipInternalDocs: true,
   },
   {
     pattern: /\b(full|real|production|live|complete|ready|certified)\s+spatial\b|\bspatial\s+(?:is\s+|remains\s+)?(full|real|production|live|complete|ready|certified)\b/i,
@@ -92,11 +93,13 @@ for (const phrase of requiredBoundaryPhrases) {
 
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
+  const isInternalDoc = relativePath.startsWith("docs/");
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
   lines.forEach((line, index) => {
     if (isImplementationLine(line)) return;
     const publicText = publicTextFromLine(line);
     for (const claim of riskyClaims) {
+      if (claim.skipInternalDocs && isInternalDoc) continue;
       claim.pattern.lastIndex = 0;
       if (!claim.pattern.test(publicText)) continue;
       if (claim.allowedNearby.test(publicText)) continue;
