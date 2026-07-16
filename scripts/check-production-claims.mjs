@@ -71,10 +71,14 @@ let failed = false;
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+  const contextRadius = relativePath.startsWith("docs/") ? 8 : 2;
 
   lines.forEach((line, index) => {
     const publicText = publicTextFromLine(line);
-    const context = [lines[index - 2] ?? "", lines[index - 1] ?? "", publicText, lines[index + 1] ?? "", lines[index + 2] ?? ""].join(" ");
+    const context = lines
+      .slice(Math.max(0, index - contextRadius), Math.min(lines.length, index + contextRadius + 1))
+      .map((entry, offset) => offset === contextRadius ? publicText : entry)
+      .join(" ");
 
     for (const claim of riskyProductionClaims) {
       claim.pattern.lastIndex = 0;
