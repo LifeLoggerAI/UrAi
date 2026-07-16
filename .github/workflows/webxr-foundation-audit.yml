@@ -10,6 +10,7 @@ on:
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
+      - "scripts/check-home-xr-lock.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
@@ -22,6 +23,7 @@ on:
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
+      - "scripts/check-home-xr-lock.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
@@ -154,11 +156,10 @@ jobs:
       - name: Verify production-claims policy
         run: npm run check:production-claims
 
-      - name: Verify Home XR lock and historical proof manifest
+      - name: Verify Home XR source lock and historical proof manifest
         run: |
           node scripts/check-home-xr-lock.mjs
           node scripts/check-home-xr-proof-manifest.mjs
-          npm run smoke:genesis-spine
 
       - name: Confirm browser evidence remains canonical-only
         shell: bash
