@@ -12,6 +12,8 @@ on:
       - "scripts/check-webxr-foundation-release-readiness.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/check-public-copy.mjs"
+      - "scripts/check-production-claims.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
   pull_request:
@@ -24,6 +26,8 @@ on:
       - "scripts/check-webxr-foundation-release-readiness.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/check-public-copy.mjs"
+      - "scripts/check-production-claims.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
 
@@ -148,11 +152,48 @@ jobs:
       - name: Verify assets
         run: npm run verify:assets
 
+      - name: Capture copy and production-claim policy evidence
+        id: policy
+        shell: bash
+        run: |
+          set -uo pipefail
+          evidence="$RUNNER_TEMP/webxr-policy-audit"
+          mkdir -p "$evidence"
+
+          set +e
+          npm run check:public-copy 2>&1 | tee "$evidence/public-copy.log"
+          public_copy_status=${PIPESTATUS[0]}
+          npm run check:production-claims 2>&1 | tee "$evidence/production-claims.log"
+          production_claims_status=${PIPESTATUS[0]}
+          set -e
+
+          printf '%s\n' "$public_copy_status" > "$evidence/public-copy.exit"
+          printf '%s\n' "$production_claims_status" > "$evidence/production-claims.exit"
+          {
+            echo "head_sha=$TARGET_SHA"
+            echo "credentialed=false"
+            echo "deployment=false"
+            echo "browser_certification=false"
+            echo "production_data_mutation=false"
+          } > "$evidence/authority.env"
+
+          echo "public_copy_exit=$public_copy_status" >> "$GITHUB_OUTPUT"
+          echo "production_claims_exit=$production_claims_status" >> "$GITHUB_OUTPUT"
+
+      - name: Upload copy and production-claim policy evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: legacy-webxr-policy-audit-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/webxr-policy-audit
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Verify public-copy policy
-        run: npm run check:public-copy
+        run: test "${{ steps.policy.outputs.public_copy_exit }}" = "0"
 
       - name: Verify production-claims policy
-        run: npm run check:production-claims
+        run: test "${{ steps.policy.outputs.production_claims_exit }}" = "0"
 
       - name: Verify Home XR lock and historical proof manifest
         run: |
