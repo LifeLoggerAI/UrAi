@@ -69,6 +69,28 @@ function nearestMarkdownHeading(lines, index) {
   return "";
 }
 
+function nearestMarkdownListPreamble(lines, index) {
+  let cursor = index - 1;
+  let sawList = /^\s*(?:[-*+]\s+|\d+[.)]\s+)/.test(lines[index] ?? "");
+
+  while (cursor >= 0) {
+    const candidate = lines[cursor].trim();
+    if (/^#{1,6}\s+/.test(candidate)) return "";
+    if (!candidate) {
+      cursor -= 1;
+      continue;
+    }
+    if (/^(?:[-*+]\s+|\d+[.)]\s+)/.test(candidate)) {
+      sawList = true;
+      cursor -= 1;
+      continue;
+    }
+    return sawList ? candidate : "";
+  }
+
+  return "";
+}
+
 const files = scannedRoots
   .flatMap(listFiles)
   .filter((filePath) => textExtensions.has(path.extname(filePath)))
@@ -85,6 +107,7 @@ for (const filePath of files) {
     const publicText = publicTextFromLine(line);
     const context = [
       isMarkdown ? nearestMarkdownHeading(lines, index) : "",
+      isMarkdown ? nearestMarkdownListPreamble(lines, index) : "",
       lines[index - 2] ?? "",
       lines[index - 1] ?? "",
       publicText,
