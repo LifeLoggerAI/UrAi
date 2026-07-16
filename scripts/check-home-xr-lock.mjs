@@ -20,6 +20,14 @@ const layer = read("src/components/urai/home/HomeXRInteractionLayer.tsx");
 const targets = read("src/components/urai/home/HomeXRTargets.ts");
 const xrFoundation = read("src/components/xr/XRSessionFoundation.tsx");
 const e2e = read("tests/e2e/home-xr-interaction.spec.ts");
+const authoritySource = read("system/canonical-authority.json");
+let authority = null;
+
+try {
+  authority = authoritySource ? JSON.parse(authoritySource) : null;
+} catch {
+  authority = null;
+}
 
 assertCheck(
   "Home keeps existing cinematic world",
@@ -80,15 +88,21 @@ assertCheck(
 );
 
 assertCheck(
-  "Home XR smoke captures proof screenshots",
-  e2e.includes("home-desktop.png") && e2e.includes("home-mobile.png") && e2e.includes("home-xr-affordance-mocked.png"),
-  "Home XR e2e smoke must capture desktop, mobile, and mocked-XR screenshots.",
+  "legacy Home XR browser assertions are archived",
+  e2e.includes('test.describe.skip("archived home XR assertions"') &&
+    e2e.includes("outside current release smoke"),
+  "The legacy Home XR Playwright file must remain explicitly skipped and non-certifying.",
 );
 
 assertCheck(
-  "Home XR smoke mocks supported immersive-vr",
-  e2e.includes("isSessionSupported") && e2e.includes("immersive-vr") && e2e.includes("Enter VR"),
-  "Home XR e2e smoke must prove the real XR affordance appears only when immersive-vr is supported or mocked.",
+  "canonical browser-proof authority belongs to Spatial",
+  authority?.canonicalProductRepo === "LifeLoggerAI/urai-spatial" &&
+    authority?.applicationRoot === "urai-tier1" &&
+    authority?.branch === "main" &&
+    authority?.domain === "urai.app" &&
+    Array.isArray(authority?.legacyRepos) &&
+    authority.legacyRepos.includes("LifeLoggerAI/UrAi"),
+  "system/canonical-authority.json must assign production and browser-proof authority to urai-spatial and classify UrAi as legacy.",
 );
 
 const failed = checks.filter((check) => !check.passed);
@@ -103,4 +117,4 @@ if (failed.length) {
   process.exit(1);
 }
 
-console.log("\nHome XR static lock passed.");
+console.log("\nHome XR legacy source lock passed; browser certification remains canonical-only.");
