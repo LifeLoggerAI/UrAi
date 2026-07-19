@@ -9,87 +9,49 @@ const workflow = fs.existsSync(path.join(root, workflowPath))
   : "";
 
 const checks = [];
+const check = (name, passed, detail) => checks.push({ name, passed, detail });
 
-function check(name, passed, detail) {
-  checks.push({ name, passed, detail });
-}
-
-check(
-  "workflow exists",
-  Boolean(workflow),
-  `${workflowPath} must exist.`
-);
-
+check("workflow exists", Boolean(workflow), `${workflowPath} must exist.`);
 check(
   "workflow is manual only",
   workflow.includes("workflow_dispatch:") && !workflow.includes("\n  push:") && !workflow.includes("\n  pull_request:"),
-  "Deploy workflow must remain manual-only to avoid accidental production deploys."
+  "Quarantined workflow must be manual-only."
 );
-
 check(
-  "required inputs are present",
-  workflow.includes("live_url:") && workflow.includes("firebase_project:"),
-  "Deploy workflow must require live_url and firebase_project inputs."
+  "workflow fails closed",
+  /quarantined|disabled|deny/i.test(workflow) && workflow.includes("exit 1"),
+  "Quarantined workflow must explicitly deny and exit nonzero."
 );
-
 check(
-  "Firebase token is required",
-  workflow.includes("secrets.FIREBASE_TOKEN") && workflow.includes("Missing FIREBASE_TOKEN"),
-  "Deploy workflow must explicitly require FIREBASE_TOKEN before deploying."
+  "workflow has no credential access",
+  !/secrets\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|google-github-actions\/auth/i.test(workflow),
+  "Quarantined workflow must not reference deployment credentials."
 );
-
 check(
-  "pre-deploy verification gates are present",
-  workflow.includes("npm run check:types") &&
-    workflow.includes("npm run lint") &&
-    workflow.includes("npm test") &&
-    workflow.includes("npm run build") &&
-    workflow.includes("npm run verify:routes") &&
-    workflow.includes("npm run verify:assets") &&
-    workflow.includes("npm run check:public-copy") &&
-    workflow.includes("npm run check:production-claims") &&
-    workflow.includes("node scripts/check-home-xr-lock.mjs") &&
-    workflow.includes("node scripts/check-home-xr-proof-manifest.mjs") &&
-    workflow.includes("node scripts/check-home-xr-live-deploy-proof.mjs") &&
-    workflow.includes("npm run smoke:genesis-spine"),
-  "Deploy workflow must run the full pre-deploy verification gate."
+  "workflow has no deploy command",
+  !/firebase(?:-tools)?\s+deploy|gcloud\s+(?:run|app)\s+deploy|vercel\s+(?:deploy|--prod)/i.test(workflow),
+  "Quarantined workflow must not contain a cloud deployment command."
 );
-
 check(
-  "Home XR smoke runs before deploy",
-  workflow.includes("npx playwright install --with-deps chromium") &&
-    workflow.includes("npx playwright test tests/e2e/home-xr-interaction.spec.ts"),
-  "Deploy workflow must run Home XR Playwright smoke before deploy."
+  "workflow is read only",
+  workflow.includes("contents: read") && !workflow.includes("contents: write"),
+  "Quarantined workflow must have read-only repository permission."
 );
-
 check(
-  "Firebase Hosting deploy is present",
-  workflow.includes("npx firebase-tools deploy --only hosting") && workflow.includes("--project"),
-  "Deploy workflow must deploy Firebase Hosting with an explicit project."
-);
-
-check(
-  "live URL smoke runs after deploy",
-  workflow.includes("node scripts/smoke-home-xr-live-url.mjs"),
-  "Deploy workflow must smoke the deployed live URL after Firebase deploy."
-);
-
-check(
-  "deploy proof artifact uploads",
-  workflow.includes("home-xr-deploy-proof") && workflow.includes("actions/upload-artifact@v4"),
-  "Deploy workflow must upload deploy proof artifacts."
+  "canonical authority is named",
+  workflow.includes("urai-spatial") && workflow.includes("urai-tier1"),
+  "Quarantined workflow must direct operators to the canonical release authority."
 );
 
 const failed = checks.filter((item) => !item.passed);
 for (const item of checks) {
-  const icon = item.passed ? "PASS" : "FAIL";
-  console.log(`[${icon}] ${item.name}`);
+  console.log(`[${item.passed ? "PASS" : "FAIL"}] ${item.name}`);
   if (!item.passed) console.log(`       ${item.detail}`);
 }
 
 if (failed.length) {
-  console.error(`\nHome XR deploy workflow check failed: ${failed.length} failing check(s).`);
+  console.error(`Home XR quarantine check failed: ${failed.length} failing check(s).`);
   process.exit(1);
 }
 
-console.log("\nHome XR deploy workflow check passed.");
+console.log("Home XR deployment authority is quarantined.");

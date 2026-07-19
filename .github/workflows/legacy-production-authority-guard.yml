@@ -1,0 +1,108 @@
+name: Legacy Production Authority Guard
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_LFS_SKIP_SMUDGE: "1"
+
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact reviewed head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+          lfs: false
+
+      - name: Verify exact clean head and LFS boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_head="$(git rev-parse HEAD)"
+          commit_tree="$(git rev-parse 'HEAD^{tree}')"
+          index_tree="$(git write-tree)"
+          untracked="$(git ls-files --others --exclude-standard)"
+          non_lfs_changes="$(git diff --name-only -- . ':(exclude)public/assets/**')"
+          printf 'expected_head=%s\nactual_head=%s\ncommit_tree=%s\nindex_tree=%s\n' \
+            "$TARGET_SHA" "$actual_head" "$commit_tree" "$index_tree"
+          if [[ -n "$untracked" ]]; then printf 'untracked_paths:\n%s\n' "$untracked"; fi
+          if [[ -n "$non_lfs_changes" ]]; then printf 'non_lfs_changes:\n%s\n' "$non_lfs_changes"; fi
+          test "$actual_head" = "$TARGET_SHA"
+          test "$index_tree" = "$commit_tree"
+          test -z "$untracked"
+          test -z "$non_lfs_changes"
+
+          lfs_files="$(git lfs ls-files --name-only)"
+          test "$lfs_files" = "public/assets/orb/orb_images_lottie.json"
+          test "$(grep -c 'filter=lfs' .gitattributes)" = "1"
+          grep -Fxq 'public/assets/orb/orb_images_lottie.json filter=lfs diff=lfs merge=lfs -text' .gitattributes
+          ! grep -Eq '^public/assets/\*\*' .gitattributes
+
+      - name: Verify legacy production denial
+        shell: bash
+        run: |
+          set -euo pipefail
+          quarantined=(
+            .github/workflows/firebase-production-deploy.yml
+            .github/workflows/deploy-home-xr.yml
+            .github/workflows/deploy-urai-app.yml
+            .github/workflows/deploy-urai.yml
+            .github/workflows/p1-release-gate.yml
+            .github/workflows/production-evidence.yml
+            .github/workflows/life-map-quest-production-evidence.yml
+            .github/workflows/post-deploy-verify.yml
+          )
+
+          for file in "${quarantined[@]}"; do
+            test -f "$file"
+            grep -Eqi 'quarantined|disabled|deny' "$file"
+            grep -Fq 'exit 1' "$file"
+            grep -Fq 'contents: read' "$file"
+            grep -Fq 'urai-spatial' "$file"
+            ! grep -Eqi 'secrets\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|google-github-actions/auth|firebase(-tools)?[[:space:]]+deploy|gcloud[[:space:]]+(run|app)[[:space:]]+deploy|vercel[[:space:]]+(deploy|--prod)|urai-4dc1d' "$file"
+          done
+
+          ! grep -R -n 'urai-4dc1d' .github/workflows
+          test "$(sed -n '1,20p' scripts/deploy-urai-firebase.sh | grep -c 'exit 1')" -ge 1
+          ! grep -Eqi 'firebase[[:space:]]+deploy|gcloud[[:space:]]+(run|app)[[:space:]]+deploy|urai-4dc1d' scripts/deploy-urai-firebase.sh
+
+          node scripts/check-home-xr-deploy-workflow.mjs
+          node scripts/check-home-xr-launch-evidence-consistency.mjs
+          node scripts/check-system-registry.mjs
+
+          node <<'NODE'
+          const fs = require('fs')
+          const authority = JSON.parse(fs.readFileSync('system/canonical-authority.json', 'utf8'))
+          const expected = {
+            canonicalProductRepo: 'LifeLoggerAI/urai-spatial',
+            applicationRoot: 'urai-tier1',
+            branch: 'main',
+            domain: 'urai.app'
+          }
+          for (const [key, value] of Object.entries(expected)) {
+            if (authority[key] !== value) throw new Error(`${key} must equal ${value}`)
+          }
+          for (const legacy of ['LifeLoggerAI/UrAi', 'LifeLoggerAI/UrAi-Dev', 'LifeLoggerAI/UrAiProd']) {
+            if (!authority.legacyRepos?.includes(legacy)) throw new Error(`missing legacy classification: ${legacy}`)
+          }
+          NODE
+
+          grep -Fq '"deploy": "node scripts/block-legacy-production-deploy.mjs deploy"' package.json
+          grep -Fq '"ship:urai": "node scripts/block-legacy-production-deploy.mjs ship:urai"' package.json
+          grep -Fq '"ship:urai:prod": "node scripts/block-legacy-production-deploy.mjs ship:urai:prod"' package.json

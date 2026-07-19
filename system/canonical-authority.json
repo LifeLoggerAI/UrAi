@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "urai-canonical-authority-1",
+  "recordedAt": "2026-07-15",
+  "canonicalProductRepo": "LifeLoggerAI/urai-spatial",
+  "applicationRoot": "urai-tier1",
+  "branch": "main",
+  "domain": "urai.app",
+  "certifiedProductionSha": "e2850a8b9dbd2fd11ee0197505da278322916aa0",
+  "legacyRepos": [
+    "LifeLoggerAI/UrAi",
+    "LifeLoggerAI/UrAi-Dev",
+    "LifeLoggerAI/UrAiProd"
+  ],
+  "supersedes": [
+    "system/urai-system-registry.json#canonicalProductRepo",
+    "historical documentation that names LifeLoggerAI/UrAi as canonical"
+  ],
+  "rules": [
+    "Production deployment authority exists only in LifeLoggerAI/urai-spatial on main.",
+    "Legacy repositories must remain credential-free and fail closed for deployment.",
+    "Historical registry content is evidence, not executable release authority."
+  ]
+}

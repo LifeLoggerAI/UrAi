@@ -13,8 +13,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: audit-home-xr-proof-chain-${{ github.ref }}
+  group: audit-home-xr-proof-chain-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_LFS_SKIP_SMUDGE: "1"
 
 jobs:
   audit-home-xr-proof-chain:
@@ -23,19 +27,26 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Check out exact candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+          lfs: false
 
-      - name: Verify legacy production authority boundary
+      - name: Prove exact clean candidate
         shell: bash
         run: |
           set -euo pipefail
-          test ! -f .github/workflows/deploy.yml
-          test ! -f .github/workflows/firebase-hosting-live.yml
-          test -f docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq 'LifeLoggerAI/urai-spatial' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq 'sole production authority' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq '.github/workflows/spatial-live-deploy.yml' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git write-tree)" = "$(git rev-parse 'HEAD^{tree}')"
+          test -z "$(git ls-files --others --exclude-standard)"
+          test -z "$(git diff --name-only -- . ':(exclude)public/assets/**')"
+
+      - name: Verify legacy production authority boundary
+        run: node scripts/check-legacy-production-authority-boundary.mjs
 
       - name: Preserve Home XR source as reference material
         shell: bash
@@ -45,4 +56,4 @@ jobs:
           test -f scripts/check-home-xr-proof-manifest.mjs
           test -f scripts/check-home-xr-live-deploy-proof.mjs
           echo 'Home XR implementation and historical proof remain available for reviewed feature extraction.'
-          echo 'Production certification now belongs to LifeLoggerAI/urai-spatial/urai-tier1.'
+          echo 'Production certification belongs exclusively to LifeLoggerAI/urai-spatial/urai-tier1/main.'

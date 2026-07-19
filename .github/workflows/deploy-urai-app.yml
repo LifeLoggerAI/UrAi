@@ -1,41 +1,33 @@
-name: Deploy urai.app
+name: Legacy urai.app Deploy — Quarantined
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    env:
-      FIREBASE_CLI_DISABLE_UPDATE_CHECK: "true"
-      NEXT_TELEMETRY_DISABLED: "1"
-      URAI_MIN_INSTALL_FREE_MB: "1000"
-
+  deny-legacy-production:
+    name: Deny legacy urai.app deployment
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install
-        run: npm ci
-
-      - name: Verify app
+      - name: Record canonical authority and fail closed
+        shell: bash
         run: |
-          npm run check:firebase
-          npm run check:v1
-          npm run check:types
-          npm run build
+          cat <<'EOF'
+          This legacy workflow is intentionally quarantined.
 
-      - name: Deploy urai.app
-        run: |
-          printf '%s' "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > "$RUNNER_TEMP/firebase-service-account.json"
-          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-service-account.json"
-          npx firebase-tools@15.22.1 experiments:enable webframeworks
-          npx firebase-tools@15.22.1 deploy --only hosting --project urai-4dc1d --non-interactive
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+          LifeLoggerAI/UrAi must not write a service-account file or deploy the
+          Firebase Hosting target that serves urai.app.
+
+          Canonical production authority:
+            LifeLoggerAI/urai-spatial
+            application: urai-tier1
+            branch: main
+            domain: urai.app
+
+          Use the protected release workflow in urai-spatial.
+          No secrets are read and no infrastructure mutation is attempted here.
+          EOF
+          exit 1
