@@ -1,5 +1,5 @@
-import { NewHomeScene } from "@/components/urai/home/NewHomeScene";
+import { LaunchPage } from "@/components/launch/LaunchShell";
 
 export default function RootPage() {
-  return <NewHomeScene />;
+  return <LaunchPage kind="home" />;
 }
