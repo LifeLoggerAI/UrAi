@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { PrivateHomeShell } from "@/components/launch/LaunchShell";
 
 export default function AppHomePage() {
-  redirect("/home");
+  return <PrivateHomeShell />;
 }
