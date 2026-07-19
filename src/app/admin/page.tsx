@@ -1,8 +1,8 @@
 "use client";
 
-import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminShell as LaunchAdminShell } from "@/components/launch/LaunchShell";
 import { requireAdminAccess } from "@/lib/admin/adminAccess";
-import { useUraiAuth, UraiAuthProvider } from "@/providers/UraiAuthProvider";
+import { UraiAuthProvider, useUraiAuth } from "@/providers/UraiAuthProvider";
 
 function AdminPageContent() {
   const auth = useUraiAuth();
@@ -24,7 +24,7 @@ function AdminPageContent() {
     );
   }
 
-  return <AdminShell />;
+  return <LaunchAdminShell />;
 }
 
 export default function AdminPage() {
