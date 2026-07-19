@@ -209,6 +209,20 @@ service cloud.firestore {
 
     match /waitlistEntries/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
     match /contactMessages/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
+    match /makeMineRequests/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if isAdmin(); allow delete: if false; }
+    match /foundingAccessMembers/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if isAdmin(); allow delete: if false; }
+    match /creatorApplications/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if isAdmin(); allow delete: if false; }
+    match /publicWorlds/{id} { allow read: if true; allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
+    match /watchVideos/{id} { allow read: if true; allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
+    match /signalLedgerEntries/{id} { allow read: if isAdmin(); allow create: if isAdmin(); allow update: if isAdmin(); allow delete: if false; }
+    match /paymentEvents/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission() || isAdmin(); allow update: if isAdmin(); allow delete: if false; }
+    match /analyticsEvents/{id} { allow read: if isAdmin(); allow create: if createsPublicSubmission(); allow update: if false; allow delete: if false; }
+    match /passportProfiles/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
+    match /consentSettings/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if false; }
+    match /privateMemories/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /chatThreads/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /chatMessages/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
+    match /lifeMapNodes/{id} { allow read: if ownsResource(); allow create: if ownsRequest(); allow update: if ownsResource() && ownsRequest(); allow delete: if ownsResource(); }
     match /creatorSubmissions/{id} { allow read: if isSignedIn() && ownsRequest(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
     match /jobApplications/{id} { allow read: if isAdmin() || ownsResource(); allow create: if isSignedIn() && ownsRequest(); allow update: if isAdmin(); allow delete: if false; }
 
