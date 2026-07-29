@@ -6,6 +6,10 @@ on:
       - chore/quarantine-current-main-20260729
     paths:
       - .github/workflows/one-shot-current-main-quarantine.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/one-shot-current-main-quarantine.yml
 
 permissions:
   contents: write
@@ -16,11 +20,13 @@ concurrency:
 
 jobs:
   quarantine:
+    if: github.repository == 'LifeLoggerAI/UrAi'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       TARGET_BRANCH: chore/quarantine-current-main-20260729
       CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
+      STAGING_PARENT_SHA: 65aeeb497dc7db70cb688272705be38bf3600841
       HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
     steps:
       - name: Check out exact current-main branch
@@ -37,8 +43,9 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
-          test "$(git rev-parse HEAD^)" = "$CURRENT_MAIN_SHA"
+          test "$(git rev-parse HEAD^)" = "$STAGING_PARENT_SHA"
           test "$(git rev-parse origin/main)" = "$CURRENT_MAIN_SHA"
+          git merge-base --is-ancestor "$CURRENT_MAIN_SHA" HEAD
           git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
           test -z "$(git status --porcelain --untracked-files=all)"
 
@@ -132,7 +139,7 @@ jobs:
           - Repository: `LifeLoggerAI/UrAi`
           - Starting current main: `658b36da6b239333a918396251aad6386894e78f`
           - Historical reviewed quarantine source: `b08490ec27245481ae8d163604ea2403eee0c3de`
-          - Canonical public authority: `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `urai.app`
+          - Canonical public authority: `LifeLoggerAI/urai-spatial` -> `urai-tier1` -> `main` -> `urai.app`
 
           This reconciliation preserves the two current-main launch-shell commits while selectively transplanting only reviewed quarantine workflows, authority guards, deployment-denial scripts, canonical-authority records, and legacy documentation. It does not merge the historical divergent product tree.
 
