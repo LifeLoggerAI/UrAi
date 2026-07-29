@@ -48,7 +48,6 @@ jobs:
 
           actual_head="$(git rev-parse HEAD)"
           actual_main="$(git rev-parse origin/main)"
-          dirty="$(git status --porcelain --untracked-files=all)"
           printf 'expectedHead=%s\nactualHead=%s\nexpectedMain=%s\nactualMain=%s\n' \
             "$EXPECTED_HEAD" "$actual_head" "$CURRENT_MAIN_SHA" "$actual_main"
 
@@ -57,37 +56,43 @@ jobs:
           git merge-base --is-ancestor "$CURRENT_MAIN_SHA" "$actual_head"
           git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
 
-          allowed_filter_paths=(
-            public/assets/sky/cosmic/sky-cosmic-09a.mp4
-            public/assets/sky/cosmic/sky-cosmic-10.mp4
-            public/assets/sky/cosmic/sky-cosmic-10a.mp4
-            public/assets/sky/energy/fallback-sky-energy-15.png
-            public/assets/sky/energy/fallback-sky-energy-15a.png
-            public/assets/sky/energy/fallback-sky-energy-16.png
-            public/assets/sky/energy/fallback-sky-energy-16a.png
-            public/assets/sky/energy/sky-energy-15.mp4
-            public/assets/sky/energy/sky-energy-15a.mp4
-            public/assets/sky/energy/sky-energy-16.mp4
-            public/assets/sky/energy/sky-energy-16a.mp4
-          )
-          declare -A allowed=()
-          for path in "${allowed_filter_paths[@]}"; do allowed["$path"]=1; done
+          unexpected=0
+          while IFS= read -r -d '' entry; do
+            status="${entry:0:2}"
+            path="${entry:3}"
+            allowed=false
+            case "$path" in
+              public/assets/ground/energy/*|\
+              public/assets/ground/fracture/*|\
+              public/assets/images/genesis-orb-placeholder.svg|\
+              'public/assets/orb/New Text Document.txt'|\
+              public/assets/orb/orb.json|\
+              public/assets/sky/bloom/*|\
+              public/assets/sky/cosmic/*|\
+              public/assets/sky/energy/*)
+                allowed=true
+                ;;
+            esac
 
-          if [ -n "$dirty" ]; then
-            unexpected=0
-            while IFS= read -r line; do
-              status="${line:0:3}"
-              path="${line:3}"
-              if [ "$status" != ' M ' ] || [ -z "${allowed[$path]+x}" ]; then
-                printf 'Unexpected dirty path before mutation: %s\n' "$line" >&2
-                unexpected=1
-                continue
-              fi
-              echo "Ignoring exact checkout-filter artifact: $path"
-              git update-index --assume-unchanged "$path"
-            done <<< "$dirty"
-            test "$unexpected" -eq 0
-          fi
+            if [ "$status" != ' M' ] || [ "$allowed" != true ]; then
+              printf 'Unexpected dirty path before mutation: status=%q path=%q\n' "$status" "$path" >&2
+              unexpected=1
+              continue
+            fi
+
+            echo "Ignoring exact checkout-filter artifact: $path"
+            git update-index --assume-unchanged -- "$path"
+          done < <(git status --porcelain=v1 -z --untracked-files=all)
+          test "$unexpected" -eq 0
+
+          residual_unexpected=0
+          while IFS= read -r -d '' entry; do
+            status="${entry:0:2}"
+            path="${entry:3}"
+            printf 'Residual dirty path after filter isolation: status=%q path=%q\n' "$status" "$path" >&2
+            residual_unexpected=1
+          done < <(git status --porcelain=v1 -z --untracked-files=all)
+          test "$residual_unexpected" -eq 0
 
       - name: Transplant only reviewed quarantine controls
         shell: bash
@@ -191,26 +196,23 @@ jobs:
           git rm .github/workflows/one-shot-current-main-quarantine.yml
           git add -A
 
-          allowed_filter_paths=(
-            public/assets/sky/cosmic/sky-cosmic-09a.mp4
-            public/assets/sky/cosmic/sky-cosmic-10.mp4
-            public/assets/sky/cosmic/sky-cosmic-10a.mp4
-            public/assets/sky/energy/fallback-sky-energy-15.png
-            public/assets/sky/energy/fallback-sky-energy-15a.png
-            public/assets/sky/energy/fallback-sky-energy-16.png
-            public/assets/sky/energy/fallback-sky-energy-16a.png
-            public/assets/sky/energy/sky-energy-15.mp4
-            public/assets/sky/energy/sky-energy-15a.mp4
-            public/assets/sky/energy/sky-energy-16.mp4
-            public/assets/sky/energy/sky-energy-16a.mp4
-          )
-          git reset -- "${allowed_filter_paths[@]}" || true
-          for path in "${allowed_filter_paths[@]}"; do
-            if git diff --cached --name-only | grep -Fx "$path"; then
-              echo "Filtered media artifact entered the staged tree: $path" >&2
-              exit 1
-            fi
-          done
+          staged_filter_artifact=0
+          while IFS= read -r -d '' path; do
+            case "$path" in
+              public/assets/ground/energy/*|\
+              public/assets/ground/fracture/*|\
+              public/assets/images/genesis-orb-placeholder.svg|\
+              'public/assets/orb/New Text Document.txt'|\
+              public/assets/orb/orb.json|\
+              public/assets/sky/bloom/*|\
+              public/assets/sky/cosmic/*|\
+              public/assets/sky/energy/*)
+                printf 'Filtered asset entered staged tree: %q\n' "$path" >&2
+                staged_filter_artifact=1
+                ;;
+            esac
+          done < <(git diff --cached --name-only -z)
+          test "$staged_filter_artifact" -eq 0
           git diff --cached --check
 
       - name: Verify fail-closed staged tree
