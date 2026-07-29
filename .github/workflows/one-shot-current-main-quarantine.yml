@@ -28,7 +28,6 @@ jobs:
       EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
       CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
       HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
-      ALLOWED_FILTER_DIRTY_PATH: public/assets/ground/energy/ground-energy-15.mp4
       OUT_DIR: current-main-quarantine-export
     steps:
       - name: Check out exact current-main branch
@@ -58,14 +57,36 @@ jobs:
           git merge-base --is-ancestor "$CURRENT_MAIN_SHA" "$actual_head"
           git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
 
-          expected_dirty=" M $ALLOWED_FILTER_DIRTY_PATH"
-          if [ -n "$dirty" ] && [ "$dirty" != "$expected_dirty" ]; then
-            printf 'Unexpected dirty checkout before mutation:\n%s\n' "$dirty" >&2
-            exit 1
-          fi
-          if [ "$dirty" = "$expected_dirty" ]; then
-            echo "Ignoring exact checkout-filter artifact: $ALLOWED_FILTER_DIRTY_PATH"
-            git update-index --assume-unchanged "$ALLOWED_FILTER_DIRTY_PATH"
+          allowed_filter_paths=(
+            public/assets/sky/cosmic/sky-cosmic-09a.mp4
+            public/assets/sky/cosmic/sky-cosmic-10.mp4
+            public/assets/sky/cosmic/sky-cosmic-10a.mp4
+            public/assets/sky/energy/fallback-sky-energy-15.png
+            public/assets/sky/energy/fallback-sky-energy-15a.png
+            public/assets/sky/energy/fallback-sky-energy-16.png
+            public/assets/sky/energy/fallback-sky-energy-16a.png
+            public/assets/sky/energy/sky-energy-15.mp4
+            public/assets/sky/energy/sky-energy-15a.mp4
+            public/assets/sky/energy/sky-energy-16.mp4
+            public/assets/sky/energy/sky-energy-16a.mp4
+          )
+          declare -A allowed=()
+          for path in "${allowed_filter_paths[@]}"; do allowed["$path"]=1; done
+
+          if [ -n "$dirty" ]; then
+            unexpected=0
+            while IFS= read -r line; do
+              status="${line:0:3}"
+              path="${line:3}"
+              if [ "$status" != ' M ' ] || [ -z "${allowed[$path]+x}" ]; then
+                printf 'Unexpected dirty path before mutation: %s\n' "$line" >&2
+                unexpected=1
+                continue
+              fi
+              echo "Ignoring exact checkout-filter artifact: $path"
+              git update-index --assume-unchanged "$path"
+            done <<< "$dirty"
+            test "$unexpected" -eq 0
           fi
 
       - name: Transplant only reviewed quarantine controls
@@ -169,11 +190,27 @@ jobs:
 
           git rm .github/workflows/one-shot-current-main-quarantine.yml
           git add -A
-          git reset -- "$ALLOWED_FILTER_DIRTY_PATH" || true
-          if git diff --cached --name-only | grep -Fx "$ALLOWED_FILTER_DIRTY_PATH"; then
-            echo "Filtered media artifact entered the staged tree" >&2
-            exit 1
-          fi
+
+          allowed_filter_paths=(
+            public/assets/sky/cosmic/sky-cosmic-09a.mp4
+            public/assets/sky/cosmic/sky-cosmic-10.mp4
+            public/assets/sky/cosmic/sky-cosmic-10a.mp4
+            public/assets/sky/energy/fallback-sky-energy-15.png
+            public/assets/sky/energy/fallback-sky-energy-15a.png
+            public/assets/sky/energy/fallback-sky-energy-16.png
+            public/assets/sky/energy/fallback-sky-energy-16a.png
+            public/assets/sky/energy/sky-energy-15.mp4
+            public/assets/sky/energy/sky-energy-15a.mp4
+            public/assets/sky/energy/sky-energy-16.mp4
+            public/assets/sky/energy/sky-energy-16a.mp4
+          )
+          git reset -- "${allowed_filter_paths[@]}" || true
+          for path in "${allowed_filter_paths[@]}"; do
+            if git diff --cached --name-only | grep -Fx "$path"; then
+              echo "Filtered media artifact entered the staged tree: $path" >&2
+              exit 1
+            fi
+          done
           git diff --cached --check
 
       - name: Verify fail-closed staged tree
