@@ -25,8 +25,8 @@ jobs:
     timeout-minutes: 15
     env:
       TARGET_BRANCH: chore/quarantine-current-main-20260729
+      EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
       CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
-      STAGING_PARENT_SHA: f04d58042ce4dae4670d179608002aee95445231
       HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
     steps:
       - name: Check out exact current-main branch
@@ -44,11 +44,33 @@ jobs:
           set -euo pipefail
           git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
           git fetch --no-tags origin "$HISTORICAL_QUARANTINE_SHA"
-          test "$(git rev-parse HEAD^)" = "$STAGING_PARENT_SHA"
-          test "$(git rev-parse origin/main)" = "$CURRENT_MAIN_SHA"
-          git merge-base --is-ancestor "$CURRENT_MAIN_SHA" HEAD
-          git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
-          test -z "$(git status --porcelain --untracked-files=all)"
+
+          actual_head="$(git rev-parse HEAD)"
+          actual_main="$(git rev-parse origin/main)"
+          dirty="$(git status --porcelain --untracked-files=all)"
+          printf 'expectedHead=%s\nactualHead=%s\nexpectedMain=%s\nactualMain=%s\n' \
+            "$EXPECTED_HEAD" "$actual_head" "$CURRENT_MAIN_SHA" "$actual_main"
+
+          if [ "$actual_head" != "$EXPECTED_HEAD" ]; then
+            echo "Refusing stale branch checkout" >&2
+            exit 1
+          fi
+          if [ "$actual_main" != "$CURRENT_MAIN_SHA" ]; then
+            echo "Canonical legacy main moved; re-audit required" >&2
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$CURRENT_MAIN_SHA" "$actual_head"; then
+            echo "Current main is not an ancestor of the quarantine candidate" >&2
+            exit 1
+          fi
+          if ! git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"; then
+            echo "Historical reviewed quarantine commit is unavailable" >&2
+            exit 1
+          fi
+          if [ -n "$dirty" ]; then
+            printf 'Dirty checkout before mutation:\n%s\n' "$dirty" >&2
+            exit 1
+          fi
 
       - name: Transplant only reviewed quarantine controls
         shell: bash
