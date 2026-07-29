@@ -26,7 +26,7 @@ jobs:
     env:
       TARGET_BRANCH: chore/quarantine-current-main-20260729
       CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
-      STAGING_PARENT_SHA: 65aeeb497dc7db70cb688272705be38bf3600841
+      STAGING_PARENT_SHA: f04d58042ce4dae4670d179608002aee95445231
       HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
     steps:
       - name: Check out exact current-main branch
@@ -43,6 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --no-tags origin "$HISTORICAL_QUARANTINE_SHA"
           test "$(git rev-parse HEAD^)" = "$STAGING_PARENT_SHA"
           test "$(git rev-parse origin/main)" = "$CURRENT_MAIN_SHA"
           git merge-base --is-ancestor "$CURRENT_MAIN_SHA" HEAD
