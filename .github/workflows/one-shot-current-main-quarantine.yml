@@ -1,4 +1,4 @@
-name: One-shot current-main legacy quarantine
+name: One-shot export current-main legacy quarantine
 
 on:
   push:
@@ -12,29 +12,31 @@ on:
       - .github/workflows/one-shot-current-main-quarantine.yml
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: one-shot-current-main-legacy-quarantine
+  group: one-shot-export-current-main-legacy-quarantine
   cancel-in-progress: false
 
 jobs:
-  quarantine:
+  export-quarantine:
     if: github.repository == 'LifeLoggerAI/UrAi'
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       TARGET_BRANCH: chore/quarantine-current-main-20260729
       EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
       CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
       HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
+      ALLOWED_FILTER_DIRTY_PATH: public/assets/ground/energy/ground-energy-15.mp4
+      OUT_DIR: current-main-quarantine-export
     steps:
       - name: Check out exact current-main branch
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
           show-progress: false
           lfs: false
 
@@ -51,25 +53,19 @@ jobs:
           printf 'expectedHead=%s\nactualHead=%s\nexpectedMain=%s\nactualMain=%s\n' \
             "$EXPECTED_HEAD" "$actual_head" "$CURRENT_MAIN_SHA" "$actual_main"
 
-          if [ "$actual_head" != "$EXPECTED_HEAD" ]; then
-            echo "Refusing stale branch checkout" >&2
+          test "$actual_head" = "$EXPECTED_HEAD"
+          test "$actual_main" = "$CURRENT_MAIN_SHA"
+          git merge-base --is-ancestor "$CURRENT_MAIN_SHA" "$actual_head"
+          git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
+
+          expected_dirty=" M $ALLOWED_FILTER_DIRTY_PATH"
+          if [ -n "$dirty" ] && [ "$dirty" != "$expected_dirty" ]; then
+            printf 'Unexpected dirty checkout before mutation:\n%s\n' "$dirty" >&2
             exit 1
           fi
-          if [ "$actual_main" != "$CURRENT_MAIN_SHA" ]; then
-            echo "Canonical legacy main moved; re-audit required" >&2
-            exit 1
-          fi
-          if ! git merge-base --is-ancestor "$CURRENT_MAIN_SHA" "$actual_head"; then
-            echo "Current main is not an ancestor of the quarantine candidate" >&2
-            exit 1
-          fi
-          if ! git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"; then
-            echo "Historical reviewed quarantine commit is unavailable" >&2
-            exit 1
-          fi
-          if [ -n "$dirty" ]; then
-            printf 'Dirty checkout before mutation:\n%s\n' "$dirty" >&2
-            exit 1
+          if [ "$dirty" = "$expected_dirty" ]; then
+            echo "Ignoring exact checkout-filter artifact: $ALLOWED_FILTER_DIRTY_PATH"
+            git update-index --assume-unchanged "$ALLOWED_FILTER_DIRTY_PATH"
           fi
 
       - name: Transplant only reviewed quarantine controls
@@ -166,15 +162,21 @@ jobs:
 
           This reconciliation preserves the two current-main launch-shell commits while selectively transplanting only reviewed quarantine workflows, authority guards, deployment-denial scripts, canonical-authority records, and legacy documentation. It does not merge the historical divergent product tree.
 
-          Source containment additionally removes every Firebase project alias from `.firebaserc` and every deployable Hosting, Firestore, Functions, Storage, and App Hosting section from `firebase.json`. Production deployment package aliases remain fail-closed. The new `URAI Launch Verify` workflow remains verification-only and may not read production secrets or deploy infrastructure.
+          Source containment additionally removes every Firebase project alias from `.firebaserc` and every deployable Hosting, Firestore, Functions, Storage, and App Hosting section from `firebase.json`. Production deployment package aliases remain fail-closed. The current `URAI Launch Verify` workflow remains verification-only and may not read production secrets or deploy infrastructure.
 
           Repository settings, environments, secrets, deploy keys, installed apps, webhooks, historic artifacts, provider credentials, and credential revocation remain administrator-side gates outside source control.
           EOF
 
           git rm .github/workflows/one-shot-current-main-quarantine.yml
-          git diff --check
+          git add -A
+          git reset -- "$ALLOWED_FILTER_DIRTY_PATH" || true
+          if git diff --cached --name-only | grep -Fx "$ALLOWED_FILTER_DIRTY_PATH"; then
+            echo "Filtered media artifact entered the staged tree" >&2
+            exit 1
+          fi
+          git diff --cached --check
 
-      - name: Verify fail-closed current tree
+      - name: Verify fail-closed staged tree
         shell: bash
         run: |
           set -euo pipefail
@@ -196,15 +198,45 @@ jobs:
           node scripts/check-home-xr-launch-evidence-consistency.mjs
           node scripts/check-system-registry.mjs
           node -e "const p=require('./package.json'); for (const k of ['deploy','deploy:rules','deploy:hosting','ship:urai','ship:urai:prod']) { if (!String(p.scripts[k]).includes('block-legacy-production-deploy.mjs')) throw new Error(k+' is not blocked') }"
-          git diff --cached --name-status > /tmp/quarantine-files.txt
-          test -s /tmp/quarantine-files.txt
+          test -n "$(git diff --cached --name-only)"
 
-      - name: Commit and publish containment candidate
+      - name: Export exact staged tree
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "chore: quarantine legacy production authority on current main"
-          git push origin "HEAD:$TARGET_BRANCH"
+          mkdir -p "$OUT_DIR/tree"
+          git diff --cached --name-status > "$OUT_DIR/name-status.tsv"
+          : > "$OUT_DIR/deletions.txt"
+          : > "$OUT_DIR/modes.tsv"
+
+          while IFS=$'\t' read -r status path extra; do
+            case "$status" in
+              D)
+                printf '%s\n' "$path" >> "$OUT_DIR/deletions.txt"
+                ;;
+              R*|C*)
+                source_path="$path"
+                destination_path="$extra"
+                printf '%s\n' "$source_path" >> "$OUT_DIR/deletions.txt"
+                path="$destination_path"
+                ;;
+            esac
+            if [ -e "$path" ]; then
+              mkdir -p "$OUT_DIR/tree/$(dirname "$path")"
+              cp -a "$path" "$OUT_DIR/tree/$path"
+              mode="$(git ls-files -s -- "$path" | awk 'NR==1 {print $1}')"
+              printf '%s\t%s\n' "${mode:-100644}" "$path" >> "$OUT_DIR/modes.tsv"
+            fi
+          done < "$OUT_DIR/name-status.tsv"
+
+          cp docs/LEGACY_CURRENT_MAIN_QUARANTINE_RECEIPT_2026-07-29.md "$OUT_DIR/receipt.md"
+          printf '%s\n' "$EXPECTED_HEAD" > "$OUT_DIR/source-head.txt"
+          printf '%s\n' "$CURRENT_MAIN_SHA" > "$OUT_DIR/base-main.txt"
+
+      - name: Upload exact quarantine packet
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: current-main-quarantine-${{ env.EXPECTED_HEAD }}
+          path: current-main-quarantine-export
+          if-no-files-found: error
+          retention-days: 30
