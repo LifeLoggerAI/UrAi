@@ -9,4 +9,6 @@ This reconciliation preserves the current-main launch-shell history while select
 
 Source containment removes every Firebase project alias, every deployable Hosting, Firestore, Functions, Storage, and App Hosting section, and the entire legacy Firebase Functions source/package tree. Production deployment package aliases remain fail-closed. `URAI Launch Verify` remains verification-only and may not read production secrets or deploy infrastructure.
 
+A receipt-only follow-up commit triggers the final pull-request workflow train after the one-shot materializer deletes itself. That validation commit does not restore product source, provider credentials, Firebase targets, deployment configuration, or production authority.
+
 Repository settings, environments, secrets, deploy keys, installed apps, webhooks, historic artifacts, provider credentials, and credential revocation remain administrator-side gates outside source control.
