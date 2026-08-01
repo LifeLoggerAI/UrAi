@@ -36,11 +36,7 @@ check(
   "Use native Three/WebXR foundation unless @react-three/xr compatibility is intentionally audited and locked.",
 );
 
-check(
-  "XR foundation module exists",
-  exists("src/components/xr/XRSessionFoundation.tsx"),
-  "src/components/xr/XRSessionFoundation.tsx must exist.",
-);
+check("XR foundation module exists", exists("src/components/xr/XRSessionFoundation.tsx"), "XR foundation source must remain available for reference.");
 
 check(
   "XR foundation detects WebGL and browser WebXR API",
@@ -56,7 +52,7 @@ check(
 
 check(
   "real WebXR session request is gated",
-  xrFoundation.includes('xr.requestSession("immersive-vr"') && xrFoundation.includes("renderer.xr.setSession") && xrFoundation.includes("capabilities.immersiveVr !== \"supported\""),
+  xrFoundation.includes('xr.requestSession("immersive-vr"') && xrFoundation.includes("renderer.xr.setSession") && xrFoundation.includes('capabilities.immersiveVr !== "supported"'),
   "Enter VR must request a real browser WebXR session only after capability support is detected.",
 );
 
@@ -67,21 +63,20 @@ check(
 );
 
 check(
-  "/xr route is wired to real preview and capability panel",
+  "/xr route is wired to preview and capability panel",
   xrRoute.includes("XRReadyCanvas") && xrRoute.includes("XRSessionButton") && xrRoute.includes("XRStatusPanel") && xrRoute.includes("HomeWorldCanvas"),
-  "/xr must show the Home 3D preview, capability panel, and support-gated VR entry.",
+  "/xr must preserve the reference preview, capability panel, and support-gated entry source.",
 );
 
 check(
-  "/home route keeps Home scene and adds safe XR affordance",
-  homeRoute.includes("HomeXREntryCard") && homeRoute.includes("HomeWorldCanvas") && homeRoute.includes('href="/xr"'),
-  "/home must preserve Home 3D and add only a safe XR route/affordance.",
-);
-
-check(
-  "/ route does not claim full XR",
-  rootRoute.includes("Check XR gate") && rootRoute.includes("headset entry") && rootRoute.includes("remain gated"),
-  "/ must link to the XR gate while keeping headset claims gated.",
+  "Home scene retains claim-safe XR affordance",
+  rootRoute.includes("NewHomeScene") &&
+    homeRoute.includes("HomeXREntryCard") &&
+    homeRoute.includes("HomeWorldCanvas") &&
+    homeRoute.includes('href="/xr"') &&
+    homeRoute.includes("Check XR support") &&
+    homeRoute.includes("headset entry stay gated until proof passes"),
+  "The legacy root must delegate to Home, link only to support checks, and keep headset entry visibly gated.",
 );
 
 check(
@@ -91,41 +86,38 @@ check(
 );
 
 check(
-  "Playwright smoke covers desktop, mobile, and mocked support",
-  e2e.includes("/home desktop loads") && e2e.includes("/home mobile loads") && e2e.includes("mocked supported") && e2e.includes("toHaveCount(0)"),
-  "E2E smoke must cover desktop, mobile, no fake button, and mocked supported affordance.",
+  "legacy Playwright assertions are explicitly archived",
+  e2e.includes('test.describe.skip("archived home XR assertions"') && e2e.includes("outside current release smoke"),
+  "The legacy repository must not present archived browser assertions as current release evidence.",
 );
 
 check(
-  "manual deploy workflow exists and runs pre-deploy gates",
+  "legacy Home XR deploy workflow is quarantined",
   deployWorkflow.includes("workflow_dispatch:") &&
-    deployWorkflow.includes("npm run check:types") &&
-    deployWorkflow.includes("npm run lint") &&
-    deployWorkflow.includes("npm run build") &&
-    deployWorkflow.includes("npm run verify:routes") &&
-    deployWorkflow.includes("npm run verify:assets") &&
-    deployWorkflow.includes("npm run check:public-copy") &&
-    deployWorkflow.includes("npm run check:production-claims") &&
-    deployWorkflow.includes("npx playwright test tests/e2e/home-xr-interaction.spec.ts"),
-  "Deploy workflow must remain manual and run the full verification gate before Firebase deploy.",
+    /quarantined|disabled|deny/i.test(deployWorkflow) &&
+    deployWorkflow.includes("exit 1") &&
+    deployWorkflow.includes("LifeLoggerAI/urai-spatial") &&
+    deployWorkflow.includes("urai-tier1") &&
+    deployWorkflow.includes("urai.app"),
+  "Legacy Home XR workflow must remain manual, fail closed, and name the canonical Spatial authority.",
 );
 
 check(
-  "manual deploy workflow requires Firebase token before deploy",
-  deployWorkflow.includes("Missing FIREBASE_TOKEN") && deployWorkflow.includes("npx firebase-tools deploy --only hosting"),
-  "Firebase deploy must require an explicit repository secret and deploy Hosting only after checks pass.",
+  "legacy Home XR workflow cannot authenticate or deploy",
+  !/secrets\.|FIREBASE_TOKEN|SERVICE_ACCOUNT|google-github-actions\/auth|firebase(?:-tools)?\s+deploy|gcloud\s+(?:run|app)\s+deploy/i.test(deployWorkflow),
+  "Legacy Home XR workflow must be credential-free and contain no cloud deployment command.",
 );
 
 check(
-  "live proof doc blocks live claims until evidence exists",
+  "historical live proof remains warning-bound",
   liveProof.includes("Configuration is not deployment proof") && liveProof.includes("HOME QUEST/XR LIVE-SMOKE-PASSED") && liveProof.includes("HOME QUEST/XR LIVE-QUEST-VERIFIED") && liveProof.includes("Do not claim"),
-  "Live proof doc must block live/Quest claims until URL, screenshot, smoke, and Quest evidence are linked.",
+  "Historical proof must remain preserved but must not establish current deployment authority.",
 );
 
 check(
   "release evidence records honest warning status",
   releaseEvidence.includes("WEBXR FOUNDATION READY WITH WARNINGS") && releaseEvidence.includes("does not include a completed live deployment artifact") && releaseEvidence.includes("physical Quest hardware validation"),
-  "Release evidence must keep current status honest until live deployment and Quest proof are attached.",
+  "Historical release evidence must keep its limitations explicit.",
 );
 
 const failed = checks.filter((item) => !item.passed);
@@ -135,8 +127,8 @@ for (const item of checks) {
 }
 
 if (failed.length > 0) {
-  console.error(`\nWebXR foundation release readiness failed: ${failed.length} failing check(s).`);
+  console.error(`\nWebXR foundation source readiness failed: ${failed.length} failing check(s).`);
   process.exit(1);
 }
 
-console.log("\nWebXR foundation release readiness checks passed. This verifies repository readiness, not live deployment or Quest hardware proof.");
+console.log("\nWebXR legacy source and quarantine checks passed. This is not browser, deployment, or Quest hardware certification.");

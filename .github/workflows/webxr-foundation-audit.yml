@@ -1,4 +1,4 @@
-name: WebXR Foundation Audit
+name: Legacy WebXR Source Audit
 
 on:
   workflow_dispatch:
@@ -7,15 +7,12 @@ on:
       - "src/components/xr/**"
       - "src/app/xr/**"
       - "src/components/urai/home/**"
-      - "src/app/page.tsx"
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
-      - "scripts/write-webxr-audit-summary.mjs"
-      - "scripts/write-home-xr-deploy-proof-summary.mjs"
-      - "scripts/check-home-xr-*.mjs"
-      - "launch-proof/home-quest-interaction/**"
-      - "docs/release-evidence/**"
+      - "scripts/check-home-xr-lock.mjs"
+      - "scripts/check-home-xr-deploy-workflow.mjs"
+      - "scripts/check-home-xr-launch-evidence-consistency.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
   pull_request:
@@ -23,15 +20,12 @@ on:
       - "src/components/xr/**"
       - "src/app/xr/**"
       - "src/components/urai/home/**"
-      - "src/app/page.tsx"
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
       - "scripts/check-webxr-foundation-release-readiness.mjs"
-      - "scripts/write-webxr-audit-summary.mjs"
-      - "scripts/write-home-xr-deploy-proof-summary.mjs"
-      - "scripts/check-home-xr-*.mjs"
-      - "launch-proof/home-quest-interaction/**"
-      - "docs/release-evidence/**"
+      - "scripts/check-home-xr-lock.mjs"
+      - "scripts/check-home-xr-deploy-workflow.mjs"
+      - "scripts/check-home-xr-launch-evidence-consistency.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
 
@@ -39,95 +33,138 @@ permissions:
   contents: read
 
 concurrency:
-  group: webxr-foundation-audit-${{ github.ref }}
+  group: legacy-webxr-source-${{ github.event.pull_request.head.sha || github.sha }}
   cancel-in-progress: true
 
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  GIT_LFS_SKIP_SMUDGE: "1"
+  CI: "true"
+  NEXT_PUBLIC_FIREBASE_API_KEY: "ci-placeholder"
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "legacy-reference-ci.invalid"
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID: "legacy-reference-ci"
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "legacy-reference-ci.invalid"
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+  NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:legacy-reference"
+  FIREBASE_PROJECT_ID: "legacy-reference-ci"
+  FIREBASE_CLIENT_EMAIL: "ci@example.invalid"
+  FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
+  URAI_REQUIRE_FIREBASE_ADMIN: "0"
+  URAI_ENABLE_CHRONO_FIRESTORE: "0"
+
 jobs:
-  audit:
-    name: Verify WebXR foundation without deploy claims
-    runs-on: ubuntu-latest
+  source-audit:
+    name: Verify legacy WebXR source without deploy claims
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
-
-    env:
-      CI: "true"
-      NEXT_PUBLIC_FIREBASE_API_KEY: "ci-placeholder"
-      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "ci-placeholder.firebaseapp.com"
-      NEXT_PUBLIC_FIREBASE_PROJECT_ID: "urai-4dc1d"
-      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "ci-placeholder.appspot.com"
-      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
-      NEXT_PUBLIC_FIREBASE_APP_ID: "1:000000000000:web:ci"
-      FIREBASE_PROJECT_ID: "urai-4dc1d"
-      FIREBASE_CLIENT_EMAIL: "ci@example.iam.gserviceaccount.com"
-      FIREBASE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\nci-placeholder\n-----END PRIVATE KEY-----\n"
-      URAI_REQUIRE_FIREBASE_ADMIN: "0"
-      URAI_ENABLE_CHRONO_FIRESTORE: "0"
-      OPENAI_API_KEY: "ci-placeholder-openai-key"
-      PLAYWRIGHT_SKIP_BROWSER_GC: "1"
-      WEBXR_AUDIT_OUTPUT_DIR: "/tmp/urai-webxr-audit-summary"
-
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Checkout exact reviewed head
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+          lfs: false
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Prove exact clean head
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_head="$(git rev-parse HEAD)"
+          commit_tree="$(git rev-parse 'HEAD^{tree}')"
+          index_tree="$(git write-tree)"
+          untracked="$(git ls-files --others --exclude-standard)"
+          non_lfs_changes="$(git diff --name-only -- . ':(exclude)public/assets/**')"
+          printf 'expected_head=%s\nactual_head=%s\ncommit_tree=%s\nindex_tree=%s\n' \
+            "$TARGET_SHA" "$actual_head" "$commit_tree" "$index_tree"
+          if [[ -n "$untracked" ]]; then printf 'untracked_paths:\n%s\n' "$untracked"; fi
+          if [[ -n "$non_lfs_changes" ]]; then printf 'non_lfs_changes:\n%s\n' "$non_lfs_changes"; fi
+          test "$actual_head" = "$TARGET_SHA"
+          test "$index_tree" = "$commit_tree"
+          test -z "$untracked"
+          test -z "$non_lfs_changes"
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install frozen dependencies
+        run: npm ci
 
-      - name: WebXR repository readiness verifier
-        run: node scripts/check-webxr-foundation-release-readiness.mjs
+      - name: Capture WebXR source readiness contract
+        id: readiness
+        shell: bash
+        run: |
+          set -uo pipefail
+          evidence="$RUNNER_TEMP/webxr-source-readiness"
+          mkdir -p "$evidence"
+          set +e
+          node scripts/check-webxr-foundation-release-readiness.mjs 2>&1 | tee "$evidence/readiness.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$status" > "$evidence/readiness.exit"
+          {
+            echo "head_sha=$TARGET_SHA"
+            echo "credentialed=false"
+            echo "deployment=false"
+            echo "browser_certification=false"
+            echo "production_data_mutation=false"
+          } > "$evidence/authority.env"
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
 
-      - name: Typecheck
-        run: npm run check:types
+      - name: Upload WebXR source readiness evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: legacy-webxr-source-readiness-${{ env.TARGET_SHA }}
+          path: ${{ runner.temp }}/webxr-source-readiness
+          if-no-files-found: error
+          retention-days: 30
 
-      - name: Lint
-        run: npm run lint
+      - name: Enforce WebXR source readiness result
+        run: test "${{ steps.readiness.outputs.exit_code }}" = "0"
 
-      - name: Unit tests
+      - name: Verify Home XR deployment quarantine
+        run: node scripts/check-home-xr-deploy-workflow.mjs
+
+      - name: Verify Home XR evidence quarantine
+        run: node scripts/check-home-xr-launch-evidence-consistency.mjs
+
+      - name: Verify TypeScript and lint
+        run: |
+          npm run check:types
+          npm run lint
+
+      - name: Verify focused XR unit contract
         run: npm test -- --runInBand src/components/xr/__tests__/XRSessionFoundation.test.tsx
 
-      - name: Production build
+      - name: Build source candidate
         run: npm run build
 
-      - name: Route and asset gates
-        run: |
-          npm run verify:routes
-          npm run verify:assets
+      - name: Verify routes
+        run: npm run verify:routes
 
-      - name: Public claim gates
-        run: |
-          npm run check:public-copy
-          npm run check:production-claims
+      - name: Verify assets
+        run: npm run verify:assets
 
-      - name: Home XR proof gates
+      - name: Verify public-copy policy
+        run: npm run check:public-copy
+
+      - name: Verify production-claims policy
+        run: npm run check:production-claims
+
+      - name: Verify Home XR source lock and historical proof manifest
         run: |
           node scripts/check-home-xr-lock.mjs
           node scripts/check-home-xr-proof-manifest.mjs
-          node scripts/check-home-xr-live-deploy-proof.mjs
-          node scripts/check-home-xr-deploy-workflow.mjs
-          node scripts/check-home-xr-structured-deploy-proof.mjs
 
-      - name: Genesis spine smoke
-        run: npm run smoke:genesis-spine
-
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
-
-      - name: Home XR browser smoke
-        run: npx playwright test tests/e2e/home-xr-interaction.spec.ts --project=chromium --project=mobile-chrome
-
-      - name: Write WebXR audit summary
-        if: always()
-        run: node scripts/write-webxr-audit-summary.mjs
-
-      - name: Upload WebXR audit summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: webxr-foundation-audit-summary
-          path: /tmp/urai-webxr-audit-summary
-          if-no-files-found: error
+      - name: Confirm browser evidence remains canonical-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'test.describe.skip("archived home XR assertions"' tests/e2e/home-xr-interaction.spec.ts
+          grep -Fq 'outside current release smoke' tests/e2e/home-xr-interaction.spec.ts
+          grep -Fq 'LifeLoggerAI/urai-spatial' system/canonical-authority.json

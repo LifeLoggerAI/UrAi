@@ -1,5 +1,7 @@
 # URAI Launch Blocker Matrix
 
+> **Archived legacy planning record.** This file is not current deployment authority and its commands must not be used to publish production. Canonical production authority is `LifeLoggerAI/urai-spatial -> urai-tier1 -> main -> urai.app`.
+
 Date: 2026-06-08
 Owner: Adam Clamp
 Scope: Cross-repo launch control for the URAI V1 / Genesis-adjacent repo lattice.
@@ -61,7 +63,7 @@ These should not delay controlled V1 if public copy does not claim them as live:
 - Full passive sensing
 - AI therapist / diagnosis
 - Marketplace / user data selling
-- Full AR/VR/XR
+- Full AR/VR/XR — not live or claimed in controlled V1
 - Enterprise admin console
 - Studio/export/media pipeline
 - Provider-backed asset generation

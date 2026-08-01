@@ -1,69 +1,17 @@
-name: Post Deploy Verify
+name: Legacy Post Deploy Verification — Quarantined
 
 on:
   workflow_dispatch:
-    inputs:
-      base_url:
-        description: "Base URL to verify after deploy"
-        required: true
-        default: "https://urai-4dc1d.web.app"
 
 permissions:
   contents: read
 
-concurrency:
-  group: post-deploy-verify
-  cancel-in-progress: true
-
 jobs:
-  post-deploy-verify:
-    name: Verify deployed URAI routes
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    env:
-      BASE_URL: ${{ github.event.inputs.base_url }}
-
+  deny:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Verify HTTP routes
-        shell: bash
+      - name: Deny legacy post-deploy authority
         run: |
-          set -euo pipefail
-          mkdir -p evidence
-
-          check_url() {
-            path="$1"
-            url="${BASE_URL%/}${path}"
-            echo "Checking $url"
-            status="$(curl --silent --show-error --location --output "evidence/body-${path//\//_}.txt" --write-out '%{http_code}' "$url" || true)"
-            echo "$url -> $status"
-            test "$status" = "200"
-          }
-
-          check_url "/"
-          check_url "/home"
-          check_url "/demo"
-          check_url "/status"
-
-      - name: Write verification summary
-        if: always()
-        shell: bash
-        run: |
-          mkdir -p evidence
-          {
-            echo "# URAI Post Deploy Verification"
-            echo
-            echo "- Base URL: ${BASE_URL}"
-            echo "- Commit: ${GITHUB_SHA}"
-            echo "- Run ID: ${GITHUB_RUN_ID}"
-            echo "- Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          } > evidence/post-deploy-summary.md
-
-      - name: Upload verification artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: post-deploy-verification-results
-          path: evidence
-          if-no-files-found: ignore
-          retention-days: 7
+          echo "This legacy repository cannot verify or certify a canonical deployment." >&2
+          echo "Use the canonical urai-spatial protected release process." >&2
+          exit 1

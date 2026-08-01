@@ -20,6 +20,7 @@ const layer = read("src/components/urai/home/HomeXRInteractionLayer.tsx");
 const targets = read("src/components/urai/home/HomeXRTargets.ts");
 const xrFoundation = read("src/components/xr/XRSessionFoundation.tsx");
 const e2e = read("tests/e2e/home-xr-interaction.spec.ts");
+const authority = read("system/canonical-authority.json");
 
 assertCheck(
   "Home keeps existing cinematic world",
@@ -80,15 +81,18 @@ assertCheck(
 );
 
 assertCheck(
-  "Home XR smoke captures proof screenshots",
-  e2e.includes("home-desktop.png") && e2e.includes("home-mobile.png") && e2e.includes("home-xr-affordance-mocked.png"),
-  "Home XR e2e smoke must capture desktop, mobile, and mocked-XR screenshots.",
+  "legacy Home XR browser assertions are archived",
+  e2e.includes('test.describe.skip("archived home XR assertions"') &&
+    e2e.includes("outside current release smoke"),
+  "Legacy browser assertions must remain explicitly archived and non-certifying.",
 );
 
 assertCheck(
-  "Home XR smoke mocks supported immersive-vr",
-  e2e.includes("isSessionSupported") && e2e.includes("immersive-vr") && e2e.includes("Enter VR"),
-  "Home XR e2e smoke must prove the real XR affordance appears only when immersive-vr is supported or mocked.",
+  "canonical browser authority belongs to urai-spatial",
+  authority.includes('"canonicalProductRepo": "LifeLoggerAI/urai-spatial"') &&
+    authority.includes('"applicationRoot": "urai-tier1"') &&
+    authority.includes('"domain": "urai.app"'),
+  "Legacy Home XR source checks must defer current browser certification to urai-spatial.",
 );
 
 const failed = checks.filter((check) => !check.passed);
@@ -103,4 +107,4 @@ if (failed.length) {
   process.exit(1);
 }
 
-console.log("\nHome XR static lock passed.");
+console.log("\nHome XR source lock passed. Browser certification remains canonical-only.");

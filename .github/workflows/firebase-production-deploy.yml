@@ -1,88 +1,34 @@
-name: Firebase Production Deploy
+name: Legacy Firebase Production Deploy — Quarantined
 
 on:
   workflow_dispatch:
-    inputs:
-      deploy_hosting:
-        description: Deploy Firebase Hosting/App Hosting
-        required: true
-        default: "true"
-        type: choice
-        options:
-          - "true"
-          - "false"
-      deploy_firestore:
-        description: Deploy Firestore rules and indexes
-        required: true
-        default: "true"
-        type: choice
-        options:
-          - "true"
-          - "false"
+
+permissions:
+  contents: read
 
 jobs:
-  production-deploy:
-    name: Validate and deploy production
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-
-    env:
-      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
-      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
-      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
-      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
-      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
-      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
-      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-      FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
-      FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-      ELEVENLABS_MODEL_ID: ${{ vars.ELEVENLABS_MODEL_ID || 'eleven_multilingual_v2' }}
-      ELEVENLABS_DEFAULT_VOICE_ID: ${{ vars.ELEVENLABS_DEFAULT_VOICE_ID }}
-      ELEVENLABS_BACKUP_VOICE_ID: ${{ vars.ELEVENLABS_BACKUP_VOICE_ID }}
-      NEXT_PUBLIC_URAI_NARRATOR_FALLBACK: speech
-      URAI_REQUIRE_FIREBASE_ADMIN: "1"
-      URAI_ENABLE_CHRONO_FIRESTORE: "0"
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/firebase-service-account.json
-
+  deny-legacy-production:
+    name: Deny legacy production authority
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Write Firebase service account
+      - name: Record canonical authority and fail closed
         shell: bash
-        env:
-          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
         run: |
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON" ]; then
-            echo 'Missing FIREBASE_SERVICE_ACCOUNT_JSON secret.' >&2
-            exit 1
-          fi
-          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          cat <<'EOF'
+          This workflow is intentionally quarantined.
 
-      - name: Run preflight
-        run: npm run preflight
+          LifeLoggerAI/UrAi is a legacy/reference repository and must not deploy
+          Firebase Hosting, Firestore rules, indexes, functions, or any other
+          production resource.
 
-      - name: Run URAI tier lock
-        run: npm run urai:tier5
+          Canonical production authority:
+            LifeLoggerAI/urai-spatial
+            application: urai-tier1
+            branch: main
+            domain: urai.app
 
-      - name: Build production app
-        run: npm run build
-
-      - name: Deploy Firestore rules and indexes
-        if: ${{ inputs.deploy_firestore == 'true' }}
-        run: npx firebase-tools deploy --only firestore:rules,firestore:indexes --project urai-4dc1d --non-interactive
-
-      - name: Deploy Firebase hosting
-        if: ${{ inputs.deploy_hosting == 'true' }}
-        run: npx firebase-tools deploy --only hosting --project urai-4dc1d --non-interactive
+          Use the protected canonical production workflow in urai-spatial.
+          No secrets are read and no infrastructure mutation is attempted here.
+          EOF
+          exit 1

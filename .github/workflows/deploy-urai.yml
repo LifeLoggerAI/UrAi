@@ -1,39 +1,33 @@
-name: Deploy URAI to Firebase
+name: Legacy URAI Firebase Deploy — Quarantined
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  deploy:
-    name: Deploy canonical URAI app
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-
+  deny-legacy-production:
+    name: Deny legacy Firebase deployment
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: false
+      - name: Record canonical authority and fail closed
+        shell: bash
+        run: |
+          cat <<'EOF'
+          This legacy workflow is intentionally quarantined.
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
+          LifeLoggerAI/UrAi must not authenticate a Firebase service account or
+          execute the legacy ship:urai production command.
 
-      - name: Install dependencies
-        run: npm install
+          Canonical production authority:
+            LifeLoggerAI/urai-spatial
+            application: urai-tier1
+            branch: main
+            domain: urai.app
 
-      - name: Validate Firebase target
-        run: npm run check:firebase
-
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_URAI }}
-
-      - name: Ship URAI
-        run: npm run ship:urai
+          Use the protected release workflow in urai-spatial.
+          No secrets are read and no infrastructure mutation is attempted here.
+          EOF
+          exit 1

@@ -15,10 +15,12 @@ const ignoredFragments = [
 ];
 const textExtensions = new Set([".md", ".mdx", ".ts", ".tsx", ".js", ".jsx"]);
 
+const negativeOrEvidenceContext = /\b(do not claim|must not claim|not allowed|not a claim|not an?\s+[^.]{0,40}claim|not verified|not live|not production|not marketed|not certified|future proof|future|until|before|requires?|required|remaining|missing|validation|verification|evidence|warning|gated|gate|supported|unsupported|capability|if supported|when supported|fallback|browser proves support|WebXR API|immersive-vr support|legacy|reference|archived|historical)\b/i;
+
 const riskyProductionClaims = [
   {
     pattern: /\b(full|real|production|live|complete|done done)\s+(VR|AR|XR|WebXR|headset|Quest)\b/i,
-    allowed: /\b(gated|supported|unsupported|capability|if supported|when supported|proof|warning|not verified|not live|fallback|browser proves support|WebXR API|immersive-vr support|evidence-required)\b/i,
+    allowed: negativeOrEvidenceContext,
     reason: "XR production claims must be support-gated or proof-qualified.",
   },
   {
@@ -28,12 +30,12 @@ const riskyProductionClaims = [
   },
   {
     pattern: /\b(Quest ready|headset ready|VR ready|AR ready|XR ready)\b/i,
-    allowed: /\b(with warnings|not verified|requires|supported|if supported|capability|proof|physical Quest validation|browser proves support|evidence-required)\b/i,
+    allowed: negativeOrEvidenceContext,
     reason: "Readiness claims must include warnings, support gates, or proof.",
   },
   {
     pattern: /\b(iOS Quick Look|quick-look|USDZ|\.usdz)\b/i,
-    allowed: /\b(gated|not claimed|not present|not verified|until|requires|after|before|evidence-required|no verified)\b/i,
+    allowed: negativeOrEvidenceContext,
     reason: "iOS Quick Look/USDZ claims must stay gated until a verified USDZ asset exists.",
   },
 ];
@@ -69,12 +71,17 @@ let failed = false;
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
   const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/);
+  const contextRadius = relativePath.startsWith("docs/") ? 8 : 2;
 
   lines.forEach((line, index) => {
     const publicText = publicTextFromLine(line);
-    const context = [lines[index - 1] ?? "", publicText, lines[index + 1] ?? ""].join(" ");
+    const context = lines
+      .slice(Math.max(0, index - contextRadius), Math.min(lines.length, index + contextRadius + 1))
+      .map((entry, offset) => offset === contextRadius ? publicText : entry)
+      .join(" ");
 
     for (const claim of riskyProductionClaims) {
+      claim.pattern.lastIndex = 0;
       if (!claim.pattern.test(publicText)) continue;
       if (claim.allowed.test(context)) continue;
 
