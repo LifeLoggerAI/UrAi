@@ -6,6 +6,9 @@ on:
       - chore/quarantine-current-main-20260729
     paths:
       - .github/workflows/one-shot-current-main-quarantine.yml
+  pull_request:
+    types: [reopened]
+    branches: [main]
 
 permissions:
   contents: write
@@ -16,7 +19,7 @@ concurrency:
 
 env:
   TARGET_BRANCH: chore/quarantine-current-main-20260729
-  EXPECTED_HEAD: ${{ github.sha }}
+  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
   CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
   HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
 
@@ -178,8 +181,6 @@ jobs:
 
       - name: Commit quarantine to exact branch
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
