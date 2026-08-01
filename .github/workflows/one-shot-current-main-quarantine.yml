@@ -34,22 +34,25 @@ jobs:
           show-progress: false
           lfs: false
 
-      - name: Normalize historical LFS drift and verify authorities
+      - name: Verify exact authorities and classify legacy LFS drift
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
-          # This legacy repository contains full Git blobs under paths now marked for
-          # LFS. Disable local LFS transforms so Git compares the committed blobs
-          # exactly instead of manufacturing a dirty worktree before source repair.
           git config --local filter.lfs.clean cat
           git config --local filter.lfs.smudge cat
           git config --local --unset-all filter.lfs.process || true
           git config --local filter.lfs.required false
           git reset --hard HEAD
           git clean -fdx
-          test -z "$(git status --porcelain --untracked-files=all)"
+
+          # The current branch's obsolete .gitattributes marks historical full asset
+          # blobs as LFS pointers. Permit only that known unstaged public/assets drift;
+          # the reviewed quarantine .gitattributes replaces it in the resulting commit.
+          test -z "$(git diff --cached --name-only)"
+          unexpected="$(git diff --name-only | grep -v '^public/assets/' || true)"
+          test -z "$unexpected"
 
           git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
           git fetch --no-tags origin "$HISTORICAL_QUARANTINE_SHA"
@@ -158,8 +161,14 @@ jobs:
 
           git rm -r --ignore-unmatch functions
           git rm .github/workflows/one-shot-current-main-quarantine.yml
-          git add -A
+
+          # The historical checkout stages only the explicit reviewed file list. Add
+          # generated/modified quarantine files explicitly; never stage asset drift.
+          git add .firebaserc firebase.json \
+            docs/LEGACY_CURRENT_MAIN_QUARANTINE_RECEIPT_2026-08-01.md \
+            scripts/check-legacy-production-authority-boundary.mjs
           git diff --cached --check
+          test -z "$(git diff --cached --name-only | grep '^public/assets/' || true)"
 
       - name: Verify fail-closed staged tree
         shell: bash
