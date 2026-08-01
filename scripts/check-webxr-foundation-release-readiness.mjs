@@ -69,14 +69,15 @@ check(
 );
 
 check(
-  "Home scene retains claim-safe XR affordance",
-  rootRoute.includes("NewHomeScene") &&
+  "quarantined root and archived Home retain claim-safe XR boundaries",
+  rootRoute.includes('import { LaunchPage } from "@/components/launch/LaunchShell"') &&
+    rootRoute.includes('<LaunchPage kind="home" />') &&
     homeRoute.includes("HomeXREntryCard") &&
     homeRoute.includes("HomeWorldCanvas") &&
     homeRoute.includes('href="/xr"') &&
     homeRoute.includes("Check XR support") &&
     homeRoute.includes("headset entry stay gated until proof passes"),
-  "The legacy root must delegate to Home, link only to support checks, and keep headset entry visibly gated.",
+  "The quarantined legacy root must remain on the non-production launch shell while the archived Home reference links only to XR support checks and keeps headset entry visibly gated.",
 );
 
 check(
