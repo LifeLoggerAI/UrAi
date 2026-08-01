@@ -1,11 +1,6 @@
 name: Materialize current-main legacy quarantine
 
 on:
-  push:
-    branches:
-      - chore/quarantine-current-main-20260729
-    paths:
-      - .github/workflows/one-shot-current-main-quarantine.yml
   pull_request:
     types: [reopened]
     branches: [main]
@@ -19,9 +14,10 @@ concurrency:
 
 env:
   TARGET_BRANCH: chore/quarantine-current-main-20260729
-  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
   CURRENT_MAIN_SHA: 658b36da6b239333a918396251aad6386894e78f
   HISTORICAL_QUARANTINE_SHA: b08490ec27245481ae8d163604ea2403eee0c3de
+  GIT_LFS_SKIP_SMUDGE: '1'
 
 jobs:
   materialize:
@@ -38,17 +34,28 @@ jobs:
           show-progress: false
           lfs: false
 
-      - name: Verify immutable source authorities
+      - name: Normalize historical LFS drift and verify authorities
         shell: bash
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+          # This legacy repository contains full Git blobs under paths now marked for
+          # LFS. Disable local LFS transforms so Git compares the committed blobs
+          # exactly instead of manufacturing a dirty worktree before source repair.
+          git config --local filter.lfs.clean cat
+          git config --local filter.lfs.smudge cat
+          git config --local --unset-all filter.lfs.process || true
+          git config --local filter.lfs.required false
+          git reset --hard HEAD
+          git clean -fdx
+          test -z "$(git status --porcelain --untracked-files=all)"
+
           git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
           git fetch --no-tags origin "$HISTORICAL_QUARANTINE_SHA"
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
           test "$(git rev-parse origin/main)" = "$CURRENT_MAIN_SHA"
           git merge-base --is-ancestor "$CURRENT_MAIN_SHA" HEAD
           git cat-file -e "$HISTORICAL_QUARANTINE_SHA^{commit}"
-          test -z "$(git status --porcelain --untracked-files=all)"
 
       - name: Apply only reviewed quarantine source
         shell: bash
