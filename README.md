@@ -1,3 +1,11 @@
+# LEGACY / REFERENCE REPOSITORY — NOT PRODUCTION AUTHORITY
+
+> **Quarantined deployment authority.** This repository must not deploy or represent the current URAI production application.
+>
+> Canonical production authority is **`LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `urai.app`**.
+>
+> Content here is retained for historical evidence, migration reference, and controlled local testing only. Production workflows in this repository are fail-closed and must remain credential-free. Do not restore deployment authority here.
+
 # URAI
 
 URAI V1 is a public demo for the simplest version of the product promise: show how one sample memory can become the first scene of a symbolic world.
@@ -52,7 +60,7 @@ http://localhost:3014/u/adamclamp
 
 ## Validation
 
-Run the V1 validation path before deploying or sharing the demo:
+Run the V1 validation path before sharing any local reference build:
 
 ```bash
 npm run check:system-registry
@@ -109,9 +117,7 @@ Then commit the refreshed `package-lock.json`. See `docs/LOCKFILE_REFRESH.md` fo
 
 ## Firebase configuration
 
-The app expects a consistent set of Firebase environment variables that share the
-`NEXT_PUBLIC_FIREBASE_` prefix. Populate these keys in your `.env.local` file by copying
-`env.local.template`:
+The app expects a consistent set of Firebase environment variables that share the `NEXT_PUBLIC_FIREBASE_` prefix. Populate these keys in your `.env.local` file by copying `env.local.template` for local reference testing only:
 
 ```bash
 cp env.local.template .env.local
@@ -136,7 +142,7 @@ FIREBASE_CLIENT_EMAIL
 FIREBASE_PRIVATE_KEY
 ```
 
-The waitlist route works in local dry-run mode without Admin credentials. With Admin credentials configured, `/api/waitlist` writes to `waitlistSignups/{normalizedEmail}`.
+The waitlist route works in local dry-run mode without Admin credentials. With Admin credentials configured, `/api/waitlist` writes to `waitlistSignups/{normalizedEmail}`. This capability is not authorized for production from this legacy repository.
 
 ## Demo routes
 
@@ -154,13 +160,9 @@ The waitlist route works in local dry-run mode without Admin credentials. With A
 | `/api/companion` | POST endpoint for deterministic mocked companion narrator responses with safety boundaries |
 | `/api/waitlist` | POST endpoint for early-access signups |
 
-## Firebase deploy
+## Deployment prohibition
 
-Deploy rules and indexes:
-
-```bash
-firebase deploy --only firestore:rules,firestore:indexes
-```
+Do not deploy Firebase Hosting, Firestore rules/indexes, functions, or any other production resource from this repository. The former deployment workflows are retained as fail-closed quarantine guards. Use the protected canonical release process in `LifeLoggerAI/urai-spatial`.
 
 ## Canonical system docs
 

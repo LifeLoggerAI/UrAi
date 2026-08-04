@@ -1,3 +1,4 @@
-# Track only heavy asset types under public/assets
-public/assets/** filter=lfs diff=lfs merge=lfs -text
-public/assets/**/*.{mp4,webm,zip,webp,png,jpg,jpeg,gif,lottie,json} filter=lfs diff=lfs merge=lfs -text
+# Keep LFS filtering limited to files that are actually committed as LFS pointers.
+# Broad public/assets/** rules caused ordinary binary blobs to appear modified
+# immediately after a clean skip-smudge checkout.
+public/assets/orb/orb_images_lottie.json filter=lfs diff=lfs merge=lfs -text

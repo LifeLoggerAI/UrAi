@@ -1,12 +1,12 @@
 # URAI Tier-2 Access Locks
 
-Status: Tier-2 preparation layer for the main `LifeLoggerAI/UrAi` app. This document does not unlock public Tier-2 behavior by itself.
+Status: **ARCHIVED LEGACY DESIGN / REFERENCE ONLY**. This document describes an earlier `LifeLoggerAI/UrAi` access-gating design. It does not unlock public behavior, authorize cloud mutation, or define current production architecture.
 
 ## Purpose
 
-Tier-1 remains the locked public baseline. Tier-2 work may proceed in parallel only when it depends on Tier-1 and does not redefine, weaken, duplicate, or bypass Tier-1.
+This file preserves the historical Tier-2 gate model for reviewed feature extraction. Current production authority is exclusively `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `urai.app`.
 
-Tier-2 Personal Access features must render a silent Tier-1 fallback until all of these are true:
+The historical design required a silent Tier-1 fallback until all of these were true:
 
 1. The user is authenticated.
 2. The feature flag is enabled.
@@ -18,11 +18,11 @@ Tier-2 Personal Access features must render a silent Tier-1 fallback until all o
 
 ## Project boundary
 
-This is not the separate `urai-spatial` repo. This belongs to the main URAI app repo and only prepares personal Tier-2 access gates for app features such as Life Map, Memory Stars, Mood Weather, Narrator Presence, Preview Mode, and Private Offline Cache.
+This repository is not the canonical `urai-spatial` runtime. The following material is retained only as a legacy reference for possible reviewed extraction; it must not be treated as executable release, deployment, data-migration, or production authority.
 
 ## Public language rule
 
-Do not expose internal labels such as Tier-2, Canon proof, Agent Loop, lock matrix, debug, or admin in public UX. Use user-facing language instead:
+Do not expose internal labels such as Tier-2, Canon proof, Agent Loop, lock matrix, debug, or admin in public UX. Historical user-facing labels included:
 
 - Life Map
 - Memory Stars
@@ -31,9 +31,9 @@ Do not expose internal labels such as Tier-2, Canon proof, Agent Loop, lock matr
 - Preview Mode
 - Private Offline Cache
 
-## Current implementation surface
+## Historical implementation surface
 
-The current additive implementation is intentionally small:
+The archived implementation references:
 
 - `src/lib/tier-locks/types.ts`
 - `src/lib/tier-locks/config.ts`
@@ -48,23 +48,11 @@ The current additive implementation is intentionally small:
 - `tests/unit/tier-locks/tier2SeedScript.test.ts`
 - `tests/rules/tier2-policy.test.js`
 
-This layer is safe to build during Tier-1 lock because it does not change the locked routes, home scene, public routing, or live data capture.
+This layer is reference material only. Any feature extraction must be independently reviewed, imported into the correct canonical repository, and certified there.
 
-## Staging seed commands
+## Historical seed format
 
-Dry-run JSON seed:
-
-```bash
-npm run seed:tier2
-```
-
-Firestore staging seed, requires Firebase Admin environment variables:
-
-```bash
-URAI_TIER2_SEED_UID=demo-adam-clamp npm run seed:tier2:firestore
-```
-
-The seed writes Tier-2 feature flag docs, a Tier-2 internal demo user marker, and owner-bound consent docs. It should be used only for non-public staging/testing until Tier-1 is sealed.
+The earlier design included dry-run and Firestore seed commands. Do not execute cloud seeding from this quarantined repository. Any future migration or seed must use a named nonproduction target, protected identity, checks-only proof, read-back verification, rollback, and canonical approval.
 
 ## Tier-2 feature gates
 
@@ -77,7 +65,7 @@ The seed writes Tier-2 feature flag docs, a Tier-2 internal demo user marker, an
 | `ritual_ar_preview` | Preview Mode | `tier2` | rituals | `tier2.ritual_ar_preview` | Tier-1 baseline |
 | `offline_spatial_cache` | Private Offline Cache | `tier2` | offline cache | `tier2.offline_spatial_cache` | Tier-1 baseline |
 
-## Required decision matrix
+## Historical decision matrix
 
 | User state | Expected decision |
 | --- | --- |
@@ -88,19 +76,18 @@ The seed writes Tier-2 feature flag docs, a Tier-2 internal demo user marker, an
 | Signed in, consent accepted, flag enabled, tier2+ | Allow |
 | Admin override | Allow and audit |
 
-## Not implemented yet
+## Not implemented or activated here
 
-These are intentionally not activated by this parallel foundation pass:
+These capabilities remain out of scope for this quarantined legacy repository:
 
 - Public Tier-2 route exposure
 - Passive sensing
 - Live AI companion activation
 - Paid marketplace or premium packs
-- Full AR or VR launch
+- AR and VR launch
 - B2B/admin production access
 - Client-controlled entitlement writes
 
-## Next integration steps
+## Extraction rule
 
-1. Add Playwright coverage proving Tier-1 fallback and Tier-2 unlock.
-2. Wire Tier-2 UI only behind flags after Tier-1 is sealed.
+Do not wire, seed, deploy, or activate these legacy gates from `LifeLoggerAI/UrAi`. Create a bounded candidate in the correct canonical repository, obtain non-author review, and collect exact protected evidence there.

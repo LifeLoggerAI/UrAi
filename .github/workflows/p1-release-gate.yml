@@ -1,128 +1,17 @@
-name: P1 Release Gate
+name: Legacy P1 Release Gate — Quarantined
 
 on:
   workflow_dispatch:
-    inputs:
-      ref:
-        description: "Git ref to verify"
-        required: false
-        default: "main"
-      staging_project_id:
-        description: "Verified staging project ID"
-        required: false
-        default: "urai-staging"
-      production_project_id:
-        description: "Verified production project ID"
-        required: false
-        default: "urai-4dc1d"
-      rollback_target_sha:
-        description: "Known-good rollback commit SHA"
-        required: true
-        default: "afd285cd8793b52255c75db2332e4552555c87f0"
-      production_deploy_approved:
-        description: "Type APPROVE to confirm production promotion is approved"
-        required: true
-        default: "APPROVE"
+
+permissions:
+  contents: read
 
 jobs:
-  p1:
-    name: Strict P1 release gate
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-
+  deny:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout requested ref
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.ref || github.ref }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build app for command-backed P1 smoke
-        env:
-          NEXT_DISABLE_CACHE: "1"
-        run: npm run build
-
-      - name: Install Playwright Chromium and OS dependencies
-        run: npx playwright install --with-deps chromium
-
-      - name: Resolve release candidate SHA
-        id: sha
-        run: echo "release_candidate_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Resolve project IDs
-        id: projects
-        env:
-          INPUT_STAGING_PROJECT_ID: ${{ github.event.inputs.staging_project_id }}
-          INPUT_PRODUCTION_PROJECT_ID: ${{ github.event.inputs.production_project_id }}
+      - name: Deny legacy release authority
         run: |
-          set -euo pipefail
-          staging_project_id="${INPUT_STAGING_PROJECT_ID:-urai-staging}"
-          production_project_id="${INPUT_PRODUCTION_PROJECT_ID:-urai-4dc1d}"
-          echo "staging_project_id=$staging_project_id" >> "$GITHUB_OUTPUT"
-          echo "production_project_id=$production_project_id" >> "$GITHUB_OUTPUT"
-
-      - name: Validate release inputs
-        env:
-          STAGING_PROJECT_ID: ${{ steps.projects.outputs.staging_project_id }}
-          PRODUCTION_PROJECT_ID: ${{ steps.projects.outputs.production_project_id }}
-        run: |
-          set -euo pipefail
-
-          if [ "${{ github.event.inputs.production_deploy_approved }}" != "APPROVE" ]; then
-            echo "production_deploy_approved input must be APPROVE"
-            exit 1
-          fi
-
-          if [ -z "$STAGING_PROJECT_ID" ] || [ -z "$PRODUCTION_PROJECT_ID" ]; then
-            echo "staging and production project IDs are required"
-            exit 1
-          fi
-
-          if [ "$STAGING_PROJECT_ID" = "$PRODUCTION_PROJECT_ID" ]; then
-            echo "staging and production project IDs must be different"
-            exit 1
-          fi
-
-          if [ "$STAGING_PROJECT_ID" != "urai-staging" ]; then
-            echo "staging project ID must match firebase.staging.json deploy target: urai-staging"
-            exit 1
-          fi
-
-          if [ "$PRODUCTION_PROJECT_ID" != "urai-4dc1d" ]; then
-            echo "production project ID must match firebase.json deploy target: urai-4dc1d"
-            exit 1
-          fi
-
-      - name: Run strict P1 release gate
-        env:
-          URAI_P1_STRICT: "1"
-          URAI_P1_RUN_COMMANDS: "1"
-          URAI_STAGING_PROJECT_ID: ${{ steps.projects.outputs.staging_project_id }}
-          URAI_PRODUCTION_PROJECT_ID: ${{ steps.projects.outputs.production_project_id }}
-          URAI_RELEASE_CANDIDATE_SHA: ${{ steps.sha.outputs.release_candidate_sha }}
-          URAI_ROLLBACK_TARGET_SHA: ${{ github.event.inputs.rollback_target_sha }}
-          URAI_STAGING_SMOKE_TESTED: "1"
-          URAI_PRODUCTION_DEPLOY_APPROVED: "1"
-          URAI_WAITLIST_DRY_RUN: "1"
-          PLAYWRIGHT_OUTPUT_DIR: test-results
-          NEXT_CACHE_DIR: .next/cache
-        run: npm run release:p1
-
-      - name: Upload P1 artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: p1-release-gate-results
-          path: |
-            test-results
-            playwright-report
-          if-no-files-found: ignore
-          retention-days: 7
+          echo "This legacy repository cannot approve or certify a production release." >&2
+          echo "Use the canonical urai-spatial release process." >&2
+          exit 1

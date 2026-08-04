@@ -52,15 +52,7 @@ jobs:
           npm run build
 
       - name: Verify legacy production authority boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-          test ! -f .github/workflows/deploy.yml
-          test ! -f .github/workflows/firebase-hosting-live.yml
-          test -f docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq 'LifeLoggerAI/urai-spatial' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq 'sole production authority' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
-          grep -Fq '.github/workflows/spatial-live-deploy.yml' docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md
+        run: node scripts/check-legacy-production-authority-boundary.mjs
 
       - name: Preserve legacy completion audits as advisory
         continue-on-error: true
