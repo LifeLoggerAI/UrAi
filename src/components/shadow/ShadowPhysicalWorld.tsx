@@ -4,7 +4,7 @@ import { ContactShadows, Environment, PerspectiveCamera } from "@react-three/dre
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
-import { RuntimeGLB, URAI_REAL_3D } from "@/components/urai/real3d/RuntimeGLB";
+import { RuntimeGLB, URAI_SPATIAL_AUTHORITY } from "@/components/urai/real3d/RuntimeGLB";
 
 function ShadowScene() {
   const haze = useRef<THREE.Group>(null);
@@ -25,7 +25,7 @@ function ShadowScene() {
         <pointLight key={`${x}-${z}`} position={[x, 0.42, z]} intensity={2.8} distance={2.8} decay={2} color="#8b839d" />
       ))}
 
-      <RuntimeGLB src={URAI_REAL_3D.shadow} name="shadow-world-glb" />
+      <RuntimeGLB src={URAI_SPATIAL_AUTHORITY.shadow} name="shadow-hall-real-v1-glb" />
 
       <group ref={haze} position={[0, 0.65, -9]}>
         {[-4, -1.2, 2.2, 4.5].map((x, index) => (
@@ -46,7 +46,7 @@ export function ShadowPhysicalWorld() {
     <div className="absolute inset-0" aria-hidden="true">
       <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}>
         <Suspense fallback={null}>
-          <PerspectiveCamera makeDefault position={[0, 1.6, 7.4]} fov={44} />
+          <PerspectiveCamera makeDefault position={[0, 1.68, 7.5]} fov={42} />
           <ShadowScene />
         </Suspense>
       </Canvas>
