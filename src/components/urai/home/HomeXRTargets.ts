@@ -18,23 +18,27 @@ export type HomeXRTarget = {
   color: string;
 };
 
+/**
+ * Interaction anchors are physical world coordinates, not floating menu layout.
+ * The Ground / Life Map / Orb positions match the accepted spatial Home authority.
+ */
 export const homeXRTargets: HomeXRTarget[] = [
   {
     id: "life-map",
     label: "Life Map",
-    helper: "Open the memory galaxy.",
+    helper: "Ascend into the memory galaxy.",
     href: "/life-map",
-    position: [-2.7, 2.45, -2.2],
-    scale: [1.25, 0.42, 0.08],
+    position: [4.9, 0.95, -7.2],
+    scale: [1.7, 2.25, 0.62],
     color: "#67e8f9",
   },
   {
     id: "ground",
     label: "Ground",
-    helper: "Enter real-life support.",
+    helper: "Descend into real-life support.",
     href: "/ground",
-    position: [0, -0.32, -2.6],
-    scale: [1.5, 0.42, 0.08],
+    position: [-4.9, 0.95, -7.2],
+    scale: [1.7, 2.25, 0.62],
     color: "#86efac",
   },
   {
@@ -42,8 +46,8 @@ export const homeXRTargets: HomeXRTarget[] = [
     label: "Sky",
     helper: "Ascend through the upper world.",
     href: "/life-map",
-    position: [0, 2.72, -3.15],
-    scale: [1.45, 0.42, 0.08],
+    position: [0, 3.4, -7.8],
+    scale: [3.2, 1.4, 1.2],
     color: "#bae6fd",
   },
   {
@@ -51,17 +55,17 @@ export const homeXRTargets: HomeXRTarget[] = [
     label: "Horizon",
     helper: "See the route spine.",
     href: "/location-map",
-    position: [2.7, 1.22, -2.35],
-    scale: [1.35, 0.42, 0.08],
+    position: [7.4, 1.0, -1.4],
+    scale: [1.8, 2.1, 1.2],
     color: "#fde68a",
   },
   {
     id: "replay",
     label: "Replay",
-    helper: "Open life replay.",
+    helper: "Enter life replay.",
     href: "/replay",
-    position: [-2.8, 1.32, -2.25],
-    scale: [1.18, 0.38, 0.08],
+    position: [-6.6, 1.0, -1.8],
+    scale: [1.8, 2.1, 1.2],
     color: "#c4b5fd",
   },
   {
@@ -69,8 +73,8 @@ export const homeXRTargets: HomeXRTarget[] = [
     label: "Orb Chat",
     helper: "Talk to the orb companion.",
     href: "/ochat",
-    position: [0, 1.35, -2.05],
-    scale: [1.28, 0.38, 0.08],
+    position: [0, 1.45, -2.85],
+    scale: [1.15, 1.15, 1.15],
     color: "#a5f3fc",
   },
   {
@@ -78,8 +82,8 @@ export const homeXRTargets: HomeXRTarget[] = [
     label: "Mirror",
     helper: "Open reflection mode.",
     href: "/mirror",
-    position: [2.82, 2.2, -2.18],
-    scale: [1.16, 0.38, 0.08],
+    position: [6.2, 1.0, 3.0],
+    scale: [1.8, 2.1, 1.2],
     color: "#f0abfc",
   },
   {
@@ -87,8 +91,8 @@ export const homeXRTargets: HomeXRTarget[] = [
     label: "XR Preview",
     helper: "Check headset capability.",
     href: "/xr",
-    position: [0, 0.42, -1.95],
-    scale: [1.32, 0.38, 0.08],
+    position: [-6.0, 1.0, 3.4],
+    scale: [1.8, 2.1, 1.2],
     color: "#93c5fd",
   },
 ];
