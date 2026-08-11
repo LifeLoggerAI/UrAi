@@ -1,0 +1,179 @@
+name: Vendor URAI Spatial Model Authority
+
+on:
+  push:
+    branches:
+      - agent/final-asset-lock
+    paths:
+      - .github/workflows/vendor-spatial-model-authority.yml
+      - docs/final-asset-lock/PROMOTED_SPATIAL_MODEL_AUTHORITY.md
+      - src/components/urai/real3d/**
+      - src/components/urai/council/**
+      - src/components/urai/home/**
+      - src/components/shadow/**
+      - src/components/mirror/**
+      - src/components/legacy/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urai-vendor-spatial-model-authority-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PROMOTED_SOURCE_SHA: a58628601b3cb257ed81d93b6089a1f482484630
+  REAL_WORLD_SOURCE_SHA: 1a187a9f503591150af6122677a73494a4ac2ce2
+  TARGET_BRANCH: agent/final-asset-lock
+
+jobs:
+  vendor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact UrAi candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: true
+          show-progress: false
+
+      - name: Checkout promoted spatial authority
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: LifeLoggerAI/urai-spatial
+          ref: ${{ env.PROMOTED_SOURCE_SHA }}
+          path: _vendor/spatial-promoted
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Checkout real-world forge source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: LifeLoggerAI/urai-spatial
+          ref: ${{ env.REAL_WORLD_SOURCE_SHA }}
+          path: _vendor/spatial-real-world
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Prove pinned source commits
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C _vendor/spatial-promoted rev-parse HEAD)" = "$PROMOTED_SOURCE_SHA"
+          test "$(git -C _vendor/spatial-real-world rev-parse HEAD)" = "$REAL_WORLD_SOURCE_SHA"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
+        with:
+          python-version: '3.12'
+
+      - name: Install deterministic GLB dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.2.6 trimesh==4.11.1
+
+      - name: Forge six humans and four physical realms
+        working-directory: _vendor/spatial-real-world
+        run: python scripts/generate-urai-real-world-extension-v1.py
+
+      - name: Vendor exact promoted and real-world binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf public/assets/urai/generated/real-world-v1
+          mkdir -p public/assets/urai/generated/models
+          mkdir -p public/assets/urai/generated/real-world-v1
+          mkdir -p public/assets/urai/home-production/cc0
+          mkdir -p docs/final-asset-lock/provenance
+
+          cp _vendor/spatial-promoted/urai-tier1/public/assets/urai/generated/models/home-entry-chamber-v1.glb public/assets/urai/generated/models/
+          cp _vendor/spatial-promoted/urai-tier1/public/assets/urai/generated/models/urai-orb-avatar-v1.glb public/assets/urai/generated/models/
+          cp _vendor/spatial-promoted/urai-tier1/public/assets/urai/generated/models/portal-ring-master-v1.glb public/assets/urai/generated/models/
+          cp _vendor/spatial-promoted/urai-tier1/public/assets/urai/home-production/cc0/polyhaven-fern-02-geometry-v1.glb public/assets/urai/home-production/cc0/
+
+          cp _vendor/spatial-real-world/urai-tier1/public/assets/urai/generated/real-world-v1/*.glb public/assets/urai/generated/real-world-v1/
+          cp _vendor/spatial-real-world/operations/assets/generated-receipts/urai-real-world-extension-v1.json docs/final-asset-lock/provenance/
+          cp _vendor/spatial-promoted/operations/assets/production-receipts/home-entry-chamber-v1.json docs/final-asset-lock/provenance/
+          cp _vendor/spatial-promoted/operations/assets/third-party/home-polyhaven-fern-02-geometry-v1.json docs/final-asset-lock/provenance/
+          cp _vendor/spatial-promoted/docs/release-evidence/SPATIAL_ASSET_COMPLETION_LEDGER_2026-08-01.json docs/final-asset-lock/provenance/
+
+      - name: Verify exact binary hashes and physical budgets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, pathlib, struct
+          import trimesh
+
+          expected = {
+            'public/assets/urai/generated/models/home-entry-chamber-v1.glb': 'b7bdced5a721598a9dfe592ee19da04d754d5b8b1d48b23cc44403a89b1ee529',
+            'public/assets/urai/generated/models/urai-orb-avatar-v1.glb': '34f48f2bc042458c041d738d2b68d390eab05a61f91b37a8cd30defd0753d18c',
+            'public/assets/urai/generated/models/portal-ring-master-v1.glb': '6e29acaaab0eb048ddd2e4690bf5949ef58865061574ca961bdec6b6312d80f5',
+            'public/assets/urai/home-production/cc0/polyhaven-fern-02-geometry-v1.glb': '9e3d29b1f917ec9f6e72f713fc7131f1d413ffecfbd3c96e7d72f92529f31a87',
+            'public/assets/urai/generated/real-world-v1/council-guide-human-v1.glb': '8b3ed25d87c809941c1fb7e2a810a7c4a5bd88755c70dca930229205004fc8c6',
+            'public/assets/urai/generated/real-world-v1/council-mirror-human-v1.glb': '4de521cf2829fb42a46b75057ac7702b8ca25397de09fefa97fa23c962c72e13',
+            'public/assets/urai/generated/real-world-v1/council-guardian-human-v1.glb': '09a0e2348dcf554f928522ad20b08e5bbb42d3ee7ae6d0360befbf4f1bb0a5d5',
+            'public/assets/urai/generated/real-world-v1/council-archivist-human-v1.glb': 'd49e5c694b35edeaef862fcfb7d33ebb25b9395a4c3c6e3e38ed0b1fc56f1a71',
+            'public/assets/urai/generated/real-world-v1/council-builder-human-v1.glb': '121cd474b6a2079f0043772800e63e450fe0e448c587c76e6d8079c73763a0c2',
+            'public/assets/urai/generated/real-world-v1/council-trickster-human-v1.glb': '03e90e735f36eda9eac4f64ff3b07d2f1078f64c83bb7868dc35f19d57c7e955',
+            'public/assets/urai/generated/real-world-v1/council-chamber-real-v1.glb': '53ba2ed5b5e190bc06d15fd2eddfd63595a1a3e90515413d405a22993e99def7',
+            'public/assets/urai/generated/real-world-v1/shadow-hall-real-v1.glb': 'b20e1803f5d4051464d3efafbbd13620d4a277cbd2c7a73d74b7942ec144b2c3',
+            'public/assets/urai/generated/real-world-v1/mirror-chamber-real-v1.glb': '573749e3ad28054085a1406952d31786fec8ed7c0ae19dd58c35266d6af4a7ec',
+            'public/assets/urai/generated/real-world-v1/legacy-archive-real-v1.glb': '80a667bbf03f7cc68fae0e661ba86e6a191a35726ae95816c6d183808b8470fe',
+          }
+
+          for name, sha in expected.items():
+              data = pathlib.Path(name).read_bytes()
+              assert hashlib.sha256(data).hexdigest() == sha, name
+              magic, version, length = struct.unpack_from('<III', data, 0)
+              assert magic == 0x46546C67 and version == 2 and length == len(data), name
+              assert b'PLACEHOLDER' not in data, name
+
+          receipt = json.loads(pathlib.Path('docs/final-asset-lock/provenance/urai-real-world-extension-v1.json').read_text())
+          assert receipt['modelCount'] == 10
+          assert receipt['cameraAspect'] == '5:4'
+          assert receipt['units'] == 'meters'
+          assert receipt['totalVertices'] == 61268
+          assert receipt['totalFaces'] == 120060
+
+          for asset in receipt['assets']:
+              path = pathlib.Path('public/assets/urai/generated/real-world-v1') / asset['fileName']
+              scene = trimesh.load(path, force='scene')
+              vertices = sum(len(g.vertices) for g in scene.geometry.values() if hasattr(g, 'vertices'))
+              faces = sum(len(g.faces) for g in scene.geometry.values() if hasattr(g, 'faces'))
+              assert vertices == asset['vertices'], asset['fileName']
+              assert faces == asset['faces'], asset['fileName']
+              if '-human-' in asset['fileName']:
+                  low, high = asset['bounds']
+                  assert 1.65 <= high[1] - low[1] <= 2.05, asset['fileName']
+                  assert vertices >= 7500 and faces >= 15000, asset['fileName']
+
+          print('URAI spatial authority vendor verification PASS: 14 exact GLBs; 6 distinct human models; 4 physical extension realms; promoted Home/orb/portal/CC0 fern.')
+          PY
+
+      - name: Remove vendor checkouts before commit
+        run: rm -rf _vendor
+
+      - name: Commit exact binaries only if branch head is still current
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- public/assets/urai/generated/models public/assets/urai/generated/real-world-v1 public/assets/urai/home-production/cc0 docs/final-asset-lock/provenance)" ]; then
+            echo 'Spatial model authority already matches exact reviewed/generated hashes.'
+            exit 0
+          fi
+
+          remote_head="$(git ls-remote origin "refs/heads/${TARGET_BRANCH}" | awk '{print $1}')"
+          if [ "$remote_head" != "$GITHUB_SHA" ]; then
+            echo "Stale vendor input: branch moved to $remote_head; refusing to push from $GITHUB_SHA"
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/assets/urai/generated/models public/assets/urai/generated/real-world-v1 public/assets/urai/home-production/cc0 docs/final-asset-lock/provenance
+          git commit -m 'Vendor exact spatial model authority binaries'
+          git push origin "HEAD:${TARGET_BRANCH}"
