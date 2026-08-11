@@ -1,7 +1,9 @@
 import { readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { join } from 'node:path';
 
 const ROOT = join(process.cwd(), 'public/assets/urai/real-3d');
+const MANIFEST_PATH = join(ROOT, 'asset-manifest.json');
 const JSON_CHUNK = 0x4e4f534a;
 
 const contracts = {
@@ -158,10 +160,23 @@ function injectSceneExtras(buffer, contract) {
   return output;
 }
 
+const manifest = JSON.parse(await readFile(MANIFEST_PATH, 'utf8'));
+const manifestByFile = new Map(manifest.assets.map((asset) => [asset.file, asset]));
+
 for (const [filename, contract] of Object.entries(contracts)) {
   const path = join(ROOT, filename);
   const before = await readFile(path);
   const after = injectSceneExtras(before, contract);
   await writeFile(path, after);
+  const record = manifestByFile.get(filename);
+  if (!record) throw new Error(`Missing manifest record for ${filename}`);
+  record.bytes = after.length;
+  record.sha256 = createHash('sha256').update(after).digest('hex');
+  record.worldContractEmbedded = true;
+  record.contractVersion = contract.contractVersion;
   console.log(`Embedded URAI world contract: ${filename} (${after.length} bytes)`);
 }
+
+manifest.worldContractsEmbedded = true;
+manifest.worldContractVersion = 1;
+await writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
