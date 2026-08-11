@@ -56,7 +56,8 @@ if (failures.length === 0) {
       failures.push(`${key}: expected final runtime path ${expectedPath}`);
     }
 
-    const diskPath = join(root, expectedPath.replace(/^\\//, ""));
+    const relativePath = expectedPath.startsWith("/") ? expectedPath.slice(1) : expectedPath;
+    const diskPath = join(root, relativePath);
     if (!existsSync(diskPath)) {
       failures.push(`${key}: final runtime file missing at ${expectedPath}`);
     }
