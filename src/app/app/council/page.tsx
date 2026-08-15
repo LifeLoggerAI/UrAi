@@ -1,11 +1,5 @@
-import SystemRoutePage from "@/components/SystemRoutePage";
+import CouncilWorld from "@/components/urai/council/CouncilWorld";
 
 export default function CouncilPage() {
-  return (
-    <SystemRoutePage
-      title="Council Narrator"
-      description="Council sessions, narrator messages, reflection threads, and companion tone logic converge into one guided insight surface."
-      status="wired"
-    />
-  );
+  return <CouncilWorld />;
 }

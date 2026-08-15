@@ -1,54 +1,28 @@
 "use client";
 
-import { useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { RealHumanPresence } from "@/components/urai/humans/RealHumanPresence";
 
-const vertexShader = `
-varying vec3 vNormal;
-void main() {
-  vNormal = normal;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`;
-
-const fragmentShader = `
-varying vec3 vNormal;
-uniform float time;
-
-float fresnel(float angle, float power) {
-  return pow(1.0 - angle, power);
-}
-
-void main() {
-  float f = fresnel(dot(vNormal, vec3(0.0, 0.0, 1.0)), 4.0);
-  float noise = 0.5 + 0.5 * sin(time + vNormal.x * 10.0) * sin(time + vNormal.y * 10.0);
-  gl_FragColor = vec4(vec3(0.2, 0.3, 0.5) * f * noise, 1.0);
-}
-`;
-
+/**
+ * Compatibility wrapper for legacy Home imports.
+ *
+ * The old implementation rendered a glowing box. Home now shares the same
+ * human-proportioned runtime representation used by Council so the spatial
+ * world reads as inhabited by people rather than abstract placeholders.
+ */
 export function AvatarSilhouette() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const uniforms = useMemo(
-    () => ({
-      time: { value: 0.0 },
-    }),
-    []
-  );
-
-  useFrame(({ clock }) => {
-    uniforms.time.value = clock.getElapsedTime();
-  });
-
   return (
-    <mesh ref={meshRef} position={[0, -0.5, -2]}>
-      <boxGeometry args={[0.5, 1, 0.5]} />
-      <shaderMaterial
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        transparent
-      />
-    </mesh>
+    <RealHumanPresence
+      name="home-human-presence"
+      position={[0, -0.5, -2]}
+      rotation={[0, 0, 0]}
+      scale={1}
+      skinTone="#b8795e"
+      hairColor="#241813"
+      hairStyle="short"
+      shirtColor="#26384a"
+      trouserColor="#20252d"
+      shoeColor="#161719"
+      accentColor="#8ed7ff"
+    />
   );
 }

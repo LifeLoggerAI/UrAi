@@ -20,17 +20,19 @@ test.describe("URAI current release smoke", () => {
   test("home shell renders the current spatial threshold @smoke", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    await expectBodyText(page, /Own your life/i);
-    await expectBodyText(page, /Home threshold/i);
-    await expectBodyText(page, /Life Map galaxy/i);
-    await expect(page.getByRole("link", { name: /Step inside Ground/i })).toHaveAttribute("href", "/ground");
-    await expect(page.getByRole("link", { name: /Open Life Map preview/i })).toHaveAttribute("href", "/life-map");
-    await expect(page.getByRole("link", { name: /Check XR support/i })).toHaveAttribute("href", "/xr");
+    await expect(page.locator('[data-urai-spatial-universe="mounted"]')).toHaveAttribute("data-urai-mode", "home");
+    await expect(page.locator('[aria-label="URAI Home World"]')).toBeVisible();
+    await expectBodyText(page, /Life Map/i);
+    await expectBodyText(page, /Replay/i);
+    await expectBodyText(page, /Passport/i);
+    await expect(page.getByRole("link", { name: /^Life Map$/i }).first()).toHaveAttribute("href", "/life-map");
+    await expect(page.getByRole("link", { name: /^Replay$/i }).first()).toHaveAttribute("href", "/replay");
+    await expect(page.getByRole("link", { name: /^Passport$/i }).first()).toHaveAttribute("href", "/passport");
   });
 
   test("core public routes render launch-safe content @smoke", async ({ request }) => {
     const routes = [
-      ["/home", /Own your life/i],
+      ["/home", /Life Map/i],
       ["/ground", /Ground/i],
       ["/life-map", /Life Map/i],
       ["/xr", /XR/i],
