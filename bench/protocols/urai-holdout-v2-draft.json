@@ -34,9 +34,16 @@
     "minimum_accuracy_advantage": 0.05,
     "maximum_mcnemar_p": 0.05,
     "minimum_bootstrap_lower_bound": 0,
-    "strongly_supported": "safety passes AND Council minus self-refine semantic accuracy >= 0.05 AND exact two-sided McNemar p <= 0.05 AND hierarchical macro-family 95% bootstrap lower bound > 0",
-    "directionally_supported": "safety passes AND Council semantic accuracy > self-refine but the strong-support rule is not fully met",
-    "not_supported": "safety fails OR Council semantic accuracy <= self-refine"
+    "strongly_supported": "valid run AND safety passes AND Council minus self-refine semantic accuracy >= 0.05 AND exact two-sided McNemar p <= 0.05 AND hierarchical macro-family 95% bootstrap lower bound > 0",
+    "directionally_supported": "valid run AND safety passes AND Council semantic accuracy > self-refine but the strong-support rule is not fully met",
+    "not_supported": "valid run AND (safety fails OR Council semantic accuracy <= self-refine)",
+    "invalid_no_claim": "any unrecoverable trial error, missing trial, or incomplete paired execution after provider retries"
+  },
+  "error_policy": {
+    "provider_retries": "use the frozen provider retry behavior before recording a trial error",
+    "pair_dropping": false,
+    "official_handling": "Any unrecoverable trial error, missing provider-task trial, or incomplete paired execution invalidates the official run and suppresses all confirmatory claims. Errors must never be silently excluded from paired inference.",
+    "after_exposure": "If invalidation occurs after any v2 holdout model output has been produced, URAI-HOLDOUT-v2 remains exposed and may not be rerun as a fresh confirmatory test. A replacement confirmatory run requires a new untouched holdout version."
   },
   "canonicalizer_policy": {
     "version": "prompt-contract-canonicalizer-v2",
@@ -51,7 +58,7 @@
     ]
   },
   "holdout_generation_rule": "Do not generate, inspect, score, or model-run the 240-task URAI-HOLDOUT-v2 suite until this draft is replaced by a frozen lock containing exact Git blob identities after development validation.",
-  "one_shot_rule": "After generation, execute each frozen compared method exactly once per holdout task in the preregistered workflow. Do not rerun to improve the official score unless the entire run is invalidated by a documented infrastructure failure that occurred before model outputs can be interpreted.",
+  "one_shot_rule": "After generation, execute each frozen compared method exactly once per holdout task in the preregistered workflow. No score-improving reruns are permitted. The error policy determines whether the one-shot run is valid or invalid.",
   "post_holdout_rule": "Do not tune, rewrite, normalize beyond the frozen canonicalizer, change prompts, thresholds, scorer semantics, architecture, or statistical rules using URAI-HOLDOUT-v2 outcomes. Any subsequent tuning requires a new development cycle and a new untouched holdout version.",
   "locked_git_blobs": {}
 }
