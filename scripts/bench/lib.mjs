@@ -39,10 +39,7 @@ export function asPositiveInt(value, fallback) {
 
 export function csv(value, fallback = []) {
   if (!value) return fallback;
-  return String(value)
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
+  return String(value).split(',').map((item) => item.trim()).filter(Boolean);
 }
 
 export async function readJsonl(filePath) {
@@ -106,9 +103,7 @@ export function extractJson(text) {
     }
     const firstArray = cleaned.indexOf('[');
     const lastArray = cleaned.lastIndexOf(']');
-    if (firstArray !== -1 && lastArray > firstArray) {
-      return JSON.parse(cleaned.slice(firstArray, lastArray + 1));
-    }
+    if (firstArray !== -1 && lastArray > firstArray) return JSON.parse(cleaned.slice(firstArray, lastArray + 1));
     throw new Error('No valid JSON value found in model output.');
   }
 }
@@ -116,11 +111,7 @@ export function extractJson(text) {
 function normalizeJson(value) {
   if (Array.isArray(value)) return value.map(normalizeJson);
   if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.keys(value)
-        .sort()
-        .map((key) => [key, normalizeJson(value[key])]),
-    );
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, normalizeJson(value[key])]));
   }
   return value;
 }
@@ -148,11 +139,7 @@ export function scoreTask(task, outputText) {
       const actual = normalizeJson(extractJson(outputText));
       const expected = normalizeJson(scorer.value);
       const pass = JSON.stringify(actual) === JSON.stringify(expected);
-      return {
-        score: pass ? 1 : 0,
-        passed: pass,
-        detail: pass ? 'JSON matched exactly' : `expected ${JSON.stringify(expected)}; got ${JSON.stringify(actual)}`,
-      };
+      return { score: pass ? 1 : 0, passed: pass, detail: pass ? 'JSON matched exactly' : `expected ${JSON.stringify(expected)}; got ${JSON.stringify(actual)}` };
     } catch (error) {
       return { score: 0, passed: false, detail: `invalid JSON output: ${error.message}` };
     }
@@ -165,15 +152,12 @@ export function summarizeTrials(trials) {
   const passed = completed.filter((trial) => trial.passed);
   const scores = completed.map((trial) => Number(trial.score ?? 0));
   const latencies = completed.map((trial) => Number(trial.latency_ms ?? 0));
-  const usage = completed.reduce(
-    (acc, trial) => {
-      acc.input_tokens += Number(trial.usage?.input_tokens ?? 0);
-      acc.output_tokens += Number(trial.usage?.output_tokens ?? 0);
-      acc.total_tokens += Number(trial.usage?.total_tokens ?? 0);
-      return acc;
-    },
-    { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-  );
+  const usage = completed.reduce((acc, trial) => {
+    acc.input_tokens += Number(trial.usage?.input_tokens ?? 0);
+    acc.output_tokens += Number(trial.usage?.output_tokens ?? 0);
+    acc.total_tokens += Number(trial.usage?.total_tokens ?? 0);
+    return acc;
+  }, { input_tokens: 0, output_tokens: 0, total_tokens: 0 });
   return {
     trials: trials.length,
     completed: completed.length,
@@ -193,42 +177,36 @@ export async function fetchJson(url, options = {}, retry = {}) {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
+    let shouldRetry = false;
     try {
       const response = await fetch(url, { ...options, signal: controller.signal });
       const text = await response.text();
       let body;
-      try {
-        body = text ? JSON.parse(text) : {};
-      } catch {
-        body = { raw: text };
-      }
+      try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
       if (response.ok) return { response, body, attempts: attempt };
-      const retryable = response.status === 429 || response.status >= 500;
-      if (!retryable || attempt === attempts) {
-        throw new Error(`HTTP ${response.status}: ${clampText(JSON.stringify(body), 2000)}`);
-      }
-      lastError = new Error(`HTTP ${response.status}`);
+      const serialized = JSON.stringify(body);
+      const billingBlocked = /prepayment credits are depleted|credit balance is too low|billing.*(disabled|required)/i.test(serialized);
+      shouldRetry = !billingBlocked && (response.status === 429 || response.status >= 500);
+      const error = new Error(`HTTP ${response.status}: ${clampText(serialized, 2000)}`);
+      error.nonRetryable = !shouldRetry;
+      throw error;
     } catch (error) {
       lastError = error;
-      if (attempt === attempts) throw error;
+      if (error?.nonRetryable || attempt === attempts) throw error;
+      shouldRetry = true;
     } finally {
       clearTimeout(timer);
     }
-    await new Promise((resolve) => setTimeout(resolve, 750 * 2 ** (attempt - 1)));
+    if (shouldRetry) await new Promise((resolve) => setTimeout(resolve, 750 * 2 ** (attempt - 1)));
   }
   throw lastError ?? new Error('Request failed');
 }
 
 export function usageSum(...values) {
-  return values.reduce(
-    (acc, usage) => {
-      acc.input_tokens += Number(usage?.input_tokens ?? 0);
-      acc.output_tokens += Number(usage?.output_tokens ?? 0);
-      acc.total_tokens += usage?.total_tokens == null
-        ? Number(usage?.input_tokens ?? 0) + Number(usage?.output_tokens ?? 0)
-        : Number(usage.total_tokens);
-      return acc;
-    },
-    { input_tokens: 0, output_tokens: 0, total_tokens: 0 },
-  );
+  return values.reduce((acc, usage) => {
+    acc.input_tokens += Number(usage?.input_tokens ?? 0);
+    acc.output_tokens += Number(usage?.output_tokens ?? 0);
+    acc.total_tokens += usage?.total_tokens == null ? Number(usage?.input_tokens ?? 0) + Number(usage?.output_tokens ?? 0) : Number(usage.total_tokens);
+    return acc;
+  }, { input_tokens: 0, output_tokens: 0, total_tokens: 0 });
 }
