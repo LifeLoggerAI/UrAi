@@ -1,13 +1,78 @@
 name: URAI Frontier Benchmark
 
 on:
+  push:
+    branches: [agent/frontier-benchmark-harness]
+    paths:
+      - "scripts/bench/**"
+      - "bench/suites/**"
+      - "docs/benchmarks/**"
+      - ".github/workflows/frontier-benchmark.yml"
   workflow_dispatch:
+    inputs:
+      providers:
+        description: "Comma-separated provider IDs"
+        required: false
+        default: "openai,openai+urai"
+      repeats:
+        description: "Repeats per task"
+        required: false
+        default: "1"
+      max_output_tokens:
+        description: "Maximum aggregate output-token budget per task"
+        required: false
+        default: "1200"
 
 jobs:
   benchmark:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MYTHOS_MODEL: ${{ secrets.ANTHROPIC_MYTHOS_MODEL }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      BENCH_PROVIDERS: ${{ inputs.providers || 'openai,openai+urai' }}
+      BENCH_REPEATS: ${{ inputs.repeats || '1' }}
+      BENCH_MAX_OUTPUT_TOKENS: ${{ inputs.max_output_tokens || '1200' }}
     steps:
-      - name: Upgrade in progress
-        run: echo "Benchmark workflow temporarily paused while the v2 suite is installed."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Generate frozen synthetic suite
+        run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
+
+      - name: Provider readiness
+        run: node scripts/bench/doctor.mjs
+
+      - name: Deterministic smoke proof
+        run: node scripts/bench/run-frontier-bench.mjs --suite bench/suites/smoke.jsonl --providers mock,mock+urai --max-output-tokens 512 --run-id ci-smoke
+
+      - name: Expanded live paired A/B
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "providers=$BENCH_PROVIDERS repeats=$BENCH_REPEATS maxOutputTokens=$BENCH_MAX_OUTPUT_TOKENS"
+          node scripts/bench/run-frontier-bench.mjs \
+            --suite bench/suites/urai-long-horizon-v2.jsonl \
+            --providers="$BENCH_PROVIDERS" \
+            --repeats="$BENCH_REPEATS" \
+            --max-output-tokens="$BENCH_MAX_OUTPUT_TOKENS" \
+            --run-id ci-live-v2 \
+            --fail-on-errors
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-benchmark-evidence-v2
+          path: |
+            bench/results/
+            bench/suites/urai-long-horizon-v2.jsonl
+          if-no-files-found: error
