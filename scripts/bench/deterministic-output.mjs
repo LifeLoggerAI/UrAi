@@ -1,4 +1,4 @@
-export const DETERMINISTIC_OUTPUT_VERSION = 'deterministic-json-normalizer-v1';
+export const DETERMINISTIC_OUTPUT_VERSION = 'deterministic-json-normalizer-v2';
 
 function parsed(candidate) {
   try {
@@ -6,6 +6,12 @@ function parsed(candidate) {
   } catch {
     return { found: false, value: null };
   }
+}
+
+function requestedKeys(prompt) {
+  const match = String(prompt ?? '').match(/\bkeys?\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*(?:\s*,?\s*and\s+[A-Za-z_][A-Za-z0-9_]*)?)/i);
+  if (!match) return [];
+  return match[1].replace(/\s+and\s+/gi, ',').split(',').map((value) => value.trim()).filter(Boolean);
 }
 
 function fencedJsonCandidates(text) {
@@ -24,7 +30,6 @@ function balancedJsonCandidates(text) {
   for (let start = 0; start < text.length; start += 1) {
     const opening = text[start];
     if (opening !== '{' && opening !== '[') continue;
-
     const stack = [];
     let inString = false;
     let escaped = false;
@@ -53,6 +58,27 @@ function balancedJsonCandidates(text) {
     }
   }
   return candidates;
+}
+
+function repairRequestedShape(taskPrompt, value) {
+  const keys = [...new Set(requestedKeys(taskPrompt))];
+  if (!keys.length || !value || Array.isArray(value) || typeof value !== 'object') return value;
+
+  if (keys.length === 1 && keys[0] === 'selected') {
+    if (Object.keys(value).length === 1 && 'id' in value && typeof value.id !== 'object') return { selected: value.id };
+    if (Object.keys(value).length === 1 && value.selected && !Array.isArray(value.selected) && typeof value.selected === 'object' && 'id' in value.selected) {
+      return { selected: value.selected.id };
+    }
+  }
+
+  if (keys.length === 2 && keys.includes('selected') && keys.includes('score')) {
+    if (value.selected && !Array.isArray(value.selected) && typeof value.selected === 'object' && 'id' in value.selected) {
+      const score = 'score' in value ? value.score : value.selected.score;
+      if (score !== undefined) return { selected: value.selected.id, score };
+    }
+  }
+
+  return value;
 }
 
 export function extractFinalJsonValue(text) {
@@ -85,10 +111,11 @@ export function normalizeRequestedOutput(taskPrompt, outputText) {
   const extracted = extractFinalJsonValue(raw);
   if (!extracted.found) return { text: raw, changed: false, extraction_source: extracted.source };
 
-  const normalized = JSON.stringify(extracted.value);
+  const repaired = repairRequestedShape(taskPrompt, extracted.value);
+  const normalized = JSON.stringify(repaired);
   return {
     text: normalized,
     changed: normalized !== raw,
-    extraction_source: extracted.source,
+    extraction_source: repaired === extracted.value ? extracted.source : `${extracted.source}+shape_repair`,
   };
 }
