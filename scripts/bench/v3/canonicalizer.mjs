@@ -42,7 +42,7 @@ function rankedWinner(value) {
 }
 
 function promptRequestsWinner(prompt) {
-  return /\b(rank|ranking|ranked|choose|pick|select|selected|winner|highest|lowest|best)\b/i.test(String(prompt ?? ''));
+  return /\b(rank|ranking|ranked|choose|pick|select|winner|highest|lowest|best)\b/i.test(String(prompt ?? ''));
 }
 
 export function canonicalizeOutputContract(taskPrompt, answer) {
