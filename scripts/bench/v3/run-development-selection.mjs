@@ -151,6 +151,12 @@ function pairedStats(leftId, rightId) {
   return { both_pass: bothPass, left_only: leftOnly, right_only: rightOnly, both_fail: bothFail, right_minus_left_tasks: rightOnly - leftOnly };
 }
 
+function passCount(stats) {
+  const completed = Number(stats?.completed ?? 0);
+  const passRate = Number(stats?.pass_rate ?? 0);
+  return Math.round(completed * passRate);
+}
+
 const byProvider = Object.fromEntries(providers.map((provider) => [provider.id, summarizeTrials(allTrials.filter((trial) => trial.provider === provider.id))]));
 const v3Trials = allTrials.filter((trial) => trial.provider === v3.id && trial.status === 'completed');
 let preservedCorrect = 0;
@@ -175,9 +181,9 @@ const v3Gate = {
   persistent_failures: persistentFailure,
   net_gate_value: usefulReplacement - harmfulReplacement,
 };
-const builderPasses = Number(byProvider[builder.id]?.passed ?? 0);
-const v3Passes = Number(byProvider[v3.id]?.passed ?? 0);
-const selfRefinePasses = Number(byProvider[selfRefine.id]?.passed ?? 0);
+const builderPasses = passCount(byProvider[builder.id]);
+const v3Passes = passCount(byProvider[v3.id]);
+const selfRefinePasses = passCount(byProvider[selfRefine.id]);
 let selectedArchitecture;
 let selectionReason;
 if (v3Gate.net_gate_value < 0) {
