@@ -1,0 +1,55 @@
+name: URAI HOLDOUT v1 One-Shot Validation
+
+on:
+  push:
+    branches: [agent/frontier-benchmark-harness]
+    paths:
+      - ".github/workflows/urai-holdout-v1.yml"
+  workflow_dispatch:
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_BENCH_MODEL: gpt-4o-mini
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Generate sealed holdout
+        run: node scripts/bench/generate-holdout-v1.mjs bench/holdout/urai-holdout-v1.jsonl
+
+      - name: Validate frozen runner
+        run: |
+          node --check scripts/bench/generate-holdout-v1.mjs
+          node --check scripts/bench/run-holdout-v1.mjs
+          node --test scripts/bench/v3/gate.test.mjs
+
+      - name: Run URAI-HOLDOUT-v1 exactly once
+        run: |
+          node scripts/bench/run-holdout-v1.mjs \
+            --protocol bench/protocols/urai-holdout-v1-lock.json \
+            --suite bench/holdout/urai-holdout-v1.jsonl \
+            --run-id ci-urai-holdout-v1 \
+            --max-output-tokens 1200
+
+      - name: Upload sealed holdout evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: urai-holdout-v1-evidence
+          path: |
+            bench/protocols/urai-holdout-v1-lock.json
+            bench/holdout/urai-holdout-v1.jsonl
+            bench/results/ci-urai-holdout-v1/
+          if-no-files-found: error
