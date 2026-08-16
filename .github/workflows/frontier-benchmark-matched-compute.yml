@@ -1,4 +1,4 @@
-name: URAI Development Candidate Benchmark
+name: URAI Council v3 Freeze Validation
 
 on:
   push:
@@ -26,37 +26,25 @@ jobs:
       - name: Generate frozen synthetic suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Test development candidates
+      - name: Validate safe typed v3 harness
         run: |
-          node --test \
-            scripts/bench/deterministic-output.test.mjs \
-            scripts/bench/reduced-council.test.mjs \
-            scripts/bench/selective-router.test.mjs \
-            scripts/bench/preservation-gate.test.mjs \
-            scripts/bench/providers.test.mjs
-          node --check scripts/bench/run-dev-candidates.mjs
-          node --check scripts/bench/select-router-threshold.mjs
+          node --test scripts/bench/v3/gate.test.mjs
+          node --check scripts/bench/v3/harnesses.mjs
+          node --check scripts/bench/v3/run-freeze-validation.mjs
 
-      - name: Run development candidate comparison
+      - name: Run fresh stochastic freeze validation
         run: |
-          node scripts/bench/run-dev-candidates.mjs \
-            --run-id ci-dev-candidates-v3 \
-            --repeats 1 \
+          node scripts/bench/v3/run-freeze-validation.mjs \
+            --run-id ci-v3-freeze-validation \
+            --repeats 2 \
             --max-output-tokens 1200
-
-      - name: Select router threshold with leave-one-family-out checks
-        if: success()
-        run: |
-          node scripts/bench/select-router-threshold.mjs \
-            --trials bench/results/ci-dev-candidates-v3/trials.jsonl \
-            --output bench/results/ci-dev-candidates-v3/router-selection.json
 
       - name: Upload benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontier-benchmark-evidence-dev-candidates-v3
+          name: frontier-benchmark-evidence-v3-freeze-validation
           path: |
-            bench/results/ci-dev-candidates-v3/
+            bench/results/ci-v3-freeze-validation/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
