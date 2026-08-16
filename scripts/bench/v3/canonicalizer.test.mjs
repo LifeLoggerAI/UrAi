@@ -51,3 +51,17 @@ test('does not collapse arbitrary arrays when winner intent is absent', () => {
   assert.equal(result.answer, original);
   assert.equal(result.changed, false);
 });
+
+test('semantic endpoint extracts the final balanced JSON from prose', () => {
+  const prompt = 'Return only JSON with exactly keys selected and score. Pick the highest score.';
+  const result = canonicalizeOutputContract(prompt, 'I checked the rows. Final answer: {"id":"N3","score":89}');
+  assert.equal(result.answer, '{"selected":"N3","score":89}');
+  assert.equal(result.reason, 'deterministic_requested_key_projection');
+});
+
+test('semantic endpoint uses the final fenced JSON when multiple JSON values appear', () => {
+  const prompt = 'Return only JSON with exactly key selected. Choose the highest stable version.';
+  const output = 'Working note: {"selected":"old"}\n```json\n{"selected":"3.9.9"}\n```';
+  const result = canonicalizeOutputContract(prompt, output);
+  assert.equal(result.answer, '{"selected":"3.9.9"}');
+});
