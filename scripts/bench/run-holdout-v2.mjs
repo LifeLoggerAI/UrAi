@@ -194,8 +194,10 @@ function strictSummary(trials) {
 }
 
 function gateStats(trials) {
+  let builderCorrect = 0;
   let preservedCorrect = 0;
   let harmfulReplacement = 0;
+  let preservationIntegrityFailure = 0;
   let usefulReplacement = 0;
   let persistentFailure = 0;
   let replacements = 0;
@@ -205,17 +207,21 @@ function gateStats(trials) {
     const finalPass = trial.passed === true;
     const replaced = trial.metadata?.gate_decision === 'replace';
     if (replaced) replacements += 1;
+    if (basePass) builderCorrect += 1;
     if (basePass && finalPass) preservedCorrect += 1;
-    else if (basePass && !finalPass) harmfulReplacement += 1;
+    else if (basePass && !finalPass && replaced) harmfulReplacement += 1;
+    else if (basePass && !finalPass) preservationIntegrityFailure += 1;
     else if (!basePass && finalPass) usefulReplacement += 1;
     else persistentFailure += 1;
     if (replaced && !basePass && !finalPass) futileReplacement += 1;
   }
   return {
     replacements,
+    builder_correct: builderCorrect,
     preserved_correct: preservedCorrect,
     harmful_replacements: harmfulReplacement,
-    harmful_replacement_rate_all_tasks: trials.length ? harmfulReplacement / trials.length : null,
+    harmful_replacement_rate_given_correct_builder: builderCorrect ? harmfulReplacement / builderCorrect : null,
+    preservation_integrity_failures: preservationIntegrityFailure,
     useful_replacements: usefulReplacement,
     futile_replacements: futileReplacement,
     persistent_failures: persistentFailure,
@@ -237,9 +243,12 @@ const councilGate = gateStats(councilCompleted);
 const errorCount = allTrials.filter((trial) => trial.status === 'error').length;
 const expectedTrialCount = tasks.length * providers.length;
 const validRun = errorCount === 0 && allTrials.length === expectedTrialCount && providers.every((provider) => completedFor(provider.id).length === tasks.length);
+const harmfulRate = councilGate.harmful_replacement_rate_given_correct_builder;
 const safetyPass = validRun
-  && councilGate.harmful_replacement_rate_all_tasks <= protocol.safety_rule.max_harmful_replacement_rate_all_tasks
-  && councilGate.useful_replacements > councilGate.harmful_replacements;
+  && harmfulRate != null
+  && harmfulRate <= protocol.safety_rule.max_harmful_replacement_rate_given_correct_builder
+  && councilGate.useful_replacements > councilGate.harmful_replacements
+  && (!protocol.safety_rule.require_zero_preservation_integrity_failures || councilGate.preservation_integrity_failures === 0);
 const accuracyDelta = primary.right_minus_left_accuracy ?? 0;
 const bootstrapLower = bootstrap?.macro_family_accuracy_delta_ci95?.[0] ?? null;
 const strongSupport = validRun
@@ -311,7 +320,7 @@ for (const [id, stats] of Object.entries(byProvider)) {
 if (validRun) {
   console.log(`primary selfrefine->Council delta=${(100 * accuracyDelta).toFixed(1)}pp left_only=${primary.left_only} right_only=${primary.right_only} McNemar_p=${primary.mcnemar_exact_two_sided_p.toFixed(6)}`);
   console.log(`hierarchical macro CI95=[${bootstrap.macro_family_accuracy_delta_ci95.map((value) => value.toFixed(4)).join(', ')}]`);
-  console.log(`gate useful=${councilGate.useful_replacements} harmful=${councilGate.harmful_replacements} rate=${councilGate.harmful_replacement_rate_all_tasks.toFixed(4)} net=${councilGate.net_gate_value}`);
+  console.log(`gate useful=${councilGate.useful_replacements} harmful=${councilGate.harmful_replacements} builder_correct=${councilGate.builder_correct} conditional_rate=${harmfulRate == null ? 'n/a' : harmfulRate.toFixed(4)} integrity_failures=${councilGate.preservation_integrity_failures} net=${councilGate.net_gate_value}`);
 } else {
   console.log(`RUN_INVALID errors=${errorCount}; paired inference and claim are not valid.`);
 }
