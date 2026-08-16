@@ -27,9 +27,9 @@ jobs:
       - name: Generate development suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Validate v2 contract-aware harness
+      - name: Validate v2 contract-aware harness and statistics
         run: |
-          node --test scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs
+          node --test scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/paired-stats.test.mjs
           node --check scripts/bench/v3/harnesses.mjs
           node --check scripts/bench/v3/run-development-selection.mjs
 
