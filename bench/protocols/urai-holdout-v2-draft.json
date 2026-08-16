@@ -27,8 +27,12 @@
     "family_summary": "macro-average paired accuracy delta with all family deltas reported"
   },
   "safety_rule": {
-    "max_harmful_replacement_rate_all_tasks": 0.02,
-    "require_useful_replacements_gt_harmful_replacements": true
+    "max_harmful_replacement_rate_given_correct_builder": 0.025,
+    "require_useful_replacements_gt_harmful_replacements": true,
+    "require_zero_preservation_integrity_failures": true,
+    "denominator_definition": "completed Council trials for which the frozen Builder-stage semantic scorer marks the Builder answer correct",
+    "harmful_replacement_definition": "a gate_decision=replace trial whose Builder-stage semantic answer is correct and whose Council final semantic answer is wrong",
+    "preservation_integrity_failure_definition": "a trial whose Builder-stage semantic answer is correct and Council final semantic answer is wrong without gate_decision=replace"
   },
   "claim_rule": {
     "minimum_accuracy_advantage": 0.05,
