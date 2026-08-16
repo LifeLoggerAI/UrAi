@@ -25,6 +25,7 @@ import {
   macroFamilyAccuracyDelta,
   pairedAccuracyStats,
 } from './v3/paired-stats.mjs';
+import { extractPreCanonicalSystemOutput, strictWholeJsonScore } from './v3/strict-contract.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const protocolPath = path.resolve(process.cwd(), String(args.protocol ?? 'bench/protocols/urai-holdout-v2-lock.json'));
@@ -70,21 +71,11 @@ const council = createBuilderPreservationHarnessV3(base, { minimumConfidence: pr
 const providers = [direct, selfRefine, council];
 const allTrials = [];
 
-function strictWholeJsonScore(task, rawText) {
-  const text = String(rawText ?? '').trim();
-  try {
-    const value = JSON.parse(text);
-    return scoreTask(task, JSON.stringify(value));
-  } catch (error) {
-    return { score: 0, passed: false, detail: `strict whole-JSON contract failed: ${error.message}` };
-  }
-}
-
-function preCanonicalOutput(provider, result) {
-  if (provider.id === direct.id) return result.raw?.pre_canonical_output ?? result.text;
-  if (provider.id === selfRefine.id) return result.raw?.stages?.final?.text ?? result.text;
-  if (provider.id === council.id) return result.raw?.gate?.selected_answer ?? result.raw?.builder_canonical?.answer ?? result.text;
-  return result.text;
+function harnessKind(provider) {
+  if (provider.id === direct.id) return 'direct';
+  if (provider.id === selfRefine.id) return 'self_refine';
+  if (provider.id === council.id) return 'council_v3';
+  return 'unknown';
 }
 
 function builderStageScore(task, result) {
@@ -119,6 +110,7 @@ await writeJson(path.join(resultsDir, 'manifest.json'), {
   statistics: protocol.statistics,
   claim_rule: protocol.claim_rule,
   safety_rule: protocol.safety_rule,
+  error_policy: protocol.error_policy,
   frozen_from_commit: protocol.frozen_from_commit,
   locked_git_blobs: protocol.locked_git_blobs,
   post_holdout_rule: protocol.post_holdout_rule,
@@ -137,7 +129,7 @@ for (const task of tasks) {
     try {
       const result = await provider.complete({ task, prompt: task.prompt, maxOutputTokens });
       const semantic = scoreTask(task, result.text);
-      const rawOutput = preCanonicalOutput(provider, result);
+      const rawOutput = extractPreCanonicalSystemOutput(harnessKind(provider), result);
       const strict = strictWholeJsonScore(task, rawOutput);
       const builderStage = provider.id === council.id ? builderStageScore(task, result) : null;
       const trial = {
@@ -174,6 +166,10 @@ for (const task of tasks) {
         family: task.family,
         status: 'error',
         latency_ms: Math.round(performance.now() - started),
+        score: 0,
+        passed: false,
+        strict_raw_score: 0,
+        strict_raw_passed: false,
         error: String(error?.stack ?? error),
       };
       allTrials.push(trial);
@@ -183,8 +179,12 @@ for (const task of tasks) {
   }
 }
 
+function providerTrials(providerId) {
+  return allTrials.filter((trial) => trial.provider === providerId);
+}
+
 function completedFor(providerId) {
-  return allTrials.filter((trial) => trial.provider === providerId && trial.status === 'completed');
+  return providerTrials(providerId).filter((trial) => trial.status === 'completed');
 }
 
 function strictSummary(trials) {
@@ -223,26 +223,33 @@ function gateStats(trials) {
   };
 }
 
-const byProvider = Object.fromEntries(providers.map((provider) => [provider.id, summarizeTrials(completedFor(provider.id))]));
-const strictByProvider = Object.fromEntries(providers.map((provider) => [provider.id, strictSummary(completedFor(provider.id))]));
+const byProvider = Object.fromEntries(providers.map((provider) => [provider.id, summarizeTrials(providerTrials(provider.id))]));
+const strictByProvider = Object.fromEntries(providers.map((provider) => [provider.id, strictSummary(providerTrials(provider.id))]));
 const primary = pairedAccuracyStats(completedFor(selfRefine.id), completedFor(council.id));
 const directVsCouncil = pairedAccuracyStats(completedFor(direct.id), completedFor(council.id));
-const macro = macroFamilyAccuracyDelta(primary.pair_rows);
-const bootstrap = hierarchicalPairedBootstrap(primary.pair_rows, {
+const macro = primary.pair_rows.length ? macroFamilyAccuracyDelta(primary.pair_rows) : null;
+const bootstrap = primary.pair_rows.length ? hierarchicalPairedBootstrap(primary.pair_rows, {
   replicates: protocol.statistics.hierarchical_bootstrap_replicates,
   seed: protocol.statistics.hierarchical_bootstrap_seed,
-});
-const councilGate = gateStats(completedFor(council.id));
-const safetyPass = councilGate.harmful_replacement_rate_all_tasks <= protocol.safety_rule.max_harmful_replacement_rate_all_tasks
+}) : null;
+const councilCompleted = completedFor(council.id);
+const councilGate = gateStats(councilCompleted);
+const errorCount = allTrials.filter((trial) => trial.status === 'error').length;
+const expectedTrialCount = tasks.length * providers.length;
+const validRun = errorCount === 0 && allTrials.length === expectedTrialCount && providers.every((provider) => completedFor(provider.id).length === tasks.length);
+const safetyPass = validRun
+  && councilGate.harmful_replacement_rate_all_tasks <= protocol.safety_rule.max_harmful_replacement_rate_all_tasks
   && councilGate.useful_replacements > councilGate.harmful_replacements;
 const accuracyDelta = primary.right_minus_left_accuracy ?? 0;
-const bootstrapLower = bootstrap.macro_family_accuracy_delta_ci95[0];
-const strongSupport = safetyPass
+const bootstrapLower = bootstrap?.macro_family_accuracy_delta_ci95?.[0] ?? null;
+const strongSupport = validRun
+  && safetyPass
   && accuracyDelta >= protocol.claim_rule.minimum_accuracy_advantage
   && primary.mcnemar_exact_two_sided_p <= protocol.claim_rule.maximum_mcnemar_p
   && bootstrapLower > protocol.claim_rule.minimum_bootstrap_lower_bound;
 let claimStatus;
-if (!safetyPass || accuracyDelta <= 0) claimStatus = 'not_supported';
+if (!validRun) claimStatus = 'invalid_no_claim';
+else if (!safetyPass || accuracyDelta <= 0) claimStatus = 'not_supported';
 else if (strongSupport) claimStatus = 'strongly_supported';
 else claimStatus = 'directionally_supported';
 
@@ -250,7 +257,7 @@ const familySummary = {};
 for (const family of [...families].sort()) {
   familySummary[family] = {};
   for (const provider of providers) {
-    const trials = completedFor(provider.id).filter((trial) => trial.family === family);
+    const trials = providerTrials(provider.id).filter((trial) => trial.family === family);
     familySummary[family][provider.id] = {
       semantic: summarizeTrials(trials),
       strict_raw: strictSummary(trials),
@@ -263,6 +270,10 @@ const summary = {
   protocol: protocol.protocol,
   suite_sha256: suiteSha256,
   one_shot_holdout: true,
+  valid_run: validRun,
+  error_count: errorCount,
+  expected_trial_count: expectedTrialCount,
+  observed_trial_count: allTrials.length,
   primary_endpoint: protocol.primary_endpoint,
   by_provider: byProvider,
   strict_raw_by_provider: strictByProvider,
@@ -276,13 +287,16 @@ const summary = {
   council_gate: councilGate,
   predeclared_claim_evaluation: {
     status: claimStatus,
+    valid_run: validRun,
+    error_count: errorCount,
     safety_pass: safetyPass,
     council_minus_self_refine_accuracy: accuracyDelta,
-    macro_family_accuracy_delta: macro.macro_delta,
+    macro_family_accuracy_delta: macro?.macro_delta ?? null,
     mcnemar_exact_two_sided_p: primary.mcnemar_exact_two_sided_p,
-    macro_family_bootstrap_ci95: bootstrap.macro_family_accuracy_delta_ci95,
+    macro_family_bootstrap_ci95: bootstrap?.macro_family_accuracy_delta_ci95 ?? null,
     rule: protocol.claim_rule,
     safety_rule: protocol.safety_rule,
+    error_policy: protocol.error_policy,
   },
   post_holdout_rule: protocol.post_holdout_rule,
 };
@@ -292,11 +306,15 @@ console.log('\nURAI-HOLDOUT-v2 one-shot summary');
 for (const [id, stats] of Object.entries(byProvider)) {
   const correct = Math.round((stats.pass_rate ?? 0) * stats.completed);
   const strict = strictByProvider[id];
-  console.log(`${id}: semantic=${correct}/${stats.completed} (${stats.pass_rate == null ? 'n/a' : (100 * stats.pass_rate).toFixed(1) + '%'}) strict=${strict.passed}/${strict.completed} tokens=${stats.usage.total_tokens}`);
+  console.log(`${id}: semantic=${correct}/${stats.completed} (${stats.pass_rate == null ? 'n/a' : (100 * stats.pass_rate).toFixed(1) + '%'}) strict=${strict.passed}/${strict.completed} errors=${stats.errors} tokens=${stats.usage.total_tokens}`);
 }
-console.log(`primary selfrefine->Council delta=${(100 * accuracyDelta).toFixed(1)}pp left_only=${primary.left_only} right_only=${primary.right_only} McNemar_p=${primary.mcnemar_exact_two_sided_p.toFixed(6)}`);
-console.log(`hierarchical macro CI95=[${bootstrap.macro_family_accuracy_delta_ci95.map((value) => value.toFixed(4)).join(', ')}]`);
-console.log(`gate useful=${councilGate.useful_replacements} harmful=${councilGate.harmful_replacements} rate=${councilGate.harmful_replacement_rate_all_tasks.toFixed(4)} net=${councilGate.net_gate_value}`);
+if (validRun) {
+  console.log(`primary selfrefine->Council delta=${(100 * accuracyDelta).toFixed(1)}pp left_only=${primary.left_only} right_only=${primary.right_only} McNemar_p=${primary.mcnemar_exact_two_sided_p.toFixed(6)}`);
+  console.log(`hierarchical macro CI95=[${bootstrap.macro_family_accuracy_delta_ci95.map((value) => value.toFixed(4)).join(', ')}]`);
+  console.log(`gate useful=${councilGate.useful_replacements} harmful=${councilGate.harmful_replacements} rate=${councilGate.harmful_replacement_rate_all_tasks.toFixed(4)} net=${councilGate.net_gate_value}`);
+} else {
+  console.log(`RUN_INVALID errors=${errorCount}; paired inference and claim are not valid.`);
+}
 console.log(`PREDECLARED_CLAIM_STATUS=${claimStatus}`);
 console.log(`results=${resultsDir}`);
-if (allTrials.some((trial) => trial.status === 'error')) process.exitCode = 2;
+if (!validRun) process.exitCode = 2;
