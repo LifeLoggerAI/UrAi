@@ -1,25 +1,11 @@
-export const OUTPUT_CANONICALIZER_VERSION = 'prompt-contract-canonicalizer-v2';
+import { extractFinalJsonValue } from '../deterministic-output.mjs';
 
-function stripCodeFence(text) {
-  const trimmed = String(text ?? '').trim();
-  const match = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-  return match ? match[1].trim() : trimmed;
-}
+export const OUTPUT_CANONICALIZER_VERSION = 'prompt-contract-canonicalizer-v2';
 
 function requestedKeys(prompt) {
   const match = String(prompt ?? '').match(/\bkeys?\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*(?:\s*,?\s*and\s+[A-Za-z_][A-Za-z0-9_]*)?)/i);
   if (!match) return [];
   return match[1].replace(/\s+and\s+/gi, ',').split(',').map((value) => value.trim()).filter(Boolean);
-}
-
-function parseWholeJson(text) {
-  return JSON.parse(stripCodeFence(text));
-}
-
-function extractSingleFencedJson(text) {
-  const matches = [...String(text ?? '').matchAll(/```(?:json)?\s*([\s\S]*?)\s*```/gi)];
-  if (matches.length !== 1) return null;
-  try { return JSON.parse(matches[0][1].trim()); } catch { return null; }
 }
 
 function canonicalJson(value) {
@@ -45,6 +31,10 @@ function promptRequestsWinner(prompt) {
   return /\b(rank|ranking|ranked|choose|pick|select|winner|highest|lowest|best)\b/i.test(String(prompt ?? ''));
 }
 
+function extractionReason(prefix, source) {
+  return source === 'whole_output_json' ? prefix : `${prefix}:${source}`;
+}
+
 export function canonicalizeOutputContract(taskPrompt, answer) {
   const prompt = String(taskPrompt ?? '');
   const original = String(answer ?? '').trim();
@@ -55,26 +45,20 @@ export function canonicalizeOutputContract(taskPrompt, answer) {
     return { answer: original, changed: false, reason: 'no_supported_contract' };
   }
 
-  let parsed;
-  let source = 'whole';
-  try {
-    parsed = parseWholeJson(original);
-  } catch {
-    if (!onlyJson) return { answer: original, changed: false, reason: 'not_strict_json' };
-    parsed = extractSingleFencedJson(original);
-    if (parsed == null) return { answer: original, changed: false, reason: 'no_unique_fenced_json' };
-    source = 'single_fenced_json';
-  }
+  const extracted = extractFinalJsonValue(original);
+  if (!extracted.found) return { answer: original, changed: false, reason: 'no_json_value_found' };
+  const parsed = extracted.value;
+  const source = extracted.source;
 
   if (expectsArray) {
     if (!Array.isArray(parsed)) return { answer: original, changed: false, reason: 'array_contract_mismatch' };
     const answerText = canonicalJson(parsed);
-    return { answer: answerText, changed: answerText !== original, reason: source === 'whole' ? 'canonical_json_array' : 'extracted_fenced_json_array' };
+    return { answer: answerText, changed: answerText !== original, reason: extractionReason('canonical_json_array', source) };
   }
 
   if (!keys.length) {
     const answerText = canonicalJson(parsed);
-    return { answer: answerText, changed: answerText !== original, reason: source === 'whole' ? 'canonical_json' : 'extracted_fenced_json' };
+    return { answer: answerText, changed: answerText !== original, reason: extractionReason('canonical_json', source) };
   }
 
   const expected = [...new Set(keys)];
@@ -146,6 +130,6 @@ export function canonicalizeOutputContract(taskPrompt, answer) {
   return {
     answer: answerText,
     changed: answerText !== original,
-    reason: repairReason ?? (source === 'whole' ? 'canonical_exact_key_json' : 'extracted_fenced_exact_key_json'),
+    reason: repairReason ?? extractionReason('canonical_exact_key_json', source),
   };
 }
