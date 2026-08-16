@@ -1,0 +1,74 @@
+name: URAI Frontier Benchmark
+
+on:
+  push:
+    branches: [agent/frontier-benchmark-harness]
+    paths:
+      - "scripts/bench/**"
+      - "bench/suites/**"
+      - "docs/benchmarks/**"
+      - ".github/workflows/frontier-benchmark.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MYTHOS_MODEL: ${{ secrets.ANTHROPIC_MYTHOS_MODEL }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Provider readiness
+        run: node scripts/bench/doctor.mjs
+
+      - name: Deterministic smoke proof
+        run: node scripts/bench/run-frontier-bench.mjs --suite bench/suites/smoke.jsonl --providers mock,mock+urai --max-output-tokens 512 --run-id ci-smoke
+
+      - name: Live provider A/B when credentials exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          providers=""
+          add_provider() {
+            if [ -n "$providers" ]; then providers="$providers,$1"; else providers="$1"; fi
+          }
+          if [ -n "${GEMINI_API_KEY:-}" ]; then
+            add_provider gemini
+            add_provider gemini+urai
+          fi
+          if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+            add_provider fable
+            add_provider fable+urai
+            if [ -n "${ANTHROPIC_MYTHOS_MODEL:-}" ]; then
+              add_provider mythos
+              add_provider mythos+urai
+            fi
+          fi
+          if [ -n "${OPENAI_API_KEY:-}" ]; then
+            add_provider openai
+            add_provider openai+urai
+          fi
+          if [ -z "$providers" ]; then
+            echo "No live provider credentials are configured; smoke proof completed."
+            exit 0
+          fi
+          node scripts/bench/run-frontier-bench.mjs --providers="$providers" --repeats=1 --max-output-tokens=1200 --run-id ci-live
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-benchmark-evidence
+          path: bench/results/
+          if-no-files-found: warn
