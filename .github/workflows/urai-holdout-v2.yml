@@ -1,0 +1,67 @@
+name: URAI Holdout v2 One-Shot Confirmatory
+
+on:
+  push:
+    branches:
+      - agent/frontier-benchmark-v2-freeze
+    paths:
+      - .github/workflows/urai-holdout-v2.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_MODEL: gpt-4o-mini
+
+    steps:
+      - name: Checkout frozen benchmark branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Preflight frozen tooling and sealed boundary
+        run: |
+          set -euo pipefail
+          node --test scripts/bench/deterministic-output.test.mjs
+          node --test scripts/bench/v3/canonicalizer.test.mjs
+          node --test scripts/bench/v3/gate.test.mjs
+          node --test scripts/bench/v3/paired-stats.test.mjs
+          node --test scripts/bench/v3/strict-contract.test.mjs
+          node --check scripts/bench/generate-holdout-v2.mjs
+          node --check scripts/bench/run-holdout-v2.mjs
+          node --check scripts/bench/verify-protocol-lock.mjs
+          node scripts/bench/verify-protocol-lock.mjs \
+            --protocol bench/protocols/urai-holdout-v2-lock.json \
+            --assert-holdout-absent bench/holdout/urai-holdout-v2.jsonl
+
+      - name: Generate sealed 240-task holdout
+        run: node scripts/bench/generate-holdout-v2.mjs bench/holdout/urai-holdout-v2.jsonl
+
+      - name: Run one-shot confirmatory comparison
+        run: |
+          node scripts/bench/run-holdout-v2.mjs \
+            --protocol bench/protocols/urai-holdout-v2-lock.json \
+            --suite bench/holdout/urai-holdout-v2.jsonl \
+            --run-id ci-urai-holdout-v2 \
+            --max-output-tokens 1200
+
+      - name: Upload sealed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: urai-holdout-v2-one-shot-evidence
+          if-no-files-found: warn
+          retention-days: 90
+          path: |
+            bench/protocols/urai-holdout-v2-lock.json
+            bench/holdout/urai-holdout-v2.jsonl
+            bench/results/ci-urai-holdout-v2/
