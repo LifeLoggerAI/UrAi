@@ -1,4 +1,4 @@
-name: URAI Council v3 Freeze Validation
+name: URAI v2 Contract-Aware Development Validation
 
 on:
   push:
@@ -14,6 +14,7 @@ jobs:
       contents: read
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_BENCH_MODEL: gpt-4o-mini
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,28 +24,28 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Generate frozen synthetic suite
+      - name: Generate development suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Validate safe typed v3 harness
+      - name: Validate v2 contract-aware harness
         run: |
-          node --test scripts/bench/v3/gate.test.mjs
+          node --test scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs
           node --check scripts/bench/v3/harnesses.mjs
-          node --check scripts/bench/v3/run-freeze-validation.mjs
+          node --check scripts/bench/v3/run-development-selection.mjs
 
-      - name: Run fresh stochastic freeze validation
+      - name: Run fresh v2 development comparison
         run: |
-          node scripts/bench/v3/run-freeze-validation.mjs \
-            --run-id ci-v3-freeze-validation \
-            --repeats 2 \
+          node scripts/bench/v3/run-development-selection.mjs \
+            --run-id ci-v2-contract-dev \
+            --repeats 1 \
             --max-output-tokens 1200
 
-      - name: Upload benchmark evidence
+      - name: Upload development evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontier-benchmark-evidence-v3-freeze-validation
+          name: urai-v2-contract-dev-evidence
           path: |
-            bench/results/ci-v3-freeze-validation/
+            bench/results/ci-v2-contract-dev/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
