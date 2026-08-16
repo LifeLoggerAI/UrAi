@@ -1,0 +1,40 @@
+name: URAI Matched Compute Benchmark
+
+on:
+  push:
+    branches: [agent/frontier-benchmark-harness]
+    paths:
+      - ".github/workflows/frontier-benchmark-matched-compute.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Generate frozen synthetic suite
+        run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
+
+      - name: Run matched-compute control
+        run: node scripts/bench/run-matched-compute.mjs
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-benchmark-evidence-matched-compute-v1
+          path: |
+            bench/results/ci-matched-compute-v1/
+            bench/suites/urai-long-horizon-v2.jsonl
+          if-no-files-found: error
