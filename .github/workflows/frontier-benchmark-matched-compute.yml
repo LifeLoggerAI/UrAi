@@ -1,4 +1,4 @@
-name: URAI v2 Isolated Development Validation
+name: URAI v2 Final Isolated Development Validation
 
 on:
   push:
@@ -29,16 +29,16 @@ jobs:
 
       - name: Validate final v2 development tooling
         run: |
-          node --test scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/paired-stats.test.mjs scripts/bench/v3/strict-contract.test.mjs
+          node --test scripts/bench/deterministic-output.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/paired-stats.test.mjs scripts/bench/v3/strict-contract.test.mjs
           node --check scripts/bench/v3/harnesses.mjs
           node --check scripts/bench/v3/run-development-selection.mjs
           node --check scripts/bench/run-holdout-v2.mjs
           node --check scripts/bench/verify-protocol-lock.mjs
 
-      - name: Run fresh v2 development comparison
+      - name: Run fresh final v2 development comparison
         run: |
           node scripts/bench/v3/run-development-selection.mjs \
-            --run-id ci-v2-contract-dev-isolated \
+            --run-id ci-v2-final-dev-isolated \
             --repeats 1 \
             --max-output-tokens 1200
 
@@ -46,8 +46,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: urai-v2-contract-dev-isolated-evidence
+          name: urai-v2-final-dev-isolated-evidence
           path: |
-            bench/results/ci-v2-contract-dev-isolated/
+            bench/results/ci-v2-final-dev-isolated/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
