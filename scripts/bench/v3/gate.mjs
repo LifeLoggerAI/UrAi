@@ -1,12 +1,8 @@
-export const BUILDER_PRESERVATION_GATE_VERSION = 'builder-preservation-gate-v2-independent';
+export const BUILDER_PRESERVATION_GATE_VERSION = 'builder-preservation-gate-v3-safe-typed';
 
 const REPLACEABLE_DEFECT_TYPES = new Set([
   'arithmetic_error',
   'contradiction',
-  'constraint_violation',
-  'missing_condition',
-  'invalid_option',
-  'output_contract_error',
 ]);
 
 function stripCodeFence(text) {
@@ -120,6 +116,14 @@ function nonEmptyEvidence(value) {
   return Array.isArray(value) && value.some((item) => String(item ?? '').trim().length >= 8);
 }
 
+function candidateText(value) {
+  const candidate = value?.candidate_answer;
+  if (candidate == null) return '';
+  if (typeof candidate === 'string') return candidate;
+  if (typeof candidate === 'object') return JSON.stringify(candidate);
+  return String(candidate);
+}
+
 function record(parsed) {
   if (!parsed?.ok) return null;
   const value = parsed.value;
@@ -129,7 +133,7 @@ function record(parsed) {
     defectType: String(value.defect_type ?? '').toLowerCase(),
     defectClaim: String(value.defect_claim ?? '').trim(),
     evidence: value.evidence,
-    candidate: String(value.candidate_answer ?? ''),
+    candidate: candidateText(value),
     confidence: confidence(value.confidence),
   };
 }
@@ -166,7 +170,6 @@ export function decideIndependentBuilderPreservation({ taskPrompt, builderAnswer
 
   const candidateContract = validateOutputContract(taskPrompt, a.candidate);
   if (!candidateContract.valid) return preserve('candidate_violates_output_contract', { candidate_contract: candidateContract });
-  if (a.defectType === 'output_contract_error' && baseContract.valid) return preserve('unsupported_output_contract_rewrite');
 
   return {
     decision: 'replace',
