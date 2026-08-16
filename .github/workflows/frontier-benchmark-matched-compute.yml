@@ -26,20 +26,25 @@ jobs:
       - name: Generate frozen synthetic suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Run matched-compute control
+      - name: Validate Council v3 development harness
         run: |
-          node --test scripts/bench/preservation-gate.test.mjs scripts/bench/providers.test.mjs
-          node scripts/bench/run-matched-compute.mjs \
-            --run-id ci-preservation-gate-v2 \
-            --repeats 1 \
+          node --check scripts/bench/v3/canonicalizer.mjs
+          node --check scripts/bench/v3/gate.mjs
+          node --check scripts/bench/v3/harnesses.mjs
+          node --check scripts/bench/v3/run-development-selection.mjs
+
+      - name: Run Council v3 development selection
+        run: |
+          node scripts/bench/v3/run-development-selection.mjs \
+            --run-id ci-council-v3-dev-selection \
             --max-output-tokens 1200
 
       - name: Upload benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontier-benchmark-evidence-preservation-gate-v2
+          name: frontier-benchmark-evidence-council-v3-dev-selection
           path: |
-            bench/results/ci-preservation-gate-v2/
+            bench/results/ci-council-v3-dev-selection/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
