@@ -1,0 +1,2 @@
+{"id":"smoke-json","prompt":"Return only this exact JSON object and nothing else: {\"status\":\"ready\",\"value\":7}\n<MOCK_ANSWER>{\"status\":\"ready\",\"value\":7}</MOCK_ANSWER>","scorer":{"type":"json_equals","value":{"status":"ready","value":7}}}
+{"id":"smoke-contains","prompt":"Return the three words alpha, beta, gamma.\n<MOCK_ANSWER>alpha beta gamma</MOCK_ANSWER>","scorer":{"type":"contains_all","values":["alpha","beta","gamma"]}}
