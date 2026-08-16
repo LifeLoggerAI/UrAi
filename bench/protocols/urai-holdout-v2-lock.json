@@ -1,0 +1,104 @@
+{
+  "schema_version": 2,
+  "protocol": "URAI-HOLDOUT-v2",
+  "status": "frozen_before_holdout_generation",
+  "frozen_at": "2026-08-16",
+  "frozen_from_commit": "f1fece352784cc784363bd45a54233a5cced214c",
+  "architecture": "openai+urai-v3",
+  "development_validation": {
+    "run_id": 31952628038,
+    "commit": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038",
+    "artifact_id": 9265864405,
+    "artifact_name": "urai-v2-final-dev-isolated-evidence",
+    "artifact_sha256": "169ff4ac3ea9aff7679395855156cad855fc92f990a79fcd71661722d059a467",
+    "selection": "openai+urai-v3"
+  },
+  "model": "gpt-4o-mini",
+  "max_output_tokens": 1200,
+  "minimum_gate_confidence": 0.95,
+  "task_count": 240,
+  "families": 12,
+  "tasks_per_family": 20,
+  "family_names": [
+    "constraint-arithmetic",
+    "constraint-selection",
+    "dependency-closure",
+    "dependency-schedule",
+    "filter-sort",
+    "instruction-precedence",
+    "inventory-reconciliation",
+    "ledger-recovery",
+    "multi-hop-path",
+    "ranking-tiebreak",
+    "state-supersession",
+    "version-resolution"
+  ],
+  "primary_comparison": "openai+selfrefine-canon_vs_openai+urai-v3",
+  "primary_endpoint": "shared deterministic contract-normalized semantic task accuracy",
+  "secondary_endpoints": [
+    "strict whole-JSON exact task accuracy before final deterministic canonicalization",
+    "openai+direct-canon_vs_openai+urai-v3 semantic paired accuracy",
+    "per-family semantic accuracy",
+    "Council Builder-to-final preservation safety",
+    "model calls, tokens, and latency"
+  ],
+  "statistics": {
+    "hierarchical_bootstrap_method": "paired resampling of benchmark families with replacement, then paired tasks within each sampled family",
+    "hierarchical_bootstrap_replicates": 50000,
+    "hierarchical_bootstrap_seed": 20260816,
+    "confidence_interval": 0.95,
+    "paired_task_test": "exact two-sided McNemar",
+    "family_summary": "macro-average paired accuracy delta with all family deltas reported"
+  },
+  "safety_rule": {
+    "max_harmful_replacement_rate_given_correct_builder": 0.025,
+    "require_useful_replacements_gt_harmful_replacements": true,
+    "require_zero_preservation_integrity_failures": true,
+    "denominator_definition": "completed Council trials for which the frozen Builder-stage semantic scorer marks the Builder answer correct",
+    "harmful_replacement_definition": "a gate_decision=replace trial whose Builder-stage semantic answer is correct and whose Council final semantic answer is wrong",
+    "preservation_integrity_failure_definition": "a trial whose Builder-stage semantic answer is correct and Council final semantic answer is wrong without gate_decision=replace"
+  },
+  "claim_rule": {
+    "minimum_accuracy_advantage": 0.05,
+    "maximum_mcnemar_p": 0.05,
+    "minimum_bootstrap_lower_bound": 0,
+    "strongly_supported": "valid run AND safety passes AND Council minus self-refine semantic accuracy >= 0.05 AND exact two-sided McNemar p <= 0.05 AND hierarchical macro-family 95% bootstrap lower bound > 0",
+    "directionally_supported": "valid run AND safety passes AND Council semantic accuracy > self-refine but the strong-support rule is not fully met",
+    "not_supported": "valid run AND (safety fails OR Council semantic accuracy <= self-refine)",
+    "invalid_no_claim": "any unrecoverable trial error, missing trial, or incomplete paired execution after provider retries"
+  },
+  "error_policy": {
+    "provider_retries": "use the frozen provider retry behavior before recording a trial error",
+    "pair_dropping": false,
+    "official_handling": "Any unrecoverable trial error, missing provider-task trial, or incomplete paired execution invalidates the official run and suppresses all confirmatory claims. Errors must never be silently excluded from paired inference.",
+    "after_exposure": "If invalidation occurs after any v2 holdout model output has been produced, URAI-HOLDOUT-v2 remains exposed and may not be rerun as a fresh confirmatory test. A replacement confirmatory run requires a new untouched holdout version."
+  },
+  "canonicalizer_policy": {
+    "version": "prompt-contract-canonicalizer-v2",
+    "shared_across_methods": true,
+    "answer_key_access": false,
+    "may_compute_or_rerank": false,
+    "allowed_repairs": [
+      "project scalar id plus score to requested selected plus score while dropping unrequested candidate metadata",
+      "under explicit ranking/winner intent and an exactly-selected contract, project first already-ranked scalar ID or first object's scalar id to selected",
+      "project an already-ranked selected array to its first scalar/object id under the same winner contract",
+      "existing deterministic nested selected-object to scalar selected repair"
+    ]
+  },
+  "holdout_generation_rule": "The holdout file must be absent before the one-shot workflow begins. The frozen generator may then create exactly 240 tasks once, after lock verification and before any model calls.",
+  "one_shot_rule": "After generation, execute each frozen compared method exactly once per holdout task in the preregistered workflow. No score-improving reruns are permitted. The error policy determines whether the one-shot run is valid or invalid.",
+  "post_holdout_rule": "Do not tune, rewrite, normalize beyond the frozen canonicalizer, change prompts, thresholds, scorer semantics, architecture, generation logic, or statistical rules using URAI-HOLDOUT-v2 outcomes. Any subsequent tuning requires a new development cycle and a new untouched holdout version.",
+  "locked_git_blobs": {
+    "scripts/bench/v3/canonicalizer.mjs": "3b1ac1c3dbda2d067ee53b726ca0914870e59b82",
+    "scripts/bench/v3/gate.mjs": "05458d21d431b1cca410d4a0e90183e50910c52a",
+    "scripts/bench/v3/harnesses.mjs": "3d28bcecee969c83a8a2ca7aaaebb06e5bdcd352",
+    "scripts/bench/deterministic-output.mjs": "dcb658f078c0608036a7b9040833c19f498b4962",
+    "scripts/bench/v3/paired-stats.mjs": "5eb98c2dfe9632a58cce6de3512d1d685c8c6c61",
+    "scripts/bench/v3/strict-contract.mjs": "0ff140a3fdbaa6cbee4f78bab66d104b776ea237",
+    "scripts/bench/providers.mjs": "6d40b44770ab65b9df0b04f137266374c7e7158c",
+    "scripts/bench/lib.mjs": "8a74c312584a8eb5fc0380852043c4749715e020",
+    "scripts/bench/run-holdout-v2.mjs": "92df9077c95d2bd586dfcb32da022d7bb1d9dc51",
+    "scripts/bench/verify-protocol-lock.mjs": "edfa64a03b07f4a48d727cd1ea8914de5f76a56a",
+    "scripts/bench/generate-holdout-v2.mjs": "252973ee58c7e1321e3b23a7ae78160a8cdaf036"
+  }
+}

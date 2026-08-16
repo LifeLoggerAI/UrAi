@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol": "URAI-HOLDOUT-v1",
+  "status": "frozen_before_holdout_generation",
+  "frozen_from_commit": "a38c811ed3a346ba5fcd7075066502ace8cb3c10",
+  "freeze_validation_run": 31942437146,
+  "architecture": "openai+urai-v3",
+  "model": "gpt-4o-mini",
+  "max_output_tokens": 1200,
+  "minimum_gate_confidence": 0.95,
+  "task_count": 72,
+  "families": 12,
+  "tasks_per_family": 6,
+  "primary_comparison": "openai+selfrefine-canon_vs_openai+urai-v3",
+  "primary_endpoint": "exact task accuracy",
+  "claim_rule": {
+    "safety": "harmful gate replacements <= 1 and useful replacements > harmful replacements",
+    "strongly_supported": "safety passes AND v3 minus self-refine accuracy >= 0.05 AND exact two-sided McNemar p <= 0.05",
+    "directionally_supported": "safety passes AND v3 accuracy > self-refine accuracy but strong-support threshold is not met",
+    "not_supported": "safety fails OR v3 accuracy <= self-refine accuracy"
+  },
+  "secondary_comparisons": [
+    "openai+direct-canon_vs_openai+urai-v3",
+    "v3 internal canonicalized Builder stage_vs_v3 final"
+  ],
+  "post_holdout_rule": "Do not tune, rewrite, or reinterpret the frozen architecture using URAI-HOLDOUT-v1 outcomes. Any future tuning requires a new development cycle and a new untouched holdout version.",
+  "locked_git_blobs": {
+    "scripts/bench/v3/gate.mjs": "05458d21d431b1cca410d4a0e90183e50910c52a",
+    "scripts/bench/v3/harnesses.mjs": "3d28bcecee969c83a8a2ca7aaaebb06e5bdcd352",
+    "scripts/bench/v3/canonicalizer.mjs": "30d4d87468a04658d5c5e1815aae9865d83ab2e0",
+    "scripts/bench/providers.mjs": "6d40b44770ab65b9df0b04f137266374c7e7158c",
+    "scripts/bench/lib.mjs": "8a74c312584a8eb5fc0380852043c4749715e020"
+  }
+}

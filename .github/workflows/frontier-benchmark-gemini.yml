@@ -1,0 +1,50 @@
+name: URAI Gemini Frontier Benchmark
+
+on:
+  push:
+    branches: [agent/frontier-benchmark-harness]
+    paths:
+      - ".github/workflows/frontier-benchmark-gemini.yml"
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Generate frozen synthetic suite
+        run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
+
+      - name: Provider readiness
+        run: node scripts/bench/doctor.mjs
+
+      - name: Expanded Gemini paired A/B
+        run: |
+          node scripts/bench/run-frontier-bench.mjs \
+            --suite bench/suites/urai-long-horizon-v2.jsonl \
+            --providers="gemini,gemini+urai" \
+            --repeats=1 \
+            --max-output-tokens=1200 \
+            --run-id ci-gemini-v2 \
+            --fail-on-errors
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontier-benchmark-evidence-v2-gemini
+          path: |
+            bench/results/
+            bench/suites/urai-long-horizon-v2.jsonl
+          if-no-files-found: error

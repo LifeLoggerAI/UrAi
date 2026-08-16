@@ -17,6 +17,7 @@ audit/
 tmp/
 artifacts/launch/
 test-results/
+bench/results/
 playwright-report/
 tsconfig.tsbuildinfo
 *.zip
