@@ -1,4 +1,5 @@
 import { fetchJson, usageSum } from './lib.mjs';
+import { decideAnswerPreservation, PRESERVATION_GATE_VERSION } from './preservation-gate.mjs';
 
 function providerResult({ text, model, usage, raw, attempts = 1, metadata = {} }) {
   const normalizedUsage = {
@@ -173,7 +174,7 @@ function stagePrompt({ task, role, instruction, prior = '' }) {
   ].join('\n');
 }
 
-export function createUraiCouncilHarness(baseProvider) {
+export function createUraiCouncilHarnessV1(baseProvider) {
   return {
     id: `${baseProvider.id}+urai`,
     model: `${baseProvider.model ?? 'unknown'} + URAI Council harness v1`,
@@ -248,6 +249,124 @@ export function createUraiCouncilHarness(baseProvider) {
   };
 }
 
+const GATE_SCHEMA = `{
+  "decision": "preserve" | "replace",
+  "defect_verified": true | false,
+  "defect_type": "arithmetic_error" | "contradiction" | "constraint_violation" | "missing_condition" | "invalid_option" | "format_error" | "other" | "none",
+  "defect_claim": "one specific falsifiable claim",
+  "evidence": ["concise checkable reason"],
+  "candidate_answer": "the complete exact replacement answer, or the exact base answer when preserving",
+  "confidence": 0.0
+}`;
+
+export function createUraiCouncilHarness(baseProvider, options = {}) {
+  const minimumConfidence = Number(options.minimumConfidence ?? 0.9);
+  return {
+    id: `${baseProvider.id}+urai`,
+    model: `${baseProvider.model ?? 'unknown'} + URAI Council harness v2 preservation gate`,
+    availability: baseProvider.availability,
+    async complete({ task, prompt, maxOutputTokens }) {
+      const totalBudget = Math.max(256, Number(maxOutputTokens ?? 1024));
+      const stageBudgets = {
+        base: Math.max(64, Math.floor(totalBudget * 0.35)),
+        challenge: Math.max(64, Math.floor(totalBudget * 0.2)),
+        verification: Math.max(64, Math.floor(totalBudget * 0.28)),
+      };
+      stageBudgets.arbiter = Math.max(64, totalBudget - stageBudgets.base - stageBudgets.challenge - stageBudgets.verification);
+
+      const syntheticTask = { ...task, prompt };
+      const base = await baseProvider.complete({
+        task: syntheticTask,
+        prompt,
+        maxOutputTokens: stageBudgets.base,
+      });
+
+      const challenge = await baseProvider.complete({
+        task: syntheticTask,
+        maxOutputTokens: stageBudgets.challenge,
+        prompt: stagePrompt({
+          task: syntheticTask,
+          role: 'Archivist / Base Answer Challenger',
+          instruction: [
+            'The base answer is presumed correct. Try to falsify it, but do not rewrite it for style.',
+            'A replacement is allowed only for a concrete factual, arithmetic, logical, constraint, option, missing-condition, or output-contract defect.',
+            'If no exact defect can be proved, choose preserve. Return only one valid JSON object using this schema:',
+            GATE_SCHEMA,
+          ].join('\n'),
+          prior: `BASE ANSWER (preserve exactly unless proved wrong):\n${base.text}`,
+        }),
+      });
+
+      const verification = await baseProvider.complete({
+        task: syntheticTask,
+        maxOutputTokens: stageBudgets.verification,
+        prompt: stagePrompt({
+          task: syntheticTask,
+          role: 'Mirror / Independent Defect Verifier',
+          instruction: [
+            'Independently verify the challenge against the original task and base answer.',
+            'Recalculate arithmetic and recheck every cited constraint. Reject stylistic disagreement, vague concern, and speculative correction.',
+            'Do not defer to the challenger. If the defect is not concrete and verified, choose preserve.',
+            'When replacing, provide the complete exact corrected answer. Return only one valid JSON object using this schema:',
+            GATE_SCHEMA,
+          ].join('\n'),
+          prior: `BASE ANSWER:\n${base.text}\n\nCHALLENGE:\n${challenge.text}`,
+        }),
+      });
+
+      const arbiter = await baseProvider.complete({
+        task: syntheticTask,
+        maxOutputTokens: stageBudgets.arbiter,
+        prompt: stagePrompt({
+          task: syntheticTask,
+          role: 'Guardian / Preservation Arbiter',
+          instruction: [
+            'Choose between the exact base answer and the exact verified candidate. Do not generate a third answer.',
+            'The default is preserve. Choose replace only when the challenger and independent verifier identify the same concrete defect and the verifier candidate actually fixes it.',
+            'Reject low-confidence, stylistic, malformed, contradictory, or unverified revisions.',
+            'Copy the selected candidate answer exactly. Return only one valid JSON object using this schema:',
+            GATE_SCHEMA,
+          ].join('\n'),
+          prior: `BASE ANSWER:\n${base.text}\n\nCHALLENGE:\n${challenge.text}\n\nINDEPENDENT VERIFICATION:\n${verification.text}`,
+        }),
+      });
+
+      const gate = decideAnswerPreservation({
+        taskPrompt: task.prompt,
+        baseAnswer: base.text,
+        challengeText: challenge.text,
+        verificationText: verification.text,
+        arbiterText: arbiter.text,
+        minimumConfidence,
+      });
+
+      return providerResult({
+        text: gate.selected_answer,
+        model: `${baseProvider.model ?? base.model} + URAI Council harness v2 preservation gate`,
+        usage: usageSum(base.usage, challenge.usage, verification.usage, arbiter.usage),
+        attempts: Number(base.attempts ?? 1) + Number(challenge.attempts ?? 1) + Number(verification.attempts ?? 1) + Number(arbiter.attempts ?? 1),
+        raw: {
+          stages: {
+            base: { text: base.text, usage: base.usage },
+            challenge: { text: challenge.text, usage: challenge.usage },
+            verification: { text: verification.text, usage: verification.usage },
+            arbiter: { text: arbiter.text, usage: arbiter.usage },
+          },
+          stage_budgets: stageBudgets,
+          gate,
+        },
+        metadata: {
+          harness: 'urai-council-v2',
+          gate: PRESERVATION_GATE_VERSION,
+          gate_decision: gate.decision,
+          gate_reason: gate.reason,
+          base_provider: baseProvider.id,
+        },
+      });
+    },
+  };
+}
+
 export function providerRegistry(env = process.env) {
   const base = {
     gemini: createGeminiProvider(env),
@@ -259,9 +378,14 @@ export function providerRegistry(env = process.env) {
   return {
     ...base,
     'gemini+urai': createUraiCouncilHarness(base.gemini),
+    'gemini+urai-v1': createUraiCouncilHarnessV1(base.gemini),
     'fable+urai': createUraiCouncilHarness(base.fable),
+    'fable+urai-v1': createUraiCouncilHarnessV1(base.fable),
     'mythos+urai': createUraiCouncilHarness(base.mythos),
+    'mythos+urai-v1': createUraiCouncilHarnessV1(base.mythos),
     'openai+urai': createUraiCouncilHarness(base.openai),
+    'openai+urai-v1': createUraiCouncilHarnessV1(base.openai),
     'mock+urai': createUraiCouncilHarness(base.mock),
+    'mock+urai-v1': createUraiCouncilHarnessV1(base.mock),
   };
 }

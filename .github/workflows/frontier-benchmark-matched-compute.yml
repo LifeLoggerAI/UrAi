@@ -27,14 +27,19 @@ jobs:
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
       - name: Run matched-compute control
-        run: node scripts/bench/run-matched-compute.mjs
+        run: |
+          node --test scripts/bench/preservation-gate.test.mjs scripts/bench/providers.test.mjs
+          node scripts/bench/run-matched-compute.mjs \
+            --run-id ci-preservation-gate-v2 \
+            --repeats 1 \
+            --max-output-tokens 1200
 
       - name: Upload benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontier-benchmark-evidence-matched-compute-v1
+          name: frontier-benchmark-evidence-preservation-gate-v2
           path: |
-            bench/results/ci-matched-compute-v1/
+            bench/results/ci-preservation-gate-v2/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error

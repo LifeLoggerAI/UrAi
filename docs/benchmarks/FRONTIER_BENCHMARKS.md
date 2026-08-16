@@ -4,14 +4,25 @@ This directory documents the reproducible model-vs-harness benchmark runner unde
 
 ## What it tests
 
-The runner supports direct base-model calls and the same base model wrapped in an experimental URAI Council orchestration pass:
+The runner supports direct base-model calls and the same base model wrapped in two experimental URAI Council orchestration passes.
+
+Council v1 is retained as a development baseline:
 
 1. Archivist extracts authoritative state and superseding updates.
 2. Builder solves from that state.
 3. Mirror audits concrete errors and missed constraints.
 4. Guardian + Guide synthesizes the final answer.
 
-The wrapper uses the same underlying provider and splits one configured aggregate output-token budget across those stages. It records aggregate input/output token usage so any quality lift can be weighed against added context/cost.
+Council v2 is the default `+urai` provider and adds a do-no-harm preservation gate:
+
+1. Generate and retain a base answer.
+2. Require a structured challenger to identify one concrete defect.
+3. Require an independent structured verifier to recalculate and verify the defect.
+4. Require an arbiter to choose preserve or replace; code returns the selected answer verbatim.
+
+Replacement requires unanimous high-confidence agreement, concrete evidence, an allowed shared defect type, equivalent replacement candidates, and a valid inferred output contract. Malformed, speculative, stylistic, low-confidence, or disagreeing revisions preserve the base.
+
+Each wrapper uses the same underlying provider and splits one configured aggregate output-token budget across four calls. It records aggregate input/output token usage so any quality lift can be weighed against added context/cost.
 
 This benchmark wrapper is an evaluation harness inspired by URAI Council concepts. It is not a claim that the production companion runtime already executes these four stages.
 
@@ -43,6 +54,27 @@ Run the deterministic local self-check:
 
 ```bash
 node scripts/bench/run-frontier-bench.mjs --suite bench/suites/smoke.jsonl --providers mock,mock+urai --max-output-tokens 512
+```
+
+Run preservation-gate unit and integration tests:
+
+```bash
+node --test scripts/bench/preservation-gate.test.mjs scripts/bench/providers.test.mjs
+```
+
+Run the matched four-call development comparison with direct, generic self-refinement, four-sample vote, Council v1, and Council v2:
+
+```bash
+node scripts/bench/run-matched-compute.mjs --run-id local-dev-v2 --repeats 1 --max-output-tokens 1200
+```
+
+Generate a task-level regression/recovery matrix from a completed run:
+
+```bash
+node scripts/bench/analyze-regressions.mjs \
+  --suite bench/suites/urai-long-horizon-v2.jsonl \
+  --trials bench/results/local-dev-v2/trials.jsonl \
+  --output-dir bench/results/local-dev-v2/forensics
 ```
 
 Run the included synthetic long-horizon suite against the public providers for which credentials are configured:

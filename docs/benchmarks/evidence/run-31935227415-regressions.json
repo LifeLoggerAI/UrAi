@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "run_id": 31935227415,
+  "repository": "LifeLoggerAI/UrAi",
+  "commit": "e040988c6bb57184e3556c2da4aee8d347885869",
+  "suite_sha256": "9166d8ad126315653a2e177f7d23d90acd77713a58da4bd5fabb2cfc4acf8e5c",
+  "counts": {
+    "preservation": 34,
+    "regression": 8,
+    "recovery": 5,
+    "persistent_failure": 13,
+    "net_council_value": -3
+  },
+  "regressions": [
+    {
+      "task_id": "allocation-2",
+      "family": "constraint-arithmetic",
+      "earliest_causal_stage": "mirror",
+      "taxonomy": ["arithmetic", "hallucinated_correction", "answer_drift"],
+      "builder_correct": true,
+      "expected": {"alpha": 22, "beta": 19, "gamma": 37, "reserve": 12},
+      "council_final": {"alpha": 22, "beta": 19, "gamma": 25, "reserve": 12}
+    },
+    {
+      "task_id": "closure-4",
+      "family": "dependency-closure",
+      "earliest_causal_stage": "mirror",
+      "taxonomy": ["logical_deduction", "constraint_misread", "answer_drift"],
+      "builder_correct": true,
+      "expected": ["A4", "B4", "C4", "D4"],
+      "council_final": ["C4", "D4"]
+    },
+    {
+      "task_id": "ledger-1",
+      "family": "ledger-recovery",
+      "earliest_causal_stage": "mirror",
+      "taxonomy": ["ledger_state", "arithmetic", "hallucinated_correction"],
+      "builder_correct": true,
+      "expected": {"balance": 133, "entries_applied": 4},
+      "council_final": {"balance": 129, "entries_applied": 4}
+    },
+    {
+      "task_id": "ledger-3",
+      "family": "ledger-recovery",
+      "earliest_causal_stage": "archivist_builder",
+      "taxonomy": ["ledger_state", "output_schema", "information_loss"],
+      "builder_correct": false,
+      "expected": {"balance": 158, "entries_applied": 4},
+      "council_final": {"balance": 158, "entries_applied_type": "array"}
+    },
+    {
+      "task_id": "ledger-4",
+      "family": "ledger-recovery",
+      "earliest_causal_stage": "archivist",
+      "taxonomy": ["ledger_state", "duplicate_confusion", "output_schema"],
+      "builder_correct": false,
+      "expected": {"balance": 169, "entries_applied": 4},
+      "council_final": {"balance": 176, "entries_applied_type": "array"}
+    },
+    {
+      "task_id": "ledger-5",
+      "family": "ledger-recovery",
+      "earliest_causal_stage": "mirror",
+      "taxonomy": ["ledger_state", "duplicate_confusion", "hallucinated_correction"],
+      "builder_correct": true,
+      "expected": {"balance": 180, "entries_applied": 4},
+      "council_final": {"balance": 180, "entries_applied": 3}
+    },
+    {
+      "task_id": "path-5",
+      "family": "multi-hop-path",
+      "earliest_causal_stage": "mirror",
+      "taxonomy": ["multi_hop_reasoning", "invented_constraint", "answer_drift"],
+      "builder_correct": true,
+      "expected": ["S5", "A5", "B5", "T5"],
+      "council_final": ["S5", "A5", "B5"]
+    },
+    {
+      "task_id": "state-4",
+      "family": "state-supersession",
+      "earliest_causal_stage": "archivist",
+      "taxonomy": ["state_recovery", "information_loss", "hallucinated_value"],
+      "builder_correct": false,
+      "expected": {"name": "Dune", "score": 31, "flag": "blue"},
+      "council_final": {"name": "Final Authoritative Record", "score": 31, "flag": "blue"}
+    }
+  ],
+  "recoveries": [
+    {"task_id": "filter-1", "family": "filter-sort", "taxonomy": ["output_schema", "filtering"]},
+    {"task_id": "filter-3", "family": "filter-sort", "taxonomy": ["output_schema", "filtering"]},
+    {"task_id": "inventory-4", "family": "inventory-reconciliation", "taxonomy": ["arithmetic"]},
+    {"task_id": "selection-4", "family": "constraint-selection", "taxonomy": ["constraint_filtering", "selection"]},
+    {"task_id": "selection-5", "family": "constraint-selection", "taxonomy": ["constraint_filtering", "selection"]}
+  ]
+}
