@@ -1,8 +1,8 @@
-name: URAI v2 Contract-Aware Development Validation
+name: URAI v2 Final Isolated Development Validation
 
 on:
   push:
-    branches: [agent/frontier-benchmark-harness]
+    branches: [agent/frontier-benchmark-v2-execution]
     paths:
       - ".github/workflows/frontier-benchmark-matched-compute.yml"
   workflow_dispatch:
@@ -27,16 +27,18 @@ jobs:
       - name: Generate development suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Validate v2 contract-aware harness and statistics
+      - name: Validate final v2 development tooling
         run: |
-          node --test scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/paired-stats.test.mjs
+          node --test scripts/bench/deterministic-output.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/paired-stats.test.mjs scripts/bench/v3/strict-contract.test.mjs
           node --check scripts/bench/v3/harnesses.mjs
           node --check scripts/bench/v3/run-development-selection.mjs
+          node --check scripts/bench/run-holdout-v2.mjs
+          node --check scripts/bench/verify-protocol-lock.mjs
 
-      - name: Run fresh v2 development comparison
+      - name: Run fresh final v2 development comparison
         run: |
           node scripts/bench/v3/run-development-selection.mjs \
-            --run-id ci-v2-contract-dev \
+            --run-id ci-v2-final-dev-isolated \
             --repeats 1 \
             --max-output-tokens 1200
 
@@ -44,8 +46,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: urai-v2-contract-dev-evidence
+          name: urai-v2-final-dev-isolated-evidence
           path: |
-            bench/results/ci-v2-contract-dev/
+            bench/results/ci-v2-final-dev-isolated/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
