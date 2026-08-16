@@ -1,4 +1,4 @@
-name: URAI Matched Compute Benchmark
+name: URAI Development Candidate Benchmark
 
 on:
   push:
@@ -26,25 +26,37 @@ jobs:
       - name: Generate frozen synthetic suite
         run: node scripts/bench/generate-long-horizon-v2.mjs bench/suites/urai-long-horizon-v2.jsonl
 
-      - name: Validate Council v3 development harness
+      - name: Test development candidates
         run: |
-          node --check scripts/bench/v3/canonicalizer.mjs
-          node --check scripts/bench/v3/gate.mjs
-          node --check scripts/bench/v3/harnesses.mjs
-          node --check scripts/bench/v3/run-development-selection.mjs
+          node --test \
+            scripts/bench/deterministic-output.test.mjs \
+            scripts/bench/reduced-council.test.mjs \
+            scripts/bench/selective-router.test.mjs \
+            scripts/bench/preservation-gate.test.mjs \
+            scripts/bench/providers.test.mjs
+          node --check scripts/bench/run-dev-candidates.mjs
+          node --check scripts/bench/select-router-threshold.mjs
 
-      - name: Run Council v3 development selection
+      - name: Run development candidate comparison
         run: |
-          node scripts/bench/v3/run-development-selection.mjs \
-            --run-id ci-council-v3-dev-selection \
+          node scripts/bench/run-dev-candidates.mjs \
+            --run-id ci-dev-candidates-v3 \
+            --repeats 1 \
             --max-output-tokens 1200
+
+      - name: Select router threshold with leave-one-family-out checks
+        if: success()
+        run: |
+          node scripts/bench/select-router-threshold.mjs \
+            --trials bench/results/ci-dev-candidates-v3/trials.jsonl \
+            --output bench/results/ci-dev-candidates-v3/router-selection.json
 
       - name: Upload benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: frontier-benchmark-evidence-council-v3-dev-selection
+          name: frontier-benchmark-evidence-dev-candidates-v3
           path: |
-            bench/results/ci-council-v3-dev-selection/
+            bench/results/ci-dev-candidates-v3/
             bench/suites/urai-long-horizon-v2.jsonl
           if-no-files-found: error
