@@ -6,15 +6,18 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
 jobs:
   ci:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -25,5 +28,5 @@ jobs:
         run: npm test
 
       - name: Validate Firebase Secrets
+        if: ${{ env.FIREBASE_TOKEN != '' }}
         run: echo "FIREBASE_TOKEN secret is present"
-        if: ${{ secrets.FIREBASE_TOKEN != '' }}
