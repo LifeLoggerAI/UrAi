@@ -6,6 +6,7 @@ on:
     paths:
       - "src/components/xr/**"
       - "src/app/xr/**"
+      - "src/app/page.tsx"
       - "src/components/urai/home/**"
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
@@ -19,6 +20,7 @@ on:
     paths:
       - "src/components/xr/**"
       - "src/app/xr/**"
+      - "src/app/page.tsx"
       - "src/components/urai/home/**"
       - "tests/e2e/home-xr-interaction.spec.ts"
       - "src/components/xr/__tests__/**"
