@@ -27,7 +27,9 @@ test.describe("URAI current release smoke", () => {
     await page.goto("/home", { waitUntil: "networkidle" });
 
     await expect(page.locator('[data-urai-spatial-universe="mounted"]')).toHaveAttribute("data-urai-mode", "home");
-    await expect(page.locator('[aria-label="URAI Home World"]')).toBeVisible();
+    const homeWorld = page.locator('[aria-label="URAI Home World"]');
+    await expect(homeWorld).toBeAttached();
+    await expect(homeWorld.locator(".world-shell")).toBeVisible();
     await expectBodyText(page, /Life Map/i);
     await expectBodyText(page, /Replay/i);
     await expectBodyText(page, /Passport/i);
