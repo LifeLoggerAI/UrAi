@@ -84,9 +84,19 @@ const missingDevDeps = ["tailwindcss", "postcss", "autoprefixer", "typescript", 
 );
 
 const firebaseJson = readJson("firebase.json");
+const authority = readJson("system/canonical-authority.json");
+const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi") === true;
 const firebaseProblems = [];
-if (firebaseJson.firestore?.rules !== "firestore.rules") firebaseProblems.push("firebase.json firestore.rules must point to firestore.rules");
-if (firebaseJson.firestore?.indexes !== "firestore.indexes.json") firebaseProblems.push("firebase.json firestore.indexes must point to firestore.indexes.json");
+if (isQuarantinedLegacy) {
+  const deployableKeys = ["hosting", "functions", "firestore", "storage", "apphosting"];
+  const deployableConfig = deployableKeys.filter((key) => firebaseJson[key] != null);
+  if (deployableConfig.length > 0) {
+    firebaseProblems.push(`quarantined firebase.json must remain emulator-only; found: ${deployableConfig.join(", ")}`);
+  }
+} else {
+  if (firebaseJson.firestore?.rules !== "firestore.rules") firebaseProblems.push("firebase.json firestore.rules must point to firestore.rules");
+  if (firebaseJson.firestore?.indexes !== "firestore.indexes.json") firebaseProblems.push("firebase.json firestore.indexes must point to firestore.indexes.json");
+}
 
 const problems = [
   ...missingFiles.map((file) => `Missing file: ${file}`),
