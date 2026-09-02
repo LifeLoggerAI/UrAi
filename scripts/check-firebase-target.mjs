@@ -28,6 +28,28 @@ function readJson(file) {
 const firebaserc = readJson(".firebaserc");
 const firebaseJson = readJson(firebaseConfigPath);
 
+const authorityPath = path.join(root, "system/canonical-authority.json");
+const authority = fs.existsSync(authorityPath)
+  ? JSON.parse(fs.readFileSync(authorityPath, "utf8"))
+  : null;
+const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi") === true;
+
+if (isQuarantinedLegacy) {
+  const projectAliases = Object.values(firebaserc.projects || {});
+  const deployableKeys = ["hosting", "functions", "firestore", "storage", "apphosting"];
+  const deployableConfig = deployableKeys.filter((key) => firebaseJson[key] != null);
+
+  if (projectAliases.length > 0) {
+    fail(`Quarantined legacy repository must not define Firebase project aliases. Found: ${projectAliases.join(", ")}.`);
+  }
+  if (deployableConfig.length > 0) {
+    fail(`Quarantined legacy repository must remain emulator-only. Found deployable config: ${deployableConfig.join(", ")}.`);
+  }
+
+  console.log("[urai-firebase-target] OK: legacy Firebase authority is quarantined and emulator-only.");
+  process.exit(0);
+}
+
 const projectAliases = Object.values(firebaserc.projects || {});
 const hostingSite = firebaseJson.hosting?.site;
 
