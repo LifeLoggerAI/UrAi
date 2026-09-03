@@ -36,8 +36,8 @@ const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi"
 
 if (isQuarantinedLegacy) {
   const projectAliases = Object.values(firebaserc.projects || {});
-  const deployableKeys = ["hosting", "functions", "firestore", "database", "storage", "apphosting"];
-  const deployableConfig = deployableKeys.filter((key) => firebaseJson[key] != null);
+  const safeLegacyKeys = new Set(["emulators"]);
+  const deployableConfig = Object.keys(firebaseJson).filter((key) => !safeLegacyKeys.has(key));
 
   if (projectAliases.length > 0) {
     fail(`Quarantined legacy repository must not define Firebase project aliases. Found: ${projectAliases.join(", ")}.`);
