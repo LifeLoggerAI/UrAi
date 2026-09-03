@@ -135,6 +135,6 @@
     "typescript": "^5.0.0"
   },
   "engines": {
-    "node": "20"
+    "node": ">=20.9.0"
   }
 }
