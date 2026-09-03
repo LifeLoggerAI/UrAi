@@ -41,7 +41,7 @@ function createFixture() {
   const skipped = new Set([".git", ".next", "node_modules", ".firebaserc", "firebase.json", "system"]);
 
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
-    if (skipped.has(entry.name)) continue;
+    if (skipped.has(entry.name) || /^firebase(?:\.[A-Za-z0-9_-]+)*\.json$/.test(entry.name)) continue;
     fs.symlinkSync(
       path.join(root, entry.name),
       path.join(fixture, entry.name),
@@ -129,6 +129,11 @@ try {
   expectFail(run(firebaseCheck, fixture), /firebase\.production\.json:remoteconfig/i, "alternate Firebase config check:firebase mutation");
   expectFail(run(v1Check, fixture), /firebase\.production\.json:remoteconfig/i, "alternate Firebase config check:v1 mutation");
   fs.rmSync(path.join(fixture, "firebase.production.json"));
+
+  writeJson(path.join(fixture, "deploy.json"), { hosting: { site: "forbidden" } });
+  const arbitraryConfig = spawnSync(process.execPath, [firebaseCheck, "--config", "deploy.json"], { cwd: fixture, encoding: "utf8" });
+  expectFail(arbitraryConfig, /deploy\.json:hosting/i, "arbitrary --config Firebase mutation");
+  fs.rmSync(path.join(fixture, "deploy.json"));
 
   const nonLegacy = { ...authority, legacyRepos: authority.legacyRepos.filter((repo) => repo !== "LifeLoggerAI/UrAi") };
   writeJson(path.join(fixture, "system/canonical-authority.json"), nonLegacy);
