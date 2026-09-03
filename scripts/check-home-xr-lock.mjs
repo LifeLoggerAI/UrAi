@@ -62,8 +62,9 @@ assertCheck(
 
 assertCheck(
   "in-world instructions exist",
-  layer.includes("Point + trigger to select. Grip/back to close."),
-  "HomeXRInteractionLayer must include the required in-world instruction panel.",
+  layer.includes("Point + trigger to select. Grip/back to close.") &&
+    layer.includes("<ControllerInstructionPanel visible={isPresenting && connectedControllerCount > 0} />"),
+  "HomeXRInteractionLayer must show controller commands only while an XR controller is connected.",
 );
 
 for (const requiredTarget of ["Life Map", "Ground", "Sky", "Horizon", "Replay", "Orb Chat", "Mirror", "XR Preview"]) {
