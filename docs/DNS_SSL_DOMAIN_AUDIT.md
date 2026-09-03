@@ -1,3 +1,5 @@
+> **Historical observation — not current DNS/SSL evidence.** These June 2026 observations are retained for audit history and must not be used to assert current ownership, routing, TLS health, deployment, or release status. The current `urai.app` product authority is `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main`; `LifeLoggerAI/UrAi` is quarantined legacy/reference. Re-run live DNS, TLS, host, and exact-deploy verification before any operational or public claim.
+
 # URAI DNS/SSL Domain Audit
 
 Generated: 2026-06-25
