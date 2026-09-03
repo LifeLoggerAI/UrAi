@@ -14,6 +14,7 @@ on:
       - "scripts/check-home-xr-lock.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/check-legacy-quarantine-contract-tests.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
   pull_request:
@@ -28,6 +29,7 @@ on:
       - "scripts/check-home-xr-lock.mjs"
       - "scripts/check-home-xr-deploy-workflow.mjs"
       - "scripts/check-home-xr-launch-evidence-consistency.mjs"
+      - "scripts/check-legacy-quarantine-contract-tests.mjs"
       - ".github/workflows/webxr-foundation-audit.yml"
       - ".github/workflows/deploy-home-xr.yml"
 
@@ -92,6 +94,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - name: Verify legacy quarantine mutation contract
+        run: node scripts/check-legacy-quarantine-contract-tests.mjs
 
       - name: Install frozen dependencies
         run: npm ci

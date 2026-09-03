@@ -94,30 +94,12 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
   if (!visible) return null;
   return (
     <group position={[0, 1.25, -2.0]}>
-      <mesh scale={[1.8, 0.58, 0.04]}>
+      <mesh scale={[1.8, 0.42, 0.04]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#241a12" transparent opacity={0.82} roughness={0.9} />
       </mesh>
-      <Text position={[0, 0.1, 0.045]} fontSize={0.062} anchorX="center" anchorY="middle" maxWidth={1.55} color="#f6e7c8">
-        no XR controllers are connected
-      </Text>
-      <Text position={[0, -0.11, 0.045]} fontSize={0.052} anchorX="center" anchorY="middle" maxWidth={1.55} color="#d8bd9d">
-        Desktop and touch interaction remain available
-      </Text>
-    </group>
-  );
-}
-
-function XRInstructionPanel({ visible }: { visible: boolean }) {
-  if (!visible) return null;
-  return (
-    <group position={[0, 0.62, -1.65]}>
-      <mesh scale={[1.9, 0.3, 0.04]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#111827" transparent opacity={0.78} roughness={0.9} />
-      </mesh>
-      <Text position={[0, 0, 0.045]} fontSize={0.052} anchorX="center" anchorY="middle" maxWidth={1.65} color="#e8f4ff">
-        Point + trigger to select. Grip/back to close.
+      <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#f6e7c8">
+        Wake your XR controllers
       </Text>
     </group>
   );
@@ -236,7 +218,6 @@ export function HomeXRInteractionLayer() {
   return (
     <group name="home-xr-interaction-layer" userData={{ visualLanguage: "physical-world-not-dashboard" }}>
       <ControllerFallbackPanel visible={isPresenting && connectedControllerCount === 0} />
-      <XRInstructionPanel visible={isPresenting && connectedControllerCount > 0} />
 
       {homeXRTargets.map((target) => (
         <group key={target.id}>

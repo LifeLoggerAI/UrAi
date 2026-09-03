@@ -54,6 +54,9 @@ jobs:
           grep -Fxq 'public/assets/orb/orb_images_lottie.json filter=lfs diff=lfs merge=lfs -text' .gitattributes
           ! grep -Eq '^public/assets/\*\*' .gitattributes
 
+      - name: Verify quarantine validation mutation contract
+        run: node scripts/check-legacy-quarantine-contract-tests.mjs
+
       - name: Verify legacy production denial
         shell: bash
         run: |
