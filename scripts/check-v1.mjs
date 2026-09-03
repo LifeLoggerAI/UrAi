@@ -89,7 +89,12 @@ const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi"
 const firebaseProblems = [];
 if (isQuarantinedLegacy) {
   const safeLegacyKeys = new Set(["emulators"]);
-  const deployableConfig = Object.keys(firebaseJson).filter((key) => !safeLegacyKeys.has(key));
+  const firebaseConfigFiles = fs.readdirSync(root).filter((name) => /^firebase(?:\.[A-Za-z0-9_-]+)*\.json$/.test(name));
+  const deployableConfig = firebaseConfigFiles.flatMap((name) =>
+    Object.keys(readJson(name))
+      .filter((key) => !safeLegacyKeys.has(key))
+      .map((key) => `${name}:${key}`),
+  );
   if (deployableConfig.length > 0) {
     firebaseProblems.push(`quarantined firebase.json must remain emulator-only; found: ${deployableConfig.join(", ")}`);
   }
