@@ -1,3 +1,5 @@
+> **Superseded wiring matrix — retained for audit history.** This June 2026 matrix contains obsolete canonical-repository, deploy-command, URL, and readiness statements. It must not authorize deployment, consumption, release, or public claims. Current exclusive public-product authority is `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `https://urai.app`; `LifeLoggerAI/UrAi` is quarantined legacy/reference. Reconcile every dependency against current repo-native authority and exact-head evidence before use.
+
 # URAI System Of Systems Wiring Matrix
 
 Updated: 2026-06-25
