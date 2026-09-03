@@ -36,11 +36,22 @@ function listJsonFiles(directory) {
     if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
-    else if (
-      entry.isFile() &&
-      entry.name.endsWith(".json") &&
-      !isVerifiedGitLfsPointer(absolute)
-    ) files.push(path.relative(root, absolute));
+    else if (entry.name.endsWith(".json")) {
+      const isRegularFile = entry.isFile();
+      const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
+        try {
+          const resolved = fs.realpathSync(absolute);
+          const relative = path.relative(root, resolved);
+          return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative) &&
+            fs.statSync(resolved).isFile();
+        } catch {
+          return false;
+        }
+      })();
+      if ((isRegularFile || isSafeFileSymlink) && !isVerifiedGitLfsPointer(absolute)) {
+        files.push(path.relative(root, absolute));
+      }
+    }
   }
   return files;
 }
