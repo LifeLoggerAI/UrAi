@@ -131,6 +131,8 @@ try {
   fs.rmSync(path.join(fixture, "firebase.production.json"));
 
   writeJson(path.join(fixture, "deploy.json"), { hosting: { site: "forbidden" } });
+  expectFail(run(firebaseCheck, fixture), /deploy\\.json:hosting/i, "arbitrarily named Firebase config check:firebase mutation");
+  expectFail(run(v1Check, fixture), /deploy\\.json:hosting/i, "arbitrarily named Firebase config check:v1 mutation");
   const arbitraryConfig = spawnSync(process.execPath, [firebaseCheck, "--config", "deploy.json"], { cwd: fixture, encoding: "utf8" });
   expectFail(arbitraryConfig, /deploy\.json:hosting/i, "arbitrary --config Firebase mutation");
   fs.rmSync(path.join(fixture, "deploy.json"));
