@@ -105,6 +105,21 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
   );
 }
 
+function ControllerInstructionPanel({ visible }: { visible: boolean }) {
+  if (!visible) return null;
+  return (
+    <group position={[0, 1.25, -2.0]}>
+      <mesh scale={[1.8, 0.42, 0.04]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#12241d" transparent opacity={0.82} roughness={0.9} />
+      </mesh>
+      <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#e8f6ee">
+        Point + trigger to select. Grip/back to close.
+      </Text>
+    </group>
+  );
+}
+
 function addControllerRay(controller: THREE.Group, color: number) {
   if (controller.getObjectByName("home-xr-controller-ray")) return;
   const geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -5)]);
@@ -218,6 +233,7 @@ export function HomeXRInteractionLayer() {
   return (
     <group name="home-xr-interaction-layer" userData={{ visualLanguage: "physical-world-not-dashboard" }}>
       <ControllerFallbackPanel visible={isPresenting && connectedControllerCount === 0} />
+      <ControllerInstructionPanel visible={isPresenting && connectedControllerCount > 0} />
 
       {homeXRTargets.map((target) => (
         <group key={target.id}>
