@@ -142,6 +142,13 @@ try {
   expectFail(run(v1Check, fixture), /configs\/firebase\.json:storage/i, "nested Firebase config check:v1 mutation");
   fs.rmSync(path.join(fixture, "configs"), { recursive: true, force: true });
 
+  writeJson(path.join(fixture, "linked-config.payload"), { hosting: { site: "forbidden" } });
+  fs.symlinkSync("linked-config.payload", path.join(fixture, "linked-config.json"), "file");
+  expectFail(run(firebaseCheck, fixture), /linked-config\.json:hosting/i, "symlinked Firebase config check:firebase mutation");
+  expectFail(run(v1Check, fixture), /linked-config\.json:hosting/i, "symlinked Firebase config check:v1 mutation");
+  fs.rmSync(path.join(fixture, "linked-config.json"));
+  fs.rmSync(path.join(fixture, "linked-config.payload"));
+
   const nonLegacy = { ...authority, legacyRepos: authority.legacyRepos.filter((repo) => repo !== "LifeLoggerAI/UrAi") };
   writeJson(path.join(fixture, "system/canonical-authority.json"), nonLegacy);
   writeJson(path.join(fixture, ".firebaserc"), { projects: { default: "urai-4dc1d" } });
