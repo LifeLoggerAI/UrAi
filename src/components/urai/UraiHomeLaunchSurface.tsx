@@ -33,7 +33,7 @@ export default function UraiHomeLaunchSurface() {
         .urai-home-world-cinematic [class*="whisper"],
         .urai-home-world-cinematic [class*="copy"],
         .urai-home-world-cinematic [class*="caption"],
-        .urai-home-world-cinematic [class*="label"] {
+        .urai-home-world-cinematic [class*="caption"] {
           display: none !important;
         }
       `}</style>
