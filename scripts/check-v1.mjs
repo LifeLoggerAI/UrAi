@@ -84,6 +84,23 @@ function listJsonFiles(directory) {
   return files;
 }
 
+const firebaseConfigKeys = new Set([
+  "apphosting", "database", "dataconnect", "emulators", "extensions",
+  "firestore", "functions", "hosting", "remoteconfig", "storage",
+]);
+
+function firebaseConfigFiles() {
+  return listJsonFiles(root).filter((name) => {
+    try {
+      const value = readJson(name);
+      return value && typeof value === "object" &&
+        Object.keys(value).some((key) => firebaseConfigKeys.has(key));
+    } catch {
+      return false;
+    }
+  });
+}
+
 const missingFiles = requiredFiles.filter((file) => !exists(file));
 const packageJson = readJson("package.json");
 const missingScripts = requiredPackageScripts.filter((script) => !packageJson.scripts?.[script]);
@@ -100,8 +117,8 @@ const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi"
 const firebaseProblems = [];
 if (isQuarantinedLegacy) {
   const safeLegacyKeys = new Set(["emulators"]);
-  const firebaseConfigFiles = fs.readdirSync(root).filter((name) => /^firebase(?:\.[A-Za-z0-9_-]+)*\.json$/.test(name));
-  const deployableConfig = firebaseConfigFiles.flatMap((name) =>
+  const discoveredFirebaseConfigs = firebaseConfigFiles();
+  const deployableConfig = discoveredFirebaseConfigs.flatMap((name) =>
     Object.keys(readJson(name))
       .filter((key) => !safeLegacyKeys.has(key))
       .map((key) => `${name}:${key}`),
