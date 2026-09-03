@@ -36,7 +36,7 @@ function listJsonFiles(directory) {
     if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
-    else if (entry.name.endsWith(".json")) {
+    else if (entry.name.toLowerCase().endsWith(".json")) {
       const isRegularFile = entry.isFile();
       const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
         try {
