@@ -54,6 +54,13 @@ jobs:
           grep -Fxq 'public/assets/orb/orb_images_lottie.json filter=lfs diff=lfs merge=lfs -text' .gitattributes
           ! grep -Eq '^public/assets/\*\*' .gitattributes
 
+      - name: Validate checked-out quarantine configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/check-firebase-target.mjs
+          node scripts/check-v1.mjs
+
       - name: Verify quarantine validation mutation contract
         run: node scripts/check-legacy-quarantine-contract-tests.mjs
 
