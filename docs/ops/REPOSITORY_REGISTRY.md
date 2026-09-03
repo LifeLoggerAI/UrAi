@@ -1,3 +1,5 @@
+> **Superseded repository registry — retained for audit history.** The role and status table below is a June 2026 snapshot, not current release authority. `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` is now the sole public-product and `urai.app` deployment authority. `LifeLoggerAI/UrAi` is quarantined legacy/reference. Current classifications and readiness must come from each repository's current default-branch authority records and exact-head evidence.
+
 # URAI Repository Registry
 
 Every URAI repository must have one role, one owner, one deployment status, and one receipt trail.
