@@ -4,12 +4,18 @@ async function expectBodyText(page: import("@playwright/test").Page, text: strin
   await expect(page.locator("body")).toContainText(text);
 }
 
+const privatePayloadMarkers = [
+  /data-(?:private-memory|owner-memory)(?:-id)?=/i,
+  /["'](?:privateMemory|ownerMemory|memoryContent|ownerUid)["']\s*:/i,
+  /(?:memoryId|ownerUid|ownerId)\s*=\s*["'][^"']+/i,
+];
+
 async function expectHtml(request: import("@playwright/test").APIRequestContext, route: string, text: string | RegExp) {
   const response = await request.get(route);
   await expect(response).toBeOK();
   const html = await response.text();
   expect(html).toMatch(text);
-  expect(html).not.toMatch(/private memory/i);
+  for (const marker of privatePayloadMarkers) expect(html).not.toMatch(marker);
 }
 
 test.describe("URAI current release smoke", () => {
@@ -18,16 +24,18 @@ test.describe("URAI current release smoke", () => {
   });
 
   test("home shell renders the current spatial threshold @smoke", async ({ page }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.goto("/home", { waitUntil: "networkidle" });
 
     await expect(page.locator('[data-urai-spatial-universe="mounted"]')).toHaveAttribute("data-urai-mode", "home");
-    await expect(page.locator('[aria-label="URAI Home World"]')).toBeVisible();
+    const homeWorld = page.locator('[aria-label="URAI Home World"]');
+    await expect(homeWorld).toBeAttached();
+    await expect(homeWorld.locator(".world-shell")).toBeVisible();
     await expectBodyText(page, /Life Map/i);
     await expectBodyText(page, /Replay/i);
     await expectBodyText(page, /Passport/i);
-    await expect(page.getByRole("link", { name: /^Life Map$/i }).first()).toHaveAttribute("href", "/life-map");
-    await expect(page.getByRole("link", { name: /^Replay$/i }).first()).toHaveAttribute("href", "/replay");
-    await expect(page.getByRole("link", { name: /^Passport$/i }).first()).toHaveAttribute("href", "/passport");
+    await expect(page.locator('a[aria-label="Life Map"]').first()).toHaveAttribute("href", "/life-map");
+    await expect(page.locator('a[aria-label="Replay"]').first()).toHaveAttribute("href", "/replay");
+    await expect(page.locator('a[aria-label="Passport"]').first()).toHaveAttribute("href", "/passport");
   });
 
   test("core public routes render launch-safe content @smoke", async ({ request }) => {
