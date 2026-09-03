@@ -25,13 +25,22 @@ function readJson(file) {
   }
 }
 
+function isVerifiedGitLfsPointer(file) {
+  const source = fs.readFileSync(file, "utf8");
+  return /^version https:\/\/git-lfs\.github\.com\/spec\/v1\noid sha256:[0-9a-f]{64}\nsize [1-9][0-9]*\n?$/.test(source);
+}
+
 function listJsonFiles(directory) {
   const files = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
-    else if (entry.isFile() && entry.name.endsWith(".json")) files.push(path.relative(root, absolute));
+    else if (
+      entry.isFile() &&
+      entry.name.endsWith(".json") &&
+      !isVerifiedGitLfsPointer(absolute)
+    ) files.push(path.relative(root, absolute));
   }
   return files;
 }
