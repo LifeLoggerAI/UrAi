@@ -6,7 +6,7 @@ async function expectBodyText(page: import("@playwright/test").Page, text: strin
 
 const privatePayloadMarkers = [
   /data-(?:private-memory|owner-memory)(?:-id)?=/i,
-  /["'](?:privateMemory|ownerMemory|memoryContent|ownerUid)["']\s*:/i,
+  /(?:\\+)?["\'](?:privateMemory|ownerMemory|memoryContent|ownerUid)(?:\\+)?["\']\s*:/i,
   /(?:memoryId|ownerUid|ownerId)\s*=\s*["'][^"']+/i,
 ];
 
