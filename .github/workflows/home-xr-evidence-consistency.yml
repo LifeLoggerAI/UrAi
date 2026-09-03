@@ -43,7 +43,6 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
+          node-version: "22.14.0"
       - name: Check launch evidence consistency
         run: node scripts/check-home-xr-launch-evidence-consistency.mjs
