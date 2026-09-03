@@ -25,6 +25,34 @@ function readJson(file) {
   }
 }
 
+function listJsonFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
+    else if (entry.isFile() && entry.name.endsWith(".json")) files.push(path.relative(root, absolute));
+  }
+  return files;
+}
+
+const firebaseConfigKeys = new Set([
+  "apphosting", "database", "dataconnect", "emulators", "extensions",
+  "firestore", "functions", "hosting", "remoteconfig", "storage",
+]);
+
+function firebaseConfigFiles(explicitConfig) {
+  return [...new Set([explicitConfig, ...listJsonFiles(root).filter((name) => {
+    try {
+      const value = readJson(name);
+      return value && typeof value === "object" &&
+        Object.keys(value).some((key) => firebaseConfigKeys.has(key));
+    } catch {
+      return false;
+    }
+  })])];
+}
+
 const firebaserc = readJson(".firebaserc");
 const firebaseJson = readJson(firebaseConfigPath);
 
