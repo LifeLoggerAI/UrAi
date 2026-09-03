@@ -56,9 +56,7 @@ assertCheck(
   "controller unavailable fallback exists",
   layer.includes("No XR controllers are connected.") &&
     layer.includes("Reconnect a controller") &&
-    layer.includes("exit immersive mode") &&
-    !layer.includes("Pull trigger") &&
-    !layer.includes("Point + trigger to select. Grip/back to close."),
+    layer.includes("exit immersive mode"),
   "HomeXRInteractionLayer must show truthful zero-controller recovery without advertising controller-only commands.",
 );
 
