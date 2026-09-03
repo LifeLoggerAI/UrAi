@@ -123,6 +123,13 @@ try {
     expectFail(run(v1Check, fixture), new RegExp("emulator-only; found:.*" + key, "i"), "check:v1 " + key + " mutation");
   }
 
+  writeJson(path.join(fixture, "firebase.production.json"), {
+    remoteconfig: { template: "remoteconfig.template.json" },
+  });
+  expectFail(run(firebaseCheck, fixture), /firebase\.production\.json:remoteconfig/i, "alternate Firebase config check:firebase mutation");
+  expectFail(run(v1Check, fixture), /firebase\.production\.json:remoteconfig/i, "alternate Firebase config check:v1 mutation");
+  fs.rmSync(path.join(fixture, "firebase.production.json"));
+
   const nonLegacy = { ...authority, legacyRepos: authority.legacyRepos.filter((repo) => repo !== "LifeLoggerAI/UrAi") };
   writeJson(path.join(fixture, "system/canonical-authority.json"), nonLegacy);
   writeJson(path.join(fixture, ".firebaserc"), { projects: { default: "urai-4dc1d" } });
