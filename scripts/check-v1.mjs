@@ -73,6 +73,17 @@ function exists(file) {
   return fs.existsSync(path.join(root, file));
 }
 
+function listJsonFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
+    else if (entry.isFile() && entry.name.endsWith(".json")) files.push(path.relative(root, absolute));
+  }
+  return files;
+}
+
 const missingFiles = requiredFiles.filter((file) => !exists(file));
 const packageJson = readJson("package.json");
 const missingScripts = requiredPackageScripts.filter((script) => !packageJson.scripts?.[script]);
