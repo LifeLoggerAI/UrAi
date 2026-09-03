@@ -33,8 +33,11 @@ test.describe("URAI current release smoke", () => {
     await expectBodyText(page, /Life Map/i);
     await expectBodyText(page, /Replay/i);
     await expectBodyText(page, /Passport/i);
+    await expect(page.locator('a[aria-label="Life Map"]').first()).toBeVisible();
     await expect(page.locator('a[aria-label="Life Map"]').first()).toHaveAttribute("href", "/life-map");
+    await expect(page.locator('a[aria-label="Replay"]').first()).toBeVisible();
     await expect(page.locator('a[aria-label="Replay"]').first()).toHaveAttribute("href", "/replay");
+    await expect(page.locator('a[aria-label="Passport"]').first()).toBeVisible();
     await expect(page.locator('a[aria-label="Passport"]').first()).toHaveAttribute("href", "/passport");
   });
 
