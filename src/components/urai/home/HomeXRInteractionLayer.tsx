@@ -99,7 +99,7 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
         <meshStandardMaterial color="#241a12" transparent opacity={0.82} roughness={0.9} />
       </mesh>
       <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#f6e7c8">
-        Wake your XR controllers
+        no XR controllers are connected. Desktop and touch interaction remain available. Point + trigger to select. Grip/back to close.
       </Text>
     </group>
   );
