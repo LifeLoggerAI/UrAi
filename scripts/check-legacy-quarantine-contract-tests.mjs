@@ -103,6 +103,9 @@ const deployableValues = {
   database: { rules: "database.rules.json" },
   storage: { rules: "storage.rules" },
   apphosting: { backendId: "forbidden" },
+  remoteconfig: { template: "remoteconfig.template.json" },
+  extensions: { "forbidden-instance": "publisher/extension@1.0.0" },
+  dataconnect: { source: "dataconnect" },
 };
 
 const { fixture, authority } = createFixture();
