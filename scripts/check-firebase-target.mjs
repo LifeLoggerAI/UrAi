@@ -36,7 +36,7 @@ const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi"
 
 if (isQuarantinedLegacy) {
   const projectAliases = Object.values(firebaserc.projects || {});
-  const deployableKeys = ["hosting", "functions", "firestore", "storage", "apphosting"];
+  const deployableKeys = ["hosting", "functions", "firestore", "database", "storage", "apphosting"];
   const deployableConfig = deployableKeys.filter((key) => firebaseJson[key] != null);
 
   if (projectAliases.length > 0) {

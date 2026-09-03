@@ -100,6 +100,7 @@ const deployableValues = {
   hosting: { site: "forbidden" },
   functions: { source: "functions" },
   firestore: { rules: "firestore.rules", indexes: "firestore.indexes.json" },
+  database: { rules: "database.rules.json" },
   storage: { rules: "storage.rules" },
   apphosting: { backendId: "forbidden" },
 };

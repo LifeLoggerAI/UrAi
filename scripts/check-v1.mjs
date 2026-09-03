@@ -88,7 +88,7 @@ const authority = readJson("system/canonical-authority.json");
 const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi") === true;
 const firebaseProblems = [];
 if (isQuarantinedLegacy) {
-  const deployableKeys = ["hosting", "functions", "firestore", "storage", "apphosting"];
+  const deployableKeys = ["hosting", "functions", "firestore", "database", "storage", "apphosting"];
   const deployableConfig = deployableKeys.filter((key) => firebaseJson[key] != null);
   if (deployableConfig.length > 0) {
     firebaseProblems.push(`quarantined firebase.json must remain emulator-only; found: ${deployableConfig.join(", ")}`);

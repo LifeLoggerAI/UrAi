@@ -40,6 +40,7 @@ test.describe("URAI current release smoke", () => {
 
   test("core public routes render launch-safe content @smoke", async ({ request }) => {
     const routes = [
+      ["/", /Life Map/i],
       ["/home", /Life Map/i],
       ["/ground", /Ground/i],
       ["/life-map", /Life Map/i],
