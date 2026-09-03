@@ -33,12 +33,13 @@ test.describe("URAI current release smoke", () => {
     await expectBodyText(page, /Life Map/i);
     await expectBodyText(page, /Replay/i);
     await expectBodyText(page, /Passport/i);
-    await expect(page.locator('a[aria-label="Life Map"] .nav-label').first()).toBeVisible();
-    await expect(page.locator('a[aria-label="Life Map"]').first()).toHaveAttribute("href", "/life-map");
-    await expect(page.locator('a[aria-label="Replay"] .nav-label').first()).toBeVisible();
-    await expect(page.locator('a[aria-label="Replay"]').first()).toHaveAttribute("href", "/replay");
-    await expect(page.locator('a[aria-label="Passport"] .nav-label').first()).toBeVisible();
-    await expect(page.locator('a[aria-label="Passport"]').first()).toHaveAttribute("href", "/passport");
+    for (const [label, href] of [["Life Map", "/life-map"], ["Replay", "/replay"], ["Passport", "/passport"]] as const) {
+      const navItem = page.locator(`a[aria-label="${label}"]`).first();
+      const navLabel = navItem.locator(".nav-label");
+      await expect(navLabel).toBeVisible();
+      await expect(navLabel).toHaveCSS("opacity", "1");
+      await expect(navItem).toHaveAttribute("href", href);
+    }
   });
 
   test("core public routes render launch-safe content @smoke", async ({ request }) => {
