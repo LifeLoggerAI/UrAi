@@ -99,7 +99,7 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
         <meshStandardMaterial color="#241a12" transparent opacity={0.82} roughness={0.9} />
       </mesh>
       <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#f6e7c8">
-        no XR controllers are connected. Desktop and touch interaction remain available. Point + trigger to select. Grip/back to close.
+        No XR controllers are connected. Reconnect a controller, or exit immersive mode to continue with desktop or touch controls.
       </Text>
     </group>
   );
