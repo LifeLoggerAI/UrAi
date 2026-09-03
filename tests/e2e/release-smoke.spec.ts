@@ -70,7 +70,7 @@ test.describe("URAI current release smoke", () => {
     expect(html).toMatch(/public demo/i);
     expect(html).toMatch(/Sample data only/i);
     expect(html).toMatch(/without exposing owner-only memory data/i);
-    expect(html).not.toMatch(/private memory/i);
+    expect(html).not.toMatch(/private memory/i);\n    for (const marker of privatePayloadMarkers) expect(html).not.toMatch(marker);
   });
 
   test("waitlist and status APIs respond safely @smoke", async ({ request }) => {
