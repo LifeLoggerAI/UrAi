@@ -137,6 +137,13 @@ try {
   expectFail(arbitraryConfig, /deploy\.json:hosting/i, "arbitrary --config Firebase mutation");
   fs.rmSync(path.join(fixture, "deploy.json"));
 
+  writeJson(path.join(fixture, "deploy.conf"), { hosting: { site: "forbidden" } });
+  expectFail(run(firebaseCheck, fixture), /deploy\.conf:hosting/i, "extensionless-policy Firebase config check:firebase mutation");
+  expectFail(run(v1Check, fixture), /deploy\.conf:hosting/i, "extensionless-policy Firebase config check:v1 mutation");
+  const arbitraryNonJsonConfig = spawnSync(process.execPath, [firebaseCheck, "--config", "deploy.conf"], { cwd: fixture, encoding: "utf8" });
+  expectFail(arbitraryNonJsonConfig, /deploy\.conf:hosting/i, "arbitrary non-json-suffix --config Firebase mutation");
+  fs.rmSync(path.join(fixture, "deploy.conf"));
+
   writeJson(path.join(fixture, "configs/firebase.json"), { storage: { rules: "storage.rules" } });
   expectFail(run(firebaseCheck, fixture), /configs\/firebase\.json:storage/i, "nested Firebase config check:firebase mutation");
   expectFail(run(v1Check, fixture), /configs\/firebase\.json:storage/i, "nested Firebase config check:v1 mutation");
