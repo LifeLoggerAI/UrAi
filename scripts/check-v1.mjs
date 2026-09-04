@@ -69,29 +69,51 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
 }
 
+function tryReadJson(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function exists(file) {
   return fs.existsSync(path.join(root, file));
 }
 
-function listJsonFiles(directory) {
+function isVerifiedGitLfsPointer(file) {
+  try {
+    const source = fs.readFileSync(file, "utf8");
+    return /^version https:\/\/git-lfs\.github\.com\/spec\/v1\noid sha256:[0-9a-f]{64}\nsize [1-9][0-9]*\n?$/.test(source);
+  } catch {
+    return false;
+  }
+}
+
+function listCandidateFiles(directory) {
   const files = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
     const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...listJsonFiles(absolute));
-    else if (entry.name.toLowerCase().endsWith(".json")) {
-      const isRegularFile = entry.isFile();
-      const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
-        try {
-          const resolved = fs.realpathSync(absolute);
-          const relative = path.relative(root, resolved);
-          return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative) &&
-            fs.statSync(resolved).isFile();
-        } catch {
-          return false;
-        }
-      })();
-      if (isRegularFile || isSafeFileSymlink) files.push(path.relative(root, absolute));
+    if (entry.isDirectory()) {
+      files.push(...listCandidateFiles(absolute));
+      continue;
+    }
+
+    const isRegularFile = entry.isFile();
+    const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
+      try {
+        const resolved = fs.realpathSync(absolute);
+        const relative = path.relative(root, resolved);
+        return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative) &&
+          fs.statSync(resolved).isFile();
+      } catch {
+        return false;
+      }
+    })();
+
+    if ((isRegularFile || isSafeFileSymlink) && !isVerifiedGitLfsPointer(absolute)) {
+      files.push(path.relative(root, absolute));
     }
   }
   return files;
@@ -103,14 +125,10 @@ const firebaseConfigKeys = new Set([
 ]);
 
 function firebaseConfigFiles() {
-  return listJsonFiles(root).filter((name) => {
-    try {
-      const value = readJson(name);
-      return value && typeof value === "object" &&
-        Object.keys(value).some((key) => firebaseConfigKeys.has(key));
-    } catch {
-      return false;
-    }
+  return listCandidateFiles(root).filter((name) => {
+    const value = tryReadJson(path.join(root, name));
+    return value && typeof value === "object" && !Array.isArray(value) &&
+      Object.keys(value).some((key) => firebaseConfigKeys.has(key));
   });
 }
 
