@@ -1,3 +1,5 @@
+> **Historical domain-planning snapshot — not current authority.** The mappings and statuses below were recorded in June 2026 and are preserved for audit history; they do not prove present ownership, DNS, TLS, hosting, deployment, or public availability. The sole current `urai.app` product authority is `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main`. `LifeLoggerAI/UrAi` is quarantined legacy/reference. Reverify every other property from its current repo-native authority and live provider evidence before acting or publishing a claim.
+
 # URAI Domain Registry
 
 Every domain must map to exactly one intended repository and one launch status.

@@ -1,3 +1,5 @@
+> **Superseded operational runbook — retained for audit history.** This June 2026 watch plan names `LifeLoggerAI/UrAi` as canonical, but that authority has been revoked. Current exclusive public-product and deployment authority is `LifeLoggerAI/urai-spatial` → `urai-tier1` → `main` → `https://urai.app`. `LifeLoggerAI/UrAi` is a quarantined legacy/reference repository. Do not deploy, roll back, certify, or generate current production evidence from this runbook; use the protected `urai-spatial` release workflow and its exact-head evidence instead.
+
 # URAI Post-Launch Watch
 
 Generated: 2026-06-26
