@@ -111,7 +111,7 @@
     "firebase-admin": "^13.0.0",
     "framer-motion": "^12.23.24",
     "lucide-react": "^0.544.0",
-    "next": "^15.5.18",
+    "next": "^16.3.4",
     "r3f-perf": "^7.2.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -130,7 +130,7 @@
     "eslint": "^8.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "postcss": "^8.5.15",
+    "postcss": "^8.5.23",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.0.0"
   },
