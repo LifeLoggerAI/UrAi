@@ -69,8 +69,67 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
 }
 
+function tryReadJson(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
 function exists(file) {
   return fs.existsSync(path.join(root, file));
+}
+
+function isVerifiedGitLfsPointer(file) {
+  try {
+    const source = fs.readFileSync(file, "utf8");
+    return /^version https:\/\/git-lfs\.github\.com\/spec\/v1\noid sha256:[0-9a-f]{64}\nsize [1-9][0-9]*\n?$/.test(source);
+  } catch {
+    return false;
+  }
+}
+
+function listCandidateFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listCandidateFiles(absolute));
+      continue;
+    }
+
+    const isRegularFile = entry.isFile();
+    const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
+      try {
+        const resolved = fs.realpathSync(absolute);
+        const relative = path.relative(root, resolved);
+        return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative) &&
+          fs.statSync(resolved).isFile();
+      } catch {
+        return false;
+      }
+    })();
+
+    if ((isRegularFile || isSafeFileSymlink) && !isVerifiedGitLfsPointer(absolute)) {
+      files.push(path.relative(root, absolute));
+    }
+  }
+  return files;
+}
+
+const firebaseConfigKeys = new Set([
+  "apphosting", "database", "dataconnect", "emulators", "extensions",
+  "firestore", "functions", "hosting", "remoteconfig", "storage",
+]);
+
+function firebaseConfigFiles() {
+  return listCandidateFiles(root).filter((name) => {
+    const value = tryReadJson(path.join(root, name));
+    return value && typeof value === "object" && !Array.isArray(value) &&
+      Object.keys(value).some((key) => firebaseConfigKeys.has(key));
+  });
 }
 
 const missingFiles = requiredFiles.filter((file) => !exists(file));
@@ -84,9 +143,24 @@ const missingDevDeps = ["tailwindcss", "postcss", "autoprefixer", "typescript", 
 );
 
 const firebaseJson = readJson("firebase.json");
+const authority = readJson("system/canonical-authority.json");
+const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi") === true;
 const firebaseProblems = [];
-if (firebaseJson.firestore?.rules !== "firestore.rules") firebaseProblems.push("firebase.json firestore.rules must point to firestore.rules");
-if (firebaseJson.firestore?.indexes !== "firestore.indexes.json") firebaseProblems.push("firebase.json firestore.indexes must point to firestore.indexes.json");
+if (isQuarantinedLegacy) {
+  const safeLegacyKeys = new Set(["emulators"]);
+  const discoveredFirebaseConfigs = firebaseConfigFiles();
+  const deployableConfig = discoveredFirebaseConfigs.flatMap((name) =>
+    Object.keys(readJson(name))
+      .filter((key) => !safeLegacyKeys.has(key))
+      .map((key) => `${name}:${key}`),
+  );
+  if (deployableConfig.length > 0) {
+    firebaseProblems.push(`quarantined firebase.json must remain emulator-only; found: ${deployableConfig.join(", ")}`);
+  }
+} else {
+  if (firebaseJson.firestore?.rules !== "firestore.rules") firebaseProblems.push("firebase.json firestore.rules must point to firestore.rules");
+  if (firebaseJson.firestore?.indexes !== "firestore.indexes.json") firebaseProblems.push("firebase.json firestore.indexes must point to firestore.indexes.json");
+}
 
 const problems = [
   ...missingFiles.map((file) => `Missing file: ${file}`),

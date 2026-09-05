@@ -99,7 +99,22 @@ function ControllerFallbackPanel({ visible }: { visible: boolean }) {
         <meshStandardMaterial color="#241a12" transparent opacity={0.82} roughness={0.9} />
       </mesh>
       <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#f6e7c8">
-        Wake your XR controllers
+        No XR controllers are connected. Reconnect a controller, or exit immersive mode to continue with desktop or touch controls.
+      </Text>
+    </group>
+  );
+}
+
+function ControllerInstructionPanel({ visible }: { visible: boolean }) {
+  if (!visible) return null;
+  return (
+    <group position={[0, 1.25, -2.0]}>
+      <mesh scale={[1.8, 0.42, 0.04]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="#12241d" transparent opacity={0.82} roughness={0.9} />
+      </mesh>
+      <Text position={[0, 0, 0.045]} fontSize={0.065} anchorX="center" anchorY="middle" maxWidth={1.55} color="#e8f6ee">
+        Point + trigger to select. Grip/back to close.
       </Text>
     </group>
   );
@@ -218,6 +233,7 @@ export function HomeXRInteractionLayer() {
   return (
     <group name="home-xr-interaction-layer" userData={{ visualLanguage: "physical-world-not-dashboard" }}>
       <ControllerFallbackPanel visible={isPresenting && connectedControllerCount === 0} />
+      <ControllerInstructionPanel visible={isPresenting && connectedControllerCount > 0} />
 
       {homeXRTargets.map((target) => (
         <group key={target.id}>

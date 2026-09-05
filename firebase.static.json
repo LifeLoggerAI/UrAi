@@ -1,7 +1,5 @@
 {
-  "hosting": {
-    "public": ".next",
-    "target": "urai-staging",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  "emulators": {
+    "firestore": { "port": 8080 }
   }
 }

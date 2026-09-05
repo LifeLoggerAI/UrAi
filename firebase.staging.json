@@ -1,13 +1,5 @@
 {
-  "hosting": {
-    "site": "urai-staging",
-    "source": "."
-  },
-  "firestore": {
-    "rules": "firestore.staging.rules",
-    "indexes": "firestore.indexes.json"
-  },
-  "storage": {
-    "rules": "storage.rules"
+  "emulators": {
+    "firestore": { "port": 8080 }
   }
 }

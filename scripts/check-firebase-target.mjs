@@ -25,8 +25,94 @@ function readJson(file) {
   }
 }
 
+function tryReadJson(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function isVerifiedGitLfsPointer(file) {
+  try {
+    const source = fs.readFileSync(file, "utf8");
+    return /^version https:\/\/git-lfs\.github\.com\/spec\/v1\noid sha256:[0-9a-f]{64}\nsize [1-9][0-9]*\n?$/.test(source);
+  } catch {
+    return false;
+  }
+}
+
+function listCandidateFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if ([".git", ".next", "node_modules"].includes(entry.name)) continue;
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listCandidateFiles(absolute));
+      continue;
+    }
+
+    const isRegularFile = entry.isFile();
+    const isSafeFileSymlink = entry.isSymbolicLink() && (() => {
+      try {
+        const resolved = fs.realpathSync(absolute);
+        const relative = path.relative(root, resolved);
+        return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative) &&
+          fs.statSync(resolved).isFile();
+      } catch {
+        return false;
+      }
+    })();
+
+    if ((isRegularFile || isSafeFileSymlink) && !isVerifiedGitLfsPointer(absolute)) {
+      files.push(path.relative(root, absolute));
+    }
+  }
+  return files;
+}
+
+const firebaseConfigKeys = new Set([
+  "apphosting", "database", "dataconnect", "emulators", "extensions",
+  "firestore", "functions", "hosting", "remoteconfig", "storage",
+]);
+
+function firebaseConfigFiles(explicitConfig) {
+  return [...new Set([explicitConfig, ...listCandidateFiles(root).filter((name) => {
+    const value = tryReadJson(path.join(root, name));
+    return value && typeof value === "object" && !Array.isArray(value) &&
+      Object.keys(value).some((key) => firebaseConfigKeys.has(key));
+  })])];
+}
+
 const firebaserc = readJson(".firebaserc");
 const firebaseJson = readJson(firebaseConfigPath);
+
+const authorityPath = path.join(root, "system/canonical-authority.json");
+const authority = fs.existsSync(authorityPath)
+  ? JSON.parse(fs.readFileSync(authorityPath, "utf8"))
+  : null;
+const isQuarantinedLegacy = authority?.legacyRepos?.includes("LifeLoggerAI/UrAi") === true;
+
+if (isQuarantinedLegacy) {
+  const projectAliases = Object.values(firebaserc.projects || {});
+  const safeLegacyKeys = new Set(["emulators"]);
+  const discoveredFirebaseConfigs = firebaseConfigFiles(firebaseConfigPath);
+  const deployableConfig = discoveredFirebaseConfigs.flatMap((name) =>
+    Object.keys(readJson(name))
+      .filter((key) => !safeLegacyKeys.has(key))
+      .map((key) => `${name}:${key}`),
+  );
+
+  if (projectAliases.length > 0) {
+    fail(`Quarantined legacy repository must not define Firebase project aliases. Found: ${projectAliases.join(", ")}.`);
+  }
+  if (deployableConfig.length > 0) {
+    fail(`Quarantined legacy repository must remain emulator-only. Found deployable config: ${deployableConfig.join(", ")}.`);
+  }
+
+  console.log("[urai-firebase-target] OK: legacy Firebase authority is quarantined and emulator-only.");
+  process.exit(0);
+}
 
 const projectAliases = Object.values(firebaserc.projects || {});
 const hostingSite = firebaseJson.hosting?.site;

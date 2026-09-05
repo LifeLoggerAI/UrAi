@@ -26,10 +26,6 @@ export default function UraiHomeLaunchSurface() {
     >
       <UraiResolvedHomeScene />
       <style jsx global>{`
-        .urai-home-world-cinematic .minimal-orbit-nav,
-        .urai-home-world-cinematic nav,
-        .urai-home-world-cinematic [class*="nav"],
-        .urai-home-world-cinematic [class*="dock"],
         .urai-home-world-cinematic .field-whisper,
         .urai-home-world-cinematic .return-home,
         .urai-home-world-cinematic [data-urai-home-accessibility],
@@ -37,7 +33,7 @@ export default function UraiHomeLaunchSurface() {
         .urai-home-world-cinematic [class*="whisper"],
         .urai-home-world-cinematic [class*="copy"],
         .urai-home-world-cinematic [class*="caption"],
-        .urai-home-world-cinematic [class*="label"] {
+        .urai-home-world-cinematic [class*="caption"] {
           display: none !important;
         }
       `}</style>

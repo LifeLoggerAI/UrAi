@@ -4,7 +4,7 @@ Date: 2026-07-10
 
 `LifeLoggerAI/UrAi` is not authorized to deploy `https://urai.app` or the shared Firebase project `urai-4dc1d`.
 
-The canonical production authority is:
+The canonical and sole production authority is:
 
 - repository: `LifeLoggerAI/urai-spatial`
 - runtime root: `urai-tier1`

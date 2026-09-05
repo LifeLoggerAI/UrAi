@@ -4,12 +4,18 @@ async function expectBodyText(page: import("@playwright/test").Page, text: strin
   await expect(page.locator("body")).toContainText(text);
 }
 
+const privatePayloadMarkers = [
+  /data-(?:private-memory|owner-memory)(?:-id)?=/i,
+  /(?:\\+)?["\'](?:privateMemory|ownerMemory|memoryContent|ownerUid)(?:\\+)?["\']\s*:/i,
+  /(?:memoryId|ownerUid|ownerId)\s*=\s*["'][^"']+/i,
+];
+
 async function expectHtml(request: import("@playwright/test").APIRequestContext, route: string, text: string | RegExp) {
   const response = await request.get(route);
   await expect(response).toBeOK();
   const html = await response.text();
   expect(html).toMatch(text);
-  expect(html).not.toMatch(/private memory/i);
+  for (const marker of privatePayloadMarkers) expect(html).not.toMatch(marker);
 }
 
 test.describe("URAI current release smoke", () => {
@@ -18,20 +24,27 @@ test.describe("URAI current release smoke", () => {
   });
 
   test("home shell renders the current spatial threshold @smoke", async ({ page }) => {
-    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.goto("/home", { waitUntil: "networkidle" });
 
     await expect(page.locator('[data-urai-spatial-universe="mounted"]')).toHaveAttribute("data-urai-mode", "home");
-    await expect(page.locator('[aria-label="URAI Home World"]')).toBeVisible();
+    const homeWorld = page.locator('[aria-label="URAI Home World"]');
+    await expect(homeWorld).toBeAttached();
+    await expect(homeWorld.locator(".world-shell")).toBeVisible();
     await expectBodyText(page, /Life Map/i);
     await expectBodyText(page, /Replay/i);
     await expectBodyText(page, /Passport/i);
-    await expect(page.getByRole("link", { name: /^Life Map$/i }).first()).toHaveAttribute("href", "/life-map");
-    await expect(page.getByRole("link", { name: /^Replay$/i }).first()).toHaveAttribute("href", "/replay");
-    await expect(page.getByRole("link", { name: /^Passport$/i }).first()).toHaveAttribute("href", "/passport");
+    for (const [label, href] of [["Life Map", "/life-map"], ["Replay", "/replay"], ["Passport", "/passport"]] as const) {
+      const navItem = page.locator(`a[aria-label="${label}"]`).first();
+      const navLabel = navItem.locator(".nav-label");
+      await expect(navLabel).toBeVisible();
+      await expect(navLabel).toHaveCSS("opacity", "1");
+      await expect(navItem).toHaveAttribute("href", href);
+    }
   });
 
   test("core public routes render launch-safe content @smoke", async ({ request }) => {
     const routes = [
+      ["/", /Life Map/i],
       ["/home", /Life Map/i],
       ["/ground", /Ground/i],
       ["/life-map", /Life Map/i],
@@ -58,6 +71,7 @@ test.describe("URAI current release smoke", () => {
     expect(html).toMatch(/Sample data only/i);
     expect(html).toMatch(/without exposing owner-only memory data/i);
     expect(html).not.toMatch(/private memory/i);
+    for (const marker of privatePayloadMarkers) expect(html).not.toMatch(marker);
   });
 
   test("waitlist and status APIs respond safely @smoke", async ({ request }) => {
