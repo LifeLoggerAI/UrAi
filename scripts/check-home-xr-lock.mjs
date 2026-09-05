@@ -54,14 +54,17 @@ assertCheck(
 
 assertCheck(
   "controller unavailable fallback exists",
-  layer.includes("no XR controllers are connected") && layer.includes("Desktop and touch interaction remain available"),
-  "HomeXRInteractionLayer must show a visible fallback when a VR session has no connected controllers.",
+  layer.includes("No XR controllers are connected.") &&
+    layer.includes("Reconnect a controller") &&
+    layer.includes("exit immersive mode"),
+  "HomeXRInteractionLayer must show truthful zero-controller recovery without advertising controller-only commands.",
 );
 
 assertCheck(
   "in-world instructions exist",
-  layer.includes("Point + trigger to select. Grip/back to close."),
-  "HomeXRInteractionLayer must include the required in-world instruction panel.",
+  layer.includes("Point + trigger to select. Grip/back to close.") &&
+    layer.includes("<ControllerInstructionPanel visible={isPresenting && connectedControllerCount > 0} />"),
+  "HomeXRInteractionLayer must show controller commands only while an XR controller is connected.",
 );
 
 for (const requiredTarget of ["Life Map", "Ground", "Sky", "Horizon", "Replay", "Orb Chat", "Mirror", "XR Preview"]) {

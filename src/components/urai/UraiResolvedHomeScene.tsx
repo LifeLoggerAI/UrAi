@@ -429,7 +429,7 @@ const styles = `
     border-radius: 8px;
     font-size: 12px;
     white-space: nowrap;
-    opacity: 0;
+    opacity: 1;
     pointer-events: none;
     transition: opacity 0.2s;
   }
