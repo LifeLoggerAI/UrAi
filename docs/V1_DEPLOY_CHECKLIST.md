@@ -1,6 +1,8 @@
-# URAI V1 Deploy Checklist
+# URAI V1 Legacy Verification Checklist
 
-Use this checklist before treating the V1 demo spine as launch-ready.
+`LifeLoggerAI/UrAi` is a historical/legacy repository. It is **NEVER DEPLOY** and is not current UrAi production authority.
+
+This checklist exists only to keep legacy source locally reproducible and to prevent historical deployment instructions from being mistaken for current authority.
 
 ## 1. Install dependencies
 
@@ -8,9 +10,7 @@ Use this checklist before treating the V1 demo spine as launch-ready.
 npm install
 ```
 
-This is required after adding `firebase-admin`.
-
-## 2. Configure environment
+## 2. Configure local-only environment
 
 Copy the template:
 
@@ -18,7 +18,7 @@ Copy the template:
 cp env.local.template .env.local
 ```
 
-Fill the public Firebase web keys:
+Public Firebase web values may be supplied only for non-authoritative local UI verification when needed:
 
 ```txt
 NEXT_PUBLIC_FIREBASE_API_KEY=
@@ -29,73 +29,52 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 ```
 
-Fill server-only Firebase Admin keys for real waitlist persistence:
+Do **not** configure private-key or service-account deployment credentials in this legacy repository. `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL` paired with key material, `FIREBASE_SERVICE_ACCOUNT_KEY`, raw/base64 service-account JSON, `credentials_json`, and `FIREBASE_TOKEN` are not authorized here.
 
-```txt
-FIREBASE_PROJECT_ID=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_PRIVATE_KEY=
-```
-
-Local development works without Admin keys, but `/api/waitlist` will return `mode: dry-run` instead of writing to Firestore.
-
-## 3. Generate demo seed artifact
+## 3. Generate deterministic local demo fixture
 
 ```bash
 npm run seed:demo
 ```
 
-Expected output:
+Expected local output:
 
 ```txt
 tmp/urai-demo-seed.json
 ```
 
-## 4. Validate app
+The fixture is synthetic and local-only. `npm run seed:firestore` / `--firestore` must fail closed under the legacy quarantine.
+
+## 4. Validate legacy source
 
 ```bash
 npm run check:types
 npm run build
-npm run preflight
+npm run check:legacy-quarantine
 ```
 
-## 5. Verify routes
+`check:legacy-quarantine` succeeds only when the underlying production command is refused with the expected fail-closed message. Any release/launch command must preserve that explicit legacy production block.
 
-Open locally:
+## 5. Local route checks
 
-```txt
-/
-/u/adamclamp
-/api/companion
-/api/waitlist
-```
+Historical routes may be exercised locally for regression/reference purposes only. A working local route is not deployment, production, canonical-product, or provider evidence.
 
-Expected behavior:
+## 6. Provider mutation is forbidden
 
-- `/` renders the home demo spine.
-- `/u/adamclamp` renders public constellation, forecast, reflection, blooms, timeline, and waitlist CTA.
-- `/api/companion` accepts POST requests and returns companion JSON.
-- `/api/waitlist` accepts POST requests and either writes to Firestore or returns dry-run mode.
+Do not deploy Firestore rules, indexes, Hosting, Functions, App Hosting, or any other provider resource from this repository. Do not seed Firestore or export customer/provider data from it.
 
-## 6. Deploy Firebase rules and indexes
+Current provider work belongs to the canonical governed UrAi system and must use its own exact-head WIF/ADC, review, deployment, readback, monitoring/recovery, and rollback authority.
 
-```bash
-firebase deploy --only firestore:rules,firestore:indexes
-```
+## 7. Legacy definition of done
 
-## 7. Deploy hosting/app
+This legacy source is safely contained when:
 
-Use the configured Firebase hosting or app hosting deployment for the project.
+- local deterministic source checks pass;
+- local synthetic demo generation works;
+- Firestore/provider mutation commands fail closed;
+- no long-lived Firebase/service-account credential path remains executable or recommended;
+- production deployment commands remain blocked;
+- no private passive, relationship, memory, customer, or provider data is accessed;
+- documentation clearly identifies this repository as historical and non-authoritative.
 
-## 8. Launch definition of done
-
-V1 demo spine is launch-ready when:
-
-- `npm run check:types` passes.
-- `npm run build` passes.
-- `/` loads without heavy video assets.
-- `/u/adamclamp` loads without backend dependency.
-- Waitlist dry-run works locally.
-- Waitlist Firestore write works in configured environment.
-- Firestore rules and indexes deploy successfully.
-- No private passive, relationship, or memory data is publicly readable.
+**Classification: LEGACY SOURCE VERIFICATION ONLY / NEVER DEPLOY / NO PROVIDER OR PRODUCTION AUTHORITY.**
