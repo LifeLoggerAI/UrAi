@@ -50,10 +50,10 @@ The fixture is synthetic and local-only. `npm run seed:firestore` / `--firestore
 ```bash
 npm run check:types
 npm run build
-npm run check:legacy-production-disabled
+npm run check:legacy-quarantine
 ```
 
-Any release/launch command must preserve the explicit legacy production block.
+`check:legacy-quarantine` succeeds only when the underlying production command is refused with the expected fail-closed message. Any release/launch command must preserve that explicit legacy production block.
 
 ## 5. Local route checks
 
