@@ -88,36 +88,8 @@ fs.writeFileSync(outputPath, JSON.stringify(seed, null, 2));
 console.log(`Wrote ${outputPath}`);
 
 if (shouldWriteFirestore) {
-  const hasAdminEnv = Boolean(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY);
-  if (!hasAdminEnv) {
-    console.error("Missing Firebase Admin env vars. JSON seed was written, but Firestore was not updated.");
-    process.exit(1);
-  }
-
-  const { cert, getApps, initializeApp } = await import("firebase-admin/app");
-  const { getFirestore } = await import("firebase-admin/firestore");
-
-  if (!getApps().length) {
-    initializeApp({
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: String(process.env.FIREBASE_PRIVATE_KEY).replace(/\\n/g, "\n"),
-      }),
-    });
-  }
-
-  const db = getFirestore();
-  for (const [docId, value] of Object.entries(featureFlags)) {
-    await db.collection("features").doc(docId).set(value, { merge: true });
-    console.log(`Seeded features/${docId}`);
-  }
-
-  await db.collection("users").doc(ownerUid).set(seed.users[ownerUid], { merge: true });
-  console.log(`Seeded users/${ownerUid}`);
-
-  for (const [source, value] of Object.entries(consents)) {
-    await db.collection("users").doc(ownerUid).collection("consents").doc(source).set(value, { merge: true });
-    console.log(`Seeded users/${ownerUid}/consents/${source}`);
-  }
+  console.error(
+    "Legacy repository quarantine: Firestore mutation is disabled here. Use the current canonical system and its governed provider authority instead.",
+  );
+  process.exit(1);
 }

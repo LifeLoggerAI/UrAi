@@ -65,6 +65,7 @@ Run the V1 validation path before sharing any local reference build:
 ```bash
 npm run check:system-registry
 npm run check:production-lock
+npm run check:legacy-quarantine
 npm run smoke:production
 npm run smoke:genesis-spine
 npm run check:v1
@@ -97,7 +98,7 @@ npm run test:e2e
 | `npm run smoke:production` | Checks only configured safe public URLs and does not imply production readiness by itself |
 | `npm run check:firestore-contract` | Verifies required Firestore rule matches and server-only waitlist posture; warns on remaining `userId` index drift |
 | `npm run seed:demo` | Writes `tmp/urai-demo-seed.json` |
-| `npm run seed:firestore` | Writes demo seed data to Firestore when Firebase Admin env vars are configured |
+| `npm run seed:firestore` | Fails closed; provider mutation is forbidden from this legacy repository |
 | `npm run waitlist:export` | Exports `waitlistSignups` to `tmp/waitlist-export.csv` or a dry-run sample row locally |
 | `npm run test:smoke` | Runs launch-critical Playwright smoke tests |
 | `npm run test:e2e` | Runs the full Playwright suite across configured desktop and mobile projects |
@@ -134,15 +135,9 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID
 ```
 
-Server-side Firebase Admin access requires:
+Server-side Firebase Admin access is intentionally unavailable in this legacy repository. Do not place service-account email, private-key material, credential JSON, or deployment tokens in `.env.local`.
 
-```txt
-FIREBASE_PROJECT_ID
-FIREBASE_CLIENT_EMAIL
-FIREBASE_PRIVATE_KEY
-```
-
-The waitlist route works in local dry-run mode without Admin credentials. With Admin credentials configured, `/api/waitlist` writes to `waitlistSignups/{normalizedEmail}`. This capability is not authorized for production from this legacy repository.
+The waitlist route is limited to local dry-run behavior here. `/api/waitlist` must not write provider data from this repository; current provider work belongs to the canonical governed system and uses short-lived ADC/WIF.
 
 ## Demo routes
 

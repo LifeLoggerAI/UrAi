@@ -1,3 +1,5 @@
+import { isFirebaseAdminConfigured } from "../firebase-admin";
+
 export type SpatialSceneStatus =
   | "draft"
   | "queued"
@@ -104,9 +106,6 @@ export const SPATIAL_DEFERRED_CAPABILITIES = [
   "clinical-care-claims",
 ] as const;
 
-function firebaseAdminConfigured() {
-  return Boolean(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY);
-}
 
 export const SPATIAL_DEFINITION_OF_DONE: SpatialReadinessCheck[] = [
   {
@@ -126,9 +125,9 @@ export const SPATIAL_DEFINITION_OF_DONE: SpatialReadinessCheck[] = [
   {
     id: "firebase-admin-auth",
     label: "Firebase Admin auth",
-    ok: firebaseAdminConfigured(),
+    ok: isFirebaseAdminConfigured(),
     requiredForLive: true,
-    message: "Firebase Admin credentials are required before private Spatial APIs can verify ID tokens in production.",
+    message: "Legacy Firebase Admin is quarantined in this repository; private Spatial APIs cannot become live-ready here.",
   },
   {
     id: "private-beta-flag",
@@ -176,7 +175,7 @@ export function resolveSpatialReadiness() {
     status: liveReady ? "production-live-ready" : mode === "private-beta" ? "private-beta-staged" : "public-demo-staged",
     liveReady,
     publicDemoReady: mode === "public-demo" || mode === "private-beta" || liveReady,
-    privateBetaReady: mode === "private-beta" && firebaseAdminConfigured(),
+    privateBetaReady: mode === "private-beta" && isFirebaseAdminConfigured(),
     blocking,
     checks: SPATIAL_DEFINITION_OF_DONE,
     requiredV1Surfaces: SPATIAL_V1_REQUIRED_SURFACES,

@@ -37,6 +37,7 @@
     "check:system-registry": "node scripts/check-system-registry.mjs",
     "check:production-lock": "node scripts/check-production-lock.mjs",
     "check:legacy-production-disabled": "node scripts/block-legacy-production-deploy.mjs check",
+    "check:legacy-quarantine": "node scripts/check-legacy-quarantine-boundary.mjs",
     "smoke:genesis-spine": "node scripts/smoke-genesis-spine.mjs",
     "smoke:genesis-xr-ar-live": "node scripts/check-genesis-xr-ar-live-url.mjs",
     "smoke:linked-routes": "node scripts/smoke-linked-routes.mjs",
