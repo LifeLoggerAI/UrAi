@@ -48,8 +48,8 @@ const seedVideos = [
     category: "Memory Cinema",
   },
   {
-    title: "Not a Chatbot. A Memory OS.",
-    description: "URAI is building the private emotional memory OS.",
+    title: "Not a Chatbot. A Living Memory Interface.",
+    description: "URAI is building a private personal-intelligence system for memory, context, and reflection.",
     category: "Signal Breakdown",
   },
   {
@@ -333,7 +333,7 @@ export function LaunchPage({ kind }: { kind: LaunchPageKind }) {
       case "trust": return { eyebrow: "Trust Center", title: "No ads inside your memory.", subtitle: "URAI Private is ad-free. Your memory, voice, emotions, relationships, journal data, passive signals, and personal insights are not ad inventory.", primaryHref: "/waitlist", primary: "Join Waitlist", secondaryHref: "/worlds", secondary: "Public Worlds" };
       case "waitlist": return { eyebrow: "Waitlist", title: "Join the early URAI list.", subtitle: "Be first to see URAI Private, URAI Worlds, Make Mine previews, and Founding Access drops.", primaryHref: "#form", primary: "Join", secondaryHref: "/trust", secondary: "Trust Promise" };
       case "passport": return { eyebrow: "URAI Passport", title: "Your memory. Your permission. Your passport.", subtitle: "URAI Passport is the access and consent layer for private memory, founding status, creator status, and future user-owned data permissions.", primaryHref: "/waitlist", primary: "Get Access", secondaryHref: "/trust", secondary: "Trust Center" };
-      default: return { eyebrow: "URAI V1", title: "Not a chatbot. A memory OS.", subtitle: "URAI turns memory, emotion, voice, reflection, and life signals into a private symbolic interface for understanding your life.", primaryHref: "/waitlist", primary: "Join Waitlist", secondaryHref: "/worlds", secondary: "Watch URAI Worlds" };
+      default: return { eyebrow: "URAI V1", title: "Not a chatbot. A living memory interface.", subtitle: "URAI turns memory, emotion, voice, reflection, and life signals into a private symbolic interface for understanding your life.", primaryHref: "/waitlist", primary: "Join Waitlist", secondaryHref: "/worlds", secondary: "Watch URAI Worlds" };
     }
   }, [kind]);
 
