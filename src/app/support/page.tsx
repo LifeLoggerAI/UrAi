@@ -42,7 +42,7 @@ export default function SupportPage() {
           <h1 className="text-3xl font-semibold sm:text-4xl">We’re here to help</h1>
           <p className="text-base leading-relaxed text-white/60">
             If you’re seeing something off, have privacy questions, or want onboarding support, drop us a note.
-            We reply within 24 hours (often much faster during launch week).
+            Response timing depends on current support capacity; no response-time SLA is claimed on this public preview.
           </p>
         </header>
 
@@ -82,11 +82,11 @@ export default function SupportPage() {
           <h2 className="text-lg font-semibold text-white">Need a human?</h2>
           <p className="mt-2">
             Email
-            <a href="mailto:press@urai.app" className="text-white underline underline-offset-4">
+            <a href="mailto:support@urailabs.com" className="text-white underline underline-offset-4">
               {" "}
-              press@urai.app
+              support@urailabs.com
             </a>
-            {" "}or DM @urai on X. For enterprise pilots, reply with “pilot” and we’ll send the setup doc.
+            {" "}For enterprise or pilot inquiries, use the launch-authoritative URAI Labs contact route.
           </p>
         </section>
       </div>

@@ -85,7 +85,7 @@ export default function BugReportButton() {
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Bug inbox offline here — email press@urai.app and we’ll jump in.");
+      setErrorMessage("Bug inbox offline here — email support@urailabs.com for follow-up.");
       setState("error");
       return;
     }
@@ -112,7 +112,7 @@ export default function BugReportButton() {
     } catch (error) {
       console.error("Bug report failed", error);
       setState("error");
-      setErrorMessage("Couldn’t capture that. Ping press@urai.app instead.");
+      setErrorMessage("Couldn’t capture that. Ping support@urailabs.com instead.");
     }
   };
 
@@ -132,10 +132,10 @@ export default function BugReportButton() {
         <p className="mt-4 text-xs text-amber-300">
           Bug intake is paused here. Email
           <a
-            href="mailto:press@urai.app"
+            href="mailto:support@urailabs.com"
             className="mx-1 underline decoration-dashed underline-offset-4"
           >
-            press@urai.app
+            support@urailabs.com
           </a>
           if you spot something urgent.
         </p>

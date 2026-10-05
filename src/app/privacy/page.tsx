@@ -80,7 +80,7 @@ export default function PrivacyPage() {
             URAI insights are reflective AI patterns. They are not medical, legal, or clinical determinations. When a signal looks sensitive, the interface should slow down, summarize gently, and point users toward real support.
           </p>
           <p className="mt-4">
-            Questions? <a href="mailto:privacy@urai.app" className="text-white underline underline-offset-4">privacy@urai.app</a>
+            Questions? <a href="mailto:privacy@urailabs.com" className="text-white underline underline-offset-4">privacy@urailabs.com</a>
           </p>
         </section>
       </div>

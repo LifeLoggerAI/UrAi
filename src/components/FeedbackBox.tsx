@@ -32,7 +32,7 @@ export default function FeedbackBox() {
     }
 
     if (!isFirebaseConfigured) {
-      setErrorMessage("Feedback inbox is offline — ping press@urai.app while we bring it back.");
+      setErrorMessage("Feedback inbox is offline — ping support@urailabs.com while we bring it back.");
       setStatus("error");
       return;
     }
@@ -55,7 +55,7 @@ export default function FeedbackBox() {
     } catch (error) {
       console.error("Failed to send feedback", error);
       setStatus("error");
-      setErrorMessage("Couldn’t save that. Try again or email press@urai.app.");
+      setErrorMessage("Couldn’t save that. Try again or email support@urailabs.com.");
     }
   };
 
@@ -64,7 +64,7 @@ export default function FeedbackBox() {
       <div className="mb-4 space-y-1">
         <h3 className="text-lg font-semibold text-white">Have notes for URAI?</h3>
         <p className="text-sm text-white/60">
-          We’re shipping daily. Leave a thought, bug, or wish and we’ll reply within 24h.
+          Leave a thought, bug, or wish for review. Response timing depends on current support capacity.
         </p>
       </div>
 
@@ -72,10 +72,10 @@ export default function FeedbackBox() {
         <p className="text-sm text-amber-200">
           Feedback capture is paused because Firebase isn’t configured in this environment. Email
           <a
-            href="mailto:press@urai.app"
+            href="mailto:support@urailabs.com"
             className="ml-1 underline decoration-dashed underline-offset-4"
           >
-            press@urai.app
+            support@urailabs.com
           </a>
           {" "}with anything urgent.
         </p>
