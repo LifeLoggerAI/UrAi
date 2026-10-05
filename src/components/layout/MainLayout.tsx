@@ -19,8 +19,7 @@ const MainLayout = ({ children }) => {
                 Help us tune the Life Movie.
               </h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/60">
-                Spot a rough edge? Drop a note or fire off a bug report. We ship
-                daily and reply within 24 hours.
+                Spot a rough edge? Drop a note or fire off a bug report. Share a note or bug report for review. Response timing depends on current support capacity.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 text-xs text-white/40">
@@ -37,7 +36,7 @@ const MainLayout = ({ children }) => {
                 Support docs ↗
               </Link>
               <a
-                href="mailto:press@urai.app"
+                href="mailto:contact@urailabs.com"
                 className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-semibold uppercase tracking-wide text-white hover:border-white/40 hover:text-white"
               >
                 Email us
