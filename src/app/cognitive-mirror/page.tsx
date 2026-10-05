@@ -135,7 +135,7 @@ export default async function CognitiveMirrorPage() {
               ChronoMirror
             </p>
             <h1 className="mt-2 text-4xl font-black tracking-tight">
-              Cognitive Mirror
+              Mirror
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-white/60">
               Subjective time perception, emotional density, replay pacing,

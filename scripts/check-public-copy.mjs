@@ -91,6 +91,33 @@ for (const phrase of requiredBoundaryPhrases) {
   }
 }
 
+const currentCanonFiles = [
+  "src/app/changelog/page.tsx",
+  "src/app/investors/page.tsx",
+  "src/components/launch/LaunchShell.tsx",
+  "src/app/cognitive-mirror/page.tsx",
+  "src/app/cognitive-mirror/error.tsx",
+  "src/app/cognitive-mirror/loading.tsx",
+  "src/components/life-map/LifeMapUniverse.tsx",
+];
+const legacyPublicCanonPatterns = [
+  /emotional life OS/i,
+  /\bmemory OS\b/i,
+  /Cognitive Mirror/i,
+  /Cognitive mirror/i,
+];
+for (const relativePath of currentCanonFiles) {
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) continue;
+  const content = fs.readFileSync(absolutePath, "utf8");
+  for (const pattern of legacyPublicCanonPatterns) {
+    if (pattern.test(content)) {
+      console.error(`public-copy: legacy public canon in ${relativePath}: ${pattern}`);
+      failed = true;
+    }
+  }
+}
+
 for (const filePath of files) {
   const relativePath = path.relative(root, filePath).replace(/\\/g, "/");
   const isInternalDoc = relativePath.startsWith("docs/");

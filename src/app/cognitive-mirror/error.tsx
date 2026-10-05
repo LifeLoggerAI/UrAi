@@ -8,7 +8,7 @@ export default function CognitiveMirrorError({ error, reset }: { error: Error; r
       route="cognitive-mirror"
       error={error}
       reset={reset}
-      title="Cognitive mirror is foggy"
+      title="Mirror is foggy"
       description="We couldn’t project your reflection data. Try again or hop to the status page for more detail."
       secondaryAction={{ label: "View status", href: "/status" }}
     />

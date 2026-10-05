@@ -10,7 +10,7 @@ export default function InvestorsPage() {
     <UraiRouteShell
       eyebrow="Investors"
       title="URAI V1 is converging into a coherent launch surface."
-      description="The investor route summarizes URAI as a privacy-first emotional life OS with a public demo, Home Orb, Life Map, companion layer, and Firebase-backed product architecture."
+      description="The investor route summarizes URAI as a privacy-first personal intelligence system with a public demo, Home Orb, Life Map, companion layer, and Firebase-backed product architecture."
       primaryHref="/u/adamclamp"
       primaryLabel="View Public Demo"
       secondaryHref="/about"
