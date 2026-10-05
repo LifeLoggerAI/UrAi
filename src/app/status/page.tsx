@@ -50,11 +50,11 @@ export default function StatusPage() {
           <p className="mt-4">
             Need deeper history or an export? Ping us at
             <a
-              href="mailto:press@urai.app"
+              href="mailto:support@urailabs.com"
               className="text-white underline decoration-white/40 decoration-dashed underline-offset-4 hover:decoration-white"
             >
               {" "}
-              press@urai.app
+              support@urailabs.com
             </a>
             .
           </p>
