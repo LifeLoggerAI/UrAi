@@ -14,7 +14,7 @@ export default function CognitiveMirrorLoading() {
           <div className="h-64 w-full rounded-2xl bg-white/10 animate-pulse" aria-hidden="true" />
         </div>
       </div>
-      <span className="sr-only">Loading cognitive mirror</span>
+      <span className="sr-only">Loading Mirror</span>
     </div>
   );
 }
