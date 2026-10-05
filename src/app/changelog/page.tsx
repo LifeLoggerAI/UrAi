@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Changelog | URAI",
-  description: "Recent product updates for the URAI emotional life OS.",
+  description: "Recent product updates for URAI personal intelligence.",
 };
 
 const updates = [
