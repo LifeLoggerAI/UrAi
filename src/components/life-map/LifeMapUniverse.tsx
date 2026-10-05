@@ -27,7 +27,7 @@ type ViewMode = "lifeMap" | "focus" | "replay" | "mirror" | "bloom";
 
 const overlayCopy: Record<string, { title: string; eyebrow: string; body: string; stage: string }> = {
   mirror: {
-    eyebrow: "Cognitive mirror",
+    eyebrow: "Mirror",
     title: "Mirror of becoming",
     body: "A symbolic mirror for memory, mood, and meaning.",
     stage: "the mirror reflects only sourced signals",
