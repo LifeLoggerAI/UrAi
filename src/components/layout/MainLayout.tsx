@@ -19,7 +19,7 @@ const MainLayout = ({ children }) => {
                 Help us tune the Life Movie.
               </h2>
               <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/60">
-                Spot a rough edge? Drop a note or fire off a bug report. Share a note or bug report for review. Response timing depends on current support capacity.
+                Spot a rough edge? Share a note or bug report for review. Response timing depends on current support capacity.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 text-xs text-white/40">
