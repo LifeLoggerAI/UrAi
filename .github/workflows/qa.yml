@@ -50,6 +50,7 @@ jobs:
         run: node scripts/check-legacy-production-authority-boundary.mjs
 
       - name: Install Playwright Chromium
+        timeout-minutes: 10
         run: npx playwright install --with-deps chromium
 
       - name: Legacy E2E regression audit
