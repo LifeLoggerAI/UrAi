@@ -1,8 +1,9 @@
 'use client';
 
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
-import { Perf } from "r3f-perf";
+import { Suspense, useState } from "react";
+import { LegacyFrameSampler, LegacyFrameOverlay } from "@/components/urai/LegacyFrameDiagnostics";
+import type { LegacyFrameMetrics } from "@/lib/runtime/frame-diagnostics";
 import { PortalNav, PortalNavProps } from "@/components/urai/PortalNav";
 import { UraiScene } from "@/lib/urai/scene-theme";
 
@@ -15,15 +16,17 @@ type GenesisSceneShellProps = {
 };
 
 export function GenesisSceneShell({ children, onNavigate, onOpenOrbChat, activeScene }: GenesisSceneShellProps) {
+  const [frameMetrics, setFrameMetrics] = useState<LegacyFrameMetrics | null>(null);
   return (
     <div className="fixed inset-0">
       <Canvas>
         <Suspense fallback={null}>
           {children}
         </Suspense>
-        <Perf position="bottom-left" />
+        <LegacyFrameSampler onSample={setFrameMetrics} />
       </Canvas>
 
+      <LegacyFrameOverlay sample={frameMetrics} />
       <PortalNav onNavigate={onNavigate} activeScene={activeScene} />
     </div>
   );
