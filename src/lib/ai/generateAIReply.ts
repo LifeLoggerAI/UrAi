@@ -5,6 +5,7 @@ import { createAILogMetadata, logAIMetadata } from "./aiLoggingPolicy";
 import type { UraiAIReply, UraiAIRequest } from "./aiTypes";
 import { getCompanionSystemPrompt } from "@/lib/companion/companionSystemPrompts";
 import { generateLocalCompanionResponse } from "@/lib/companion/localCompanionResponder";
+import { requireLegacyPaidProviderAuthority } from "../runtime/legacy-paid-provider-quarantine";
 
 function localReply(request: UraiAIRequest, safetyLevel: UraiAIReply["safetyLevel"] = "normal"): UraiAIReply {
   const local = generateLocalCompanionResponse(request.message, {
@@ -59,6 +60,7 @@ export async function generateAIReply(request: UraiAIRequest): Promise<UraiAIRep
   });
 
   try {
+    requireLegacyPaidProviderAuthority();
     const response = await fetch(OPENAI_API_URL, {
       method: "POST",
       headers: {

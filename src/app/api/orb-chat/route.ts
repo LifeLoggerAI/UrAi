@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { OrbChatContext, OrbMessage } from "@/lib/types";
+import { LegacyPaidProviderQuarantinedError, requireLegacyPaidProviderAuthority } from "@/lib/runtime/legacy-paid-provider-quarantine";
 
 type OrbChatRequest = {
   message?: string;
@@ -58,6 +59,7 @@ async function generateOpenAIReply(request: OrbChatRequest, systemPrompt: string
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) return null;
+  requireLegacyPaidProviderAuthority();
 
   const userMessage = request.message?.trim() ?? "";
   const history = (request.messages ?? [])
@@ -112,6 +114,9 @@ export async function POST(request: Request) {
       usedFallback: !openAIReply,
     });
   } catch (error) {
+    if (error instanceof LegacyPaidProviderQuarantinedError) {
+      return NextResponse.json({ error: error.message, code: error.code }, { status: 503 });
+    }
     const message = error instanceof Error ? error.message : "Unknown orb chat error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
