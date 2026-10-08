@@ -1,0 +1,53 @@
+name: Legacy dependency consumer security
+
+on:
+  pull_request:
+    paths:
+      - package.json
+      - package-lock.json
+      - pnpm-lock.yaml
+      - vendor/braces/**
+      - tests/security/legacy-dependency-consumers.test.mjs
+      - .github/workflows/legacy-dependency-consumer-security.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legacy-dependency-security-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: true
+
+jobs:
+  installed-consumers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Prove exact clean source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXACT_HEAD"
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Restore actual frozen npm graph
+        run: npm ci --no-audit --no-fund
+      - name: Prove installed library consumers
+        run: node --test tests/security/legacy-dependency-consumers.test.mjs
+      - name: Audit actual installed npm graph
+        run: npm audit --audit-level=moderate
+      - name: Prove separately supported frozen pnpm lock
+        run: corepack pnpm@9.15.9 install --frozen-lockfile --lockfile-only --ignore-scripts
+      - name: Audit separately supported pnpm lock
+        run: corepack pnpm@9.15.9 audit --audit-level=moderate
+      - name: Preserve immutable source and locks
+        run: git diff --exit-code
