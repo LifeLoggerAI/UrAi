@@ -9,11 +9,10 @@ export function getServerAIConfig(): {
   model: string;
   summaryModel: string;
 } {
-  const apiKey = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL;
   const summaryModel = process.env.OPENAI_SUMMARY_MODEL ?? model;
-  if (!apiKey) return { provider: "local_fallback", model, summaryModel };
-  return { provider: "openai", apiKey, model, summaryModel };
+  // Legacy credentials cannot establish canonical atomic spending authority.
+  return { provider: "local_fallback", model, summaryModel };
 }
 
 export function isAIProviderConfigured(): boolean {

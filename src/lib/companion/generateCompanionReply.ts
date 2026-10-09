@@ -4,6 +4,7 @@ import type { CompanionSafetyLevel, CompanionSuggestedAction } from "./companion
 import { summarizePermissionedContextForPrompt } from "./buildPermissionedContext";
 import { getCompanionSystemPrompt } from "./companionSystemPrompts";
 import { generateLocalCompanionResponse } from "./localCompanionResponder";
+import { requireLegacyPaidProviderAuthority } from "../runtime/legacy-paid-provider-quarantine";
 
 type GenerateCompanionReplyInput = {
   message: string;
@@ -52,6 +53,7 @@ export async function generateCompanionReply(input: GenerateCompanionReplyInput)
   const permissionedContext = summarizePermissionedContextForPrompt(input.context);
 
   try {
+    requireLegacyPaidProviderAuthority();
     const response = await fetch(OPENAI_URL, {
       method: "POST",
       headers: {

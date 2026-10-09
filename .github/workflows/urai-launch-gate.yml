@@ -62,6 +62,10 @@ jobs:
           npm run validate:completion
           npm run urai:tier5
 
+      - name: Install Playwright Chromium for legacy smoke
+        timeout-minutes: 10
+        run: npx playwright install --with-deps chromium
+
       - name: Run legacy smoke tests as advisory
         continue-on-error: true
         run: npm run test:smoke
