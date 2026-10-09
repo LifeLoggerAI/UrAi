@@ -1,3 +1,19 @@
+# UrAi Repository Authority
+
+Updated: 2026-10-09
+
+Status: **QUARANTINED LEGACY / REFERENCE REPOSITORY**
+
+The canonical product repository is `LifeLoggerAI/urai-spatial`, with application root `urai-tier1`, branch `main`, and domain `urai.app`. This repository (`LifeLoggerAI/UrAi`), `LifeLoggerAI/UrAi-Dev`, and `LifeLoggerAI/UrAiProd` retain historical source and evidence; they have no staging or production deployment authority.
+
+Read [the machine-readable repository authority](../system/canonical-authority.json), [the quarantine controls](LEGACY_QUARANTINE_AUTHORITY.md), and [the production deployment boundary](LEGACY_PRODUCTION_DEPLOY_DISABLED.md). The machine record's dated `certifiedProductionSha` is retained historical evidence and does not identify the current deployed revision or approve a current release.
+
+The June 25 record below is **historical and superseded**. Its description of this repository as canonical and its service readiness labels, including Jobs' former “production-live” label, are not current authority. Preserve the record for provenance; resolve each service's present source, deployed revision, runtime evidence, and release requirements through its owning repository and the current Labs governance register.
+
+Current cross-system provenance is maintained by `LifeLoggerAI/urai-labs-llc:governance/cross-system-canon-provenance.json`; release decisions use `governance/system-candidate-20261003.json` at a freshly resolved exact Labs governance commit. This document grants no deployment, credential, provider, review, or release authority.
+
+## Historical June 25 record — superseded
+
 # URAI Repo Canonical Status
 
 Updated: 2026-06-25
