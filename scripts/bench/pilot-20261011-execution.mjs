@@ -8,8 +8,8 @@ import {
   createCanonicalizedDirectProvider,
   createSelfRefineCanonicalHarness,
   createBuilderPreservationHarnessV3,
-} from '../v3/harnesses.mjs';
-import { scoreTask } from '../lib.mjs';
+} from './v3/harnesses.mjs';
+import { scoreTask } from './lib.mjs';
 
 const MODEL = 'gpt-4o-mini-2024-07-18';
 const RATE_INPUT = 0.15 / 1000000;
