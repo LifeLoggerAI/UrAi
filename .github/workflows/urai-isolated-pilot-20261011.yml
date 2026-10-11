@@ -1,0 +1,38 @@
+name: URAI Isolated Six-Case Live Benchmark
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PAID_BENCHMARK_APPROVED: 'true'
+    steps:
+      - name: Checkout isolated pinned branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Set up Node.js 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Assert exact isolated benchmark branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF}" = "refs/heads/bench/spatial-memory-pilot-20261011"
+          node --check scripts/bench/pilot-20261011-execution.mjs
+          node --test scripts/bench/v3/gate.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/strict-contract.test.mjs
+      - name: Run six-case development smoke with a 30-cent cap
+        run: node scripts/bench/pilot-20261011-execution.mjs
+      - name: Retain exact-source pilot evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: urai-pilot-20261011-live-evidence
+          path: bench/results/pilot-20261011-ci/
+          retention-days: 30
+          if-no-files-found: warn
