@@ -30,8 +30,7 @@ jobs:
       needs.offline.result == 'success' &&
       github.ref == 'refs/heads/bench/hard-memory-reasoning-20261014' &&
       github.run_attempt == 1 &&
-      (github.event_name == 'workflow_dispatch' ||
-       (github.event_name == 'push' && github.event.head_commit.message == 'bench: founder-authorized hard development pilot 2026-10-14'))
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -55,4 +54,4 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-# Founder-authorized one-time dispatch marker for the exact-message gated development pilot.
+# Paid execution returned to manual-only after the founder-authorized single push run.
