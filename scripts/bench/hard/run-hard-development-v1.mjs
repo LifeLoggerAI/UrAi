@@ -8,11 +8,11 @@ import {
   createCanonicalizedDirectProvider,
   createSelfRefineCanonicalHarness,
   createBuilderPreservationHarnessV3,
-} from './v3/harnesses.mjs';
-import { createCouncilSelfRefinementHarnessV1 } from './v3/council-refinement.mjs';
-import { createExtendedSelfRefineCanonicalHarness } from './v3/extended-self-refine.mjs';
-import { scoreTask } from './lib.mjs';
-import { generateHardTasks } from './hard/hard-case-generator.mjs';
+} from '../v3/harnesses.mjs';
+import { createCouncilSelfRefinementHarnessV1 } from '../v3/council-refinement.mjs';
+import { createExtendedSelfRefineCanonicalHarness } from '../v3/extended-self-refine.mjs';
+import { scoreTask } from '../lib.mjs';
+import { generateHardTasks } from './hard-case-generator.mjs';
 
 const MODEL = 'gpt-4o-mini-2024-07-18';
 const RATE_INPUT = 0.15 / 1000000;
