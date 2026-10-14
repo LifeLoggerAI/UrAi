@@ -1,0 +1,27 @@
+name: UrAi Historical Hard Development Evidence Integrity
+on:
+  push:
+    branches: [codex/hard-benchmark-oracle-repair-20261014]
+    paths:
+      - 'scripts/bench/hard/hard-development-integrity*.mjs'
+      - '.github/workflows/urai-hard-development-integrity.yml'
+  pull_request:
+    paths:
+      - 'scripts/bench/hard/hard-development-integrity*.mjs'
+      - '.github/workflows/urai-hard-development-integrity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-integrity-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Verify synthetic integrity and tamper denials (no credentials or provider calls)
+        run: node --test scripts/bench/hard/hard-development-integrity.test.mjs

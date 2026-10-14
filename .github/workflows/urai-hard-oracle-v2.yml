@@ -1,0 +1,27 @@
+name: UrAi Hard Evidence Oracle V2 Integrity
+on:
+  push:
+    branches: [codex/hard-benchmark-oracle-repair-20261014]
+    paths:
+      - 'scripts/bench/hard/**'
+      - '.github/workflows/urai-hard-oracle-v2.yml'
+  pull_request:
+    paths:
+      - 'scripts/bench/hard/**'
+      - '.github/workflows/urai-hard-oracle-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  oracle-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Independent synthetic oracle tests, never paid provider calls
+        run: node --test scripts/bench/hard/hard-case-generator-v2.test.mjs scripts/bench/hard/hard-case-generator.test.mjs

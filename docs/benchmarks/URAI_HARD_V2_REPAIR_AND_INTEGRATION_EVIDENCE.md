@@ -1,0 +1,9 @@
+# UrAi Council benchmark — new development repair, not a score revision
+
+This branch creates a **new version** of the synthetic hard-case generator after inspecting the exposed 2026-10-14 16-case development pilot. Historical generator v1, its exposed tasks, all 80 outcomes, and the prior 240-case holdout are unchanged. V2 is also **development-only** and cannot serve as an independent confirmatory set. The fixes remove fabricated impossible chronology (record dated before event), and repair the candidate selection instruction/JSON oracle mismatch. Test the new questions offline before any further paid evaluation.
+
+Repository verification: in urai-spatial main, `apps/functions/src/councilProviderFunctions.ts` supplies Firebase-verified provider-specific calls with explicit model processing consent; `urai-tier1/src/spatial/council/councilProviderRegistry.ts` routes to provider-specific calls with admission flags. These do **not by themselves** demonstrate a production, persistent multi-provider independent-critic refinement pipeline with memory graph retrieval. The legacy Council benchmark scripts in LifeLoggerAI/UrAi are **not** deployment evidence.
+
+Observed v1 development pilot: direct 6/16; historical Council 5/16; enhanced Council 5/16; self-refine 4/16; six-call self-refine 5/16. Those results cannot distinguish architectures reliably with 16 questions and known generator/oracle defects. Confirmatory evaluation requires independent task review, frozen versioned architecture, a virgin seed sealed before execution, and fair context/tool/compute controls.
+
+Open integration gates: live provider admission and credentials; persistent memory retrieval authorization and revocation with multi-session authenticated proof; graph-aware relationship verification; Council full orchestrator and independent criticism; staged visual integration; PR #1636 independent review and acceptance. Full-vision Gold Master remains NO-GO without evidence.
