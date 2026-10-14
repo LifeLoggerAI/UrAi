@@ -1,0 +1,56 @@
+name: URAI Hard Memory Reasoning Development Pilot
+on:
+  push:
+    branches: [bench/hard-memory-reasoning-20261014]
+    paths:
+      - 'scripts/bench/hard/**'
+      - '.github/workflows/urai-hard-development-20261014.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    if: github.ref == 'refs/heads/bench/hard-memory-reasoning-20261014'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Hard-case oracle and harness validation
+        run: |
+          node --check scripts/bench/hard/run-hard-development-v1.mjs
+          node --test scripts/bench/hard/hard-case-generator.test.mjs scripts/bench/v3/gate.test.mjs scripts/bench/v3/council-refinement.test.mjs scripts/bench/v3/extended-self-refine.test.mjs
+  pilot:
+    needs: offline
+    if: >-
+      needs.offline.result == 'success' &&
+      github.ref == 'refs/heads/bench/hard-memory-reasoning-20261014' &&
+      github.run_attempt == 1 &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'push' && github.event.head_commit.message == 'bench: founder-authorized hard development pilot 2026-10-14'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PAID_BENCHMARK_APPROVED: 'true'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Execute 16-case five-way hard development pilot
+        run: node scripts/bench/hard/run-hard-development-v1.mjs
+      - name: Preserve development evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: urai-hard-development-20261014-evidence
+          path: bench/results/hard-development-v1/
+          retention-days: 30
+          if-no-files-found: warn
