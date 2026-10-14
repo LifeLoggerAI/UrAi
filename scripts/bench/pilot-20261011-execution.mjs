@@ -9,6 +9,7 @@ import {
   createSelfRefineCanonicalHarness,
   createBuilderPreservationHarnessV3,
 } from './v3/harnesses.mjs';
+import { createCouncilSelfRefinementHarnessV1 } from './v3/council-refinement.mjs';
 import { scoreTask } from './lib.mjs';
 
 const MODEL = 'gpt-4o-mini-2024-07-18';
@@ -90,31 +91,41 @@ const providers=[
   {id:'direct',run:createCanonicalizedDirectProvider(base)},
   {id:'self_refinement',run:createSelfRefineCanonicalHarness(base)},
   {id:'historical_council_v3',run:createBuilderPreservationHarnessV3(base)},
+  {id:'historical_council_v3_plus_refinement',run:createCouncilSelfRefinementHarnessV1(base)},
 ];
 await mkdir(out,{recursive:true});
 const outputFile=out+'/trials.jsonl';
 const manifest={time_utc:new Date().toISOString(),git_sha:process.env.GITHUB_SHA||null,
   suite_sha256:hash(suiteRaw),task_count:suite.length,model:MODEL,
   historical_council_source:'scripts/bench/v3/harnesses.mjs',
-  current_urai_council:false,development_only:true,cap_usd:CAP,
+  current_urai_council:false,development_only:true,confirmatory:false,
+  method_ids:providers.map(p=>p.id),refinement_is_extra_compute:true,cap_usd:CAP,
   model_rate_usd_per_million:{input:0.15,output:0.60}};
 await writeFile(out+'/manifest.json',JSON.stringify(manifest,null,2));
 const rows=[];
 let failure=null;
 outer: for(let i=0;i<suite.length;i++) {
   const task=suite[i];
-  for(let j=0;j<3;j++) {
-    const entry=providers[(i+j)%3]; // deterministic interleaving
+  for(let j=0;j<providers.length;j++) {
+    const entry=providers[(i+j)%providers.length]; // deterministic interleaving
     const start=performance.now(),startIn=totalInput,startOut=totalOutput,startCalls=calls,startCost=spent;
     try {
       const result=await entry.run.complete({task,prompt:task.prompt,maxOutputTokens:900});
       const scored=scoreTask(task,result.text);
+      const before=typeof result.raw?.council?.text==='string' ? scoreTask(task,result.raw.council.text) : null;
+      const transition=before ? {council_initial_passed:before.passed,refined_passed:scored.passed,
+        helped:!before.passed&&scored.passed,harmed:before.passed&&!scored.passed,
+        selected_changed:result.raw.council.text!==result.text} : null;
       const row={case_id:task.id,family:task.family,method:entry.id,
         model:MODEL,status:'completed',passed:scored.passed,score:scored.score,
         latency_ms:Math.round((performance.now()-start)*1000)/1000,
         usage:{input_tokens:totalInput-startIn,output_tokens:totalOutput-startOut,
           calls:calls-startCalls,estimated_cost_usd:rounded(spent-startCost)},
         gate_decision:result.metadata?.gate_decision||null,
+        council_gate_decision:result.metadata?.council_gate_decision||null,
+        refinement_gate_decision:result.metadata?.refinement_gate_decision||null,
+        refinement_gate_reason:result.metadata?.refinement_gate_reason||null,
+        refinement_transition:transition,
         output:result.text};
       rows.push(row);
       await appendFile(outputFile,JSON.stringify(row)+'\n');
@@ -128,7 +139,7 @@ outer: for(let i=0;i<suite.length;i++) {
   }
 }
 const summary={time_utc:new Date().toISOString(),status:failure?'STOPPED':'COMPLETE',
-  total_trials:rows.length,expected_trials:18,model_calls:calls,
+  total_trials:rows.length,expected_trials:suite.length*providers.length,model_calls:calls,
   input_tokens:totalInput,output_tokens:totalOutput,
   estimated_spend_usd:rounded(spent),hard_local_cap_usd:CAP,
   uncertain_billing:uncertainBilling,fail_code:failure,
@@ -139,6 +150,9 @@ const summary={time_utc:new Date().toISOString(),status:failure?'STOPPED':'COMPL
       mean_latency_ms:d.length?Math.round(d.reduce((a,x)=>a+x.latency_ms,0)/d.length*1000)/1000:null,
       p95_latency_ms:pct(d.map(x=>x.latency_ms),.95),
       model_calls:d.reduce((a,x)=>a+x.usage.calls,0),
+      refinement_helped:d.filter(x=>x.refinement_transition?.helped).length,
+      refinement_harmed:d.filter(x=>x.refinement_transition?.harmed).length,
+      refinement_changed:d.filter(x=>x.refinement_transition?.selected_changed).length,
       estimated_cost_usd:rounded(d.reduce((a,x)=>a+x.usage.estimated_cost_usd,0))}];
   }))};
 await writeFile(out+'/summary.json',JSON.stringify(summary,null,2));
