@@ -54,3 +54,5 @@ jobs:
           path: bench/results/hard-development-v1/
           retention-days: 30
           if-no-files-found: warn
+
+# Founder-authorized one-time dispatch marker for the exact-message gated development pilot.
