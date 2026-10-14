@@ -36,7 +36,14 @@ jobs:
           node --check scripts/bench/pilot-20261011-execution.mjs
           node --test scripts/bench/v3/gate.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/strict-contract.test.mjs scripts/bench/v3/council-refinement.test.mjs scripts/bench/v3/extended-self-refine.test.mjs
   pilot:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/bench/spatial-memory-pilot-20261011'
+    # One-time founder authorization on 2026-10-14: no recurring paid push runs.
+    # Reruns of the same event never repeat paid provider calls.
+    if: >-
+      needs.offline.result == 'success' &&
+      github.ref == 'refs/heads/bench/spatial-memory-pilot-20261011' &&
+      github.run_attempt == 1 &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'push' && github.event.head_commit.message == 'bench: founder-authorized one-time capped live pilot 2026-10-14'))
     needs: offline
     runs-on: ubuntu-latest
     timeout-minutes: 30
