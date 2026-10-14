@@ -45,7 +45,7 @@ export function generateHardTasks(seed, options = {}) {
   const rng = seededRandom(seed);
   const tasks = [];
   function add(family, index, corpus, question, expected) {
-    const id = 'hard-v1-' + family + '-' + pad(index);
+    const id = 'hard-v2-' + family + '-' + pad(index);
     const prompt = [
       'FICTIONAL LIFE-RECORD RECONCILIATION / CASE ' + id,
       'This is a synthetic test. Use only the supplied records. Do not infer facts from missing evidence.',
