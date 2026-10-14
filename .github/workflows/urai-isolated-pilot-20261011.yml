@@ -1,4 +1,4 @@
-name: URAI Isolated Council Refinement Pilot
+name: URAI Isolated Council Refinement and Matched-Calls Pilot
 on:
   push:
     branches:
@@ -7,6 +7,8 @@ on:
       - 'scripts/bench/pilot-20261011-execution.mjs'
       - 'scripts/bench/v3/council-refinement.mjs'
       - 'scripts/bench/v3/council-refinement.test.mjs'
+      - 'scripts/bench/v3/extended-self-refine.mjs'
+      - 'scripts/bench/v3/extended-self-refine.test.mjs'
       - '.github/workflows/urai-isolated-pilot-20261011.yml'
   workflow_dispatch:
 permissions:
@@ -30,8 +32,9 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/bench/v3/council-refinement.mjs
+          node --check scripts/bench/v3/extended-self-refine.mjs
           node --check scripts/bench/pilot-20261011-execution.mjs
-          node --test scripts/bench/v3/gate.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/strict-contract.test.mjs scripts/bench/v3/council-refinement.test.mjs
+          node --test scripts/bench/v3/gate.test.mjs scripts/bench/v3/canonicalizer.test.mjs scripts/bench/v3/strict-contract.test.mjs scripts/bench/v3/council-refinement.test.mjs scripts/bench/v3/extended-self-refine.test.mjs
   pilot:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/bench/spatial-memory-pilot-20261011'
     needs: offline
@@ -54,13 +57,13 @@ jobs:
         run: |
           set -euo pipefail
           test "${GITHUB_REF}" = "refs/heads/bench/spatial-memory-pilot-20261011"
-      - name: Run six-case four-arm smoke with a 30-cent cap
+      - name: Run six-case five-arm smoke with a 30-cent cap
         run: node scripts/bench/pilot-20261011-execution.mjs
       - name: Retain exact-source pilot evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: urai-pilot-20261011-four-arm-live-evidence
+          name: urai-pilot-20261011-five-arm-live-evidence
           path: bench/results/pilot-20261011-ci/
           retention-days: 30
           if-no-files-found: warn

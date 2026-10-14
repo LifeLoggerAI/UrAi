@@ -10,6 +10,7 @@ import {
   createBuilderPreservationHarnessV3,
 } from './v3/harnesses.mjs';
 import { createCouncilSelfRefinementHarnessV1 } from './v3/council-refinement.mjs';
+import { createExtendedSelfRefineCanonicalHarness } from './v3/extended-self-refine.mjs';
 import { scoreTask } from './lib.mjs';
 
 const MODEL = 'gpt-4o-mini-2024-07-18';
@@ -92,6 +93,7 @@ const providers=[
   {id:'self_refinement',run:createSelfRefineCanonicalHarness(base)},
   {id:'historical_council_v3',run:createBuilderPreservationHarnessV3(base)},
   {id:'historical_council_v3_plus_refinement',run:createCouncilSelfRefinementHarnessV1(base)},
+  {id:'self_refinement_six_call',run:createExtendedSelfRefineCanonicalHarness(base)},
 ];
 await mkdir(out,{recursive:true});
 const outputFile=out+'/trials.jsonl';
@@ -112,10 +114,12 @@ outer: for(let i=0;i<suite.length;i++) {
     try {
       const result=await entry.run.complete({task,prompt:task.prompt,maxOutputTokens:900});
       const scored=scoreTask(task,result.text);
-      const before=typeof result.raw?.council?.text==='string' ? scoreTask(task,result.raw.council.text) : null;
-      const transition=before ? {council_initial_passed:before.passed,refined_passed:scored.passed,
+      const priorText=typeof result.raw?.council?.text==='string' ? result.raw.council.text
+        : typeof result.raw?.self_refinement_prior?.text==='string' ? result.raw.self_refinement_prior.text : null;
+      const before=typeof priorText==='string' ? scoreTask(task,priorText) : null;
+      const transition=before ? {baseline_passed:before.passed,refined_passed:scored.passed,
         helped:!before.passed&&scored.passed,harmed:before.passed&&!scored.passed,
-        selected_changed:result.raw.council.text!==result.text} : null;
+        selected_changed:priorText!==result.text} : null;
       const row={case_id:task.id,family:task.family,method:entry.id,
         model:MODEL,status:'completed',passed:scored.passed,score:scored.score,
         latency_ms:Math.round((performance.now()-start)*1000)/1000,
