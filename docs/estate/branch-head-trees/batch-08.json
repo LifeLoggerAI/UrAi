@@ -1,0 +1,1033 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 8,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Git metadata only; no all-byte SHA256 or complete historical ancestry.",
+  "branches": [
+    {
+      "ref": "refs/heads/codex/urai-final-consolidation",
+      "head": "c5ccfe425b712fc4d9f3060d2cb0f46d01318e31",
+      "tree": "c5ccfe425b712fc4d9f3060d2cb0f46d01318e31",
+      "truncated": false,
+      "entries": 3058,
+      "blobs": 1698,
+      "bytes": 601284533,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 806,
+      "blobs_changed_same_path": 122,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/urai-spatial-coherence",
+      "head": "b78a4018c6707b1ceea440c581d86ce48951d23a",
+      "tree": "b78a4018c6707b1ceea440c581d86ce48951d23a",
+      "truncated": false,
+      "entries": 3053,
+      "blobs": 1695,
+      "bytes": 601300537,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 809,
+      "blobs_changed_same_path": 118,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/urai-spatial-production-shell",
+      "head": "ea7250f09db771f525080255d68cd96d9770ca5c",
+      "tree": "ea7250f09db771f525080255d68cd96d9770ca5c",
+      "truncated": false,
+      "entries": 2839,
+      "blobs": 1513,
+      "bytes": 599950971,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 992,
+      "blobs_changed_same_path": 123,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "85bc542edf0b684e69914395b246046d0a5bf04a",
+          515544
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass",
+      "head": "666447f209703c28eec83b92d3211f2919ff7b0b",
+      "tree": "666447f209703c28eec83b92d3211f2919ff7b0b",
+      "truncated": false,
+      "entries": 2597,
+      "blobs": 1328,
+      "bytes": 599239765,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1176,
+      "blobs_changed_same_path": 97,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "073ddc68e532f7baadbb948d90a1c7756a3d139f",
+          8171
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass-current",
+      "head": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+      "tree": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+      "truncated": false,
+      "entries": 2631,
+      "blobs": 1352,
+      "bytes": 599251716,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1152,
+      "blobs_changed_same_path": 92,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "b71501247dcf3826109d4c7693479b09c899f330",
+          583
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "073ddc68e532f7baadbb948d90a1c7756a3d139f",
+          8171
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/wire-memory-world-root",
+      "head": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+      "tree": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+      "truncated": false,
+      "entries": 3003,
+      "blobs": 1653,
+      "bytes": 600786119,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 852,
+      "blobs_changed_same_path": 126,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/complete/repo-finalization",
+      "head": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+      "tree": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+      "truncated": false,
+      "entries": 2597,
+      "blobs": 1328,
+      "bytes": 599235869,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1176,
+      "blobs_changed_same_path": 98,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "073ddc68e532f7baadbb948d90a1c7756a3d139f",
+          8171
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/complete/urai-system-of-systems",
+      "head": "12d51da49c983e58678dd931ae3049290cb72395",
+      "tree": "12d51da49c983e58678dd931ae3049290cb72395",
+      "truncated": false,
+      "entries": 3021,
+      "blobs": 1668,
+      "bytes": 601226642,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 837,
+      "blobs_changed_same_path": 125,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/complete-urai-contract-reconciliation",
+      "head": "1b0bc70db3db19574da14dba8307722343743049",
+      "tree": "1b0bc70db3db19574da14dba8307722343743049",
+      "truncated": false,
+      "entries": 2977,
+      "blobs": 1631,
+      "bytes": 600697003,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 874,
+      "blobs_changed_same_path": 130,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/complete-urai-system-of-systems",
+      "head": "0af59110fb2e23226306324185c62b01982b5009",
+      "tree": "0af59110fb2e23226306324185c62b01982b5009",
+      "truncated": false,
+      "entries": 2950,
+      "blobs": 1611,
+      "bytes": 600641716,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 894,
+      "blobs_changed_same_path": 129,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/complete-production-ready-setup",
+      "head": "dfca38df866f624b91c62f39994d3c4a242ff6bb",
+      "tree": "dfca38df866f624b91c62f39994d3c4a242ff6bb",
+      "truncated": false,
+      "entries": 2193,
+      "blobs": 1009,
+      "bytes": 182116098,
+      "paths_added_vs_main": 1,
+      "paths_removed_vs_main": 1481,
+      "blobs_changed_same_path": 23,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-5c031e09-51de-4ed4-a53c-228f99ea6cd8",
+      "head": "2cd299d3a9cb847f3f4a44d123bddba00190dea1",
+      "tree": "2cd299d3a9cb847f3f4a44d123bddba00190dea1",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    }
+  ]
+}
