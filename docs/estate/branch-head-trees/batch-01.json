@@ -1,0 +1,2254 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 1,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Metadata only; immutably resolves full trees via tree SHA; history, LFS bytes and independent SHA256 unverified.",
+  "branches": [
+    {
+      "ref": "refs/heads/about-memory-world-copy",
+      "head": "7a0b2702123654019f56679fdf1fd3e13c93e5a3",
+      "tree": "7a0b2702123654019f56679fdf1fd3e13c93e5a3",
+      "truncated": false,
+      "entries": 3009,
+      "blobs": 1658,
+      "bytes": 600817268,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 326,
+            "bytes": 1127110
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 553904
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449358
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 76,
+            "bytes": 305227
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 227879
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 37,
+            "bytes": 149515
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 31,
+            "bytes": 107743
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 29,
+            "bytes": 47607
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 20890
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "bf7eac12ece2762877206ad11b97abd2787698a5",
+          2372
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "fb59978223b329962ccbe8d8061f7043cd886710",
+          1404
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "792e8afd22498a1a2553c37c26c3c6d534dca688",
+          4362
+        ],
+        [
+          ".github/workflows/playwright-smoke.yml",
+          "b10aa0630ff133b3504dd3a5fb574c714d198c04",
+          1931
+        ],
+        [
+          ".github/workflows/post-deploy-verify.yml",
+          "837d1a393c35291bf2ba8e72e25f6855c7873db1",
+          2010
+        ],
+        [
+          ".github/workflows/production-evidence.yml",
+          "d6461d24fb47c3e7ed890a327f06a8da2f69e51e",
+          4799
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "4d07c2ea27586146e85a076564ff37002b8f2915",
+          2214
+        ],
+        [
+          ".github/workflows/staging-smoke.yml",
+          "b7d9b8d41357872b325c0e66f8c7f4476edf6df7",
+          797
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "ac9554273a0e867e41b75796f2121c166541bcf2",
+          1637
+        ],
+        [
+          ".github/workflows/urai-vault-ci.yml",
+          "c9e0714811cba4a9560ce733a3d8cf0b536a7e71",
+          816
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-execution",
+      "head": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038",
+      "tree": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038",
+      "truncated": false,
+      "entries": 4084,
+      "blobs": 2535,
+      "bytes": 604906887,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204086
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 325,
+            "bytes": 895759
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 119,
+            "bytes": 518844
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101914
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "6742faf9d869a3cd8a5322f5c25386c55f9d0a0a",
+          1832
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "1332bf69a02216d68c153a1c63352bc0fdcbb273",
+          4183
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "3e2e21ce30940dca319a2840f3ff69eafc9c2faf",
+          984
+        ],
+        [
+          ".github/workflows/deploy-urai-app.yml",
+          "471a30e7b259013009da0488df82dd4a9de08092",
+          894
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "6c16e7f4e28d285082eb0fb44fb227f32ba5a953",
+          902
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "128b4abaafe3f291182a3702d5f04aee3a3c9110",
+          966
+        ],
+        [
+          ".github/workflows/frontier-benchmark-fable.yml",
+          "1fa0990186409ee05878f3891b5d5aa37d811301",
+          1449
+        ],
+        [
+          ".github/workflows/frontier-benchmark-gemini.yml",
+          "1cd5cd47deeef59719200e3d913319a7f436bb54",
+          1386
+        ],
+        [
+          ".github/workflows/frontier-benchmark-matched-compute.yml",
+          "8c51c4e99e57d2c5d83026beeb5880812eeab009",
+          1821
+        ],
+        [
+          ".github/workflows/frontier-benchmark.yml",
+          "79ce69f5b64358af03be220e73a3ec8ac6225f4e",
+          2590
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/legacy-production-authority-guard.yml",
+          "19ee178a9920b0c6ae030dfac219232f75ab8377",
+          4572
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "97e1e1296744486dc32491d7f00b6cbdd645341c",
+          416
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "a74824028a9e591fca4438ce1c33fd2436d18885",
+          391
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-freeze",
+      "head": "603a3aacc909f60350aacf626b16b9af9c93a0ba",
+      "tree": "603a3aacc909f60350aacf626b16b9af9c93a0ba",
+      "truncated": false,
+      "entries": 4089,
+      "blobs": 2540,
+      "bytes": 604935298,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204086
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 327,
+            "bytes": 904633
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 120,
+            "bytes": 529131
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101914
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "6742faf9d869a3cd8a5322f5c25386c55f9d0a0a",
+          1832
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "1332bf69a02216d68c153a1c63352bc0fdcbb273",
+          4183
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "3e2e21ce30940dca319a2840f3ff69eafc9c2faf",
+          984
+        ],
+        [
+          ".github/workflows/deploy-urai-app.yml",
+          "471a30e7b259013009da0488df82dd4a9de08092",
+          894
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "6c16e7f4e28d285082eb0fb44fb227f32ba5a953",
+          902
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "128b4abaafe3f291182a3702d5f04aee3a3c9110",
+          966
+        ],
+        [
+          ".github/workflows/frontier-benchmark-fable.yml",
+          "1fa0990186409ee05878f3891b5d5aa37d811301",
+          1449
+        ],
+        [
+          ".github/workflows/frontier-benchmark-gemini.yml",
+          "1cd5cd47deeef59719200e3d913319a7f436bb54",
+          1386
+        ],
+        [
+          ".github/workflows/frontier-benchmark-matched-compute.yml",
+          "8c51c4e99e57d2c5d83026beeb5880812eeab009",
+          1821
+        ],
+        [
+          ".github/workflows/frontier-benchmark.yml",
+          "79ce69f5b64358af03be220e73a3ec8ac6225f4e",
+          2590
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/legacy-production-authority-guard.yml",
+          "19ee178a9920b0c6ae030dfac219232f75ab8377",
+          4572
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "97e1e1296744486dc32491d7f00b6cbdd645341c",
+          416
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "a74824028a9e591fca4438ce1c33fd2436d18885",
+          391
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-prereg-staging",
+      "head": "d58b88561339dafe62ed31463e3b50736b875825",
+      "tree": "d58b88561339dafe62ed31463e3b50736b875825",
+      "truncated": false,
+      "entries": 4084,
+      "blobs": 2535,
+      "bytes": 604908083,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204086
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 325,
+            "bytes": 895759
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 119,
+            "bytes": 519480
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101914
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "6742faf9d869a3cd8a5322f5c25386c55f9d0a0a",
+          1832
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "1332bf69a02216d68c153a1c63352bc0fdcbb273",
+          4183
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "3e2e21ce30940dca319a2840f3ff69eafc9c2faf",
+          984
+        ],
+        [
+          ".github/workflows/deploy-urai-app.yml",
+          "471a30e7b259013009da0488df82dd4a9de08092",
+          894
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "6c16e7f4e28d285082eb0fb44fb227f32ba5a953",
+          902
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "128b4abaafe3f291182a3702d5f04aee3a3c9110",
+          966
+        ],
+        [
+          ".github/workflows/frontier-benchmark-fable.yml",
+          "1fa0990186409ee05878f3891b5d5aa37d811301",
+          1449
+        ],
+        [
+          ".github/workflows/frontier-benchmark-gemini.yml",
+          "1cd5cd47deeef59719200e3d913319a7f436bb54",
+          1386
+        ],
+        [
+          ".github/workflows/frontier-benchmark-matched-compute.yml",
+          "8c51c4e99e57d2c5d83026beeb5880812eeab009",
+          1821
+        ],
+        [
+          ".github/workflows/frontier-benchmark.yml",
+          "79ce69f5b64358af03be220e73a3ec8ac6225f4e",
+          2590
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/legacy-production-authority-guard.yml",
+          "19ee178a9920b0c6ae030dfac219232f75ab8377",
+          4572
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "97e1e1296744486dc32491d7f00b6cbdd645341c",
+          416
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "a74824028a9e591fca4438ce1c33fd2436d18885",
+          391
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/governed-asset-promotion-gate",
+      "head": "b8cd5c055409ebe2be3fd085b6fa29ace29d7631",
+      "tree": "b8cd5c055409ebe2be3fd085b6fa29ace29d7631",
+      "truncated": false,
+      "entries": 3996,
+      "blobs": 2464,
+      "bytes": 605080283,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2144269
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 308,
+            "bytes": 829503
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 82,
+            "bytes": 277437
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "35ff409bc0dd2a2c6559d1c0becbca1c42f06303",
+          1543
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "20bf4c5a832fe4144f64c5d494de03cebe775701",
+          4524
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "c5ce6926a5a1f8d2a0b46e57379f04de8bd00cf8",
+          4286
+        ],
+        [
+          ".github/workflows/deploy-urai-app.yml",
+          "540eb643c1f6c2eb80dbeee9485a0a07e011fcf7",
+          1145
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "2a73ebe5b9ba081d6098208333ca6fabe2f3feae",
+          837
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/governed-asset-promotion.yml",
+          "4837c4147635691522f7c41c2f576e9ffde6751e",
+          2237
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "077aafef7887972096ddb0d1e78d725443506c51",
+          2997
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "792e8afd22498a1a2553c37c26c3c6d534dca688",
+          4362
+        ],
+        [
+          ".github/workflows/playwright-smoke.yml",
+          "b10aa0630ff133b3504dd3a5fb574c714d198c04",
+          1931
+        ],
+        [
+          ".github/workflows/post-deploy-verify.yml",
+          "23057d298dfaf9cd15f140453b8ac8755ae53e50",
+          1784
+        ],
+        [
+          ".github/workflows/production-evidence.yml",
+          "17da896d4c067bd0a4574296da60d89e4d753402",
+          2625
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/v1-launch-hardening",
+      "head": "9256d212d76d3f1b2f9e475771079895f8e6e28f",
+      "tree": "9256d212d76d3f1b2f9e475771079895f8e6e28f",
+      "truncated": false,
+      "entries": 2742,
+      "blobs": 1437,
+      "bytes": 599818324,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 186,
+            "bytes": 612644
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 441607
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 50,
+            "bytes": 195783
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 20,
+            "bytes": 92756
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 24,
+            "bytes": 29296
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 6,
+            "bytes": 17362
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 16870
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "59c6adc8671128f8243f98a39e0e5f094525d7bf",
+          1726
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "052817e34c0082d47bca07ef1ba85d4caa0aba19",
+          1317
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "a028e4871b30a683924950ce1c5962d951280609",
+          2110
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "f6b1881a3f337c1698c7a4a226c02a477ac9d46a",
+          1590
+        ],
+        [
+          ".github/workflows/urai-vault-ci.yml",
+          "5e68b9fc78824d5b7a1dc1f0ad967e92dbf50e6b",
+          636
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/attachment-canon-system-pass",
+      "head": "9e6a0abdbeb927fafe97957be09cce66f7420bcf",
+      "tree": "9e6a0abdbeb927fafe97957be09cce66f7420bcf",
+      "truncated": false,
+      "entries": 2900,
+      "blobs": 1565,
+      "bytes": 600276822,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 288,
+            "bytes": 959311
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449399
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 57,
+            "bytes": 222713
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 25,
+            "bytes": 122874
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 14,
+            "bytes": 33654
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 25,
+            "bytes": 30235
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "HOME_LOCK_REPORT.md",
+          {
+            "files": 1,
+            "bytes": 11915
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "76a07d28495688a9654163cc1006ca20a26fb570",
+          1868
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "052817e34c0082d47bca07ef1ba85d4caa0aba19",
+          1317
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "a028e4871b30a683924950ce1c5962d951280609",
+          2110
+        ],
+        [
+          ".github/workflows/staging-smoke.yml",
+          "b7d9b8d41357872b325c0e66f8c7f4476edf6df7",
+          797
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "f6b1881a3f337c1698c7a4a226c02a477ac9d46a",
+          1590
+        ],
+        [
+          ".github/workflows/urai-vault-ci.yml",
+          "5e68b9fc78824d5b7a1dc1f0ad967e92dbf50e6b",
+          636
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/production-architecture-contracts",
+      "head": "ea5559bafe5054f6dae13d1a3614dd655cdaff9d",
+      "tree": "ea5559bafe5054f6dae13d1a3614dd655cdaff9d",
+      "truncated": false,
+      "entries": 2906,
+      "blobs": 1571,
+      "bytes": 600319693,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 290,
+            "bytes": 973201
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554955
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 462033
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 57,
+            "bytes": 222713
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 25,
+            "bytes": 123023
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 16,
+            "bytes": 38953
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 27,
+            "bytes": 37339
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "HOME_LOCK_REPORT.md",
+          {
+            "files": 1,
+            "bytes": 11915
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "76a07d28495688a9654163cc1006ca20a26fb570",
+          1868
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "6d782637c151122fccce11c6f73660700e66e9b6",
+          1899
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "052817e34c0082d47bca07ef1ba85d4caa0aba19",
+          1317
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "7502e947acb77f4a9479c2ab2f5bb1044d11b52c",
+          4198
+        ],
+        [
+          ".github/workflows/playwright-smoke.yml",
+          "5f387f6d28ab0a459b6fcb515cd53167dbe39ab4",
+          1597
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "a028e4871b30a683924950ce1c5962d951280609",
+          2110
+        ],
+        [
+          ".github/workflows/staging-smoke.yml",
+          "b7d9b8d41357872b325c0e66f8c7f4476edf6df7",
+          797
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "f6b1881a3f337c1698c7a4a226c02a477ac9d46a",
+          1590
+        ],
+        [
+          ".github/workflows/urai-vault-ci.yml",
+          "5e68b9fc78824d5b7a1dc1f0ad967e92dbf50e6b",
+          636
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/tier-freeze-system-ledger",
+      "head": "3844f5d795ea0b1d48d49f26ee16b4a5e9429e27",
+      "tree": "3844f5d795ea0b1d48d49f26ee16b4a5e9429e27",
+      "truncated": false,
+      "entries": 2887,
+      "blobs": 1559,
+      "bytes": 600251531,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 284,
+            "bytes": 945494
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449399
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 56,
+            "bytes": 214041
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 25,
+            "bytes": 122874
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 13,
+            "bytes": 30888
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 25,
+            "bytes": 30235
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "HOME_LOCK_REPORT.md",
+          {
+            "files": 1,
+            "bytes": 11915
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "76a07d28495688a9654163cc1006ca20a26fb570",
+          1868
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "052817e34c0082d47bca07ef1ba85d4caa0aba19",
+          1317
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "a028e4871b30a683924950ce1c5962d951280609",
+          2110
+        ],
+        [
+          ".github/workflows/staging-smoke.yml",
+          "b7d9b8d41357872b325c0e66f8c7f4476edf6df7",
+          797
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "f6b1881a3f337c1698c7a4a226c02a477ac9d46a",
+          1590
+        ],
+        [
+          ".github/workflows/urai-vault-ci.yml",
+          "5e68b9fc78824d5b7a1dc1f0ad967e92dbf50e6b",
+          636
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/urai-v50-v200-2026-07-06",
+      "head": "907cc3eda82873ae8b17b7345ca5edb2d04850a1",
+      "tree": "907cc3eda82873ae8b17b7345ca5edb2d04850a1",
+      "truncated": false,
+      "entries": 3952,
+      "blobs": 2433,
+      "bytes": 605030432,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2143021
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 290,
+            "bytes": 857233
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 80,
+            "bytes": 269970
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "fc729c9b9c2c65b3dcf8904fd201cb65769c35ec",
+          1087
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "7bb3978487770a85acafcc4e0fd42b5c1d56b577",
+          4873
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "c5ce6926a5a1f8d2a0b46e57379f04de8bd00cf8",
+          4286
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "2a73ebe5b9ba081d6098208333ca6fabe2f3feae",
+          837
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "e8151b704d7f7af27e3ca0fd9a4c206bda7dc12d",
+          2559
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "897321d61fd7d1dd78f8147f00ef31ebe5d0f1b1",
+          539
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "077aafef7887972096ddb0d1e78d725443506c51",
+          2997
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "792e8afd22498a1a2553c37c26c3c6d534dca688",
+          4362
+        ],
+        [
+          ".github/workflows/playwright-smoke.yml",
+          "b10aa0630ff133b3504dd3a5fb574c714d198c04",
+          1931
+        ],
+        [
+          ".github/workflows/post-deploy-verify.yml",
+          "23057d298dfaf9cd15f140453b8ac8755ae53e50",
+          1784
+        ],
+        [
+          ".github/workflows/production-evidence.yml",
+          "17da896d4c067bd0a4574296da60d89e4d753402",
+          2625
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/audit-life-map-trust-polish",
+      "head": "40fcf4445bb53d50be359fc6100e7f76ce4dc96e",
+      "tree": "40fcf4445bb53d50be359fc6100e7f76ce4dc96e",
+      "truncated": false,
+      "entries": 2683,
+      "blobs": 1392,
+      "bytes": 599630760,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 155,
+            "bytes": 473652
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 440901
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 40,
+            "bytes": 158284
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 18,
+            "bytes": 86039
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 23,
+            "bytes": 28660
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 16870
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15586
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "59c6adc8671128f8243f98a39e0e5f094525d7bf",
+          1726
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "76af00a3f011dbe2d56c194f9f6015c3eb1080f0",
+          886
+        ],
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "1e486136a035c3934fb671522d15811ca5891f85",
+          3192
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "052817e34c0082d47bca07ef1ba85d4caa0aba19",
+          1317
+        ],
+        [
+          ".github/workflows/qa-local.yml",
+          "7150fe3a7e3549aa8d189d3706b25c8e6c8f4fb7",
+          1679
+        ],
+        [
+          ".github/workflows/qa.yml",
+          "a028e4871b30a683924950ce1c5962d951280609",
+          2110
+        ],
+        [
+          ".github/workflows/strikeplan-sync.yml",
+          "e666d84912a0f9ce682a5e06a71ab387cdad0ec0",
+          770
+        ],
+        [
+          ".github/workflows/urai-ci.yml",
+          "ea60bf8dd31b040a8a9be364cda4126191c88d48",
+          2583
+        ],
+        [
+          ".github/workflows/urai-launch-gate.yml",
+          "f6b1881a3f337c1698c7a4a226c02a477ac9d46a",
+          1590
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/bench/hard-memory-reasoning-20261014",
+      "head": "741f98a52b379955da45613e81e4ec468befe514",
+      "tree": "741f98a52b379955da45613e81e4ec468befe514",
+      "truncated": false,
+      "entries": 4104,
+      "blobs": 2553,
+      "bytes": 605008936,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204086
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 329,
+            "bytes": 910721
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 128,
+            "bytes": 589206
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101914
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "priority_paths": [
+        [
+          ".github/workflows/assets-ci.yml",
+          "17b59bc55588dd94cfbae1b018a36e5295ae6a31",
+          2102
+        ],
+        [
+          ".github/workflows/audit-home-xr-deploy-workflow.yml",
+          "6ca66136571ce1111af403003376a1f6e209f710",
+          693
+        ],
+        [
+          ".github/workflows/audit-home-xr-evidence-index.yml",
+          "b5e5a19b05f285910573a683ce3c6cf42cbba1cb",
+          687
+        ],
+        [
+          ".github/workflows/audit-home-xr-proof-chain.yml",
+          "6742faf9d869a3cd8a5322f5c25386c55f9d0a0a",
+          1832
+        ],
+        [
+          ".github/workflows/ci.yml",
+          "1332bf69a02216d68c153a1c63352bc0fdcbb273",
+          4183
+        ],
+        [
+          ".github/workflows/deploy-home-xr.yml",
+          "3e2e21ce30940dca319a2840f3ff69eafc9c2faf",
+          984
+        ],
+        [
+          ".github/workflows/deploy-urai-app.yml",
+          "471a30e7b259013009da0488df82dd4a9de08092",
+          894
+        ],
+        [
+          ".github/workflows/deploy-urai.yml",
+          "6c16e7f4e28d285082eb0fb44fb227f32ba5a953",
+          902
+        ],
+        [
+          ".github/workflows/firebase-production-deploy.yml",
+          "128b4abaafe3f291182a3702d5f04aee3a3c9110",
+          966
+        ],
+        [
+          ".github/workflows/frontier-benchmark-fable.yml",
+          "1fa0990186409ee05878f3891b5d5aa37d811301",
+          1449
+        ],
+        [
+          ".github/workflows/frontier-benchmark-gemini.yml",
+          "1cd5cd47deeef59719200e3d913319a7f436bb54",
+          1386
+        ],
+        [
+          ".github/workflows/frontier-benchmark-matched-compute.yml",
+          "8c51c4e99e57d2c5d83026beeb5880812eeab009",
+          1821
+        ],
+        [
+          ".github/workflows/frontier-benchmark.yml",
+          "79ce69f5b64358af03be220e73a3ec8ac6225f4e",
+          2590
+        ],
+        [
+          ".github/workflows/home-xr-evidence-consistency.yml",
+          "aa9204409ca94616ef763c70198e8c37435ae9df",
+          1495
+        ],
+        [
+          ".github/workflows/independent-release-verifier.yml",
+          "c46be669a7f87bd66e6d878a6a443d24641382f8",
+          1217
+        ],
+        [
+          ".github/workflows/legacy-production-authority-guard.yml",
+          "19ee178a9920b0c6ae030dfac219232f75ab8377",
+          4572
+        ],
+        [
+          ".github/workflows/life-map-quest-production-evidence.yml",
+          "97e1e1296744486dc32491d7f00b6cbdd645341c",
+          416
+        ],
+        [
+          ".github/workflows/p1-release-gate.yml",
+          "a74824028a9e591fca4438ce1c33fd2436d18885",
+          391
+        ]
+      ]
+    }
+  ]
+}
