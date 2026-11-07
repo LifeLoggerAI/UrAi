@@ -1,0 +1,1953 @@
+{
+  "schema": "urai-main-head-membership-v1",
+  "source": "GitHub archived 242 branch tips and 3152 pinned main commit records (both previously read back)",
+  "base_commit": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "branch-tip reachability only, not branch-exclusive ancestor enumeration; frozen 242 refs",
+  "stats": {
+    "branch_names": 242,
+    "distinct_head_commits": 239,
+    "heads_already_reachable_from_main": 130,
+    "distinct_heads_already_in_main": 127,
+    "head_refs_outside_main": 112,
+    "distinct_head_commits_outside_main": 112
+  },
+  "rows": [
+    {
+      "index": 0,
+      "ref": "refs/heads/about-memory-world-copy",
+      "head": "7a0b2702123654019f56679fdf1fd3e13c93e5a3",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9159d2d3f8e992e29f0a27763e411691e3655f5b",
+      "author_utc": "2026-05-22T19:47:31Z"
+    },
+    {
+      "index": 1,
+      "ref": "refs/heads/agent/final-asset-lock",
+      "head": "2c605a2cb73ecbb03eeccb4d6be9fad487c43215",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2b4c155b294a19790387e53baf970887aca5d124",
+      "author_utc": "2026-08-15T02:15:33Z"
+    },
+    {
+      "index": 2,
+      "ref": "refs/heads/agent/frontier-benchmark-harness",
+      "head": "fb9fc8dcfa53e4dea692be9003c77660f66dac42",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 3,
+      "ref": "refs/heads/agent/frontier-benchmark-v2-execution",
+      "head": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 4,
+      "ref": "refs/heads/agent/frontier-benchmark-v2-freeze",
+      "head": "603a3aacc909f60350aacf626b16b9af9c93a0ba",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 5,
+      "ref": "refs/heads/agent/frontier-benchmark-v2-prereg-staging",
+      "head": "d58b88561339dafe62ed31463e3b50736b875825",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 6,
+      "ref": "refs/heads/agent/governed-asset-promotion-gate",
+      "head": "b8cd5c055409ebe2be3fd085b6fa29ace29d7631",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 7,
+      "ref": "refs/heads/agent/v1-launch-hardening",
+      "head": "9256d212d76d3f1b2f9e475771079895f8e6e28f",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9fd305f6fc113cf1ed73501458de9754c592c0dc",
+      "author_utc": "2026-05-17T10:08:40Z"
+    },
+    {
+      "index": 8,
+      "ref": "refs/heads/audit/attachment-canon-system-pass",
+      "head": "9e6a0abdbeb927fafe97957be09cce66f7420bcf",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 9,
+      "ref": "refs/heads/audit/production-architecture-contracts",
+      "head": "ea5559bafe5054f6dae13d1a3614dd655cdaff9d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d43690d040aa63d022142e912e30c95a86a375e5",
+      "author_utc": "2026-05-20T02:25:08Z"
+    },
+    {
+      "index": 10,
+      "ref": "refs/heads/audit/tier-freeze-system-ledger",
+      "head": "3844f5d795ea0b1d48d49f26ee16b4a5e9429e27",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "cdc9f619fe302566cb2fb48eac43627a88028931",
+      "author_utc": "2026-05-19T14:31:12Z"
+    },
+    {
+      "index": 11,
+      "ref": "refs/heads/audit/urai-v50-v200-2026-07-06",
+      "head": "907cc3eda82873ae8b17b7345ca5edb2d04850a1",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 12,
+      "ref": "refs/heads/audit-life-map-trust-polish",
+      "head": "40fcf4445bb53d50be359fc6100e7f76ce4dc96e",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 13,
+      "ref": "refs/heads/bench/hard-memory-reasoning-20261014",
+      "head": "741f98a52b379955da45613e81e4ec468befe514",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 14,
+      "ref": "refs/heads/bench/spatial-memory-pilot-20261011",
+      "head": "d23b35dfe7be29647dbca7e26604ffa4584154aa",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 15,
+      "ref": "refs/heads/canon/upstream-authority-20260924",
+      "head": "446fb60cca95619d01f18be243f3e5b1c65cc79c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "4ddaa6435c9e47d8b5b3a1a3cca9c554990b42f5",
+      "author_utc": "2026-09-25T14:13:02Z"
+    },
+    {
+      "index": 16,
+      "ref": "refs/heads/chatgpt/demo-ready-spine",
+      "head": "71718e6b2b1ecfe31204b81506431c70988d784c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "6ebb892be95e7fa1047039854bf09a7d21cc9efe",
+      "author_utc": "2026-05-16T07:59:26Z"
+    },
+    {
+      "index": 17,
+      "ref": "refs/heads/chore/align-legacy-ci-boundary-20260710",
+      "head": "a0981976f421f0b6c5bf521c076c95b065658bc7",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 18,
+      "ref": "refs/heads/chore/disable-legacy-production-deploys-20260710",
+      "head": "35403d2b23cd18c5154f530d87fbeef56caf8db2",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 19,
+      "ref": "refs/heads/chore/genesis-permissions-passport-status",
+      "head": "b8520475043482d3f0cc6e92213412d415f613ef",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "5a17f9435618bb03b5dd626902966806cfa1572b",
+      "author_utc": "2026-05-23T22:16:23Z"
+    },
+    {
+      "index": 20,
+      "ref": "refs/heads/chore/p0-launch-verification-20260508",
+      "head": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 21,
+      "ref": "refs/heads/chore/p1-release-hardening-20260508",
+      "head": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 22,
+      "ref": "refs/heads/chore/p2-v1-demo-polish-20260508",
+      "head": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 23,
+      "ref": "refs/heads/chore/quarantine-current-main-20260729",
+      "head": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 24,
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-20260715",
+      "head": "b08490ec27245481ae8d163604ea2403eee0c3de",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 25,
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-v2-20260715",
+      "head": "5f749548a18f07a113dab33201d943ec905e0858",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 26,
+      "ref": "refs/heads/chore/restore-sole-production-authority-wording",
+      "head": "edeb5a84282558e836d4584745b509c3be2fba9d",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 27,
+      "ref": "refs/heads/ci/openai-placeholder-launch-gate",
+      "head": "8a8954bd341b16af08b02dc79e2c7e6b8b35e1e0",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "851b34548a1ffed1ae08d7e4339ce3a07e08388b",
+      "author_utc": "2026-05-20T19:52:00Z"
+    },
+    {
+      "index": 28,
+      "ref": "refs/heads/ci/playwright-smoke-runner",
+      "head": "8c710b0f37c7e0994c1898f6225ce969408d39dc",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "362df1d50371163ca48c9d06939fb3da15e63193",
+      "author_utc": "2026-05-20T18:03:48Z"
+    },
+    {
+      "index": 29,
+      "ref": "refs/heads/ci/tier-freeze-ledger-artifact",
+      "head": "e93934631dfcca5c6d9ce5d78970942079f913c5",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e125972fc5e3e581feaf09890e23e615d0b71236",
+      "author_utc": "2026-05-20T19:22:42Z"
+    },
+    {
+      "index": 30,
+      "ref": "refs/heads/ci-validation",
+      "head": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 31,
+      "ref": "refs/heads/cinematic-integration-build-cleanup",
+      "head": "7c7c4a92d00bbbecb50db4f50d65519435eb08e4",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "b01d2f4a0c86d67e56671b0306838ca5fdcbee5b",
+      "author_utc": "2026-05-17T11:56:59Z"
+    },
+    {
+      "index": 32,
+      "ref": "refs/heads/codex/access-first-global-pricing",
+      "head": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "f961cbe061277b79f6fd5ad199f1686563735fd9",
+      "author_utc": "2026-05-09T13:34:06Z"
+    },
+    {
+      "index": 33,
+      "ref": "refs/heads/codex/add-app/providers.tsx-for-import-resolution",
+      "head": "1131878beab965694a226c7aa11209a7dbe7f37a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "f698c912ee737b07de9d126bff49271b7626524d",
+      "author_utc": "2025-09-26T03:15:14Z"
+    },
+    {
+      "index": 34,
+      "ref": "refs/heads/codex/add-client-directive-and-update-import",
+      "head": "1264445d74fe5cc643c37c16535c27909f62920f",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 35,
+      "ref": "refs/heads/codex/add-client-directive-to-button",
+      "head": "e4ec4b43ce1bcafa3c15b5462fbc75acdf03a0fa",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "8b10745671518577340563dcf7b116e07540403c",
+      "author_utc": "2025-09-30T21:05:59Z"
+    },
+    {
+      "index": 36,
+      "ref": "refs/heads/codex/add-client-directive-to-page-component",
+      "head": "e8bb29466f7b59f1d86664d81a28354a1c35e870",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "09e3bd7e4f7d7e0ce5bbe3f1a48c3c7604977982",
+      "author_utc": "2025-09-26T03:15:54Z"
+    },
+    {
+      "index": 37,
+      "ref": "refs/heads/codex/add-loading-and-error-components-per-route",
+      "head": "487ba52cbf180de77453f529d5be4cb283d6c01c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "76df65b1f9295f30b5cb2de2b24efb34c1dfa8e2",
+      "author_utc": "2025-09-26T03:26:40Z"
+    },
+    {
+      "index": 38,
+      "ref": "refs/heads/codex/add-or-update-avatar-media-asset",
+      "head": "787a968b7b7181ca74080d9a7d75cf9961ecc2bb",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "c6dab2c095ff4699d17668314c68a447b3886418",
+      "author_utc": "2025-09-26T03:32:43Z"
+    },
+    {
+      "index": 39,
+      "ref": "refs/heads/codex/add-staging-promotion-and-rollback-runbooks",
+      "head": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9583f1612500072330180c64dbb93606ef5e7e5e",
+      "author_utc": "2026-05-08T03:02:25Z"
+    },
+    {
+      "index": 40,
+      "ref": "refs/heads/codex/add-storymode_v1_5-profile-with-crossfades",
+      "head": "817f753e390b054f4e9f7b752f861913d24d1920",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "cb057b5734184208391ec1baeacf31d1866badc8",
+      "author_utc": "2025-09-20T08:33:57Z"
+    },
+    {
+      "index": 41,
+      "ref": "refs/heads/codex/add-testing-and-ci-configuration",
+      "head": "0f4281fdfbad09b43f017abb6d638d69d5d23a8d",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 42,
+      "ref": "refs/heads/codex/add-use-client-directive-and-update-button-import",
+      "head": "1e65177117009b869a2031efa9ea2e4dc6aabf16",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "6a8aab039c79b1ce4e5a91f0db7edb303e1d02f1",
+      "author_utc": "2025-09-26T03:07:19Z"
+    },
+    {
+      "index": 43,
+      "ref": "refs/heads/codex/add-use-client-directive-to-bottomnav",
+      "head": "c1115397e4e9db4fe75c443a98926069d204ca86",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "88eb5a9eb2338652ef3eab639d3ebcd19fea2487",
+      "author_utc": "2025-09-26T03:32:49Z"
+    },
+    {
+      "index": 44,
+      "ref": "refs/heads/codex/add-use-client-directive-to-page.tsx",
+      "head": "7274976acda044afee6a2db1863ae8c81dca4586",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "1a7f39f92c68665c337a018713c3557e3f92d6ce",
+      "author_utc": "2025-09-26T03:03:12Z"
+    },
+    {
+      "index": 45,
+      "ref": "refs/heads/codex/add-use-client-directive-to-page.tsx-jt01sc",
+      "head": "31253afae526e269da3c6bb11390600e115c2ddc",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "21319f557463b6b29f50715c83f8f33dda5aa687",
+      "author_utc": "2025-09-26T03:32:50Z"
+    },
+    {
+      "index": 46,
+      "ref": "refs/heads/codex/add-use-client-pragma-and-type-props",
+      "head": "8d2a837a650e22dded064ecd62c25743b1168910",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 47,
+      "ref": "refs/heads/codex/add-v3-features-for-starfield-timeline",
+      "head": "fdc818f9d84e9c1a1368632a82cd78f658d6cf4e",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "364754f25a001cf157571707cfd2ff49ea366662",
+      "author_utc": "2025-09-21T08:27:31Z"
+    },
+    {
+      "index": 48,
+      "ref": "refs/heads/codex/ancient-signals-verification-ci",
+      "head": "2b64a60317cf4a2bdf9a4e0ba2435bb31e7f28f6",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 49,
+      "ref": "refs/heads/codex/complete-all-tasks-for-project-launch",
+      "head": "52b282ae592f897784f3fe044112ba9930d720cb",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a69b95b0acb6af0c42ac731abf8cee55cad94661",
+      "author_utc": "2025-09-26T03:33:10Z"
+    },
+    {
+      "index": 50,
+      "ref": "refs/heads/codex/complete-urai-v6v10-deepdive-plan",
+      "head": "fdef0146609d42701b8b0f7fe83f7fea7ed664c4",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 51,
+      "ref": "refs/heads/codex/consolidate-firebase-environment-variables",
+      "head": "db63c3f78b8b08aabae4c374c233b4e716902ae5",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9f6d1d5e4cc364b780abd632fc81e9d9d416a205",
+      "author_utc": "2025-09-26T03:09:36Z"
+    },
+    {
+      "index": 52,
+      "ref": "refs/heads/codex/create-email-templates-and-subjects",
+      "head": "c885e9351e106b8ad7eccfd8baca0a5e95b37b85",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a7a8ecfeb7b4c8433f08159c25e6a426937100cc",
+      "author_utc": "2025-09-26T03:20:43Z"
+    },
+    {
+      "index": 53,
+      "ref": "refs/heads/codex/create-marketing-playbook-documentation",
+      "head": "2b70db06c7b7d6fc3b061ce6b347302c8c27475c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "1583fb9014c25da197416d810c89b2f195a8c73b",
+      "author_utc": "2025-09-26T03:32:53Z"
+    },
+    {
+      "index": 54,
+      "ref": "refs/heads/codex/ecosystem-integration-hardening",
+      "head": "0afd30b48da74bbc9df294db39df2ec806041502",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "bd6a7a5d54571371254771ea6dd9da30b95a630c",
+      "author_utc": "2026-05-24T02:13:07Z"
+    },
+    {
+      "index": 55,
+      "ref": "refs/heads/codex/edit-onboarding-page-for-client-use",
+      "head": "4934a3f865d693041e683ed1ac11745dd9414019",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 56,
+      "ref": "refs/heads/codex/firebase-clean-tree-preflight",
+      "head": "f29d747236a002118f1c98dda23dc006e005d774",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 57,
+      "ref": "refs/heads/codex/fix-button-import-in-onboarding-page",
+      "head": "f8a0755225ee88c367b9519ae143e16c4367fc13",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 58,
+      "ref": "refs/heads/codex/fix-code-issue",
+      "head": "6869d5698d1ab9d5af295b7a8711563a1a2e6da8",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "46db6d67c4d1bf1e70595177d185c5e6751f222a",
+      "author_utc": "2025-11-08T09:48:47Z"
+    },
+    {
+      "index": 59,
+      "ref": "refs/heads/codex/fix-spatial-life-map-types",
+      "head": "d35a7e9a2d4340223d801d9f8c84bc898be69ae9",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "df9125793092a217832f504edb6d9a6bb29efd8d",
+      "author_utc": "2026-05-17T23:21:38Z"
+    },
+    {
+      "index": 60,
+      "ref": "refs/heads/codex/fix-syntax-error-in-home-view.tsx",
+      "head": "907ddd125ba46d85d653a1d4260129130ed3f37a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "39fb4eff474c9458c55c22e32a7f8ca68f66df8c",
+      "author_utc": "2025-11-08T01:38:26Z"
+    },
+    {
+      "index": 61,
+      "ref": "refs/heads/codex/hard-benchmark-oracle-repair-20261014",
+      "head": "12794cbb2599e644fbb982c2d5be244f4879e35e",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 62,
+      "ref": "refs/heads/codex/merge-lifemap-scene",
+      "head": "eebfca8b26df32b752ff6d1aa7d8edb9c87a3483",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "6fc825cb166357af7a8cd7601ab1eb4e4b42271b",
+      "author_utc": "2026-05-07T06:20:43Z"
+    },
+    {
+      "index": 63,
+      "ref": "refs/heads/codex/polish-all-app-features-end-to-end",
+      "head": "42f260b40862f851d75b553c26550f4c06839c16",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 64,
+      "ref": "refs/heads/codex/refactor-home-page-layout",
+      "head": "9e61602208f842b9d6785bb54b75355833c36176",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a2efa21da5904570fa839d5fa8c0605ad3d48e7e",
+      "author_utc": "2025-09-26T03:14:13Z"
+    },
+    {
+      "index": 65,
+      "ref": "refs/heads/codex/refactor-layout-rendering-logic",
+      "head": "737089e114f66fb4f6cdd6b85b363fd65e777362",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 66,
+      "ref": "refs/heads/codex/remove-staging/production-env-files-and-update-gitignore",
+      "head": "62dfa33c181553e55c1eba681ed30867e3fc28b0",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 67,
+      "ref": "refs/heads/codex/replace-static-json-with-async-data-fetch",
+      "head": "c6b49ae8bc719bad7e82c7b3aa73932e1ee0e68c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3cd2aa978fb18421d2a1b0cc42f4f271a818405b",
+      "author_utc": "2025-09-26T03:17:36Z"
+    },
+    {
+      "index": 68,
+      "ref": "refs/heads/codex/root-marker",
+      "head": "536fd987f4865d62db2e4e2c9e3b5727d4f3b08b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 69,
+      "ref": "refs/heads/codex/root-smoke-flow",
+      "head": "061f7c7015c03505cb993bf63642840678f716a7",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 70,
+      "ref": "refs/heads/codex/scene-generator-cleanup",
+      "head": "9abc5c5531774d26dce3d5615af84146a8cd16df",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 71,
+      "ref": "refs/heads/codex/simple-memory-world-entry",
+      "head": "6f555ec4e1ed7c954dbb2f5c5e0e4deb66cb60f6",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "66e855332e8ad6f725b79a52152a14bed6c2d9f8",
+      "author_utc": "2026-05-22T16:51:22Z"
+    },
+    {
+      "index": 72,
+      "ref": "refs/heads/codex/staging-rollback-runbook",
+      "head": "781a10073a77b9a0e9635c2645f30f2bf3dbeb1b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 73,
+      "ref": "refs/heads/codex/strengthen-lockfile-check",
+      "head": "615aeca02b7294ba0ddd0b462695d9a314012ed2",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3f046741d63b8b7c4607a71a8faa81085d1070f4",
+      "author_utc": "2026-05-22T09:11:26Z"
+    },
+    {
+      "index": 74,
+      "ref": "refs/heads/codex/tier2-parallel-foundation",
+      "head": "d6ea9573cbcda8ea59bffe9eecb4ba5377e4719a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3b47011f3b674dedaeb2812ffed1f4341ae34290",
+      "author_utc": "2026-05-14T19:00:51Z"
+    },
+    {
+      "index": 75,
+      "ref": "refs/heads/codex/update-audio-upload-storage-location",
+      "head": "42a15c11f6e7a8a95eb84c8a381ff1ee7fb897fc",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "5e6591ae969b94db0e7cf135a9cf7b5c6802747f",
+      "author_utc": "2025-09-26T03:19:53Z"
+    },
+    {
+      "index": 76,
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page",
+      "head": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 77,
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page-2depb7",
+      "head": "e7cac7b343dd2748e7e25784eae82e76daba7c33",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a6fcdd88a61f2fe2e96ec5830f200d67922130ec",
+      "author_utc": "2025-09-26T03:32:51Z"
+    },
+    {
+      "index": 78,
+      "ref": "refs/heads/codex/update-firestore-rules-and-add-tests",
+      "head": "09730bdc35f1580756127efca582421cd44fc115",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "620e798439bd61d56cea334793d43ab0318031d5",
+      "author_utc": "2025-09-26T03:24:11Z"
+    },
+    {
+      "index": 79,
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests",
+      "head": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 80,
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests-5rvfhh",
+      "head": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 81,
+      "ref": "refs/heads/codex/update-mainlayout-and-add-onboardinggate",
+      "head": "c65b649863921a2c44cb1b0a0c915312c75fae92",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2c91b38cfc08efa2c4622f9b2398eedc0733c90e",
+      "author_utc": "2026-06-02T00:17:17Z"
+    },
+    {
+      "index": 82,
+      "ref": "refs/heads/codex/update-onboarding-page-for-client-usage",
+      "head": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 83,
+      "ref": "refs/heads/codex/update-onboarding-page-with-client-usage",
+      "head": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 84,
+      "ref": "refs/heads/codex/update-routing-and-layout-for-onboarding",
+      "head": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 85,
+      "ref": "refs/heads/codex/update-v1-launch-status-after-preflight",
+      "head": "060e44ccfd0a290b93375aa819733670e75195d6",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 86,
+      "ref": "refs/heads/codex/urai-canon-clean",
+      "head": "81ba81b44b7772a618b0779ac2d5b44d3c0559aa",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9a862329d5372e4eacf68c0f766db8eb7c7db752",
+      "author_utc": "2026-06-02T00:13:04Z"
+    },
+    {
+      "index": 87,
+      "ref": "refs/heads/codex/urai-final-consolidation",
+      "head": "c5ccfe425b712fc4d9f3060d2cb0f46d01318e31",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "c6938cd94727e2b36febc3ea982f479c301a6e0e",
+      "author_utc": "2026-06-01T21:43:47Z"
+    },
+    {
+      "index": 88,
+      "ref": "refs/heads/codex/urai-spatial-coherence",
+      "head": "b78a4018c6707b1ceea440c581d86ce48951d23a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d16f092ac2e64a747b135d49a401793dbec3dd5c",
+      "author_utc": "2026-06-01T20:27:52Z"
+    },
+    {
+      "index": 89,
+      "ref": "refs/heads/codex/urai-spatial-production-shell",
+      "head": "ea7250f09db771f525080255d68cd96d9770ca5c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "328ed882ef19e487bfb6874c95ab7525deb4204e",
+      "author_utc": "2026-05-17T22:29:57Z"
+    },
+    {
+      "index": 90,
+      "ref": "refs/heads/codex/v1-qa-polish-pass",
+      "head": "666447f209703c28eec83b92d3211f2919ff7b0b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 91,
+      "ref": "refs/heads/codex/v1-qa-polish-pass-current",
+      "head": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 92,
+      "ref": "refs/heads/codex/wire-memory-world-root",
+      "head": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 93,
+      "ref": "refs/heads/cold-vault-2026-08-16",
+      "head": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2b4c155b294a19790387e53baf970887aca5d124",
+      "author_utc": "2026-08-15T02:16:18Z"
+    },
+    {
+      "index": 94,
+      "ref": "refs/heads/complete/repo-finalization",
+      "head": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 95,
+      "ref": "refs/heads/complete/urai-system-of-systems",
+      "head": "12d51da49c983e58678dd931ae3049290cb72395",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "defaf8cd5871d57862e08fa76be32d20024be9c1",
+      "author_utc": "2026-05-23T23:42:12Z"
+    },
+    {
+      "index": 96,
+      "ref": "refs/heads/complete-cinematic-urai-redesign-modular",
+      "head": "150f7b8f41526a78c8dbcc30c1ab3a92fa27002b",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a89ec9c0be78d868aef85ca5a30b5bb726d7a8d2",
+      "author_utc": "2026-05-17T11:41:04Z"
+    },
+    {
+      "index": 97,
+      "ref": "refs/heads/complete-urai-contract-reconciliation",
+      "head": "1b0bc70db3db19574da14dba8307722343743049",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "84eb1156defefeeb36eafc66d804feb594ddf422",
+      "author_utc": "2026-05-21T09:48:35Z"
+    },
+    {
+      "index": 98,
+      "ref": "refs/heads/complete-urai-system-of-systems",
+      "head": "0af59110fb2e23226306324185c62b01982b5009",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "4220ca17f659b3534d145273d29c06895cd40d17",
+      "author_utc": "2026-05-21T09:39:52Z"
+    },
+    {
+      "index": 99,
+      "ref": "refs/heads/copilot/complete-production-ready-setup",
+      "head": "dfca38df866f624b91c62f39994d3c4a242ff6bb",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "eb7c44f9423752131e3d2a22d3c3b908ba113c6c",
+      "author_utc": "2025-09-09T02:46:15Z"
+    },
+    {
+      "index": 100,
+      "ref": "refs/heads/copilot/fix-5c031e09-51de-4ed4-a53c-228f99ea6cd8",
+      "head": "2cd299d3a9cb847f3f4a44d123bddba00190dea1",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T21:59:58Z"
+    },
+    {
+      "index": 101,
+      "ref": "refs/heads/copilot/fix-9b26f208-45bc-4459-b486-b1b3904581fb",
+      "head": "3c84d1592a4d5568a6b33ba604a801e505352602",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T22:02:08Z"
+    },
+    {
+      "index": 102,
+      "ref": "refs/heads/copilot/fix-12cc2506-29c9-4ec1-a1b5-d6690b3f2c0d",
+      "head": "5a65e227ac0eecce5cf6dcedcba429169ecb1c62",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d758fc21f1db2fd3de3514ba7cfd8e26160b8d29",
+      "author_utc": "2025-09-11T03:36:50Z"
+    },
+    {
+      "index": 103,
+      "ref": "refs/heads/copilot/fix-31bdd213-503e-466d-a5af-e818ad461102",
+      "head": "c58d29a735de0d26a5ad84db97cc6f8d4cf78d30",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e283420c5bb07a9ad5303c4d87e928c98eedcbbe",
+      "author_utc": "2025-09-12T06:44:17Z"
+    },
+    {
+      "index": 104,
+      "ref": "refs/heads/copilot/fix-98d311a8-d1cc-4bfa-88be-e7e59992b7c5",
+      "head": "33b40beef091c618b2f4645537c5a5d5f984fc75",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T21:54:44Z"
+    },
+    {
+      "index": 105,
+      "ref": "refs/heads/copilot/fix-346bd111-e126-488a-8b6b-9644d577afde",
+      "head": "d32225a886ac786a679d2c25305c86f2231b8213",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2880cdee980c136bfeaff7318ab394dd8fc7b224",
+      "author_utc": "2025-09-08T04:22:59Z"
+    },
+    {
+      "index": 106,
+      "ref": "refs/heads/copilot/fix-401d711e-511c-4a0f-89c0-4fcea267c3fa",
+      "head": "9f5b44428cc03955fdb5ad927bcefe15dc74e477",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d758fc21f1db2fd3de3514ba7cfd8e26160b8d29",
+      "author_utc": "2025-09-11T03:44:05Z"
+    },
+    {
+      "index": 107,
+      "ref": "refs/heads/copilot/fix-451e6405-c9c7-4393-a2f9-14e3d3a4383d",
+      "head": "8222d129e16e9071ca0df9b1ab468d19b1011a0f",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T21:45:49Z"
+    },
+    {
+      "index": 108,
+      "ref": "refs/heads/copilot/fix-929cd1c3-5ddc-40ef-ad58-c3e7ff2f065e",
+      "head": "4dcfd9ddecc3bdffd97513f51430f096ff94d005",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d758fc21f1db2fd3de3514ba7cfd8e26160b8d29",
+      "author_utc": "2025-09-11T03:49:52Z"
+    },
+    {
+      "index": 109,
+      "ref": "refs/heads/copilot/fix-7718e777-9488-4419-964d-2889d08f5fb1",
+      "head": "898c0561c86bb0c7ff1b86c8ed78ddc0aa964161",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T21:47:28Z"
+    },
+    {
+      "index": 110,
+      "ref": "refs/heads/copilot/fix-942851da-1b00-438b-ad32-94a6a48c9721",
+      "head": "ee08dc04330746182277e41b3e4e518682f17c0b",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T22:12:03Z"
+    },
+    {
+      "index": 111,
+      "ref": "refs/heads/copilot/fix-aff2b0f3-1af2-423e-8299-eeab643ddbd7",
+      "head": "68351f4d5d54863d921dfc80f739518925a8ea12",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "86ca7a69e673a3ad185b8e315646de390d3c6d97",
+      "author_utc": "2025-09-12T09:30:01Z"
+    },
+    {
+      "index": 112,
+      "ref": "refs/heads/copilot/fix-c96d6494-bd50-4f5f-996b-4e3a6721c01e",
+      "head": "d14d5ddbdb16e308bf3e93da44ad995f424a9e75",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "34d77bcfd9a18510c0a0b34369de8e257cc15f2c",
+      "author_utc": "2025-09-10T00:43:28Z"
+    },
+    {
+      "index": 113,
+      "ref": "refs/heads/copilot/fix-c2202792-a11a-4b7c-8b07-99961cc1bfbd",
+      "head": "3badadc6e48152fce0bdf4019785979960fd5aa9",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "86ca7a69e673a3ad185b8e315646de390d3c6d97",
+      "author_utc": "2025-09-12T14:26:37Z"
+    },
+    {
+      "index": 114,
+      "ref": "refs/heads/copilot/fix-d95f7a09-19e3-4778-8582-5937fce8e126",
+      "head": "f9b59364763c39257ce863a88a6aeefdc8158490",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 115,
+      "ref": "refs/heads/copilot/fix-ed3c9973-7c76-4678-99f3-6df4c97a5088",
+      "head": "0870c79f74f228e6049d476b6fbb0b78e0b7580c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "86ca7a69e673a3ad185b8e315646de390d3c6d97",
+      "author_utc": "2025-09-12T08:45:24Z"
+    },
+    {
+      "index": 116,
+      "ref": "refs/heads/copilot/fix-edcf0d1e-a777-4d61-9981-ffb231520e09",
+      "head": "a5fc4882025249849d508534d2170fd78c8f7ada",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 117,
+      "ref": "refs/heads/copilot/fix-f3ca843e-1d89-4a89-986e-f129f437506b",
+      "head": "8a569552051ed2bcb09e73a7b2a15832fa656aa6",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e283420c5bb07a9ad5303c4d87e928c98eedcbbe",
+      "author_utc": "2025-09-12T05:42:50Z"
+    },
+    {
+      "index": 118,
+      "ref": "refs/heads/copilot/fix-ff4fc437-d969-4149-9ea6-eefc685ddd94",
+      "head": "9b5288e385180150f78d527ef2cd3cccb22626e1",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3baf8fdc5dd207ef35f7885a31d85a11d0ab90da",
+      "author_utc": "2025-09-09T21:39:39Z"
+    },
+    {
+      "index": 119,
+      "ref": "refs/heads/copilot/implement-urai-v1-to-v10",
+      "head": "9d1818546bd543ef5cd559883334b8e09a29cf42",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "eb7c44f9423752131e3d2a22d3c3b908ba113c6c",
+      "author_utc": "2025-09-08T23:29:01Z"
+    },
+    {
+      "index": 120,
+      "ref": "refs/heads/dependabot/npm_and_yarn/npm_and_yarn-49ef3a552c",
+      "head": "806882813f6093fcd8c4fc3671023de95a7a3bd5",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 121,
+      "ref": "refs/heads/disable-legacy-prod-latest",
+      "head": "6cb7f54b6057358152897083ed95ec12c595b223",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 122,
+      "ref": "refs/heads/disable-legacy-production-deploy",
+      "head": "86420dde738c3916604ff1f113a9b71a46a98fd1",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 123,
+      "ref": "refs/heads/docs/closeout-gate-evidence-tightening-20260509",
+      "head": "746f45de16706923340545f7a2875d222200a121",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 124,
+      "ref": "refs/heads/docs/dns-tls-email-closeout-20260912",
+      "head": "82783e7e14d3f9123999d13ae6a2a22af86476d1",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "bb29224dd098b6eb43b135c3a4d94b6e23ec2922",
+      "author_utc": "2026-09-05T12:04:36Z"
+    },
+    {
+      "index": 125,
+      "ref": "refs/heads/docs/genesis-estate-handoff-20261106",
+      "head": "16330aca83dbf8249ab1c7d4d37e24b225720aff",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 126,
+      "ref": "refs/heads/docs/launch-closeout-runbook-20260508",
+      "head": "b847bb60288c016a75721efc31134f9628c06531",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 127,
+      "ref": "refs/heads/docs/public-authority-reconciliation-20260903",
+      "head": "912e44828d75339621837dcc1caa46822c35910d",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 128,
+      "ref": "refs/heads/docs/update-v1-lockfile-status",
+      "head": "5bd414202d014fa4210e547f08954058ab19a514",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 129,
+      "ref": "refs/heads/docs/v1-status-ancient-signals",
+      "head": "7103b6093134564a078cba0e318f034d60f3b06a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "ff69860efa83bb5b06674163a693521a330d9f84",
+      "author_utc": "2026-05-07T06:16:52Z"
+    },
+    {
+      "index": 130,
+      "ref": "refs/heads/docs-memory-world-positioning",
+      "head": "1ca78d9e9547f2df91e2e09e1b2b1487824b221b",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "c4b376ef44b0278ac20d418d44a685a403039152",
+      "author_utc": "2026-05-22T19:21:53Z"
+    },
+    {
+      "index": 131,
+      "ref": "refs/heads/docs-tier-1-3-evidence-ledger",
+      "head": "24ca6d18a6a7b80b28b6dcc700813dc7ccc10cea",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3f31a1d04dc796843a0f015051c5e4f978ef43a5",
+      "author_utc": "2026-05-21T00:17:10Z"
+    },
+    {
+      "index": 132,
+      "ref": "refs/heads/feat/urai-vault-data-wallet",
+      "head": "7cf45d471d1dac523e95ba48673954607ee2639d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "fe5a03d0f4b3c5da142cba0787cbac29065c529e",
+      "author_utc": "2026-05-04T05:08:03Z"
+    },
+    {
+      "index": 133,
+      "ref": "refs/heads/feature/ancient-signals-engine",
+      "head": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 134,
+      "ref": "refs/heads/feature/ancient-signals-engine-clean",
+      "head": "2b63fbb6ee90eecab92dd005a1c7e4a2b8ea7276",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "662bbb370659de0575f1fd7202f9f5f5e25e4df9",
+      "author_utc": "2026-05-07T05:37:01Z"
+    },
+    {
+      "index": 135,
+      "ref": "refs/heads/feature/immersive-3d-world-home-life-map",
+      "head": "2e5c8a2e497595f2ca331eee630a5e6bfb948059",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 136,
+      "ref": "refs/heads/feature/life-map-full-implementation",
+      "head": "dde1a321633d98716c29c49a141777204519e675",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "6b15fee10910233a897a2542e7e50fc71fc67737",
+      "author_utc": "2026-05-15T17:04:29Z"
+    },
+    {
+      "index": 137,
+      "ref": "refs/heads/feature/sky-map-v1-clean",
+      "head": "3a64486cd6dcf3a17176c20fcb097490222704e7",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 138,
+      "ref": "refs/heads/feature/sky-map-v1-latest",
+      "head": "08762e14e6399d458854ad9fb80096ccb1e8d7de",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 139,
+      "ref": "refs/heads/feature/sky-map-v1",
+      "head": "fff4372b243c80aeb7ba7e392bc553b8ef207df0",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "4ad5e982f3d1fc381a5f8914aeab97493cd8c6dc",
+      "author_utc": "2026-05-14T18:56:13Z"
+    },
+    {
+      "index": 140,
+      "ref": "refs/heads/feature/v1-visual-magic-home-ascent",
+      "head": "cd971f6c89a6fad02c77253db3b4fd05acef1efe",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 141,
+      "ref": "refs/heads/final/home-lock-execution",
+      "head": "af3bd2f9fc3e5a5cf82f0e322d86589f237e2817",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 142,
+      "ref": "refs/heads/final-cinematic-art-pass",
+      "head": "a8ad51926cd971415f06cc3d3e47c9862c6311c6",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "867212beba743ce84d6cfb61329e7077f6e06d53",
+      "author_utc": "2026-05-17T12:13:23Z"
+    },
+    {
+      "index": 143,
+      "ref": "refs/heads/fix/ancient-signals-ground-layer-state",
+      "head": "f5ce77afa01eab23e2d310f37159993580cbfd51",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 144,
+      "ref": "refs/heads/fix/ci-smoke-host-deps",
+      "head": "33180e06603da6588b8e646432e54ea4962edaa0",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "1eb38d0aba80ef7666ba13700081e15d697032fd",
+      "author_utc": "2026-05-20T17:54:54Z"
+    },
+    {
+      "index": 145,
+      "ref": "refs/heads/fix/cinematic-clean-home-lifemap",
+      "head": "f9ad0bd3cb1861bf7c41914706d6fa47337b9cbe",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 146,
+      "ref": "refs/heads/fix/completion-gates",
+      "head": "a622ff655b6bb8413354b47a0ef4163e07979269",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e99398536d10852bdb1810b3fcea9cf4fac8043e",
+      "author_utc": "2026-05-20T03:05:12Z"
+    },
+    {
+      "index": 147,
+      "ref": "refs/heads/fix/deploy-script-env-order",
+      "head": "9cb27747e71e7bc4d0fe96c412fbae58df185013",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "b490d039739bd7c8fce47e65f603cf9adba6806c",
+      "author_utc": "2026-05-18T01:59:56Z"
+    },
+    {
+      "index": 148,
+      "ref": "refs/heads/fix/firebase-config-root-detection",
+      "head": "18a223146b05d58d2477878ff6b513099c4b1c21",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "70722e980b93e12ee048e0496ae3004fe96d7ece",
+      "author_utc": "2026-05-18T02:10:20Z"
+    },
+    {
+      "index": 149,
+      "ref": "refs/heads/fix/firestore-contract-helper-aliases",
+      "head": "8991b6d3ab7d45d4960d4d600805175a7fde10d9",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "058cba19fa15bab40e736126fb62151b4bbf3b7c",
+      "author_utc": "2026-05-20T19:17:50Z"
+    },
+    {
+      "index": 150,
+      "ref": "refs/heads/fix/firestore-rules-ci",
+      "head": "8b09b709ad85643463c4bd2d674b3974097cdd1d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "988e378a931dc497e0cdff036ef195dd2285eba1",
+      "author_utc": "2026-05-18T18:23:41Z"
+    },
+    {
+      "index": 151,
+      "ref": "refs/heads/fix/focus-replay-firestore-rules",
+      "head": "66b8250ba530b1863d659b6057d9caa8bf5ab0db",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "77fb4de1e814b5e6ee543d766cb7f65b54d11e7a",
+      "author_utc": "2026-05-20T18:14:28Z"
+    },
+    {
+      "index": 152,
+      "ref": "refs/heads/fix/home-lock-ci-p0-gates",
+      "head": "90ff33a7030602970efbf8ac04bc6ad0c88b95bd",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e9258f70c452d3bcd1387f7857f4aa84bd7de158",
+      "author_utc": "2026-05-18T19:00:05Z"
+    },
+    {
+      "index": 153,
+      "ref": "refs/heads/fix/home-page-default-resolved-scene",
+      "head": "ce0b59fc8eb761b3bd771dd2f105a055eaa5a898",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "dc7695ec2498d4d0cbc1e4784a5474430bc8bfd7",
+      "author_utc": "2026-05-20T19:11:38Z"
+    },
+    {
+      "index": 154,
+      "ref": "refs/heads/fix/home-production-redirect",
+      "head": "364ca5c258ed98ce0a3476e9a1509da4e5166054",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "7243ae26b72d639ea732557502d10d8076f86dbf",
+      "author_utc": "2026-05-20T20:09:11Z"
+    },
+    {
+      "index": 155,
+      "ref": "refs/heads/fix/home-scene-composition",
+      "head": "146df72e972d7b96f7cddcf0e9c6cf7328704d60",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 156,
+      "ref": "refs/heads/fix/home-scene-lint-gate",
+      "head": "f878b0ca4f4d39cf3fd823aa33c0fa11b25475f4",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 157,
+      "ref": "refs/heads/fix/home-smoke-accessible-surfaces",
+      "head": "d83325fc5089659711a2a5986a750e0cd451b113",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "efb7946a880af860429fc2dfa6e99d17a0966630",
+      "author_utc": "2026-05-20T19:59:40Z"
+    },
+    {
+      "index": 158,
+      "ref": "refs/heads/fix/home-smoke-labels",
+      "head": "e1f90bdc6d35cb16d937b82264870dc25fa81396",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2576b026cea64a2391a2cb729560dd71f0cf5c34",
+      "author_utc": "2026-05-20T21:28:30Z"
+    },
+    {
+      "index": 159,
+      "ref": "refs/heads/fix/legacy-braces-installed-topology-20261009",
+      "head": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 160,
+      "ref": "refs/heads/fix/legacy-launch-gate-chromium-20261009",
+      "head": "305fc519485b867cec57b971bfcb724ca264d1f3",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 161,
+      "ref": "refs/heads/fix/legacy-public-canon-copy-20261005",
+      "head": "5bebec58219648ccf62f0e45c8d8715175c25296",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 162,
+      "ref": "refs/heads/fix/legacy-public-privacy-contact-20261005",
+      "head": "cb8378c9734e91cc62c49947b004df946ad8096a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "72bc983df782023db88df5cb4c21bb0762a214c0",
+      "author_utc": "2026-10-05T12:52:05Z"
+    },
+    {
+      "index": 163,
+      "ref": "refs/heads/fix/legacy-quarantine-review-gaps-20260902",
+      "head": "9eea92d21b10092447e2a89bb02ec0aa2d48be63",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 164,
+      "ref": "refs/heads/fix/life-map-aaa-tier4-production",
+      "head": "ea382ee47c9e3621969d8c7b692438ffdb2ad1c0",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 165,
+      "ref": "refs/heads/fix/lifemap-fallback-without-firebase-env",
+      "head": "5ba76ac674adec4a7a695362c84cb8014833fa68",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "09bc28d96e035b9b3ec99f13d69c75f5e31a0da4",
+      "author_utc": "2026-05-14T21:57:48Z"
+    },
+    {
+      "index": 166,
+      "ref": "refs/heads/fix/lifemap-triangle-header-dom",
+      "head": "688494887ac5179f7a18adfcc968a1a21a18c043",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 167,
+      "ref": "refs/heads/fix/preflight-children-types",
+      "head": "4d89627bc4a38d8c8069dcb77e20d540a696bc2c",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 168,
+      "ref": "refs/heads/fix/public-copy-boundary-checker",
+      "head": "436d2f2f5168fab3b858b548a436a5cce5ea81bd",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3d3dfff2ccabc5ccf326a7e8bf27935f0e577119",
+      "author_utc": "2026-05-20T19:32:43Z"
+    },
+    {
+      "index": 169,
+      "ref": "refs/heads/fix/root-home-smoke-labels",
+      "head": "6d98f4556f42e129d51bbdfcca84445ff4a45b9b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 170,
+      "ref": "refs/heads/fix/rules-contracts",
+      "head": "1d11eaa2d0dcbbfd02d27c0e6a7da63d9f2deab5",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "7fa7bed66a285363451493412611063c113ecf83",
+      "author_utc": "2026-05-20T21:05:29Z"
+    },
+    {
+      "index": 171,
+      "ref": "refs/heads/fix/smoke-current-home-canon",
+      "head": "7cc36b935bf77d0c9c92eb45c0415e8dea19fddc",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "be7b6c12a2b72d47169aea670fb8656e37ab0c65",
+      "author_utc": "2026-05-20T17:57:50Z"
+    },
+    {
+      "index": 172,
+      "ref": "refs/heads/fix/staging-prod-deploy-hardening",
+      "head": "bf112a33e9b85a25063ce0abf44981a8374b33ed",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "6cc88e26a584700c58221a957fd3a582fde655ea",
+      "author_utc": "2026-05-18T01:54:24Z"
+    },
+    {
+      "index": 173,
+      "ref": "refs/heads/fix/staging-ssr-next-runtime",
+      "head": "32795455491a15e7d66900cc190916b5b62e6cec",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "8cda38dbf52bbede3cec7b0957b98bf6bc881514",
+      "author_utc": "2026-05-18T01:01:22Z"
+    },
+    {
+      "index": 174,
+      "ref": "refs/heads/fix/tier1-routes",
+      "head": "74b370d2eb807a3fd97692c44d83b85d7a83dce6",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 175,
+      "ref": "refs/heads/fix/tier2-firestore-policy-contracts",
+      "head": "19b0bb6f91df8a6176e71f5048e4a16ed78939fd",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 176,
+      "ref": "refs/heads/fix/urai-ci-secret-condition",
+      "head": "a586c32fa3c813581a6c965a849ca49d1257994b",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 177,
+      "ref": "refs/heads/fix/webgl-visual-tuning-home-route",
+      "head": "607966ae4d907ec7e65907f655316e3a181413a6",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 178,
+      "ref": "refs/heads/fix/3d-world-routes",
+      "head": "78a740a57c2cc126d195b7ea0781535d903c0c2b",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "59d688515fe2b9a700e775cb1ec7c636aff29cd2",
+      "author_utc": "2026-05-18T18:07:03Z"
+    },
+    {
+      "index": 179,
+      "ref": "refs/heads/fix-npm-ci-lockfile",
+      "head": "e3150973580d0150c43b65985f974fa6db9c0835",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 180,
+      "ref": "refs/heads/fix-smoke-textbox-selector",
+      "head": "c59c5d0241cd867c53c7a13806b92c4c0f617b11",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 181,
+      "ref": "refs/heads/fullscreen-parallax-final-lock",
+      "head": "d7d8508c905333cff99f80108203d786d7d89aab",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 182,
+      "ref": "refs/heads/genesis-public-launch",
+      "head": "000147f432ab309a49fe0736ed5cc4ed32ba2199",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 183,
+      "ref": "refs/heads/genesis-safe-consolidation",
+      "head": "d826aef23832e272abd69868c88d5df7675a4cdd",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 184,
+      "ref": "refs/heads/genesis-staging-live",
+      "head": "0706a2317bd809932f72274405e9e0153a7d52ad",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 185,
+      "ref": "refs/heads/genesis-visual-supremacy",
+      "head": "f935befbebfca9289a74920a4fcb62411a339764",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 186,
+      "ref": "refs/heads/home/final-lock",
+      "head": "8b09b709ad85643463c4bd2d674b3974097cdd1d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "988e378a931dc497e0cdff036ef195dd2285eba1",
+      "author_utc": "2026-05-18T18:23:41Z"
+    },
+    {
+      "index": 187,
+      "ref": "refs/heads/home-cinematic-ground-orb-polish",
+      "head": "e6f2602941cacfe1b91f858ede56ee4b47f1e615",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 188,
+      "ref": "refs/heads/home-final-hero-redesign-lock",
+      "head": "976555b0e971ffd5e8b37ec3b92225ef11a3ca0a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "796699e0f516ab73b08adecae742ffdfc93c2e88",
+      "author_utc": "2026-05-17T12:43:05Z"
+    },
+    {
+      "index": 189,
+      "ref": "refs/heads/home-fullscreen-final-art-fix",
+      "head": "564d95c58e3f8fab7133da9460c2c1cf7138ef32",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "0f976af2797bebe654bed32a94b0069ce8b8cbbf",
+      "author_utc": "2026-05-17T12:31:50Z"
+    },
+    {
+      "index": 190,
+      "ref": "refs/heads/home-live-wired-polish",
+      "head": "2d344073a2c328ab858a84554a87f952a0501289",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 191,
+      "ref": "refs/heads/impl/cinematic-runtime-depth",
+      "head": "0c2b941ea4a0ef072eed3e5f8938dd19efb347ad",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 192,
+      "ref": "refs/heads/implement-system-release-readiness",
+      "head": "203df0eff5eb17884b6050a976d6b0759723b18d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "377aa817e85e136d33f499676075a884e76dc7b7",
+      "author_utc": "2026-05-04T10:11:43Z"
+    },
+    {
+      "index": 193,
+      "ref": "refs/heads/implement-urai-life-map",
+      "head": "07502ecb472b85f6486ea0880bde796614e3720c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "848e9af809d2c77bfa879ad08aa5e63da1924597",
+      "author_utc": "2026-05-17T10:06:49Z"
+    },
+    {
+      "index": 194,
+      "ref": "refs/heads/implementation/cinematic-runtime-contracts",
+      "head": "2bc857c88122e252bdaa9b0aee5316af370814af",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "e0340a931a5c321a3fdd561b9a8bae043a47293b",
+      "author_utc": "2026-05-20T02:33:09Z"
+    },
+    {
+      "index": 195,
+      "ref": "refs/heads/implementation/focus-replay-evidence-contracts",
+      "head": "530100607605d1c8073700d956f131b2a05e7167",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "f6449fe6c436e20caf98f29d092fdb4d2a940fba",
+      "author_utc": "2026-05-20T18:07:57Z"
+    },
+    {
+      "index": 196,
+      "ref": "refs/heads/implementation/replay-evidence-ui",
+      "head": "4d99cee5e3041aea7934379adb026c874dde4158",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9569a95812eebcfe2148bcb7d9a553c9ec57b117",
+      "author_utc": "2026-05-20T18:20:56Z"
+    },
+    {
+      "index": 197,
+      "ref": "refs/heads/integrate-cinematic-urai-redesign",
+      "head": "0f2294a5a9f9f082bf84ad643743eca6ab70f526",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 198,
+      "ref": "refs/heads/integration/visual-home-lifemap-production",
+      "head": "624cf5c14a97a6c9471c753242e0b730ff47c74f",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "c22ad99c7d6e21056cdbcbdeea10b9e338cc394b",
+      "author_utc": "2026-05-15T23:04:34Z"
+    },
+    {
+      "index": 199,
+      "ref": "refs/heads/launch/v1-public-surface-evidence-2026-05-22",
+      "head": "eff7b72fde6e618b1698269d377e7d212ea381d0",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "2d145a81cfcf41513cd8480dcdaafe57c9490808",
+      "author_utc": "2026-05-22T20:05:58Z"
+    },
+    {
+      "index": 200,
+      "ref": "refs/heads/legacy-readme",
+      "head": "f9e3545b7fcd4c3344720d534a9111e8a31b6870",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 201,
+      "ref": "refs/heads/lifemap-layer-data-and-era-controls",
+      "head": "0b7ff536ec14d2b47fec0ac7d320b6a2640b81e0",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 202,
+      "ref": "refs/heads/lifemap-layered-immersive-system",
+      "head": "0bbb3f7e02b5eed934e78367ec37fd2e1e23d0c7",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "0314f6642c141a10fa3e0546927c08eaf0546c46",
+      "author_utc": "2026-05-15T17:02:31Z"
+    },
+    {
+      "index": 203,
+      "ref": "refs/heads/main",
+      "head": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "59b3539e0a5972c2aadfd8801bba43a9d76836c5",
+      "author_utc": "2026-10-05T19:08:40Z"
+    },
+    {
+      "index": 204,
+      "ref": "refs/heads/mom-vr-life-map-polish",
+      "head": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 205,
+      "ref": "refs/heads/passport-foundation-pass-1",
+      "head": "7437f102bacdfa0ddda18cdc3161e5b477403c5c",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "0cdf36aeb67844798f1fb3c7065ac25d8c8f3091",
+      "author_utc": "2026-06-06T05:14:09Z"
+    },
+    {
+      "index": 206,
+      "ref": "refs/heads/polish/webgl-home-lifemap-readability",
+      "head": "1e4dffbd5d06e54e90ef11fdc9dd3956c09e0845",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 207,
+      "ref": "refs/heads/production/urai-cinematic-root",
+      "head": "5e639a3febcb3334f3bce54921f2774df2e46549",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "62b47060d526b91627f435c5e51bdfa3f2e47a43",
+      "author_utc": "2026-05-15T22:36:00Z"
+    },
+    {
+      "index": 208,
+      "ref": "refs/heads/production-grade-fixes",
+      "head": "6832f0c40a92fc661dc94b85b01a83d051534720",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "32e6cd48a72014d100deb6e78c671fbc565590f8",
+      "author_utc": "2025-09-08T04:42:01Z"
+    },
+    {
+      "index": 209,
+      "ref": "refs/heads/repair/canon-provenance-reconciliation-20261007",
+      "head": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 210,
+      "ref": "refs/heads/repair/legacy-authority-status-doc-20261009",
+      "head": "943d4b64e59a8e5aa38e8ed373827793a66fb071",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 211,
+      "ref": "refs/heads/repair/legacy-paid-runtime-quarantine-20261007",
+      "head": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 212,
+      "ref": "refs/heads/rescue/backup-20250908-0650",
+      "head": "f09d8028686e867a35adc538338ec370806cc325",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "d958741fe25ba9a93052678bb433d404a9356af5",
+      "author_utc": "2025-09-08T05:56:43Z"
+    },
+    {
+      "index": 213,
+      "ref": "refs/heads/root-copy",
+      "head": "b3b84235ae6776b0ad0bca424b706887b6c9a2df",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "0bbf0ff75842c9f0d52fbd71ea2fab3802ae2247",
+      "author_utc": "2026-05-22T17:37:54Z"
+    },
+    {
+      "index": 214,
+      "ref": "refs/heads/security/legacy-credential-quarantine-20260911",
+      "head": "ffed507342d5e1083ca99819826d4a5d1fc98e67",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 215,
+      "ref": "refs/heads/share-meta",
+      "head": "de5130a050326111c4aac60474642b33285abbdd",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "b4a28483382b58d4170e5fb12d699671d808f3a8",
+      "author_utc": "2026-05-22T18:21:26Z"
+    },
+    {
+      "index": 216,
+      "ref": "refs/heads/system-of-systems-backbone",
+      "head": "203df0eff5eb17884b6050a976d6b0759723b18d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "377aa817e85e136d33f499676075a884e76dc7b7",
+      "author_utc": "2026-05-04T10:11:43Z"
+    },
+    {
+      "index": 217,
+      "ref": "refs/heads/system-of-systems-verifier-satisfaction",
+      "head": "203df0eff5eb17884b6050a976d6b0759723b18d",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "377aa817e85e136d33f499676075a884e76dc7b7",
+      "author_utc": "2026-05-04T10:11:43Z"
+    },
+    {
+      "index": 218,
+      "ref": "refs/heads/system-release-verifier",
+      "head": "e9ad13acf924e7ca396660621e5db2f6e93e9202",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "4b26d49af3bd4a9fddfb59c3224dea93f5ca482c",
+      "author_utc": "2026-05-04T10:06:56Z"
+    },
+    {
+      "index": 219,
+      "ref": "refs/heads/test/home-e2e-smoke-coverage",
+      "head": "aa5e4352217e4e4671956008ceee3e87c4ff574c",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 220,
+      "ref": "refs/heads/tier-1-3-lock-audit-pass",
+      "head": "2e1897be8d0324eb75bfb71896cff3caba898dc2",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 221,
+      "ref": "refs/heads/tier-lock-pr1-rules-contracts",
+      "head": "168560bf05eb3b819af95d18679584e90fa8a577",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "901772c06dd2c9496d839b82b887aaa5d7c3b461",
+      "author_utc": "2026-05-20T20:07:26Z"
+    },
+    {
+      "index": 222,
+      "ref": "refs/heads/tier-lock-pr2-smoke-home-controls",
+      "head": "34acd66d5a3efaaf553f8d08090c8f50306bf321",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "995346762dbeb74415223cd5b920a6f1fbb75b25",
+      "author_utc": "2026-05-20T20:10:49Z"
+    },
+    {
+      "index": 223,
+      "ref": "refs/heads/tier-lock-pr3-freeze-evidence-cleanup",
+      "head": "84d9f7c746dbbddfa8131bbad2776766fbbd3438",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 224,
+      "ref": "refs/heads/tier-lock-route-completion",
+      "head": "9c7528f0b02cd5374c33fc0a2163cd449e7e8161",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 225,
+      "ref": "refs/heads/tooling/local-merge-recovery",
+      "head": "12ea7a1d2b8e039c0fc4ffdb516c737697b4d7e7",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 226,
+      "ref": "refs/heads/urai-asset-factory",
+      "head": "98526c7bc2ec85906af042cc03b5929612bbd9f1",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 227,
+      "ref": "refs/heads/urai-build-spine-20260505",
+      "head": "84e8619e9f0250123640e48c37cfb07b7d7ac109",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 228,
+      "ref": "refs/heads/urai-done-done-production-spine",
+      "head": "1667dfeb2c9a3d7edd4ef3e6eb9eb0230a02249a",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 229,
+      "ref": "refs/heads/urai-full-completion-implementation",
+      "head": "8f868cadd731cf60d9f18c5766f52afcf518e753",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "736f02027ed9d4422c012a028455f2d76923ec70",
+      "author_utc": "2026-05-11T18:33:20Z"
+    },
+    {
+      "index": 230,
+      "ref": "refs/heads/urai-launch-validation-ping",
+      "head": "8a733d2e40f94315c516eefd10871c96e9b34a70",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 231,
+      "ref": "refs/heads/urai-main-audit-fixes",
+      "head": "e8748c3f10eadff1027550d9da0b0090d9120c70",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 232,
+      "ref": "refs/heads/urai-ochat-canon",
+      "head": "d1297fbb2c5b55fb692d29746ded9d21b8bbabcb",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "64fd954758363e7cf88910c7578746a1c766347b",
+      "author_utc": "2026-05-21T10:03:40Z"
+    },
+    {
+      "index": 233,
+      "ref": "refs/heads/urai-production-polish",
+      "head": "cacd716b2b9af011137827dc244c8d06521a5556",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9d65f8cb1f71d4ed2cf9122f480eaaf30d892d05",
+      "author_utc": "2026-05-17T23:08:41Z"
+    },
+    {
+      "index": 234,
+      "ref": "refs/heads/urai-production-polish-pass",
+      "head": "37e68d75b7b0c7faa34441f420ed7c487b998cf0",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 235,
+      "ref": "refs/heads/urai-spatial-canvas-shell",
+      "head": "cabc62938f05b551a333f0793fa3dc308237c63c",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 236,
+      "ref": "refs/heads/urai-spatial-ochat-runtime",
+      "head": "d80768a8409d0c61af398bc8f237d919b63a4548",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "3a9b4644d391b68cef243ee693d34a3e0460f5f2",
+      "author_utc": "2026-05-21T10:09:16Z"
+    },
+    {
+      "index": 237,
+      "ref": "refs/heads/urai-spatial-sacred-tech-polish",
+      "head": "58f6ccaee55cb9246de5ecddd9dd985207fb05c1",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    },
+    {
+      "index": 238,
+      "ref": "refs/heads/urai-spatial-shell-hud",
+      "head": "ff89d2c19dbd18fd6d9cd7f23549f742d52d7807",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "4ba3315d1b27b64be34ab8b0a7315ce4a50bba66",
+      "author_utc": "2026-05-21T10:24:40Z"
+    },
+    {
+      "index": 239,
+      "ref": "refs/heads/urai-spatial-universe-provider",
+      "head": "5f58cb54f375b40d9459bc2dcba668501e9d45a0",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "a91b33e4049844ca2dbf45fc28176a49bee17efc",
+      "author_utc": "2026-05-21T10:15:20Z"
+    },
+    {
+      "index": 240,
+      "ref": "refs/heads/urai-tier-freeze-execution-system",
+      "head": "d8e8aeebb07915a25e7b5f86a531f21902c40e40",
+      "head_in_frozen_main_graph": true,
+      "main_tree_sha": "9c680fbdc72155ffc45d2776e687110abe8ee7c4",
+      "author_utc": "2026-05-21T12:24:11Z"
+    },
+    {
+      "index": 241,
+      "ref": "refs/heads/urai-v1-launch-shell",
+      "head": "5dbb8fe410d5c748b6f0eebcb1ff3cb2556b7006",
+      "head_in_frozen_main_graph": false,
+      "main_tree_sha": null,
+      "author_utc": null
+    }
+  ]
+}
