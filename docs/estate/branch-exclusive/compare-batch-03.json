@@ -1,0 +1,199 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 24,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/codex/complete-urai-v6v10-deepdive-plan",
+      "head": "fdef0146609d42701b8b0f7fe83f7fea7ed664c4",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 7,
+      "changed_file_sample": [
+        "docs/v6-v10-delivery-tracker.md",
+        "src/app/error.tsx",
+        "src/app/loading.tsx",
+        "src/app/not-found.tsx",
+        "src/components/feedback/RouteState.tsx",
+        "src/components/layout/MainLayout.tsx",
+        "src/lib/telemetry/routeTelemetry.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/edit-onboarding-page-for-client-use",
+      "head": "4934a3f865d693041e683ed1ac11745dd9414019",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/firebase-clean-tree-preflight",
+      "head": "f29d747236a002118f1c98dda23dc006e005d774",
+      "status": "diverged",
+      "ahead_by": 6,
+      "behind_by": 1248,
+      "merge_base": "9f4698936360b39db4ebfd9710bc32f7d55ae771",
+      "too_large": null,
+      "reported_file_count": 6,
+      "changed_file_sample": [
+        ".github/workflows/playwright-smoke.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-vault-ci.yml",
+        "package.json",
+        "scripts/check-clean-working-tree.mjs",
+        "scripts/deploy-urai-firebase.sh"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/fix-button-import-in-onboarding-page",
+      "head": "f8a0755225ee88c367b9519ae143e16c4367fc13",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/hard-benchmark-oracle-repair-20261014",
+      "head": "12794cbb2599e644fbb982c2d5be244f4879e35e",
+      "status": "diverged",
+      "ahead_by": 78,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 75,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-hard-development-20261014.yml",
+        ".github/workflows/urai-hard-development-integrity.yml",
+        ".github/workflows/urai-hard-oracle-v2.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".github/workflows/urai-holdout-v2.yml",
+        ".github/workflows/urai-isolated-pilot-20261011.yml",
+        ".gitignore",
+        "bench/pilot-20261011/suite.jsonl"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/polish-all-app-features-end-to-end",
+      "head": "42f260b40862f851d75b553c26550f4c06839c16",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 4,
+      "changed_file_sample": [
+        "src/app/layout.tsx",
+        "src/app/onboarding/page.tsx",
+        "src/components/HomeScene.tsx",
+        "src/components/layout/RouteAwareLayout.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/refactor-layout-rendering-logic",
+      "head": "737089e114f66fb4f6cdd6b85b363fd65e777362",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/layout.tsx",
+        "src/components/layout/MainLayout.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/remove-staging/production-env-files-and-update-gitignore",
+      "head": "62dfa33c181553e55c1eba681ed30867e3fc28b0",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2397,
+      "merge_base": "6832f0c40a92fc661dc94b85b01a83d051534720",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        ".env.local.production",
+        ".env.local.staging",
+        ".gitignore",
+        "docs/env-variables.md",
+        "env.local.template"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/root-marker",
+      "head": "536fd987f4865d62db2e4e2c9e3b5727d4f3b08b",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1218,
+      "merge_base": "0184d0e015c41695611bef9e8f7bfdfa8b99d1cc",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/root-smoke-flow",
+      "head": "061f7c7015c03505cb993bf63642840678f716a7",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1210,
+      "merge_base": "0e073b54270fa5bbee5a72ccdd193d3ba8a761b3",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "tests/e2e/v1-smoke.spec.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/scene-generator-cleanup",
+      "head": "9abc5c5531774d26dce3d5615af84146a8cd16df",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1213,
+      "merge_base": "838ce8bea0e91a5e2e48c28e6d4c9e2d2b06c5d9",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "tests/e2e/v1-smoke.spec.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/staging-rollback-runbook",
+      "head": "781a10073a77b9a0e9635c2645f30f2bf3dbeb1b",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2058,
+      "merge_base": "bec1abb519edc458105b79ab2c566b0e6d0c953a",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "docs/ROLLBACK_RUNBOOK.md",
+        "docs/STAGING_PROMOTION_CHECKLIST.md"
+      ]
+    }
+  ]
+}
