@@ -1,0 +1,895 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 7,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/fix/lifemap-triangle-header-dom",
+      "head": "688494887ac5179f7a18adfcc968a1a21a18c043",
+      "ahead_by": 2,
+      "behind_by": 1988,
+      "merge_base": "a9c3640f164b39a2b5d03ba2df19f901f11cf4ee",
+      "commits": [
+        {
+          "sha": "fb1260dac133293904336715d10446d0975d9810",
+          "tree": "a5cc70ab98b9102679ef181a8e12edadf0f0f0b0",
+          "parents": [
+            "a9c3640f164b39a2b5d03ba2df19f901f11cf4ee"
+          ],
+          "authored": "2026-05-15T00:06:06Z",
+          "committed": "2026-05-15T00:06:06Z",
+          "title": "fix: remove conflicting Life Map shell pseudo layers"
+        },
+        {
+          "sha": "688494887ac5179f7a18adfcc968a1a21a18c043",
+          "tree": "3b941eb9c5fe441733f1c1771de1167a25718e37",
+          "parents": [
+            "fb1260dac133293904336715d10446d0975d9810"
+          ],
+          "authored": "2026-05-15T00:13:29Z",
+          "committed": "2026-05-15T00:13:29Z",
+          "title": "fix: render Life Map title as DOM"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/preflight-children-types",
+      "head": "4d89627bc4a38d8c8069dcb77e20d540a696bc2c",
+      "ahead_by": 7,
+      "behind_by": 1994,
+      "merge_base": "fab97bdff09da1a66a67fce40305c5faf7b14fe5",
+      "commits": [
+        {
+          "sha": "700b45042834e70e5ee9369c054cc9683e0631b8",
+          "tree": "23b531b917fde2c550136d12ac094bf6d51db2d2",
+          "parents": [
+            "fab97bdff09da1a66a67fce40305c5faf7b14fe5"
+          ],
+          "authored": "2026-05-14T21:18:45Z",
+          "committed": "2026-05-14T21:18:45Z",
+          "title": "fix: type Card children as optional ReactNode"
+        },
+        {
+          "sha": "29f6813ad0cbf9d4854424763137639aa7e704fa",
+          "tree": "66e88e000411d12181f0f347e8388436caeba110",
+          "parents": [
+            "700b45042834e70e5ee9369c054cc9683e0631b8"
+          ],
+          "authored": "2026-05-14T21:18:58Z",
+          "committed": "2026-05-14T21:18:58Z",
+          "title": "fix: type Chip children as optional ReactNode"
+        },
+        {
+          "sha": "29e9f50ce292dcbe2a132841948b0f468ff04c8e",
+          "tree": "9302291071f59cc661a64a528c549b85b166967f",
+          "parents": [
+            "29f6813ad0cbf9d4854424763137639aa7e704fa"
+          ],
+          "authored": "2026-05-14T21:19:19Z",
+          "committed": "2026-05-14T21:19:19Z",
+          "title": "fix: allow optional provider children during typecheck"
+        },
+        {
+          "sha": "36b718a253824056a376a71c156c07495d380841",
+          "tree": "ad8b509abcfd232f3b91f601f4623584ac00b29c",
+          "parents": [
+            "29e9f50ce292dcbe2a132841948b0f468ff04c8e"
+          ],
+          "authored": "2026-05-14T21:19:35Z",
+          "committed": "2026-05-14T21:19:35Z",
+          "title": "fix: allow optional chrono badge children"
+        },
+        {
+          "sha": "71b70e497db502a053f628311112b5568dd982d4",
+          "tree": "f34d76523149b3af67b66081129658cc6b3effb1",
+          "parents": [
+            "36b718a253824056a376a71c156c07495d380841"
+          ],
+          "authored": "2026-05-14T21:21:37Z",
+          "committed": "2026-05-14T21:21:37Z",
+          "title": "fix: allow React key on Card props"
+        },
+        {
+          "sha": "3c741fb2c85b0fe36674fda7a6676b0ff5843ecc",
+          "tree": "3d461928158ed78c728eeeb08914cfec1640d3ac",
+          "parents": [
+            "71b70e497db502a053f628311112b5568dd982d4"
+          ],
+          "authored": "2026-05-14T21:26:02Z",
+          "committed": "2026-05-14T21:26:02Z",
+          "title": "fix: model auth token in rules emulator"
+        },
+        {
+          "sha": "4d89627bc4a38d8c8069dcb77e20d540a696bc2c",
+          "tree": "089d7d5d75ba4d91884a4640672ba76ee6191d8b",
+          "parents": [
+            "3c741fb2c85b0fe36674fda7a6676b0ff5843ecc"
+          ],
+          "authored": "2026-05-14T21:30:10Z",
+          "committed": "2026-05-14T21:30:10Z",
+          "title": "build: pin React type dependency"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/root-home-smoke-labels",
+      "head": "6d98f4556f42e129d51bbdfcca84445ff4a45b9b",
+      "ahead_by": 9,
+      "behind_by": 1335,
+      "merge_base": "81c599b0a95ec537c66db11fc9eed3164edc9444",
+      "commits": [
+        {
+          "sha": "55fe05d9431cc471a566f59f654b0772907f40e1",
+          "tree": "f085ce378fa5d385e679a381af94c93c0124540d",
+          "parents": [
+            "81c599b0a95ec537c66db11fc9eed3164edc9444"
+          ],
+          "authored": "2026-05-20T21:35:25Z",
+          "committed": "2026-05-20T21:35:25Z",
+          "title": "Document root home smoke label fix"
+        },
+        {
+          "sha": "9be7d191b78311eab601d9cf4cbc46a32675a4b0",
+          "tree": "292025945508a181cad95093b352816aed1a439a",
+          "parents": [
+            "55fe05d9431cc471a566f59f654b0772907f40e1"
+          ],
+          "authored": "2026-05-20T21:39:17Z",
+          "committed": "2026-05-20T21:39:17Z",
+          "title": "Use canonical home page at root"
+        },
+        {
+          "sha": "7388b7a92308d6f3f5c31cd98a145ae2a505a3dc",
+          "tree": "1b6a1f50c318f85e8d1ed77d61d20a8e32ebb4da",
+          "parents": [
+            "9be7d191b78311eab601d9cf4cbc46a32675a4b0"
+          ],
+          "authored": "2026-05-20T21:42:58Z",
+          "committed": "2026-05-20T21:42:58Z",
+          "title": "Accept root re-export of canonical home route"
+        },
+        {
+          "sha": "a864e7c3332d18f352cecbc8efd5d43ade49aa0e",
+          "tree": "3334d996c5a05cf7fdb1369488fb308b2d12eb90",
+          "parents": [
+            "7388b7a92308d6f3f5c31cd98a145ae2a505a3dc"
+          ],
+          "authored": "2026-05-20T21:48:29Z",
+          "committed": "2026-05-20T21:48:29Z",
+          "title": "Expose root home smoke title"
+        },
+        {
+          "sha": "135c14cd347a1e210dbfd09c648e597b17a420c6",
+          "tree": "757fccd4cca741e48724af420492d1f2995f7de2",
+          "parents": [
+            "a864e7c3332d18f352cecbc8efd5d43ade49aa0e"
+          ],
+          "authored": "2026-05-20T21:54:07Z",
+          "committed": "2026-05-20T21:54:07Z",
+          "title": "Expose root URAI smoke anchor"
+        },
+        {
+          "sha": "ebeff233fdec9998fea25a7b7c2164f44b8d1178",
+          "tree": "757fccd4cca741e48724af420492d1f2995f7de2",
+          "parents": [
+            "135c14cd347a1e210dbfd09c648e597b17a420c6"
+          ],
+          "authored": "2026-05-21T00:01:32Z",
+          "committed": "2026-05-21T00:01:32Z",
+          "title": "Touch root page for smoke rerun"
+        },
+        {
+          "sha": "219f204c5f6ea5519b5a2972d2ad5e4a534f59d3",
+          "tree": "d9159e2d4e1bb50db986aa7354e809c517d1fd6c",
+          "parents": [
+            "ebeff233fdec9998fea25a7b7c2164f44b8d1178"
+          ],
+          "authored": "2026-05-21T00:02:25Z",
+          "committed": "2026-05-21T00:02:25Z",
+          "title": "Expose core section smoke label"
+        },
+        {
+          "sha": "38c37b972084faa16ae7f4f6a24943edf4e38aaf",
+          "tree": "f9456be6adedff154ab5a7352dbfdb2303f7b1cc",
+          "parents": [
+            "219f204c5f6ea5519b5a2972d2ad5e4a534f59d3"
+          ],
+          "authored": "2026-05-21T00:08:40Z",
+          "committed": "2026-05-21T00:08:40Z",
+          "title": "Expose home state smoke anchor"
+        },
+        {
+          "sha": "6d98f4556f42e129d51bbdfcca84445ff4a45b9b",
+          "tree": "cecfd872c3d74cc67fd22f4ae4a4b5e36cb79632",
+          "parents": [
+            "38c37b972084faa16ae7f4f6a24943edf4e38aaf"
+          ],
+          "authored": "2026-05-21T00:12:52Z",
+          "committed": "2026-05-21T00:12:52Z",
+          "title": "Expose quiet sky narrator smoke anchor"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/tier1-routes",
+      "head": "74b370d2eb807a3fd97692c44d83b85d7a83dce6",
+      "ahead_by": 1,
+      "behind_by": 1367,
+      "merge_base": "b71af7e163a2fe1704124bfae992f4b460aa36cc",
+      "commits": [
+        {
+          "sha": "74b370d2eb807a3fd97692c44d83b85d7a83dce6",
+          "tree": "851b34548a1ffed1ae08d7e4339ce3a07e08388b",
+          "parents": [
+            "b71af7e163a2fe1704124bfae992f4b460aa36cc"
+          ],
+          "authored": "2026-05-20T19:48:49Z",
+          "committed": "2026-05-20T19:48:49Z",
+          "title": "Provide CI placeholder OpenAI key for env audit"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/tier2-firestore-policy-contracts",
+      "head": "19b0bb6f91df8a6176e71f5048e4a16ed78939fd",
+      "ahead_by": 1,
+      "behind_by": 1380,
+      "merge_base": "5fccd3fe99eae95bd6000f97adabc8935f3523db",
+      "commits": [
+        {
+          "sha": "19b0bb6f91df8a6176e71f5048e4a16ed78939fd",
+          "tree": "dc7695ec2498d4d0cbc1e4784a5474430bc8bfd7",
+          "parents": [
+            "5fccd3fe99eae95bd6000f97adabc8935f3523db"
+          ],
+          "authored": "2026-05-20T19:08:34Z",
+          "committed": "2026-05-20T19:08:34Z",
+          "title": "Use default export for resolved home scene"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/urai-ci-secret-condition",
+      "head": "a586c32fa3c813581a6c965a849ca49d1257994b",
+      "ahead_by": 1,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "commits": [
+        {
+          "sha": "a586c32fa3c813581a6c965a849ca49d1257994b",
+          "tree": "1cfa2ce8715a17389a149444b020880ecc9e73a9",
+          "parents": [
+            "cf497899c9943ea14d9a06a162fa842c25c3a415"
+          ],
+          "authored": "2026-08-17T02:43:58Z",
+          "committed": "2026-08-17T02:43:58Z",
+          "title": "Fix UrAi CI secret condition"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/webgl-visual-tuning-home-route",
+      "head": "607966ae4d907ec7e65907f655316e3a181413a6",
+      "ahead_by": 3,
+      "behind_by": 1990,
+      "merge_base": "45e5a0a3cacc8aff2420665952e75e710997ee99",
+      "commits": [
+        {
+          "sha": "665878870bdf1b6ad8a627a4b13ae67428c87659",
+          "tree": "aa386da41db3098043324c3493e360f7db779eb7",
+          "parents": [
+            "45e5a0a3cacc8aff2420665952e75e710997ee99"
+          ],
+          "authored": "2026-05-14T23:13:45Z",
+          "committed": "2026-05-14T23:13:45Z",
+          "title": "fix: render WebGL HomeScene on home route"
+        },
+        {
+          "sha": "7a2032a5500c379e575175868d983d6df17aa520",
+          "tree": "834b80bce466148e0ece67692b3b9667af322fcf",
+          "parents": [
+            "665878870bdf1b6ad8a627a4b13ae67428c87659"
+          ],
+          "authored": "2026-05-14T23:14:50Z",
+          "committed": "2026-05-14T23:14:50Z",
+          "title": "fix: tune Life Map WebGL exposure"
+        },
+        {
+          "sha": "607966ae4d907ec7e65907f655316e3a181413a6",
+          "tree": "d52455153665f0b450e795b998c27dd293486a0f",
+          "parents": [
+            "7a2032a5500c379e575175868d983d6df17aa520"
+          ],
+          "authored": "2026-05-14T23:19:33Z",
+          "committed": "2026-05-14T23:19:33Z",
+          "title": "fix: preserve branded home shell signal"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix-npm-ci-lockfile",
+      "head": "e3150973580d0150c43b65985f974fa6db9c0835",
+      "ahead_by": 2,
+      "behind_by": 2056,
+      "merge_base": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241",
+      "commits": [
+        {
+          "sha": "b3b0ea778cfc47eba34a7a3aed19180d256bba76",
+          "tree": "43e9990294b69b926b2c712ec8ba488253085d52",
+          "parents": [
+            "e5b90a39f9ff00d05801cadc16151bf2fc1ce241"
+          ],
+          "authored": "2026-05-08T03:15:46Z",
+          "committed": "2026-05-08T03:15:46Z",
+          "title": "Add temporary lockfile refresh workflow"
+        },
+        {
+          "sha": "e3150973580d0150c43b65985f974fa6db9c0835",
+          "tree": "60f78775f21944ca70fd1a73d6bb6a7492c52064",
+          "parents": [
+            "b3b0ea778cfc47eba34a7a3aed19180d256bba76"
+          ],
+          "authored": "2026-05-08T03:17:20Z",
+          "committed": "2026-05-08T03:17:20Z",
+          "title": "Trigger lockfile refresh workflow"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix-smoke-textbox-selector",
+      "head": "c59c5d0241cd867c53c7a13806b92c4c0f617b11",
+      "ahead_by": 1,
+      "behind_by": 1207,
+      "merge_base": "39fbcb4743950a29bec064f9b700af24ff4e5fd7",
+      "commits": [
+        {
+          "sha": "c59c5d0241cd867c53c7a13806b92c4c0f617b11",
+          "tree": "065ca547f0f42e5e5d4992d39b33f7a9ab565d19",
+          "parents": [
+            "39fbcb4743950a29bec064f9b700af24ff4e5fd7"
+          ],
+          "authored": "2026-05-22T17:42:43Z",
+          "committed": "2026-05-22T17:42:43Z",
+          "title": "Remove banned placeholder token from root copy"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fullscreen-parallax-final-lock",
+      "head": "d7d8508c905333cff99f80108203d786d7d89aab",
+      "ahead_by": 2,
+      "behind_by": 1711,
+      "merge_base": "c802a034d7b26082a0f1613ec397575835f51dc3",
+      "commits": [
+        {
+          "sha": "0724ebaab2698a45da11f3816f62299dd2237963",
+          "tree": "3f231710aadfdf9638b605fc9b560ece3442db69",
+          "parents": [
+            "c802a034d7b26082a0f1613ec397575835f51dc3"
+          ],
+          "authored": "2026-05-17T13:05:07Z",
+          "committed": "2026-05-17T13:05:07Z",
+          "title": "Add final viewport and parallax lock for home and life map"
+        },
+        {
+          "sha": "d7d8508c905333cff99f80108203d786d7d89aab",
+          "tree": "cb8b60ce7a7cefc3db3942bab176e0c4750554b8",
+          "parents": [
+            "0724ebaab2698a45da11f3816f62299dd2237963"
+          ],
+          "authored": "2026-05-17T13:05:46Z",
+          "committed": "2026-05-17T13:05:46Z",
+          "title": "Load final viewport lock stylesheet last"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/genesis-public-launch",
+      "head": "000147f432ab309a49fe0736ed5cc4ed32ba2199",
+      "ahead_by": 38,
+      "behind_by": 434,
+      "merge_base": "846323ac45b20f4e18b2d80899b1548ee0fe7fd7",
+      "commits": [
+        {
+          "sha": "6897b35cfcd66a8515624f7c9c8bd9a84b33c7f9",
+          "tree": "b30dd167e7484117d7a9c6bd5f92970432234b6e",
+          "parents": [
+            "846323ac45b20f4e18b2d80899b1548ee0fe7fd7"
+          ],
+          "authored": "2026-06-26T09:08:48Z",
+          "committed": "2026-06-26T09:08:48Z",
+          "title": "Launch URAI Genesis visual asset pack and final QA evidence"
+        },
+        {
+          "sha": "5f8e738097a409b378dc49a5ef0bffd400d77876",
+          "tree": "da463f60747f23d7d5d9b95acc9a56f30a4c1a38",
+          "parents": [
+            "6897b35cfcd66a8515624f7c9c8bd9a84b33c7f9"
+          ],
+          "authored": "2026-06-26T10:26:15Z",
+          "committed": "2026-06-26T10:26:15Z",
+          "title": "Launch URAI Genesis visual asset pack and final QA evidence"
+        },
+        {
+          "sha": "a9875e8a5d340a4c071c0bcf2f9b8eb828284b8c",
+          "tree": "e3ec8ef0f8274be1a4c5a042e5b30a144eb1cb73",
+          "parents": [
+            "5f8e738097a409b378dc49a5ef0bffd400d77876"
+          ],
+          "authored": "2026-06-26T13:43:50Z",
+          "committed": "2026-06-26T13:43:50Z",
+          "title": "Stabilize Genesis launch routes and proof"
+        },
+        {
+          "sha": "307a1b564bf77642065c09fdd8779e7ddb49d0c9",
+          "tree": "9a46d9699fa5e3e388b311061f9576e35c253f1c",
+          "parents": [
+            "a9875e8a5d340a4c071c0bcf2f9b8eb828284b8c"
+          ],
+          "authored": "2026-06-27T04:15:20Z",
+          "committed": "2026-06-27T04:15:20Z",
+          "title": "Fix Genesis Canvas runtime fallback"
+        },
+        {
+          "sha": "d5697cba08ebb8425a336973069f26af855323ea",
+          "tree": "8fafec061cc49cf3d0a5e9e690738e7c7d22a53f",
+          "parents": [
+            "307a1b564bf77642065c09fdd8779e7ddb49d0c9"
+          ],
+          "authored": "2026-06-27T04:34:38Z",
+          "committed": "2026-06-27T04:34:38Z",
+          "title": "Polish Genesis friend demo path"
+        },
+        {
+          "sha": "d0daabcefa9727089b707a2daccd70b06b4bcf10",
+          "tree": "5c26305980214cc6c634f0899a808313c785f314",
+          "parents": [
+            "d5697cba08ebb8425a336973069f26af855323ea"
+          ],
+          "authored": "2026-06-27T06:47:40Z",
+          "committed": "2026-06-27T06:47:40Z",
+          "title": "Add Genesis onboarding film system"
+        },
+        {
+          "sha": "68fe992dba644adc9b6bdb5463f23a564a7a240c",
+          "tree": "d5a75579dc0a98465daeecee91e7d0d2d27aefc9",
+          "parents": [
+            "d0daabcefa9727089b707a2daccd70b06b4bcf10"
+          ],
+          "authored": "2026-06-27T06:51:26Z",
+          "committed": "2026-06-27T06:51:26Z",
+          "title": "Wire Genesis onboarding seed into Life Map"
+        },
+        {
+          "sha": "f9300b04ac4146d59b72e5ea9f7a94da789f89b6",
+          "tree": "adeb2fd7e673b6834d4278af491867a5b7db613a",
+          "parents": [
+            "68fe992dba644adc9b6bdb5463f23a564a7a240c"
+          ],
+          "authored": "2026-06-27T07:05:48Z",
+          "committed": "2026-06-27T07:05:48Z",
+          "title": "Polish Genesis onboarding film experience"
+        },
+        {
+          "sha": "53fe278fbbd2f941f7de8009a8220a6d458e081b",
+          "tree": "0230c01c4ffad475051a872ff05be52c6cba4f20",
+          "parents": [
+            "f9300b04ac4146d59b72e5ea9f7a94da789f89b6"
+          ],
+          "authored": "2026-06-27T07:21:16Z",
+          "committed": "2026-06-27T07:21:16Z",
+          "title": "Add Genesis final media asset pack"
+        },
+        {
+          "sha": "b0e063d9225e3635b22e884576c8f3f9204facd5",
+          "tree": "99244acd1680203dbe76e30f7e6eaa68b410a050",
+          "parents": [
+            "53fe278fbbd2f941f7de8009a8220a6d458e081b"
+          ],
+          "authored": "2026-06-27T07:36:09Z",
+          "committed": "2026-06-27T07:36:09Z",
+          "title": "Finalize Genesis onboarding film release"
+        },
+        {
+          "sha": "444a19828b6a3856cf73e0d092d1da3010910875",
+          "tree": "a938c2aac5b3788469a050038a052062c0fb2b6b",
+          "parents": [
+            "b0e063d9225e3635b22e884576c8f3f9204facd5"
+          ],
+          "authored": "2026-06-27T14:26:32Z",
+          "committed": "2026-06-27T14:26:32Z",
+          "title": "Polish Genesis Life Map experience"
+        },
+        {
+          "sha": "0816bc8341caf0224261da9fc9c3b16d0663e39c",
+          "tree": "6bea174285edc6b36ff822b4cd35726f015b9114",
+          "parents": [
+            "444a19828b6a3856cf73e0d092d1da3010910875"
+          ],
+          "authored": "2026-06-27T15:19:17Z",
+          "committed": "2026-06-27T15:19:17Z",
+          "title": "Polish Genesis Focus screen experience"
+        },
+        {
+          "sha": "3b474b3cc7f5c11639cdfa3018113d3044d8445d",
+          "tree": "8f1176346155c4d621b421bb5c205813cefe8fd6",
+          "parents": [
+            "0816bc8341caf0224261da9fc9c3b16d0663e39c"
+          ],
+          "authored": "2026-06-27T15:44:35Z",
+          "committed": "2026-06-27T15:44:35Z",
+          "title": "Polish Genesis Replay screen experience"
+        },
+        {
+          "sha": "494c826486fb80c1c2238547251c226060cc92b9",
+          "tree": "9ed828cb036d8f9b5fa3b5cb5ceaa8ac0d8bef70",
+          "parents": [
+            "3b474b3cc7f5c11639cdfa3018113d3044d8445d"
+          ],
+          "authored": "2026-06-27T15:49:07Z",
+          "committed": "2026-06-27T15:49:07Z",
+          "title": "Sync Genesis Replay route navigation"
+        },
+        {
+          "sha": "3b6b01d18753107714c2901ab4510b16becad08d",
+          "tree": "a896e0c59f0f6c5859fcf7ff1b755e4b98f21d2e",
+          "parents": [
+            "494c826486fb80c1c2238547251c226060cc92b9"
+          ],
+          "authored": "2026-06-27T16:15:48Z",
+          "committed": "2026-06-27T16:15:48Z",
+          "title": "Polish Genesis Passport consent vault"
+        },
+        {
+          "sha": "a3c11e36246709e15abf94e82a0fa3a31b6947a6",
+          "tree": "e425cf7e1f278548dec855a6f2c34d729ce99663",
+          "parents": [
+            "3b6b01d18753107714c2901ab4510b16becad08d"
+          ],
+          "authored": "2026-06-27T16:34:20Z",
+          "committed": "2026-06-27T16:34:20Z",
+          "title": "Polish Genesis status trust surface"
+        },
+        {
+          "sha": "f6d2c3749f4de060d7e4fba9a4fad5e8f4976c9a",
+          "tree": "3275ca496402d824a3ef69b40250717d70b4cb4e",
+          "parents": [
+            "a3c11e36246709e15abf94e82a0fa3a31b6947a6"
+          ],
+          "authored": "2026-06-27T17:24:29Z",
+          "committed": "2026-06-27T17:24:29Z",
+          "title": "Polish Genesis launch and private beta gates"
+        },
+        {
+          "sha": "81340580dab4e02b24fe218bf2be6c4396dd7d91",
+          "tree": "34aa92aa412618d6fb96b9fc63088dc5d4eb5abc",
+          "parents": [
+            "f6d2c3749f4de060d7e4fba9a4fad5e8f4976c9a"
+          ],
+          "authored": "2026-06-27T17:38:42Z",
+          "committed": "2026-06-27T17:38:42Z",
+          "title": "Polish Genesis onboarding safe-start gate"
+        },
+        {
+          "sha": "8a37c5e74047dcc1ced63deebf901af7df5a81ca",
+          "tree": "a28ae023218e2da0f300fa58924de1603b3d439a",
+          "parents": [
+            "81340580dab4e02b24fe218bf2be6c4396dd7d91"
+          ],
+          "authored": "2026-06-27T17:52:49Z",
+          "committed": "2026-06-27T17:52:49Z",
+          "title": "Polish Genesis Ground preview layer"
+        },
+        {
+          "sha": "7062520deb7e7d5fa946e995cede594c6ee54bf2",
+          "tree": "e40f052b7107135809ed588098a16a1915d9a7f1",
+          "parents": [
+            "8a37c5e74047dcc1ced63deebf901af7df5a81ca"
+          ],
+          "authored": "2026-06-27T18:15:20Z",
+          "committed": "2026-06-27T18:15:20Z",
+          "title": "Polish Genesis Orb companion chamber"
+        },
+        {
+          "sha": "a1e59bdb3e33fbac6f3046d4d05c48aedf5ec225",
+          "tree": "1c5d1ba584da5f462e148eba7190c782d5595b6c",
+          "parents": [
+            "7062520deb7e7d5fa946e995cede594c6ee54bf2"
+          ],
+          "authored": "2026-06-27T19:27:30Z",
+          "committed": "2026-06-27T19:27:30Z",
+          "title": "Polish Genesis Orb identity chamber"
+        },
+        {
+          "sha": "ebd5425412b9912114507b1b3b33d8cc99e47f7b",
+          "tree": "e80786eee79b993cb5c839340b603861c91d5174",
+          "parents": [
+            "a1e59bdb3e33fbac6f3046d4d05c48aedf5ec225"
+          ],
+          "authored": "2026-06-27T19:45:36Z",
+          "committed": "2026-06-27T19:45:36Z",
+          "title": "Polish Genesis Sky preview layer"
+        },
+        {
+          "sha": "fc5956a7067e6451b31e36be8f696dc76b564eb6",
+          "tree": "f5866dbb59420523215d0a98966adf6fc39ec583",
+          "parents": [
+            "ebd5425412b9912114507b1b3b33d8cc99e47f7b"
+          ],
+          "authored": "2026-06-27T20:07:46Z",
+          "committed": "2026-06-27T20:07:46Z",
+          "title": "Polish Genesis Horizon preview layer"
+        },
+        {
+          "sha": "a2764cd605b0a298d690833c458c8cd342527fa7",
+          "tree": "cbd69db243719942d3e13707fd8580c07449b422",
+          "parents": [
+            "fc5956a7067e6451b31e36be8f696dc76b564eb6"
+          ],
+          "authored": "2026-06-27T20:40:03Z",
+          "committed": "2026-06-27T20:40:03Z",
+          "title": "Polish Genesis waitlist early access gate"
+        },
+        {
+          "sha": "20bda935040713fb93ee82abc76af433a451839f",
+          "tree": "272e2f912c9976d7a581b3d31ac6559582440663",
+          "parents": [
+            "a2764cd605b0a298d690833c458c8cd342527fa7"
+          ],
+          "authored": "2026-06-27T21:11:02Z",
+          "committed": "2026-06-27T21:11:02Z",
+          "title": "Polish Genesis system command center"
+        },
+        {
+          "sha": "1b0949e0b266d015678c753738cca1bb9e2c84db",
+          "tree": "791bce434e1d5988dd8b7f0c3531f53b5e210f06",
+          "parents": [
+            "20bda935040713fb93ee82abc76af433a451839f"
+          ],
+          "authored": "2026-06-27T21:20:30Z",
+          "committed": "2026-06-27T21:20:30Z",
+          "title": "Polish Genesis support center"
+        },
+        {
+          "sha": "344b09ea4c2c11c367911fe79b73119b3fafb8e2",
+          "tree": "7b205ed93623f62764ba72d9b16682a73d2eca17",
+          "parents": [
+            "1b0949e0b266d015678c753738cca1bb9e2c84db"
+          ],
+          "authored": "2026-06-27T21:36:46Z",
+          "committed": "2026-06-27T21:36:46Z",
+          "title": "Polish Genesis privacy field"
+        },
+        {
+          "sha": "f070ac6bd5aaa0e001ddfd211e250be0223b203c",
+          "tree": "1ae1e218e02782e23c181489e17034ddcc8c2dcf",
+          "parents": [
+            "344b09ea4c2c11c367911fe79b73119b3fafb8e2"
+          ],
+          "authored": "2026-06-27T22:00:08Z",
+          "committed": "2026-06-27T22:00:08Z",
+          "title": "Polish Genesis demo walkthrough"
+        },
+        {
+          "sha": "ef4e1ab36f78c8101a4ef418a5e4f15793738faf",
+          "tree": "37dafe9182d7928d144ab38ea59cbf98616e3d66",
+          "parents": [
+            "f070ac6bd5aaa0e001ddfd211e250be0223b203c"
+          ],
+          "authored": "2026-06-27T22:16:37Z",
+          "committed": "2026-06-27T22:16:37Z",
+          "title": "Polish Genesis Cognitive Mirror"
+        },
+        {
+          "sha": "48e57d82ab34b5274655c6ffb4fbe465f39c7133",
+          "tree": "4bdb310687351ca0dc594805555f30eed78a31f3",
+          "parents": [
+            "ef4e1ab36f78c8101a4ef418a5e4f15793738faf"
+          ],
+          "authored": "2026-06-27T22:37:05Z",
+          "committed": "2026-06-27T22:37:05Z",
+          "title": "Unify Genesis public visual system"
+        },
+        {
+          "sha": "7245eda1dc649f573caba9c45a55d74c637235bd",
+          "tree": "116705a4cfc775fcc8bd7c8bb99fb7bfe560d7f6",
+          "parents": [
+            "48e57d82ab34b5274655c6ffb4fbe465f39c7133"
+          ],
+          "authored": "2026-06-27T23:39:02Z",
+          "committed": "2026-06-27T23:39:02Z",
+          "title": "Harden Genesis deep routes"
+        },
+        {
+          "sha": "ffdd118fb219cd0c5bee6286e82c1d68948022c1",
+          "tree": "5bc2475ee9c637f2f472bbc7aff65f9f33724e0d",
+          "parents": [
+            "7245eda1dc649f573caba9c45a55d74c637235bd"
+          ],
+          "authored": "2026-06-28T00:00:51Z",
+          "committed": "2026-06-28T00:00:51Z",
+          "title": "Complete Genesis public route and asset audit"
+        },
+        {
+          "sha": "90c5084ddf0fe36df1bfb2537321da66f8486391",
+          "tree": "460b256dbecfb012ed99b6ae0ffdf09a8895b460",
+          "parents": [
+            "ffdd118fb219cd0c5bee6286e82c1d68948022c1"
+          ],
+          "authored": "2026-06-28T00:10:26Z",
+          "committed": "2026-06-28T00:10:26Z",
+          "title": "Lock Genesis launch claims and security audit"
+        },
+        {
+          "sha": "1994a15a58a1a90f284f831993b9f3657c03ac89",
+          "tree": "61923672abc8adcae61c847eb2948b5774c5cd58",
+          "parents": [
+            "90c5084ddf0fe36df1bfb2537321da66f8486391"
+          ],
+          "authored": "2026-06-28T00:24:25Z",
+          "committed": "2026-06-28T00:24:25Z",
+          "title": "Fix Genesis public access path"
+        },
+        {
+          "sha": "116e3d090f70980fc4627fc6ee0fb010ff546038",
+          "tree": "35e69b56a5d2637e532961f98d0d632bac5a9c9d",
+          "parents": [
+            "1994a15a58a1a90f284f831993b9f3657c03ac89"
+          ],
+          "authored": "2026-06-28T00:57:28Z",
+          "committed": "2026-06-28T00:57:28Z",
+          "title": "Fix Genesis live deploy build dependencies"
+        },
+        {
+          "sha": "81434fb5214409b233c9a449e38669736a69efdf",
+          "tree": "5e4cafcdf996f4086cd90458b6fd1f91219a6e48",
+          "parents": [
+            "116e3d090f70980fc4627fc6ee0fb010ff546038"
+          ],
+          "authored": "2026-06-28T01:02:48Z",
+          "committed": "2026-06-28T01:02:48Z",
+          "title": "Add Genesis production claims gate"
+        },
+        {
+          "sha": "29dfa61168dae8983f5fb9d47761c54890f63e9f",
+          "tree": "785be64a3aac06ba07c3ade2c350b1946511a288",
+          "parents": [
+            "81434fb5214409b233c9a449e38669736a69efdf"
+          ],
+          "authored": "2026-06-28T23:18:25Z",
+          "committed": "2026-06-28T23:18:25Z",
+          "title": "fix: align onboarding asset fallback contract"
+        },
+        {
+          "sha": "000147f432ab309a49fe0736ed5cc4ed32ba2199",
+          "tree": "7499ca2adaaf7cbdb9e38dfc5cb893a394d7cd5b",
+          "parents": [
+            "29dfa61168dae8983f5fb9d47761c54890f63e9f"
+          ],
+          "authored": "2026-06-28T23:18:59Z",
+          "committed": "2026-06-28T23:18:59Z",
+          "title": "test: expect onboarding fallback assets"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/genesis-safe-consolidation",
+      "head": "d826aef23832e272abd69868c88d5df7675a4cdd",
+      "ahead_by": 8,
+      "behind_by": 580,
+      "merge_base": "d119ad18ba76f295274f6e1871848f1c9ac64fd6",
+      "commits": [
+        {
+          "sha": "32978b597bb8eda7c022b8c2b014d579637b05a4",
+          "tree": "17979cfaeb0b6086d3250aa2502e4da4d65a712a",
+          "parents": [
+            "d119ad18ba76f295274f6e1871848f1c9ac64fd6"
+          ],
+          "authored": "2026-06-07T06:11:23Z",
+          "committed": "2026-06-07T06:11:23Z",
+          "title": "Add URAI Genesis central model types"
+        },
+        {
+          "sha": "24894ac068275333e789982cc93fe98235e7f903",
+          "tree": "111393152aba513a22285068d1b5a2f9bb8dccf2",
+          "parents": [
+            "32978b597bb8eda7c022b8c2b014d579637b05a4"
+          ],
+          "authored": "2026-06-07T06:11:49Z",
+          "committed": "2026-06-07T06:11:49Z",
+          "title": "Add URAI Genesis repo agent safety guide"
+        },
+        {
+          "sha": "4de89f00fd0cd34e2281d42ea85a8556564d664e",
+          "tree": "a9aa1f8b64601fd79f89effc243258cdd0f31301",
+          "parents": [
+            "24894ac068275333e789982cc93fe98235e7f903"
+          ],
+          "authored": "2026-06-07T06:12:13Z",
+          "committed": "2026-06-07T06:12:13Z",
+          "title": "Add URAI Genesis master specification"
+        },
+        {
+          "sha": "0682c666d535befd0d403397ba21d8d0eee1069a",
+          "tree": "c2e9437d8407075c7b696900eca9840cb15ecad8",
+          "parents": [
+            "4de89f00fd0cd34e2281d42ea85a8556564d664e"
+          ],
+          "authored": "2026-06-07T06:12:31Z",
+          "committed": "2026-06-07T06:12:31Z",
+          "title": "Add URAI Genesis system map"
+        },
+        {
+          "sha": "79d4c3527530b50a530cff84c7ea6e15b41f668f",
+          "tree": "93618954e1df2205f984f7534ab5344e567adb24",
+          "parents": [
+            "0682c666d535befd0d403397ba21d8d0eee1069a"
+          ],
+          "authored": "2026-06-07T06:13:00Z",
+          "committed": "2026-06-07T06:13:00Z",
+          "title": "Add URAI Genesis deployment checklist"
+        },
+        {
+          "sha": "472ffa699b2d9d19eac3e0995f1c62f91d24b0de",
+          "tree": "b3fb13f800b4315b6455985c54c2515c526355ff",
+          "parents": [
+            "79d4c3527530b50a530cff84c7ea6e15b41f668f"
+          ],
+          "authored": "2026-06-07T06:13:22Z",
+          "committed": "2026-06-07T06:13:22Z",
+          "title": "Add URAI Genesis Firestore helper scaffolds"
+        },
+        {
+          "sha": "c7c1322c5bfeae7d4539cabcfe23a28fc93f9a46",
+          "tree": "e3a4333c0d3e0e7d736c9a1f66e245b3fe23d07f",
+          "parents": [
+            "472ffa699b2d9d19eac3e0995f1c62f91d24b0de"
+          ],
+          "authored": "2026-06-07T06:14:12Z",
+          "committed": "2026-06-07T06:14:12Z",
+          "title": "Add URAI Genesis intelligence utilities"
+        },
+        {
+          "sha": "d826aef23832e272abd69868c88d5df7675a4cdd",
+          "tree": "9274298736056672a5f09b83aeb45d4a09fef771",
+          "parents": [
+            "c7c1322c5bfeae7d4539cabcfe23a28fc93f9a46"
+          ],
+          "authored": "2026-06-07T06:15:03Z",
+          "committed": "2026-06-07T06:15:03Z",
+          "title": "Add URAI Genesis intelligence unit tests"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
