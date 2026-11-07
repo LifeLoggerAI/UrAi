@@ -1,0 +1,190 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 48,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/copilot/fix-edcf0d1e-a777-4d61-9981-ffb231520e09",
+      "head": "a5fc4882025249849d508534d2170fd78c8f7ada",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2397,
+      "merge_base": "6832f0c40a92fc661dc94b85b01a83d051534720",
+      "too_large": null,
+      "reported_file_count": 0,
+      "changed_file_sample": []
+    },
+    {
+      "ref": "refs/heads/dependabot/npm_and_yarn/npm_and_yarn-49ef3a552c",
+      "head": "806882813f6093fcd8c4fc3671023de95a7a3bd5",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 3,
+      "changed_file_sample": [
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml"
+      ]
+    },
+    {
+      "ref": "refs/heads/disable-legacy-prod-latest",
+      "head": "6cb7f54b6057358152897083ed95ec12c595b223",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 117,
+      "merge_base": "a1d9d95ed608818a4c2f1b5749dcc18854d13e25",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/disable-legacy-production-deploy",
+      "head": "86420dde738c3916604ff1f113a9b71a46a98fd1",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 119,
+      "merge_base": "b68e8e7fe85c37b524aa91a4512026dd81c7409b",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        ".github/workflows/deploy.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/docs/closeout-gate-evidence-tightening-20260509",
+      "head": "746f45de16706923340545f7a2875d222200a121",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2025,
+      "merge_base": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/LAUNCH_CLOSEOUT_RUNBOOK.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/docs/genesis-estate-handoff-20261106",
+      "head": "16330aca83dbf8249ab1c7d4d37e24b225720aff",
+      "status": "ahead",
+      "ahead_by": 2,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "docs/estate/00_START_HERE.md",
+        "docs/estate/MANIFEST.json"
+      ]
+    },
+    {
+      "ref": "refs/heads/docs/launch-closeout-runbook-20260508",
+      "head": "b847bb60288c016a75721efc31134f9628c06531",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2053,
+      "merge_base": "e6b118b927d8cec9f7286b230c3bb7e717aa1f9f",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/LAUNCH_CLOSEOUT_RUNBOOK.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/docs/public-authority-reconciliation-20260903",
+      "head": "912e44828d75339621837dcc1caa46822c35910d",
+      "status": "diverged",
+      "ahead_by": 6,
+      "behind_by": 26,
+      "merge_base": "82783e7e14d3f9123999d13ae6a2a22af86476d1",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        "docs/DNS_SSL_DOMAIN_AUDIT.md",
+        "docs/POST_LAUNCH_WATCH.md",
+        "docs/SYSTEM_OF_SYSTEMS_WIRING_MATRIX.md",
+        "docs/ops/DOMAIN_REGISTRY.md",
+        "docs/ops/REPOSITORY_REGISTRY.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/docs/update-v1-lockfile-status",
+      "head": "5bd414202d014fa4210e547f08954058ab19a514",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2063,
+      "merge_base": "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/V1_LAUNCH_STATUS.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/feature/ancient-signals-engine",
+      "head": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+      "status": "diverged",
+      "ahead_by": 29,
+      "behind_by": 2176,
+      "merge_base": "10456f90431351b5a0fdfe955363752e065ed2d4",
+      "too_large": null,
+      "reported_file_count": 18,
+      "changed_file_sample": [
+        "docs/ancient-signals-engine.md",
+        "firebase.json",
+        "firestore.indexes.json",
+        "firestore.rules",
+        "functions/src/ancientCallableFunctions.ts",
+        "functions/src/ancientPassiveRollups.ts",
+        "functions/src/ancientScheduledRollups.ts",
+        "functions/src/ancientSignalCompute.ts",
+        "functions/src/index.ts",
+        "src/app/cognitive-mirror/page.tsx",
+        "src/components/HomeScene.tsx",
+        "src/components/ancient-signals/AncientSignalAmbientLayer.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/feature/immersive-3d-world-home-life-map",
+      "head": "2e5c8a2e497595f2ca331eee630a5e6bfb948059",
+      "status": "diverged",
+      "ahead_by": 11,
+      "behind_by": 1710,
+      "merge_base": "544c69243eafdf37ba36b80f0407d322fd6bcc7b",
+      "too_large": null,
+      "reported_file_count": 7,
+      "changed_file_sample": [
+        "firestore.rules",
+        "src/app/home-view.tsx",
+        "src/components/life-map/LifeMapUniverse.tsx",
+        "src/components/urai/life-map/LifeMapPage.tsx",
+        "src/components/urai/world/ImmersiveWorld3D.tsx",
+        "src/lib/life-map/mock-data.ts",
+        "src/lib/types.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/feature/sky-map-v1-clean",
+      "head": "3a64486cd6dcf3a17176c20fcb097490222704e7",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2023,
+      "merge_base": "f1211e37b8cd1cb72abfab2cf1a3885894c7a88c",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/HomeScene.tsx"
+      ]
+    }
+  ]
+}
