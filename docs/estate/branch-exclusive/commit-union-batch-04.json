@@ -1,0 +1,975 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 4,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page",
+      "head": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+          "tree": "71df59fc32d6815c0a58053d343a2f90ee432a2b",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:32:46Z",
+          "committed": "2025-09-26T03:32:46Z",
+          "title": "Fix onboarding button import path"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests",
+      "head": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+      "ahead_by": 1,
+      "behind_by": 2267,
+      "merge_base": "0f03c4698398a1e2972d37d1d26ae15fb1bb9155",
+      "commits": [
+        {
+          "sha": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+          "tree": "123e6c8ba26e50aa688c1bb89836a05fd3bac4f0",
+          "parents": [
+            "0f03c4698398a1e2972d37d1d26ae15fb1bb9155"
+          ],
+          "authored": "2025-09-26T03:26:49Z",
+          "committed": "2025-09-26T03:26:49Z",
+          "title": "Update Firestore owner checks and add rule tests"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests-5rvfhh",
+      "head": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+      "ahead_by": 1,
+      "behind_by": 2267,
+      "merge_base": "0f03c4698398a1e2972d37d1d26ae15fb1bb9155",
+      "commits": [
+        {
+          "sha": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+          "tree": "123e6c8ba26e50aa688c1bb89836a05fd3bac4f0",
+          "parents": [
+            "0f03c4698398a1e2972d37d1d26ae15fb1bb9155"
+          ],
+          "authored": "2025-09-26T03:26:58Z",
+          "committed": "2025-09-26T03:26:58Z",
+          "title": "Update Firestore owner checks and add rule tests"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-for-client-usage",
+      "head": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+          "tree": "62cb37eb056ba82dafce3fce6fec2473d69abb3f",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:10:11Z",
+          "committed": "2025-09-26T03:10:11Z",
+          "title": "Convert onboarding page to client component"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-with-client-usage",
+      "head": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "commits": [
+        {
+          "sha": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+          "tree": "d93338a0499d3bd614efb31e320593e8ce1d3cd9",
+          "parents": [
+            "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e"
+          ],
+          "authored": "2025-09-26T03:07:10Z",
+          "committed": "2025-09-26T03:07:10Z",
+          "title": "Fix onboarding page client navigation"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-routing-and-layout-for-onboarding",
+      "head": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+          "tree": "1c054900873068f2ca21cd909656e53ec9d9e6f5",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:14:39Z",
+          "committed": "2025-09-26T03:14:39Z",
+          "title": "Refactor onboarding route group"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/update-v1-launch-status-after-preflight",
+      "head": "060e44ccfd0a290b93375aa819733670e75195d6",
+      "ahead_by": 1,
+      "behind_by": 1238,
+      "merge_base": "70badf8827f62c600252ebbb04e79886c927aec6",
+      "commits": [
+        {
+          "sha": "060e44ccfd0a290b93375aa819733670e75195d6",
+          "tree": "365307e7b61851e34d94c702079f50861bd87996",
+          "parents": [
+            "70badf8827f62c600252ebbb04e79886c927aec6"
+          ],
+          "authored": "2026-05-22T09:01:48Z",
+          "committed": "2026-05-22T09:01:48Z",
+          "title": "Update V1 launch status after release preflight merge"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass",
+      "head": "666447f209703c28eec83b92d3211f2919ff7b0b",
+      "ahead_by": 5,
+      "behind_by": 2061,
+      "merge_base": "6e9c706dd27c3f3e7cf9722c56d6db41e00845cc",
+      "commits": [
+        {
+          "sha": "39f0c2ad73a959e1cc8bd0c834416ca17c157876",
+          "tree": "8242d24726e834409c18e895876224b98f57f95e",
+          "parents": [
+            "6e9c706dd27c3f3e7cf9722c56d6db41e00845cc"
+          ],
+          "authored": "2026-05-07T17:06:14Z",
+          "committed": "2026-05-07T17:06:14Z",
+          "title": "Tighten lint validation"
+        },
+        {
+          "sha": "a0029d23535081e110b1d8dd56b973822958bf3a",
+          "tree": "90612c5663c4fad8734167ed8ac01ab36575eb48",
+          "parents": [
+            "39f0c2ad73a959e1cc8bd0c834416ca17c157876"
+          ],
+          "authored": "2026-05-07T17:06:40Z",
+          "committed": "2026-05-07T17:06:40Z",
+          "title": "Polish waitlist form states"
+        },
+        {
+          "sha": "7e36e7cd513cf8d9b93633bcac77f9c39a76c397",
+          "tree": "c38f77543dd45591419fed4c664901117ac749e1",
+          "parents": [
+            "a0029d23535081e110b1d8dd56b973822958bf3a"
+          ],
+          "authored": "2026-05-07T17:09:10Z",
+          "committed": "2026-05-07T17:09:10Z",
+          "title": "Polish companion chat error states"
+        },
+        {
+          "sha": "24547d5a6c6e710562a9e361408cb84385494a0f",
+          "tree": "c2000862e2b5c9f8dbdbb116a6974e06d6433dae",
+          "parents": [
+            "7e36e7cd513cf8d9b93633bcac77f9c39a76c397"
+          ],
+          "authored": "2026-05-07T17:12:31Z",
+          "committed": "2026-05-07T17:12:31Z",
+          "title": "Expand V1 E2E coverage"
+        },
+        {
+          "sha": "666447f209703c28eec83b92d3211f2919ff7b0b",
+          "tree": "d94c60ef6c63babf8cdaf0a576497fe2371bf6fb",
+          "parents": [
+            "24547d5a6c6e710562a9e361408cb84385494a0f"
+          ],
+          "authored": "2026-05-07T17:13:14Z",
+          "committed": "2026-05-07T17:13:14Z",
+          "title": "Document E2E and release validation"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass-current",
+      "head": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+      "ahead_by": 64,
+      "behind_by": 2059,
+      "merge_base": "8ea221c295ac64b9f6f14ccea0f9e8cc0deee3cb",
+      "commits": [
+        {
+          "sha": "05af86b9b571f33dd732a7a4aa0e37941ffc6f23",
+          "tree": "9606faca50bec8d0579654d3b2624052080180c1",
+          "parents": [
+            "8ea221c295ac64b9f6f14ccea0f9e8cc0deee3cb"
+          ],
+          "authored": "2026-05-07T17:15:17Z",
+          "committed": "2026-05-07T17:15:17Z",
+          "title": "Tighten lint validation"
+        },
+        {
+          "sha": "575917ee8e1703f959cf9011bed8981910dc05e5",
+          "tree": "31c4fae5b0928e55c42b7c2b2812217360bdfbb8",
+          "parents": [
+            "05af86b9b571f33dd732a7a4aa0e37941ffc6f23"
+          ],
+          "authored": "2026-05-07T17:15:40Z",
+          "committed": "2026-05-07T17:15:40Z",
+          "title": "Polish waitlist form states"
+        },
+        {
+          "sha": "e61d70f593d7f57e501efda6c410bfb57b6acad4",
+          "tree": "a78815648f59e093a941f2c8f529fb09f9fd16e7",
+          "parents": [
+            "575917ee8e1703f959cf9011bed8981910dc05e5"
+          ],
+          "authored": "2026-05-07T17:16:28Z",
+          "committed": "2026-05-07T17:16:28Z",
+          "title": "Polish companion chat error states"
+        },
+        {
+          "sha": "b354956b84b74bd7e4855b9938caf5e2af1b3c46",
+          "tree": "844a9c89d18135a3c2421fda06f64b63553beb73",
+          "parents": [
+            "e61d70f593d7f57e501efda6c410bfb57b6acad4"
+          ],
+          "authored": "2026-05-07T17:23:26Z",
+          "committed": "2026-05-07T17:23:26Z",
+          "title": "Expand V1 E2E coverage"
+        },
+        {
+          "sha": "16ab9345441341efb479ad37219a6354a446c108",
+          "tree": "95f089cc7135347403ef1617b8f615347fb45469",
+          "parents": [
+            "b354956b84b74bd7e4855b9938caf5e2af1b3c46"
+          ],
+          "authored": "2026-05-07T17:30:08Z",
+          "committed": "2026-05-07T17:30:08Z",
+          "title": "Document E2E and release validation"
+        },
+        {
+          "sha": "6706306c1af440ed39aff8d8b6c1124b2ba26c17",
+          "tree": "5a34411441660ef0d3bde5b2d23337f936d64d69",
+          "parents": [
+            "16ab9345441341efb479ad37219a6354a446c108"
+          ],
+          "authored": "2026-05-07T17:44:43Z",
+          "committed": "2026-05-07T17:44:43Z",
+          "title": "Fix React 19 testing dependency conflict"
+        },
+        {
+          "sha": "c73b716386b43b17995548dc356d0b2f93b084a1",
+          "tree": "930033b872f17f1edeb0b488b4f10b6cf73015fd",
+          "parents": [
+            "6706306c1af440ed39aff8d8b6c1124b2ba26c17"
+          ],
+          "authored": "2026-05-07T17:48:40Z",
+          "committed": "2026-05-07T17:48:40Z",
+          "title": "Use install while lockfile is stale"
+        },
+        {
+          "sha": "7f108f48658cb4de6b280d7742ca732f57be6b05",
+          "tree": "6db3e072d8a8ada5620e0599af37aa2869958ca0",
+          "parents": [
+            "c73b716386b43b17995548dc356d0b2f93b084a1"
+          ],
+          "authored": "2026-05-07T18:04:42Z",
+          "committed": "2026-05-07T18:04:42Z",
+          "title": "Use install for release verifier while lockfile is stale"
+        },
+        {
+          "sha": "10878051db9d4da820755c91e8d2136bb6a7cb07",
+          "tree": "6cee18f7acf261b48cfcf6cfefc7c70b1dff5dcf",
+          "parents": [
+            "7f108f48658cb4de6b280d7742ca732f57be6b05"
+          ],
+          "authored": "2026-05-07T18:10:02Z",
+          "committed": "2026-05-07T18:10:02Z",
+          "title": "Use install for assets CI while lockfile is stale"
+        },
+        {
+          "sha": "3856432341e4424a0ca9c0f3d1838222e1a4db7b",
+          "tree": "4153e72439696a5ea5aff44dafe92dc8b90fb86a",
+          "parents": [
+            "10878051db9d4da820755c91e8d2136bb6a7cb07"
+          ],
+          "authored": "2026-05-07T18:10:57Z",
+          "committed": "2026-05-07T18:10:57Z",
+          "title": "Align QA workflow with npm app scripts"
+        },
+        {
+          "sha": "5e91b5b445773d4756fd875fcc03add7aec153cc",
+          "tree": "1415654985d0434b9b770022c290dddb994ff06e",
+          "parents": [
+            "3856432341e4424a0ca9c0f3d1838222e1a4db7b"
+          ],
+          "authored": "2026-05-07T18:14:28Z",
+          "committed": "2026-05-07T18:14:28Z",
+          "title": "Guard assets CI when asset tooling is absent"
+        },
+        {
+          "sha": "ed1ef0c1afab703fd3f5b34ce145967995c0082b",
+          "tree": "66302ed2182082a19f34f5bd5cda46096f510aa4",
+          "parents": [
+            "5e91b5b445773d4756fd875fcc03add7aec153cc"
+          ],
+          "authored": "2026-05-07T18:15:21Z",
+          "committed": "2026-05-07T18:15:21Z",
+          "title": "Use install in Firebase deploy while lockfile is stale"
+        },
+        {
+          "sha": "a9760eafebfd5decb07e3566d2e12499c751ee4b",
+          "tree": "a5a69374406b0c929e6a0cc648ea271f1331d985",
+          "parents": [
+            "ed1ef0c1afab703fd3f5b34ce145967995c0082b"
+          ],
+          "authored": "2026-05-07T18:15:41Z",
+          "committed": "2026-05-07T18:15:41Z",
+          "title": "Use install in live Firebase deploy while lockfile is stale"
+        },
+        {
+          "sha": "ff3610e5f1d349b174109843bf3d48de557d8458",
+          "tree": "59ab40171497c162b2f9c14fbb4661a46358a7d6",
+          "parents": [
+            "a9760eafebfd5decb07e3566d2e12499c751ee4b"
+          ],
+          "authored": "2026-05-07T18:19:44Z",
+          "committed": "2026-05-07T18:19:44Z",
+          "title": "Add missing Jest jsdom environment"
+        },
+        {
+          "sha": "12968a9586c2cb76b212a56997585b48f4b5fc51",
+          "tree": "7fab8880ba6870d60dedc8085caea818f91c7470",
+          "parents": [
+            "ff3610e5f1d349b174109843bf3d48de557d8458"
+          ],
+          "authored": "2026-05-07T18:24:28Z",
+          "committed": "2026-05-07T18:24:28Z",
+          "title": "Scope app typecheck away from functions sources"
+        },
+        {
+          "sha": "1281ed87dd18cbe3447fd35a0ff8e2d8959d3dad",
+          "tree": "4d7a611ff397fdaf8a466d63c66d11c70f9bcd23",
+          "parents": [
+            "12968a9586c2cb76b212a56997585b48f4b5fc51"
+          ],
+          "authored": "2026-05-07T18:26:16Z",
+          "committed": "2026-05-07T18:26:16Z",
+          "title": "Type local data audit log writes"
+        },
+        {
+          "sha": "5b278046884096e71d65361d9b4654696537e204",
+          "tree": "479bdabdff7ed1598e4ea5e9e2cdf3214e917fa0",
+          "parents": [
+            "1281ed87dd18cbe3447fd35a0ff8e2d8959d3dad"
+          ],
+          "authored": "2026-05-07T18:31:03Z",
+          "committed": "2026-05-07T18:31:03Z",
+          "title": "Align production start port with V1 app config"
+        },
+        {
+          "sha": "ec95edf86713bbbf6d2c7b0c4d4a025b1f040440",
+          "tree": "e9e9600cfff21450f4e1fce18e822366da82cffd",
+          "parents": [
+            "5b278046884096e71d65361d9b4654696537e204"
+          ],
+          "authored": "2026-05-07T18:31:49Z",
+          "committed": "2026-05-07T18:31:49Z",
+          "title": "Gate Lighthouse on configured web categories"
+        },
+        {
+          "sha": "ac38522f5a736a36caf687cdb8c0c4f4cfbbcf97",
+          "tree": "9b56ce26706c81b39408c39d7bc3b82c3e20345f",
+          "parents": [
+            "ec95edf86713bbbf6d2c7b0c4d4a025b1f040440"
+          ],
+          "authored": "2026-05-07T19:52:19Z",
+          "committed": "2026-05-07T19:52:19Z",
+          "title": "Fix journal route type inference"
+        },
+        {
+          "sha": "2375e5be06f6b3b5acfe9860a45951b2832b4b94",
+          "tree": "a5e046d8d4bef112418fd72c157a079a256b50ff",
+          "parents": [
+            "ac38522f5a736a36caf687cdb8c0c4f4cfbbcf97"
+          ],
+          "authored": "2026-05-07T19:54:31Z",
+          "committed": "2026-05-07T19:54:31Z",
+          "title": "Fix journal delete route type inference"
+        },
+        {
+          "sha": "7040ec3c0af77f0822221fe278f0ff88070bb6e2",
+          "tree": "143e20b785bc6abf9bfc1bc2a954f9a46eb103ef",
+          "parents": [
+            "2375e5be06f6b3b5acfe9860a45951b2832b4b94"
+          ],
+          "authored": "2026-05-07T19:54:56Z",
+          "committed": "2026-05-07T19:54:56Z",
+          "title": "Fix audit log handler typing"
+        },
+        {
+          "sha": "232cf9cd5d8c62306b4072b71ab97b76ee464ae9",
+          "tree": "a5b344fe500bc2219db480b1ba24c89afd1e6227",
+          "parents": [
+            "7040ec3c0af77f0822221fe278f0ff88070bb6e2"
+          ],
+          "authored": "2026-05-07T19:55:15Z",
+          "committed": "2026-05-07T19:55:15Z",
+          "title": "Fix transcription route type inference"
+        },
+        {
+          "sha": "8bfea87a21c64fc5fdfc5057508a4ef1b704653e",
+          "tree": "1113df1a17afcd588342437343b2dac2b6d66c7f",
+          "parents": [
+            "232cf9cd5d8c62306b4072b71ab97b76ee464ae9"
+          ],
+          "authored": "2026-05-07T19:56:03Z",
+          "committed": "2026-05-07T19:56:03Z",
+          "title": "Add missing framer motion dependency"
+        },
+        {
+          "sha": "3ab89ba0b107b4a094560c27783fc3157e145a38",
+          "tree": "69f2b57688f5967f67cd1f811ba07fd285400061",
+          "parents": [
+            "8bfea87a21c64fc5fdfc5057508a4ef1b704653e"
+          ],
+          "authored": "2026-05-07T19:57:08Z",
+          "committed": "2026-05-07T19:57:08Z",
+          "title": "Keep bug report success state visible"
+        },
+        {
+          "sha": "d2cc715a32c88f6df64e3cafb561c730d1012b43",
+          "tree": "86902d41d9d1bea17c96e8bfaa7c50e09562788d",
+          "parents": [
+            "3ab89ba0b107b4a094560c27783fc3157e145a38"
+          ],
+          "authored": "2026-05-07T19:58:40Z",
+          "committed": "2026-05-07T19:58:40Z",
+          "title": "Fix lifemap browser timer typing"
+        },
+        {
+          "sha": "8033541ecd66da4ed91ecedab6dbdf530cea0993",
+          "tree": "ceaf5f00ee6baea4f50842292385a400b436bd86",
+          "parents": [
+            "d2cc715a32c88f6df64e3cafb561c730d1012b43"
+          ],
+          "authored": "2026-05-07T19:59:25Z",
+          "committed": "2026-05-07T19:59:25Z",
+          "title": "Fix emotional tone Firestore doc typing"
+        },
+        {
+          "sha": "072f747654d883dffe95c3e4a3ff3c9d4c68d625",
+          "tree": "1119a68f66abaf832ba352b597647f4f97af7027",
+          "parents": [
+            "8033541ecd66da4ed91ecedab6dbdf530cea0993"
+          ],
+          "authored": "2026-05-07T19:59:50Z",
+          "committed": "2026-05-07T19:59:50Z",
+          "title": "Fix chrono telemetry settled result handling"
+        },
+        {
+          "sha": "0c4faed415d7bcf0847c1a486c508c7db74c142d",
+          "tree": "dbf4f474a0b4758dd4a43b6c1da0ed5f081c2538",
+          "parents": [
+            "072f747654d883dffe95c3e4a3ff3c9d4c68d625"
+          ],
+          "authored": "2026-05-07T20:09:23Z",
+          "committed": "2026-05-07T20:09:23Z",
+          "title": "Use Next Link for internal constellation route"
+        },
+        {
+          "sha": "03a74b6541bef9f3890e43db999e46725f616f5c",
+          "tree": "de490b808ac1c8ec984d85469ac2d3e4d6f4bbe7",
+          "parents": [
+            "0c4faed415d7bcf0847c1a486c508c7db74c142d"
+          ],
+          "authored": "2026-05-07T20:14:52Z",
+          "committed": "2026-05-07T20:14:52Z",
+          "title": "Skip optional QA script when absent"
+        },
+        {
+          "sha": "f2ffe60829dbd0da34fa97353f3f5a223b640468",
+          "tree": "82e76d1fd5226ba1fa211ff6e3019226779b4abd",
+          "parents": [
+            "03a74b6541bef9f3890e43db999e46725f616f5c"
+          ],
+          "authored": "2026-05-07T20:16:21Z",
+          "committed": "2026-05-07T20:16:21Z",
+          "title": "Allow staging-ready static release verification"
+        },
+        {
+          "sha": "5f94abd428632ce22d51e63376ec977e39f8e384",
+          "tree": "cce93b90a86ae9c707f6f67e0d564bb180cccd29",
+          "parents": [
+            "f2ffe60829dbd0da34fa97353f3f5a223b640468"
+          ],
+          "authored": "2026-05-07T20:18:16Z",
+          "committed": "2026-05-07T20:18:16Z",
+          "title": "Add canonical dashboard route"
+        },
+        {
+          "sha": "8240f416433b3336c07393e2642634621c081324",
+          "tree": "75ea45c5d90b554b68d6b4c18a5d0e9cc6e464c3",
+          "parents": [
+            "5f94abd428632ce22d51e63376ec977e39f8e384"
+          ],
+          "authored": "2026-05-07T20:19:47Z",
+          "committed": "2026-05-07T20:19:47Z",
+          "title": "Add canonical marketplace route"
+        },
+        {
+          "sha": "eab6df16e47d3e70b5f44aed61f8daa9414af11b",
+          "tree": "3428dec34b8b154edb2ed4df87ee18cdfa64a6a3",
+          "parents": [
+            "8240f416433b3336c07393e2642634621c081324"
+          ],
+          "authored": "2026-05-07T20:20:20Z",
+          "committed": "2026-05-07T20:20:20Z",
+          "title": "Add canonical settings route"
+        },
+        {
+          "sha": "2d6fee199e574215c0b912d60c72948311effd93",
+          "tree": "6760a38599ec7125c2a3092a683a9054747e6f1b",
+          "parents": [
+            "eab6df16e47d3e70b5f44aed61f8daa9414af11b"
+          ],
+          "authored": "2026-05-07T20:21:00Z",
+          "committed": "2026-05-07T20:21:00Z",
+          "title": "Add canonical admin route"
+        },
+        {
+          "sha": "0ced765559915df335ade711446f7b43983caa8a",
+          "tree": "db7548b3cd456435ef370e7b2c9c0079591d8afa",
+          "parents": [
+            "2d6fee199e574215c0b912d60c72948311effd93"
+          ],
+          "authored": "2026-05-07T20:23:26Z",
+          "committed": "2026-05-07T20:23:26Z",
+          "title": "Add canonical admin system route"
+        },
+        {
+          "sha": "3780e5c741a4d51ce06fa08c7e7e385131039e74",
+          "tree": "1ef57472f68bac874a300eacdc1ffb78bfbe4232",
+          "parents": [
+            "0ced765559915df335ade711446f7b43983caa8a"
+          ],
+          "authored": "2026-05-07T20:24:34Z",
+          "committed": "2026-05-07T20:24:34Z",
+          "title": "Add canonical admin users route"
+        },
+        {
+          "sha": "b0fcf78d5788684a07e9797bec71fc8a2d888de4",
+          "tree": "f05666d03cf5dab3fd16a5f7c7b268878c03d7ae",
+          "parents": [
+            "3780e5c741a4d51ce06fa08c7e7e385131039e74"
+          ],
+          "authored": "2026-05-07T20:25:59Z",
+          "committed": "2026-05-07T20:25:59Z",
+          "title": "Add route page"
+        },
+        {
+          "sha": "68143acb721d03a4a6d86abd7ca65a29a4500b12",
+          "tree": "522446ee32d93bfe5e87fdf48dd7272a3d4af425",
+          "parents": [
+            "b0fcf78d5788684a07e9797bec71fc8a2d888de4"
+          ],
+          "authored": "2026-05-07T20:27:24Z",
+          "committed": "2026-05-07T20:27:24Z",
+          "title": "Add route page"
+        },
+        {
+          "sha": "8b10b52fd9894c34dbec515b28da65c4e548e677",
+          "tree": "90925ee6b7bf98e0fd72590548934ff37d57ca95",
+          "parents": [
+            "68143acb721d03a4a6d86abd7ca65a29a4500b12"
+          ],
+          "authored": "2026-05-07T20:28:07Z",
+          "committed": "2026-05-07T20:28:07Z",
+          "title": "Add route page"
+        },
+        {
+          "sha": "5c27d993e05faac55057599779825edcef7e464d",
+          "tree": "b8b3c09fef883219d8110e5e59e5f7e10463973f",
+          "parents": [
+            "8b10b52fd9894c34dbec515b28da65c4e548e677"
+          ],
+          "authored": "2026-05-07T20:29:34Z",
+          "committed": "2026-05-07T20:29:34Z",
+          "title": "Add system of systems report"
+        },
+        {
+          "sha": "c9ce4833b494f8377821555c495524f9dfe569e8",
+          "tree": "bbded531f9173dfbbedfd26ed3cfc111ce8b7b03",
+          "parents": [
+            "5c27d993e05faac55057599779825edcef7e464d"
+          ],
+          "authored": "2026-05-07T20:31:09Z",
+          "committed": "2026-05-07T20:31:09Z",
+          "title": "Add repo map"
+        },
+        {
+          "sha": "2c52da31351557644414f292b5e335d3644e9c4c",
+          "tree": "79a17a631d7ca870df02240d47d7d9de478b71e1",
+          "parents": [
+            "c9ce4833b494f8377821555c495524f9dfe569e8"
+          ],
+          "authored": "2026-05-07T20:32:48Z",
+          "committed": "2026-05-07T20:32:48Z",
+          "title": "Add report"
+        },
+        {
+          "sha": "f0637344175a65fbe1904bbfad25cbee642e944a",
+          "tree": "2ea24bb61de755e23413926d93c4f9495d9b1537",
+          "parents": [
+            "2c52da31351557644414f292b5e335d3644e9c4c"
+          ],
+          "authored": "2026-05-07T20:35:24Z",
+          "committed": "2026-05-07T20:35:24Z",
+          "title": "Add todo systems report"
+        },
+        {
+          "sha": "50f66776c40b531bedb1de72f080fa03ee0549d7",
+          "tree": "990d400fa83169b0df4a2d80653bed8e1b228fb3",
+          "parents": [
+            "f0637344175a65fbe1904bbfad25cbee642e944a"
+          ],
+          "authored": "2026-05-07T20:35:55Z",
+          "committed": "2026-05-07T20:35:55Z",
+          "title": "Add risk register report"
+        },
+        {
+          "sha": "fba2a84e5a89fa1f26f2a3ff23610e5305f27745",
+          "tree": "e29ba2dbcc8e1648cfb78132f247289ef335c0de",
+          "parents": [
+            "50f66776c40b531bedb1de72f080fa03ee0549d7"
+          ],
+          "authored": "2026-05-07T20:36:35Z",
+          "committed": "2026-05-07T20:36:35Z",
+          "title": "Add release lock report"
+        },
+        {
+          "sha": "4c5dd23bf319507dbbee1f9357d84b382c70b5fa",
+          "tree": "766451f54a66f2b5c06b4023282f70bbeeece88a",
+          "parents": [
+            "fba2a84e5a89fa1f26f2a3ff23610e5305f27745"
+          ],
+          "authored": "2026-05-07T20:37:34Z",
+          "committed": "2026-05-07T20:37:34Z",
+          "title": "Add final system report"
+        },
+        {
+          "sha": "72f42c43047e04f94f3a0fcee2011c1958b83080",
+          "tree": "53199c62a383b7adb203bcd2aeafaf7cf3967a23",
+          "parents": [
+            "4c5dd23bf319507dbbee1f9357d84b382c70b5fa"
+          ],
+          "authored": "2026-05-07T20:39:36Z",
+          "committed": "2026-05-07T20:39:36Z",
+          "title": "Add e2e test report"
+        },
+        {
+          "sha": "39d476885d8eb5c5fc83b093cf4378825e54a692",
+          "tree": "f1157547316a207f671cdd76b83404bff42a2fce",
+          "parents": [
+            "72f42c43047e04f94f3a0fcee2011c1958b83080"
+          ],
+          "authored": "2026-05-07T20:41:02Z",
+          "committed": "2026-05-07T20:41:02Z",
+          "title": "Add deployment report"
+        },
+        {
+          "sha": "3d3f99a79bceeffefd747214d7d15134956c3bdc",
+          "tree": "c11b142c26d2d5d718b6948f690bc471de6d1140",
+          "parents": [
+            "39d476885d8eb5c5fc83b093cf4378825e54a692"
+          ],
+          "authored": "2026-05-07T20:41:43Z",
+          "committed": "2026-05-07T20:41:43Z",
+          "title": "Add release notes report"
+        },
+        {
+          "sha": "4abc85b18bf0692003e0488c1ee88b9a8e000865",
+          "tree": "dabc19bba2cb7ee1f747f4cf6ed77f00a51662ce",
+          "parents": [
+            "3d3f99a79bceeffefd747214d7d15134956c3bdc"
+          ],
+          "authored": "2026-05-07T20:42:08Z",
+          "committed": "2026-05-07T20:42:08Z",
+          "title": "Add known limitations report"
+        },
+        {
+          "sha": "6348b1fbf0f59b320046a5b5daac390a20d04656",
+          "tree": "c4c39c87ba0aaa16239ccb8bb76db1396f4b20e2",
+          "parents": [
+            "4abc85b18bf0692003e0488c1ee88b9a8e000865"
+          ],
+          "authored": "2026-05-07T20:43:07Z",
+          "committed": "2026-05-07T20:43:07Z",
+          "title": "Add next actions report"
+        },
+        {
+          "sha": "33ed4a3a41c2e62059a493f91e69b136397673ef",
+          "tree": "9d680a3541f1f9f72e02682f6a2c428a02fcaf79",
+          "parents": [
+            "6348b1fbf0f59b320046a5b5daac390a20d04656"
+          ],
+          "authored": "2026-05-07T20:45:00Z",
+          "committed": "2026-05-07T20:45:00Z",
+          "title": "Add page"
+        },
+        {
+          "sha": "89f20ee107bad6dbf97eb19191e50bd5ad4560a0",
+          "tree": "22d2e8e46499cfc6e46f5b6521d2d0500a567077",
+          "parents": [
+            "33ed4a3a41c2e62059a493f91e69b136397673ef"
+          ],
+          "authored": "2026-05-07T20:45:37Z",
+          "committed": "2026-05-07T20:45:37Z",
+          "title": "Add report"
+        },
+        {
+          "sha": "8425e178b43142f33393ddd5eb88c6776bfa4cb6",
+          "tree": "43e25fa42e3acccf54ecc8e0f35c7664c7c9d839",
+          "parents": [
+            "89f20ee107bad6dbf97eb19191e50bd5ad4560a0"
+          ],
+          "authored": "2026-05-07T20:49:06Z",
+          "committed": "2026-05-07T20:49:06Z",
+          "title": "Defer Firebase env failure until runtime use"
+        },
+        {
+          "sha": "0a5104f4ac5ff52156a47bc067e695863b5db6da",
+          "tree": "f75c6104c053688336e72a4628d4d1fd15931c41",
+          "parents": [
+            "8425e178b43142f33393ddd5eb88c6776bfa4cb6"
+          ],
+          "authored": "2026-05-07T20:51:45Z",
+          "committed": "2026-05-07T20:51:45Z",
+          "title": "Use unit test script in UrAi CI"
+        },
+        {
+          "sha": "60cdd5b1a52823e5b4c48ad85a740877424cdb5c",
+          "tree": "4850def9ea74b93cb5f2d92927f6310573132e99",
+          "parents": [
+            "0a5104f4ac5ff52156a47bc067e695863b5db6da"
+          ],
+          "authored": "2026-05-07T20:56:41Z",
+          "committed": "2026-05-07T20:56:41Z",
+          "title": "Make rules emulator parse compact Firestore rules"
+        },
+        {
+          "sha": "09f4ec2f8e82a0d92fcaf4db9ef60f192a58c656",
+          "tree": "26e748ae7130ca811386b6a491f89f8eafd4cff6",
+          "parents": [
+            "60cdd5b1a52823e5b4c48ad85a740877424cdb5c"
+          ],
+          "authored": "2026-05-07T21:06:49Z",
+          "committed": "2026-05-07T21:06:49Z",
+          "title": "Stabilize V1 E2E selectors"
+        },
+        {
+          "sha": "e172d33b1eef09fbe8a0dc2693346b041df7c3e9",
+          "tree": "e20d41ff274fc2a397197e81b912bcbefacc359b",
+          "parents": [
+            "09f4ec2f8e82a0d92fcaf4db9ef60f192a58c656"
+          ],
+          "authored": "2026-05-07T21:09:32Z",
+          "committed": "2026-05-07T21:09:32Z",
+          "title": "Stabilize V1 Playwright smoke selectors"
+        },
+        {
+          "sha": "77c4e5f4a8a99ddb413513071a84c673f1c20edd",
+          "tree": "18f172c5219aef9209ad035decfc0eb88c886e8c",
+          "parents": [
+            "e172d33b1eef09fbe8a0dc2693346b041df7c3e9"
+          ],
+          "authored": "2026-05-07T21:11:22Z",
+          "committed": "2026-05-07T21:11:22Z",
+          "title": "Use stable Lighthouse PR performance gate"
+        },
+        {
+          "sha": "266ae61b7aa5ed45ab10955839f5393adc38a0fb",
+          "tree": "d232513f369317ecd4e05d46b98e1bba47649750",
+          "parents": [
+            "77c4e5f4a8a99ddb413513071a84c673f1c20edd"
+          ],
+          "authored": "2026-05-07T21:13:17Z",
+          "committed": "2026-05-07T21:13:17Z",
+          "title": "Align Lighthouse gate with V1 launch baseline"
+        },
+        {
+          "sha": "8bb4cbe714d2f35cbb186125b4a9021ad84ab299",
+          "tree": "d87e74aad0588d8b110acefc33c1f063e8af905e",
+          "parents": [
+            "266ae61b7aa5ed45ab10955839f5393adc38a0fb"
+          ],
+          "authored": "2026-05-07T21:16:11Z",
+          "committed": "2026-05-07T21:16:11Z",
+          "title": "Make Lighthouse performance report-only for PRs"
+        },
+        {
+          "sha": "a82dcd2325f69b12726c4137ad6e940dcf65ef10",
+          "tree": "7e3d6cc8b5f5043f0d38eb2476f0f889b673cce9",
+          "parents": [
+            "8bb4cbe714d2f35cbb186125b4a9021ad84ab299"
+          ],
+          "authored": "2026-05-07T21:16:18Z",
+          "committed": "2026-05-07T21:16:18Z",
+          "title": "Stabilize waitlist and companion E2E interactions"
+        },
+        {
+          "sha": "1e5d5fad84166a4ef54e3d1cdabeb58d152dd8b2",
+          "tree": "518c27c9a3984c5b225401792a6c79fcf343e700",
+          "parents": [
+            "a82dcd2325f69b12726c4137ad6e940dcf65ef10"
+          ],
+          "authored": "2026-05-07T21:22:20Z",
+          "committed": "2026-05-07T21:22:20Z",
+          "title": "Harden V1 E2E form selectors"
+        },
+        {
+          "sha": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+          "tree": "89657f8d57c5c5a73778e0cec698473d87ec1463",
+          "parents": [
+            "1e5d5fad84166a4ef54e3d1cdabeb58d152dd8b2"
+          ],
+          "authored": "2026-05-07T21:25:04Z",
+          "committed": "2026-05-07T21:25:04Z",
+          "title": "Move V1 happy-path smoke checks to API requests"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/wire-memory-world-root",
+      "head": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+      "ahead_by": 1,
+      "behind_by": 1227,
+      "merge_base": "c90036904d4ccce5d430a15b9a97898c1bf59cf1",
+      "commits": [
+        {
+          "sha": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+          "tree": "9de8c7729b4e808b514c1b270ae4a0ab64d492cc",
+          "parents": [
+            "c90036904d4ccce5d430a15b9a97898c1bf59cf1"
+          ],
+          "authored": "2026-05-22T17:00:08Z",
+          "committed": "2026-05-22T17:00:08Z",
+          "title": "Preserve home lock marker on root entry"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/complete/repo-finalization",
+      "head": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+      "ahead_by": 2,
+      "behind_by": 2063,
+      "merge_base": "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb",
+      "commits": [
+        {
+          "sha": "ed25c1c00973852c041b2fe695bdab53668e871e",
+          "tree": "8dd7607f9631f48d57d1b48fe176278ce2b3235f",
+          "parents": [
+            "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb"
+          ],
+          "authored": "2026-05-07T06:46:16Z",
+          "committed": "2026-05-07T06:46:16Z",
+          "title": "Complete CI validation workflow"
+        },
+        {
+          "sha": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+          "tree": "ed1390910fb75d2124bc68767bc1d3abcd9dd98e",
+          "parents": [
+            "ed25c1c00973852c041b2fe695bdab53668e871e"
+          ],
+          "authored": "2026-05-07T06:46:52Z",
+          "committed": "2026-05-07T06:46:52Z",
+          "title": "Update V1 launch status for final repo validation"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/copilot/fix-d95f7a09-19e3-4778-8582-5937fce8e126",
+      "head": "f9b59364763c39257ce863a88a6aeefdc8158490",
+      "ahead_by": 4,
+      "behind_by": 2413,
+      "merge_base": "ec29df718997ef9f4e055ce4ab193e4dc68e8448",
+      "commits": [
+        {
+          "sha": "49aaa2c29b8a60a13146a879f0727f25f0fe3383",
+          "tree": "eed8d6c8f70b6d77444454cbc737bfdc1febc598",
+          "parents": [
+            "ec29df718997ef9f4e055ce4ab193e4dc68e8448"
+          ],
+          "authored": "2025-09-06T04:51:22Z",
+          "committed": "2025-09-06T04:51:22Z",
+          "title": "Initial exploration: understanding schema conflicts and build state"
+        },
+        {
+          "sha": "7b9a6f4f276ea062df2e38573bcc3edbebc72de7",
+          "tree": "c6ee657ad31688ca1cb8f836e434daaf708eb0d6",
+          "parents": [
+            "49aaa2c29b8a60a13146a879f0727f25f0fe3383"
+          ],
+          "authored": "2025-09-06T04:57:23Z",
+          "committed": "2025-09-06T04:57:23Z",
+          "title": "Unify ChatMessage schemas to use src/ai/schemas/chat.ts as single source of truth"
+        },
+        {
+          "sha": "573203bbf92361f14fc93e2b2a8a777c447895e9",
+          "tree": "fb095a0c9c90e093c1817c393b48db88ae843487",
+          "parents": [
+            "7b9a6f4f276ea062df2e38573bcc3edbebc72de7"
+          ],
+          "authored": "2025-09-06T05:00:55Z",
+          "committed": "2025-09-06T05:00:55Z",
+          "title": "Unify chat schemas and fix schema conflicts to support script requirements"
+        },
+        {
+          "sha": "f9b59364763c39257ce863a88a6aeefdc8158490",
+          "tree": "01869ca477074432a1437bcd42a8c82f49e10d18",
+          "parents": [
+            "573203bbf92361f14fc93e2b2a8a777c447895e9"
+          ],
+          "authored": "2025-09-06T05:02:39Z",
+          "committed": "2025-09-06T05:02:39Z",
+          "title": "Final verification: bash script requirements met, schemas unified and tested"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
