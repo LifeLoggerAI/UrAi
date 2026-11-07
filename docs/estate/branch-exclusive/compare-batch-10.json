@@ -1,0 +1,91 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 108,
+  "count": 4,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/urai-production-polish-pass",
+      "head": "37e68d75b7b0c7faa34441f420ed7c487b998cf0",
+      "status": "diverged",
+      "ahead_by": 6,
+      "behind_by": 1710,
+      "merge_base": "544c69243eafdf37ba36b80f0407d322fd6bcc7b",
+      "too_large": null,
+      "reported_file_count": 6,
+      "changed_file_sample": [
+        "src/components/life-map/FocusMemoryView.tsx",
+        "src/components/life-map/HomeAuraScene.tsx",
+        "src/components/life-map/LifeMapControls.tsx",
+        "src/components/life-map/LifeMapUniverse.tsx",
+        "src/components/life-map/ReplayThreadView.tsx",
+        "src/lib/life-map/production-copy.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-spatial-canvas-shell",
+      "head": "cabc62938f05b551a333f0793fa3dc308237c63c",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1260,
+      "merge_base": "3aa6f014dc21f2cdcfa81ece9ff39ab36c067698",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/urai/SpatialUniverseCanvas.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-spatial-sacred-tech-polish",
+      "head": "58f6ccaee55cb9246de5ecddd9dd985207fb05c1",
+      "status": "diverged",
+      "ahead_by": 27,
+      "behind_by": 1257,
+      "merge_base": "6320abca8952a4b24d7504988c2ca4e7d8be791e",
+      "too_large": null,
+      "reported_file_count": 17,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "docs/URAI_HOME_ROUTE_AUDIT_ADDENDUM.md",
+        "docs/URAI_REPO_AUDIT_AND_IMPLEMENTATION_REPORT.md",
+        "next.config.mjs",
+        "src/app/home/page.tsx",
+        "src/app/layout.tsx",
+        "src/app/u/[handle]/page.tsx",
+        "src/components/ForecastCard.tsx",
+        "src/components/WaitlistForm.tsx",
+        "src/components/WeeklyReflectionCard.tsx",
+        "src/components/urai/HomeWorldSmokeContract.tsx",
+        "src/lib/urai-canon/cinematic-controller.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-v1-launch-shell",
+      "head": "5dbb8fe410d5c748b6f0eebcb1ff3cb2556b7006",
+      "status": "diverged",
+      "ahead_by": 19,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "too_large": null,
+      "reported_file_count": 18,
+      "changed_file_sample": [
+        "docs/launch/urai-v1-launch-shell.md",
+        "firestore.rules",
+        "src/app/admin/page.tsx",
+        "src/app/app/home/page.tsx",
+        "src/app/creators/page.tsx",
+        "src/app/founding/page.tsx",
+        "src/app/make-mine/page.tsx",
+        "src/app/page.tsx",
+        "src/app/passport/page.tsx",
+        "src/app/trust/page.tsx",
+        "src/app/waitlist/page.tsx",
+        "src/app/watch/page.tsx"
+      ]
+    }
+  ]
+}
