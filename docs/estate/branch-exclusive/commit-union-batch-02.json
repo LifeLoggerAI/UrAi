@@ -1,0 +1,1625 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 2,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/chore/p0-launch-verification-20260508",
+      "head": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+      "ahead_by": 4,
+      "behind_by": 2056,
+      "merge_base": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241",
+      "commits": [
+        {
+          "sha": "40b189d410121627bdf9e21d25cb783152a33e89",
+          "tree": "ccc307a2f8bf9554438e8a89d89d0430bba8afde",
+          "parents": [
+            "e5b90a39f9ff00d05801cadc16151bf2fc1ce241"
+          ],
+          "authored": "2026-05-08T17:53:11Z",
+          "committed": "2026-05-08T17:53:11Z",
+          "title": "Add P0 launch gate verifier"
+        },
+        {
+          "sha": "6c67e0155bf42562b949b0f2c5eda653469bd7f5",
+          "tree": "881b86b3f857b1a61324f1ea4a43f24f5807a3f0",
+          "parents": [
+            "40b189d410121627bdf9e21d25cb783152a33e89"
+          ],
+          "authored": "2026-05-08T17:53:38Z",
+          "committed": "2026-05-08T17:53:38Z",
+          "title": "Wire P0 launch gate script"
+        },
+        {
+          "sha": "f21888fc38606561f5057dcd61b9d5041b6a4c4f",
+          "tree": "0dd8c90d4ad14d137d42d60f91054e85884908bc",
+          "parents": [
+            "6c67e0155bf42562b949b0f2c5eda653469bd7f5"
+          ],
+          "authored": "2026-05-08T17:55:54Z",
+          "committed": "2026-05-08T17:55:54Z",
+          "title": "Run P0 launch gate in CI"
+        },
+        {
+          "sha": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+          "tree": "594ff23f2a6d7c2f8dd38369bd931f1f915e9ecf",
+          "parents": [
+            "f21888fc38606561f5057dcd61b9d5041b6a4c4f"
+          ],
+          "authored": "2026-05-08T17:57:35Z",
+          "committed": "2026-05-08T17:57:35Z",
+          "title": "Tighten P0 launch gate status handling"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/p1-release-hardening-20260508",
+      "head": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+      "ahead_by": 4,
+      "behind_by": 2055,
+      "merge_base": "1b0e476156d24651fd98b460f7ede331e6d53b4a",
+      "commits": [
+        {
+          "sha": "00dfc29f1172957cb9481858171a67a12fa8bf30",
+          "tree": "8c17a57b33c1bd9e34433a8c7eac769daf8cef0d",
+          "parents": [
+            "1b0e476156d24651fd98b460f7ede331e6d53b4a"
+          ],
+          "authored": "2026-05-08T18:14:16Z",
+          "committed": "2026-05-08T18:14:16Z",
+          "title": "Add P1 release hardening docs"
+        },
+        {
+          "sha": "f461cd8030a5d7f833ff16c9e0c3f8915caa9dfa",
+          "tree": "914868bdcbafa6dedfd8bad810f858be869f7a9e",
+          "parents": [
+            "00dfc29f1172957cb9481858171a67a12fa8bf30"
+          ],
+          "authored": "2026-05-08T18:15:01Z",
+          "committed": "2026-05-08T18:15:01Z",
+          "title": "Add P1 release gate verifier"
+        },
+        {
+          "sha": "32f75e12ff1087cac41e21213e9c340bdb1a849d",
+          "tree": "75d585f4b90370ef3f09a7bd6073e0bd74b75d6d",
+          "parents": [
+            "f461cd8030a5d7f833ff16c9e0c3f8915caa9dfa"
+          ],
+          "authored": "2026-05-08T18:15:29Z",
+          "committed": "2026-05-08T18:15:29Z",
+          "title": "Wire P1 release gate script"
+        },
+        {
+          "sha": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+          "tree": "31397de2bbf863ed5fb06d7a5e699c6e6d9206b6",
+          "parents": [
+            "32f75e12ff1087cac41e21213e9c340bdb1a849d"
+          ],
+          "authored": "2026-05-08T18:15:52Z",
+          "committed": "2026-05-08T18:15:52Z",
+          "title": "Run P1 release gate in CI"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/p2-v1-demo-polish-20260508",
+      "head": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+      "ahead_by": 5,
+      "behind_by": 2054,
+      "merge_base": "d47ff39411c1eea5f7dcef5f78a8f1b7fdbca2f3",
+      "commits": [
+        {
+          "sha": "5f6247d4fe372f89325095495b07e3fab7ceaeae",
+          "tree": "2ad95a191133f5e37b70f1549a97957c6faf3fd8",
+          "parents": [
+            "d47ff39411c1eea5f7dcef5f78a8f1b7fdbca2f3"
+          ],
+          "authored": "2026-05-08T18:27:08Z",
+          "committed": "2026-05-08T18:27:08Z",
+          "title": "Polish public constellation framing"
+        },
+        {
+          "sha": "1f9d52610a663988b65d933c5c0a0c1880d1a0ae",
+          "tree": "d6a068f39cbfe018a73df53b82f224991ff0ba52",
+          "parents": [
+            "5f6247d4fe372f89325095495b07e3fab7ceaeae"
+          ],
+          "authored": "2026-05-08T18:28:08Z",
+          "committed": "2026-05-08T18:28:08Z",
+          "title": "Polish companion demo copy"
+        },
+        {
+          "sha": "4fef6b27c800b9b09f94603ac80b49ba5426dfc9",
+          "tree": "ba0718aead9453ede5bf540d307b662aa2154913",
+          "parents": [
+            "1f9d52610a663988b65d933c5c0a0c1880d1a0ae"
+          ],
+          "authored": "2026-05-08T18:34:32Z",
+          "committed": "2026-05-08T18:34:32Z",
+          "title": "Polish waitlist states and copy"
+        },
+        {
+          "sha": "a331349998da16556d84de35a88bbac0a3eb644e",
+          "tree": "e5d496af9b0a069afd4e97b9664f14197b3391b7",
+          "parents": [
+            "4fef6b27c800b9b09f94603ac80b49ba5426dfc9"
+          ],
+          "authored": "2026-05-08T18:36:55Z",
+          "committed": "2026-05-08T18:36:55Z",
+          "title": "Polish home demo positioning"
+        },
+        {
+          "sha": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+          "tree": "3a14f98b48c6adf0cf56b5bfb99411cec33cd726",
+          "parents": [
+            "a331349998da16556d84de35a88bbac0a3eb644e"
+          ],
+          "authored": "2026-05-08T20:09:08Z",
+          "committed": "2026-05-08T20:09:08Z",
+          "title": "Update V1 smoke tests for polished copy"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-current-main-20260729",
+      "head": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+      "ahead_by": 14,
+      "behind_by": 79,
+      "merge_base": "658b36da6b239333a918396251aad6386894e78f",
+      "commits": [
+        {
+          "sha": "65aeeb497dc7db70cb688272705be38bf3600841",
+          "tree": "aaa72f8822d68f15361cf4e6e44c8f0bf3ddb15a",
+          "parents": [
+            "658b36da6b239333a918396251aad6386894e78f"
+          ],
+          "authored": "2026-07-29T02:32:37Z",
+          "committed": "2026-07-29T02:32:37Z",
+          "title": "ci(legacy): stage current-main quarantine executor"
+        },
+        {
+          "sha": "f04d58042ce4dae4670d179608002aee95445231",
+          "tree": "4c7cd7cbc463f89fa1c9acee4b9c70dc1e78f3ec",
+          "parents": [
+            "65aeeb497dc7db70cb688272705be38bf3600841"
+          ],
+          "authored": "2026-07-29T02:49:07Z",
+          "committed": "2026-07-29T02:49:07Z",
+          "title": "ci(legacy): trigger current-main quarantine materialization"
+        },
+        {
+          "sha": "299398bdd6da1bd42124af315893953a2accc86d",
+          "tree": "cd92f31c865867abac6326cd5281a1d150db3151",
+          "parents": [
+            "f04d58042ce4dae4670d179608002aee95445231"
+          ],
+          "authored": "2026-07-29T02:55:25Z",
+          "committed": "2026-07-29T02:55:25Z",
+          "title": "ci(legacy): fetch exact historical quarantine authority"
+        },
+        {
+          "sha": "34d69bc1c7fd8c7c8f516422257770d5bbe18a0a",
+          "tree": "2fd519ae62fc3b145ce99a92df7dfde1184b36e0",
+          "parents": [
+            "299398bdd6da1bd42124af315893953a2accc86d"
+          ],
+          "authored": "2026-07-29T03:04:18Z",
+          "committed": "2026-07-29T03:04:18Z",
+          "title": "ci(legacy): make authority preflight exact and diagnostic"
+        },
+        {
+          "sha": "3a49ffe44a7d1b200c08cc66fb9317a10f03f962",
+          "tree": "327f9f17226a1bcae935d22c047fdc7f5af42717",
+          "parents": [
+            "34d69bc1c7fd8c7c8f516422257770d5bbe18a0a"
+          ],
+          "authored": "2026-07-29T03:11:39Z",
+          "committed": "2026-07-29T03:11:39Z",
+          "title": "ci(legacy): export verified current-main quarantine tree"
+        },
+        {
+          "sha": "b8923f1cfa3709276ca74ae3fdeff455d8fd9047",
+          "tree": "f2ef9f7d12ebfe0690f1c975239654d1eb3e4f68",
+          "parents": [
+            "3a49ffe44a7d1b200c08cc66fb9317a10f03f962"
+          ],
+          "authored": "2026-07-29T03:18:41Z",
+          "committed": "2026-07-29T03:18:41Z",
+          "title": "ci(legacy): isolate exact checkout-filter media set"
+        },
+        {
+          "sha": "2637c387625ec7f7663a9d3f192b827831243787",
+          "tree": "072785a4719cf7673cbe0e25640ace41245ccbb9",
+          "parents": [
+            "b8923f1cfa3709276ca74ae3fdeff455d8fd9047"
+          ],
+          "authored": "2026-07-29T03:31:43Z",
+          "committed": "2026-07-29T03:31:43Z",
+          "title": "ci(legacy): parse checkout-filter paths safely"
+        },
+        {
+          "sha": "30e121f0c0a8fa25f411761922b05c9d3496e118",
+          "tree": "ba19ba591fd34633f28f6ad32c280728486c1887",
+          "parents": [
+            "2637c387625ec7f7663a9d3f192b827831243787"
+          ],
+          "authored": "2026-08-01T22:34:49Z",
+          "committed": "2026-08-01T22:34:49Z",
+          "title": "Materialize reviewed current-main quarantine on branch"
+        },
+        {
+          "sha": "a69e2f700f141a0f9bac13761b3e78752115b280",
+          "tree": "f6a5a082af56a427636110df81087bae9114f7d3",
+          "parents": [
+            "30e121f0c0a8fa25f411761922b05c9d3496e118"
+          ],
+          "authored": "2026-08-01T22:36:18Z",
+          "committed": "2026-08-01T22:36:18Z",
+          "title": "Allow controlled PR-reopen quarantine materialization"
+        },
+        {
+          "sha": "569dd32de7be403b3b8e18f7c5853e35f7a2e94c",
+          "tree": "bdf66c50c477f43eee5e832a78f5eacd3de57926",
+          "parents": [
+            "a69e2f700f141a0f9bac13761b3e78752115b280"
+          ],
+          "authored": "2026-08-01T22:39:52Z",
+          "committed": "2026-08-01T22:39:52Z",
+          "title": "Normalize legacy LFS drift before quarantine materialization"
+        },
+        {
+          "sha": "7964500dd9d90d661e0ee85099d40a710492cdee",
+          "tree": "db6af139a84d6e675bed329534b018e2f06bc625",
+          "parents": [
+            "569dd32de7be403b3b8e18f7c5853e35f7a2e94c"
+          ],
+          "authored": "2026-08-01T22:42:07Z",
+          "committed": "2026-08-01T22:42:07Z",
+          "title": "Allow only known legacy asset drift during quarantine materialization"
+        },
+        {
+          "sha": "2cfc228b1352a4eea005b656208af5e85e6adf5b",
+          "tree": "77d65fe9bcc7ca650311574aa62654520e50dfac",
+          "parents": [
+            "7964500dd9d90d661e0ee85099d40a710492cdee"
+          ],
+          "authored": "2026-08-01T22:43:08Z",
+          "committed": "2026-08-01T22:43:08Z",
+          "title": "Apply current-main legacy quarantine"
+        },
+        {
+          "sha": "ec313aaec619973f13a8d74bb0dae856dffdfef5",
+          "tree": "4420c98fb21fa1bd77ab9e08280f38bc38ed1cff",
+          "parents": [
+            "2cfc228b1352a4eea005b656208af5e85e6adf5b"
+          ],
+          "authored": "2026-08-01T22:44:10Z",
+          "committed": "2026-08-01T22:44:10Z",
+          "title": "Trigger final exact-head legacy quarantine verification"
+        },
+        {
+          "sha": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+          "tree": "2ee52bde28b1249aff605a5a16e2b31030a9471d",
+          "parents": [
+            "ec313aaec619973f13a8d74bb0dae856dffdfef5"
+          ],
+          "authored": "2026-08-01T22:47:38Z",
+          "committed": "2026-08-01T22:47:38Z",
+          "title": "Align legacy WebXR audit with quarantined launch root"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-20260715",
+      "head": "b08490ec27245481ae8d163604ea2403eee0c3de",
+      "ahead_by": 56,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "commits": [
+        {
+          "sha": "ab53f5470050e3fd0ef450fdaf6211e8efbfd0ac",
+          "tree": "2223308924abef1edbffdaa29da79bb496595093",
+          "parents": [
+            "81cb8382d914b11d781851b2d07e1526c3a0220c"
+          ],
+          "authored": "2026-07-15T22:29:42Z",
+          "committed": "2026-07-15T22:29:42Z",
+          "title": "Quarantine legacy Firebase production deploy workflow"
+        },
+        {
+          "sha": "d7e4b58a0cf50c9e0395fc28d0444a91b8e637c9",
+          "tree": "995c734d4c80a782625d1b14c143c162580cb149",
+          "parents": [
+            "ab53f5470050e3fd0ef450fdaf6211e8efbfd0ac"
+          ],
+          "authored": "2026-07-15T22:29:55Z",
+          "committed": "2026-07-15T22:29:55Z",
+          "title": "Quarantine legacy Home XR deployment workflow"
+        },
+        {
+          "sha": "8762f4ece524d6be4051015190137abf0b23ea15",
+          "tree": "cdb9beba64e3706258ed71d9aaac074d2b9cac60",
+          "parents": [
+            "d7e4b58a0cf50c9e0395fc28d0444a91b8e637c9"
+          ],
+          "authored": "2026-07-15T22:30:23Z",
+          "committed": "2026-07-15T22:30:23Z",
+          "title": "Classify UrAi as legacy reference authority"
+        },
+        {
+          "sha": "850a8801d55bfa430889574e429df5b6b7fdbd0e",
+          "tree": "2ee06c9131fcb1261c59be0d76c7e587897809ec",
+          "parents": [
+            "8762f4ece524d6be4051015190137abf0b23ea15"
+          ],
+          "authored": "2026-07-15T22:30:43Z",
+          "committed": "2026-07-15T22:30:43Z",
+          "title": "Document legacy credential rotation and quarantine authority"
+        },
+        {
+          "sha": "3db942246f7c4934b4fefa6c0c3abd81d94d566b",
+          "tree": "b1eef01147cd4bd3bea3b789fbaa160d41a7d675",
+          "parents": [
+            "850a8801d55bfa430889574e429df5b6b7fdbd0e"
+          ],
+          "authored": "2026-07-15T22:31:54Z",
+          "committed": "2026-07-15T22:31:54Z",
+          "title": "Quarantine legacy urai.app deployment workflow"
+        },
+        {
+          "sha": "c27229e49d43edffc06c900ce397e188ee3a508e",
+          "tree": "095a3ebb0a608585501380f3fb3ff558d6545111",
+          "parents": [
+            "3db942246f7c4934b4fefa6c0c3abd81d94d566b"
+          ],
+          "authored": "2026-07-15T22:32:06Z",
+          "committed": "2026-07-15T22:32:06Z",
+          "title": "Quarantine legacy Firebase ship workflow"
+        },
+        {
+          "sha": "a8d7126317772c74f7f43288fb468df1e9f568ee",
+          "tree": "3844323582e06a3f4f5f8f7cb3a5616411f44d42",
+          "parents": [
+            "c27229e49d43edffc06c900ce397e188ee3a508e"
+          ],
+          "authored": "2026-07-15T22:41:53Z",
+          "committed": "2026-07-15T22:41:53Z",
+          "title": "chore: disable legacy deploy script"
+        },
+        {
+          "sha": "1383af810c58aabeebe229de4249ffb97df1728e",
+          "tree": "b68d5b10e6951b9954e36ce6eec305190bf33c87",
+          "parents": [
+            "a8d7126317772c74f7f43288fb468df1e9f568ee"
+          ],
+          "authored": "2026-07-15T22:42:10Z",
+          "committed": "2026-07-15T22:42:10Z",
+          "title": "chore: apply expanded legacy production quarantine"
+        },
+        {
+          "sha": "d38abf1b2ca4432b3629d1b868de42831e107d61",
+          "tree": "3844323582e06a3f4f5f8f7cb3a5616411f44d42",
+          "parents": [
+            "1383af810c58aabeebe229de4249ffb97df1728e"
+          ],
+          "authored": "2026-07-15T22:42:43Z",
+          "committed": "2026-07-15T22:42:43Z",
+          "title": "chore: remove temporary quarantine helper"
+        },
+        {
+          "sha": "659233a29b6ee15d4335b11456dc910fedd72d8c",
+          "tree": "202529430fbe005f97f03690eb243d2e887c4999",
+          "parents": [
+            "d38abf1b2ca4432b3629d1b868de42831e107d61"
+          ],
+          "authored": "2026-07-15T22:42:46Z",
+          "committed": "2026-07-15T22:42:46Z",
+          "title": "Add machine-readable canonical production authority"
+        },
+        {
+          "sha": "16f86a4e4fe907a3c6009e98794349fe69eb3b57",
+          "tree": "177378d2f0f88e93cac0033d4fbe273d622db95e",
+          "parents": [
+            "659233a29b6ee15d4335b11456dc910fedd72d8c"
+          ],
+          "authored": "2026-07-15T22:43:16Z",
+          "committed": "2026-07-15T22:43:16Z",
+          "title": "Validate canonical authority override for legacy registry"
+        },
+        {
+          "sha": "492ad8a3c99bcb60c50fc88eb7d27959aeb328aa",
+          "tree": "c0a7442270f41d8744f3dd4ffd1f5721b90c6dca",
+          "parents": [
+            "16f86a4e4fe907a3c6009e98794349fe69eb3b57"
+          ],
+          "authored": "2026-07-15T22:43:19Z",
+          "committed": "2026-07-15T22:43:19Z",
+          "title": "security: quarantine legacy P1 release gate"
+        },
+        {
+          "sha": "626da963018b44343046ba75e04629e9a531bd9f",
+          "tree": "ab471a38c52877680bd216b32557803e902abf59",
+          "parents": [
+            "492ad8a3c99bcb60c50fc88eb7d27959aeb328aa"
+          ],
+          "authored": "2026-07-15T22:43:27Z",
+          "committed": "2026-07-15T22:43:27Z",
+          "title": "security: quarantine legacy production evidence"
+        },
+        {
+          "sha": "c353b48978b63ed61a0424603e44f8a75623a815",
+          "tree": "34879b4aaab60e14038ff40320df3750cb34dad3",
+          "parents": [
+            "626da963018b44343046ba75e04629e9a531bd9f"
+          ],
+          "authored": "2026-07-15T22:43:35Z",
+          "committed": "2026-07-15T22:43:35Z",
+          "title": "security: quarantine legacy Life Map evidence"
+        },
+        {
+          "sha": "81efbf817d4775e877e9dee77a6b625a30809bd0",
+          "tree": "8d6433d68268770a5ff47fc1c370425ff84cb321",
+          "parents": [
+            "c353b48978b63ed61a0424603e44f8a75623a815"
+          ],
+          "authored": "2026-07-15T22:43:43Z",
+          "committed": "2026-07-15T22:43:43Z",
+          "title": "Align quarantine authority documentation and settings review"
+        },
+        {
+          "sha": "009d480f74340b943b4e9f377594ef4038ac5770",
+          "tree": "32697453cf89967f62e0f992477e66c4584e364e",
+          "parents": [
+            "81efbf817d4775e877e9dee77a6b625a30809bd0"
+          ],
+          "authored": "2026-07-15T22:43:44Z",
+          "committed": "2026-07-15T22:43:44Z",
+          "title": "security: quarantine legacy post-deploy verifier"
+        },
+        {
+          "sha": "b90e779d37caa534e685329722368e4a5e1123ec",
+          "tree": "97a1d680af92d8b39d9115649184daca1784c723",
+          "parents": [
+            "009d480f74340b943b4e9f377594ef4038ac5770"
+          ],
+          "authored": "2026-07-15T22:44:34Z",
+          "committed": "2026-07-15T22:44:34Z",
+          "title": "security: make legacy WebXR audit source-only"
+        },
+        {
+          "sha": "af22800e6762c1f0f8cf272cd21b13a4366e7eb4",
+          "tree": "675790a94fdb794e61e900f5759db7c1eb505d3d",
+          "parents": [
+            "b90e779d37caa534e685329722368e4a5e1123ec"
+          ],
+          "authored": "2026-07-15T22:44:48Z",
+          "committed": "2026-07-15T22:44:48Z",
+          "title": "test: verify Home XR deployment quarantine"
+        },
+        {
+          "sha": "3ac7968a3daacc1630b866a0a601e7a2a9050203",
+          "tree": "06a5b42f38e769e07b82c7bea83702e874744df7",
+          "parents": [
+            "af22800e6762c1f0f8cf272cd21b13a4366e7eb4"
+          ],
+          "authored": "2026-07-15T22:45:05Z",
+          "committed": "2026-07-15T22:45:05Z",
+          "title": "test: align Home XR evidence with legacy quarantine"
+        },
+        {
+          "sha": "bb9e3b829f953c80ee9fc3709a685c0c152a2769",
+          "tree": "9badfb140902504a2cb682867a0e8ed74e999f69",
+          "parents": [
+            "3ac7968a3daacc1630b866a0a601e7a2a9050203"
+          ],
+          "authored": "2026-07-15T22:46:51Z",
+          "committed": "2026-07-15T22:46:51Z",
+          "title": "ci: enforce legacy production authority quarantine"
+        },
+        {
+          "sha": "5ff03ad4ce1dae4c70ecaea793646c5053b2fcfd",
+          "tree": "0f18d9647a6426dcb8880ade32ebfd10a944ce05",
+          "parents": [
+            "bb9e3b829f953c80ee9fc3709a685c0c152a2769"
+          ],
+          "authored": "2026-07-15T23:03:07Z",
+          "committed": "2026-07-15T23:03:07Z",
+          "title": "ci: make legacy authority checkout LFS-deterministic"
+        },
+        {
+          "sha": "50571fb8c2920e13a2f3e7511d6a7a8fe3580b9d",
+          "tree": "43b0209dfda8292f453b7cafc1feabd76d32481c",
+          "parents": [
+            "5ff03ad4ce1dae4c70ecaea793646c5053b2fcfd"
+          ],
+          "authored": "2026-07-15T23:03:32Z",
+          "committed": "2026-07-15T23:03:32Z",
+          "title": "ci: make legacy WebXR checkout LFS-deterministic"
+        },
+        {
+          "sha": "dbf0f5340c26bbfde9f342c812e9f26c4320fd54",
+          "tree": "0a066efe5fd2ab6ec5759874ea27be147bceb202",
+          "parents": [
+            "50571fb8c2920e13a2f3e7511d6a7a8fe3580b9d"
+          ],
+          "authored": "2026-07-15T23:06:12Z",
+          "committed": "2026-07-15T23:06:12Z",
+          "title": "ci: verify exact legacy tree without LFS filter false failures"
+        },
+        {
+          "sha": "ae0d88e14223c0d73b428b2ba2ac92a64ec58259",
+          "tree": "366bf35c0337396913a398db8a79a062e6ccd241",
+          "parents": [
+            "dbf0f5340c26bbfde9f342c812e9f26c4320fd54"
+          ],
+          "authored": "2026-07-15T23:06:31Z",
+          "committed": "2026-07-15T23:06:31Z",
+          "title": "ci: verify exact WebXR tree without LFS filter false failures"
+        },
+        {
+          "sha": "26fdd29011c4267c1a1e6bc3b01d67fe40c23c82",
+          "tree": "007fb58d46fba1059584417900f6aab25927c70a",
+          "parents": [
+            "ae0d88e14223c0d73b428b2ba2ac92a64ec58259"
+          ],
+          "authored": "2026-07-15T23:06:43Z",
+          "committed": "2026-07-15T23:06:43Z",
+          "title": "chore: diagnose exact legacy checkout dirt"
+        },
+        {
+          "sha": "cafa3cef0d399a7ae496e57d418759c404e66a3f",
+          "tree": "366bf35c0337396913a398db8a79a062e6ccd241",
+          "parents": [
+            "26fdd29011c4267c1a1e6bc3b01d67fe40c23c82"
+          ],
+          "authored": "2026-07-15T23:08:16Z",
+          "committed": "2026-07-15T23:08:16Z",
+          "title": "chore: remove completed LFS diagnostic"
+        },
+        {
+          "sha": "cd36ebfee7449674ffe0a4b2cd77b8059475d6d5",
+          "tree": "da27c0317bde18aa612484fc41e8bad62e168820",
+          "parents": [
+            "cafa3cef0d399a7ae496e57d418759c404e66a3f"
+          ],
+          "authored": "2026-07-15T23:09:30Z",
+          "committed": "2026-07-15T23:09:30Z",
+          "title": "fix: align LFS attributes with actual pointer set"
+        },
+        {
+          "sha": "2351f3a993bace16c931495f901f4d99c87bb46b",
+          "tree": "48a0c762207e5fcc1b7e29c002f8845927b3273a",
+          "parents": [
+            "cd36ebfee7449674ffe0a4b2cd77b8059475d6d5"
+          ],
+          "authored": "2026-07-15T23:11:13Z",
+          "committed": "2026-07-15T23:11:13Z",
+          "title": "ci: isolate legacy WebXR source contracts"
+        },
+        {
+          "sha": "393e91570ef562eb292d4907a3915762afeaed79",
+          "tree": "f4b0eb833ec1ff361833bf98552256e51d6ea231",
+          "parents": [
+            "2351f3a993bace16c931495f901f4d99c87bb46b"
+          ],
+          "authored": "2026-07-15T23:14:59Z",
+          "committed": "2026-07-15T23:14:59Z",
+          "title": "fix: align WebXR source gate with legacy quarantine"
+        },
+        {
+          "sha": "6bae34fe75c00f1a893d95c4697c624f9207fd37",
+          "tree": "aef1a62b522284c6bf756481ec92b24a5fc7f590",
+          "parents": [
+            "393e91570ef562eb292d4907a3915762afeaed79"
+          ],
+          "authored": "2026-07-15T23:16:03Z",
+          "committed": "2026-07-15T23:16:03Z",
+          "title": "ci: lock exact legacy LFS pointer boundary"
+        },
+        {
+          "sha": "02a2120e29776f8012d123cb24ebc119c0588dab",
+          "tree": "34b4720f697e5db17ee281e656e64797b4e1acaa",
+          "parents": [
+            "6bae34fe75c00f1a893d95c4697c624f9207fd37"
+          ],
+          "authored": "2026-07-15T23:20:00Z",
+          "committed": "2026-07-15T23:20:00Z",
+          "title": "ci: retain WebXR source readiness evidence"
+        },
+        {
+          "sha": "23438ba8681428c6d780d1a647f62c15f580e9c1",
+          "tree": "aeaaaf2389e69afc314c68833e27d4009117b42c",
+          "parents": [
+            "02a2120e29776f8012d123cb24ebc119c0588dab"
+          ],
+          "authored": "2026-07-15T23:22:39Z",
+          "committed": "2026-07-15T23:22:39Z",
+          "title": "fix: align WebXR gate with archived legacy browser boundary"
+        },
+        {
+          "sha": "81091251039de81d265d318de30b935866ce78c1",
+          "tree": "0510d185926be18aa160f4e48c39f412a208421d",
+          "parents": [
+            "23438ba8681428c6d780d1a647f62c15f580e9c1"
+          ],
+          "authored": "2026-07-15T23:23:15Z",
+          "committed": "2026-07-15T23:23:15Z",
+          "title": "ci: remove false legacy browser-certification path"
+        },
+        {
+          "sha": "f5e0758d97de201e5d3a3b59fa1621a50a1fd270",
+          "tree": "36f2dbf69188d11bb3cd2813de28b5599c218317",
+          "parents": [
+            "81091251039de81d265d318de30b935866ce78c1"
+          ],
+          "authored": "2026-07-15T23:30:11Z",
+          "committed": "2026-07-15T23:30:11Z",
+          "title": "chore: isolate legacy route and claim checks"
+        },
+        {
+          "sha": "f992a6821a024e147006653846cb654ec7b5c1d2",
+          "tree": "6e0c4403c9f8c99efc187d8b66b19789ef457773",
+          "parents": [
+            "f5e0758d97de201e5d3a3b59fa1621a50a1fd270"
+          ],
+          "authored": "2026-07-15T23:30:29Z",
+          "committed": "2026-07-15T23:30:29Z",
+          "title": "ci: isolate legacy route and claim checks"
+        },
+        {
+          "sha": "817934b7f386c9f100813270d3f6503342bc9126",
+          "tree": "d5ee352d51034655380e4377ce57518e08356a1d",
+          "parents": [
+            "f992a6821a024e147006653846cb654ec7b5c1d2"
+          ],
+          "authored": "2026-07-15T23:33:41Z",
+          "committed": "2026-07-15T23:33:41Z",
+          "title": "fix: distinguish Spatial branding from immersive claims"
+        },
+        {
+          "sha": "2b705676aa9313e33b0cef56a772b4746695a00b",
+          "tree": "75c1f3bffe0058f1438071e54b3e19ee71bddb23",
+          "parents": [
+            "817934b7f386c9f100813270d3f6503342bc9126"
+          ],
+          "authored": "2026-07-15T23:34:07Z",
+          "committed": "2026-07-15T23:34:07Z",
+          "title": "fix: preserve explicit XR prohibitions in claim scan"
+        },
+        {
+          "sha": "24c7ae85d1e8659ac41b54d8f8a11bd164635b67",
+          "tree": "e6eda8768c9a1a01b38d1a5cfd6b00b28865e35e",
+          "parents": [
+            "2b705676aa9313e33b0cef56a772b4746695a00b"
+          ],
+          "authored": "2026-07-15T23:34:30Z",
+          "committed": "2026-07-15T23:34:30Z",
+          "title": "chore: remove consumed route and claim diagnostic"
+        },
+        {
+          "sha": "998b138b6dd459c7da6645ab4eb89d4fa0ba8b91",
+          "tree": "b2acf855678ad953d57744b305f536a9e0f657b4",
+          "parents": [
+            "24c7ae85d1e8659ac41b54d8f8a11bd164635b67"
+          ],
+          "authored": "2026-07-15T23:41:34Z",
+          "committed": "2026-07-15T23:41:34Z",
+          "title": "chore: apply internal-doc claim context fix"
+        },
+        {
+          "sha": "d1ba361cc96f7e58678fb9abd6063050cf535559",
+          "tree": "d9467b0e39a2f93f49ed644e1ff6fd2faec7fc53",
+          "parents": [
+            "998b138b6dd459c7da6645ab4eb89d4fa0ba8b91"
+          ],
+          "authored": "2026-07-15T23:44:24Z",
+          "committed": "2026-07-15T23:44:24Z",
+          "title": "Recognize multi-line V1 boundary context"
+        },
+        {
+          "sha": "85b5c9f1987061c3499f9fab44f94a484f1a2492",
+          "tree": "5ae942c2d0a53e2942d8fd380eca6910047eafd0",
+          "parents": [
+            "d1ba361cc96f7e58678fb9abd6063050cf535559"
+          ],
+          "authored": "2026-07-15T23:44:55Z",
+          "committed": "2026-07-15T23:44:55Z",
+          "title": "Centralize legacy production authority boundary"
+        },
+        {
+          "sha": "8d9059efa4cd651339222bf9f428a7856dd9da34",
+          "tree": "2e1ac5c19ad0f96e8af8f55d4592f1e0ef55702e",
+          "parents": [
+            "85b5c9f1987061c3499f9fab44f94a484f1a2492"
+          ],
+          "authored": "2026-07-15T23:45:10Z",
+          "committed": "2026-07-15T23:45:10Z",
+          "title": "Use canonical legacy authority boundary check"
+        },
+        {
+          "sha": "89aec629a3c64e3a57bc1070f90f0a97e912e4ab",
+          "tree": "be95596298f87708bf325ac47decf3e8ce76507f",
+          "parents": [
+            "8d9059efa4cd651339222bf9f428a7856dd9da34"
+          ],
+          "authored": "2026-07-15T23:45:29Z",
+          "committed": "2026-07-15T23:45:29Z",
+          "title": "Align CI with canonical quarantine authority"
+        },
+        {
+          "sha": "01d72eb32d70481dcf354d2ac34b82e9465e775c",
+          "tree": "a5266705ffe5adf9c3b5946536f7365d84528cca",
+          "parents": [
+            "89aec629a3c64e3a57bc1070f90f0a97e912e4ab"
+          ],
+          "authored": "2026-07-15T23:45:41Z",
+          "committed": "2026-07-15T23:45:41Z",
+          "title": "Align QA with canonical quarantine authority"
+        },
+        {
+          "sha": "513a92615964fe3c2950a9a38fbc859e02a98b5e",
+          "tree": "382622e9db4b22e9748e2f38e482af788ee20c03",
+          "parents": [
+            "01d72eb32d70481dcf354d2ac34b82e9465e775c"
+          ],
+          "authored": "2026-07-15T23:45:54Z",
+          "committed": "2026-07-15T23:45:54Z",
+          "title": "Align launch gate with quarantine authority"
+        },
+        {
+          "sha": "f223bf9e163d5e5af1dbd722792ca0e4620cc97b",
+          "tree": "9532c365a6b7268b5eabb17d066bd1fcfe23d068",
+          "parents": [
+            "513a92615964fe3c2950a9a38fbc859e02a98b5e"
+          ],
+          "authored": "2026-07-15T23:46:58Z",
+          "committed": "2026-07-15T23:46:58Z",
+          "title": "Remove temporary public-copy branch mutator"
+        },
+        {
+          "sha": "6b09542d320c4f6f6042393e56f5927e3e2d35a1",
+          "tree": "c758031224df277709e7ec6d909125074851cd34",
+          "parents": [
+            "f223bf9e163d5e5af1dbd722792ca0e4620cc97b"
+          ],
+          "authored": "2026-07-16T00:10:57Z",
+          "committed": "2026-07-16T00:10:57Z",
+          "title": "fix: scope immersive public-copy checks to public surfaces"
+        },
+        {
+          "sha": "6c9fce535227a939d131d015b22ebaef201553d8",
+          "tree": "c4192797e8823640619cdb5acf0bee855f5cf656",
+          "parents": [
+            "6b09542d320c4f6f6042393e56f5927e3e2d35a1"
+          ],
+          "authored": "2026-07-16T00:22:27Z",
+          "committed": "2026-07-16T00:22:27Z",
+          "title": "fix: preserve negative context in internal claim docs"
+        },
+        {
+          "sha": "dc9ab9c19bdfb943f37e44e6763fc9f88a8da3e2",
+          "tree": "d9a875486e85629ddcdd548cc90077859d276b8d",
+          "parents": [
+            "6c9fce535227a939d131d015b22ebaef201553d8"
+          ],
+          "authored": "2026-07-16T00:38:20Z",
+          "committed": "2026-07-16T00:38:20Z",
+          "title": "ci: retain production claim diagnostic"
+        },
+        {
+          "sha": "c0fc56eb8de34826dcd18b85b61ee9b8837cc141",
+          "tree": "43c53a3ca99d8f81261e3363c9e4eaeca85722fd",
+          "parents": [
+            "dc9ab9c19bdfb943f37e44e6763fc9f88a8da3e2"
+          ],
+          "authored": "2026-07-16T00:42:07Z",
+          "committed": "2026-07-16T00:42:07Z",
+          "title": "docs: mark legacy launch matrix non-authoritative"
+        },
+        {
+          "sha": "8c616523100998c9ca8e09ee88197cad955a800e",
+          "tree": "63ec7d2a073132fdac0b7b818767978ca462b367",
+          "parents": [
+            "c0fc56eb8de34826dcd18b85b61ee9b8837cc141"
+          ],
+          "authored": "2026-07-16T00:42:58Z",
+          "committed": "2026-07-16T00:42:58Z",
+          "title": "ci: remove consumed production claim diagnostic"
+        },
+        {
+          "sha": "c01007de5415a0f5ff8493e343e63bb8ec795d93",
+          "tree": "817510ef00dd339411076dadc4cd63d8e2920857",
+          "parents": [
+            "8c616523100998c9ca8e09ee88197cad955a800e"
+          ],
+          "authored": "2026-07-16T00:47:15Z",
+          "committed": "2026-07-16T00:47:15Z",
+          "title": "ci: isolate legacy Home XR lock failure"
+        },
+        {
+          "sha": "f5a0a913b5062c19ac59cdc0d983135d8d8c8423",
+          "tree": "831ee023300aeeda2c57fc42d7f9b99fcec90f7a",
+          "parents": [
+            "c01007de5415a0f5ff8493e343e63bb8ec795d93"
+          ],
+          "authored": "2026-07-16T00:49:39Z",
+          "committed": "2026-07-16T00:49:39Z",
+          "title": "fix: make legacy Home XR lock source-only"
+        },
+        {
+          "sha": "050ddd70dc84666c4324785ec5d2d7c8568580c3",
+          "tree": "497b57394a5a4b3190ef6b060d899d334b6562f9",
+          "parents": [
+            "f5a0a913b5062c19ac59cdc0d983135d8d8c8423"
+          ],
+          "authored": "2026-07-16T00:50:20Z",
+          "committed": "2026-07-16T00:50:20Z",
+          "title": "ci: keep legacy WebXR audit source-only"
+        },
+        {
+          "sha": "5aaab212a4a13b3b6dc0f586820b6ab66caf7d8b",
+          "tree": "244943dcaa4e3b06b9704de17687191f046ba7e7",
+          "parents": [
+            "050ddd70dc84666c4324785ec5d2d7c8568580c3"
+          ],
+          "authored": "2026-07-16T00:51:00Z",
+          "committed": "2026-07-16T00:51:00Z",
+          "title": "ci: remove consumed Home XR lock diagnostic"
+        },
+        {
+          "sha": "b08490ec27245481ae8d163604ea2403eee0c3de",
+          "tree": "243ffe1bec4a64c06dcfc1f002747f12e8b9ee4e",
+          "parents": [
+            "5aaab212a4a13b3b6dc0f586820b6ab66caf7d8b"
+          ],
+          "authored": "2026-07-16T01:05:09Z",
+          "committed": "2026-07-16T01:05:09Z",
+          "title": "docs: update legacy references"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-v2-20260715",
+      "head": "5f749548a18f07a113dab33201d943ec905e0858",
+      "ahead_by": 56,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "commits": [
+        {
+          "sha": "ab53f5470050e3fd0ef450fdaf6211e8efbfd0ac",
+          "tree": "2223308924abef1edbffdaa29da79bb496595093",
+          "parents": [
+            "81cb8382d914b11d781851b2d07e1526c3a0220c"
+          ],
+          "authored": "2026-07-15T22:29:42Z",
+          "committed": "2026-07-15T22:29:42Z",
+          "title": "Quarantine legacy Firebase production deploy workflow"
+        },
+        {
+          "sha": "d7e4b58a0cf50c9e0395fc28d0444a91b8e637c9",
+          "tree": "995c734d4c80a782625d1b14c143c162580cb149",
+          "parents": [
+            "ab53f5470050e3fd0ef450fdaf6211e8efbfd0ac"
+          ],
+          "authored": "2026-07-15T22:29:55Z",
+          "committed": "2026-07-15T22:29:55Z",
+          "title": "Quarantine legacy Home XR deployment workflow"
+        },
+        {
+          "sha": "8762f4ece524d6be4051015190137abf0b23ea15",
+          "tree": "cdb9beba64e3706258ed71d9aaac074d2b9cac60",
+          "parents": [
+            "d7e4b58a0cf50c9e0395fc28d0444a91b8e637c9"
+          ],
+          "authored": "2026-07-15T22:30:23Z",
+          "committed": "2026-07-15T22:30:23Z",
+          "title": "Classify UrAi as legacy reference authority"
+        },
+        {
+          "sha": "850a8801d55bfa430889574e429df5b6b7fdbd0e",
+          "tree": "2ee06c9131fcb1261c59be0d76c7e587897809ec",
+          "parents": [
+            "8762f4ece524d6be4051015190137abf0b23ea15"
+          ],
+          "authored": "2026-07-15T22:30:43Z",
+          "committed": "2026-07-15T22:30:43Z",
+          "title": "Document legacy credential rotation and quarantine authority"
+        },
+        {
+          "sha": "3db942246f7c4934b4fefa6c0c3abd81d94d566b",
+          "tree": "b1eef01147cd4bd3bea3b789fbaa160d41a7d675",
+          "parents": [
+            "850a8801d55bfa430889574e429df5b6b7fdbd0e"
+          ],
+          "authored": "2026-07-15T22:31:54Z",
+          "committed": "2026-07-15T22:31:54Z",
+          "title": "Quarantine legacy urai.app deployment workflow"
+        },
+        {
+          "sha": "c27229e49d43edffc06c900ce397e188ee3a508e",
+          "tree": "095a3ebb0a608585501380f3fb3ff558d6545111",
+          "parents": [
+            "3db942246f7c4934b4fefa6c0c3abd81d94d566b"
+          ],
+          "authored": "2026-07-15T22:32:06Z",
+          "committed": "2026-07-15T22:32:06Z",
+          "title": "Quarantine legacy Firebase ship workflow"
+        },
+        {
+          "sha": "a8d7126317772c74f7f43288fb468df1e9f568ee",
+          "tree": "3844323582e06a3f4f5f8f7cb3a5616411f44d42",
+          "parents": [
+            "c27229e49d43edffc06c900ce397e188ee3a508e"
+          ],
+          "authored": "2026-07-15T22:41:53Z",
+          "committed": "2026-07-15T22:41:53Z",
+          "title": "chore: disable legacy deploy script"
+        },
+        {
+          "sha": "1383af810c58aabeebe229de4249ffb97df1728e",
+          "tree": "b68d5b10e6951b9954e36ce6eec305190bf33c87",
+          "parents": [
+            "a8d7126317772c74f7f43288fb468df1e9f568ee"
+          ],
+          "authored": "2026-07-15T22:42:10Z",
+          "committed": "2026-07-15T22:42:10Z",
+          "title": "chore: apply expanded legacy production quarantine"
+        },
+        {
+          "sha": "d38abf1b2ca4432b3629d1b868de42831e107d61",
+          "tree": "3844323582e06a3f4f5f8f7cb3a5616411f44d42",
+          "parents": [
+            "1383af810c58aabeebe229de4249ffb97df1728e"
+          ],
+          "authored": "2026-07-15T22:42:43Z",
+          "committed": "2026-07-15T22:42:43Z",
+          "title": "chore: remove temporary quarantine helper"
+        },
+        {
+          "sha": "659233a29b6ee15d4335b11456dc910fedd72d8c",
+          "tree": "202529430fbe005f97f03690eb243d2e887c4999",
+          "parents": [
+            "d38abf1b2ca4432b3629d1b868de42831e107d61"
+          ],
+          "authored": "2026-07-15T22:42:46Z",
+          "committed": "2026-07-15T22:42:46Z",
+          "title": "Add machine-readable canonical production authority"
+        },
+        {
+          "sha": "16f86a4e4fe907a3c6009e98794349fe69eb3b57",
+          "tree": "177378d2f0f88e93cac0033d4fbe273d622db95e",
+          "parents": [
+            "659233a29b6ee15d4335b11456dc910fedd72d8c"
+          ],
+          "authored": "2026-07-15T22:43:16Z",
+          "committed": "2026-07-15T22:43:16Z",
+          "title": "Validate canonical authority override for legacy registry"
+        },
+        {
+          "sha": "492ad8a3c99bcb60c50fc88eb7d27959aeb328aa",
+          "tree": "c0a7442270f41d8744f3dd4ffd1f5721b90c6dca",
+          "parents": [
+            "16f86a4e4fe907a3c6009e98794349fe69eb3b57"
+          ],
+          "authored": "2026-07-15T22:43:19Z",
+          "committed": "2026-07-15T22:43:19Z",
+          "title": "security: quarantine legacy P1 release gate"
+        },
+        {
+          "sha": "626da963018b44343046ba75e04629e9a531bd9f",
+          "tree": "ab471a38c52877680bd216b32557803e902abf59",
+          "parents": [
+            "492ad8a3c99bcb60c50fc88eb7d27959aeb328aa"
+          ],
+          "authored": "2026-07-15T22:43:27Z",
+          "committed": "2026-07-15T22:43:27Z",
+          "title": "security: quarantine legacy production evidence"
+        },
+        {
+          "sha": "c353b48978b63ed61a0424603e44f8a75623a815",
+          "tree": "34879b4aaab60e14038ff40320df3750cb34dad3",
+          "parents": [
+            "626da963018b44343046ba75e04629e9a531bd9f"
+          ],
+          "authored": "2026-07-15T22:43:35Z",
+          "committed": "2026-07-15T22:43:35Z",
+          "title": "security: quarantine legacy Life Map evidence"
+        },
+        {
+          "sha": "81efbf817d4775e877e9dee77a6b625a30809bd0",
+          "tree": "8d6433d68268770a5ff47fc1c370425ff84cb321",
+          "parents": [
+            "c353b48978b63ed61a0424603e44f8a75623a815"
+          ],
+          "authored": "2026-07-15T22:43:43Z",
+          "committed": "2026-07-15T22:43:43Z",
+          "title": "Align quarantine authority documentation and settings review"
+        },
+        {
+          "sha": "009d480f74340b943b4e9f377594ef4038ac5770",
+          "tree": "32697453cf89967f62e0f992477e66c4584e364e",
+          "parents": [
+            "81efbf817d4775e877e9dee77a6b625a30809bd0"
+          ],
+          "authored": "2026-07-15T22:43:44Z",
+          "committed": "2026-07-15T22:43:44Z",
+          "title": "security: quarantine legacy post-deploy verifier"
+        },
+        {
+          "sha": "b90e779d37caa534e685329722368e4a5e1123ec",
+          "tree": "97a1d680af92d8b39d9115649184daca1784c723",
+          "parents": [
+            "009d480f74340b943b4e9f377594ef4038ac5770"
+          ],
+          "authored": "2026-07-15T22:44:34Z",
+          "committed": "2026-07-15T22:44:34Z",
+          "title": "security: make legacy WebXR audit source-only"
+        },
+        {
+          "sha": "af22800e6762c1f0f8cf272cd21b13a4366e7eb4",
+          "tree": "675790a94fdb794e61e900f5759db7c1eb505d3d",
+          "parents": [
+            "b90e779d37caa534e685329722368e4a5e1123ec"
+          ],
+          "authored": "2026-07-15T22:44:48Z",
+          "committed": "2026-07-15T22:44:48Z",
+          "title": "test: verify Home XR deployment quarantine"
+        },
+        {
+          "sha": "3ac7968a3daacc1630b866a0a601e7a2a9050203",
+          "tree": "06a5b42f38e769e07b82c7bea83702e874744df7",
+          "parents": [
+            "af22800e6762c1f0f8cf272cd21b13a4366e7eb4"
+          ],
+          "authored": "2026-07-15T22:45:05Z",
+          "committed": "2026-07-15T22:45:05Z",
+          "title": "test: align Home XR evidence with legacy quarantine"
+        },
+        {
+          "sha": "bb9e3b829f953c80ee9fc3709a685c0c152a2769",
+          "tree": "9badfb140902504a2cb682867a0e8ed74e999f69",
+          "parents": [
+            "3ac7968a3daacc1630b866a0a601e7a2a9050203"
+          ],
+          "authored": "2026-07-15T22:46:51Z",
+          "committed": "2026-07-15T22:46:51Z",
+          "title": "ci: enforce legacy production authority quarantine"
+        },
+        {
+          "sha": "5ff03ad4ce1dae4c70ecaea793646c5053b2fcfd",
+          "tree": "0f18d9647a6426dcb8880ade32ebfd10a944ce05",
+          "parents": [
+            "bb9e3b829f953c80ee9fc3709a685c0c152a2769"
+          ],
+          "authored": "2026-07-15T23:03:07Z",
+          "committed": "2026-07-15T23:03:07Z",
+          "title": "ci: make legacy authority checkout LFS-deterministic"
+        },
+        {
+          "sha": "50571fb8c2920e13a2f3e7511d6a7a8fe3580b9d",
+          "tree": "43b0209dfda8292f453b7cafc1feabd76d32481c",
+          "parents": [
+            "5ff03ad4ce1dae4c70ecaea793646c5053b2fcfd"
+          ],
+          "authored": "2026-07-15T23:03:32Z",
+          "committed": "2026-07-15T23:03:32Z",
+          "title": "ci: make legacy WebXR checkout LFS-deterministic"
+        },
+        {
+          "sha": "dbf0f5340c26bbfde9f342c812e9f26c4320fd54",
+          "tree": "0a066efe5fd2ab6ec5759874ea27be147bceb202",
+          "parents": [
+            "50571fb8c2920e13a2f3e7511d6a7a8fe3580b9d"
+          ],
+          "authored": "2026-07-15T23:06:12Z",
+          "committed": "2026-07-15T23:06:12Z",
+          "title": "ci: verify exact legacy tree without LFS filter false failures"
+        },
+        {
+          "sha": "ae0d88e14223c0d73b428b2ba2ac92a64ec58259",
+          "tree": "366bf35c0337396913a398db8a79a062e6ccd241",
+          "parents": [
+            "dbf0f5340c26bbfde9f342c812e9f26c4320fd54"
+          ],
+          "authored": "2026-07-15T23:06:31Z",
+          "committed": "2026-07-15T23:06:31Z",
+          "title": "ci: verify exact WebXR tree without LFS filter false failures"
+        },
+        {
+          "sha": "26fdd29011c4267c1a1e6bc3b01d67fe40c23c82",
+          "tree": "007fb58d46fba1059584417900f6aab25927c70a",
+          "parents": [
+            "ae0d88e14223c0d73b428b2ba2ac92a64ec58259"
+          ],
+          "authored": "2026-07-15T23:06:43Z",
+          "committed": "2026-07-15T23:06:43Z",
+          "title": "chore: diagnose exact legacy checkout dirt"
+        },
+        {
+          "sha": "cafa3cef0d399a7ae496e57d418759c404e66a3f",
+          "tree": "366bf35c0337396913a398db8a79a062e6ccd241",
+          "parents": [
+            "26fdd29011c4267c1a1e6bc3b01d67fe40c23c82"
+          ],
+          "authored": "2026-07-15T23:08:16Z",
+          "committed": "2026-07-15T23:08:16Z",
+          "title": "chore: remove completed LFS diagnostic"
+        },
+        {
+          "sha": "cd36ebfee7449674ffe0a4b2cd77b8059475d6d5",
+          "tree": "da27c0317bde18aa612484fc41e8bad62e168820",
+          "parents": [
+            "cafa3cef0d399a7ae496e57d418759c404e66a3f"
+          ],
+          "authored": "2026-07-15T23:09:30Z",
+          "committed": "2026-07-15T23:09:30Z",
+          "title": "fix: align LFS attributes with actual pointer set"
+        },
+        {
+          "sha": "2351f3a993bace16c931495f901f4d99c87bb46b",
+          "tree": "48a0c762207e5fcc1b7e29c002f8845927b3273a",
+          "parents": [
+            "cd36ebfee7449674ffe0a4b2cd77b8059475d6d5"
+          ],
+          "authored": "2026-07-15T23:11:13Z",
+          "committed": "2026-07-15T23:11:13Z",
+          "title": "ci: isolate legacy WebXR source contracts"
+        },
+        {
+          "sha": "393e91570ef562eb292d4907a3915762afeaed79",
+          "tree": "f4b0eb833ec1ff361833bf98552256e51d6ea231",
+          "parents": [
+            "2351f3a993bace16c931495f901f4d99c87bb46b"
+          ],
+          "authored": "2026-07-15T23:14:59Z",
+          "committed": "2026-07-15T23:14:59Z",
+          "title": "fix: align WebXR source gate with legacy quarantine"
+        },
+        {
+          "sha": "6bae34fe75c00f1a893d95c4697c624f9207fd37",
+          "tree": "aef1a62b522284c6bf756481ec92b24a5fc7f590",
+          "parents": [
+            "393e91570ef562eb292d4907a3915762afeaed79"
+          ],
+          "authored": "2026-07-15T23:16:03Z",
+          "committed": "2026-07-15T23:16:03Z",
+          "title": "ci: lock exact legacy LFS pointer boundary"
+        },
+        {
+          "sha": "02a2120e29776f8012d123cb24ebc119c0588dab",
+          "tree": "34b4720f697e5db17ee281e656e64797b4e1acaa",
+          "parents": [
+            "6bae34fe75c00f1a893d95c4697c624f9207fd37"
+          ],
+          "authored": "2026-07-15T23:20:00Z",
+          "committed": "2026-07-15T23:20:00Z",
+          "title": "ci: retain WebXR source readiness evidence"
+        },
+        {
+          "sha": "23438ba8681428c6d780d1a647f62c15f580e9c1",
+          "tree": "aeaaaf2389e69afc314c68833e27d4009117b42c",
+          "parents": [
+            "02a2120e29776f8012d123cb24ebc119c0588dab"
+          ],
+          "authored": "2026-07-15T23:22:39Z",
+          "committed": "2026-07-15T23:22:39Z",
+          "title": "fix: align WebXR gate with archived legacy browser boundary"
+        },
+        {
+          "sha": "81091251039de81d265d318de30b935866ce78c1",
+          "tree": "0510d185926be18aa160f4e48c39f412a208421d",
+          "parents": [
+            "23438ba8681428c6d780d1a647f62c15f580e9c1"
+          ],
+          "authored": "2026-07-15T23:23:15Z",
+          "committed": "2026-07-15T23:23:15Z",
+          "title": "ci: remove false legacy browser-certification path"
+        },
+        {
+          "sha": "f5e0758d97de201e5d3a3b59fa1621a50a1fd270",
+          "tree": "36f2dbf69188d11bb3cd2813de28b5599c218317",
+          "parents": [
+            "81091251039de81d265d318de30b935866ce78c1"
+          ],
+          "authored": "2026-07-15T23:30:11Z",
+          "committed": "2026-07-15T23:30:11Z",
+          "title": "chore: isolate legacy route and claim checks"
+        },
+        {
+          "sha": "f992a6821a024e147006653846cb654ec7b5c1d2",
+          "tree": "6e0c4403c9f8c99efc187d8b66b19789ef457773",
+          "parents": [
+            "f5e0758d97de201e5d3a3b59fa1621a50a1fd270"
+          ],
+          "authored": "2026-07-15T23:30:29Z",
+          "committed": "2026-07-15T23:30:29Z",
+          "title": "ci: isolate legacy route and claim checks"
+        },
+        {
+          "sha": "817934b7f386c9f100813270d3f6503342bc9126",
+          "tree": "d5ee352d51034655380e4377ce57518e08356a1d",
+          "parents": [
+            "f992a6821a024e147006653846cb654ec7b5c1d2"
+          ],
+          "authored": "2026-07-15T23:33:41Z",
+          "committed": "2026-07-15T23:33:41Z",
+          "title": "fix: distinguish Spatial branding from immersive claims"
+        },
+        {
+          "sha": "2b705676aa9313e33b0cef56a772b4746695a00b",
+          "tree": "75c1f3bffe0058f1438071e54b3e19ee71bddb23",
+          "parents": [
+            "817934b7f386c9f100813270d3f6503342bc9126"
+          ],
+          "authored": "2026-07-15T23:34:07Z",
+          "committed": "2026-07-15T23:34:07Z",
+          "title": "fix: preserve explicit XR prohibitions in claim scan"
+        },
+        {
+          "sha": "24c7ae85d1e8659ac41b54d8f8a11bd164635b67",
+          "tree": "e6eda8768c9a1a01b38d1a5cfd6b00b28865e35e",
+          "parents": [
+            "2b705676aa9313e33b0cef56a772b4746695a00b"
+          ],
+          "authored": "2026-07-15T23:34:30Z",
+          "committed": "2026-07-15T23:34:30Z",
+          "title": "chore: remove consumed route and claim diagnostic"
+        },
+        {
+          "sha": "998b138b6dd459c7da6645ab4eb89d4fa0ba8b91",
+          "tree": "b2acf855678ad953d57744b305f536a9e0f657b4",
+          "parents": [
+            "24c7ae85d1e8659ac41b54d8f8a11bd164635b67"
+          ],
+          "authored": "2026-07-15T23:41:34Z",
+          "committed": "2026-07-15T23:41:34Z",
+          "title": "chore: apply internal-doc claim context fix"
+        },
+        {
+          "sha": "d1ba361cc96f7e58678fb9abd6063050cf535559",
+          "tree": "d9467b0e39a2f93f49ed644e1ff6fd2faec7fc53",
+          "parents": [
+            "998b138b6dd459c7da6645ab4eb89d4fa0ba8b91"
+          ],
+          "authored": "2026-07-15T23:44:24Z",
+          "committed": "2026-07-15T23:44:24Z",
+          "title": "Recognize multi-line V1 boundary context"
+        },
+        {
+          "sha": "85b5c9f1987061c3499f9fab44f94a484f1a2492",
+          "tree": "5ae942c2d0a53e2942d8fd380eca6910047eafd0",
+          "parents": [
+            "d1ba361cc96f7e58678fb9abd6063050cf535559"
+          ],
+          "authored": "2026-07-15T23:44:55Z",
+          "committed": "2026-07-15T23:44:55Z",
+          "title": "Centralize legacy production authority boundary"
+        },
+        {
+          "sha": "8d9059efa4cd651339222bf9f428a7856dd9da34",
+          "tree": "2e1ac5c19ad0f96e8af8f55d4592f1e0ef55702e",
+          "parents": [
+            "85b5c9f1987061c3499f9fab44f94a484f1a2492"
+          ],
+          "authored": "2026-07-15T23:45:10Z",
+          "committed": "2026-07-15T23:45:10Z",
+          "title": "Use canonical legacy authority boundary check"
+        },
+        {
+          "sha": "89aec629a3c64e3a57bc1070f90f0a97e912e4ab",
+          "tree": "be95596298f87708bf325ac47decf3e8ce76507f",
+          "parents": [
+            "8d9059efa4cd651339222bf9f428a7856dd9da34"
+          ],
+          "authored": "2026-07-15T23:45:29Z",
+          "committed": "2026-07-15T23:45:29Z",
+          "title": "Align CI with canonical quarantine authority"
+        },
+        {
+          "sha": "01d72eb32d70481dcf354d2ac34b82e9465e775c",
+          "tree": "a5266705ffe5adf9c3b5946536f7365d84528cca",
+          "parents": [
+            "89aec629a3c64e3a57bc1070f90f0a97e912e4ab"
+          ],
+          "authored": "2026-07-15T23:45:41Z",
+          "committed": "2026-07-15T23:45:41Z",
+          "title": "Align QA with canonical quarantine authority"
+        },
+        {
+          "sha": "513a92615964fe3c2950a9a38fbc859e02a98b5e",
+          "tree": "382622e9db4b22e9748e2f38e482af788ee20c03",
+          "parents": [
+            "01d72eb32d70481dcf354d2ac34b82e9465e775c"
+          ],
+          "authored": "2026-07-15T23:45:54Z",
+          "committed": "2026-07-15T23:45:54Z",
+          "title": "Align launch gate with quarantine authority"
+        },
+        {
+          "sha": "f223bf9e163d5e5af1dbd722792ca0e4620cc97b",
+          "tree": "9532c365a6b7268b5eabb17d066bd1fcfe23d068",
+          "parents": [
+            "513a92615964fe3c2950a9a38fbc859e02a98b5e"
+          ],
+          "authored": "2026-07-15T23:46:58Z",
+          "committed": "2026-07-15T23:46:58Z",
+          "title": "Remove temporary public-copy branch mutator"
+        },
+        {
+          "sha": "641e934ff41957af899fe3a73a89698d3bd2b7bf",
+          "tree": "690048a99fad07ecdb9db71f36c868a72db47d97",
+          "parents": [
+            "f223bf9e163d5e5af1dbd722792ca0e4620cc97b"
+          ],
+          "authored": "2026-07-15T23:53:38Z",
+          "committed": "2026-07-15T23:53:38Z",
+          "title": "Make legacy copy audit Markdown-section aware"
+        },
+        {
+          "sha": "2e522917286cd6c6bc4a017d696633a2f8f051af",
+          "tree": "5db83dd4adca65b3b95047745025a8dfb4a15de3",
+          "parents": [
+            "641e934ff41957af899fe3a73a89698d3bd2b7bf"
+          ],
+          "authored": "2026-07-15T23:58:01Z",
+          "committed": "2026-07-15T23:58:01Z",
+          "title": "Make production-claim audit Markdown-section aware"
+        },
+        {
+          "sha": "2a50cad3f620ab4a1ef3fc9527491d73ea967078",
+          "tree": "8d2c8ba51f0a9e3331b867dd3d73c327df7a9710",
+          "parents": [
+            "2e522917286cd6c6bc4a017d696633a2f8f051af"
+          ],
+          "authored": "2026-07-16T00:03:21Z",
+          "committed": "2026-07-16T00:03:21Z",
+          "title": "Honor explicit Markdown list boundary preambles"
+        },
+        {
+          "sha": "cfb7170bcd4cae4a4fb671d27e54a34532270b87",
+          "tree": "9b8329b44792a49464fbe256109ef471b9ff89f8",
+          "parents": [
+            "2a50cad3f620ab4a1ef3fc9527491d73ea967078"
+          ],
+          "authored": "2026-07-16T00:07:15Z",
+          "committed": "2026-07-16T00:07:15Z",
+          "title": "Classify explicit negative Markdown preambles"
+        },
+        {
+          "sha": "05f25815fa7a68f75adaa69cad6376a6ece3d76a",
+          "tree": "4337389a7b0ac682cbf7812db214aea227f3e799",
+          "parents": [
+            "cfb7170bcd4cae4a4fb671d27e54a34532270b87"
+          ],
+          "authored": "2026-07-16T00:11:03Z",
+          "committed": "2026-07-16T00:11:03Z",
+          "title": "Retain exact WebXR claim-policy diagnostics"
+        },
+        {
+          "sha": "309a17fe9756a51ea3c50639e99bb9ca5f94230c",
+          "tree": "2e45afbe038aa1a06118cf7eafe94bc9112b1b96",
+          "parents": [
+            "05f25815fa7a68f75adaa69cad6376a6ece3d76a"
+          ],
+          "authored": "2026-07-16T00:16:01Z",
+          "committed": "2026-07-16T00:16:01Z",
+          "title": "Mark Tier-2 locks as legacy reference only"
+        },
+        {
+          "sha": "8f34e126e76df5e96f9070ee68e66011e96397f2",
+          "tree": "4c761cf2967e3768496bca169d727eba967299d7",
+          "parents": [
+            "309a17fe9756a51ea3c50639e99bb9ca5f94230c"
+          ],
+          "authored": "2026-07-16T00:16:23Z",
+          "committed": "2026-07-16T00:16:23Z",
+          "title": "Archive obsolete UrAi launch authority matrix"
+        },
+        {
+          "sha": "fe3a025490b42daceaa4172df6fbab9e41cc6dcf",
+          "tree": "93b49db4541ec027d90326a0b12f6c8f544dd826",
+          "parents": [
+            "8f34e126e76df5e96f9070ee68e66011e96397f2"
+          ],
+          "authored": "2026-07-16T00:16:35Z",
+          "committed": "2026-07-16T00:16:35Z",
+          "title": "Correct WebXR handoff to canonical Spatial authority"
+        },
+        {
+          "sha": "b8710428326e5c6c9a8dc13e19b6deca3ed2a819",
+          "tree": "4a55d4f9b89eb3f2870671f7f208f9b75d552743",
+          "parents": [
+            "fe3a025490b42daceaa4172df6fbab9e41cc6dcf"
+          ],
+          "authored": "2026-07-16T00:24:14Z",
+          "committed": "2026-07-16T00:24:14Z",
+          "title": "Separate historical URL smoke from source containment"
+        },
+        {
+          "sha": "5f749548a18f07a113dab33201d943ec905e0858",
+          "tree": "4e2548e991eba68ad430d38d0f7b24b8b9ab3918",
+          "parents": [
+            "b8710428326e5c6c9a8dc13e19b6deca3ed2a819"
+          ],
+          "authored": "2026-07-16T00:30:00Z",
+          "committed": "2026-07-16T00:30:00Z",
+          "title": "Align Home XR static lock with legacy quarantine"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/chore/restore-sole-production-authority-wording",
+      "head": "edeb5a84282558e836d4584745b509c3be2fba9d",
+      "ahead_by": 1,
+      "behind_by": 27,
+      "merge_base": "79de45f4041500af5892de9513fadb43729a3ce3",
+      "commits": [
+        {
+          "sha": "edeb5a84282558e836d4584745b509c3be2fba9d",
+          "tree": "bb29224dd098b6eb43b135c3a4d94b6e23ec2922",
+          "parents": [
+            "79de45f4041500af5892de9513fadb43729a3ce3"
+          ],
+          "authored": "2026-09-05T11:58:13Z",
+          "committed": "2026-09-05T11:58:13Z",
+          "title": "docs: restore sole production authority wording"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/ci-validation",
+      "head": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+      "ahead_by": 3,
+      "behind_by": 2062,
+      "merge_base": "e7cd742984912caecdb31266d3c29d1743b79af0",
+      "commits": [
+        {
+          "sha": "029a0cb5e4bd654ace798c93ff9367e199c45d24",
+          "tree": "41d48ef8783619856a9503da1b1a4c8687d7db4f",
+          "parents": [
+            "e7cd742984912caecdb31266d3c29d1743b79af0"
+          ],
+          "authored": "2026-05-07T07:05:42Z",
+          "committed": "2026-05-07T07:05:42Z",
+          "title": "Validate app and Firebase Functions in CI"
+        },
+        {
+          "sha": "971003fdc1f2c2538dce6eb9f405f1a5ecf4a984",
+          "tree": "76edd236d162ad697dd530fb6435891babff783c",
+          "parents": [
+            "029a0cb5e4bd654ace798c93ff9367e199c45d24"
+          ],
+          "authored": "2026-05-08T02:54:25Z",
+          "committed": "2026-05-08T02:54:25Z",
+          "title": "Fix functions build unused import"
+        },
+        {
+          "sha": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+          "tree": "3096fbcdee84eebfc5f384fb36cde3164c63b6ea",
+          "parents": [
+            "971003fdc1f2c2538dce6eb9f405f1a5ecf4a984"
+          ],
+          "authored": "2026-05-08T02:56:35Z",
+          "committed": "2026-05-08T02:56:35Z",
+          "title": "Use npm install for app CI until peers are aligned"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-and-update-import",
+      "head": "1264445d74fe5cc643c37c16535c27909f62920f",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "commits": [
+        {
+          "sha": "1264445d74fe5cc643c37c16535c27909f62920f",
+          "tree": "0b43f14d7a765e290f127de065ea88d91d9fc4f6",
+          "parents": [
+            "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e"
+          ],
+          "authored": "2025-09-26T03:07:05Z",
+          "committed": "2025-09-26T03:07:05Z",
+          "title": "fix: mark onboarding page as client component"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/add-testing-and-ci-configuration",
+      "head": "0f4281fdfbad09b43f017abb6d638d69d5d23a8d",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "0f4281fdfbad09b43f017abb6d638d69d5d23a8d",
+          "tree": "ce2c4da68c531341576f229679e23ef3ef24ad13",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:28:33Z",
+          "committed": "2025-09-26T03:28:33Z",
+          "title": "test: add onboarding flow coverage"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-pragma-and-type-props",
+      "head": "8d2a837a650e22dded064ecd62c25743b1168910",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "commits": [
+        {
+          "sha": "8d2a837a650e22dded064ecd62c25743b1168910",
+          "tree": "1fb21d09e3b6ee9c7bdb3b11adec9200c278ca13",
+          "parents": [
+            "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e"
+          ],
+          "authored": "2025-09-26T03:32:52Z",
+          "committed": "2025-09-26T03:32:52Z",
+          "title": "Convert Button component to client with typed props"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/ancient-signals-verification-ci",
+      "head": "2b64a60317cf4a2bdf9a4e0ba2435bb31e7f28f6",
+      "ahead_by": 2,
+      "behind_by": 2096,
+      "merge_base": "2bfbbe10bcd1f5c241760adb112555ecf0272586",
+      "commits": [
+        {
+          "sha": "9d0286cae050b40482ceac5a8807fd73fc24d50c",
+          "tree": "5c7d2f750e15559f37190b307abbe7783e43b4d7",
+          "parents": [
+            "2bfbbe10bcd1f5c241760adb112555ecf0272586"
+          ],
+          "authored": "2026-05-07T06:46:58Z",
+          "committed": "2026-05-07T06:46:58Z",
+          "title": "Add Ancient Signals verification workflow"
+        },
+        {
+          "sha": "2b64a60317cf4a2bdf9a4e0ba2435bb31e7f28f6",
+          "tree": "f63b3c6ef65b0a53489ab8adba8c91c8d2b32841",
+          "parents": [
+            "9d0286cae050b40482ceac5a8807fd73fc24d50c"
+          ],
+          "authored": "2026-05-07T07:10:17Z",
+          "committed": "2026-05-07T07:10:17Z",
+          "title": "Fix Ancient Signals functions build"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
