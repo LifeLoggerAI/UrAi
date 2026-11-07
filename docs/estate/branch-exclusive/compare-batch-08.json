@@ -1,0 +1,217 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 84,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/genesis-staging-live",
+      "head": "0706a2317bd809932f72274405e9e0153a7d52ad",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 428,
+      "merge_base": "fc108ddfb87ff99d0fa94e995803312cb3acd1d1",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/lib/urai/types.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/genesis-visual-supremacy",
+      "head": "f935befbebfca9289a74920a4fcb62411a339764",
+      "status": "diverged",
+      "ahead_by": 49,
+      "behind_by": 1142,
+      "merge_base": "8ad112d05fa9bbd9de85638ca564dc3a39367e8a",
+      "too_large": null,
+      "reported_file_count": 66,
+      "changed_file_sample": [
+        "docs/products/council/qa.md",
+        "docs/products/intelligence-engine/qa.md",
+        "docs/products/passive-data/qa.md",
+        "docs/system/build-evidence.md",
+        "docs/system/canonical-authority-map.md",
+        "docs/system/completion-status-matrix.md",
+        "docs/system/evidence-gates.md",
+        "docs/system/evidence-ledger.md",
+        "docs/system/integration-dependency-map.md",
+        "docs/system/product-map.md",
+        "docs/system/repo-inventory.md",
+        "docs/system/repo-status-matrix.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/home-cinematic-ground-orb-polish",
+      "head": "e6f2602941cacfe1b91f858ede56ee4b47f1e615",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1912,
+      "merge_base": "afed0e60914816f6e55fc5627fe68690b7a1b380",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/components/urai/UraiResolvedHomeScene.tsx",
+        "src/lib/use-urai-home-state.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/home-live-wired-polish",
+      "head": "2d344073a2c328ab858a84554a87f952a0501289",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1913,
+      "merge_base": "4c790f9ca1f8b456c3ce596a0c9c9ae42207c6ba",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "scripts/seed-demo.mjs",
+        "src/lib/use-urai-home-state.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/impl/cinematic-runtime-depth",
+      "head": "0c2b941ea4a0ef072eed3e5f8938dd19efb347ad",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1383,
+      "merge_base": "33fd2eb8c2f905fea1f4ff5f14abab646f8d0c6e",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/CINEMATIC_RUNTIME_DEPTH.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/integrate-cinematic-urai-redesign",
+      "head": "0f2294a5a9f9f082bf84ad643743eca6ab70f526",
+      "status": "diverged",
+      "ahead_by": 37,
+      "behind_by": 1875,
+      "merge_base": "20c16bcdde735a8d8dcca7edd602879f7568f185",
+      "too_large": null,
+      "reported_file_count": 31,
+      "changed_file_sample": [
+        "src/components/urai/data/emotionPalette.ts",
+        "src/components/urai/data/memoryStars.ts",
+        "src/components/urai/home/AvatarSilhouette.tsx",
+        "src/components/urai/home/CosmicSky.tsx",
+        "src/components/urai/home/EmotionalNebulaLayer.tsx",
+        "src/components/urai/home/GroundSystem.tsx",
+        "src/components/urai/home/HomeAscentController.tsx",
+        "src/components/urai/home/HomeScene.tsx",
+        "src/components/urai/home/MemoryOrb.tsx",
+        "src/components/urai/home/StarParticleField.tsx",
+        "src/components/urai/hooks/useAscentTransition.ts",
+        "src/components/urai/hooks/useGalaxyCamera.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/legacy-readme",
+      "head": "f9e3545b7fcd4c3344720d534a9111e8a31b6870",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 115,
+      "merge_base": "5a3ce86542f762d5ce8a6b5c9c023246bf844150",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "README.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/lifemap-layer-data-and-era-controls",
+      "head": "0b7ff536ec14d2b47fec0ac7d320b6a2640b81e0",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1914,
+      "merge_base": "497130aee4269f4e3f5c3e91ece5d681873ef78a",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "scripts/seed-demo.mjs",
+        "src/components/lifemap/useMemoryStars.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/mom-vr-life-map-polish",
+      "head": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 415,
+      "merge_base": "8951e6788d240ce39c09c00869f45a1797a63f7c",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/components/urai/life-map/LifeMapPage.tsx",
+        "src/components/urai/world/MomLifeMapPolishOverlay.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/polish/webgl-home-lifemap-readability",
+      "head": "1e4dffbd5d06e54e90ef11fdc9dd3956c09e0845",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1989,
+      "merge_base": "20f582b96ea194456d24a8ae3becee27f065c7d6",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/components/HomeWebGLSky.tsx",
+        "src/components/lifemap/LifeMapScene.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/repair/canon-provenance-reconciliation-20261007",
+      "head": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0",
+      "status": "ahead",
+      "ahead_by": 10,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 32,
+      "changed_file_sample": [
+        ".github/workflows/legacy-dependency-consumer-security.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-launch-gate.yml",
+        ".npmrc",
+        "docs/CROSS_SYSTEM_CANON_AUTHORITY.md",
+        "docs/security/legacy-dual-lock-dependency-repair-20261008.md",
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "src/app/api/orb-chat/route.ts",
+        "src/components/urai/GenesisSceneShell.tsx",
+        "src/components/urai/LegacyFrameDiagnostics.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/repair/legacy-authority-status-doc-20261009",
+      "head": "943d4b64e59a8e5aa38e8ed373827793a66fb071",
+      "status": "ahead",
+      "ahead_by": 11,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 33,
+      "changed_file_sample": [
+        ".github/workflows/legacy-dependency-consumer-security.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-launch-gate.yml",
+        ".npmrc",
+        "docs/CROSS_SYSTEM_CANON_AUTHORITY.md",
+        "docs/REPO_CANONICAL_STATUS.md",
+        "docs/security/legacy-dual-lock-dependency-repair-20261008.md",
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "src/app/api/orb-chat/route.ts",
+        "src/components/urai/GenesisSceneShell.tsx"
+      ]
+    }
+  ]
+}
