@@ -1,0 +1,248 @@
+{
+  "schema": "one-urai-genesis-historical-branch-tree-sample-v1",
+  "observed_on": "2026-11-07",
+  "repository": "LifeLoggerAI/UrAi",
+  "baseline_main_commit": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "total_known_branch_heads": 242,
+  "branch_trees_scanned": 23,
+  "branch_trees_remaining": 219,
+  "method": "Independent GitHub REST recursive /git/trees/{head}?recursive=1 per sampled head vs pinned main manifest; git object ID/size metadata only",
+  "limitations": [
+    "main-relative path count, not source ancestry or true donor originality",
+    "all Git tree responses returned truncated:false",
+    "No full branch byte SHA256 or historical ancestry or LFS fetch",
+    "No test/build/device/cloud certification"
+  ],
+  "branch_snapshots": [
+    {
+      "branch": "rescue/backup-20250908-0650",
+      "commit": "f09d8028686e867a35adc538338ec370806cc325",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1006,
+      "git_reported_blob_bytes": 182161927,
+      "paths_absent_from_main": 1491,
+      "paths_new_to_main_baseline": 8,
+      "blob_ids_different_in_common_paths": 15
+    },
+    {
+      "branch": "feature/ancient-signals-engine",
+      "commit": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1283,
+      "git_reported_blob_bytes": 599095662,
+      "paths_absent_from_main": 1222,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 76
+    },
+    {
+      "branch": "feature/life-map-full-implementation",
+      "commit": "dde1a321633d98716c29c49a141777204519e675",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1392,
+      "git_reported_blob_bytes": 599610991,
+      "paths_absent_from_main": 1113,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 101
+    },
+    {
+      "branch": "feature/immersive-3d-world-home-life-map",
+      "commit": "2e5c8a2e497595f2ca331eee630a5e6bfb948059",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1502,
+      "git_reported_blob_bytes": 599942708,
+      "paths_absent_from_main": 1003,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 117
+    },
+    {
+      "branch": "feat/urai-vault-data-wallet",
+      "commit": "7cf45d471d1dac523e95ba48673954607ee2639d",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1162,
+      "git_reported_blob_bytes": 598735197,
+      "paths_absent_from_main": 1337,
+      "paths_new_to_main_baseline": 10,
+      "blob_ids_different_in_common_paths": 45
+    },
+    {
+      "branch": "implementation/focus-replay-evidence-contracts",
+      "commit": "530100607605d1c8073700d956f131b2a05e7167",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1601,
+      "git_reported_blob_bytes": 600604371,
+      "paths_absent_from_main": 904,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 130
+    },
+    {
+      "branch": "implementation/replay-evidence-ui",
+      "commit": "4d99cee5e3041aea7934379adb026c874dde4158",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1603,
+      "git_reported_blob_bytes": 600608557,
+      "paths_absent_from_main": 902,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 130
+    },
+    {
+      "branch": "production/urai-cinematic-root",
+      "commit": "5e639a3febcb3334f3bce54921f2774df2e46549",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1408,
+      "git_reported_blob_bytes": 599649639,
+      "paths_absent_from_main": 1097,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 97
+    },
+    {
+      "branch": "genesis-visual-supremacy",
+      "commit": "f935befbebfca9289a74920a4fcb62411a339764",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1710,
+      "git_reported_blob_bytes": 601220285,
+      "paths_absent_from_main": 814,
+      "paths_new_to_main_baseline": 35,
+      "blob_ids_different_in_common_paths": 147
+    },
+    {
+      "branch": "agent/final-asset-lock",
+      "commit": "2c605a2cb73ecbb03eeccb4d6be9fad487c43215",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 2486,
+      "git_reported_blob_bytes": 604634310,
+      "paths_absent_from_main": 3,
+      "paths_new_to_main_baseline": 0,
+      "blob_ids_different_in_common_paths": 50
+    },
+    {
+      "branch": "agent/frontier-benchmark-harness",
+      "commit": "fb9fc8dcfa53e4dea692be9003c77660f66dac42",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 2540,
+      "git_reported_blob_bytes": 604935298,
+      "paths_absent_from_main": 3,
+      "paths_new_to_main_baseline": 54,
+      "blob_ids_different_in_common_paths": 51
+    },
+    {
+      "branch": "codex/hard-benchmark-oracle-repair-20261014",
+      "commit": "12794cbb2599e644fbb982c2d5be244f4879e35e",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 2560,
+      "git_reported_blob_bytes": 605049378,
+      "paths_absent_from_main": 3,
+      "paths_new_to_main_baseline": 74,
+      "blob_ids_different_in_common_paths": 51
+    },
+    {
+      "branch": "cold-vault-2026-08-16",
+      "commit": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 2486,
+      "git_reported_blob_bytes": 604634310,
+      "paths_absent_from_main": 3,
+      "paths_new_to_main_baseline": 0,
+      "blob_ids_different_in_common_paths": 50
+    },
+    {
+      "branch": "complete-cinematic-urai-redesign-modular",
+      "commit": "150f7b8f41526a78c8dbcc30c1ab3a92fa27002b",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1499,
+      "git_reported_blob_bytes": 599898812,
+      "paths_absent_from_main": 1006,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 118
+    },
+    {
+      "branch": "implement-system-release-readiness",
+      "commit": "203df0eff5eb17884b6050a976d6b0759723b18d",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1238,
+      "git_reported_blob_bytes": 598917471,
+      "paths_absent_from_main": 1261,
+      "paths_new_to_main_baseline": 10,
+      "blob_ids_different_in_common_paths": 61
+    },
+    {
+      "branch": "mom-vr-life-map-polish",
+      "commit": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 2305,
+      "git_reported_blob_bytes": 604457589,
+      "paths_absent_from_main": 200,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 105
+    },
+    {
+      "branch": "copilot/implement-urai-v1-to-v10",
+      "commit": "9d1818546bd543ef5cd559883334b8e09a29cf42",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1009,
+      "git_reported_blob_bytes": 182116098,
+      "paths_absent_from_main": 1481,
+      "paths_new_to_main_baseline": 1,
+      "blob_ids_different_in_common_paths": 23
+    },
+    {
+      "branch": "urai-full-completion-implementation",
+      "commit": "8f868cadd731cf60d9f18c5766f52afcf518e753",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1376,
+      "git_reported_blob_bytes": 599435612,
+      "paths_absent_from_main": 1129,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 97
+    },
+    {
+      "branch": "home-fullscreen-final-art-fix",
+      "commit": "564d95c58e3f8fab7133da9460c2c1cf7138ef32",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1500,
+      "git_reported_blob_bytes": 599906136,
+      "paths_absent_from_main": 1005,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 117
+    },
+    {
+      "branch": "lifemap-layered-immersive-system",
+      "commit": "0bbb3f7e02b5eed934e78367ec37fd2e1e23d0c7",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1389,
+      "git_reported_blob_bytes": 599552148,
+      "paths_absent_from_main": 1116,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 100
+    },
+    {
+      "branch": "feature/sky-map-v1",
+      "commit": "fff4372b243c80aeb7ba7e392bc553b8ef207df0",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1368,
+      "git_reported_blob_bytes": 599396155,
+      "paths_absent_from_main": 1136,
+      "paths_new_to_main_baseline": 15,
+      "blob_ids_different_in_common_paths": 98
+    },
+    {
+      "branch": "feature/v1-visual-magic-home-ascent",
+      "commit": "cd971f6c89a6fad02c77253db3b4fd05acef1efe",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1381,
+      "git_reported_blob_bytes": 599460677,
+      "paths_absent_from_main": 1124,
+      "paths_new_to_main_baseline": 16,
+      "blob_ids_different_in_common_paths": 98
+    },
+    {
+      "branch": "system-of-systems-backbone",
+      "commit": "203df0eff5eb17884b6050a976d6b0759723b18d",
+      "git_tree_recursive_truncated": false,
+      "blob_paths": 1238,
+      "git_reported_blob_bytes": 598917471,
+      "paths_absent_from_main": 1261,
+      "paths_new_to_main_baseline": 10,
+      "blob_ids_different_in_common_paths": 61
+    }
+  ]
+}
