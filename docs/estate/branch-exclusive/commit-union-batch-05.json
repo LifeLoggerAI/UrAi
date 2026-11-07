@@ -1,0 +1,706 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 5,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/copilot/fix-edcf0d1e-a777-4d61-9981-ffb231520e09",
+      "head": "a5fc4882025249849d508534d2170fd78c8f7ada",
+      "ahead_by": 1,
+      "behind_by": 2397,
+      "merge_base": "6832f0c40a92fc661dc94b85b01a83d051534720",
+      "commits": [
+        {
+          "sha": "a5fc4882025249849d508534d2170fd78c8f7ada",
+          "tree": "32e6cd48a72014d100deb6e78c671fbc565590f8",
+          "parents": [
+            "6832f0c40a92fc661dc94b85b01a83d051534720"
+          ],
+          "authored": "2025-09-08T06:09:25Z",
+          "committed": "2025-09-08T06:09:25Z",
+          "title": "Initial plan"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/dependabot/npm_and_yarn/npm_and_yarn-49ef3a552c",
+      "head": "806882813f6093fcd8c4fc3671023de95a7a3bd5",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "806882813f6093fcd8c4fc3671023de95a7a3bd5",
+          "tree": "6c33eb66ebe5eb5cf8770e7d06be9610d61c7de4",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-17T16:37:57Z",
+          "committed": "2026-10-17T16:37:57Z",
+          "title": "Bump the npm_and_yarn group across 1 directory with 11 updates"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/disable-legacy-prod-latest",
+      "head": "6cb7f54b6057358152897083ed95ec12c595b223",
+      "ahead_by": 1,
+      "behind_by": 117,
+      "merge_base": "a1d9d95ed608818a4c2f1b5749dcc18854d13e25",
+      "commits": [
+        {
+          "sha": "6cb7f54b6057358152897083ed95ec12c595b223",
+          "tree": "d9eb70138b5c274ed41a28120a3623c95a388222",
+          "parents": [
+            "a1d9d95ed608818a4c2f1b5749dcc18854d13e25"
+          ],
+          "authored": "2026-07-03T11:39:38Z",
+          "committed": "2026-07-03T11:39:38Z",
+          "title": "Disable automatic legacy production deploys"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/disable-legacy-production-deploy",
+      "head": "86420dde738c3916604ff1f113a9b71a46a98fd1",
+      "ahead_by": 1,
+      "behind_by": 119,
+      "merge_base": "b68e8e7fe85c37b524aa91a4512026dd81c7409b",
+      "commits": [
+        {
+          "sha": "86420dde738c3916604ff1f113a9b71a46a98fd1",
+          "tree": "9eaa869bf7c00915b4176f8fcd3b9a02d00502d4",
+          "parents": [
+            "b68e8e7fe85c37b524aa91a4512026dd81c7409b"
+          ],
+          "authored": "2026-07-03T11:38:35Z",
+          "committed": "2026-07-03T11:38:35Z",
+          "title": "Disable automatic legacy production deploys"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/docs/closeout-gate-evidence-tightening-20260509",
+      "head": "746f45de16706923340545f7a2875d222200a121",
+      "ahead_by": 1,
+      "behind_by": 2025,
+      "merge_base": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b",
+      "commits": [
+        {
+          "sha": "746f45de16706923340545f7a2875d222200a121",
+          "tree": "227900db44a69822aa4f7375b2fd929f7f9dd630",
+          "parents": [
+            "6e11a7476a6fb42042aa08472b3026cbe9e1d16b"
+          ],
+          "authored": "2026-05-09T13:36:59Z",
+          "committed": "2026-05-09T13:36:59Z",
+          "title": "Tighten launch closeout gate evidence runbook"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/docs/genesis-estate-handoff-20261106",
+      "head": "16330aca83dbf8249ab1c7d4d37e24b225720aff",
+      "ahead_by": 2,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "96497227d40e675534cdae05bd2c58274a117700",
+          "tree": "85f54ca6e03bc2e60927ea50ca1c50124aba2ad6",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-11-07T04:45:37Z",
+          "committed": "2026-11-07T04:45:37Z",
+          "title": "docs(estate): add shared Genesis knowledge handoff entrypoint"
+        },
+        {
+          "sha": "16330aca83dbf8249ab1c7d4d37e24b225720aff",
+          "tree": "ad122d18b26284e4bd568371a4a304fc3faed972",
+          "parents": [
+            "96497227d40e675534cdae05bd2c58274a117700"
+          ],
+          "authored": "2026-11-07T07:02:17Z",
+          "committed": "2026-11-07T07:02:17Z",
+          "title": "docs(genesis): pin complete UrAi main Git-tree metadata with explicit byte exclusions"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/docs/launch-closeout-runbook-20260508",
+      "head": "b847bb60288c016a75721efc31134f9628c06531",
+      "ahead_by": 1,
+      "behind_by": 2053,
+      "merge_base": "e6b118b927d8cec9f7286b230c3bb7e717aa1f9f",
+      "commits": [
+        {
+          "sha": "b847bb60288c016a75721efc31134f9628c06531",
+          "tree": "295c36103a9d6e4a67f0ba8cd38df200532dd034",
+          "parents": [
+            "e6b118b927d8cec9f7286b230c3bb7e717aa1f9f"
+          ],
+          "authored": "2026-05-08T20:21:40Z",
+          "committed": "2026-05-08T20:21:40Z",
+          "title": "Add launch closeout evidence runbook"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/docs/public-authority-reconciliation-20260903",
+      "head": "912e44828d75339621837dcc1caa46822c35910d",
+      "ahead_by": 6,
+      "behind_by": 26,
+      "merge_base": "82783e7e14d3f9123999d13ae6a2a22af86476d1",
+      "commits": [
+        {
+          "sha": "ea61d0a00979e18e0f0a16a621718c6b220abaee",
+          "tree": "5fbc00cc5c4d85fe5bcfcdfc7d3f220b834529d0",
+          "parents": [
+            "a6b0f16077443c22d3de1feaf5816b70ab898f46"
+          ],
+          "authored": "2026-09-03T16:58:44Z",
+          "committed": "2026-09-03T16:58:44Z",
+          "title": "docs: mark DNS_SSL_DOMAIN_AUDIT.md as superseded authority"
+        },
+        {
+          "sha": "a8988d01dbfbcc9f2e070cd19c5a49066949ba07",
+          "tree": "0ff47fd42613fbf13ea8ffe854dee90c03408aa2",
+          "parents": [
+            "ea61d0a00979e18e0f0a16a621718c6b220abaee"
+          ],
+          "authored": "2026-09-03T16:58:50Z",
+          "committed": "2026-09-03T16:58:50Z",
+          "title": "docs: mark DOMAIN_REGISTRY.md as superseded authority"
+        },
+        {
+          "sha": "54b177a1cfeb88496c707ffc33cb5f331344b655",
+          "tree": "9eaedd15804fe0090b4f1ee8c7cba8fa43524bdb",
+          "parents": [
+            "a8988d01dbfbcc9f2e070cd19c5a49066949ba07"
+          ],
+          "authored": "2026-09-03T16:58:56Z",
+          "committed": "2026-09-03T16:58:56Z",
+          "title": "docs: mark REPOSITORY_REGISTRY.md as superseded authority"
+        },
+        {
+          "sha": "19c9eb0b7f56570360ea624bb1ad57a32909c207",
+          "tree": "6b6188c12ebbe7e004aa00138316d059f284ff83",
+          "parents": [
+            "54b177a1cfeb88496c707ffc33cb5f331344b655"
+          ],
+          "authored": "2026-09-03T16:59:01Z",
+          "committed": "2026-09-03T16:59:01Z",
+          "title": "docs: mark SYSTEM_OF_SYSTEMS_WIRING_MATRIX.md as superseded authority"
+        },
+        {
+          "sha": "d1d84f4e3d1c41bc5a5f8bc7ac5349914a86c342",
+          "tree": "ddf5e0ba80f03e88362666e01b80565034aebf04",
+          "parents": [
+            "19c9eb0b7f56570360ea624bb1ad57a32909c207"
+          ],
+          "authored": "2026-09-03T16:59:05Z",
+          "committed": "2026-09-03T16:59:05Z",
+          "title": "docs: mark POST_LAUNCH_WATCH.md as superseded authority"
+        },
+        {
+          "sha": "912e44828d75339621837dcc1caa46822c35910d",
+          "tree": "2edb7cf59ed6464a48e2c54c056d94e728e344f3",
+          "parents": [
+            "d1d84f4e3d1c41bc5a5f8bc7ac5349914a86c342",
+            "82783e7e14d3f9123999d13ae6a2a22af86476d1"
+          ],
+          "authored": "2026-09-05T20:32:10Z",
+          "committed": "2026-09-05T20:32:10Z",
+          "title": "Merge current main into public-authority reconciliation"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/docs/update-v1-lockfile-status",
+      "head": "5bd414202d014fa4210e547f08954058ab19a514",
+      "ahead_by": 1,
+      "behind_by": 2063,
+      "merge_base": "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb",
+      "commits": [
+        {
+          "sha": "5bd414202d014fa4210e547f08954058ab19a514",
+          "tree": "aeb538d166c43f9636c1695f2e9e7df1b621447b",
+          "parents": [
+            "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb"
+          ],
+          "authored": "2026-05-07T06:25:40Z",
+          "committed": "2026-05-07T06:25:40Z",
+          "title": "Update V1 launch lockfile status"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/feature/ancient-signals-engine",
+      "head": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+      "ahead_by": 29,
+      "behind_by": 2176,
+      "merge_base": "10456f90431351b5a0fdfe955363752e065ed2d4",
+      "commits": [
+        {
+          "sha": "b895a13b1a5304e7a1ccde6d7f7cebf9ca466dfc",
+          "tree": "592941b39c4632cf6e22a12a82278eaee9bd6ca8",
+          "parents": [
+            "10456f90431351b5a0fdfe955363752e065ed2d4"
+          ],
+          "authored": "2026-05-07T02:41:58Z",
+          "committed": "2026-05-07T02:41:58Z",
+          "title": "Add Ancient Signals engine"
+        },
+        {
+          "sha": "acdce3b5be0f6acaeb5e65c185a1c153d8ec0551",
+          "tree": "857330872633968fad75bf38f896775ded9727f6",
+          "parents": [
+            "b895a13b1a5304e7a1ccde6d7f7cebf9ca466dfc"
+          ],
+          "authored": "2026-05-07T02:44:18Z",
+          "committed": "2026-05-07T02:44:18Z",
+          "title": "Add Ancient Signals tests"
+        },
+        {
+          "sha": "b7dc83317dc8a0c01a5ad8a73f6b7b79fb65c652",
+          "tree": "5dcb901f01b6e5ab7f00d4aec22809ba77ebb8f6",
+          "parents": [
+            "acdce3b5be0f6acaeb5e65c185a1c153d8ec0551"
+          ],
+          "authored": "2026-05-07T02:44:43Z",
+          "committed": "2026-05-07T02:44:43Z",
+          "title": "Register Ancient Signals system contract"
+        },
+        {
+          "sha": "ad2eed3bd64e11c957988cdb207dac4b0c4a34a1",
+          "tree": "24d30af9f6203366034f70349817c4a75b6ce366",
+          "parents": [
+            "b7dc83317dc8a0c01a5ad8a73f6b7b79fb65c652"
+          ],
+          "authored": "2026-05-07T02:45:45Z",
+          "committed": "2026-05-07T02:45:45Z",
+          "title": "Document Ancient Signals engine"
+        },
+        {
+          "sha": "5669fa9dc41270236ede23bfb1d9cffaeda64e6b",
+          "tree": "d12a1f22aa60353f747288fdbaf0f9cc09a284d4",
+          "parents": [
+            "ad2eed3bd64e11c957988cdb207dac4b0c4a34a1"
+          ],
+          "authored": "2026-05-07T02:50:12Z",
+          "committed": "2026-05-07T02:50:12Z",
+          "title": "Add Ancient Signals UI card"
+        },
+        {
+          "sha": "0f92dc6f461ffe09ceec1630db9942cc9dad6763",
+          "tree": "d4a0fdec125343ce5828d946bfc990c4132fd48e",
+          "parents": [
+            "5669fa9dc41270236ede23bfb1d9cffaeda64e6b"
+          ],
+          "authored": "2026-05-07T02:50:54Z",
+          "committed": "2026-05-07T02:50:54Z",
+          "title": "Surface Ancient Signals in Cognitive Mirror"
+        },
+        {
+          "sha": "a0b7848b3ae2dd5ffb6744924ba67783246e2fc8",
+          "tree": "eb643740cbddf957c9617eb8cb12c3df0aa42264",
+          "parents": [
+            "0f92dc6f461ffe09ceec1630db9942cc9dad6763"
+          ],
+          "authored": "2026-05-07T02:53:08Z",
+          "committed": "2026-05-07T02:53:08Z",
+          "title": "Add Ancient Signals Firestore repository"
+        },
+        {
+          "sha": "663d466cbf0b562bdef07566deb996d5723eb0ed",
+          "tree": "9b74a8db93f418bba460e34c37b0eeb5c82b0770",
+          "parents": [
+            "a0b7848b3ae2dd5ffb6744924ba67783246e2fc8"
+          ],
+          "authored": "2026-05-07T02:58:40Z",
+          "committed": "2026-05-07T02:58:40Z",
+          "title": "Protect ancientSignals Firestore collection"
+        },
+        {
+          "sha": "9c490efc2423401a2ab56c27e5893b7f3ce892c8",
+          "tree": "f983275f8d05f742625cc1699b3744d2ab25a3f7",
+          "parents": [
+            "663d466cbf0b562bdef07566deb996d5723eb0ed"
+          ],
+          "authored": "2026-05-07T02:59:15Z",
+          "committed": "2026-05-07T02:59:15Z",
+          "title": "Add ancientSignals Firestore index"
+        },
+        {
+          "sha": "5936c4013270f87933f5dfffb906861c91411ba2",
+          "tree": "82ec243fd13163ba8ff621583b0cd4e488904579",
+          "parents": [
+            "9c490efc2423401a2ab56c27e5893b7f3ce892c8"
+          ],
+          "authored": "2026-05-07T03:00:10Z",
+          "committed": "2026-05-07T03:00:10Z",
+          "title": "Add Firestore and functions deploy config"
+        },
+        {
+          "sha": "73eb4ef60c2222651fb19e0ee35136838fb2b8d2",
+          "tree": "b06488faa54c11351d91452e38745aa8abeacb2f",
+          "parents": [
+            "5936c4013270f87933f5dfffb906861c91411ba2"
+          ],
+          "authored": "2026-05-07T04:01:34Z",
+          "committed": "2026-05-07T04:01:34Z",
+          "title": "Add Ancient Signals callable functions"
+        },
+        {
+          "sha": "d57cddcfff1e31d840637d066f67697b6afc6031",
+          "tree": "f0c5c9c1c6d4c936ead5e62b4434f435b1b5def9",
+          "parents": [
+            "73eb4ef60c2222651fb19e0ee35136838fb2b8d2"
+          ],
+          "authored": "2026-05-07T04:02:22Z",
+          "committed": "2026-05-07T04:02:22Z",
+          "title": "Update Ancient Signals persistence docs"
+        },
+        {
+          "sha": "c6a8e66f35f4f7aada5a53ba657d7637f2f3b1a3",
+          "tree": "ea211e18dc1cf00bd6ff9a87bef1254b970ed92d",
+          "parents": [
+            "d57cddcfff1e31d840637d066f67697b6afc6031"
+          ],
+          "authored": "2026-05-07T04:06:42Z",
+          "committed": "2026-05-07T04:06:42Z",
+          "title": "Add Ancient Signals ambient HomeView layer"
+        },
+        {
+          "sha": "a7bf455dccf90f02516baeb47a80a7989d67e7e7",
+          "tree": "e8bc14d1c117f1123eab1b4b48df5fc3d18ba497",
+          "parents": [
+            "c6a8e66f35f4f7aada5a53ba657d7637f2f3b1a3"
+          ],
+          "authored": "2026-05-07T04:07:49Z",
+          "committed": "2026-05-07T04:07:49Z",
+          "title": "Wire Ancient Signals into HomeScene"
+        },
+        {
+          "sha": "2b97d4e0a7146a480768f267b064c518ba5870bc",
+          "tree": "2ee1e271cd7a70256ccff7093210adeead675017",
+          "parents": [
+            "a7bf455dccf90f02516baeb47a80a7989d67e7e7"
+          ],
+          "authored": "2026-05-07T04:12:55Z",
+          "committed": "2026-05-07T04:12:55Z",
+          "title": "Add Ancient Signals client hook"
+        },
+        {
+          "sha": "083e00edf1205bd0dffffa265c52f7fe7f893d19",
+          "tree": "02d284ade09c2ff6d1b55e99108c0a85ee07da30",
+          "parents": [
+            "2b97d4e0a7146a480768f267b064c518ba5870bc"
+          ],
+          "authored": "2026-05-07T04:14:04Z",
+          "committed": "2026-05-07T04:14:04Z",
+          "title": "Load persisted Ancient Signals in HomeScene"
+        },
+        {
+          "sha": "91eef6998aef82b2e5b3cd68470526e6b6a7cd9e",
+          "tree": "1b87aaf45a318241779127d9c378d273d28884f3",
+          "parents": [
+            "083e00edf1205bd0dffffa265c52f7fe7f893d19"
+          ],
+          "authored": "2026-05-07T04:14:45Z",
+          "committed": "2026-05-07T04:14:45Z",
+          "title": "Show Ancient Signals snapshot source in HomeView"
+        },
+        {
+          "sha": "9c4c035abaeaf0efd6b5e21e8467925456af8bc9",
+          "tree": "0fcd0064a606984a03ee3fc7f6ae8a274bcd2793",
+          "parents": [
+            "91eef6998aef82b2e5b3cd68470526e6b6a7cd9e"
+          ],
+          "authored": "2026-05-07T04:18:20Z",
+          "committed": "2026-05-07T04:18:20Z",
+          "title": "Add Ancient Signals passive rollup adapter"
+        },
+        {
+          "sha": "8f333823cbaee6d287a38dcc259e4115e1c1b32e",
+          "tree": "6a920dc91145999af95bff5708e790ed50f1f526",
+          "parents": [
+            "9c4c035abaeaf0efd6b5e21e8467925456af8bc9"
+          ],
+          "authored": "2026-05-07T04:23:07Z",
+          "committed": "2026-05-07T04:23:07Z",
+          "title": "Connect Ancient Signals callable to passive rollups"
+        },
+        {
+          "sha": "35d5181dd700d755f1e98bd593a1f0afc68f9ec4",
+          "tree": "1cff994d890a5045bb3b08edebb31cb22777f731",
+          "parents": [
+            "8f333823cbaee6d287a38dcc259e4115e1c1b32e"
+          ],
+          "authored": "2026-05-07T04:24:42Z",
+          "committed": "2026-05-07T04:24:42Z",
+          "title": "Document Ancient Signals passive rollups"
+        },
+        {
+          "sha": "6d0ba56b1579a7e988667ceb776b6a7349e1006d",
+          "tree": "042851553a4f37b23fa2566760293e52f5250c3c",
+          "parents": [
+            "35d5181dd700d755f1e98bd593a1f0afc68f9ec4"
+          ],
+          "authored": "2026-05-07T04:28:38Z",
+          "committed": "2026-05-07T04:28:38Z",
+          "title": "Add scheduled Ancient Signals rollup"
+        },
+        {
+          "sha": "44e2238be4cdcda8f0b2f6281836bede993c9410",
+          "tree": "f22d5dc6c66456e474e2270af85d9faf330ba2f0",
+          "parents": [
+            "6d0ba56b1579a7e988667ceb776b6a7349e1006d"
+          ],
+          "authored": "2026-05-07T04:33:22Z",
+          "committed": "2026-05-07T04:33:22Z",
+          "title": "Move Ancient Signals callables into module"
+        },
+        {
+          "sha": "a164fe200637d3e05eb526ffca39e2ae6ee3989c",
+          "tree": "cc2020205c53edf4748489fa8bc7ed98f9e5c560",
+          "parents": [
+            "44e2238be4cdcda8f0b2f6281836bede993c9410"
+          ],
+          "authored": "2026-05-07T04:35:15Z",
+          "committed": "2026-05-07T04:35:15Z",
+          "title": "Export Ancient Signals function modules"
+        },
+        {
+          "sha": "31d563933d7bdcd1cef0701296d6e7139495cceb",
+          "tree": "2dc9a66c3d0dc3c84f8f1c246bb2caeb4b2e080e",
+          "parents": [
+            "a164fe200637d3e05eb526ffca39e2ae6ee3989c"
+          ],
+          "authored": "2026-05-07T04:39:41Z",
+          "committed": "2026-05-07T04:39:41Z",
+          "title": "Extract Ancient Signals compute helpers for functions"
+        },
+        {
+          "sha": "6489688214ae640d4a581af7a49ff38d77433dff",
+          "tree": "547acf1282a420de79fd96aefd27a8305b9835ba",
+          "parents": [
+            "31d563933d7bdcd1cef0701296d6e7139495cceb"
+          ],
+          "authored": "2026-05-07T04:41:37Z",
+          "committed": "2026-05-07T04:41:37Z",
+          "title": "Use shared Ancient Signals compute in scheduled rollup"
+        },
+        {
+          "sha": "cf550f9ecdd97006ef65b722b5a1551d6bc60fdf",
+          "tree": "5e7f343be8c08d5c9a5149de40ca7287731927b6",
+          "parents": [
+            "6489688214ae640d4a581af7a49ff38d77433dff"
+          ],
+          "authored": "2026-05-07T04:43:39Z",
+          "committed": "2026-05-07T04:43:39Z",
+          "title": "Use shared Ancient Signals compute in callables"
+        },
+        {
+          "sha": "53770a028c9db0da04aad3accd69eec3f0c6f7a3",
+          "tree": "80e269171db48c013572b55f9768b46e1769beaf",
+          "parents": [
+            "cf550f9ecdd97006ef65b722b5a1551d6bc60fdf"
+          ],
+          "authored": "2026-05-07T04:48:34Z",
+          "committed": "2026-05-07T04:48:34Z",
+          "title": "Support scheduled Ancient Signals snapshot source"
+        },
+        {
+          "sha": "489499f7c38c4ea0d66164de9b6a2b47b298a1f8",
+          "tree": "9529c17165d3fd8f3ca39abe4379381ba4a0950c",
+          "parents": [
+            "53770a028c9db0da04aad3accd69eec3f0c6f7a3"
+          ],
+          "authored": "2026-05-07T04:49:51Z",
+          "committed": "2026-05-07T04:49:51Z",
+          "title": "Add scheduled Ancient Signals duplicate-check index"
+        },
+        {
+          "sha": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+          "tree": "0f4267e057d367d548356493a56582800742d271",
+          "parents": [
+            "489499f7c38c4ea0d66164de9b6a2b47b298a1f8"
+          ],
+          "authored": "2026-05-07T04:50:33Z",
+          "committed": "2026-05-07T04:50:33Z",
+          "title": "Paginate scheduled Ancient Signals user rollups"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/feature/immersive-3d-world-home-life-map",
+      "head": "2e5c8a2e497595f2ca331eee630a5e6bfb948059",
+      "ahead_by": 11,
+      "behind_by": 1710,
+      "merge_base": "544c69243eafdf37ba36b80f0407d322fd6bcc7b",
+      "commits": [
+        {
+          "sha": "68b1128ba6193d1d0faa3d32ef659c125a9c5693",
+          "tree": "bda528edc881d7432a774e2f25d69ff0603c6f1d",
+          "parents": [
+            "544c69243eafdf37ba36b80f0407d322fd6bcc7b"
+          ],
+          "authored": "2026-05-17T20:50:07Z",
+          "committed": "2026-05-17T20:50:07Z",
+          "title": "Add shared immersive 3D world layer"
+        },
+        {
+          "sha": "ece27f6df58bad2520bb6ebfa0d8955fa09dac9b",
+          "tree": "c67567dfd2cb7b96a840f47e099aad277a21abbe",
+          "parents": [
+            "68b1128ba6193d1d0faa3d32ef659c125a9c5693"
+          ],
+          "authored": "2026-05-17T20:52:45Z",
+          "committed": "2026-05-17T20:52:45Z",
+          "title": "Wire immersive 3D world into home"
+        },
+        {
+          "sha": "a97a10d7c2ac1b980f8b40ce03391c497b961ada",
+          "tree": "9fb9fa4cfd69b3e2d8a82661e8f19b48ae18b72a",
+          "parents": [
+            "ece27f6df58bad2520bb6ebfa0d8955fa09dac9b"
+          ],
+          "authored": "2026-05-17T20:53:39Z",
+          "committed": "2026-05-17T20:53:39Z",
+          "title": "Wire immersive 3D world into life map"
+        },
+        {
+          "sha": "292c39bd77fa0cb0ba4c619812166f919e383671",
+          "tree": "5147ba255f45778c47acad662dac7f3a5c056d37",
+          "parents": [
+            "a97a10d7c2ac1b980f8b40ce03391c497b961ada"
+          ],
+          "authored": "2026-05-17T20:58:16Z",
+          "committed": "2026-05-17T20:58:16Z",
+          "title": "Fix Firestore launch gate rules"
+        },
+        {
+          "sha": "1a4569953b485bb63564ad1f55e5fce0c47c0da9",
+          "tree": "979b606977777f9a1b075398d8c7b2933c485024",
+          "parents": [
+            "292c39bd77fa0cb0ba4c619812166f919e383671"
+          ],
+          "authored": "2026-05-17T21:00:38Z",
+          "committed": "2026-05-17T21:00:38Z",
+          "title": "Fix Life Map lint navigation issue"
+        },
+        {
+          "sha": "5c4997cdb3124399e8d17b14fd449f5ed9e37c23",
+          "tree": "9379db72af847c47be85252a2e0c886e6966ec0b",
+          "parents": [
+            "1a4569953b485bb63564ad1f55e5fce0c47c0da9"
+          ],
+          "authored": "2026-05-17T21:04:34Z",
+          "committed": "2026-05-17T21:04:34Z",
+          "title": "Add shared orb chat types"
+        },
+        {
+          "sha": "136ef4da7c8f7f617296af031f31a01c0c139b55",
+          "tree": "32ad0a0dabef823c6cb61facb946995bfa4dd9c7",
+          "parents": [
+            "5c4997cdb3124399e8d17b14fd449f5ed9e37c23"
+          ],
+          "authored": "2026-05-17T21:06:25Z",
+          "committed": "2026-05-17T21:06:25Z",
+          "title": "Align conversation insight type"
+        },
+        {
+          "sha": "38ee5cf27c1a5bb5162f32b9e432e04d2839d02a",
+          "tree": "85085d2aeb50ddf38e1ce179a12b3b2d5c60d88e",
+          "parents": [
+            "136ef4da7c8f7f617296af031f31a01c0c139b55"
+          ],
+          "authored": "2026-05-17T21:07:01Z",
+          "committed": "2026-05-17T21:07:01Z",
+          "title": "Fix life map mock literal types"
+        },
+        {
+          "sha": "54bdcac72c4d4c2055f5844d018d354a0242061a",
+          "tree": "a6f2b72517bd8310762531fdd8a7fb40d0d84677",
+          "parents": [
+            "38ee5cf27c1a5bb5162f32b9e432e04d2839d02a"
+          ],
+          "authored": "2026-05-17T21:10:23Z",
+          "committed": "2026-05-17T21:10:23Z",
+          "title": "Add dreams Firestore rules"
+        },
+        {
+          "sha": "d76955c2ab500acc36c20f3b24617bfa9213fb3b",
+          "tree": "254d27ea3acf63447b6bbe3c59138a14796c177e",
+          "parents": [
+            "54bdcac72c4d4c2055f5844d018d354a0242061a"
+          ],
+          "authored": "2026-05-17T21:15:21Z",
+          "committed": "2026-05-17T21:15:21Z",
+          "title": "Add remaining Firestore owner collection rules"
+        },
+        {
+          "sha": "2e5c8a2e497595f2ca331eee630a5e6bfb948059",
+          "tree": "8e0ef16f5f747adcc197e80cda05f2db1b4317cd",
+          "parents": [
+            "d76955c2ab500acc36c20f3b24617bfa9213fb3b"
+          ],
+          "authored": "2026-05-17T21:17:43Z",
+          "committed": "2026-05-17T21:17:43Z",
+          "title": "Add all owner scoped Firestore test collections"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/feature/sky-map-v1-clean",
+      "head": "3a64486cd6dcf3a17176c20fcb097490222704e7",
+      "ahead_by": 1,
+      "behind_by": 2023,
+      "merge_base": "f1211e37b8cd1cb72abfab2cf1a3885894c7a88c",
+      "commits": [
+        {
+          "sha": "3a64486cd6dcf3a17176c20fcb097490222704e7",
+          "tree": "84314bc5a631ed4fef9a70b5dab8b13ae02d19ae",
+          "parents": [
+            "f1211e37b8cd1cb72abfab2cf1a3885894c7a88c"
+          ],
+          "authored": "2026-05-14T19:05:02Z",
+          "committed": "2026-05-14T19:05:02Z",
+          "title": "Route home sky transition to Sky Map V1"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
