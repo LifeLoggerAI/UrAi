@@ -1,0 +1,225 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 60,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/feature/sky-map-v1-latest",
+      "head": "08762e14e6399d458854ad9fb80096ccb1e8d7de",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2000,
+      "merge_base": "3ebffd065b3309a4879dc1fb9f8d24a2af479e76",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/HomeScene.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/feature/v1-visual-magic-home-ascent",
+      "head": "cd971f6c89a6fad02c77253db3b4fd05acef1efe",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 1991,
+      "merge_base": "46fc01386969446ad440ee7207d2932317e7a49d",
+      "too_large": null,
+      "reported_file_count": 6,
+      "changed_file_sample": [
+        "src/app/globals.css",
+        "src/components/GroundLayer.tsx",
+        "src/components/HomeScene.tsx",
+        "src/components/HomeWebGLSky.tsx",
+        "src/components/lifemap/LifeMapScene.tsx",
+        "src/components/lifemap/WebGLLifeMapField.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/final/home-lock-execution",
+      "head": "af3bd2f9fc3e5a5cf82f0e322d86589f237e2817",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1550,
+      "merge_base": "e95a437fa1911652bf9c945b0aa28201f50de945",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "scripts/p0-launch-gate.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/ancient-signals-ground-layer-state",
+      "head": "f5ce77afa01eab23e2d310f37159993580cbfd51",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2102,
+      "merge_base": "74629c3b979578ca9a31ac688b8605c84943b7e6",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/HomeScene.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/cinematic-clean-home-lifemap",
+      "head": "f9ad0bd3cb1861bf7c41914706d6fa47337b9cbe",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1987,
+      "merge_base": "a3adf4b2a10128f3ef457f552eb6cda4d4145498",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/globals.css",
+        "src/app/life-map/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-composition",
+      "head": "146df72e972d7b96f7cddcf0e9c6cf7328704d60",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1986,
+      "merge_base": "e83f96e647611093c74ff1caca00f549708c3575",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/HomeScene.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-lint-gate",
+      "head": "f878b0ca4f4d39cf3fd823aa33c0fa11b25475f4",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1351,
+      "merge_base": "f6abe692dd24e20746cca356a0758f2a0f0686fe",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "scripts/tier-lock/tier-freeze-ledger.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/legacy-braces-installed-topology-20261009",
+      "head": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+      "status": "ahead",
+      "ahead_by": 7,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 31,
+      "changed_file_sample": [
+        ".github/workflows/legacy-dependency-consumer-security.yml",
+        ".github/workflows/qa.yml",
+        ".npmrc",
+        "docs/CROSS_SYSTEM_CANON_AUTHORITY.md",
+        "docs/security/legacy-dual-lock-dependency-repair-20261008.md",
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "src/app/api/orb-chat/route.ts",
+        "src/components/urai/GenesisSceneShell.tsx",
+        "src/components/urai/LegacyFrameDiagnostics.tsx",
+        "src/lib/ai/aiConfig.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/legacy-launch-gate-chromium-20261009",
+      "head": "305fc519485b867cec57b971bfcb724ca264d1f3",
+      "status": "ahead",
+      "ahead_by": 9,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 32,
+      "changed_file_sample": [
+        ".github/workflows/legacy-dependency-consumer-security.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-launch-gate.yml",
+        ".npmrc",
+        "docs/CROSS_SYSTEM_CANON_AUTHORITY.md",
+        "docs/security/legacy-dual-lock-dependency-repair-20261008.md",
+        "package-lock.json",
+        "package.json",
+        "pnpm-lock.yaml",
+        "src/app/api/orb-chat/route.ts",
+        "src/components/urai/GenesisSceneShell.tsx",
+        "src/components/urai/LegacyFrameDiagnostics.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/legacy-public-canon-copy-20261005",
+      "head": "5bebec58219648ccf62f0e45c8d8715175c25296",
+      "status": "diverged",
+      "ahead_by": 9,
+      "behind_by": 1,
+      "merge_base": "e8ad784556b4b7f0909a132495000484eae45258",
+      "too_large": null,
+      "reported_file_count": 8,
+      "changed_file_sample": [
+        "scripts/check-public-copy.mjs",
+        "src/app/changelog/page.tsx",
+        "src/app/cognitive-mirror/error.tsx",
+        "src/app/cognitive-mirror/loading.tsx",
+        "src/app/cognitive-mirror/page.tsx",
+        "src/app/investors/page.tsx",
+        "src/components/launch/LaunchShell.tsx",
+        "src/components/life-map/LifeMapUniverse.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/legacy-quarantine-review-gaps-20260902",
+      "head": "9eea92d21b10092447e2a89bb02ec0aa2d48be63",
+      "status": "diverged",
+      "ahead_by": 54,
+      "behind_by": 28,
+      "merge_base": "a6b0f16077443c22d3de1feaf5816b70ab898f46",
+      "too_large": null,
+      "reported_file_count": 15,
+      "changed_file_sample": [
+        ".github/workflows/legacy-production-authority-guard.yml",
+        ".github/workflows/webxr-foundation-audit.yml",
+        "firebase.free-static.json",
+        "firebase.staging.json",
+        "firebase.static.json",
+        "package.json",
+        "scripts/check-firebase-target.mjs",
+        "scripts/check-home-xr-lock.mjs",
+        "scripts/check-legacy-quarantine-contract-tests.mjs",
+        "scripts/check-v1.mjs",
+        "src/app/home/page.tsx",
+        "src/components/urai/UraiHomeLaunchSurface.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/life-map-aaa-tier4-production",
+      "head": "ea382ee47c9e3621969d8c7b692438ffdb2ad1c0",
+      "status": "diverged",
+      "ahead_by": 21,
+      "behind_by": 1545,
+      "merge_base": "2d5de40895b50395e5d07bce61a8ced4c7d5c21f",
+      "too_large": null,
+      "reported_file_count": 12,
+      "changed_file_sample": [
+        ".eslintrc.json",
+        "docs/V1_DEMO_SCRIPT.md",
+        "docs/V1_LAUNCH_STATUS.md",
+        "docs/V1_PRODUCT_SPEC.md",
+        "firebase.json",
+        "firestore.rules",
+        "next.config.mjs",
+        "package.json",
+        "scripts/check-conflicts.mjs",
+        "scripts/check-public-copy.mjs",
+        "scripts/p0-launch-gate.mjs",
+        "tests/rules/rulesEmulator.js"
+      ]
+    }
+  ]
+}
