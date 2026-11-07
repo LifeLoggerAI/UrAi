@@ -1,0 +1,1360 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 8,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/genesis-staging-live",
+      "head": "0706a2317bd809932f72274405e9e0153a7d52ad",
+      "ahead_by": 1,
+      "behind_by": 428,
+      "merge_base": "fc108ddfb87ff99d0fa94e995803312cb3acd1d1",
+      "commits": [
+        {
+          "sha": "0706a2317bd809932f72274405e9e0153a7d52ad",
+          "tree": "958811cbf5645ab9b70c0d07a5818252f36a94b0",
+          "parents": [
+            "fc108ddfb87ff99d0fa94e995803312cb3acd1d1"
+          ],
+          "authored": "2026-06-27T03:50:04Z",
+          "committed": "2026-06-27T03:50:04Z",
+          "title": "Restore Genesis contract type exports"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/genesis-visual-supremacy",
+      "head": "f935befbebfca9289a74920a4fcb62411a339764",
+      "ahead_by": 49,
+      "behind_by": 1142,
+      "merge_base": "8ad112d05fa9bbd9de85638ca564dc3a39367e8a",
+      "commits": [
+        {
+          "sha": "4d4bc5322893892d605cc80a950fd72c6b8f6d7b",
+          "tree": "d871206f935227ff66aa4a6080dfea6b0efe0c94",
+          "parents": [
+            "18b5480f601168280c820d105e67564e21168b7f"
+          ],
+          "authored": "2026-05-30T06:20:36Z",
+          "committed": "2026-05-30T06:20:36Z",
+          "title": "A"
+        },
+        {
+          "sha": "80c9c2ca490dd96d9ecd4add39d0ab6493bfa923",
+          "tree": "39fb32f686528f83ecdf22890866e8d25133f968",
+          "parents": [
+            "4d4bc5322893892d605cc80a950fd72c6b8f6d7b",
+            "d5b1056ce5a3cab8f4e50025a99ca69f572bbf64"
+          ],
+          "authored": "2026-05-30T20:26:14Z",
+          "committed": "2026-05-30T20:26:14Z",
+          "title": "Merge branch 'main' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "6928742f44bbe6a058bf411b8191a6ccd1696c8d",
+          "tree": "09eb75b631e0b71842ba77e3344a6443d3d894ad",
+          "parents": [
+            "80c9c2ca490dd96d9ecd4add39d0ab6493bfa923",
+            "5e7ee94b0070f18b256106d7856dbb8c4921c219"
+          ],
+          "authored": "2026-05-30T20:37:35Z",
+          "committed": "2026-05-30T20:37:35Z",
+          "title": "Merge branch 'main' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "19a52ee4d5fec9705161bb91b4a4ac7f47495bfb",
+          "tree": "a06987ffd594d8914c911b6140af1234934e507d",
+          "parents": [
+            "6928742f44bbe6a058bf411b8191a6ccd1696c8d",
+            "8ad112d05fa9bbd9de85638ca564dc3a39367e8a"
+          ],
+          "authored": "2026-05-30T20:43:37Z",
+          "committed": "2026-05-30T20:43:37Z",
+          "title": "Merge branch 'main' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "9236741a7da138ac3f4a6365636be62f2ba8772b",
+          "tree": "715c39f7460db690b566b518d9d1e803d7919c77",
+          "parents": [
+            "19a52ee4d5fec9705161bb91b4a4ac7f47495bfb"
+          ],
+          "authored": "2026-06-01T18:25:51Z",
+          "committed": "2026-06-01T18:25:51Z",
+          "title": "Route home through resolved URAI ascent scene"
+        },
+        {
+          "sha": "d05e59f24d2b8c9011200b727248ece9f2dc46d0",
+          "tree": "8c6c5c8b58f9a65853d7caff2bd09b8802369568",
+          "parents": [
+            "9236741a7da138ac3f4a6365636be62f2ba8772b"
+          ],
+          "authored": "2026-06-01T19:56:19Z",
+          "committed": "2026-06-01T19:56:19Z",
+          "title": "Add URAI tier 1-5 polished app routes"
+        },
+        {
+          "sha": "449f535cbe38068b0066431e3d3ad96ac044bb15",
+          "tree": "1fe8614d55d72ce782b531d6eea29283ee95d47f",
+          "parents": [
+            "d05e59f24d2b8c9011200b727248ece9f2dc46d0"
+          ],
+          "authored": "2026-06-01T22:43:00Z",
+          "committed": "2026-06-01T22:43:00Z",
+          "title": "Fix static export compatibility for deployment"
+        },
+        {
+          "sha": "dab0ff6df462b2b6ad22e2e7d8c0b0ae0d6a71fb",
+          "tree": "a5551cb0b228ed2450b11ec37da65d8206229114",
+          "parents": [
+            "449f535cbe38068b0066431e3d3ad96ac044bb15"
+          ],
+          "authored": "2026-06-01T22:46:08Z",
+          "committed": "2026-06-01T22:46:08Z",
+          "title": "Restore production home entrypoint"
+        },
+        {
+          "sha": "c398dc3e004b57e6c97af7ddb0a94c3ff825af97",
+          "tree": "5b18d96cbe530044859671ead00c6fb48e196b43",
+          "parents": [
+            "dab0ff6df462b2b6ad22e2e7d8c0b0ae0d6a71fb"
+          ],
+          "authored": "2026-06-01T22:49:49Z",
+          "committed": "2026-06-01T22:49:49Z",
+          "title": "Point root route to app home view"
+        },
+        {
+          "sha": "d2639fbefef20eca00ce7ebf57ea62c4ff990a83",
+          "tree": "b13797616851941c8ce9da62e645b6cde55e71d5",
+          "parents": [
+            "c398dc3e004b57e6c97af7ddb0a94c3ff825af97"
+          ],
+          "authored": "2026-06-01T23:18:04Z",
+          "committed": "2026-06-01T23:18:04Z",
+          "title": "Unify home and life map routes"
+        },
+        {
+          "sha": "e593532a7d0f7f39406d1c12531d323ad100c5f7",
+          "tree": "9adafd80de47ee23dfc2d9e4848ff84a208166aa",
+          "parents": [
+            "d2639fbefef20eca00ce7ebf57ea62c4ff990a83"
+          ],
+          "authored": "2026-06-01T23:30:34Z",
+          "committed": "2026-06-01T23:30:34Z",
+          "title": "Make API status routes static export compatible"
+        },
+        {
+          "sha": "e8f801f3f05bca209462fdc5e8c833a87a6ee948",
+          "tree": "12f6f2c9ff78b709695affd08eeab8d6ec5916db",
+          "parents": [
+            "e593532a7d0f7f39406d1c12531d323ad100c5f7"
+          ],
+          "authored": "2026-06-01T23:51:37Z",
+          "committed": "2026-06-01T23:51:37Z",
+          "title": "Polish canonical home world experience"
+        },
+        {
+          "sha": "882dc4fddf3115705cab11453dbec26be1b7a988",
+          "tree": "ac2df96f43f7d225f13018fda54c6be0102642ba",
+          "parents": [
+            "e8f801f3f05bca209462fdc5e8c833a87a6ee948"
+          ],
+          "authored": "2026-06-01T23:57:15Z",
+          "committed": "2026-06-01T23:57:15Z",
+          "title": "Complete layered home world system"
+        },
+        {
+          "sha": "301014d347cbde12a4a93168b9760c18d900455e",
+          "tree": "e8327ae294e214259292de7a1de89b3b2f2635db",
+          "parents": [
+            "882dc4fddf3115705cab11453dbec26be1b7a988"
+          ],
+          "authored": "2026-06-02T00:01:49Z",
+          "committed": "2026-06-02T00:01:49Z",
+          "title": "Add home motion and interaction system"
+        },
+        {
+          "sha": "f00ad516d6dad9164bfa043e15fa167809448278",
+          "tree": "397ba2890835f68507e427182f91d7d2b4b93978",
+          "parents": [
+            "301014d347cbde12a4a93168b9760c18d900455e"
+          ],
+          "authored": "2026-06-02T00:07:09Z",
+          "committed": "2026-06-02T00:07:09Z",
+          "title": "Finalize home AAA interaction and state pass"
+        },
+        {
+          "sha": "0d5cf4538d71d9f0ad7bf48a9726ee8804c027d1",
+          "tree": "9e68f8b89d94788fb4f2a0d90f14632fe7016356",
+          "parents": [
+            "f00ad516d6dad9164bfa043e15fa167809448278"
+          ],
+          "authored": "2026-06-02T00:20:31Z",
+          "committed": "2026-06-02T00:20:31Z",
+          "title": "Add home production polish safeguards"
+        },
+        {
+          "sha": "6fec8db5e1caba5835e9eabd986e5ef2f57a01b0",
+          "tree": "79798a21510383af00ce7f62d4a7c06d1245b298",
+          "parents": [
+            "0d5cf4538d71d9f0ad7bf48a9726ee8804c027d1"
+          ],
+          "authored": "2026-06-02T00:33:28Z",
+          "committed": "2026-06-02T00:33:28Z",
+          "title": "Hide home debug HUD and mode controls"
+        },
+        {
+          "sha": "f6b22ee37b9a6d607e200ad8d6a2a27b30c6cb10",
+          "tree": "268c38cc0d6d95c59cb30827f90b45c4260ef4a6",
+          "parents": [
+            "6fec8db5e1caba5835e9eabd986e5ef2f57a01b0"
+          ],
+          "authored": "2026-06-02T00:48:19Z",
+          "committed": "2026-06-02T00:48:19Z",
+          "title": "Replace home with tier locked cinematic world"
+        },
+        {
+          "sha": "46b7e89b994eb13f1dd861767c38d11075954a07",
+          "tree": "5befcaff66215447c3a1c1b9dc13dc0c218f4ae4",
+          "parents": [
+            "f6b22ee37b9a6d607e200ad8d6a2a27b30c6cb10"
+          ],
+          "authored": "2026-06-02T00:50:16Z",
+          "committed": "2026-06-02T00:50:16Z",
+          "title": "Remove ImmersiveWorld3D debug label"
+        },
+        {
+          "sha": "d451c7887b84768e2731654fe92a604ac8809af5",
+          "tree": "063ec02084c87364e38f6475948b6a1af83d4fc3",
+          "parents": [
+            "46b7e89b994eb13f1dd861767c38d11075954a07"
+          ],
+          "authored": "2026-06-02T01:09:44Z",
+          "committed": "2026-06-02T01:09:44Z",
+          "title": "Actually replace home with tier locked cinematic world"
+        },
+        {
+          "sha": "b26fc3aef232c34926ea3d3960df04f9de24b893",
+          "tree": "dccbaa41832232ed0ec55177786010f6c8235b3d",
+          "parents": [
+            "d451c7887b84768e2731654fe92a604ac8809af5"
+          ],
+          "authored": "2026-06-02T01:36:19Z",
+          "committed": "2026-06-02T01:36:19Z",
+          "title": "Upgrade home world scene and remove spatial HUD"
+        },
+        {
+          "sha": "e94aba47b1a5705d8557c3d1a1a1ee89b7b0e2e6",
+          "tree": "c9addc6ab718a12a403552b3cfba2946c703894d",
+          "parents": [
+            "b26fc3aef232c34926ea3d3960df04f9de24b893"
+          ],
+          "authored": "2026-06-02T01:44:39Z",
+          "committed": "2026-06-02T01:44:39Z",
+          "title": "Refactor home world and add state driven scene"
+        },
+        {
+          "sha": "47e81785eb8c78c78a3ca926a938f991289e6a2b",
+          "tree": "47bf8833f188788b15d1d98ac50ada00c9a28622",
+          "parents": [
+            "b26fc3aef232c34926ea3d3960df04f9de24b893"
+          ],
+          "authored": "2026-06-02T05:29:48Z",
+          "committed": "2026-06-02T05:29:48Z",
+          "title": "Fix route boundary test imports"
+        },
+        {
+          "sha": "dbd6b5f9e97770596222b42e0aa3f6a7f9efa019",
+          "tree": "dad9f9fed2e2f70990171a59a4ca0d7effe26525",
+          "parents": [
+            "e94aba47b1a5705d8557c3d1a1a1ee89b7b0e2e6",
+            "47e81785eb8c78c78a3ca926a938f991289e6a2b"
+          ],
+          "authored": "2026-06-02T05:35:21Z",
+          "committed": "2026-06-02T05:35:21Z",
+          "title": "Merge branch 'genesis-visual-supremacy' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "6d77115dce900ee54edfa66dc9763d09ff2fc41b",
+          "tree": "61476804965184ba8528fe2cb186c0d6c7560644",
+          "parents": [
+            "47e81785eb8c78c78a3ca926a938f991289e6a2b"
+          ],
+          "authored": "2026-06-02T05:37:31Z",
+          "committed": "2026-06-02T05:37:31Z",
+          "title": "Declare testing-library dom dependency"
+        },
+        {
+          "sha": "1c75d067d283bb8964faf9251461951c35c3237d",
+          "tree": "a96518e161573eb33d28244ca0744a058c099b63",
+          "parents": [
+            "dbd6b5f9e97770596222b42e0aa3f6a7f9efa019",
+            "6d77115dce900ee54edfa66dc9763d09ff2fc41b"
+          ],
+          "authored": "2026-06-02T05:43:09Z",
+          "committed": "2026-06-02T05:43:09Z",
+          "title": "Merge branch 'genesis-visual-supremacy' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "98d9d2e6e84aac6fcc3a2706f12bcbebfcf6f89a",
+          "tree": "7ed9b5e8310417618550364f8173f1c3c47f2670",
+          "parents": [
+            "6d77115dce900ee54edfa66dc9763d09ff2fc41b"
+          ],
+          "authored": "2026-06-02T05:53:54Z",
+          "committed": "2026-06-02T05:53:54Z",
+          "title": "Clean static export output before build"
+        },
+        {
+          "sha": "9ba80654dfd0138f9ad556e11dcc6daaef4a67bb",
+          "tree": "76fae1558d9d3583ddcf102a09d84db95175846f",
+          "parents": [
+            "1c75d067d283bb8964faf9251461951c35c3237d",
+            "98d9d2e6e84aac6fcc3a2706f12bcbebfcf6f89a"
+          ],
+          "authored": "2026-06-02T06:12:38Z",
+          "committed": "2026-06-02T06:12:38Z",
+          "title": "Merge remote-tracking branch 'origin/genesis-visual-supremacy' into genesis-visual-supremacy"
+        },
+        {
+          "sha": "302cb50d60bcf74ac1cf552e4a6cbc2c5a263bcb",
+          "tree": "1553446835cd590c4b6a386f04089dc1f775dfde",
+          "parents": [
+            "98d9d2e6e84aac6fcc3a2706f12bcbebfcf6f89a"
+          ],
+          "authored": "2026-06-02T06:16:10Z",
+          "committed": "2026-06-02T06:16:10Z",
+          "title": "Add low-disk build mode for Next export"
+        },
+        {
+          "sha": "c4dd0a76bd7344e8faa0525b0a337ed627d9464a",
+          "tree": "f9df4a5df230d439a0407aeb354da2a89ac35b21",
+          "parents": [
+            "302cb50d60bcf74ac1cf552e4a6cbc2c5a263bcb"
+          ],
+          "authored": "2026-06-02T06:16:43Z",
+          "committed": "2026-06-02T06:16:43Z",
+          "title": "Add low disk build command"
+        },
+        {
+          "sha": "e7c34dac79f2609ca3ae58586eed20a24e25b4f9",
+          "tree": "1f267e9d32d6001232f31d5a86c534794d087461",
+          "parents": [
+            "9ba80654dfd0138f9ad556e11dcc6daaef4a67bb",
+            "c4dd0a76bd7344e8faa0525b0a337ed627d9464a"
+          ],
+          "authored": "2026-06-02T06:17:04Z",
+          "committed": "2026-06-02T06:17:04Z",
+          "title": "Merge remote-tracking branch 'origin/genesis-visual-supremacy' into genesis-visual-supremacy"
+        },
+        {
+          "sha": "69f1cff4d33c1a7a7d98ddd3dcf974847283f39d",
+          "tree": "b90c6bc605a2b2b0dafddb724f08c8c7af2da733",
+          "parents": [
+            "e7c34dac79f2609ca3ae58586eed20a24e25b4f9"
+          ],
+          "authored": "2026-06-02T08:26:24Z",
+          "committed": "2026-06-02T08:26:24Z",
+          "title": "Changes before Firebase Studio auto-run"
+        },
+        {
+          "sha": "ec1e17b8abadcbbc23bdd5f07e0d0dd6ecfaa2ec",
+          "tree": "43a02d627d0923661dc72b82c602ef8b863796e9",
+          "parents": [
+            "69f1cff4d33c1a7a7d98ddd3dcf974847283f39d"
+          ],
+          "authored": "2026-06-02T09:30:12Z",
+          "committed": "2026-06-02T09:30:12Z",
+          "title": "a"
+        },
+        {
+          "sha": "e14dd3131b5e60ed050ed0dd8d1070e622d7d696",
+          "tree": "a0aafbee6401fd74bdd23448a17aa1e9cb930667",
+          "parents": [
+            "e7c34dac79f2609ca3ae58586eed20a24e25b4f9"
+          ],
+          "authored": "2026-06-02T23:57:24Z",
+          "committed": "2026-06-02T23:57:24Z",
+          "title": "Fix orb chat shared type exports"
+        },
+        {
+          "sha": "37f36d5ec7b3483619d417218ed559076a7cf05e",
+          "tree": "73f66d6b64c2b6334c648272ca9618e4b94d1bdc",
+          "parents": [
+            "e14dd3131b5e60ed050ed0dd8d1070e622d7d696"
+          ],
+          "authored": "2026-06-02T23:59:21Z",
+          "committed": "2026-06-02T23:59:21Z",
+          "title": "Add companion shared types"
+        },
+        {
+          "sha": "a7086f6bbc3bbb4e6f5759bbb9bdd145238e2b17",
+          "tree": "b6cdbf7b8a5d073429f4d25bc99b2c70a12f986d",
+          "parents": [
+            "ec1e17b8abadcbbc23bdd5f07e0d0dd6ecfaa2ec",
+            "37f36d5ec7b3483619d417218ed559076a7cf05e"
+          ],
+          "authored": "2026-06-03T00:01:14Z",
+          "committed": "2026-06-03T00:01:14Z",
+          "title": "Resolve type export merge conflicts"
+        },
+        {
+          "sha": "7622ad309a1ddf37e5ba60836ee0846f7186c395",
+          "tree": "a8393830191d655a6b37c42039c70a854910fbe2",
+          "parents": [
+            "37f36d5ec7b3483619d417218ed559076a7cf05e"
+          ],
+          "authored": "2026-06-03T00:04:37Z",
+          "committed": "2026-06-03T00:04:37Z",
+          "title": "Allow companion mood state strings"
+        },
+        {
+          "sha": "0b42541f2cfad85d220ad9dfd9ed20cdcb58e94c",
+          "tree": "1d5d53149d99270f0be12a0361e3bdc7a7783fc4",
+          "parents": [
+            "a7086f6bbc3bbb4e6f5759bbb9bdd145238e2b17",
+            "7622ad309a1ddf37e5ba60836ee0846f7186c395"
+          ],
+          "authored": "2026-06-03T00:04:52Z",
+          "committed": "2026-06-03T00:04:52Z",
+          "title": "Merge branch 'genesis-visual-supremacy' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "f7aaa88e7cbd0456c99ddeff822b0bef3a8a25fa",
+          "tree": "22665e12e0c3cb49975a4886861b8619bf6f1862",
+          "parents": [
+            "7622ad309a1ddf37e5ba60836ee0846f7186c395"
+          ],
+          "authored": "2026-06-03T00:06:06Z",
+          "committed": "2026-06-03T00:06:06Z",
+          "title": "Add local companion responder with flexible mood state"
+        },
+        {
+          "sha": "b3ba18520dcb82125ee84d628b24344d9a54e2db",
+          "tree": "5762a97b2d089e13bbcdaf839b35f8341bd84f3a",
+          "parents": [
+            "0b42541f2cfad85d220ad9dfd9ed20cdcb58e94c",
+            "f7aaa88e7cbd0456c99ddeff822b0bef3a8a25fa"
+          ],
+          "authored": "2026-06-03T00:06:49Z",
+          "committed": "2026-06-03T00:06:49Z",
+          "title": "Resolve local companion responder type conflict"
+        },
+        {
+          "sha": "6fb0f6aa5cca4bfbcab443818585a072e0da2b0d",
+          "tree": "2a3ca5e47182316c0542696848246e6551b75a97",
+          "parents": [
+            "f7aaa88e7cbd0456c99ddeff822b0bef3a8a25fa"
+          ],
+          "authored": "2026-06-03T00:11:35Z",
+          "committed": "2026-06-03T00:11:35Z",
+          "title": "Support object input for local companion responder"
+        },
+        {
+          "sha": "4f27d84d07961306ad298e32faf362db5cf5f5b3",
+          "tree": "2a38f500110a21f16c1378493a5ea1aaa1bc5a4a",
+          "parents": [
+            "b3ba18520dcb82125ee84d628b24344d9a54e2db",
+            "6fb0f6aa5cca4bfbcab443818585a072e0da2b0d"
+          ],
+          "authored": "2026-06-03T00:15:24Z",
+          "committed": "2026-06-03T00:15:24Z",
+          "title": "Merge branch 'genesis-visual-supremacy' of https://github.com/LifeLoggerAI/UrAi into genesis-visual-supremacy"
+        },
+        {
+          "sha": "922887834140d62b59c4c6b59f5532521e358171",
+          "tree": "1eefe526020d8b56f8d81ee5f2553d9df9c7b72e",
+          "parents": [
+            "4f27d84d07961306ad298e32faf362db5cf5f5b3"
+          ],
+          "authored": "2026-06-03T02:22:41Z",
+          "committed": "2026-06-03T02:22:41Z",
+          "title": "d"
+        },
+        {
+          "sha": "6039e610f711f176ff8a684c65357880c8fe0652",
+          "tree": "02faba40b898e4df9195973c899d6ec98953d186",
+          "parents": [
+            "922887834140d62b59c4c6b59f5532521e358171"
+          ],
+          "authored": "2026-06-03T02:31:05Z",
+          "committed": "2026-06-03T02:31:05Z",
+          "title": "Make default build disk safe"
+        },
+        {
+          "sha": "3fb12816db10f3a4cc3dcf886ea65c9064b002b9",
+          "tree": "7076919f4bac98de1a712630d434dfaa93b0988d",
+          "parents": [
+            "6039e610f711f176ff8a684c65357880c8fe0652"
+          ],
+          "authored": "2026-06-03T02:31:45Z",
+          "committed": "2026-06-03T02:31:45Z",
+          "title": "Clarify disk-safe build scripts"
+        },
+        {
+          "sha": "4a9a907955122bec23daf9e231086ca68cd03259",
+          "tree": "73c69aadd4340784f59e1501de046af2fc327528",
+          "parents": [
+            "3fb12816db10f3a4cc3dcf886ea65c9064b002b9"
+          ],
+          "authored": "2026-06-03T04:40:19Z",
+          "committed": "2026-06-03T04:40:19Z",
+          "title": "Use canonical HomeScene for URAI home view"
+        },
+        {
+          "sha": "75eeddfd4598114589f25b401ab41ffab84ffe35",
+          "tree": "dcc8e7797c222852ab886a113ff538adea8e20f2",
+          "parents": [
+            "4a9a907955122bec23daf9e231086ca68cd03259"
+          ],
+          "authored": "2026-06-03T04:49:38Z",
+          "committed": "2026-06-03T04:49:38Z",
+          "title": "Use cinematic spatial memory galaxy for life map"
+        },
+        {
+          "sha": "27ae5e6c89790262c462f27d7883d8277c70ae68",
+          "tree": "ce76eacf262613029eba65cf46bad2ff92f72993",
+          "parents": [
+            "75eeddfd4598114589f25b401ab41ffab84ffe35"
+          ],
+          "authored": "2026-06-03T05:09:05Z",
+          "committed": "2026-06-03T05:09:05Z",
+          "title": "Use full spatial life map for canonical life map route"
+        },
+        {
+          "sha": "f935befbebfca9289a74920a4fcb62411a339764",
+          "tree": "922ec67e8544a9d4658fa48bce3a3b468d706ec8",
+          "parents": [
+            "27ae5e6c89790262c462f27d7883d8277c70ae68"
+          ],
+          "authored": "2026-06-03T05:30:48Z",
+          "committed": "2026-06-03T05:30:48Z",
+          "title": "Lock staging hosting to static export with API rewrites"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/home-cinematic-ground-orb-polish",
+      "head": "e6f2602941cacfe1b91f858ede56ee4b47f1e615",
+      "ahead_by": 2,
+      "behind_by": 1912,
+      "merge_base": "afed0e60914816f6e55fc5627fe68690b7a1b380",
+      "commits": [
+        {
+          "sha": "5c630e9b77812c7cf7ac9ffef2173ffd9ed94747",
+          "tree": "f84676bb1601e4dc04a9349a67aee0e817fb7482",
+          "parents": [
+            "afed0e60914816f6e55fc5627fe68690b7a1b380"
+          ],
+          "authored": "2026-05-15T18:11:28Z",
+          "committed": "2026-05-15T18:11:28Z",
+          "title": "Polish home scene sky ground orb lighting"
+        },
+        {
+          "sha": "e6f2602941cacfe1b91f858ede56ee4b47f1e615",
+          "tree": "afc5ee577585339c39250fc7881e3bc9a83db63d",
+          "parents": [
+            "5c630e9b77812c7cf7ac9ffef2173ffd9ed94747"
+          ],
+          "authored": "2026-05-15T18:12:15Z",
+          "committed": "2026-05-15T18:12:15Z",
+          "title": "Replace home fallback placeholder copy"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/home-live-wired-polish",
+      "head": "2d344073a2c328ab858a84554a87f952a0501289",
+      "ahead_by": 2,
+      "behind_by": 1913,
+      "merge_base": "4c790f9ca1f8b456c3ce596a0c9c9ae42207c6ba",
+      "commits": [
+        {
+          "sha": "958c3545206f4a34bb460631f59e8d806b58ce43",
+          "tree": "14e6087ff3167802e647e9b04e3632c8c467964d",
+          "parents": [
+            "4c790f9ca1f8b456c3ce596a0c9c9ae42207c6ba"
+          ],
+          "authored": "2026-05-15T17:50:43Z",
+          "committed": "2026-05-15T17:50:43Z",
+          "title": "Wire home state to layered Life Map data"
+        },
+        {
+          "sha": "2d344073a2c328ab858a84554a87f952a0501289",
+          "tree": "0a72e9ce73b36040c69579975e53ae5cb63a3a2f",
+          "parents": [
+            "958c3545206f4a34bb460631f59e8d806b58ce43"
+          ],
+          "authored": "2026-05-15T17:51:28Z",
+          "committed": "2026-05-15T17:51:28Z",
+          "title": "Seed live home state documents"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/impl/cinematic-runtime-depth",
+      "head": "0c2b941ea4a0ef072eed3e5f8938dd19efb347ad",
+      "ahead_by": 1,
+      "behind_by": 1383,
+      "merge_base": "33fd2eb8c2f905fea1f4ff5f14abab646f8d0c6e",
+      "commits": [
+        {
+          "sha": "0c2b941ea4a0ef072eed3e5f8938dd19efb347ad",
+          "tree": "9569a95812eebcfe2148bcb7d9a553c9ec57b117",
+          "parents": [
+            "33fd2eb8c2f905fea1f4ff5f14abab646f8d0c6e"
+          ],
+          "authored": "2026-05-20T18:18:43Z",
+          "committed": "2026-05-20T18:18:43Z",
+          "title": "Document cinematic runtime depth plan"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/integrate-cinematic-urai-redesign",
+      "head": "0f2294a5a9f9f082bf84ad643743eca6ab70f526",
+      "ahead_by": 37,
+      "behind_by": 1875,
+      "merge_base": "20c16bcdde735a8d8dcca7edd602879f7568f185",
+      "commits": [
+        {
+          "sha": "e7f148b1d39cdd693fab1345bab7c4b3ea0ecbdc",
+          "tree": "b27b1dbd2a978975cf74a699d63291c3d43c6b6b",
+          "parents": [
+            "20c16bcdde735a8d8dcca7edd602879f7568f185"
+          ],
+          "authored": "2026-05-17T10:24:47Z",
+          "committed": "2026-05-17T10:24:47Z",
+          "title": "Add ascent motion constants"
+        },
+        {
+          "sha": "8cca2376f7e324848387c7ee2152caae74200a13",
+          "tree": "3337c6b05a811a1e79cb40b671db2c78c93dc7d9",
+          "parents": [
+            "e7f148b1d39cdd693fab1345bab7c4b3ea0ecbdc"
+          ],
+          "authored": "2026-05-17T10:25:07Z",
+          "committed": "2026-05-17T10:25:07Z",
+          "title": "Add URAI emotion palette data"
+        },
+        {
+          "sha": "6aeccf8dfe1b8cd8c2aae2e736c45d135ae7d581",
+          "tree": "917e99331caf65d4f012c2183aad703da4435c1e",
+          "parents": [
+            "8cca2376f7e324848387c7ee2152caae74200a13"
+          ],
+          "authored": "2026-05-17T10:25:51Z",
+          "committed": "2026-05-17T10:25:51Z",
+          "title": "Add Memory Galaxy seed data"
+        },
+        {
+          "sha": "ba66763ab9dcf20737b6af56eeb1162505234cb4",
+          "tree": "067fdf8b1dfd0346f20a142f683abc97811e386b",
+          "parents": [
+            "6aeccf8dfe1b8cd8c2aae2e736c45d135ae7d581"
+          ],
+          "authored": "2026-05-17T10:26:43Z",
+          "committed": "2026-05-17T10:26:43Z",
+          "title": "Add reduced motion hook"
+        },
+        {
+          "sha": "ced88c83a28d0b39e29777051995d59f48b00961",
+          "tree": "2e153c4697697d4a335db38060270493f3894c21",
+          "parents": [
+            "ba66763ab9dcf20737b6af56eeb1162505234cb4"
+          ],
+          "authored": "2026-05-17T10:27:52Z",
+          "committed": "2026-05-17T10:27:52Z",
+          "title": "Centralize home motion constants and reduced-motion hook"
+        },
+        {
+          "sha": "34fa567fddce3aca5b11c8044e18eeb1a15784cc",
+          "tree": "b03dd67191d89e89ec15da5ec7b2ac78a0705bc5",
+          "parents": [
+            "ced88c83a28d0b39e29777051995d59f48b00961"
+          ],
+          "authored": "2026-05-17T10:30:22Z",
+          "committed": "2026-05-17T10:30:22Z",
+          "title": "Tighten Framer Motion easing tuple types"
+        },
+        {
+          "sha": "38b8e3cdf7e5e75cd3bc08570b7171f191c9390b",
+          "tree": "0d43a1b6a70a594e31d49a1bd812766e900b1ad9",
+          "parents": [
+            "34fa567fddce3aca5b11c8044e18eeb1a15784cc"
+          ],
+          "authored": "2026-05-17T10:31:14Z",
+          "committed": "2026-05-17T10:31:14Z",
+          "title": "Add galaxy motion constants"
+        },
+        {
+          "sha": "dc59948bf5217ca473ad8386501c42bd25f397e8",
+          "tree": "1568d5301f99f440c035e6191e0f4d58675583c0",
+          "parents": [
+            "38b8e3cdf7e5e75cd3bc08570b7171f191c9390b"
+          ],
+          "authored": "2026-05-17T10:32:06Z",
+          "committed": "2026-05-17T10:32:06Z",
+          "title": "Add reusable Galaxy camera hook"
+        },
+        {
+          "sha": "6554118e2c44355362e4cdd108a55430bc3ba44c",
+          "tree": "41d360603c567c78a1c080cc123a325f2ce64c62",
+          "parents": [
+            "dc59948bf5217ca473ad8386501c42bd25f397e8"
+          ],
+          "authored": "2026-05-17T10:32:27Z",
+          "committed": "2026-05-17T10:32:27Z",
+          "title": "Add reusable selected-star hook"
+        },
+        {
+          "sha": "d13cf5f9fb1ee50f500b55f7803258e23f3841f0",
+          "tree": "f30b9e95c21b46f10e7513686226f12367328e6b",
+          "parents": [
+            "6554118e2c44355362e4cdd108a55430bc3ba44c"
+          ],
+          "authored": "2026-05-17T10:33:10Z",
+          "committed": "2026-05-17T10:33:10Z",
+          "title": "Fix Galaxy camera pointer event typing"
+        },
+        {
+          "sha": "665b34acf6990fede8133fb6b4f7b47449818269",
+          "tree": "3b917b89fdaf0a7a12c59e8a92e6169142eac137",
+          "parents": [
+            "d13cf5f9fb1ee50f500b55f7803258e23f3841f0"
+          ],
+          "authored": "2026-05-17T10:34:02Z",
+          "committed": "2026-05-17T10:34:02Z",
+          "title": "Add reusable home star particle field component"
+        },
+        {
+          "sha": "6d89559569fa137a42c5405cf9b6c74116433d9a",
+          "tree": "36c3ce14ff73050dea09ae0c9dcea3fdd3e1a9d3",
+          "parents": [
+            "665b34acf6990fede8133fb6b4f7b47449818269"
+          ],
+          "authored": "2026-05-17T10:35:00Z",
+          "committed": "2026-05-17T10:35:00Z",
+          "title": "Add reusable ascent transition hook"
+        },
+        {
+          "sha": "7a8db7cf20ec64bfff131b22d03d7ac28e3a6952",
+          "tree": "99e787f329c8651f336ddd69f0b34bd3ef1bff31",
+          "parents": [
+            "6d89559569fa137a42c5405cf9b6c74116433d9a"
+          ],
+          "authored": "2026-05-17T10:35:37Z",
+          "committed": "2026-05-17T10:35:37Z",
+          "title": "Add reusable CosmicSky component"
+        },
+        {
+          "sha": "b7dadfc7c0a60e464e85705d8d4a4dfbd550f7d9",
+          "tree": "fe31cfec74bb2bcb0b31c6d487c13d71fe790c75",
+          "parents": [
+            "7a8db7cf20ec64bfff131b22d03d7ac28e3a6952"
+          ],
+          "authored": "2026-05-17T10:36:26Z",
+          "committed": "2026-05-17T10:36:26Z",
+          "title": "Add reusable emotional nebula layer"
+        },
+        {
+          "sha": "e1f72b64c86e4bd4d9fb6d075ce7e01298590b3a",
+          "tree": "887fe5ed061eec93113cd46a6c4099a6c0a0171d",
+          "parents": [
+            "b7dadfc7c0a60e464e85705d8d4a4dfbd550f7d9"
+          ],
+          "authored": "2026-05-17T10:37:06Z",
+          "committed": "2026-05-17T10:37:06Z",
+          "title": "Add reusable GroundSystem component"
+        },
+        {
+          "sha": "0d6008b10101b3e1855d19b9f3fb362dc1f09cae",
+          "tree": "8eff93c553d0b47ebcefee168edb85153a01653a",
+          "parents": [
+            "e1f72b64c86e4bd4d9fb6d075ce7e01298590b3a"
+          ],
+          "authored": "2026-05-17T10:37:50Z",
+          "committed": "2026-05-17T10:37:50Z",
+          "title": "Add reusable AvatarSilhouette component"
+        },
+        {
+          "sha": "b27160dcbeb0de742c241157cb8b12da498f23fa",
+          "tree": "62c085c313021df40927b59acf0866513d8b7059",
+          "parents": [
+            "0d6008b10101b3e1855d19b9f3fb362dc1f09cae"
+          ],
+          "authored": "2026-05-17T10:38:42Z",
+          "committed": "2026-05-17T10:38:42Z",
+          "title": "Add reusable MemoryOrb component"
+        },
+        {
+          "sha": "c2c3d197177ecd97ef127a74d4744ea57ba11d0e",
+          "tree": "b2f2a713a0896a5774922686b8aca776ccedcb7c",
+          "parents": [
+            "b27160dcbeb0de742c241157cb8b12da498f23fa"
+          ],
+          "authored": "2026-05-17T10:39:14Z",
+          "committed": "2026-05-17T10:39:14Z",
+          "title": "Refactor HomeScene to use modular cinematic components"
+        },
+        {
+          "sha": "77686da3d2a58824573947dde35d2ebf2f0c1c2c",
+          "tree": "865728530b3ff3ffd3958247205c32c1994c2d44",
+          "parents": [
+            "c2c3d197177ecd97ef127a74d4744ea57ba11d0e"
+          ],
+          "authored": "2026-05-17T10:39:57Z",
+          "committed": "2026-05-17T10:39:57Z",
+          "title": "Add HomeAscentController component"
+        },
+        {
+          "sha": "685ff63ade63a21d353b72da3e8efce68cba319e",
+          "tree": "57a7e7783e8cf11b14119ef35aca945e309b8034",
+          "parents": [
+            "77686da3d2a58824573947dde35d2ebf2f0c1c2c"
+          ],
+          "authored": "2026-05-17T10:41:02Z",
+          "committed": "2026-05-17T10:41:02Z",
+          "title": "Add reusable GalaxyBackground component"
+        },
+        {
+          "sha": "7d055f5f8f56947be69a4d190f85a409707aaada",
+          "tree": "a0cdcff616294175a13a02e76e63806956a88870",
+          "parents": [
+            "685ff63ade63a21d353b72da3e8efce68cba319e"
+          ],
+          "authored": "2026-05-17T10:42:32Z",
+          "committed": "2026-05-17T10:42:32Z",
+          "title": "Add reusable GalaxyCamera component"
+        },
+        {
+          "sha": "abd58a7d83b47c9b0f0558b745fed35e6bddad3e",
+          "tree": "b327ac56463ba0f5abac9d2b2ff0944e7ad7f735",
+          "parents": [
+            "7d055f5f8f56947be69a4d190f85a409707aaada"
+          ],
+          "authored": "2026-05-17T10:43:37Z",
+          "committed": "2026-05-17T10:43:37Z",
+          "title": "Fix GalaxyCamera ReactNode type import"
+        },
+        {
+          "sha": "80550eaca6d24998cfe243034fc730151a1bb7bc",
+          "tree": "ac1476d268f0e010bf862ba6e219fcba8cc835a8",
+          "parents": [
+            "abd58a7d83b47c9b0f0558b745fed35e6bddad3e"
+          ],
+          "authored": "2026-05-17T10:44:12Z",
+          "committed": "2026-05-17T10:44:12Z",
+          "title": "Add reusable GalaxyViewport component"
+        },
+        {
+          "sha": "cb27470b0b5a0cc44eea48aa41c02fa672a975d7",
+          "tree": "836b2bc7e862fe236641f6620147de2d4d6c996f",
+          "parents": [
+            "80550eaca6d24998cfe243034fc730151a1bb7bc"
+          ],
+          "authored": "2026-05-17T10:44:38Z",
+          "committed": "2026-05-17T10:44:38Z",
+          "title": "Add OrbitRings component"
+        },
+        {
+          "sha": "ed06a60aa9f8699580bc375250eeaf34e74f3bcb",
+          "tree": "b18e922af02b439c783846494938de46b9cb8864",
+          "parents": [
+            "cb27470b0b5a0cc44eea48aa41c02fa672a975d7"
+          ],
+          "authored": "2026-05-17T10:45:38Z",
+          "committed": "2026-05-17T10:45:38Z",
+          "title": "Add NebulaZones component"
+        },
+        {
+          "sha": "3644a0cb60a10e73aceb24ebbc6e346f1e15aa46",
+          "tree": "68596a2d4a26857d9ad5ecb159ee1df3a3a241cf",
+          "parents": [
+            "ed06a60aa9f8699580bc375250eeaf34e74f3bcb"
+          ],
+          "authored": "2026-05-17T10:46:31Z",
+          "committed": "2026-05-17T10:46:31Z",
+          "title": "Add ConstellationThreadLayer component"
+        },
+        {
+          "sha": "899b561faec0d33765d997b6a569284906eda7b9",
+          "tree": "5a6c06bb47149448187df6055a8c5868b22a682b",
+          "parents": [
+            "3644a0cb60a10e73aceb24ebbc6e346f1e15aa46"
+          ],
+          "authored": "2026-05-17T10:47:42Z",
+          "committed": "2026-05-17T10:47:42Z",
+          "title": "Add MemoryStar component"
+        },
+        {
+          "sha": "f909fb1ed76eb0335ffa04b7d50565012466cd4d",
+          "tree": "25496a484a635a2fd6a2aeda56f5d0e5d690fa9f",
+          "parents": [
+            "899b561faec0d33765d997b6a569284906eda7b9"
+          ],
+          "authored": "2026-05-17T10:49:20Z",
+          "committed": "2026-05-17T10:49:20Z",
+          "title": "Add MemoryStarLayer component"
+        },
+        {
+          "sha": "6f8038e5f34d21153c6e6a4baca0df88df3535cd",
+          "tree": "9d6b85e48e961d8ef3ad95fbd98aa7dbfbbfa01e",
+          "parents": [
+            "f909fb1ed76eb0335ffa04b7d50565012466cd4d"
+          ],
+          "authored": "2026-05-17T10:50:11Z",
+          "committed": "2026-05-17T10:50:11Z",
+          "title": "Add SelectedStarPortal component"
+        },
+        {
+          "sha": "f02c0513e0ddd77eb94f527b7eafdfe22134f77e",
+          "tree": "e525c45c97ecfadae3c37cb492b5517b1ecf083a",
+          "parents": [
+            "6f8038e5f34d21153c6e6a4baca0df88df3535cd"
+          ],
+          "authored": "2026-05-17T10:51:15Z",
+          "committed": "2026-05-17T10:51:15Z",
+          "title": "Add CompanionInsightCard component"
+        },
+        {
+          "sha": "2b1fd71b232d4a261cd67e7b45247f6c1107214f",
+          "tree": "699d95201e28f5971d0dbb47e09ededd8a860001",
+          "parents": [
+            "f02c0513e0ddd77eb94f527b7eafdfe22134f77e"
+          ],
+          "authored": "2026-05-17T10:51:50Z",
+          "committed": "2026-05-17T10:51:50Z",
+          "title": "Add GalaxyActionDock component"
+        },
+        {
+          "sha": "2871f1750dae8791d5f93937ed0ccac6d8179cab",
+          "tree": "60c56001966127c396febbd3b2d56c4f5ad1c8dc",
+          "parents": [
+            "2b1fd71b232d4a261cd67e7b45247f6c1107214f"
+          ],
+          "authored": "2026-05-17T10:52:09Z",
+          "committed": "2026-05-17T10:52:09Z",
+          "title": "Add CategoryFilterDock component"
+        },
+        {
+          "sha": "0785903379fd66cfa0323f7aa0f735ffc4812b02",
+          "tree": "27410395ee30e2f01a0911325bd7b0640faf80ef",
+          "parents": [
+            "2871f1750dae8791d5f93937ed0ccac6d8179cab"
+          ],
+          "authored": "2026-05-17T10:53:03Z",
+          "committed": "2026-05-17T10:53:03Z",
+          "title": "Add ZoomMiniMap component"
+        },
+        {
+          "sha": "26f3d25ba5f09a42142a5da76f6f0f1db5684b0d",
+          "tree": "4b3fec3830122af27e7d2933356d2ed7899697b1",
+          "parents": [
+            "0785903379fd66cfa0323f7aa0f735ffc4812b02"
+          ],
+          "authored": "2026-05-17T10:54:05Z",
+          "committed": "2026-05-17T10:54:05Z",
+          "title": "Refactor Memory Galaxy into cohesive component system"
+        },
+        {
+          "sha": "1963fc285373dab852d97d6f1dd7c182a76e4193",
+          "tree": "7826efba23680e0d594bef086cc4e975cd901c54",
+          "parents": [
+            "26f3d25ba5f09a42142a5da76f6f0f1db5684b0d"
+          ],
+          "authored": "2026-05-17T10:55:16Z",
+          "committed": "2026-05-17T10:55:16Z",
+          "title": "Add GalaxyHUD composition component"
+        },
+        {
+          "sha": "aa0176ada41d16fbe411654361419d7638ceec14",
+          "tree": "0a0cd93b58eea2e5a52c0c61ebed7be482bd44b8",
+          "parents": [
+            "1963fc285373dab852d97d6f1dd7c182a76e4193"
+          ],
+          "authored": "2026-05-17T10:56:36Z",
+          "committed": "2026-05-17T10:56:36Z",
+          "title": "Add mobile two finger zoom support"
+        },
+        {
+          "sha": "0f2294a5a9f9f082bf84ad643743eca6ab70f526",
+          "tree": "cc196cedc6b27a937f559ff4b50e2e2e267db1f7",
+          "parents": [
+            "aa0176ada41d16fbe411654361419d7638ceec14"
+          ],
+          "authored": "2026-05-17T10:57:16Z",
+          "committed": "2026-05-17T10:57:16Z",
+          "title": "Wire touch handlers through GalaxyViewport"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/legacy-readme",
+      "head": "f9e3545b7fcd4c3344720d534a9111e8a31b6870",
+      "ahead_by": 1,
+      "behind_by": 115,
+      "merge_base": "5a3ce86542f762d5ce8a6b5c9c023246bf844150",
+      "commits": [
+        {
+          "sha": "f9e3545b7fcd4c3344720d534a9111e8a31b6870",
+          "tree": "729b2c26ca8c9d4f17ec48d72036095b18b926c5",
+          "parents": [
+            "5a3ce86542f762d5ce8a6b5c9c023246bf844150"
+          ],
+          "authored": "2026-07-06T06:04:36Z",
+          "committed": "2026-07-06T06:04:36Z",
+          "title": "Mark UrAi as legacy reference surface"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/lifemap-layer-data-and-era-controls",
+      "head": "0b7ff536ec14d2b47fec0ac7d320b6a2640b81e0",
+      "ahead_by": 2,
+      "behind_by": 1914,
+      "merge_base": "497130aee4269f4e3f5c3e91ece5d681873ef78a",
+      "commits": [
+        {
+          "sha": "3527b07687ff596bad501e8729be550ecbea3493",
+          "tree": "2f47c306591a3c9e24ce40836331cf2f986a28ad",
+          "parents": [
+            "497130aee4269f4e3f5c3e91ece5d681873ef78a"
+          ],
+          "authored": "2026-05-15T17:23:48Z",
+          "committed": "2026-05-15T17:23:48Z",
+          "title": "Read layered Life Map nodes before memory fallback"
+        },
+        {
+          "sha": "0b7ff536ec14d2b47fec0ac7d320b6a2640b81e0",
+          "tree": "f525db3c7f2243f3676af845021453cf95b4722c",
+          "parents": [
+            "3527b07687ff596bad501e8729be550ecbea3493"
+          ],
+          "authored": "2026-05-15T17:24:45Z",
+          "committed": "2026-05-15T17:24:45Z",
+          "title": "Seed demo layered Life Map nodes"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/mom-vr-life-map-polish",
+      "head": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8",
+      "ahead_by": 2,
+      "behind_by": 415,
+      "merge_base": "8951e6788d240ce39c09c00869f45a1797a63f7c",
+      "commits": [
+        {
+          "sha": "a3eadb44bbdd97f1a0be4303c9319d3b8ebdccf1",
+          "tree": "cc958e6704e566000aa9e971565c7ddc5914796f",
+          "parents": [
+            "8951e6788d240ce39c09c00869f45a1797a63f7c"
+          ],
+          "authored": "2026-06-28T15:29:41Z",
+          "committed": "2026-06-28T15:29:41Z",
+          "title": "Add Life Map memory garden polish overlay"
+        },
+        {
+          "sha": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8",
+          "tree": "4f781ce50d6dcc3ab3b4a0b645f8cf74f8f46354",
+          "parents": [
+            "a3eadb44bbdd97f1a0be4303c9319d3b8ebdccf1"
+          ],
+          "authored": "2026-06-28T15:30:38Z",
+          "committed": "2026-06-28T15:30:38Z",
+          "title": "Show memory garden polish overlay on Life Map"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/polish/webgl-home-lifemap-readability",
+      "head": "1e4dffbd5d06e54e90ef11fdc9dd3956c09e0845",
+      "ahead_by": 2,
+      "behind_by": 1989,
+      "merge_base": "20f582b96ea194456d24a8ae3becee27f065c7d6",
+      "commits": [
+        {
+          "sha": "0dc4a05a129d57e23ebfe916940b4e92f69fe686",
+          "tree": "8156889480cf05eae2f00f95262a02f72fb1dda3",
+          "parents": [
+            "20f582b96ea194456d24a8ae3becee27f065c7d6"
+          ],
+          "authored": "2026-05-14T23:31:46Z",
+          "committed": "2026-05-14T23:31:46Z",
+          "title": "polish: soften home WebGL sky density"
+        },
+        {
+          "sha": "1e4dffbd5d06e54e90ef11fdc9dd3956c09e0845",
+          "tree": "e5d73b1f88ae38de766141c2f4c65aa2e2f45f26",
+          "parents": [
+            "0dc4a05a129d57e23ebfe916940b4e92f69fe686"
+          ],
+          "authored": "2026-05-14T23:54:17Z",
+          "committed": "2026-05-14T23:54:17Z",
+          "title": "polish: update Life Map WebGL copy"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/repair/canon-provenance-reconciliation-20261007",
+      "head": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0",
+      "ahead_by": 10,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "405e15877230f34e905f9217d38409f967c12c6d",
+          "tree": "8897d29d1d2f4be3b2abe835df0bafc6597d2b23",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-07T18:41:34Z",
+          "committed": "2026-10-07T18:41:34Z",
+          "title": "Reconcile historical cross-system canon provenance"
+        },
+        {
+          "sha": "c83a3cd0e5f10f52659a5b09011bb2ad4536b834",
+          "tree": "47bbd67cc1cffaff92b69e8b347d5627a3d010e5",
+          "parents": [
+            "405e15877230f34e905f9217d38409f967c12c6d"
+          ],
+          "authored": "2026-10-07T20:47:30Z",
+          "committed": "2026-10-07T20:47:30Z",
+          "title": "Bound Chromium installation waits while preserving browser verification gates"
+        },
+        {
+          "sha": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+          "tree": "d20822f4f16503b807f3bce9aa01e283d10bea3b",
+          "parents": [
+            "c83a3cd0e5f10f52659a5b09011bb2ad4536b834"
+          ],
+          "authored": "2026-10-07T21:21:30Z",
+          "committed": "2026-10-07T21:21:30Z",
+          "title": "Quarantine legacy OpenAI leaves before provider dispatch"
+        },
+        {
+          "sha": "ac227c2fcc08f920647665ee98b4ce6f66ffb48e",
+          "tree": "572d23555a8df72415a3eacc9d7a7eb4c038633e",
+          "parents": [
+            "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5"
+          ],
+          "authored": "2026-10-07T23:46:53Z",
+          "committed": "2026-10-07T23:46:53Z",
+          "title": "Pin quarantined legacy Next runtime to 15.5.27 in both locks"
+        },
+        {
+          "sha": "9c2788f19f656b2a37bf206d97d6896f79035675",
+          "tree": "d54044b382356b3223d670badf2a7bae2463dd9a",
+          "parents": [
+            "ac227c2fcc08f920647665ee98b4ce6f66ffb48e"
+          ],
+          "authored": "2026-10-07T23:56:09Z",
+          "committed": "2026-10-07T23:56:09Z",
+          "title": "Replace legacy diagnostic overlay with supported local R3F counters"
+        },
+        {
+          "sha": "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+          "tree": "8b547934d4f8797b41c161ceb5a09081af4d3999",
+          "parents": [
+            "9c2788f19f656b2a37bf206d97d6896f79035675"
+          ],
+          "authored": "2026-10-08T03:22:44Z",
+          "committed": "2026-10-08T03:22:44Z",
+          "title": "Repair active dual-lock dependency consumers and retain qualified brace fork review"
+        },
+        {
+          "sha": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3"
+          ],
+          "authored": "2026-10-09T06:32:43Z",
+          "committed": "2026-10-09T06:32:43Z",
+          "title": "fix(dependencies): install the admitted braces fork from its canonical directory"
+        },
+        {
+          "sha": "d916ad7cec894f2a5f81cbf24336034a7a193bd8",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+            "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9"
+          ],
+          "authored": "2026-10-09T07:22:05Z",
+          "committed": "2026-10-09T07:22:05Z",
+          "title": "Merge pull request #391 from LifeLoggerAI/fix/legacy-braces-installed-topology-20261009"
+        },
+        {
+          "sha": "305fc519485b867cec57b971bfcb724ca264d1f3",
+          "tree": "2f7a34b477886912bf61c9b3e3eba60ae129daea",
+          "parents": [
+            "d916ad7cec894f2a5f81cbf24336034a7a193bd8"
+          ],
+          "authored": "2026-10-09T07:39:55Z",
+          "committed": "2026-10-09T07:39:55Z",
+          "title": "Install Chromium before advisory legacy browser smoke"
+        },
+        {
+          "sha": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0",
+          "tree": "2f7a34b477886912bf61c9b3e3eba60ae129daea",
+          "parents": [
+            "d916ad7cec894f2a5f81cbf24336034a7a193bd8",
+            "305fc519485b867cec57b971bfcb724ca264d1f3"
+          ],
+          "authored": "2026-10-09T07:56:31Z",
+          "committed": "2026-10-09T07:56:31Z",
+          "title": "Merge pull request #392 from LifeLoggerAI/fix/legacy-launch-gate-chromium-20261009"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/repair/legacy-authority-status-doc-20261009",
+      "head": "943d4b64e59a8e5aa38e8ed373827793a66fb071",
+      "ahead_by": 11,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "405e15877230f34e905f9217d38409f967c12c6d",
+          "tree": "8897d29d1d2f4be3b2abe835df0bafc6597d2b23",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-07T18:41:34Z",
+          "committed": "2026-10-07T18:41:34Z",
+          "title": "Reconcile historical cross-system canon provenance"
+        },
+        {
+          "sha": "c83a3cd0e5f10f52659a5b09011bb2ad4536b834",
+          "tree": "47bbd67cc1cffaff92b69e8b347d5627a3d010e5",
+          "parents": [
+            "405e15877230f34e905f9217d38409f967c12c6d"
+          ],
+          "authored": "2026-10-07T20:47:30Z",
+          "committed": "2026-10-07T20:47:30Z",
+          "title": "Bound Chromium installation waits while preserving browser verification gates"
+        },
+        {
+          "sha": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+          "tree": "d20822f4f16503b807f3bce9aa01e283d10bea3b",
+          "parents": [
+            "c83a3cd0e5f10f52659a5b09011bb2ad4536b834"
+          ],
+          "authored": "2026-10-07T21:21:30Z",
+          "committed": "2026-10-07T21:21:30Z",
+          "title": "Quarantine legacy OpenAI leaves before provider dispatch"
+        },
+        {
+          "sha": "ac227c2fcc08f920647665ee98b4ce6f66ffb48e",
+          "tree": "572d23555a8df72415a3eacc9d7a7eb4c038633e",
+          "parents": [
+            "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5"
+          ],
+          "authored": "2026-10-07T23:46:53Z",
+          "committed": "2026-10-07T23:46:53Z",
+          "title": "Pin quarantined legacy Next runtime to 15.5.27 in both locks"
+        },
+        {
+          "sha": "9c2788f19f656b2a37bf206d97d6896f79035675",
+          "tree": "d54044b382356b3223d670badf2a7bae2463dd9a",
+          "parents": [
+            "ac227c2fcc08f920647665ee98b4ce6f66ffb48e"
+          ],
+          "authored": "2026-10-07T23:56:09Z",
+          "committed": "2026-10-07T23:56:09Z",
+          "title": "Replace legacy diagnostic overlay with supported local R3F counters"
+        },
+        {
+          "sha": "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+          "tree": "8b547934d4f8797b41c161ceb5a09081af4d3999",
+          "parents": [
+            "9c2788f19f656b2a37bf206d97d6896f79035675"
+          ],
+          "authored": "2026-10-08T03:22:44Z",
+          "committed": "2026-10-08T03:22:44Z",
+          "title": "Repair active dual-lock dependency consumers and retain qualified brace fork review"
+        },
+        {
+          "sha": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3"
+          ],
+          "authored": "2026-10-09T06:32:43Z",
+          "committed": "2026-10-09T06:32:43Z",
+          "title": "fix(dependencies): install the admitted braces fork from its canonical directory"
+        },
+        {
+          "sha": "d916ad7cec894f2a5f81cbf24336034a7a193bd8",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+            "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9"
+          ],
+          "authored": "2026-10-09T07:22:05Z",
+          "committed": "2026-10-09T07:22:05Z",
+          "title": "Merge pull request #391 from LifeLoggerAI/fix/legacy-braces-installed-topology-20261009"
+        },
+        {
+          "sha": "305fc519485b867cec57b971bfcb724ca264d1f3",
+          "tree": "2f7a34b477886912bf61c9b3e3eba60ae129daea",
+          "parents": [
+            "d916ad7cec894f2a5f81cbf24336034a7a193bd8"
+          ],
+          "authored": "2026-10-09T07:39:55Z",
+          "committed": "2026-10-09T07:39:55Z",
+          "title": "Install Chromium before advisory legacy browser smoke"
+        },
+        {
+          "sha": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0",
+          "tree": "2f7a34b477886912bf61c9b3e3eba60ae129daea",
+          "parents": [
+            "d916ad7cec894f2a5f81cbf24336034a7a193bd8",
+            "305fc519485b867cec57b971bfcb724ca264d1f3"
+          ],
+          "authored": "2026-10-09T07:56:31Z",
+          "committed": "2026-10-09T07:56:31Z",
+          "title": "Merge pull request #392 from LifeLoggerAI/fix/legacy-launch-gate-chromium-20261009"
+        },
+        {
+          "sha": "943d4b64e59a8e5aa38e8ed373827793a66fb071",
+          "tree": "530746734a2489bcdd8afcdf478e0429b222b293",
+          "parents": [
+            "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0"
+          ],
+          "authored": "2026-10-09T21:27:57Z",
+          "committed": "2026-10-09T21:27:57Z",
+          "title": "docs: reconcile historical repository status with legacy quarantine"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
