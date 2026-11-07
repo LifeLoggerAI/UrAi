@@ -1,0 +1,2103 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 2,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Metadata only; full Git trees resolve via the recorded immutable tree SHA. No full history, LFS payload or independent SHA256.",
+  "branches": [
+    {
+      "ref": "refs/heads/bench/spatial-memory-pilot-20261011",
+      "head": "d23b35dfe7be29647dbca7e26604ffa4584154aa",
+      "tree": "d23b35dfe7be29647dbca7e26604ffa4584154aa",
+      "truncated": false,
+      "entries": 4098,
+      "blobs": 2548,
+      "bytes": 604972744,
+      "paths_added_vs_main": 62,
+      "paths_removed_vs_main": 3,
+      "blobs_changed_same_path": 51,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204086
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 328,
+            "bytes": 908434
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 125,
+            "bytes": 557475
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101914
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/frontier-benchmark-fable.yml",
+          "1fa0990186409ee05878f3891b5d5aa37d811301",
+          1449
+        ],
+        [
+          ".github/workflows/frontier-benchmark-gemini.yml",
+          "1cd5cd47deeef59719200e3d913319a7f436bb54",
+          1386
+        ],
+        [
+          ".github/workflows/frontier-benchmark-matched-compute.yml",
+          "8c51c4e99e57d2c5d83026beeb5880812eeab009",
+          1821
+        ],
+        [
+          ".github/workflows/frontier-benchmark.yml",
+          "79ce69f5b64358af03be220e73a3ec8ac6225f4e",
+          2590
+        ],
+        [
+          ".github/workflows/urai-holdout-v1.yml",
+          "c8940b99ddb09f9e58696c7aec3c658f1275884a",
+          1613
+        ],
+        [
+          ".github/workflows/urai-holdout-v2.yml",
+          "033cb94023d5fc823e800082a53fb1c8f953aea1",
+          2221
+        ],
+        [
+          ".github/workflows/urai-isolated-pilot-20261011.yml",
+          "624b0050092a8a8b1ffad51abd31b7fe31696fee",
+          2816
+        ],
+        [
+          "bench/pilot-20261011/suite.jsonl",
+          "4250494d1eee03fd8f193f4ed1eb004c0a0d539f",
+          2485
+        ],
+        [
+          "bench/protocols/urai-holdout-v1-lock.json",
+          "740356f53911877ed440d4b1358bc7e94049ac22",
+          1730
+        ],
+        [
+          "bench/protocols/urai-holdout-v2-draft.json",
+          "c18681c1339cc018a05ef42020262be98575743d",
+          4778
+        ],
+        [
+          "bench/protocols/urai-holdout-v2-lock.json",
+          "556c42460eb63074d7dd7876c51d1bb72aa4e6d2",
+          6469
+        ],
+        [
+          "bench/suites/smoke.jsonl",
+          "5e38df67853ba400dd5b4df976a0087ad840aea0",
+          441
+        ],
+        [
+          "bench/suites/urai-long-horizon-v1.jsonl",
+          "8eb91fe81805d08f1950c432ec8fb528a9f778df",
+          3108
+        ],
+        [
+          "docs/benchmarks/COUNCIL_SELF_REFINEMENT_20261014.md",
+          "fcbe8ef62a9e1c63d4536c4caca29dd4c7496403",
+          3801
+        ],
+        [
+          "docs/benchmarks/FRONTIER_BENCHMARKS.md",
+          "375cf6562d816cd7fe67306f6dbf868b357a5773",
+          5024
+        ],
+        [
+          "docs/benchmarks/RUN_31935227415_FORENSIC.md",
+          "d2338e8f27aecd0bdeee993049d1b6559cdb839d",
+          7991
+        ],
+        [
+          "docs/benchmarks/RUN_31938563069_PRESERVATION_GATE_FINDINGS.md",
+          "b6945e0d5ef30c2b923fc995baee413f678c971f",
+          4774
+        ],
+        [
+          "docs/benchmarks/RUN_31940556523_COUNCIL_V3_FINDINGS.md",
+          "ddb9183eaaf4f5ab8a8a395b8f2ac25f5859b022",
+          5134
+        ],
+        [
+          "docs/benchmarks/URAI_HOLDOUT_V1_RESULTS.md",
+          "97114f2c0c2f0b88c147d851a67c01b14427a21f",
+          6509
+        ],
+        [
+          "docs/benchmarks/URAI_HOLDOUT_V2_RESULTS.md",
+          "876e59b437eaf0ffa9635bbf6399494724da840e",
+          4764
+        ],
+        [
+          "docs/benchmarks/URAI_V2_ARCHITECTURE_FREEZE.md",
+          "8b0400c6a59567a9bbfb24619dc2612b1eeed6a3",
+          4110
+        ],
+        [
+          "docs/benchmarks/URAI_V2_DEVELOPMENT_PLAN.md",
+          "8ea100ad09d91513a699d4ec00c08e92bab0a88d",
+          5196
+        ],
+        [
+          "docs/benchmarks/evidence/run-31935227415-regressions.json",
+          "9b1e31648fc73b02e3274ee926e3d58df90967a4",
+          3773
+        ],
+        [
+          "scripts/bench/analyze-regressions.mjs",
+          "705b1dd1a35bb70cf3298b0d4b6938005c9c92a3",
+          7343
+        ],
+        [
+          "scripts/bench/deterministic-output.mjs",
+          "dcb658f078c0608036a7b9040833c19f498b4962",
+          4522
+        ],
+        [
+          "scripts/bench/deterministic-output.test.mjs",
+          "44897c13d5eefa8342490ce6228abc4ab175f9e4",
+          1931
+        ],
+        [
+          "scripts/bench/doctor.mjs",
+          "60784c6f051b78cc1ef94f350a83f1b0fcbc5594",
+          856
+        ],
+        [
+          "scripts/bench/generate-holdout-v1.mjs",
+          "a4cde23cd539de37befd070cee8ff7ee7fcd4958",
+          9082
+        ],
+        [
+          "scripts/bench/generate-holdout-v2.mjs",
+          "252973ee58c7e1321e3b23a7ae78160a8cdaf036",
+          9651
+        ],
+        [
+          "scripts/bench/generate-long-horizon-v2.mjs",
+          "4fff05e578ba3a94018ace8f960a617f11747702",
+          7963
+        ],
+        [
+          "scripts/bench/lib.mjs",
+          "8a74c312584a8eb5fc0380852043c4749715e020",
+          8278
+        ],
+        [
+          "scripts/bench/pilot-20261011-execution.mjs",
+          "14c1678988d165f205f4345a526b70b4079a95bd",
+          9199
+        ],
+        [
+          "scripts/bench/preservation-gate.mjs",
+          "977aa8a1c3edcddd32c45addf70e90fc72cf685c",
+          6706
+        ],
+        [
+          "scripts/bench/preservation-gate.test.mjs",
+          "4eec3b46c38f799b6e03dd0fb043120cb6e1a808",
+          4160
+        ],
+        [
+          "scripts/bench/providers.mjs",
+          "6d40b44770ab65b9df0b04f137266374c7e7158c",
+          16127
+        ],
+        [
+          "scripts/bench/providers.test.mjs",
+          "938ad6c596b0f84e9fe996052ecd3edd1c845a2c",
+          3615
+        ],
+        [
+          "scripts/bench/reduced-council.mjs",
+          "f6e1921f17d0d3edba079ba0162e268880dc88c3",
+          3824
+        ],
+        [
+          "scripts/bench/reduced-council.test.mjs",
+          "2c5161202a5efab4fc2a733ec1b9702651978594",
+          1384
+        ],
+        [
+          "scripts/bench/run-dev-candidates.mjs",
+          "c8f4c8dcf9cf5c826870fbbc26e762ddf2e1acf7",
+          15682
+        ],
+        [
+          "scripts/bench/run-frontier-bench.mjs",
+          "f2058d7c6b947119a4f86235d312be417c61218a",
+          9589
+        ],
+        [
+          "scripts/bench/run-holdout-v1.mjs",
+          "1833d54a9b79e1edf7ef96dfa3917c77ddd33780",
+          11341
+        ],
+        [
+          "scripts/bench/run-holdout-v2.mjs",
+          "92df9077c95d2bd586dfcb32da022d7bb1d9dc51",
+          14836
+        ],
+        [
+          "scripts/bench/run-matched-compute.mjs",
+          "fd929436f3d776841aec6ac41b31112c8c5522e0",
+          13789
+        ],
+        [
+          "scripts/bench/select-router-threshold.mjs",
+          "8e3636a664ae2252f75c77a21ca780c83a15acb8",
+          5156
+        ],
+        [
+          "scripts/bench/selective-router.mjs",
+          "bfa71b4c036354c95cc5178f3c41f32066372d72",
+          2552
+        ],
+        [
+          "scripts/bench/selective-router.test.mjs",
+          "0d2b61ebfb7671b424562f090d15ffa81e3c51b9",
+          2067
+        ],
+        [
+          "scripts/bench/v3/canonicalizer.mjs",
+          "3b1ac1c3dbda2d067ee53b726ca0914870e59b82",
+          5478
+        ],
+        [
+          "scripts/bench/v3/canonicalizer.test.mjs",
+          "f1de3ebc37cb83c0f0dc48bf4ac592d303431c65",
+          3680
+        ],
+        [
+          "scripts/bench/v3/council-refinement.mjs",
+          "0e32f2823a034f042b1a2469a74c49e347400476",
+          6677
+        ],
+        [
+          "scripts/bench/v3/council-refinement.test.mjs",
+          "a39c2472eda087631e0301168268ae7d9a6dc377",
+          5393
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/canon/upstream-authority-20260924",
+      "head": "446fb60cca95619d01f18be243f3e5b1c65cc79c",
+      "tree": "446fb60cca95619d01f18be243f3e5b1c65cc79c",
+      "truncated": false,
+      "entries": 4031,
+      "blobs": 2489,
+      "bytes": 604646332,
+      "paths_added_vs_main": 0,
+      "paths_removed_vs_main": 0,
+      "blobs_changed_same_path": 25,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2203890
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 319,
+            "bytes": 859573
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 88,
+            "bytes": 312256
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 102466
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "unique_paths": []
+    },
+    {
+      "ref": "refs/heads/chatgpt/demo-ready-spine",
+      "head": "71718e6b2b1ecfe31204b81506431c70988d784c",
+      "tree": "71718e6b2b1ecfe31204b81506431c70988d784c",
+      "truncated": false,
+      "entries": 2701,
+      "blobs": 1404,
+      "bytes": 599658885,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 1101,
+      "blobs_changed_same_path": 97,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 165,
+            "bytes": 490463
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 441607
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 42,
+            "bytes": 168752
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 18,
+            "bytes": 86039
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 23,
+            "bytes": 28660
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 16870
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15586
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "85bc542edf0b684e69914395b246046d0a5bf04a",
+          515544
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/align-legacy-ci-boundary-20260710",
+      "head": "a0981976f421f0b6c5bf521c076c95b065658bc7",
+      "tree": "a0981976f421f0b6c5bf521c076c95b065658bc7",
+      "truncated": false,
+      "entries": 3994,
+      "blobs": 2462,
+      "bytes": 605070911,
+      "paths_added_vs_main": 13,
+      "paths_removed_vs_main": 40,
+      "blobs_changed_same_path": 86,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2144269
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 308,
+            "bytes": 829503
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 81,
+            "bytes": 270302
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "f7dfa6390b34fd51bfd3ffe9203505afc11649d5",
+          514142
+        ],
+        [
+          "functions/package.json",
+          "f27524c71e03f6c695a62638381581f81d83bd55",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f040d7e4aa843d8fa5b967fd0d47d6fed80197de",
+          1068
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "e5509ae0fadcd136a61cb4e79b8065aa034ebcdd",
+          13308
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/disable-legacy-production-deploys-20260710",
+      "head": "35403d2b23cd18c5154f530d87fbeef56caf8db2",
+      "tree": "35403d2b23cd18c5154f530d87fbeef56caf8db2",
+      "truncated": false,
+      "entries": 3993,
+      "blobs": 2461,
+      "bytes": 605070401,
+      "paths_added_vs_main": 13,
+      "paths_removed_vs_main": 41,
+      "blobs_changed_same_path": 86,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2144269
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 308,
+            "bytes": 829503
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 80,
+            "bytes": 269970
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "f7dfa6390b34fd51bfd3ffe9203505afc11649d5",
+          514142
+        ],
+        [
+          "functions/package.json",
+          "f27524c71e03f6c695a62638381581f81d83bd55",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f040d7e4aa843d8fa5b967fd0d47d6fed80197de",
+          1068
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "e5509ae0fadcd136a61cb4e79b8065aa034ebcdd",
+          13308
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/genesis-permissions-passport-status",
+      "head": "b8520475043482d3f0cc6e92213412d415f613ef",
+      "tree": "b8520475043482d3f0cc6e92213412d415f613ef",
+      "truncated": false,
+      "entries": 3021,
+      "blobs": 1668,
+      "bytes": 601192841,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 837,
+      "blobs_changed_same_path": 125,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 330,
+            "bytes": 1118430
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 553904
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 465540
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 78,
+            "bytes": 310418
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 309714
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 279305
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 37,
+            "bytes": 150063
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 31,
+            "bytes": 108879
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 29,
+            "bytes": 47607
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/p0-launch-verification-20260508",
+      "head": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+      "tree": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+      "truncated": false,
+      "entries": 2634,
+      "blobs": 1355,
+      "bytes": 599271888,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1149,
+      "blobs_changed_same_path": 93,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 12,
+            "bytes": 541557
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 134,
+            "bytes": 274500
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 32,
+            "bytes": 134873
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 14,
+            "bytes": 63024
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 20,
+            "bytes": 22804
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15400
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "b71501247dcf3826109d4c7693479b09c899f330",
+          583
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/p1-release-hardening-20260508",
+      "head": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+      "tree": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+      "truncated": false,
+      "entries": 2636,
+      "blobs": 1357,
+      "bytes": 599283638,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1147,
+      "blobs_changed_same_path": 93,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 12,
+            "bytes": 541557
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 134,
+            "bytes": 274500
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 33,
+            "bytes": 138557
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 15,
+            "bytes": 70967
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 20,
+            "bytes": 22873
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15400
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "b71501247dcf3826109d4c7693479b09c899f330",
+          583
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/p2-v1-demo-polish-20260508",
+      "head": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+      "tree": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+      "truncated": false,
+      "entries": 2636,
+      "blobs": 1357,
+      "bytes": 599286149,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1147,
+      "blobs_changed_same_path": 93,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 12,
+            "bytes": 541557
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 134,
+            "bytes": 276933
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 33,
+            "bytes": 138557
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 15,
+            "bytes": 70967
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 20,
+            "bytes": 22873
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15478
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "b71501247dcf3826109d4c7693479b09c899f330",
+          583
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-current-main-20260729",
+      "head": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+      "tree": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+      "truncated": false,
+      "entries": 4004,
+      "blobs": 2467,
+      "bytes": 604539899,
+      "paths_added_vs_main": 0,
+      "paths_removed_vs_main": 22,
+      "blobs_changed_same_path": 58,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 674,
+            "bytes": 2171285
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 311,
+            "bytes": 838266
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 82,
+            "bytes": 270676
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "unique_paths": []
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-20260715",
+      "head": "b08490ec27245481ae8d163604ea2403eee0c3de",
+      "tree": "b08490ec27245481ae8d163604ea2403eee0c3de",
+      "truncated": false,
+      "entries": 3998,
+      "blobs": 2466,
+      "bytes": 605066119,
+      "paths_added_vs_main": 13,
+      "paths_removed_vs_main": 36,
+      "blobs_changed_same_path": 67,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2144269
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 309,
+            "bytes": 833819
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 82,
+            "bytes": 269610
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "f7dfa6390b34fd51bfd3ffe9203505afc11649d5",
+          514142
+        ],
+        [
+          "functions/package.json",
+          "f27524c71e03f6c695a62638381581f81d83bd55",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f040d7e4aa843d8fa5b967fd0d47d6fed80197de",
+          1068
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "e5509ae0fadcd136a61cb4e79b8065aa034ebcdd",
+          13308
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-v2-20260715",
+      "head": "5f749548a18f07a113dab33201d943ec905e0858",
+      "tree": "5f749548a18f07a113dab33201d943ec905e0858",
+      "truncated": false,
+      "entries": 3998,
+      "blobs": 2466,
+      "bytes": 605067945,
+      "paths_added_vs_main": 13,
+      "paths_removed_vs_main": 36,
+      "blobs_changed_same_path": 69,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 663,
+            "bytes": 2144269
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 309,
+            "bytes": 830898
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 561507
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 82,
+            "bytes": 271278
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 101740
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "f7dfa6390b34fd51bfd3ffe9203505afc11649d5",
+          514142
+        ],
+        [
+          "functions/package.json",
+          "f27524c71e03f6c695a62638381581f81d83bd55",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f040d7e4aa843d8fa5b967fd0d47d6fed80197de",
+          1068
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "e5509ae0fadcd136a61cb4e79b8065aa034ebcdd",
+          13308
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    }
+  ]
+}
