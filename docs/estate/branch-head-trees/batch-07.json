@@ -1,0 +1,938 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 7,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Metadata only; full byte SHA256/history not verified.",
+  "branches": [
+    {
+      "ref": "refs/heads/codex/update-audio-upload-storage-location",
+      "head": "42a15c11f6e7a8a95eb84c8a381ff1ee7fb897fc",
+      "tree": "42a15c11f6e7a8a95eb84c8a381ff1ee7fb897fc",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598769145,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page",
+      "head": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+      "tree": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598767970,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page-2depb7",
+      "head": "e7cac7b343dd2748e7e25784eae82e76daba7c33",
+      "tree": "e7cac7b343dd2748e7e25784eae82e76daba7c33",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598767958,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-rules-and-add-tests",
+      "head": "09730bdc35f1580756127efca582421cd44fc115",
+      "tree": "09730bdc35f1580756127efca582421cd44fc115",
+      "truncated": false,
+      "entries": 2404,
+      "blobs": 1171,
+      "bytes": 598783489,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1328,
+      "blobs_changed_same_path": 52,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests",
+      "head": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+      "tree": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+      "truncated": false,
+      "entries": 2402,
+      "blobs": 1169,
+      "bytes": 598773061,
+      "paths_added_vs_main": 11,
+      "paths_removed_vs_main": 1331,
+      "blobs_changed_same_path": 51,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ],
+        [
+          "tests/rules/firestoreRules.test.js",
+          "ee56846ef53d9c482585be5402e73527868a9f6e",
+          2035
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests-5rvfhh",
+      "head": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+      "tree": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+      "truncated": false,
+      "entries": 2402,
+      "blobs": 1169,
+      "bytes": 598773061,
+      "paths_added_vs_main": 11,
+      "paths_removed_vs_main": 1331,
+      "blobs_changed_same_path": 51,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ],
+        [
+          "tests/rules/firestoreRules.test.js",
+          "ee56846ef53d9c482585be5402e73527868a9f6e",
+          2035
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-mainlayout-and-add-onboardinggate",
+      "head": "c65b649863921a2c44cb1b0a0c915312c75fae92",
+      "tree": "c65b649863921a2c44cb1b0a0c915312c75fae92",
+      "truncated": false,
+      "entries": 3067,
+      "blobs": 1705,
+      "bytes": 601296273,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 799,
+      "blobs_changed_same_path": 119,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-for-client-usage",
+      "head": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+      "tree": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598768100,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-with-client-usage",
+      "head": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+      "tree": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598767980,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-routing-and-layout-for-onboarding",
+      "head": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "tree": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "truncated": false,
+      "entries": 2402,
+      "blobs": 1169,
+      "bytes": 598767946,
+      "paths_added_vs_main": 24,
+      "paths_removed_vs_main": 1344,
+      "blobs_changed_same_path": 40,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/(auth)/layout.tsx",
+          "5c01879b21b590f9a1f60c2f6822e25e1440325f",
+          138
+        ],
+        [
+          "src/app/(auth)/onboarding/page.tsx",
+          "5fbf8b5e9e5663b69b1d95ca341e157b6fa0b125",
+          482
+        ],
+        [
+          "src/app/(main)/cognitive-mirror/page.tsx",
+          "aedc365c38ee3740af6c85d76048ba32818b4da6",
+          469
+        ],
+        [
+          "src/app/(main)/home/page.tsx",
+          "ccfb44480452940eca1aedda78099eab96ac6397",
+          996
+        ],
+        [
+          "src/app/(main)/journal/page.tsx",
+          "d2ed0b4aea5f8dadbb9c488181a7dd2f416513b1",
+          501
+        ],
+        [
+          "src/app/(main)/layout.tsx",
+          "fef3f6e8673d9714f6727a70ed0c6784f7efe6c9",
+          227
+        ],
+        [
+          "src/app/(main)/life-map/page.tsx",
+          "ecb4bedacaa5ccdaab7bc73f75d2699796f56ea1",
+          417
+        ],
+        [
+          "src/app/(main)/narrator/page.tsx",
+          "739cfd6515fbc741c639d3d09ca8e4c463b43488",
+          576
+        ],
+        [
+          "src/app/(main)/page.tsx",
+          "71f02e1c7396978110ce393cbe824fe86d3301ea",
+          108
+        ],
+        [
+          "src/app/(main)/profile-and-privacy/page.tsx",
+          "d935d2900130c1793db154fc4fb08ab0473eff70",
+          199
+        ],
+        [
+          "src/app/(main)/record/page.tsx",
+          "d0bd1196cdd2edcda49f5be5d0307ed950b38855",
+          2634
+        ],
+        [
+          "src/app/(main)/rituals-and-scrolls/page.tsx",
+          "68ab55101eb4a7184e30cb336a380c947eb8d0ab",
+          199
+        ],
+        [
+          "src/app/(main)/status/page.tsx",
+          "e70d47c723595f82e919504f2903731ae9e35821",
+          2392
+        ],
+        [
+          "src/app/(main)/support/page.tsx",
+          "871c3d93d1caf1326468751d902ff1eb753ea4fa",
+          3628
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-v1-launch-status-after-preflight",
+      "head": "060e44ccfd0a290b93375aa819733670e75195d6",
+      "tree": "060e44ccfd0a290b93375aa819733670e75195d6",
+      "truncated": false,
+      "entries": 3000,
+      "blobs": 1651,
+      "bytes": 600770963,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 854,
+      "blobs_changed_same_path": 125,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/urai-canon-clean",
+      "head": "81ba81b44b7772a618b0779ac2d5b44d3c0559aa",
+      "tree": "81ba81b44b7772a618b0779ac2d5b44d3c0559aa",
+      "truncated": false,
+      "entries": 3064,
+      "blobs": 1703,
+      "bytes": 601293776,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 801,
+      "blobs_changed_same_path": 121,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "9fcd78daa815450edd6a7955dfaf779d7f570e0f",
+          3938
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "1218d879151597b6a8bbf4c7813c2854cdf8c161",
+          514452
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ]
+      ]
+    }
+  ]
+}

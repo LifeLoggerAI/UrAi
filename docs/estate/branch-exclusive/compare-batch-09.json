@@ -1,0 +1,230 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 96,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/repair/legacy-paid-runtime-quarantine-20261007",
+      "head": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+      "status": "ahead",
+      "ahead_by": 3,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "too_large": null,
+      "reported_file_count": 8,
+      "changed_file_sample": [
+        ".github/workflows/qa.yml",
+        "docs/CROSS_SYSTEM_CANON_AUTHORITY.md",
+        "src/app/api/orb-chat/route.ts",
+        "src/lib/ai/aiConfig.ts",
+        "src/lib/ai/generateAIReply.ts",
+        "src/lib/companion/generateCompanionReply.ts",
+        "src/lib/runtime/__tests__/legacyPaidProviderQuarantine.test.ts",
+        "src/lib/runtime/legacy-paid-provider-quarantine.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/security/legacy-credential-quarantine-20260911",
+      "head": "ffed507342d5e1083ca99819826d4a5d1fc98e67",
+      "status": "diverged",
+      "ahead_by": 13,
+      "behind_by": 26,
+      "merge_base": "82783e7e14d3f9123999d13ae6a2a22af86476d1",
+      "too_large": null,
+      "reported_file_count": 11,
+      "changed_file_sample": [
+        ".env.example",
+        "README.md",
+        "docs/V1_DEPLOY_CHECKLIST.md",
+        "env.local.template",
+        "package.json",
+        "scripts/check-legacy-quarantine-boundary.mjs",
+        "scripts/export-waitlist.mjs",
+        "scripts/seed-demo.mjs",
+        "scripts/seed-tier2-access.mjs",
+        "src/lib/firebase-admin.ts",
+        "src/lib/spatial/contracts.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/test/home-e2e-smoke-coverage",
+      "head": "aa5e4352217e4e4671956008ceee3e87c4ff574c",
+      "status": "diverged",
+      "ahead_by": 3,
+      "behind_by": 1526,
+      "merge_base": "f8a567ba2078b75d5053ec695a5347773b2b7f9c",
+      "too_large": null,
+      "reported_file_count": 3,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "scripts/check-conflicts.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/tier-1-3-lock-audit-pass",
+      "head": "2e1897be8d0324eb75bfb71896cff3caba898dc2",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1336,
+      "merge_base": "e1f90bdc6d35cb16d937b82264870dc25fa81396",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/ochat/page.tsx",
+        "src/app/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/tier-lock-pr3-freeze-evidence-cleanup",
+      "head": "84d9f7c746dbbddfa8131bbad2776766fbbd3438",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1391,
+      "merge_base": "124361a8f4ff1d14717c3e0c342b1e959091c6d9",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "scripts/tier-lock/tier-freeze-ledger.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/tier-lock-route-completion",
+      "head": "9c7528f0b02cd5374c33fc0a2163cd449e7e8161",
+      "status": "diverged",
+      "ahead_by": 10,
+      "behind_by": 1241,
+      "merge_base": "115c0548167818967dc955fc616d0302f93a2452",
+      "too_large": null,
+      "reported_file_count": 6,
+      "changed_file_sample": [
+        "package.json",
+        "src/app/ochat/page.tsx",
+        "src/app/page.tsx",
+        "src/components/urai/HomeWorldSmokeContract.tsx",
+        "tests/e2e/v1-production-smoke.spec.ts",
+        "tests/e2e/v1-smoke.spec.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/tooling/local-merge-recovery",
+      "head": "12ea7a1d2b8e039c0fc4ffdb516c737697b4d7e7",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2060,
+      "merge_base": "763b044c1c1180a21185036690ecc013527afd58",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "scripts/recover-replay-merge.sh"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-asset-factory",
+      "head": "98526c7bc2ec85906af042cc03b5929612bbd9f1",
+      "status": "diverged",
+      "ahead_by": 62,
+      "behind_by": 105,
+      "merge_base": "20b2dbee4bccd0acb56e56093381418996172fdf",
+      "too_large": null,
+      "reported_file_count": 53,
+      "changed_file_sample": [
+        "README.md",
+        "docs/URAI_SPATIAL_COMPLETION_PLAN.md",
+        "docs/URAI_SPATIAL_LAUNCH_AUDIT.md",
+        "docs/URAI_SPATIAL_PR_SUMMARY.md",
+        "package.json",
+        "public/assets/urai/README.md",
+        "public/assets/urai/asset-report.json",
+        "public/assets/urai/fallbacks/launch-critical-placeholders.json",
+        "public/assets/urai/fallbacks/urai_focus_memory_chamber_001.placeholder.json",
+        "public/assets/urai/fallbacks/urai_focus_star_entry_tunnel_001.placeholder.json",
+        "public/assets/urai/fallbacks/urai_lifemap_memory_star_001.placeholder.json",
+        "public/assets/urai/fallbacks/urai_lifemap_star_feedback_fx_001.placeholder.json"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-build-spine-20260505",
+      "head": "84e8619e9f0250123640e48c37cfb07b7d7ac109",
+      "status": "diverged",
+      "ahead_by": 22,
+      "behind_by": 2204,
+      "merge_base": "6fccbba5c302502836f9aed564d16901253420ff",
+      "too_large": null,
+      "reported_file_count": 12,
+      "changed_file_sample": [
+        "firebase.json",
+        "functions/src/adaptiveMirror.ts",
+        "functions/src/challengeMirror.ts",
+        "functions/src/coachingMirror.ts",
+        "functions/src/companionMirror.ts",
+        "functions/src/corePipeline.ts",
+        "functions/src/index.ts",
+        "functions/src/personalMirror.ts",
+        "functions/src/predictiveMirror.ts",
+        "src/components/HomeScene.tsx",
+        "src/lib/narratorVoice.ts",
+        "src/lib/uraiPipeline.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-done-done-production-spine",
+      "head": "1667dfeb2c9a3d7edd4ef3e6eb9eb0230a02249a",
+      "status": "diverged",
+      "ahead_by": 4,
+      "behind_by": 229,
+      "merge_base": "6a5ef62d8264ab23f990518b58c9ee0306a2dc26",
+      "too_large": null,
+      "reported_file_count": 4,
+      "changed_file_sample": [
+        "docs/production/URAI_100_COMPLETION_PLAN.md",
+        "package.json",
+        "scripts/check-system-of-systems-readiness.mjs",
+        "system/urai-integration-spine.json"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-launch-validation-ping",
+      "head": "8a733d2e40f94315c516eefd10871c96e9b34a70",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 79,
+      "merge_base": "658b36da6b239333a918396251aad6386894e78f",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md",
+        "docs/launch/verification-ping.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/urai-main-audit-fixes",
+      "head": "e8748c3f10eadff1027550d9da0b0090d9120c70",
+      "status": "diverged",
+      "ahead_by": 22,
+      "behind_by": 587,
+      "merge_base": "1b68b49ba55fff58021408a9b3623a921f735280",
+      "too_large": null,
+      "reported_file_count": 13,
+      "changed_file_sample": [
+        "src/app/providers.tsx",
+        "src/components/genesis/Genesis.tsx",
+        "src/lib/auth/auth.test.tsx",
+        "src/lib/companion/companionTypes.ts",
+        "src/lib/companion/quickPrompts.ts",
+        "src/lib/intelligence/intelligenceDestinations.test.ts",
+        "src/lib/intelligence/intelligenceSafety.test.ts",
+        "src/lib/intelligence/intelligenceSafety.ts",
+        "src/lib/intelligence/intelligenceTypes.ts",
+        "src/lib/intelligence/moodRhythmScoring.test.ts",
+        "src/lib/intelligence/moodRhythmScoring.ts",
+        "src/lib/intelligence/symbolicInferenceEngine.test.ts"
+      ]
+    }
+  ]
+}

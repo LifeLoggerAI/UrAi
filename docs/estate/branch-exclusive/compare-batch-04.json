@@ -1,0 +1,209 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 36,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page",
+      "head": "44e51592d23709d6a7246722d28156c6cfaeeb2b",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests",
+      "head": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2267,
+      "merge_base": "0f03c4698398a1e2972d37d1d26ae15fb1bb9155",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        "firestore.rules",
+        "jest.config.js",
+        "package-lock.json",
+        "package.json",
+        "tests/rules/firestoreRules.test.js"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests-5rvfhh",
+      "head": "ae5b0a7528bdab81a835090f351c9b4a96ae5803",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2267,
+      "merge_base": "0f03c4698398a1e2972d37d1d26ae15fb1bb9155",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        "firestore.rules",
+        "jest.config.js",
+        "package-lock.json",
+        "package.json",
+        "tests/rules/firestoreRules.test.js"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-for-client-usage",
+      "head": "97140608aa25353d1f356a5289c49a2c5ab700f8",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-with-client-usage",
+      "head": "29bcd53b456f761c6c732761eab5d88ff01e3d7a",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-routing-and-layout-for-onboarding",
+      "head": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 16,
+      "changed_file_sample": [
+        "src/app/(auth)/layout.tsx",
+        "src/app/(auth)/onboarding/page.tsx",
+        "src/app/(main)/cognitive-mirror/page.tsx",
+        "src/app/(main)/home/page.tsx",
+        "src/app/(main)/journal/page.tsx",
+        "src/app/(main)/layout.tsx",
+        "src/app/(main)/life-map/page.tsx",
+        "src/app/(main)/narrator/page.tsx",
+        "src/app/(main)/page.tsx",
+        "src/app/(main)/profile-and-privacy/page.tsx",
+        "src/app/(main)/record/page.tsx",
+        "src/app/(main)/rituals-and-scrolls/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/update-v1-launch-status-after-preflight",
+      "head": "060e44ccfd0a290b93375aa819733670e75195d6",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1238,
+      "merge_base": "70badf8827f62c600252ebbb04e79886c927aec6",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/V1_LAUNCH_STATUS.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass",
+      "head": "666447f209703c28eec83b92d3211f2919ff7b0b",
+      "status": "diverged",
+      "ahead_by": 5,
+      "behind_by": 2061,
+      "merge_base": "6e9c706dd27c3f3e7cf9722c56d6db41e00845cc",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        "README.md",
+        "package.json",
+        "src/components/CompanionChat.tsx",
+        "src/components/WaitlistForm.tsx",
+        "tests/e2e/v1-smoke.spec.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass-current",
+      "head": "932df6e01f611e1f158d9786a59bdecba30ca3c5",
+      "status": "diverged",
+      "ahead_by": 64,
+      "behind_by": 2059,
+      "merge_base": "8ea221c295ac64b9f6f14ccea0f9e8cc0deee3cb",
+      "too_large": null,
+      "reported_file_count": 49,
+      "changed_file_sample": [
+        ".github/workflows/assets-ci.yml",
+        ".github/workflows/deploy.yml",
+        ".github/workflows/firebase-hosting-live.yml",
+        ".github/workflows/independent-release-verifier.yml",
+        ".github/workflows/qa-local.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-ci.yml",
+        "DEPLOYMENT_REPORT.md",
+        "E2E_TEST_REPORT.md",
+        "FINAL_SYSTEM_REPORT.md",
+        "KNOWN_LIMITATIONS.md",
+        "LOCK.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/wire-memory-world-root",
+      "head": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1227,
+      "merge_base": "c90036904d4ccce5d430a15b9a97898c1bf59cf1",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/complete/repo-finalization",
+      "head": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2063,
+      "merge_base": "b6ba78f47256d577f1690a3d2eb1e9ccb53369cb",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "docs/V1_LAUNCH_STATUS.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-d95f7a09-19e3-4778-8582-5937fce8e126",
+      "head": "f9b59364763c39257ce863a88a6aeefdc8158490",
+      "status": "diverged",
+      "ahead_by": 4,
+      "behind_by": 2413,
+      "merge_base": "ec29df718997ef9f4e055ce4ab193e4dc68e8448",
+      "too_large": null,
+      "reported_file_count": 7,
+      "changed_file_sample": [
+        "package-lock.json",
+        "package.json",
+        "src/ai/schemas/chat.ts",
+        "src/components/companion-chat-view.tsx",
+        "src/lib/schemas/chat.ts",
+        "src/lib/types.ts",
+        "tsconfig.tsbuildinfo"
+      ]
+    }
+  ]
+}

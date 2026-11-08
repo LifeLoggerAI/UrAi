@@ -1,0 +1,983 @@
+{
+  "schema": "one-urai-genesis-branch-ref-snapshot-v1",
+  "repo": "LifeLoggerAI/UrAi",
+  "observed": "2026-11-07",
+  "source": "GitHub REST paginated GET /branches (4 pages, page_size=100)",
+  "branches_count": 242,
+  "branches": [
+    {
+      "ref": "refs/heads/about-memory-world-copy",
+      "commit": "7a0b2702123654019f56679fdf1fd3e13c93e5a3"
+    },
+    {
+      "ref": "refs/heads/agent/final-asset-lock",
+      "commit": "2c605a2cb73ecbb03eeccb4d6be9fad487c43215"
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-harness",
+      "commit": "fb9fc8dcfa53e4dea692be9003c77660f66dac42"
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-execution",
+      "commit": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038"
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-freeze",
+      "commit": "603a3aacc909f60350aacf626b16b9af9c93a0ba"
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-prereg-staging",
+      "commit": "d58b88561339dafe62ed31463e3b50736b875825"
+    },
+    {
+      "ref": "refs/heads/agent/governed-asset-promotion-gate",
+      "commit": "b8cd5c055409ebe2be3fd085b6fa29ace29d7631"
+    },
+    {
+      "ref": "refs/heads/agent/v1-launch-hardening",
+      "commit": "9256d212d76d3f1b2f9e475771079895f8e6e28f"
+    },
+    {
+      "ref": "refs/heads/audit/attachment-canon-system-pass",
+      "commit": "9e6a0abdbeb927fafe97957be09cce66f7420bcf"
+    },
+    {
+      "ref": "refs/heads/audit/production-architecture-contracts",
+      "commit": "ea5559bafe5054f6dae13d1a3614dd655cdaff9d"
+    },
+    {
+      "ref": "refs/heads/audit/tier-freeze-system-ledger",
+      "commit": "3844f5d795ea0b1d48d49f26ee16b4a5e9429e27"
+    },
+    {
+      "ref": "refs/heads/audit/urai-v50-v200-2026-07-06",
+      "commit": "907cc3eda82873ae8b17b7345ca5edb2d04850a1"
+    },
+    {
+      "ref": "refs/heads/audit-life-map-trust-polish",
+      "commit": "40fcf4445bb53d50be359fc6100e7f76ce4dc96e"
+    },
+    {
+      "ref": "refs/heads/bench/hard-memory-reasoning-20261014",
+      "commit": "741f98a52b379955da45613e81e4ec468befe514"
+    },
+    {
+      "ref": "refs/heads/bench/spatial-memory-pilot-20261011",
+      "commit": "d23b35dfe7be29647dbca7e26604ffa4584154aa"
+    },
+    {
+      "ref": "refs/heads/canon/upstream-authority-20260924",
+      "commit": "446fb60cca95619d01f18be243f3e5b1c65cc79c"
+    },
+    {
+      "ref": "refs/heads/chatgpt/demo-ready-spine",
+      "commit": "71718e6b2b1ecfe31204b81506431c70988d784c"
+    },
+    {
+      "ref": "refs/heads/chore/align-legacy-ci-boundary-20260710",
+      "commit": "a0981976f421f0b6c5bf521c076c95b065658bc7"
+    },
+    {
+      "ref": "refs/heads/chore/disable-legacy-production-deploys-20260710",
+      "commit": "35403d2b23cd18c5154f530d87fbeef56caf8db2"
+    },
+    {
+      "ref": "refs/heads/chore/genesis-permissions-passport-status",
+      "commit": "b8520475043482d3f0cc6e92213412d415f613ef"
+    },
+    {
+      "ref": "refs/heads/chore/p0-launch-verification-20260508",
+      "commit": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a"
+    },
+    {
+      "ref": "refs/heads/chore/p1-release-hardening-20260508",
+      "commit": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f"
+    },
+    {
+      "ref": "refs/heads/chore/p2-v1-demo-polish-20260508",
+      "commit": "40a121289c0ea1923d4009dc7dec88c3ea60a84c"
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-current-main-20260729",
+      "commit": "1f9e53088cbb81ef1c56e560cdbed514170de472"
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-20260715",
+      "commit": "b08490ec27245481ae8d163604ea2403eee0c3de"
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-v2-20260715",
+      "commit": "5f749548a18f07a113dab33201d943ec905e0858"
+    },
+    {
+      "ref": "refs/heads/chore/restore-sole-production-authority-wording",
+      "commit": "edeb5a84282558e836d4584745b509c3be2fba9d"
+    },
+    {
+      "ref": "refs/heads/ci/openai-placeholder-launch-gate",
+      "commit": "8a8954bd341b16af08b02dc79e2c7e6b8b35e1e0"
+    },
+    {
+      "ref": "refs/heads/ci/playwright-smoke-runner",
+      "commit": "8c710b0f37c7e0994c1898f6225ce969408d39dc"
+    },
+    {
+      "ref": "refs/heads/ci/tier-freeze-ledger-artifact",
+      "commit": "e93934631dfcca5c6d9ce5d78970942079f913c5"
+    },
+    {
+      "ref": "refs/heads/ci-validation",
+      "commit": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf"
+    },
+    {
+      "ref": "refs/heads/cinematic-integration-build-cleanup",
+      "commit": "7c7c4a92d00bbbecb50db4f50d65519435eb08e4"
+    },
+    {
+      "ref": "refs/heads/codex/access-first-global-pricing",
+      "commit": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b"
+    },
+    {
+      "ref": "refs/heads/codex/add-app/providers.tsx-for-import-resolution",
+      "commit": "1131878beab965694a226c7aa11209a7dbe7f37a"
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-and-update-import",
+      "commit": "1264445d74fe5cc643c37c16535c27909f62920f"
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-to-button",
+      "commit": "e4ec4b43ce1bcafa3c15b5462fbc75acdf03a0fa"
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-to-page-component",
+      "commit": "e8bb29466f7b59f1d86664d81a28354a1c35e870"
+    },
+    {
+      "ref": "refs/heads/codex/add-loading-and-error-components-per-route",
+      "commit": "487ba52cbf180de77453f529d5be4cb283d6c01c"
+    },
+    {
+      "ref": "refs/heads/codex/add-or-update-avatar-media-asset",
+      "commit": "787a968b7b7181ca74080d9a7d75cf9961ecc2bb"
+    },
+    {
+      "ref": "refs/heads/codex/add-staging-promotion-and-rollback-runbooks",
+      "commit": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241"
+    },
+    {
+      "ref": "refs/heads/codex/add-storymode_v1_5-profile-with-crossfades",
+      "commit": "817f753e390b054f4e9f7b752f861913d24d1920"
+    },
+    {
+      "ref": "refs/heads/codex/add-testing-and-ci-configuration",
+      "commit": "0f4281fdfbad09b43f017abb6d638d69d5d23a8d"
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-directive-and-update-button-import",
+      "commit": "1e65177117009b869a2031efa9ea2e4dc6aabf16"
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-directive-to-bottomnav",
+      "commit": "c1115397e4e9db4fe75c443a98926069d204ca86"
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-directive-to-page.tsx",
+      "commit": "7274976acda044afee6a2db1863ae8c81dca4586"
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-directive-to-page.tsx-jt01sc",
+      "commit": "31253afae526e269da3c6bb11390600e115c2ddc"
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-pragma-and-type-props",
+      "commit": "8d2a837a650e22dded064ecd62c25743b1168910"
+    },
+    {
+      "ref": "refs/heads/codex/add-v3-features-for-starfield-timeline",
+      "commit": "fdc818f9d84e9c1a1368632a82cd78f658d6cf4e"
+    },
+    {
+      "ref": "refs/heads/codex/ancient-signals-verification-ci",
+      "commit": "2b64a60317cf4a2bdf9a4e0ba2435bb31e7f28f6"
+    },
+    {
+      "ref": "refs/heads/codex/complete-all-tasks-for-project-launch",
+      "commit": "52b282ae592f897784f3fe044112ba9930d720cb"
+    },
+    {
+      "ref": "refs/heads/codex/complete-urai-v6v10-deepdive-plan",
+      "commit": "fdef0146609d42701b8b0f7fe83f7fea7ed664c4"
+    },
+    {
+      "ref": "refs/heads/codex/consolidate-firebase-environment-variables",
+      "commit": "db63c3f78b8b08aabae4c374c233b4e716902ae5"
+    },
+    {
+      "ref": "refs/heads/codex/create-email-templates-and-subjects",
+      "commit": "c885e9351e106b8ad7eccfd8baca0a5e95b37b85"
+    },
+    {
+      "ref": "refs/heads/codex/create-marketing-playbook-documentation",
+      "commit": "2b70db06c7b7d6fc3b061ce6b347302c8c27475c"
+    },
+    {
+      "ref": "refs/heads/codex/ecosystem-integration-hardening",
+      "commit": "0afd30b48da74bbc9df294db39df2ec806041502"
+    },
+    {
+      "ref": "refs/heads/codex/edit-onboarding-page-for-client-use",
+      "commit": "4934a3f865d693041e683ed1ac11745dd9414019"
+    },
+    {
+      "ref": "refs/heads/codex/firebase-clean-tree-preflight",
+      "commit": "f29d747236a002118f1c98dda23dc006e005d774"
+    },
+    {
+      "ref": "refs/heads/codex/fix-button-import-in-onboarding-page",
+      "commit": "f8a0755225ee88c367b9519ae143e16c4367fc13"
+    },
+    {
+      "ref": "refs/heads/codex/fix-code-issue",
+      "commit": "6869d5698d1ab9d5af295b7a8711563a1a2e6da8"
+    },
+    {
+      "ref": "refs/heads/codex/fix-spatial-life-map-types",
+      "commit": "d35a7e9a2d4340223d801d9f8c84bc898be69ae9"
+    },
+    {
+      "ref": "refs/heads/codex/fix-syntax-error-in-home-view.tsx",
+      "commit": "907ddd125ba46d85d653a1d4260129130ed3f37a"
+    },
+    {
+      "ref": "refs/heads/codex/hard-benchmark-oracle-repair-20261014",
+      "commit": "12794cbb2599e644fbb982c2d5be244f4879e35e"
+    },
+    {
+      "ref": "refs/heads/codex/merge-lifemap-scene",
+      "commit": "eebfca8b26df32b752ff6d1aa7d8edb9c87a3483"
+    },
+    {
+      "ref": "refs/heads/codex/polish-all-app-features-end-to-end",
+      "commit": "42f260b40862f851d75b553c26550f4c06839c16"
+    },
+    {
+      "ref": "refs/heads/codex/refactor-home-page-layout",
+      "commit": "9e61602208f842b9d6785bb54b75355833c36176"
+    },
+    {
+      "ref": "refs/heads/codex/refactor-layout-rendering-logic",
+      "commit": "737089e114f66fb4f6cdd6b85b363fd65e777362"
+    },
+    {
+      "ref": "refs/heads/codex/remove-staging/production-env-files-and-update-gitignore",
+      "commit": "62dfa33c181553e55c1eba681ed30867e3fc28b0"
+    },
+    {
+      "ref": "refs/heads/codex/replace-static-json-with-async-data-fetch",
+      "commit": "c6b49ae8bc719bad7e82c7b3aa73932e1ee0e68c"
+    },
+    {
+      "ref": "refs/heads/codex/root-marker",
+      "commit": "536fd987f4865d62db2e4e2c9e3b5727d4f3b08b"
+    },
+    {
+      "ref": "refs/heads/codex/root-smoke-flow",
+      "commit": "061f7c7015c03505cb993bf63642840678f716a7"
+    },
+    {
+      "ref": "refs/heads/codex/scene-generator-cleanup",
+      "commit": "9abc5c5531774d26dce3d5615af84146a8cd16df"
+    },
+    {
+      "ref": "refs/heads/codex/simple-memory-world-entry",
+      "commit": "6f555ec4e1ed7c954dbb2f5c5e0e4deb66cb60f6"
+    },
+    {
+      "ref": "refs/heads/codex/staging-rollback-runbook",
+      "commit": "781a10073a77b9a0e9635c2645f30f2bf3dbeb1b"
+    },
+    {
+      "ref": "refs/heads/codex/strengthen-lockfile-check",
+      "commit": "615aeca02b7294ba0ddd0b462695d9a314012ed2"
+    },
+    {
+      "ref": "refs/heads/codex/tier2-parallel-foundation",
+      "commit": "d6ea9573cbcda8ea59bffe9eecb4ba5377e4719a"
+    },
+    {
+      "ref": "refs/heads/codex/update-audio-upload-storage-location",
+      "commit": "42a15c11f6e7a8a95eb84c8a381ff1ee7fb897fc"
+    },
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page",
+      "commit": "44e51592d23709d6a7246722d28156c6cfaeeb2b"
+    },
+    {
+      "ref": "refs/heads/codex/update-button-import-in-onboarding-page-2depb7",
+      "commit": "e7cac7b343dd2748e7e25784eae82e76daba7c33"
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-rules-and-add-tests",
+      "commit": "09730bdc35f1580756127efca582421cd44fc115"
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests",
+      "commit": "bb141a14e8dbbdaf7815d4167c15bfe82cc3a011"
+    },
+    {
+      "ref": "refs/heads/codex/update-firestore-security-rules-and-tests-5rvfhh",
+      "commit": "ae5b0a7528bdab81a835090f351c9b4a96ae5803"
+    },
+    {
+      "ref": "refs/heads/codex/update-mainlayout-and-add-onboardinggate",
+      "commit": "c65b649863921a2c44cb1b0a0c915312c75fae92"
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-for-client-usage",
+      "commit": "97140608aa25353d1f356a5289c49a2c5ab700f8"
+    },
+    {
+      "ref": "refs/heads/codex/update-onboarding-page-with-client-usage",
+      "commit": "29bcd53b456f761c6c732761eab5d88ff01e3d7a"
+    },
+    {
+      "ref": "refs/heads/codex/update-routing-and-layout-for-onboarding",
+      "commit": "d56a01b277ac42b2e0f9861c91e824c035969afb"
+    },
+    {
+      "ref": "refs/heads/codex/update-v1-launch-status-after-preflight",
+      "commit": "060e44ccfd0a290b93375aa819733670e75195d6"
+    },
+    {
+      "ref": "refs/heads/codex/urai-canon-clean",
+      "commit": "81ba81b44b7772a618b0779ac2d5b44d3c0559aa"
+    },
+    {
+      "ref": "refs/heads/codex/urai-final-consolidation",
+      "commit": "c5ccfe425b712fc4d9f3060d2cb0f46d01318e31"
+    },
+    {
+      "ref": "refs/heads/codex/urai-spatial-coherence",
+      "commit": "b78a4018c6707b1ceea440c581d86ce48951d23a"
+    },
+    {
+      "ref": "refs/heads/codex/urai-spatial-production-shell",
+      "commit": "ea7250f09db771f525080255d68cd96d9770ca5c"
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass",
+      "commit": "666447f209703c28eec83b92d3211f2919ff7b0b"
+    },
+    {
+      "ref": "refs/heads/codex/v1-qa-polish-pass-current",
+      "commit": "932df6e01f611e1f158d9786a59bdecba30ca3c5"
+    },
+    {
+      "ref": "refs/heads/codex/wire-memory-world-root",
+      "commit": "1c4611dc2094ffd5bed0b5edf2f7693979ecc4d3"
+    },
+    {
+      "ref": "refs/heads/cold-vault-2026-08-16",
+      "commit": "cf497899c9943ea14d9a06a162fa842c25c3a415"
+    },
+    {
+      "ref": "refs/heads/complete/repo-finalization",
+      "commit": "2c83a08a4c8f6dd1d7ea52ca535d605516542c2e"
+    },
+    {
+      "ref": "refs/heads/complete/urai-system-of-systems",
+      "commit": "12d51da49c983e58678dd931ae3049290cb72395"
+    },
+    {
+      "ref": "refs/heads/complete-cinematic-urai-redesign-modular",
+      "commit": "150f7b8f41526a78c8dbcc30c1ab3a92fa27002b"
+    },
+    {
+      "ref": "refs/heads/complete-urai-contract-reconciliation",
+      "commit": "1b0bc70db3db19574da14dba8307722343743049"
+    },
+    {
+      "ref": "refs/heads/complete-urai-system-of-systems",
+      "commit": "0af59110fb2e23226306324185c62b01982b5009"
+    },
+    {
+      "ref": "refs/heads/copilot/complete-production-ready-setup",
+      "commit": "dfca38df866f624b91c62f39994d3c4a242ff6bb"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-5c031e09-51de-4ed4-a53c-228f99ea6cd8",
+      "commit": "2cd299d3a9cb847f3f4a44d123bddba00190dea1"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-9b26f208-45bc-4459-b486-b1b3904581fb",
+      "commit": "3c84d1592a4d5568a6b33ba604a801e505352602"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-12cc2506-29c9-4ec1-a1b5-d6690b3f2c0d",
+      "commit": "5a65e227ac0eecce5cf6dcedcba429169ecb1c62"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-31bdd213-503e-466d-a5af-e818ad461102",
+      "commit": "c58d29a735de0d26a5ad84db97cc6f8d4cf78d30"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-98d311a8-d1cc-4bfa-88be-e7e59992b7c5",
+      "commit": "33b40beef091c618b2f4645537c5a5d5f984fc75"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-346bd111-e126-488a-8b6b-9644d577afde",
+      "commit": "d32225a886ac786a679d2c25305c86f2231b8213"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-401d711e-511c-4a0f-89c0-4fcea267c3fa",
+      "commit": "9f5b44428cc03955fdb5ad927bcefe15dc74e477"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-451e6405-c9c7-4393-a2f9-14e3d3a4383d",
+      "commit": "8222d129e16e9071ca0df9b1ab468d19b1011a0f"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-929cd1c3-5ddc-40ef-ad58-c3e7ff2f065e",
+      "commit": "4dcfd9ddecc3bdffd97513f51430f096ff94d005"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-7718e777-9488-4419-964d-2889d08f5fb1",
+      "commit": "898c0561c86bb0c7ff1b86c8ed78ddc0aa964161"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-942851da-1b00-438b-ad32-94a6a48c9721",
+      "commit": "ee08dc04330746182277e41b3e4e518682f17c0b"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-aff2b0f3-1af2-423e-8299-eeab643ddbd7",
+      "commit": "68351f4d5d54863d921dfc80f739518925a8ea12"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-c96d6494-bd50-4f5f-996b-4e3a6721c01e",
+      "commit": "d14d5ddbdb16e308bf3e93da44ad995f424a9e75"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-c2202792-a11a-4b7c-8b07-99961cc1bfbd",
+      "commit": "3badadc6e48152fce0bdf4019785979960fd5aa9"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-d95f7a09-19e3-4778-8582-5937fce8e126",
+      "commit": "f9b59364763c39257ce863a88a6aeefdc8158490"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-ed3c9973-7c76-4678-99f3-6df4c97a5088",
+      "commit": "0870c79f74f228e6049d476b6fbb0b78e0b7580c"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-edcf0d1e-a777-4d61-9981-ffb231520e09",
+      "commit": "a5fc4882025249849d508534d2170fd78c8f7ada"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-f3ca843e-1d89-4a89-986e-f129f437506b",
+      "commit": "8a569552051ed2bcb09e73a7b2a15832fa656aa6"
+    },
+    {
+      "ref": "refs/heads/copilot/fix-ff4fc437-d969-4149-9ea6-eefc685ddd94",
+      "commit": "9b5288e385180150f78d527ef2cd3cccb22626e1"
+    },
+    {
+      "ref": "refs/heads/copilot/implement-urai-v1-to-v10",
+      "commit": "9d1818546bd543ef5cd559883334b8e09a29cf42"
+    },
+    {
+      "ref": "refs/heads/dependabot/npm_and_yarn/npm_and_yarn-49ef3a552c",
+      "commit": "806882813f6093fcd8c4fc3671023de95a7a3bd5"
+    },
+    {
+      "ref": "refs/heads/disable-legacy-prod-latest",
+      "commit": "6cb7f54b6057358152897083ed95ec12c595b223"
+    },
+    {
+      "ref": "refs/heads/disable-legacy-production-deploy",
+      "commit": "86420dde738c3916604ff1f113a9b71a46a98fd1"
+    },
+    {
+      "ref": "refs/heads/docs/closeout-gate-evidence-tightening-20260509",
+      "commit": "746f45de16706923340545f7a2875d222200a121"
+    },
+    {
+      "ref": "refs/heads/docs/dns-tls-email-closeout-20260912",
+      "commit": "82783e7e14d3f9123999d13ae6a2a22af86476d1"
+    },
+    {
+      "ref": "refs/heads/docs/genesis-estate-handoff-20261106",
+      "commit": "16330aca83dbf8249ab1c7d4d37e24b225720aff"
+    },
+    {
+      "ref": "refs/heads/docs/launch-closeout-runbook-20260508",
+      "commit": "b847bb60288c016a75721efc31134f9628c06531"
+    },
+    {
+      "ref": "refs/heads/docs/public-authority-reconciliation-20260903",
+      "commit": "912e44828d75339621837dcc1caa46822c35910d"
+    },
+    {
+      "ref": "refs/heads/docs/update-v1-lockfile-status",
+      "commit": "5bd414202d014fa4210e547f08954058ab19a514"
+    },
+    {
+      "ref": "refs/heads/docs/v1-status-ancient-signals",
+      "commit": "7103b6093134564a078cba0e318f034d60f3b06a"
+    },
+    {
+      "ref": "refs/heads/docs-memory-world-positioning",
+      "commit": "1ca78d9e9547f2df91e2e09e1b2b1487824b221b"
+    },
+    {
+      "ref": "refs/heads/docs-tier-1-3-evidence-ledger",
+      "commit": "24ca6d18a6a7b80b28b6dcc700813dc7ccc10cea"
+    },
+    {
+      "ref": "refs/heads/feat/urai-vault-data-wallet",
+      "commit": "7cf45d471d1dac523e95ba48673954607ee2639d"
+    },
+    {
+      "ref": "refs/heads/feature/ancient-signals-engine",
+      "commit": "925d018f03e05f3e7be7bd4c15867d15c41da2e8"
+    },
+    {
+      "ref": "refs/heads/feature/ancient-signals-engine-clean",
+      "commit": "2b63fbb6ee90eecab92dd005a1c7e4a2b8ea7276"
+    },
+    {
+      "ref": "refs/heads/feature/immersive-3d-world-home-life-map",
+      "commit": "2e5c8a2e497595f2ca331eee630a5e6bfb948059"
+    },
+    {
+      "ref": "refs/heads/feature/life-map-full-implementation",
+      "commit": "dde1a321633d98716c29c49a141777204519e675"
+    },
+    {
+      "ref": "refs/heads/feature/sky-map-v1-clean",
+      "commit": "3a64486cd6dcf3a17176c20fcb097490222704e7"
+    },
+    {
+      "ref": "refs/heads/feature/sky-map-v1-latest",
+      "commit": "08762e14e6399d458854ad9fb80096ccb1e8d7de"
+    },
+    {
+      "ref": "refs/heads/feature/sky-map-v1",
+      "commit": "fff4372b243c80aeb7ba7e392bc553b8ef207df0"
+    },
+    {
+      "ref": "refs/heads/feature/v1-visual-magic-home-ascent",
+      "commit": "cd971f6c89a6fad02c77253db3b4fd05acef1efe"
+    },
+    {
+      "ref": "refs/heads/final/home-lock-execution",
+      "commit": "af3bd2f9fc3e5a5cf82f0e322d86589f237e2817"
+    },
+    {
+      "ref": "refs/heads/final-cinematic-art-pass",
+      "commit": "a8ad51926cd971415f06cc3d3e47c9862c6311c6"
+    },
+    {
+      "ref": "refs/heads/fix/ancient-signals-ground-layer-state",
+      "commit": "f5ce77afa01eab23e2d310f37159993580cbfd51"
+    },
+    {
+      "ref": "refs/heads/fix/ci-smoke-host-deps",
+      "commit": "33180e06603da6588b8e646432e54ea4962edaa0"
+    },
+    {
+      "ref": "refs/heads/fix/cinematic-clean-home-lifemap",
+      "commit": "f9ad0bd3cb1861bf7c41914706d6fa47337b9cbe"
+    },
+    {
+      "ref": "refs/heads/fix/completion-gates",
+      "commit": "a622ff655b6bb8413354b47a0ef4163e07979269"
+    },
+    {
+      "ref": "refs/heads/fix/deploy-script-env-order",
+      "commit": "9cb27747e71e7bc4d0fe96c412fbae58df185013"
+    },
+    {
+      "ref": "refs/heads/fix/firebase-config-root-detection",
+      "commit": "18a223146b05d58d2477878ff6b513099c4b1c21"
+    },
+    {
+      "ref": "refs/heads/fix/firestore-contract-helper-aliases",
+      "commit": "8991b6d3ab7d45d4960d4d600805175a7fde10d9"
+    },
+    {
+      "ref": "refs/heads/fix/firestore-rules-ci",
+      "commit": "8b09b709ad85643463c4bd2d674b3974097cdd1d"
+    },
+    {
+      "ref": "refs/heads/fix/focus-replay-firestore-rules",
+      "commit": "66b8250ba530b1863d659b6057d9caa8bf5ab0db"
+    },
+    {
+      "ref": "refs/heads/fix/home-lock-ci-p0-gates",
+      "commit": "90ff33a7030602970efbf8ac04bc6ad0c88b95bd"
+    },
+    {
+      "ref": "refs/heads/fix/home-page-default-resolved-scene",
+      "commit": "ce0b59fc8eb761b3bd771dd2f105a055eaa5a898"
+    },
+    {
+      "ref": "refs/heads/fix/home-production-redirect",
+      "commit": "364ca5c258ed98ce0a3476e9a1509da4e5166054"
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-composition",
+      "commit": "146df72e972d7b96f7cddcf0e9c6cf7328704d60"
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-lint-gate",
+      "commit": "f878b0ca4f4d39cf3fd823aa33c0fa11b25475f4"
+    },
+    {
+      "ref": "refs/heads/fix/home-smoke-accessible-surfaces",
+      "commit": "d83325fc5089659711a2a5986a750e0cd451b113"
+    },
+    {
+      "ref": "refs/heads/fix/home-smoke-labels",
+      "commit": "e1f90bdc6d35cb16d937b82264870dc25fa81396"
+    },
+    {
+      "ref": "refs/heads/fix/legacy-braces-installed-topology-20261009",
+      "commit": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9"
+    },
+    {
+      "ref": "refs/heads/fix/legacy-launch-gate-chromium-20261009",
+      "commit": "305fc519485b867cec57b971bfcb724ca264d1f3"
+    },
+    {
+      "ref": "refs/heads/fix/legacy-public-canon-copy-20261005",
+      "commit": "5bebec58219648ccf62f0e45c8d8715175c25296"
+    },
+    {
+      "ref": "refs/heads/fix/legacy-public-privacy-contact-20261005",
+      "commit": "cb8378c9734e91cc62c49947b004df946ad8096a"
+    },
+    {
+      "ref": "refs/heads/fix/legacy-quarantine-review-gaps-20260902",
+      "commit": "9eea92d21b10092447e2a89bb02ec0aa2d48be63"
+    },
+    {
+      "ref": "refs/heads/fix/life-map-aaa-tier4-production",
+      "commit": "ea382ee47c9e3621969d8c7b692438ffdb2ad1c0"
+    },
+    {
+      "ref": "refs/heads/fix/lifemap-fallback-without-firebase-env",
+      "commit": "5ba76ac674adec4a7a695362c84cb8014833fa68"
+    },
+    {
+      "ref": "refs/heads/fix/lifemap-triangle-header-dom",
+      "commit": "688494887ac5179f7a18adfcc968a1a21a18c043"
+    },
+    {
+      "ref": "refs/heads/fix/preflight-children-types",
+      "commit": "4d89627bc4a38d8c8069dcb77e20d540a696bc2c"
+    },
+    {
+      "ref": "refs/heads/fix/public-copy-boundary-checker",
+      "commit": "436d2f2f5168fab3b858b548a436a5cce5ea81bd"
+    },
+    {
+      "ref": "refs/heads/fix/root-home-smoke-labels",
+      "commit": "6d98f4556f42e129d51bbdfcca84445ff4a45b9b"
+    },
+    {
+      "ref": "refs/heads/fix/rules-contracts",
+      "commit": "1d11eaa2d0dcbbfd02d27c0e6a7da63d9f2deab5"
+    },
+    {
+      "ref": "refs/heads/fix/smoke-current-home-canon",
+      "commit": "7cc36b935bf77d0c9c92eb45c0415e8dea19fddc"
+    },
+    {
+      "ref": "refs/heads/fix/staging-prod-deploy-hardening",
+      "commit": "bf112a33e9b85a25063ce0abf44981a8374b33ed"
+    },
+    {
+      "ref": "refs/heads/fix/staging-ssr-next-runtime",
+      "commit": "32795455491a15e7d66900cc190916b5b62e6cec"
+    },
+    {
+      "ref": "refs/heads/fix/tier1-routes",
+      "commit": "74b370d2eb807a3fd97692c44d83b85d7a83dce6"
+    },
+    {
+      "ref": "refs/heads/fix/tier2-firestore-policy-contracts",
+      "commit": "19b0bb6f91df8a6176e71f5048e4a16ed78939fd"
+    },
+    {
+      "ref": "refs/heads/fix/urai-ci-secret-condition",
+      "commit": "a586c32fa3c813581a6c965a849ca49d1257994b"
+    },
+    {
+      "ref": "refs/heads/fix/webgl-visual-tuning-home-route",
+      "commit": "607966ae4d907ec7e65907f655316e3a181413a6"
+    },
+    {
+      "ref": "refs/heads/fix/3d-world-routes",
+      "commit": "78a740a57c2cc126d195b7ea0781535d903c0c2b"
+    },
+    {
+      "ref": "refs/heads/fix-npm-ci-lockfile",
+      "commit": "e3150973580d0150c43b65985f974fa6db9c0835"
+    },
+    {
+      "ref": "refs/heads/fix-smoke-textbox-selector",
+      "commit": "c59c5d0241cd867c53c7a13806b92c4c0f617b11"
+    },
+    {
+      "ref": "refs/heads/fullscreen-parallax-final-lock",
+      "commit": "d7d8508c905333cff99f80108203d786d7d89aab"
+    },
+    {
+      "ref": "refs/heads/genesis-public-launch",
+      "commit": "000147f432ab309a49fe0736ed5cc4ed32ba2199"
+    },
+    {
+      "ref": "refs/heads/genesis-safe-consolidation",
+      "commit": "d826aef23832e272abd69868c88d5df7675a4cdd"
+    },
+    {
+      "ref": "refs/heads/genesis-staging-live",
+      "commit": "0706a2317bd809932f72274405e9e0153a7d52ad"
+    },
+    {
+      "ref": "refs/heads/genesis-visual-supremacy",
+      "commit": "f935befbebfca9289a74920a4fcb62411a339764"
+    },
+    {
+      "ref": "refs/heads/home/final-lock",
+      "commit": "8b09b709ad85643463c4bd2d674b3974097cdd1d"
+    },
+    {
+      "ref": "refs/heads/home-cinematic-ground-orb-polish",
+      "commit": "e6f2602941cacfe1b91f858ede56ee4b47f1e615"
+    },
+    {
+      "ref": "refs/heads/home-final-hero-redesign-lock",
+      "commit": "976555b0e971ffd5e8b37ec3b92225ef11a3ca0a"
+    },
+    {
+      "ref": "refs/heads/home-fullscreen-final-art-fix",
+      "commit": "564d95c58e3f8fab7133da9460c2c1cf7138ef32"
+    },
+    {
+      "ref": "refs/heads/home-live-wired-polish",
+      "commit": "2d344073a2c328ab858a84554a87f952a0501289"
+    },
+    {
+      "ref": "refs/heads/impl/cinematic-runtime-depth",
+      "commit": "0c2b941ea4a0ef072eed3e5f8938dd19efb347ad"
+    },
+    {
+      "ref": "refs/heads/implement-system-release-readiness",
+      "commit": "203df0eff5eb17884b6050a976d6b0759723b18d"
+    },
+    {
+      "ref": "refs/heads/implement-urai-life-map",
+      "commit": "07502ecb472b85f6486ea0880bde796614e3720c"
+    },
+    {
+      "ref": "refs/heads/implementation/cinematic-runtime-contracts",
+      "commit": "2bc857c88122e252bdaa9b0aee5316af370814af"
+    },
+    {
+      "ref": "refs/heads/implementation/focus-replay-evidence-contracts",
+      "commit": "530100607605d1c8073700d956f131b2a05e7167"
+    },
+    {
+      "ref": "refs/heads/implementation/replay-evidence-ui",
+      "commit": "4d99cee5e3041aea7934379adb026c874dde4158"
+    },
+    {
+      "ref": "refs/heads/integrate-cinematic-urai-redesign",
+      "commit": "0f2294a5a9f9f082bf84ad643743eca6ab70f526"
+    },
+    {
+      "ref": "refs/heads/integration/visual-home-lifemap-production",
+      "commit": "624cf5c14a97a6c9471c753242e0b730ff47c74f"
+    },
+    {
+      "ref": "refs/heads/launch/v1-public-surface-evidence-2026-05-22",
+      "commit": "eff7b72fde6e618b1698269d377e7d212ea381d0"
+    },
+    {
+      "ref": "refs/heads/legacy-readme",
+      "commit": "f9e3545b7fcd4c3344720d534a9111e8a31b6870"
+    },
+    {
+      "ref": "refs/heads/lifemap-layer-data-and-era-controls",
+      "commit": "0b7ff536ec14d2b47fec0ac7d320b6a2640b81e0"
+    },
+    {
+      "ref": "refs/heads/lifemap-layered-immersive-system",
+      "commit": "0bbb3f7e02b5eed934e78367ec37fd2e1e23d0c7"
+    },
+    {
+      "ref": "refs/heads/main",
+      "commit": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+    },
+    {
+      "ref": "refs/heads/mom-vr-life-map-polish",
+      "commit": "ee1d3cfcc15048a0e16beb7b98f226bd91b472f8"
+    },
+    {
+      "ref": "refs/heads/passport-foundation-pass-1",
+      "commit": "7437f102bacdfa0ddda18cdc3161e5b477403c5c"
+    },
+    {
+      "ref": "refs/heads/polish/webgl-home-lifemap-readability",
+      "commit": "1e4dffbd5d06e54e90ef11fdc9dd3956c09e0845"
+    },
+    {
+      "ref": "refs/heads/production/urai-cinematic-root",
+      "commit": "5e639a3febcb3334f3bce54921f2774df2e46549"
+    },
+    {
+      "ref": "refs/heads/production-grade-fixes",
+      "commit": "6832f0c40a92fc661dc94b85b01a83d051534720"
+    },
+    {
+      "ref": "refs/heads/repair/canon-provenance-reconciliation-20261007",
+      "commit": "7f4f2afe9fed9122d5b8f5ac521d90247bcffeb0"
+    },
+    {
+      "ref": "refs/heads/repair/legacy-authority-status-doc-20261009",
+      "commit": "943d4b64e59a8e5aa38e8ed373827793a66fb071"
+    },
+    {
+      "ref": "refs/heads/repair/legacy-paid-runtime-quarantine-20261007",
+      "commit": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5"
+    },
+    {
+      "ref": "refs/heads/rescue/backup-20250908-0650",
+      "commit": "f09d8028686e867a35adc538338ec370806cc325"
+    },
+    {
+      "ref": "refs/heads/root-copy",
+      "commit": "b3b84235ae6776b0ad0bca424b706887b6c9a2df"
+    },
+    {
+      "ref": "refs/heads/security/legacy-credential-quarantine-20260911",
+      "commit": "ffed507342d5e1083ca99819826d4a5d1fc98e67"
+    },
+    {
+      "ref": "refs/heads/share-meta",
+      "commit": "de5130a050326111c4aac60474642b33285abbdd"
+    },
+    {
+      "ref": "refs/heads/system-of-systems-backbone",
+      "commit": "203df0eff5eb17884b6050a976d6b0759723b18d"
+    },
+    {
+      "ref": "refs/heads/system-of-systems-verifier-satisfaction",
+      "commit": "203df0eff5eb17884b6050a976d6b0759723b18d"
+    },
+    {
+      "ref": "refs/heads/system-release-verifier",
+      "commit": "e9ad13acf924e7ca396660621e5db2f6e93e9202"
+    },
+    {
+      "ref": "refs/heads/test/home-e2e-smoke-coverage",
+      "commit": "aa5e4352217e4e4671956008ceee3e87c4ff574c"
+    },
+    {
+      "ref": "refs/heads/tier-1-3-lock-audit-pass",
+      "commit": "2e1897be8d0324eb75bfb71896cff3caba898dc2"
+    },
+    {
+      "ref": "refs/heads/tier-lock-pr1-rules-contracts",
+      "commit": "168560bf05eb3b819af95d18679584e90fa8a577"
+    },
+    {
+      "ref": "refs/heads/tier-lock-pr2-smoke-home-controls",
+      "commit": "34acd66d5a3efaaf553f8d08090c8f50306bf321"
+    },
+    {
+      "ref": "refs/heads/tier-lock-pr3-freeze-evidence-cleanup",
+      "commit": "84d9f7c746dbbddfa8131bbad2776766fbbd3438"
+    },
+    {
+      "ref": "refs/heads/tier-lock-route-completion",
+      "commit": "9c7528f0b02cd5374c33fc0a2163cd449e7e8161"
+    },
+    {
+      "ref": "refs/heads/tooling/local-merge-recovery",
+      "commit": "12ea7a1d2b8e039c0fc4ffdb516c737697b4d7e7"
+    },
+    {
+      "ref": "refs/heads/urai-asset-factory",
+      "commit": "98526c7bc2ec85906af042cc03b5929612bbd9f1"
+    },
+    {
+      "ref": "refs/heads/urai-build-spine-20260505",
+      "commit": "84e8619e9f0250123640e48c37cfb07b7d7ac109"
+    },
+    {
+      "ref": "refs/heads/urai-done-done-production-spine",
+      "commit": "1667dfeb2c9a3d7edd4ef3e6eb9eb0230a02249a"
+    },
+    {
+      "ref": "refs/heads/urai-full-completion-implementation",
+      "commit": "8f868cadd731cf60d9f18c5766f52afcf518e753"
+    },
+    {
+      "ref": "refs/heads/urai-launch-validation-ping",
+      "commit": "8a733d2e40f94315c516eefd10871c96e9b34a70"
+    },
+    {
+      "ref": "refs/heads/urai-main-audit-fixes",
+      "commit": "e8748c3f10eadff1027550d9da0b0090d9120c70"
+    },
+    {
+      "ref": "refs/heads/urai-ochat-canon",
+      "commit": "d1297fbb2c5b55fb692d29746ded9d21b8bbabcb"
+    },
+    {
+      "ref": "refs/heads/urai-production-polish",
+      "commit": "cacd716b2b9af011137827dc244c8d06521a5556"
+    },
+    {
+      "ref": "refs/heads/urai-production-polish-pass",
+      "commit": "37e68d75b7b0c7faa34441f420ed7c487b998cf0"
+    },
+    {
+      "ref": "refs/heads/urai-spatial-canvas-shell",
+      "commit": "cabc62938f05b551a333f0793fa3dc308237c63c"
+    },
+    {
+      "ref": "refs/heads/urai-spatial-ochat-runtime",
+      "commit": "d80768a8409d0c61af398bc8f237d919b63a4548"
+    },
+    {
+      "ref": "refs/heads/urai-spatial-sacred-tech-polish",
+      "commit": "58f6ccaee55cb9246de5ecddd9dd985207fb05c1"
+    },
+    {
+      "ref": "refs/heads/urai-spatial-shell-hud",
+      "commit": "ff89d2c19dbd18fd6d9cd7f23549f742d52d7807"
+    },
+    {
+      "ref": "refs/heads/urai-spatial-universe-provider",
+      "commit": "5f58cb54f375b40d9459bc2dcba668501e9d45a0"
+    },
+    {
+      "ref": "refs/heads/urai-tier-freeze-execution-system",
+      "commit": "d8e8aeebb07915a25e7b5f86a531f21902c40e40"
+    },
+    {
+      "ref": "refs/heads/urai-v1-launch-shell",
+      "commit": "5dbb8fe410d5c748b6f0eebcb1ff3cb2556b7006"
+    }
+  ],
+  "tag_listing": {
+    "endpoint": "/git/refs/tags",
+    "result": "404 Not Found; cannot conclude historical tags absent"
+  },
+  "releases": [],
+  "history_coverage": "Branch head refs only; reachable commit trees/historical blobs not exhaustively fetched."
+}

@@ -1,0 +1,774 @@
+{
+  "schema": "one-urai-original-spatial-main-git-blob-identity-v1",
+  "observation_date": "2026-11-07",
+  "sources": [
+    {
+      "repo": "LifeLoggerAI/UrAi",
+      "commit": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "tree": "59b3539e0a5972c2aadfd8801bba43a9d76836c5"
+    },
+    {
+      "repo": "LifeLoggerAI/urai-spatial",
+      "commit": "da94837c2457b0a7590e26a7a644cd728de8afb8",
+      "tree": "cdf46dc08bde44d1473b5a358c4afee4dee7eb8b"
+    }
+  ],
+  "evidence_level": "source_tree_metadata_only",
+  "repository_main_blob_counts": [
+    2489,
+    8927
+  ],
+  "shared_relative_path_positions": 48,
+  "shared_relative_path_same_blob": 0,
+  "shared_relative_path_changed_blob": 48,
+  "identical_git_blob_ids_any_paths": 44,
+  "identical_ids_with_tier1_path": 40,
+  "identical_ids_only_audit_quarantine": 4,
+  "matched_total_unique_git_reported_bytes": 1369946,
+  "matched_tier1_unique_reported_bytes": 35916,
+  "matched_audit_unique_reported_bytes": 1334030,
+  "original_main_mp4_files": 35,
+  "mp4_git_blob_ids_found_anywhere_in_spatial_main": 1,
+  "limitations": [
+    "CORRECTION: all apparent MP4 Git object intersections involve the universal zero-byte Git blob SHA. Four zero-byte .mp4 placeholders in original main cannot be counted as reused media. No non-empty original MP4 object matched Spatial main.",
+    "Git object ID equality indicates bit-identical tracked object identity, not proof of license, current use, decoded playback, device acceptance, original ownership, or semantic equivalence.",
+    "Source locations, not full raw-byte SHA256 verified. Different Git object IDs do not establish absence of functionally equivalent derivatives.",
+    "The spatial source is frozen main only; open review branches and provider deployments are independent surfaces."
+  ],
+  "matched_git_objects": [
+    {
+      "git_blob_sha1": "931801754fadb784417122f98df1539dee72d319",
+      "git_reported_bytes": 1330080,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/013-memory-placeholder-b829f8d4fe.png"
+      ],
+      "spatial_paths": [
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/memory-placeholder.png",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/star-placeholder.png",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/star.png",
+        "_quarantine/public_legacy/memory-placeholder.png",
+        "_quarantine/public_legacy/star-placeholder.png",
+        "_quarantine/public_legacy/star.png"
+      ],
+      "canonical_tier1_path": false,
+      "audit_or_quarantine_only": true
+    },
+    {
+      "git_blob_sha1": "d3a0c9f1dc8a60d79ef11204fc6539f3fb65636e",
+      "git_reported_bytes": 1788,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/020-star_atlas-1bdc74703f.png"
+      ],
+      "spatial_paths": [
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/textures/star_atlas.png",
+        "_quarantine/public_legacy/textures/star_atlas.png"
+      ],
+      "canonical_tier1_path": false,
+      "audit_or_quarantine_only": true
+    },
+    {
+      "git_blob_sha1": "92572c6221f356e3541815873e48b8b8373a19a9",
+      "git_reported_bytes": 1399,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/019-star-sprite-6f58863581.png"
+      ],
+      "spatial_paths": [
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/star-sprite.png",
+        "_quarantine/public_legacy/star-sprite.png"
+      ],
+      "canonical_tier1_path": false,
+      "audit_or_quarantine_only": true
+    },
+    {
+      "git_blob_sha1": "c0e139a157fb9ae58f2457d429eea90a2cdb504a",
+      "git_reported_bytes": 1215,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/025-uraiAnalytics.dark-db5000be59.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiAnalytics.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "f4aa4c49612c9a9681ee0f125c560c123a711b56",
+      "git_reported_bytes": 1161,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/026-uraiAnalytics.light-a447eea22a.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiAnalytics.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "fc66a4ccd1f8a2864d35322302d34f80ec96b9ba",
+      "git_reported_bytes": 1120,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/001-assetFactory.dark-240d81b8f2.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/assetFactory.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "4e88ef45bc66622fa5379abc91669cf4c0760e4e",
+      "git_reported_bytes": 1112,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/027-uraiCommunications.dark-ab19355198.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiCommunications.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "12b9754b2910b9f625fcc08aefcf5bfc1a58411b",
+      "git_reported_bytes": 1100,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/041-uraiMarketing.dark-cfefa523e4.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiMarketing.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "2b5064c41999ba2f121d21241f4f4853fe3a6c36",
+      "git_reported_bytes": 1085,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/006-dream-signal-c048809163.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/dream-signal.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "dcf80a303bd8b94ad11a157549881b2b36285eb4",
+      "git_reported_bytes": 1078,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/033-uraiFoundation.dark-1b78fe805f.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiFoundation.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "6166488854dd027897f32157a759cbddd8169d2e",
+      "git_reported_bytes": 1066,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/002-assetFactory.light-11da1945af.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/assetFactory.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "86f3089d16eef6dcee9b1e2583c9360aca6f006c",
+      "git_reported_bytes": 1060,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/045-uraiSpatial.dark-187f872d76.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiSpatial.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "529b85a89545050ab0bb0a3470f0b917798b90d0",
+      "git_reported_bytes": 1058,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/028-uraiCommunications.light-66d44ec657.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiCommunications.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "094e07bd87c28ea9e4c65c753f60e7f123a1ed5c",
+      "git_reported_bytes": 1048,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/029-uraiContent.dark-2077319ad6.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiContent.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "3610032ad76bdfe41ac8d0c8d1384a9073a7d6e9",
+      "git_reported_bytes": 1046,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/042-uraiMarketing.light-a4faa9fbd5.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiMarketing.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "452478b9023929537fe82e0ca3b8f6084b5a3a6d",
+      "git_reported_bytes": 1034,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/016-recovery-bloom-a981f399c1.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/recovery-bloom.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "f60688f89c2f026f287e2028e96654168af333f2",
+      "git_reported_bytes": 1030,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/039-uraiLabs.dark-0abad39557.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiLabs.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "65d7bf07ce0c2bd7a8372a60d7ae8f5bb3602a27",
+      "git_reported_bytes": 1024,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/034-uraiFoundation.light-de37f84f39.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiFoundation.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "1326f5159fe34f463dd6fefbe26bcedb5d025e28",
+      "git_reported_bytes": 1011,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/043-uraiPrivacy.dark-471aefbbe5.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiPrivacy.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "8f5403f8859048b2e7d9f8035d1d83880d527d3a",
+      "git_reported_bytes": 1011,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/014-mirror-focus-b433553808.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/mirror-focus.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "294edf5162e439ce539ad461b6c76d72d428a4d6",
+      "git_reported_bytes": 1006,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/024-threshold-storm-7706187768.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/threshold-storm.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "4be5ce7768058a94403f788916bdf29353e8101b",
+      "git_reported_bytes": 1006,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/046-uraiSpatial.light-e26311bd67.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiSpatial.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "0e69ce7ce977ca31fc6849e403c948deed5b0a50",
+      "git_reported_bytes": 1004,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/018-ritual-echo-0ef54edd9f.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/ritual-echo.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "262d903dccfc4e3b9984d53c2d59917cc55b0ed8",
+      "git_reported_bytes": 997,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/035-uraiInvestors.dark-97cce56d5e.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiInvestors.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "5f7f3303dc53df4ef09bc9297e8b0f17a87ee184",
+      "git_reported_bytes": 994,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/030-uraiContent.light-f1d5af0a32.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiContent.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "9b0d706b5015ae3a3ddb143aa0e3c4888dac4197",
+      "git_reported_bytes": 983,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/003-calm-return-77384fc947.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/demo/memories/calm-return.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "18cfb5b6c72d199f4220a61f0bba186c136ab093",
+      "git_reported_bytes": 976,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/040-uraiLabs.light-adca78143a.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiLabs.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "a9308f18f48052d574b15a93b57044d8a6bc43cb",
+      "git_reported_bytes": 976,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/047-uraiStudio.dark-36ab695b9c.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiStudio.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "d1c2073f224cdeb025060328cb5b0aa80c1a82ac",
+      "git_reported_bytes": 976,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/037-uraiJobs.dark-071885100c.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiJobs.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "4602e198daacc57a79f306e1e94efa1b4d1fde02",
+      "git_reported_bytes": 957,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/044-uraiPrivacy.light-93b825c7ea.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiPrivacy.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "7508f50f84d6a95effafdac15e45415232dab07e",
+      "git_reported_bytes": 943,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/036-uraiInvestors.light-fc799aa81f.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiInvestors.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "44543e75c95f032ed4fa929c726501d360f63e2b",
+      "git_reported_bytes": 922,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/038-uraiJobs.light-19b2abf14f.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiJobs.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "a3edc7f22990eb6ff208988bafcd5fb947cc4d11",
+      "git_reported_bytes": 922,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/048-uraiStudio.light-a24b49605b.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiStudio.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "e77853ad3ec8611ba4f73ac41006585e6e7c62c7",
+      "git_reported_bytes": 817,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/031-uraiCore.dark-5b312bf3a5.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiCore.dark.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "13517d83483eaf68f2bfcbb537d9f673d4fd9ad9",
+      "git_reported_bytes": 763,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/032-uraiCore.light-ff782b6106.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/brand/exports/svg/uraiCore.light.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "e91fb3939e9af080622984b43598f7ad2b9aac46",
+      "git_reported_bytes": 763,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/012-memory-placeholder-12781b136d.jpg"
+      ],
+      "spatial_paths": [
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/memory-placeholder.jpg",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/media/_quarantine/public_legacy/star.jpg",
+        "_quarantine/public_legacy/memory-placeholder.jpg",
+        "_quarantine/public_legacy/star.jpg"
+      ],
+      "canonical_tier1_path": false,
+      "audit_or_quarantine_only": true
+    },
+    {
+      "git_blob_sha1": "0177178f7a8e3895e906846ab6ce0063127b32e8",
+      "git_reported_bytes": 705,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/022-surgical-nebula-veil-710441a680.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/assets/urai/lifemap/surgical-nebula-veil.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "a493515423c1a3af8633e0dc1ad7df84449ec6fe",
+      "git_reported_bytes": 602,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/008-focus-4a30fb2832.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/urai/focus/focus.svg",
+        "urai-tier1/public/urai/home/home.svg",
+        "urai-tier1/public/urai/lifemap/lifemap.svg",
+        "urai-tier1/public/urai/replay/replay.svg",
+        "urai-tier1/public/urai/sky/sky.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "8fd2613ff32a7d93637317c455bc8c6365bb852e",
+      "git_reported_bytes": 573,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/023-surgical-star-glow-681a4cccd5.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/assets/urai/lifemap/surgical-star-glow.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "2042002b87fd3a6b10eb76ea570ed693baebf05f",
+      "git_reported_bytes": 486,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/015-overlay-c29386aa1d.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/urai/overlays/overlay.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "a802cf8b891526b0d7bc470582667e2ee0be4c00",
+      "git_reported_bytes": 443,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/021-surgical-depth-fog-9f7b12f532.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/assets/urai/lifemap/surgical-depth-fog.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "36a4fe488ad024b95c435062c09082fc18a9c27c",
+      "git_reported_bytes": 328,
+      "original_paths": [
+        "next-env.d.ts"
+      ],
+      "spatial_paths": [
+        "urai-tier1/next-env.d.ts"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "5105e56ddc81bf388284257284138672281fb179",
+      "git_reported_bytes": 278,
+      "original_paths": [
+        "deploy/free-static-launch/assets/dropins/009-grain-575cd7dda1.svg"
+      ],
+      "spatial_paths": [
+        "urai-tier1/public/urai/overlays/grain.svg"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    },
+    {
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "git_reported_bytes": 0,
+      "original_paths": [
+        ".modified",
+        "assets-list.txt",
+        "docs/system/passport-pass-1a-through-1h.patch",
+        "public/assets/audio/genesis/ambient/.gitkeep",
+        "public/assets/audio/genesis/mood/.gitkeep",
+        "public/assets/audio/genesis/notifications/.gitkeep",
+        "public/assets/audio/genesis/orb/.gitkeep",
+        "public/assets/audio/genesis/portals/.gitkeep",
+        "public/assets/audio/genesis/transitions/.gitkeep",
+        "public/assets/audio/genesis/ui/.gitkeep",
+        "public/assets/audio/voice/genesis/orb/.gitkeep",
+        "public/assets/audio/voice/genesis/welcome/.gitkeep",
+        "public/assets/genesis/body/.gitkeep",
+        "public/assets/genesis/ground/.gitkeep",
+        "public/assets/genesis/orb/.gitkeep",
+        "public/assets/genesis/overlays/.gitkeep",
+        "public/assets/genesis/portals/.gitkeep",
+        "public/assets/genesis/sky/.gitkeep",
+        "public/assets/genesis/transitions/.gitkeep",
+        "public/assets/sky/fracture/fallback-sky-fracture-05.png",
+        "public/assets/sky/fracture/fallback-sky-fracture-05a.png",
+        "public/assets/sky/fracture/fallback-sky-fracture-06.png",
+        "public/assets/sky/fracture/fallback-sky-fracture-06a.png",
+        "public/assets/sky/fracture/sky-fracture-05.mp4",
+        "public/assets/sky/fracture/sky-fracture-05a.mp4",
+        "public/assets/sky/fracture/sky-fracture-06.mp4",
+        "public/assets/sky/fracture/sky-fracture-06a.mp4",
+        "public/index.static.html.bak",
+        "src/app/App.tsx",
+        "src/app/auth.ts",
+        "src/app/firebaseConfig.ts",
+        "src/components/InvestorOnboardingWizard.tsx",
+        "src/components/ResumableUpload.tsx",
+        "src/components/urai/home/placeholder.tsx",
+        "such"
+      ],
+      "spatial_paths": [
+        ".ai-backups/spatialAccountStore.ts.fixed.bak",
+        ".canon-migration/.gitkeep",
+        "Click",
+        "_audit/20260402_090115_FULL_REPAIR_SAFE/grep_authority_mode.txt",
+        "_audit/20260402_090115_FULL_REPAIR_SAFE/grep_escape.txt",
+        "_audit/20260402_090115_FULL_REPAIR_SAFE/grep_homeenvironment.txt",
+        "_audit/authority_lock_20260325_101020/build.stderr",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/.ai-logs/orb-fix-tsc-20260323_074840.log",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/camera/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/entities/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/layout/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/theme/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/transitions/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/logs/urai-tier1/_audit/tier2/execution-discovery/20260318_014744/src/spatial/world/.gitkeep",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/texts/urai-tier1/_audit/lock3-interaction-contract-proof/20260317_205949/scene_store_has_lifemap_mode.txt",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/texts/urai-tier1/_audit/lock7-pinpoint-home-runtime-surface/20260317_211311/sky_refs.txt",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/texts/urai-tier1/_audit/tier2/fix-shell-overlay-tag-component/20260318_020744/git-status.before.txt",
+        "_audit/chatgpt_handoff_20260325_095940/bundle/texts/urai-tier1/_audit/tier2/move-shell-into-spatial-module/20260318_015018/relative-imports.txt",
+        "_audit/final_finish_20260316_123318/todo_scan.txt",
+        "_audit/find_and_fix_starnode_source_20260325_030015/starnode_block.after.txt",
+        "_audit/find_and_fix_starnode_source_20260325_030015/starnode_block.before.txt",
+        "_audit/fix_starnode_intensity_20260325_025510/starnode.before.txt",
+        "_audit/fix_starnode_intensity_20260325_025630/starnode.after.txt",
+        "_audit/fix_starnode_intensity_20260325_025630/starnode.before.txt",
+        "_audit/lock_the_loop_20260325_050115/firebase_env_files.txt",
+        "_audit/lock_the_loop_20260325_050115/job_paths.txt",
+        "_audit/lock_the_loop_20260325_050115/loop_anchors.txt",
+        "_audit/lock_the_loop_20260325_050115/result_paths.txt",
+        "_audit/lock_the_loop_20260325_050115/spatial_consumption.txt",
+        "_audit/pass5_fix_starnode_intensity_20260325_030829/starnode_locations.txt",
+        "_audit/replay_lock_20260316_120745/todo_stub_hits.txt",
+        "_audit/replay_lock_20260316_121246/todo_stub_hits.txt",
+        "_audit/replay_lock_20260316_121653/todo_stub_hits.txt",
+        "_audit/runtime_authority_smoke_20260326_222145/logs/tsc.log",
+        "_audit/runtime_interaction_lock_20260326_223831/logs/tsc.log",
+        "_audit/scene_consolidation_interaction_lock_20260325_082901/SpatialScene.diff",
+        "_audit/scene_consolidation_interaction_lock_fix_20260325_084417/build.stderr",
+        "_audit/scene_runtime_refine_20260326_222654/logs/tsc.log",
+        "_audit/stabilize_scene_consolidation_interaction_lock_20260325_075049/build.log",
+        "_audit/stabilize_scene_consolidation_interaction_lock_20260325_075049/verify.log",
+        "_audit/stabilize_scene_consolidation_interaction_lock_keepopen_20260325_081249/build.log",
+        "_audit/stabilize_scene_consolidation_interaction_lock_keepopen_20260325_081249/verify.log",
+        "_audit/state_contract_hotfix3_20260326_221539/logs/tsc.log",
+        "_quarantine/_archive/packages/spatial-utils/src/anchor-resolver.ts",
+        "_quarantine/_archive/packages/spatial-utils/src/location.ts",
+        "_quarantine/_archive/packages/spatial-utils/src/time.ts",
+        "_quarantine/public_legacy/audio/calm-ambience.mp3",
+        "_quarantine/public_legacy/audio/curiosity-ambience.mp3",
+        "_quarantine/public_legacy/audio/focus-ambience.mp3",
+        "_quarantine/public_legacy/audio/joy-ambience.mp3",
+        "_quarantine/public_legacy/audio/love-ambience.mp3",
+        "_quarantine/public_legacy/audio/sad-ambience.mp3",
+        "apps/test.txt",
+        "canon-overrides/.gitkeep",
+        "dev",
+        "docs/test-write.txt",
+        "ensuring",
+        "normalizing",
+        "pnpm",
+        "tmp-test.txt",
+        "tools/test.txt",
+        "typecheck",
+        "urai-staging@1.0.0",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/camera/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/entities/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/focus/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/home/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/layout/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/lifemap/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/memory/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/replay/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/sky/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/theme/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/transitions/.gitkeep",
+        "urai-tier1/.ai-backups/20260321_064108/src.broken/spatial/world/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/camera/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/entities/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/focus/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/home/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/layout/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/lifemap/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/memory/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/replay/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/sky/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/theme/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/transitions/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_020922/src/spatial/world/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/camera/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/entities/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/focus/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/home/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/layout/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/lifemap/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/memory/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/replay/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/sky/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/theme/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/transitions/.gitkeep",
+        "urai-tier1/.ai-backups/full-sanitize-20260322_021649/src/spatial/world/.gitkeep",
+        "urai-tier1/.urai-public-demo-lock-changed-20260502-194100.txt",
+        "urai-tier1/0.02",
+        "urai-tier1/2",
+        "urai-tier1/5",
+        "urai-tier1/6",
+        "urai-tier1/ASCENT",
+        "urai-tier1/Build",
+        "urai-tier1/FOCUS",
+        "urai-tier1/HOME",
+        "urai-tier1/LIFEMAP",
+        "urai-tier1/REPLAY",
+        "urai-tier1/next",
+        "urai-tier1/public/assets/urai/generated/models/.gitkeep",
+        "urai-tier1/public/assets/urai/generated/textures/.gitkeep",
+        "urai-tier1/public/audio/ambient/ascent.mp3",
+        "urai-tier1/public/audio/ambient/focus.mp3",
+        "urai-tier1/public/audio/ambient/home.mp3",
+        "urai-tier1/public/audio/ambient/lifemap.mp3",
+        "urai-tier1/public/audio/ambient/replay.mp3",
+        "urai-tier1/src/spatial/camera/.gitkeep",
+        "urai-tier1/src/spatial/entities/.gitkeep",
+        "urai-tier1/src/spatial/focus/.gitkeep",
+        "urai-tier1/src/spatial/home/.gitkeep",
+        "urai-tier1/src/spatial/layout/.gitkeep",
+        "urai-tier1/src/spatial/lifemap/.gitkeep",
+        "urai-tier1/src/spatial/memory/.gitkeep",
+        "urai-tier1/src/spatial/replay/.gitkeep",
+        "urai-tier1/src/spatial/sky/.gitkeep",
+        "urai-tier1/src/spatial/theme/.gitkeep",
+        "urai-tier1/src/spatial/transitions/.gitkeep",
+        "urai-tier1/src/spatial/world/.gitkeep",
+        "urai-tier1/tsc",
+        "urai-tier1/urai-tier1@0.1.0",
+        "urai_tier1/test.txt",
+        "writing"
+      ],
+      "canonical_tier1_path": true,
+      "audit_or_quarantine_only": false
+    }
+  ],
+  "original_main_nonempty_mp4_files": 31,
+  "original_main_zero_byte_mp4_placeholders": [
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-05.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-05a.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-06.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-06a.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    }
+  ],
+  "nonempty_mp4_git_blob_ids_found_anywhere_in_spatial_main": 0,
+  "zero_byte_blob_is_not_media": true
+}

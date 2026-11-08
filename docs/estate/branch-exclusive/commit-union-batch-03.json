@@ -1,0 +1,1095 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 3,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/codex/complete-urai-v6v10-deepdive-plan",
+      "head": "fdef0146609d42701b8b0f7fe83f7fea7ed664c4",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "fdef0146609d42701b8b0f7fe83f7fea7ed664c4",
+          "tree": "f1959e02ca4c9cc7c88dcabe12af35dabbd9978b",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:33:15Z",
+          "committed": "2025-09-26T03:33:15Z",
+          "title": "Add global route state surfaces and telemetry"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/edit-onboarding-page-for-client-use",
+      "head": "4934a3f865d693041e683ed1ac11745dd9414019",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "4934a3f865d693041e683ed1ac11745dd9414019",
+          "tree": "913cc0b456fb303885a0f86e2440e222c74d45b2",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:32:44Z",
+          "committed": "2025-09-26T03:32:44Z",
+          "title": "Make onboarding page a client component"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/firebase-clean-tree-preflight",
+      "head": "f29d747236a002118f1c98dda23dc006e005d774",
+      "ahead_by": 6,
+      "behind_by": 1248,
+      "merge_base": "9f4698936360b39db4ebfd9710bc32f7d55ae771",
+      "commits": [
+        {
+          "sha": "c51d4d9fc69c6faf925211a2df8a23bab0956fac",
+          "tree": "b54af0fe35757446088707e570ff58e1d78cf19b",
+          "parents": [
+            "9f4698936360b39db4ebfd9710bc32f7d55ae771"
+          ],
+          "authored": "2026-05-22T08:31:46Z",
+          "committed": "2026-05-22T08:31:46Z",
+          "title": "Add clean working tree release preflight"
+        },
+        {
+          "sha": "3c62911f413267d711aa35064a507cc1da431b5b",
+          "tree": "e1f474a379e456240b363672c38ee0c5f4b6ab8a",
+          "parents": [
+            "c51d4d9fc69c6faf925211a2df8a23bab0956fac"
+          ],
+          "authored": "2026-05-22T08:34:33Z",
+          "committed": "2026-05-22T08:34:33Z",
+          "title": "Run clean tree preflight before Firebase deploy"
+        },
+        {
+          "sha": "09d908e3982ea7cadcbf4fdc6f7093ef07c84b3c",
+          "tree": "a0a1224c5418856d4f323772c576db1fe655a99c",
+          "parents": [
+            "3c62911f413267d711aa35064a507cc1da431b5b"
+          ],
+          "authored": "2026-05-22T08:35:57Z",
+          "committed": "2026-05-22T08:35:57Z",
+          "title": "Expose clean tree preflight script"
+        },
+        {
+          "sha": "0f6fb42eca54ce0c527519239df4f81f89cd7cae",
+          "tree": "ccdb074d701564075fa1a8beb204f43112de472c",
+          "parents": [
+            "09d908e3982ea7cadcbf4fdc6f7093ef07c84b3c"
+          ],
+          "authored": "2026-05-22T08:39:19Z",
+          "committed": "2026-05-22T08:39:19Z",
+          "title": "Use npm install in Playwright smoke workflow"
+        },
+        {
+          "sha": "393a7aab6524383bec27c939d0fe6c662a68d0ac",
+          "tree": "77fd0a57f97a6fc54873a8c27744321269d94bf7",
+          "parents": [
+            "0f6fb42eca54ce0c527519239df4f81f89cd7cae"
+          ],
+          "authored": "2026-05-22T08:46:41Z",
+          "committed": "2026-05-22T08:46:41Z",
+          "title": "Use npm install in Vault CI while lockfile is stale"
+        },
+        {
+          "sha": "f29d747236a002118f1c98dda23dc006e005d774",
+          "tree": "3a73d22eab77c9e29c3f407456c212ccbf06eab7",
+          "parents": [
+            "393a7aab6524383bec27c939d0fe6c662a68d0ac"
+          ],
+          "authored": "2026-05-22T08:50:48Z",
+          "committed": "2026-05-22T08:50:48Z",
+          "title": "Stabilize Lighthouse Chrome launch in CI"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/fix-button-import-in-onboarding-page",
+      "head": "f8a0755225ee88c367b9519ae143e16c4367fc13",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "f8a0755225ee88c367b9519ae143e16c4367fc13",
+          "tree": "71df59fc32d6815c0a58053d343a2f90ee432a2b",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:32:45Z",
+          "committed": "2025-09-26T03:32:45Z",
+          "title": "Fix onboarding button import path"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/hard-benchmark-oracle-repair-20261014",
+      "head": "12794cbb2599e644fbb982c2d5be244f4879e35e",
+      "ahead_by": 78,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "commits": [
+        {
+          "sha": "aec8ed2876ae86766e4227000b32dd1bfc9cec00",
+          "tree": "e3059685b8d7a7ea1976094d98d7c4b378bbe2f0",
+          "parents": [
+            "cf497899c9943ea14d9a06a162fa842c25c3a415"
+          ],
+          "authored": "2026-08-16T03:05:53Z",
+          "committed": "2026-08-16T03:05:53Z",
+          "title": "add frontier benchmark utilities"
+        },
+        {
+          "sha": "a7ec952cfad509667ddd9e0c9f4cc45d40046c34",
+          "tree": "79d92c8f96a850c4d0a7fb80b308c8c5a532b5bb",
+          "parents": [
+            "aec8ed2876ae86766e4227000b32dd1bfc9cec00"
+          ],
+          "authored": "2026-08-16T03:06:13Z",
+          "committed": "2026-08-16T03:06:13Z",
+          "title": "add frontier benchmark providers"
+        },
+        {
+          "sha": "0329008b009903e24fc823a0a791d1bc8b604f7b",
+          "tree": "917f1f2c9ec675a8ad7c729f41afea1217e05edd",
+          "parents": [
+            "a7ec952cfad509667ddd9e0c9f4cc45d40046c34"
+          ],
+          "authored": "2026-08-16T03:06:25Z",
+          "committed": "2026-08-16T03:06:25Z",
+          "title": "add frontier benchmark runner"
+        },
+        {
+          "sha": "a5e9746cdd3927a2397178fb8d37ad5452549a4d",
+          "tree": "68aa6e5aa2628ceb3f1c868bd6debdc90a32c90b",
+          "parents": [
+            "0329008b009903e24fc823a0a791d1bc8b604f7b"
+          ],
+          "authored": "2026-08-16T03:06:32Z",
+          "committed": "2026-08-16T03:06:32Z",
+          "title": "add frontier benchmark doctor"
+        },
+        {
+          "sha": "08154c8c0bd9888e3a13750ce12f08995cc9366e",
+          "tree": "d4ed8faf240e703fcc4d86dfd1c322f9218ba612",
+          "parents": [
+            "a5e9746cdd3927a2397178fb8d37ad5452549a4d"
+          ],
+          "authored": "2026-08-16T03:06:37Z",
+          "committed": "2026-08-16T03:06:37Z",
+          "title": "add benchmark smoke suite"
+        },
+        {
+          "sha": "fc0b0475b3c58bacefd61a217568be83cef0ca98",
+          "tree": "014785abb86ee65b0fe0be174ce03b3330907ad2",
+          "parents": [
+            "08154c8c0bd9888e3a13750ce12f08995cc9366e"
+          ],
+          "authored": "2026-08-16T03:06:45Z",
+          "committed": "2026-08-16T03:06:45Z",
+          "title": "add URAI long-horizon benchmark suite"
+        },
+        {
+          "sha": "97753f3f185dec1783d302049656a0076630c26f",
+          "tree": "9093cd537dbc4002d490949731088e6920d53485",
+          "parents": [
+            "fc0b0475b3c58bacefd61a217568be83cef0ca98"
+          ],
+          "authored": "2026-08-16T03:06:54Z",
+          "committed": "2026-08-16T03:06:54Z",
+          "title": "document frontier benchmark harness"
+        },
+        {
+          "sha": "b022f01f7b8702742f53b8983c1ba9f1488a5f25",
+          "tree": "23bbaa64a256ce8ff90b15d2743e6b748dbb994a",
+          "parents": [
+            "97753f3f185dec1783d302049656a0076630c26f"
+          ],
+          "authored": "2026-08-16T03:07:17Z",
+          "committed": "2026-08-16T03:07:17Z",
+          "title": "run frontier benchmark proof"
+        },
+        {
+          "sha": "945f0eed270168efeeaa9f7b1206dfcbbc541851",
+          "tree": "e594c41aee1d6dcdaa11716665c7967dd93642a8",
+          "parents": [
+            "b022f01f7b8702742f53b8983c1ba9f1488a5f25"
+          ],
+          "authored": "2026-08-16T06:47:03Z",
+          "committed": "2026-08-16T06:47:03Z",
+          "title": "pause benchmark while upgrading suite"
+        },
+        {
+          "sha": "6fd6ed91d06db1a36de065b1412564c4dcadc6f0",
+          "tree": "a456dc0c2c16517001de768872b97f8bea3d1e7b",
+          "parents": [
+            "945f0eed270168efeeaa9f7b1206dfcbbc541851"
+          ],
+          "authored": "2026-08-16T06:47:42Z",
+          "committed": "2026-08-16T06:47:42Z",
+          "title": "add expanded benchmark suite generator"
+        },
+        {
+          "sha": "840c78e7c10ac3aa021df4de8651f24d7fc81db2",
+          "tree": "bf5da7b0ac2d378f2513f04db6341e009483d3a2",
+          "parents": [
+            "6fd6ed91d06db1a36de065b1412564c4dcadc6f0"
+          ],
+          "authored": "2026-08-16T06:48:02Z",
+          "committed": "2026-08-16T06:48:02Z",
+          "title": "add paired benchmark statistics"
+        },
+        {
+          "sha": "0f8ab5b3cc601fbe7cdb1d282ac50045dbcf1f4e",
+          "tree": "43c2ec95a4f78ed62822e0abd3564642c3621e8f",
+          "parents": [
+            "840c78e7c10ac3aa021df4de8651f24d7fc81db2"
+          ],
+          "authored": "2026-08-16T06:48:16Z",
+          "committed": "2026-08-16T06:48:16Z",
+          "title": "fix benchmark retry handling"
+        },
+        {
+          "sha": "c90e1ac2ec6a8348356daae8114c066ce9c57703",
+          "tree": "d7980c175f7f6b5cdcc1f46bcc7dafbbc9c9aaf6",
+          "parents": [
+            "0f8ab5b3cc601fbe7cdb1d282ac50045dbcf1f4e"
+          ],
+          "authored": "2026-08-16T06:48:27Z",
+          "committed": "2026-08-16T06:48:27Z",
+          "title": "run expanded paired benchmark suite"
+        },
+        {
+          "sha": "1624b0281bda35b9f0f681d961f31738d3c73dc4",
+          "tree": "ffe5e71411e1345c71deee6dd7e019c9c893fd43",
+          "parents": [
+            "c90e1ac2ec6a8348356daae8114c066ce9c57703"
+          ],
+          "authored": "2026-08-16T07:05:21Z",
+          "committed": "2026-08-16T07:05:21Z",
+          "title": "run expanded Gemini paired benchmark"
+        },
+        {
+          "sha": "25ae734e0ee3b373ee027660ec4587425ed2266f",
+          "tree": "37d6176767750ee8d4875fb6eef5f21749bed4c0",
+          "parents": [
+            "1624b0281bda35b9f0f681d961f31738d3c73dc4"
+          ],
+          "authored": "2026-08-16T07:12:17Z",
+          "committed": "2026-08-16T07:12:17Z",
+          "title": "run expanded Fable paired benchmark"
+        },
+        {
+          "sha": "c623c00878fa428e57fcead03a5c3e24520f0dfd",
+          "tree": "c6e831b3aabe602758d91bf6ddd271f9b9bcddac",
+          "parents": [
+            "25ae734e0ee3b373ee027660ec4587425ed2266f"
+          ],
+          "authored": "2026-08-16T07:12:30Z",
+          "committed": "2026-08-16T07:12:30Z",
+          "title": "trigger Fable benchmark workflow"
+        },
+        {
+          "sha": "e412c1088af725e7dc070b778f86ef10c2f750d8",
+          "tree": "2b01b0d30a8a3144c1a105de4b75114b9ec37aef",
+          "parents": [
+            "c623c00878fa428e57fcead03a5c3e24520f0dfd"
+          ],
+          "authored": "2026-08-16T07:57:40Z",
+          "committed": "2026-08-16T07:57:40Z",
+          "title": "add matched-compute benchmark control"
+        },
+        {
+          "sha": "e040988c6bb57184e3556c2da4aee8d347885869",
+          "tree": "e76cb594c2369ba3714458c8127abe9cabafdab5",
+          "parents": [
+            "e412c1088af725e7dc070b778f86ef10c2f750d8"
+          ],
+          "authored": "2026-08-16T07:57:47Z",
+          "committed": "2026-08-16T07:57:47Z",
+          "title": "run matched-compute benchmark control"
+        },
+        {
+          "sha": "0c01f0f37f5499dbc37bcfd4396d5ca5dfe678a6",
+          "tree": "0eeaf699cc464eff0db09c706c287b7eacdb39de",
+          "parents": [
+            "e040988c6bb57184e3556c2da4aee8d347885869"
+          ],
+          "authored": "2026-08-16T09:15:12Z",
+          "committed": "2026-08-16T09:15:12Z",
+          "title": "harden Council with answer preservation gate"
+        },
+        {
+          "sha": "6085982a856d63b57e28ee6aebf2f0eb2c405711",
+          "tree": "ab5b9c1cb4da90ebcac2db1353bdaa0e5e60e557",
+          "parents": [
+            "0c01f0f37f5499dbc37bcfd4396d5ca5dfe678a6"
+          ],
+          "authored": "2026-08-16T10:00:45Z",
+          "committed": "2026-08-16T10:00:45Z",
+          "title": "add Council v3 development selection harness"
+        },
+        {
+          "sha": "af8f90d201ed044d7523bcd3b116a6a5ef8ba102",
+          "tree": "49f69205cba6b8f10d3454fdd72e153908824fa1",
+          "parents": [
+            "6085982a856d63b57e28ee6aebf2f0eb2c405711"
+          ],
+          "authored": "2026-08-16T10:07:49Z",
+          "committed": "2026-08-16T10:07:49Z",
+          "title": "add deterministic benchmark output normalizer"
+        },
+        {
+          "sha": "bd10b03aee73b183ee52ddf10feef1ccb34890ba",
+          "tree": "4c19f2889e03d9ba7595f31415add4e4f849194b",
+          "parents": [
+            "af8f90d201ed044d7523bcd3b116a6a5ef8ba102"
+          ],
+          "authored": "2026-08-16T10:07:59Z",
+          "committed": "2026-08-16T10:07:59Z",
+          "title": "test deterministic benchmark output normalizer"
+        },
+        {
+          "sha": "a6ebf93a38e9fff02b67c4aa93e2932ade9c9b80",
+          "tree": "f4956533ea3476d9fd841d640e9723c9b899b2c3",
+          "parents": [
+            "bd10b03aee73b183ee52ddf10feef1ccb34890ba"
+          ],
+          "authored": "2026-08-16T10:09:02Z",
+          "committed": "2026-08-16T10:09:02Z",
+          "title": "add reduced Council development candidate"
+        },
+        {
+          "sha": "d60f19e10735b12da30102b449881978ed8c87b3",
+          "tree": "412085ba8757892551f182f429018448cc2c403b",
+          "parents": [
+            "a6ebf93a38e9fff02b67c4aa93e2932ade9c9b80"
+          ],
+          "authored": "2026-08-16T10:09:11Z",
+          "committed": "2026-08-16T10:09:11Z",
+          "title": "add selective Council router candidate"
+        },
+        {
+          "sha": "1c1761cdd51e68e94b556dbbc1c7af39087acb98",
+          "tree": "da71d8ae2354a4ce23d71a1a5801845d5fde361f",
+          "parents": [
+            "d60f19e10735b12da30102b449881978ed8c87b3"
+          ],
+          "authored": "2026-08-16T10:09:19Z",
+          "committed": "2026-08-16T10:09:19Z",
+          "title": "test reduced Council candidate"
+        },
+        {
+          "sha": "6f4fd72fffb44e94d9fcd563648894b06c555cb4",
+          "tree": "6c3625833fbdd7a8bec02c2f0b0b08b5db866bd3",
+          "parents": [
+            "1c1761cdd51e68e94b556dbbc1c7af39087acb98"
+          ],
+          "authored": "2026-08-16T10:09:26Z",
+          "committed": "2026-08-16T10:09:26Z",
+          "title": "test selective Council router"
+        },
+        {
+          "sha": "6d6dca8247cf9eebdd7efd9a71828af93480401a",
+          "tree": "9d801b766d04432b55c457b6cc81d439ccfbf061",
+          "parents": [
+            "6f4fd72fffb44e94d9fcd563648894b06c555cb4"
+          ],
+          "authored": "2026-08-16T10:09:51Z",
+          "committed": "2026-08-16T10:09:51Z",
+          "title": "add development candidate benchmark runner"
+        },
+        {
+          "sha": "06309488b53b76577c5950f5c279c190feb7aa0c",
+          "tree": "18fd9473479c7e1924513058ebac61a23b1bd5bb",
+          "parents": [
+            "6d6dca8247cf9eebdd7efd9a71828af93480401a"
+          ],
+          "authored": "2026-08-16T10:11:15Z",
+          "committed": "2026-08-16T10:11:15Z",
+          "title": "harden deterministic output normalization"
+        },
+        {
+          "sha": "b06e47b4507ec3f770e5cfb20211dac935f17bce",
+          "tree": "1ccd96235b239e6b3353e7b3a734cbbe5661aff7",
+          "parents": [
+            "06309488b53b76577c5950f5c279c190feb7aa0c"
+          ],
+          "authored": "2026-08-16T10:11:27Z",
+          "committed": "2026-08-16T10:11:27Z",
+          "title": "test deterministic output shape repair"
+        },
+        {
+          "sha": "70ebb5cb1afe9e948c99083c81bc0f8f8525b22e",
+          "tree": "9b836e3e1b04172581ea3b1a1e385ce8f551704f",
+          "parents": [
+            "b06e47b4507ec3f770e5cfb20211dac935f17bce"
+          ],
+          "authored": "2026-08-16T10:11:45Z",
+          "committed": "2026-08-16T10:11:45Z",
+          "title": "document preservation gate development result"
+        },
+        {
+          "sha": "a6414fb90b7519070e6555e2982384e4e16cf77a",
+          "tree": "378fd0ec79f4b8e29b7881016110164f719e9e4f",
+          "parents": [
+            "70ebb5cb1afe9e948c99083c81bc0f8f8525b22e"
+          ],
+          "authored": "2026-08-16T10:12:55Z",
+          "committed": "2026-08-16T10:12:55Z",
+          "title": "add cross-validated router threshold selection"
+        },
+        {
+          "sha": "e3dc4aba1f2da81c0ad2029db16124f7b98304d1",
+          "tree": "fdacf232761d1b83d25889fb9edfd3a35b21f83b",
+          "parents": [
+            "a6414fb90b7519070e6555e2982384e4e16cf77a"
+          ],
+          "authored": "2026-08-16T10:14:44Z",
+          "committed": "2026-08-16T10:14:44Z",
+          "title": "run reduced Council and router development comparison"
+        },
+        {
+          "sha": "a50ea5527a51da3ab370a3d19087a6c37c718c18",
+          "tree": "de13bbe1d47412191940737724e350506a12eadb",
+          "parents": [
+            "e3dc4aba1f2da81c0ad2029db16124f7b98304d1"
+          ],
+          "authored": "2026-08-16T10:18:40Z",
+          "committed": "2026-08-16T10:18:40Z",
+          "title": "fix Council v3 development selector pass counts"
+        },
+        {
+          "sha": "eeaf0d3b867b76dab8d8f1afc1839e45463c1319",
+          "tree": "8b67f0bdb906d0664338d4577beb1edbeaee2228",
+          "parents": [
+            "a50ea5527a51da3ab370a3d19087a6c37c718c18"
+          ],
+          "authored": "2026-08-16T10:19:10Z",
+          "committed": "2026-08-16T10:19:10Z",
+          "title": "document Council v3 development result"
+        },
+        {
+          "sha": "226dd9370aebcd456b6574df9423bff4c0f3de8f",
+          "tree": "0efc65febc7d50bd54b06d0b1d623cbffd7f54bd",
+          "parents": [
+            "eeaf0d3b867b76dab8d8f1afc1839e45463c1319"
+          ],
+          "authored": "2026-08-16T10:21:50Z",
+          "committed": "2026-08-16T10:21:50Z",
+          "title": "harden v3 gate candidate handling and defect allowlist"
+        },
+        {
+          "sha": "566da8eea7f7ca7635f8eba63bbd0d1faf72cd54",
+          "tree": "d07f2f1af2a4f48726e39658aa77b3823eb1a64f",
+          "parents": [
+            "226dd9370aebcd456b6574df9423bff4c0f3de8f"
+          ],
+          "authored": "2026-08-16T10:21:59Z",
+          "committed": "2026-08-16T10:21:59Z",
+          "title": "test safe typed v3 preservation gate"
+        },
+        {
+          "sha": "f345802889e89970de2ffb06546258b97fd07dc4",
+          "tree": "199d7e512b6e1f7987fed5554de6ab18488eda42",
+          "parents": [
+            "566da8eea7f7ca7635f8eba63bbd0d1faf72cd54"
+          ],
+          "authored": "2026-08-16T10:43:29Z",
+          "committed": "2026-08-16T10:43:29Z",
+          "title": "add Council v3 freeze validation runner"
+        },
+        {
+          "sha": "a38c811ed3a346ba5fcd7075066502ace8cb3c10",
+          "tree": "1a99c1b6f21dc00308e66e45c059e92a4c0c164c",
+          "parents": [
+            "f345802889e89970de2ffb06546258b97fd07dc4"
+          ],
+          "authored": "2026-08-16T10:43:47Z",
+          "committed": "2026-08-16T10:43:47Z",
+          "title": "run Council v3 freeze validation"
+        },
+        {
+          "sha": "4dbb2882e5d2194c048f8245af0eb50ef12052b5",
+          "tree": "561bf6e4adeb8a211ac02106c28a387eed67fba5",
+          "parents": [
+            "a38c811ed3a346ba5fcd7075066502ace8cb3c10"
+          ],
+          "authored": "2026-08-16T11:19:38Z",
+          "committed": "2026-08-16T11:19:38Z",
+          "title": "lock Council v3 holdout protocol"
+        },
+        {
+          "sha": "a2da861bb6dc2759472c3cf6345781673963555f",
+          "tree": "274caed81a06e24b06fc16cdd1026729f39975b2",
+          "parents": [
+            "4dbb2882e5d2194c048f8245af0eb50ef12052b5"
+          ],
+          "authored": "2026-08-16T11:20:09Z",
+          "committed": "2026-08-16T11:20:09Z",
+          "title": "add sealed URAI holdout v1 generator"
+        },
+        {
+          "sha": "4ba94e856e044370d88c52237973c0c9f45b66a3",
+          "tree": "2821e06dbbb487acd35a63f3a791967bc7c6f26d",
+          "parents": [
+            "a2da861bb6dc2759472c3cf6345781673963555f"
+          ],
+          "authored": "2026-08-16T11:20:33Z",
+          "committed": "2026-08-16T11:20:33Z",
+          "title": "add one-shot URAI holdout v1 runner"
+        },
+        {
+          "sha": "a6d68c2d7fd4f950a1283101d30b6410f686ea95",
+          "tree": "b57523669f3e11fc9c26f4e9788bbfee5a348795",
+          "parents": [
+            "4ba94e856e044370d88c52237973c0c9f45b66a3"
+          ],
+          "authored": "2026-08-16T11:20:43Z",
+          "committed": "2026-08-16T11:20:43Z",
+          "title": "run one-shot URAI holdout v1"
+        },
+        {
+          "sha": "f410257a5caf175ea23122f3d7c4d9eb0e59ea6f",
+          "tree": "8eae28d746151ab82273ae6dcd41acc2ac7bb8b9",
+          "parents": [
+            "a6d68c2d7fd4f950a1283101d30b6410f686ea95"
+          ],
+          "authored": "2026-08-16T11:39:21Z",
+          "committed": "2026-08-16T11:39:21Z",
+          "title": "record sealed URAI holdout v1 results"
+        },
+        {
+          "sha": "6d74d7958ddc6bc000249defff6c4ca73a8ead4c",
+          "tree": "fb4b5f735980eb5806e2e6729f767e09c791c43b",
+          "parents": [
+            "f410257a5caf175ea23122f3d7c4d9eb0e59ea6f"
+          ],
+          "authored": "2026-08-16T14:13:32Z",
+          "committed": "2026-08-16T14:13:32Z",
+          "title": "harden prompt contract canonicalizer v2"
+        },
+        {
+          "sha": "5d20d59a4cd91d7174ec315d20a039f4bc18e2ac",
+          "tree": "fbddd41621e4c7da99742bbd6935930e5cda0a0a",
+          "parents": [
+            "6d74d7958ddc6bc000249defff6c4ca73a8ead4c"
+          ],
+          "authored": "2026-08-16T14:13:42Z",
+          "committed": "2026-08-16T14:13:42Z",
+          "title": "test prompt contract canonicalizer v2"
+        },
+        {
+          "sha": "930e4683383737fc12a9409b954da1bf4dce9e9a",
+          "tree": "47b26980f2f4b1ad6c84638fd92e47c52b9e26cc",
+          "parents": [
+            "5d20d59a4cd91d7174ec315d20a039f4bc18e2ac"
+          ],
+          "authored": "2026-08-16T14:14:19Z",
+          "committed": "2026-08-16T14:14:19Z",
+          "title": "run v2 contract-aware development validation"
+        },
+        {
+          "sha": "10fc677e4537075c58746a6e887450f9311263c7",
+          "tree": "659e6c099cfeb191d9985c1ea5540f9b87e276c2",
+          "parents": [
+            "930e4683383737fc12a9409b954da1bf4dce9e9a"
+          ],
+          "authored": "2026-08-16T14:14:48Z",
+          "committed": "2026-08-16T14:14:48Z",
+          "title": "document URAI v2 benchmark development plan"
+        },
+        {
+          "sha": "88ea03c8339b21d401b24b40f433d36fef4bce16",
+          "tree": "e5cbeddd0cccb60a8540fc3939b9e583cfd5808e",
+          "parents": [
+            "10fc677e4537075c58746a6e887450f9311263c7"
+          ],
+          "authored": "2026-08-16T14:15:12Z",
+          "committed": "2026-08-16T14:15:12Z",
+          "title": "add cluster-aware paired benchmark statistics"
+        },
+        {
+          "sha": "805537ffc4a488ad0f1e3996ef71a163feb09e6b",
+          "tree": "03625d8f4e39d2535a3d05b9a32f9e4056a28ac2",
+          "parents": [
+            "88ea03c8339b21d401b24b40f433d36fef4bce16"
+          ],
+          "authored": "2026-08-16T14:15:22Z",
+          "committed": "2026-08-16T14:15:22Z",
+          "title": "test cluster-aware paired benchmark statistics"
+        },
+        {
+          "sha": "5d5ba9f1cd340fa5e254becb3336b491c0dcb9bf",
+          "tree": "94e84d63d09136023b2751b76a621e61ed4b12ec",
+          "parents": [
+            "805537ffc4a488ad0f1e3996ef71a163feb09e6b"
+          ],
+          "authored": "2026-08-16T14:16:12Z",
+          "committed": "2026-08-16T14:16:12Z",
+          "title": "tighten canonicalizer winner intent"
+        },
+        {
+          "sha": "1f7e5703f3d6e274a067c55973f357eafa3cb0c2",
+          "tree": "e855f66979df415863907b0b688926a541212ec5",
+          "parents": [
+            "5d5ba9f1cd340fa5e254becb3336b491c0dcb9bf"
+          ],
+          "authored": "2026-08-16T14:16:22Z",
+          "committed": "2026-08-16T14:16:22Z",
+          "title": "validate corrected v2 benchmark tooling"
+        },
+        {
+          "sha": "f40c6d9c0b478e87b2f83b4d7bb20684cc202a11",
+          "tree": "4b4cf071e56123fb520fb8264aa5460c183e51c4",
+          "parents": [
+            "1f7e5703f3d6e274a067c55973f357eafa3cb0c2"
+          ],
+          "authored": "2026-08-16T14:17:34Z",
+          "committed": "2026-08-16T14:17:34Z",
+          "title": "add preregisterable URAI holdout v2 runner"
+        },
+        {
+          "sha": "0d17f40eccbdb2cb7ad8f389cb7e8b844e90dc53",
+          "tree": "13f0c3626cf579c0dfaf79209af82252da3776ed",
+          "parents": [
+            "f40c6d9c0b478e87b2f83b4d7bb20684cc202a11"
+          ],
+          "authored": "2026-08-16T14:17:50Z",
+          "committed": "2026-08-16T14:17:50Z",
+          "title": "draft URAI holdout v2 preregistration"
+        },
+        {
+          "sha": "24beb7a3d9664749429c494cc9e59d3dcde59941",
+          "tree": "cf801858cb41e2f2f7f81f6e714918c94326d9d2",
+          "parents": [
+            "0d17f40eccbdb2cb7ad8f389cb7e8b844e90dc53"
+          ],
+          "authored": "2026-08-16T14:19:42Z",
+          "committed": "2026-08-16T14:19:42Z",
+          "title": "add strict raw contract scorer"
+        },
+        {
+          "sha": "6939cd1e2ea11881267f9a8993e406d35e6ce822",
+          "tree": "68179f1cb549af80a2d789cccb8392424ad43ddb",
+          "parents": [
+            "24beb7a3d9664749429c494cc9e59d3dcde59941"
+          ],
+          "authored": "2026-08-16T14:19:48Z",
+          "committed": "2026-08-16T14:19:48Z",
+          "title": "test strict raw contract scoring"
+        },
+        {
+          "sha": "3593e370efe214fa3f7143ba376199419d19d544",
+          "tree": "97e4a64833acf5235bd97c5e2e901d8700238a77",
+          "parents": [
+            "6939cd1e2ea11881267f9a8993e406d35e6ce822"
+          ],
+          "authored": "2026-08-16T14:20:45Z",
+          "committed": "2026-08-16T14:20:45Z",
+          "title": "make v2 holdout error handling conservative"
+        },
+        {
+          "sha": "3d8fae2ebf0a44a69e99cef62f6ce2088f595e2a",
+          "tree": "500fe7b88519c22334f1ebe004029e3c474b7073",
+          "parents": [
+            "3593e370efe214fa3f7143ba376199419d19d544"
+          ],
+          "authored": "2026-08-16T14:20:59Z",
+          "committed": "2026-08-16T14:20:59Z",
+          "title": "lock conservative v2 error policy in draft"
+        },
+        {
+          "sha": "f2fdccf8dbe5bd8ba84112bea290266d0fec9a0b",
+          "tree": "6416585ac1a884367aa438a2fff62679176bd6e8",
+          "parents": [
+            "3d8fae2ebf0a44a69e99cef62f6ce2088f595e2a"
+          ],
+          "authored": "2026-08-16T14:21:52Z",
+          "committed": "2026-08-16T14:21:52Z",
+          "title": "add pre-generation protocol lock verifier"
+        },
+        {
+          "sha": "fb9fc8dcfa53e4dea692be9003c77660f66dac42",
+          "tree": "0a5afb1a896b8ad2046fb1793c35f7c86c4650c0",
+          "parents": [
+            "f2fdccf8dbe5bd8ba84112bea290266d0fec9a0b"
+          ],
+          "authored": "2026-08-16T18:23:58Z",
+          "committed": "2026-08-16T18:23:58Z",
+          "title": "consolidate final URAI Council benchmark v2 evidence"
+        },
+        {
+          "sha": "7ec680af90d03835bdf33bf18481c46e73275fd5",
+          "tree": "fc3c6bfa672161ad1808a2ed1a1ef58e6803e2a4",
+          "parents": [
+            "fb9fc8dcfa53e4dea692be9003c77660f66dac42"
+          ],
+          "authored": "2026-10-11T07:58:18Z",
+          "committed": "2026-10-11T07:58:18Z",
+          "title": "bench: freeze six synthetic development smoke cases on isolated branch"
+        },
+        {
+          "sha": "6d9a3f114de70d82550dbabde47dbfde8da34c84",
+          "tree": "af9bc0e5c981c1cb6708d5521bf37afd69675b60",
+          "parents": [
+            "7ec680af90d03835bdf33bf18481c46e73275fd5"
+          ],
+          "authored": "2026-10-11T08:04:06Z",
+          "committed": "2026-10-11T08:04:06Z",
+          "title": "bench: add capped live Direct/Refinement/historical-Council evaluation runner"
+        },
+        {
+          "sha": "9947b03fc26fc9c7aadd363a633898b1e7cffd58",
+          "tree": "bad007f4f58319d91b4f9dc9914d719081a54e73",
+          "parents": [
+            "6d9a3f114de70d82550dbabde47dbfde8da34c84"
+          ],
+          "authored": "2026-10-11T08:04:17Z",
+          "committed": "2026-10-11T08:04:17Z",
+          "title": "bench: add isolated dispatch-only smoke workflow with hard local cost stop"
+        },
+        {
+          "sha": "b16ae949a05a3e6420e9871b19d5633c4425ba91",
+          "tree": "96a8fa4e4209296fd2642342324f72987dd159ea",
+          "parents": [
+            "9947b03fc26fc9c7aadd363a633898b1e7cffd58"
+          ],
+          "authored": "2026-10-11T08:09:02Z",
+          "committed": "2026-10-11T08:09:02Z",
+          "title": "fix: correct isolated pilot module imports before workflow launch"
+        },
+        {
+          "sha": "17890a42621ed2368bf5616b0809ad787c052074",
+          "tree": "06422e1b8a42d34d5d5821316af1ac338f52a775",
+          "parents": [
+            "b16ae949a05a3e6420e9871b19d5633c4425ba91"
+          ],
+          "authored": "2026-10-14T18:09:11Z",
+          "committed": "2026-10-14T18:09:11Z",
+          "title": "bench: add guarded Council v3 self-refinement as fourth pilot arm"
+        },
+        {
+          "sha": "ca3823bc5b8a3cd74e93ba5e173b139974e660b8",
+          "tree": "9c26a8de17616185a2bac1bc29a4c3124f50f68d",
+          "parents": [
+            "17890a42621ed2368bf5616b0809ad787c052074"
+          ],
+          "authored": "2026-10-14T18:15:22Z",
+          "committed": "2026-10-14T18:15:22Z",
+          "title": "bench: add six-call self-refinement comparator and cost/accuracy parity"
+        },
+        {
+          "sha": "1a98399af158451db214bd82536d72633911f657",
+          "tree": "f04be4a11f9a0097e6f48373c3a2b5aaf1968c78",
+          "parents": [
+            "ca3823bc5b8a3cd74e93ba5e173b139974e660b8"
+          ],
+          "authored": "2026-10-14T18:18:05Z",
+          "committed": "2026-10-14T18:18:05Z",
+          "title": "bench: founder-authorized one-time capped live pilot 2026-10-14"
+        },
+        {
+          "sha": "d23b35dfe7be29647dbca7e26604ffa4584154aa",
+          "tree": "9c26a8de17616185a2bac1bc29a4c3124f50f68d",
+          "parents": [
+            "1a98399af158451db214bd82536d72633911f657"
+          ],
+          "authored": "2026-10-14T18:18:44Z",
+          "committed": "2026-10-14T18:18:44Z",
+          "title": "bench: restore manual-only paid benchmark trigger after one-time launch"
+        },
+        {
+          "sha": "420b0c2a2bdcdab3b3eb6121757199d79d1bad43",
+          "tree": "a3f6c863bbdf1e6b68a4a816e50ebce29cfefd9f",
+          "parents": [
+            "d23b35dfe7be29647dbca7e26604ffa4584154aa"
+          ],
+          "authored": "2026-10-14T18:34:27Z",
+          "committed": "2026-10-14T18:34:27Z",
+          "title": "bench: introduce 240 novel hard synthetic memory-evidence cases"
+        },
+        {
+          "sha": "dc66b4d120baad893c6a733f6c395f53b8c19992",
+          "tree": "1b1e5594b3cf75e6e7ab8a56f1d18c9f186dfc7d",
+          "parents": [
+            "420b0c2a2bdcdab3b3eb6121757199d79d1bad43"
+          ],
+          "authored": "2026-10-14T18:35:13Z",
+          "committed": "2026-10-14T18:35:13Z",
+          "title": "bench: hard development runner and offline verification workflow"
+        },
+        {
+          "sha": "e1d13972ab64aab7844cb73d2795c15514a53c01",
+          "tree": "9991b5ae7262f1bd9dbdb6894c91aa440ed680be",
+          "parents": [
+            "dc66b4d120baad893c6a733f6c395f53b8c19992"
+          ],
+          "authored": "2026-10-14T18:35:26Z",
+          "committed": "2026-10-14T18:35:26Z",
+          "title": "bench: fix hard runner relative imports"
+        },
+        {
+          "sha": "54e8bbf6ae27d4159b6251c5d95a7b6e1d7f128e",
+          "tree": "6efddc729b0222fa62c4a88db23c55692ba3372b",
+          "parents": [
+            "e1d13972ab64aab7844cb73d2795c15514a53c01"
+          ],
+          "authored": "2026-10-14T18:36:03Z",
+          "committed": "2026-10-14T18:36:03Z",
+          "title": "bench: founder-authorized hard development pilot 2026-10-14"
+        },
+        {
+          "sha": "30a859b082b910543dbc259715f696312b9e0eba",
+          "tree": "b992407b03e584edccb8f11238d506182806800d",
+          "parents": [
+            "54e8bbf6ae27d4159b6251c5d95a7b6e1d7f128e"
+          ],
+          "authored": "2026-10-14T18:36:19Z",
+          "committed": "2026-10-14T18:36:19Z",
+          "title": "bench: founder-authorized hard development pilot 2026-10-14"
+        },
+        {
+          "sha": "741f98a52b379955da45613e81e4ec468befe514",
+          "tree": "7c72bb0d8a28023fcb5105ae153c4e828cd803d4",
+          "parents": [
+            "30a859b082b910543dbc259715f696312b9e0eba"
+          ],
+          "authored": "2026-10-14T18:37:02Z",
+          "committed": "2026-10-14T18:37:02Z",
+          "title": "bench: restore manual-only paid hard benchmark after single run"
+        },
+        {
+          "sha": "89dda0e679cea00330da9f212e335d24234ca4ab",
+          "tree": "2494080deed880641f589551a0b25c873bd1ecd5",
+          "parents": [
+            "741f98a52b379955da45613e81e4ec468befe514"
+          ],
+          "authored": "2026-10-14T19:14:23Z",
+          "committed": "2026-10-14T19:14:23Z",
+          "title": "bench: version corrected synthetic chronology and answer contracts"
+        },
+        {
+          "sha": "556f3363ad88628efe082dfd012d69046df6cd4d",
+          "tree": "925e62ea7b7bb71878a8bbbe0b3d0bd351672451",
+          "parents": [
+            "89dda0e679cea00330da9f212e335d24234ca4ab"
+          ],
+          "authored": "2026-10-14T19:20:49Z",
+          "committed": "2026-10-14T19:20:49Z",
+          "title": "bench: uniquely version repaired hard tasks and verify oracle in CI"
+        },
+        {
+          "sha": "6507da8d544cb6c880c543593dcbcc0cfc744e7a",
+          "tree": "a768183c1fa85e74e5d9a950d5d6a777d7dc5e50",
+          "parents": [
+            "556f3363ad88628efe082dfd012d69046df6cd4d"
+          ],
+          "authored": "2026-10-14T22:38:01Z",
+          "committed": "2026-10-14T22:38:01Z",
+          "title": "bench: add offline hard-development evidence consistency verifier"
+        },
+        {
+          "sha": "079ceba14746b1505a3099ee7edc074256b167fe",
+          "tree": "6eed512fde25b0659b210b61e0646a81d65cfbba",
+          "parents": [
+            "6507da8d544cb6c880c543593dcbcc0cfc744e7a"
+          ],
+          "authored": "2026-10-14T22:38:20Z",
+          "committed": "2026-10-14T22:38:20Z",
+          "title": "test: detect tampered hard-development evidence and false certification"
+        },
+        {
+          "sha": "12794cbb2599e644fbb982c2d5be244f4879e35e",
+          "tree": "4f8921b236b8d6875d0d296989d939303ed6d9b6",
+          "parents": [
+            "079ceba14746b1505a3099ee7edc074256b167fe"
+          ],
+          "authored": "2026-10-14T22:38:28Z",
+          "committed": "2026-10-14T22:38:28Z",
+          "title": "ci: enforce offline development benchmark integrity regressions"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/polish-all-app-features-end-to-end",
+      "head": "42f260b40862f851d75b553c26550f4c06839c16",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "commits": [
+        {
+          "sha": "42f260b40862f851d75b553c26550f4c06839c16",
+          "tree": "0f5f093cf98ef16234350eab709525d824a167fc",
+          "parents": [
+            "96db84138f66316bcfc68da5dbefad2d98f38a5f"
+          ],
+          "authored": "2025-09-26T03:32:58Z",
+          "committed": "2025-09-26T03:32:58Z",
+          "title": "Fix onboarding layout handling and avatar asset"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/refactor-layout-rendering-logic",
+      "head": "737089e114f66fb4f6cdd6b85b363fd65e777362",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "commits": [
+        {
+          "sha": "737089e114f66fb4f6cdd6b85b363fd65e777362",
+          "tree": "edae13d8d4fbaf28aedc228dc33fb79ff8eb1960",
+          "parents": [
+            "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e"
+          ],
+          "authored": "2025-09-26T03:16:08Z",
+          "committed": "2025-09-26T03:16:08Z",
+          "title": "Adjust layout shell handling for onboarding"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/remove-staging/production-env-files-and-update-gitignore",
+      "head": "62dfa33c181553e55c1eba681ed30867e3fc28b0",
+      "ahead_by": 1,
+      "behind_by": 2397,
+      "merge_base": "6832f0c40a92fc661dc94b85b01a83d051534720",
+      "commits": [
+        {
+          "sha": "62dfa33c181553e55c1eba681ed30867e3fc28b0",
+          "tree": "cb99fa7f7052ad1a71afe8049422137d0dc6162e",
+          "parents": [
+            "6832f0c40a92fc661dc94b85b01a83d051534720"
+          ],
+          "authored": "2025-09-26T05:40:23Z",
+          "committed": "2025-09-26T05:40:23Z",
+          "title": "Remove env files and document environment variables"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/root-marker",
+      "head": "536fd987f4865d62db2e4e2c9e3b5727d4f3b08b",
+      "ahead_by": 1,
+      "behind_by": 1218,
+      "merge_base": "0184d0e015c41695611bef9e8f7bfdfa8b99d1cc",
+      "commits": [
+        {
+          "sha": "536fd987f4865d62db2e4e2c9e3b5727d4f3b08b",
+          "tree": "f71ef8e59d982e497f1e3ee075e7d410c73a88bb",
+          "parents": [
+            "0184d0e015c41695611bef9e8f7bfdfa8b99d1cc"
+          ],
+          "authored": "2026-05-22T17:01:44Z",
+          "committed": "2026-05-22T17:01:44Z",
+          "title": "Preserve root home lock marker"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/root-smoke-flow",
+      "head": "061f7c7015c03505cb993bf63642840678f716a7",
+      "ahead_by": 1,
+      "behind_by": 1210,
+      "merge_base": "0e073b54270fa5bbee5a72ccdd193d3ba8a761b3",
+      "commits": [
+        {
+          "sha": "061f7c7015c03505cb993bf63642840678f716a7",
+          "tree": "e4288b1c93c561cf11bb4440098a8444fe42a721",
+          "parents": [
+            "0e073b54270fa5bbee5a72ccdd193d3ba8a761b3"
+          ],
+          "authored": "2026-05-22T17:33:21Z",
+          "committed": "2026-05-22T17:33:21Z",
+          "title": "Target memory textbox in root smoke test"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/scene-generator-cleanup",
+      "head": "9abc5c5531774d26dce3d5615af84146a8cd16df",
+      "ahead_by": 1,
+      "behind_by": 1213,
+      "merge_base": "838ce8bea0e91a5e2e48c28e6d4c9e2d2b06c5d9",
+      "commits": [
+        {
+          "sha": "9abc5c5531774d26dce3d5615af84146a8cd16df",
+          "tree": "fd80f360c45af07af77af8f508d97aff5d42b18f",
+          "parents": [
+            "838ce8bea0e91a5e2e48c28e6d4c9e2d2b06c5d9"
+          ],
+          "authored": "2026-05-22T17:21:34Z",
+          "committed": "2026-05-22T17:21:34Z",
+          "title": "Update smoke test for memory world root"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/codex/staging-rollback-runbook",
+      "head": "781a10073a77b9a0e9635c2645f30f2bf3dbeb1b",
+      "ahead_by": 2,
+      "behind_by": 2058,
+      "merge_base": "bec1abb519edc458105b79ab2c566b0e6d0c953a",
+      "commits": [
+        {
+          "sha": "aa32e9534dec9ed25b2bf5b5bc5f8190ec16d573",
+          "tree": "f03f213e3950fb89789b777e764cb7ba869f55c8",
+          "parents": [
+            "bec1abb519edc458105b79ab2c566b0e6d0c953a"
+          ],
+          "authored": "2026-05-07T21:41:25Z",
+          "committed": "2026-05-07T21:41:25Z",
+          "title": "Add staging promotion checklist"
+        },
+        {
+          "sha": "781a10073a77b9a0e9635c2645f30f2bf3dbeb1b",
+          "tree": "875b2fe23686dc9e5eb2f26b93f6182146602a06",
+          "parents": [
+            "aa32e9534dec9ed25b2bf5b5bc5f8190ec16d573"
+          ],
+          "authored": "2026-05-07T21:42:35Z",
+          "committed": "2026-05-07T21:42:35Z",
+          "title": "Add rollback runbook"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}

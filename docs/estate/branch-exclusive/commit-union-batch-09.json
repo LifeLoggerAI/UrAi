@@ -1,0 +1,1595 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 9,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/repair/legacy-paid-runtime-quarantine-20261007",
+      "head": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+      "ahead_by": 3,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "405e15877230f34e905f9217d38409f967c12c6d",
+          "tree": "8897d29d1d2f4be3b2abe835df0bafc6597d2b23",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-07T18:41:34Z",
+          "committed": "2026-10-07T18:41:34Z",
+          "title": "Reconcile historical cross-system canon provenance"
+        },
+        {
+          "sha": "c83a3cd0e5f10f52659a5b09011bb2ad4536b834",
+          "tree": "47bbd67cc1cffaff92b69e8b347d5627a3d010e5",
+          "parents": [
+            "405e15877230f34e905f9217d38409f967c12c6d"
+          ],
+          "authored": "2026-10-07T20:47:30Z",
+          "committed": "2026-10-07T20:47:30Z",
+          "title": "Bound Chromium installation waits while preserving browser verification gates"
+        },
+        {
+          "sha": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+          "tree": "d20822f4f16503b807f3bce9aa01e283d10bea3b",
+          "parents": [
+            "c83a3cd0e5f10f52659a5b09011bb2ad4536b834"
+          ],
+          "authored": "2026-10-07T21:21:30Z",
+          "committed": "2026-10-07T21:21:30Z",
+          "title": "Quarantine legacy OpenAI leaves before provider dispatch"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/security/legacy-credential-quarantine-20260911",
+      "head": "ffed507342d5e1083ca99819826d4a5d1fc98e67",
+      "ahead_by": 13,
+      "behind_by": 26,
+      "merge_base": "82783e7e14d3f9123999d13ae6a2a22af86476d1",
+      "commits": [
+        {
+          "sha": "8b30be10ec1a5c8f1fae9c56c0994c94d42f8ef4",
+          "tree": "b2f04242cb05cf8bb5dbdd8b78256a3e85d39f52",
+          "parents": [
+            "82783e7e14d3f9123999d13ae6a2a22af86476d1"
+          ],
+          "authored": "2026-09-11T08:15:01Z",
+          "committed": "2026-09-11T08:15:01Z",
+          "title": "security: quarantine Firebase Admin in legacy repo"
+        },
+        {
+          "sha": "d5fe169d4aa084068a884efa6d342cb36150c900",
+          "tree": "21bb712cfc964dc8c86dca35a3da80b7f5054c02",
+          "parents": [
+            "8b30be10ec1a5c8f1fae9c56c0994c94d42f8ef4"
+          ],
+          "authored": "2026-09-11T08:15:28Z",
+          "committed": "2026-09-11T08:15:28Z",
+          "title": "security: quarantine legacy waitlist provider export"
+        },
+        {
+          "sha": "b88d51f0bcef1096ab46122f6bab9ba603c6e80b",
+          "tree": "63653dbf194c39c352bcca51a96e6bbee32bf816",
+          "parents": [
+            "d5fe169d4aa084068a884efa6d342cb36150c900"
+          ],
+          "authored": "2026-09-11T08:15:43Z",
+          "committed": "2026-09-11T08:15:43Z",
+          "title": "security: quarantine legacy tier2 Firestore seed"
+        },
+        {
+          "sha": "176717b92c33938e59d5dfadf297f532b8c6735e",
+          "tree": "bb494aaf22c7d463e742937f6a98437f822a079b",
+          "parents": [
+            "b88d51f0bcef1096ab46122f6bab9ba603c6e80b"
+          ],
+          "authored": "2026-09-11T08:24:51Z",
+          "committed": "2026-09-11T08:24:51Z",
+          "title": "security: quarantine legacy demo Firestore seeding"
+        },
+        {
+          "sha": "a3d2458dd2e820ab520c7a17a0c6a0546018da12",
+          "tree": "c1a5325f2abe88031727c890d4dae95513461fa7",
+          "parents": [
+            "176717b92c33938e59d5dfadf297f532b8c6735e"
+          ],
+          "authored": "2026-09-11T08:25:10Z",
+          "committed": "2026-09-11T08:25:10Z",
+          "title": "security: remove legacy private-key env guidance"
+        },
+        {
+          "sha": "260aa02589caf50ef721e5418324a26cd60865a3",
+          "tree": "35161e08b7201f347bb91dec23d93cefa6eca00d",
+          "parents": [
+            "a3d2458dd2e820ab520c7a17a0c6a0546018da12"
+          ],
+          "authored": "2026-09-11T08:25:31Z",
+          "committed": "2026-09-11T08:25:31Z",
+          "title": "docs: quarantine legacy deploy checklist"
+        },
+        {
+          "sha": "71c395da3bd9f06e9a93a0e25bee23b19c07813f",
+          "tree": "9e6eda5da92b7faabd6ab7f35cb51660b9f3aae7",
+          "parents": [
+            "260aa02589caf50ef721e5418324a26cd60865a3"
+          ],
+          "authored": "2026-09-11T08:29:16Z",
+          "committed": "2026-09-11T08:29:16Z",
+          "title": "fix: preserve nullable Firebase types under legacy quarantine"
+        },
+        {
+          "sha": "24840721027394a7e0828262009a1ad6b977ac93",
+          "tree": "4bec02d24d243fe555c647502fb24cf9ce1b0595",
+          "parents": [
+            "71c395da3bd9f06e9a93a0e25bee23b19c07813f"
+          ],
+          "authored": "2026-09-11T09:03:17Z",
+          "committed": "2026-09-11T09:03:17Z",
+          "title": "security: bind Spatial readiness to quarantined Admin"
+        },
+        {
+          "sha": "527d358cb8a632ae51a1aa5562a03f5fe55d0470",
+          "tree": "5ae4387e0053c04fb3912abbdaae9a59ded4016f",
+          "parents": [
+            "24840721027394a7e0828262009a1ad6b977ac93"
+          ],
+          "authored": "2026-09-11T09:03:24Z",
+          "committed": "2026-09-11T09:03:24Z",
+          "title": "docs: remove legacy Admin credential template"
+        },
+        {
+          "sha": "43b8a644fad9270d20d7fff31725c875436dbc2f",
+          "tree": "deb8a492ebb13a2d05a0295c7b388cc34d2f2e46",
+          "parents": [
+            "527d358cb8a632ae51a1aa5562a03f5fe55d0470"
+          ],
+          "authored": "2026-09-11T09:03:32Z",
+          "committed": "2026-09-11T09:03:32Z",
+          "title": "docs: remove legacy Admin credential onboarding"
+        },
+        {
+          "sha": "e4381ae69781dead81f4ab553a93aea0aa528c05",
+          "tree": "436725ce5e8303fd0ee16983ff8c213ca599a8ec",
+          "parents": [
+            "43b8a644fad9270d20d7fff31725c875436dbc2f"
+          ],
+          "authored": "2026-09-11T09:03:39Z",
+          "committed": "2026-09-11T09:03:39Z",
+          "title": "docs: use passing quarantine assertion"
+        },
+        {
+          "sha": "7ff6da4e3d989ed8cb3d77c1363fe442ca13e9db",
+          "tree": "7965deb21d3d6e554c88aa3c020bce5760b51d99",
+          "parents": [
+            "e4381ae69781dead81f4ab553a93aea0aa528c05"
+          ],
+          "authored": "2026-09-11T09:03:47Z",
+          "committed": "2026-09-11T09:03:47Z",
+          "title": "test: add passing legacy quarantine assertion"
+        },
+        {
+          "sha": "ffed507342d5e1083ca99819826d4a5d1fc98e67",
+          "tree": "579bc642c6169a6210c851871d5360097e6f6eab",
+          "parents": [
+            "7ff6da4e3d989ed8cb3d77c1363fe442ca13e9db"
+          ],
+          "authored": "2026-09-11T09:04:18Z",
+          "committed": "2026-09-11T09:04:18Z",
+          "title": "test: prove legacy deploy block fails closed"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/test/home-e2e-smoke-coverage",
+      "head": "aa5e4352217e4e4671956008ceee3e87c4ff574c",
+      "ahead_by": 3,
+      "behind_by": 1526,
+      "merge_base": "f8a567ba2078b75d5053ec695a5347773b2b7f9c",
+      "commits": [
+        {
+          "sha": "ea2f2b94137018f8e0bb1c7f2efa9729e44f0f8b",
+          "tree": "d91f90b2f1adcd025f9298f086503b4ec78416c9",
+          "parents": [
+            "f8a567ba2078b75d5053ec695a5347773b2b7f9c"
+          ],
+          "authored": "2026-05-18T19:22:26Z",
+          "committed": "2026-05-18T19:22:26Z",
+          "title": "Add merge conflict marker guard"
+        },
+        {
+          "sha": "8ed1749619914d3f8731fd9e3e3325a9d59fa2b4",
+          "tree": "c5868aaa364234e78764cd7fa9f2ec164e420993",
+          "parents": [
+            "ea2f2b94137018f8e0bb1c7f2efa9729e44f0f8b"
+          ],
+          "authored": "2026-05-18T19:23:10Z",
+          "committed": "2026-05-18T19:23:10Z",
+          "title": "Wire conflict marker guard into npm scripts"
+        },
+        {
+          "sha": "aa5e4352217e4e4671956008ceee3e87c4ff574c",
+          "tree": "00c88b978ca2bc177edeb5411bbc81eddd2e9d69",
+          "parents": [
+            "8ed1749619914d3f8731fd9e3e3325a9d59fa2b4"
+          ],
+          "authored": "2026-05-18T19:24:19Z",
+          "committed": "2026-05-18T19:24:19Z",
+          "title": "Run conflict marker guard in CI"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/tier-1-3-lock-audit-pass",
+      "head": "2e1897be8d0324eb75bfb71896cff3caba898dc2",
+      "ahead_by": 2,
+      "behind_by": 1336,
+      "merge_base": "e1f90bdc6d35cb16d937b82264870dc25fa81396",
+      "commits": [
+        {
+          "sha": "46a00cdc3ec0c2621868864a31ed145d75835e15",
+          "tree": "935ffb2a05e05a7938ea7838820d1440ed5cc072",
+          "parents": [
+            "e1f90bdc6d35cb16d937b82264870dc25fa81396"
+          ],
+          "authored": "2026-05-22T03:22:37Z",
+          "committed": "2026-05-22T03:22:37Z",
+          "title": "Add ochat companion route"
+        },
+        {
+          "sha": "2e1897be8d0324eb75bfb71896cff3caba898dc2",
+          "tree": "757fcc433dd68ac94d13bbe12596dfde15624b93",
+          "parents": [
+            "46a00cdc3ec0c2621868864a31ed145d75835e15"
+          ],
+          "authored": "2026-05-22T03:23:22Z",
+          "committed": "2026-05-22T03:23:22Z",
+          "title": "Route root to canonical resolved home scene"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/tier-lock-pr3-freeze-evidence-cleanup",
+      "head": "84d9f7c746dbbddfa8131bbad2776766fbbd3438",
+      "ahead_by": 1,
+      "behind_by": 1391,
+      "merge_base": "124361a8f4ff1d14717c3e0c342b1e959091c6d9",
+      "commits": [
+        {
+          "sha": "84d9f7c746dbbddfa8131bbad2776766fbbd3438",
+          "tree": "491a6021d0f2f448af18fcc728be23bab9759951",
+          "parents": [
+            "124361a8f4ff1d14717c3e0c342b1e959091c6d9"
+          ],
+          "authored": "2026-05-20T20:29:34Z",
+          "committed": "2026-05-20T20:29:34Z",
+          "title": "Clarify tier freeze evidence blockers"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/tier-lock-route-completion",
+      "head": "9c7528f0b02cd5374c33fc0a2163cd449e7e8161",
+      "ahead_by": 10,
+      "behind_by": 1241,
+      "merge_base": "115c0548167818967dc955fc616d0302f93a2452",
+      "commits": [
+        {
+          "sha": "8d35d203bf9ed8fde9791e0a511480e3bccc60b5",
+          "tree": "1aff8bac9fe2f0ba9de1bb158da4fd0c94a95a3a",
+          "parents": [
+            "115c0548167818967dc955fc616d0302f93a2452"
+          ],
+          "authored": "2026-05-22T03:24:51Z",
+          "committed": "2026-05-22T03:24:51Z",
+          "title": "Add ochat companion route"
+        },
+        {
+          "sha": "aeed345c413479404353eef3e3ddbc9b0796a576",
+          "tree": "9e2daa86a2f03d4aad0548e7f313894b11585490",
+          "parents": [
+            "8d35d203bf9ed8fde9791e0a511480e3bccc60b5"
+          ],
+          "authored": "2026-05-22T03:27:23Z",
+          "committed": "2026-05-22T03:27:23Z",
+          "title": "Update root page"
+        },
+        {
+          "sha": "3d3fdc3cb9a518518a64eaa3b30acb8e7a96077c",
+          "tree": "a14570de60e09c6feb393b50bbc4fb45df5c0403",
+          "parents": [
+            "aeed345c413479404353eef3e3ddbc9b0796a576"
+          ],
+          "authored": "2026-05-22T03:35:00Z",
+          "committed": "2026-05-22T03:35:00Z",
+          "title": "Align package manifest with lockfile"
+        },
+        {
+          "sha": "6abef9c1b781d730557c71cff8d5cf543e54e17c",
+          "tree": "82574e1ee0766808daae92412a5e45ce336b0ab0",
+          "parents": [
+            "3d3fdc3cb9a518518a64eaa3b30acb8e7a96077c"
+          ],
+          "authored": "2026-05-22T03:39:47Z",
+          "committed": "2026-05-22T03:39:47Z",
+          "title": "Update smoke tests for canonical home route"
+        },
+        {
+          "sha": "d5067c2ef847bbd3bd651b4e98aec95ad4835c16",
+          "tree": "1d2b069d53ea1c116530a2b49e9feb8f798bd90a",
+          "parents": [
+            "6abef9c1b781d730557c71cff8d5cf543e54e17c"
+          ],
+          "authored": "2026-05-22T03:54:30Z",
+          "committed": "2026-05-22T03:54:30Z",
+          "title": "Preserve Tier 1 root shell signal"
+        },
+        {
+          "sha": "3fb138a5caaad880ce1a0eba897f34f69d70f390",
+          "tree": "3316cb39c4d229b9554cc968bd87d5ed6b840bcd",
+          "parents": [
+            "d5067c2ef847bbd3bd651b4e98aec95ad4835c16"
+          ],
+          "authored": "2026-05-22T03:56:57Z",
+          "committed": "2026-05-22T03:56:57Z",
+          "title": "Restore canonical home smoke anchors"
+        },
+        {
+          "sha": "4188cedb3207e513087471322a31469fef93435e",
+          "tree": "84fedaecf4f81f98f737a8db40663a775e187aa9",
+          "parents": [
+            "3fb138a5caaad880ce1a0eba897f34f69d70f390"
+          ],
+          "authored": "2026-05-22T04:22:50Z",
+          "committed": "2026-05-22T04:22:50Z",
+          "title": "Align V1 smoke with canonical orb label"
+        },
+        {
+          "sha": "6e03b802d7eddd91698f6d9e523533337a2e9b8f",
+          "tree": "71d1123a7fd35a8dbe688d370ac3b7cf8c20bc7f",
+          "parents": [
+            "4188cedb3207e513087471322a31469fef93435e"
+          ],
+          "authored": "2026-05-22T05:46:19Z",
+          "committed": "2026-05-22T05:46:19Z",
+          "title": "Avoid strict mode collision in V1 smoke orb checks"
+        },
+        {
+          "sha": "86308f27ad39574a5280af66c2e3ce24036f9122",
+          "tree": "6c86957621d9eaabd555865b25f16df42224e759",
+          "parents": [
+            "6e03b802d7eddd91698f6d9e523533337a2e9b8f"
+          ],
+          "authored": "2026-05-22T10:04:29Z",
+          "committed": "2026-05-22T10:04:29Z",
+          "title": "Target smoke-contract controls in V1 home smoke"
+        },
+        {
+          "sha": "9c7528f0b02cd5374c33fc0a2163cd449e7e8161",
+          "tree": "658ea80d74a768aaf0b3771d28736771e134f4e8",
+          "parents": [
+            "86308f27ad39574a5280af66c2e3ce24036f9122"
+          ],
+          "authored": "2026-05-22T10:13:21Z",
+          "committed": "2026-05-22T10:13:21Z",
+          "title": "Avoid strict mode collision in production smoke orb checks"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/tooling/local-merge-recovery",
+      "head": "12ea7a1d2b8e039c0fc4ffdb516c737697b4d7e7",
+      "ahead_by": 1,
+      "behind_by": 2060,
+      "merge_base": "763b044c1c1180a21185036690ecc013527afd58",
+      "commits": [
+        {
+          "sha": "12ea7a1d2b8e039c0fc4ffdb516c737697b4d7e7",
+          "tree": "602948ab2d14af4dee3e28bcd5f0d1ade44c9621",
+          "parents": [
+            "763b044c1c1180a21185036690ecc013527afd58"
+          ],
+          "authored": "2026-05-07T07:06:51Z",
+          "committed": "2026-05-07T07:06:51Z",
+          "title": "Add local replay merge recovery script"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-asset-factory",
+      "head": "98526c7bc2ec85906af042cc03b5929612bbd9f1",
+      "ahead_by": 62,
+      "behind_by": 105,
+      "merge_base": "20b2dbee4bccd0acb56e56093381418996172fdf",
+      "commits": [
+        {
+          "sha": "fc7975131275d963fb96e5cc579bad64db1ed775",
+          "tree": "aa24bcb1f0ce6ab704d9cbbe46636e30ba5b65e9",
+          "parents": [
+            "20b2dbee4bccd0acb56e56093381418996172fdf"
+          ],
+          "authored": "2026-07-08T02:10:03Z",
+          "committed": "2026-07-08T02:10:03Z",
+          "title": "Start URAI asset factory manifest"
+        },
+        {
+          "sha": "b1e5fc7b9d285ea0dba28b4385668952a067b403",
+          "tree": "6253669653a3a0ea83787e67dbbf578192a8bb9c",
+          "parents": [
+            "fc7975131275d963fb96e5cc579bad64db1ed775"
+          ],
+          "authored": "2026-07-08T02:10:18Z",
+          "committed": "2026-07-08T02:10:18Z",
+          "title": "Document URAI asset factory rules"
+        },
+        {
+          "sha": "32511fb7e8708c493edb002f37bcfa948fbb95c6",
+          "tree": "346f1c7492136e06085294b19cc45b289a2cb776",
+          "parents": [
+            "b1e5fc7b9d285ea0dba28b4385668952a067b403"
+          ],
+          "authored": "2026-07-08T02:10:29Z",
+          "committed": "2026-07-08T02:10:29Z",
+          "title": "Add launch-critical asset placeholders"
+        },
+        {
+          "sha": "3cde50b7c5d1e81a0219b46f2acf67afe080ac8b",
+          "tree": "4857211d0ab4de6333587ecf77d4ee5abc3a5082",
+          "parents": [
+            "32511fb7e8708c493edb002f37bcfa948fbb95c6"
+          ],
+          "authored": "2026-07-08T02:10:34Z",
+          "committed": "2026-07-08T02:10:34Z",
+          "title": "Add home world fallback placeholder"
+        },
+        {
+          "sha": "9e22a7ecf9dac9479dc92ab133e4756c2fae3f8d",
+          "tree": "22d3660fd30a276823ca3c3f23e056b86aa2bf05",
+          "parents": [
+            "3cde50b7c5d1e81a0219b46f2acf67afe080ac8b"
+          ],
+          "authored": "2026-07-08T02:10:39Z",
+          "committed": "2026-07-08T02:10:39Z",
+          "title": "Add ground terrain fallback placeholder"
+        },
+        {
+          "sha": "a201ac80490422245e757fff42004d5a0977c8a9",
+          "tree": "d8a1ed681105ec8f1a4e4f4713385fed599f3595",
+          "parents": [
+            "9e22a7ecf9dac9479dc92ab133e4756c2fae3f8d"
+          ],
+          "authored": "2026-07-08T02:10:47Z",
+          "committed": "2026-07-08T02:10:47Z",
+          "title": "Add lifemap sky fallback placeholder"
+        },
+        {
+          "sha": "0d5508081dbea999d8b0b88f809fc0d0c007fa8c",
+          "tree": "184632c6628888c4161369ac7318f9e6b683ca84",
+          "parents": [
+            "a201ac80490422245e757fff42004d5a0977c8a9"
+          ],
+          "authored": "2026-07-08T02:10:52Z",
+          "committed": "2026-07-08T02:10:52Z",
+          "title": "Add portal system fallback placeholder"
+        },
+        {
+          "sha": "8bb5ae74d882a53a76e01af2ee5d2dabb7401d0e",
+          "tree": "a5d2279bc745e02a512fc03870f328b4b1bf1119",
+          "parents": [
+            "0d5508081dbea999d8b0b88f809fc0d0c007fa8c"
+          ],
+          "authored": "2026-07-08T02:10:56Z",
+          "committed": "2026-07-08T02:10:56Z",
+          "title": "Add memory star fallback placeholder"
+        },
+        {
+          "sha": "01f8a9a63fa2647ac4977c36e1239f4203ebc0b7",
+          "tree": "a58f0ebff9ace1d04095a5b5ac22ae2d283a1e3a",
+          "parents": [
+            "8bb5ae74d882a53a76e01af2ee5d2dabb7401d0e"
+          ],
+          "authored": "2026-07-08T02:11:05Z",
+          "committed": "2026-07-08T02:11:05Z",
+          "title": "Add star feedback fallback placeholder"
+        },
+        {
+          "sha": "4f54eafe8f7a99439ac386775b0d9c783435d8b8",
+          "tree": "0273fc2240f394b9f533db986ecab4d929839b82",
+          "parents": [
+            "01f8a9a63fa2647ac4977c36e1239f4203ebc0b7"
+          ],
+          "authored": "2026-07-08T02:11:11Z",
+          "committed": "2026-07-08T02:11:11Z",
+          "title": "Add focus tunnel fallback placeholder"
+        },
+        {
+          "sha": "0acd396e1a66f385db1f86f1f36d7a602234a3c3",
+          "tree": "898beceb74b5a96b9a9e35c67b1a48910ffc7774",
+          "parents": [
+            "4f54eafe8f7a99439ac386775b0d9c783435d8b8"
+          ],
+          "authored": "2026-07-08T02:11:14Z",
+          "committed": "2026-07-08T02:11:14Z",
+          "title": "Add memory chamber fallback placeholder"
+        },
+        {
+          "sha": "1977aa4898887e8f693e9160256ac42a77886224",
+          "tree": "b648400795184b660b2bc9a2485b15270fc1e4d7",
+          "parents": [
+            "0acd396e1a66f385db1f86f1f36d7a602234a3c3"
+          ],
+          "authored": "2026-07-08T02:11:18Z",
+          "committed": "2026-07-08T02:11:18Z",
+          "title": "Add replay film fallback placeholder"
+        },
+        {
+          "sha": "7c5f7a655fd4d6771e386eed3466c19b713f3000",
+          "tree": "9370e491fc6fd3d8fc7d5ee17de364a17e8b0263",
+          "parents": [
+            "1977aa4898887e8f693e9160256ac42a77886224"
+          ],
+          "authored": "2026-07-08T02:11:24Z",
+          "committed": "2026-07-08T02:11:24Z",
+          "title": "Add cinematic loading fallback placeholder"
+        },
+        {
+          "sha": "303e1d1ddca0a48512b3b4563ce63779e4ca0f63",
+          "tree": "77fb710e47b7e69b73e84d376624425070e52721",
+          "parents": [
+            "7c5f7a655fd4d6771e386eed3466c19b713f3000"
+          ],
+          "authored": "2026-07-08T02:11:28Z",
+          "committed": "2026-07-08T02:11:28Z",
+          "title": "Add passport status fallback placeholder"
+        },
+        {
+          "sha": "2b19de620cb812406bfe256ead97ae32ae4c535b",
+          "tree": "8e445da9f7d8e6684d819d4421dd25c3dc5fc73a",
+          "parents": [
+            "303e1d1ddca0a48512b3b4563ce63779e4ca0f63"
+          ],
+          "authored": "2026-07-08T02:11:33Z",
+          "committed": "2026-07-08T02:11:33Z",
+          "title": "Add particle light trails fallback placeholder"
+        },
+        {
+          "sha": "b2a607cbc658a06d9569d7dd8766de1c3381ffef",
+          "tree": "c1f9e56e8b8b626f572fd71ec154e296dd5b59b4",
+          "parents": [
+            "2b19de620cb812406bfe256ead97ae32ae4c535b"
+          ],
+          "authored": "2026-07-08T02:12:19Z",
+          "committed": "2026-07-08T02:12:19Z",
+          "title": "Add URAI asset factory manifest helper"
+        },
+        {
+          "sha": "be414ec93d739e319f31c987ec84b0251d251412",
+          "tree": "167559d5502ef0cbe0760ad30abd7ad6d274e156",
+          "parents": [
+            "b2a607cbc658a06d9569d7dd8766de1c3381ffef"
+          ],
+          "authored": "2026-07-08T02:12:42Z",
+          "committed": "2026-07-08T02:12:42Z",
+          "title": "Add URAI asset factory audit script"
+        },
+        {
+          "sha": "5a4ec427da58ba344f3cefb21b50195a0a3f12fc",
+          "tree": "5504c65ebd093f4895332ee84e7ae22a6bebaf3c",
+          "parents": [
+            "be414ec93d739e319f31c987ec84b0251d251412"
+          ],
+          "authored": "2026-07-08T02:12:52Z",
+          "committed": "2026-07-08T02:12:52Z",
+          "title": "Add initial URAI asset factory report"
+        },
+        {
+          "sha": "3a5bb6a2a43a533eed385c5d7e3e795fae2aea85",
+          "tree": "6902fdeba9aacad3fb9de0327ebd94c5bbcb7970",
+          "parents": [
+            "5a4ec427da58ba344f3cefb21b50195a0a3f12fc"
+          ],
+          "authored": "2026-07-08T02:13:39Z",
+          "committed": "2026-07-08T02:13:39Z",
+          "title": "Add URAI asset factory npm scripts"
+        },
+        {
+          "sha": "84eefef72e3ceba7f5fed032272310ea90fc6134",
+          "tree": "7387da80b367fcc11c285201ae25d32fb950d783",
+          "parents": [
+            "3a5bb6a2a43a533eed385c5d7e3e795fae2aea85"
+          ],
+          "authored": "2026-07-08T02:13:58Z",
+          "committed": "2026-07-08T02:13:58Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "c035bcb6c1d1ef6fe3c4aa8b22bb5dcebc8ebc6c",
+          "tree": "19e1af777ec4f0e5030b8a0fda8af9fd3794d9c1",
+          "parents": [
+            "84eefef72e3ceba7f5fed032272310ea90fc6134"
+          ],
+          "authored": "2026-07-08T02:14:02Z",
+          "committed": "2026-07-08T02:14:02Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "c38c54be536694b54835e8b2d879df484cc8058f",
+          "tree": "1a43e0120a460fa211b17a31ee7ebc70df550490",
+          "parents": [
+            "c035bcb6c1d1ef6fe3c4aa8b22bb5dcebc8ebc6c"
+          ],
+          "authored": "2026-07-08T02:14:06Z",
+          "committed": "2026-07-08T02:14:06Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "d4b623f8a2559eeb4783f23ad37d1cd1bb7dd14c",
+          "tree": "63501f899fbb987d089c665e6c2f6990e0887238",
+          "parents": [
+            "c38c54be536694b54835e8b2d879df484cc8058f"
+          ],
+          "authored": "2026-07-08T02:14:10Z",
+          "committed": "2026-07-08T02:14:10Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "cb40227494efa1ca64e355c1f75326e4cc8cb99b",
+          "tree": "60b5dc8d88f6c06fa0482506320d60f800326abe",
+          "parents": [
+            "d4b623f8a2559eeb4783f23ad37d1cd1bb7dd14c"
+          ],
+          "authored": "2026-07-08T02:14:13Z",
+          "committed": "2026-07-08T02:14:13Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "5b8dab42b1015d494852dac46d158bd38e668e5f",
+          "tree": "00b87a20b8d005dc9baf2cf91c64654ffaf32831",
+          "parents": [
+            "cb40227494efa1ca64e355c1f75326e4cc8cb99b"
+          ],
+          "authored": "2026-07-08T02:14:18Z",
+          "committed": "2026-07-08T02:14:18Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "b893e9c247580db6fc90b08daf4b30218af9939d",
+          "tree": "f8549b9f9a0db9a8a989b62bc743006f77d21194",
+          "parents": [
+            "5b8dab42b1015d494852dac46d158bd38e668e5f"
+          ],
+          "authored": "2026-07-08T02:14:22Z",
+          "committed": "2026-07-08T02:14:22Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "ad0af7ea9e87346b498b0f919fad486fa0f45398",
+          "tree": "2990ffd20b5fb1251d0712a54eda14b7a71c9287",
+          "parents": [
+            "b893e9c247580db6fc90b08daf4b30218af9939d"
+          ],
+          "authored": "2026-07-08T02:14:26Z",
+          "committed": "2026-07-08T02:14:26Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "9806550eae737030e23d5e7c83f4772a47099e90",
+          "tree": "950563c6483f2e337883609ee0387efa03fc1ba4",
+          "parents": [
+            "ad0af7ea9e87346b498b0f919fad486fa0f45398"
+          ],
+          "authored": "2026-07-08T02:14:29Z",
+          "committed": "2026-07-08T02:14:29Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "6e5dfa63af335afc60f95fbd8049f86d7d3fd48e",
+          "tree": "e11b8c1ed0c64c812b797bdc4a6372ba9bba55e0",
+          "parents": [
+            "9806550eae737030e23d5e7c83f4772a47099e90"
+          ],
+          "authored": "2026-07-08T02:14:33Z",
+          "committed": "2026-07-08T02:14:33Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "478337ecc85e80ff4d6f89fc469063a1d10e4c21",
+          "tree": "4df4d284e7401c2eba75466604dbfaee0409bf94",
+          "parents": [
+            "6e5dfa63af335afc60f95fbd8049f86d7d3fd48e"
+          ],
+          "authored": "2026-07-08T02:14:37Z",
+          "committed": "2026-07-08T02:14:37Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "4e90937ede8154e46049fa0bde881ca572785e88",
+          "tree": "95f8f387048988daf19a4351af5ed0a4dc7d3906",
+          "parents": [
+            "478337ecc85e80ff4d6f89fc469063a1d10e4c21"
+          ],
+          "authored": "2026-07-08T02:14:41Z",
+          "committed": "2026-07-08T02:14:41Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "d75e0b8e3ed45d203a8affdc5e071dfc46b52801",
+          "tree": "122dcc9c6ecf40861d4f385c1d2d25ada6f29fab",
+          "parents": [
+            "4e90937ede8154e46049fa0bde881ca572785e88"
+          ],
+          "authored": "2026-07-08T02:14:46Z",
+          "committed": "2026-07-08T02:14:46Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "89f9c0295c9797d67c02d390d1983cab4464e738",
+          "tree": "5a003efe608a778668ba005ecf22d08884d885ab",
+          "parents": [
+            "d75e0b8e3ed45d203a8affdc5e071dfc46b52801"
+          ],
+          "authored": "2026-07-08T02:14:50Z",
+          "committed": "2026-07-08T02:14:50Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "bc4961afc91ee35fc3fabd29b69f9f6165bd0062",
+          "tree": "6b4f463ccae6b7d5e072d4eafcc377d81cf77c04",
+          "parents": [
+            "89f9c0295c9797d67c02d390d1983cab4464e738"
+          ],
+          "authored": "2026-07-08T02:14:57Z",
+          "committed": "2026-07-08T02:14:57Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "2c9f2ea114525f0c3987a5143121cfe0defe6874",
+          "tree": "71caee615cd090cb69a9fe77a00624b57c76f21e",
+          "parents": [
+            "bc4961afc91ee35fc3fabd29b69f9f6165bd0062"
+          ],
+          "authored": "2026-07-08T02:15:00Z",
+          "committed": "2026-07-08T02:15:00Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "d8ca41b1e9b15bc8fbd5fb79ce9dd9985cd09644",
+          "tree": "a5ffd56bed9a5aeae28193407d70046ae62a57cb",
+          "parents": [
+            "2c9f2ea114525f0c3987a5143121cfe0defe6874"
+          ],
+          "authored": "2026-07-08T02:15:08Z",
+          "committed": "2026-07-08T02:15:08Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "ad2b9c3d305df926decae16662ee35db89e2285d",
+          "tree": "e5cbc97bfacaabc7fd3e4f7c6bc869ab7cc0c200",
+          "parents": [
+            "d8ca41b1e9b15bc8fbd5fb79ce9dd9985cd09644"
+          ],
+          "authored": "2026-07-08T02:15:30Z",
+          "committed": "2026-07-08T02:15:30Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "8b5b718a50d2e2744e33cbf79bf7ba8377c3e2a0",
+          "tree": "31b64ed802365177df7df176e81adf6022db7872",
+          "parents": [
+            "ad2b9c3d305df926decae16662ee35db89e2285d"
+          ],
+          "authored": "2026-07-08T02:15:34Z",
+          "committed": "2026-07-08T02:15:34Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "782292b8653d2ab3e091c004b40243744e3ba6fa",
+          "tree": "532ef91512f5ff56f0e7579d2463c64ab492c867",
+          "parents": [
+            "8b5b718a50d2e2744e33cbf79bf7ba8377c3e2a0"
+          ],
+          "authored": "2026-07-08T02:15:38Z",
+          "committed": "2026-07-08T02:15:38Z",
+          "title": "Create URAI asset folder structure"
+        },
+        {
+          "sha": "b8a9dd55ebb97a3b4b5881eb6fb4fcaeedf17f9f",
+          "tree": "7da152e35b6400d17bea68391db2b6b472160f39",
+          "parents": [
+            "782292b8653d2ab3e091c004b40243744e3ba6fa"
+          ],
+          "authored": "2026-07-08T02:17:27Z",
+          "committed": "2026-07-08T02:17:27Z",
+          "title": "Add route asset factory panel"
+        },
+        {
+          "sha": "896f7e90ee52e5bf1f170a6926b3fe0fd8c3f857",
+          "tree": "021884ff856a99dca86c505e5a0b7bce8c2e25b0",
+          "parents": [
+            "b8a9dd55ebb97a3b4b5881eb6fb4fcaeedf17f9f"
+          ],
+          "authored": "2026-07-08T02:18:41Z",
+          "committed": "2026-07-08T02:18:41Z",
+          "title": "Surface asset factory slots on Life Map"
+        },
+        {
+          "sha": "25f55c30c876281eaf586fad81f043dd020c8607",
+          "tree": "b5e56e8f51559f937491cd0c0083929de9bb532a",
+          "parents": [
+            "896f7e90ee52e5bf1f170a6926b3fe0fd8c3f857"
+          ],
+          "authored": "2026-07-08T02:18:53Z",
+          "committed": "2026-07-08T02:18:53Z",
+          "title": "Surface asset factory slots on Focus"
+        },
+        {
+          "sha": "39940c0dde46066dffd12d2185db0064211d03aa",
+          "tree": "57991ffd59848e578d85b80b867a305018cedf59",
+          "parents": [
+            "25f55c30c876281eaf586fad81f043dd020c8607"
+          ],
+          "authored": "2026-07-08T02:19:11Z",
+          "committed": "2026-07-08T02:19:11Z",
+          "title": "Surface asset factory slots on Replay"
+        },
+        {
+          "sha": "c97b68eee9d0b34fd27f2776f6681d0dcfb50425",
+          "tree": "36b590f5ab8b63d366eeaad26ff37a722b42a3f0",
+          "parents": [
+            "39940c0dde46066dffd12d2185db0064211d03aa"
+          ],
+          "authored": "2026-07-08T02:21:20Z",
+          "committed": "2026-07-08T02:21:20Z",
+          "title": "Surface asset factory slots on Ground"
+        },
+        {
+          "sha": "1c43577774432fee9916832052caa248592607f1",
+          "tree": "496836cdce906a60c3a600fa729c6d39bfcfaeff",
+          "parents": [
+            "c97b68eee9d0b34fd27f2776f6681d0dcfb50425"
+          ],
+          "authored": "2026-07-08T02:21:59Z",
+          "committed": "2026-07-08T02:21:59Z",
+          "title": "Surface asset factory slots on Home"
+        },
+        {
+          "sha": "c8a36db31d3644660f9e742e94c411b9afda7119",
+          "tree": "cfa6f3805a150565fdf2d4ef28985cd3f4a26ee4",
+          "parents": [
+            "1c43577774432fee9916832052caa248592607f1"
+          ],
+          "authored": "2026-07-08T02:22:44Z",
+          "committed": "2026-07-08T02:22:44Z",
+          "title": "Keep Home asset panel server-safe"
+        },
+        {
+          "sha": "93bb4061b55e8f72415ccdeacc667ffce9003f6f",
+          "tree": "f4df11075a9f21f1e797e7f8fd5544bbdd637389",
+          "parents": [
+            "c8a36db31d3644660f9e742e94c411b9afda7119"
+          ],
+          "authored": "2026-07-09T04:47:38Z",
+          "committed": "2026-07-09T04:47:38Z",
+          "title": "Keep asset panel copy claim-safe"
+        },
+        {
+          "sha": "393a9856c0a86ec55e167482225b9a88a85756a6",
+          "tree": "b6ddd79868605cc286409416efba424ffa91a864",
+          "parents": [
+            "93bb4061b55e8f72415ccdeacc667ffce9003f6f"
+          ],
+          "authored": "2026-07-09T04:53:00Z",
+          "committed": "2026-07-09T04:53:00Z",
+          "title": "Keep spatial PR summary claim-safe"
+        },
+        {
+          "sha": "8a034361b2f31daf2a064b95ba55265eb1c36d51",
+          "tree": "b907dc8726b3c52c04d4cadffd1d124431714bda",
+          "parents": [
+            "393a9856c0a86ec55e167482225b9a88a85756a6"
+          ],
+          "authored": "2026-07-09T04:55:55Z",
+          "committed": "2026-07-09T04:55:55Z",
+          "title": "Keep spatial completion plan claim-safe"
+        },
+        {
+          "sha": "9fcdcb7c076f86a3f4710003597549e2df8491cc",
+          "tree": "dc0765b7930b9d8eaf5d26ad908b48d791a45538",
+          "parents": [
+            "8a034361b2f31daf2a064b95ba55265eb1c36d51"
+          ],
+          "authored": "2026-07-09T04:56:12Z",
+          "committed": "2026-07-09T04:56:12Z",
+          "title": "Keep spatial launch audit claim-safe"
+        },
+        {
+          "sha": "250fb51fb56b0382e3b0375b964b65e2aec90ebc",
+          "tree": "169e7102ecc2375b7234e1468b16ab5b254a55a0",
+          "parents": [
+            "9fcdcb7c076f86a3f4710003597549e2df8491cc"
+          ],
+          "authored": "2026-07-09T05:00:37Z",
+          "committed": "2026-07-09T05:00:37Z",
+          "title": "Narrow public copy XR gate to immersive terms"
+        },
+        {
+          "sha": "b328b5bc0008c9dca4bae25dae4297cc72e6ca0e",
+          "tree": "a32088c321e317f525641b2e81c2b6f256737549",
+          "parents": [
+            "250fb51fb56b0382e3b0375b964b65e2aec90ebc"
+          ],
+          "authored": "2026-07-09T05:02:41Z",
+          "committed": "2026-07-09T05:02:41Z",
+          "title": "Restore archived Home XR proof markers"
+        },
+        {
+          "sha": "c23ef7089c3a2af220b75b9570b0ea7987f66b71",
+          "tree": "57075eda3b032b09287f07514ff25939820e19af",
+          "parents": [
+            "b328b5bc0008c9dca4bae25dae4297cc72e6ca0e"
+          ],
+          "authored": "2026-07-09T05:06:16Z",
+          "committed": "2026-07-09T05:06:16Z",
+          "title": "Restore archived WebXR smoke markers"
+        },
+        {
+          "sha": "d4013577117404487d3a779f706e16bfd4c22ae4",
+          "tree": "92904309c33cfb975cdf798700af8307f360051f",
+          "parents": [
+            "c23ef7089c3a2af220b75b9570b0ea7987f66b71"
+          ],
+          "authored": "2026-07-09T05:11:08Z",
+          "committed": "2026-07-09T05:11:08Z",
+          "title": "Add root XR gate boundary copy"
+        },
+        {
+          "sha": "e40fdd858818897ac0191f9fa953575ab84b0bcb",
+          "tree": "da3296219c7e377714d5d8e4858519b9f6b25de6",
+          "parents": [
+            "d4013577117404487d3a779f706e16bfd4c22ae4"
+          ],
+          "authored": "2026-07-09T05:26:45Z",
+          "committed": "2026-07-09T05:26:45Z",
+          "title": "Keep Focus asset panel copy claim-safe"
+        },
+        {
+          "sha": "3a5c75aac88cf7531caf9e45db84165fd2c5040b",
+          "tree": "911506aeea7ecede50cf3996a874d80d7aca8616",
+          "parents": [
+            "e40fdd858818897ac0191f9fa953575ab84b0bcb"
+          ],
+          "authored": "2026-07-09T05:27:45Z",
+          "committed": "2026-07-09T05:27:45Z",
+          "title": "Keep Home asset panel copy claim-safe"
+        },
+        {
+          "sha": "605c4a2f0a55f2d3bdbd65b2988267c9bf069ab1",
+          "tree": "3c89b8892ab538bfbfeaff0dbd6a67af23b23081",
+          "parents": [
+            "3a5c75aac88cf7531caf9e45db84165fd2c5040b"
+          ],
+          "authored": "2026-07-09T05:27:56Z",
+          "committed": "2026-07-09T05:27:56Z",
+          "title": "Keep Life Map asset panel copy claim-safe"
+        },
+        {
+          "sha": "51f53cec82040982de155e51fa687f7907eeb7b8",
+          "tree": "0bf580b5368bf174c220c0336141c8f50b6a95b2",
+          "parents": [
+            "605c4a2f0a55f2d3bdbd65b2988267c9bf069ab1"
+          ],
+          "authored": "2026-07-09T05:29:35Z",
+          "committed": "2026-07-09T05:29:35Z",
+          "title": "Keep Ground asset panel copy claim-safe"
+        },
+        {
+          "sha": "6355bc179744f19c92d2c084f29921ac300c9073",
+          "tree": "86f356879b9e0028e03ce2823cefbee52c779f10",
+          "parents": [
+            "51f53cec82040982de155e51fa687f7907eeb7b8"
+          ],
+          "authored": "2026-07-09T05:30:44Z",
+          "committed": "2026-07-09T05:30:44Z",
+          "title": "Restore Ground page and keep asset panel copy claim-safe"
+        },
+        {
+          "sha": "bc8e49c81dc91e6d9d5ac292e93e785d4a0f0cd7",
+          "tree": "5cf2b2b18ab6cbc3117c2a70d6c11cb73a0f2afc",
+          "parents": [
+            "6355bc179744f19c92d2c084f29921ac300c9073"
+          ],
+          "authored": "2026-07-09T05:33:04Z",
+          "committed": "2026-07-09T05:33:04Z",
+          "title": "Keep Replay asset panel copy claim-safe"
+        },
+        {
+          "sha": "43dad175f6de85a981c6d652cf6e81204e386350",
+          "tree": "fd2591dae4e2c880f14e7763237954916ab561b7",
+          "parents": [
+            "bc8e49c81dc91e6d9d5ac292e93e785d4a0f0cd7"
+          ],
+          "authored": "2026-07-09T05:41:14Z",
+          "committed": "2026-07-09T05:41:14Z",
+          "title": "Tighten README dashboard V1 boundary"
+        },
+        {
+          "sha": "98526c7bc2ec85906af042cc03b5929612bbd9f1",
+          "tree": "c725de0cbfcb8daacf150996efb8cbd525c96503",
+          "parents": [
+            "43dad175f6de85a981c6d652cf6e81204e386350"
+          ],
+          "authored": "2026-07-09T05:54:01Z",
+          "committed": "2026-07-09T05:54:01Z",
+          "title": "Make dashboard gate copy explicit for V1 public-copy check"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-build-spine-20260505",
+      "head": "84e8619e9f0250123640e48c37cfb07b7d7ac109",
+      "ahead_by": 22,
+      "behind_by": 2204,
+      "merge_base": "6fccbba5c302502836f9aed564d16901253420ff",
+      "commits": [
+        {
+          "sha": "f43b7b6777833095c4a3f37cf330107cb5f05f72",
+          "tree": "80963e8254cf0025e0df5eaac3a24d016dfb0c6f",
+          "parents": [
+            "6fccbba5c302502836f9aed564d16901253420ff"
+          ],
+          "authored": "2026-05-05T08:05:33Z",
+          "committed": "2026-05-05T08:05:33Z",
+          "title": "build spine: wire Firebase hosting functions and Firestore"
+        },
+        {
+          "sha": "cf46350922538c7b970a293076843fa6cc252e12",
+          "tree": "d586df28b333c0c449c53fffd58ce44ed0b0e0e4",
+          "parents": [
+            "f43b7b6777833095c4a3f37cf330107cb5f05f72"
+          ],
+          "authored": "2026-05-05T08:05:58Z",
+          "committed": "2026-05-05T08:05:58Z",
+          "title": "add URAI core pipeline functions"
+        },
+        {
+          "sha": "4960b5f6fe9a09b8afda2552754531f0dafed7ce",
+          "tree": "6567e18405d23b5a1bf3f63ed7d034762b993a0f",
+          "parents": [
+            "cf46350922538c7b970a293076843fa6cc252e12"
+          ],
+          "authored": "2026-05-05T08:06:24Z",
+          "committed": "2026-05-05T08:06:24Z",
+          "title": "export core pipeline functions"
+        },
+        {
+          "sha": "673e500b78fff6c00671ac2d832739f18de62854",
+          "tree": "198027d3f160bbcd51a02800c084ae12fe40bf0c",
+          "parents": [
+            "4960b5f6fe9a09b8afda2552754531f0dafed7ce"
+          ],
+          "authored": "2026-05-05T08:12:54Z",
+          "committed": "2026-05-05T08:12:54Z",
+          "title": "add client helpers for URAI pipeline"
+        },
+        {
+          "sha": "d9032303eadb7e84c69c2143c32eb7b7f67733e6",
+          "tree": "d6f4aa1437df016a14a5b6d725e659c479c93acd",
+          "parents": [
+            "673e500b78fff6c00671ac2d832739f18de62854"
+          ],
+          "authored": "2026-05-05T08:14:27Z",
+          "committed": "2026-05-05T08:14:27Z",
+          "title": "add Cognitive Mirror UI hook"
+        },
+        {
+          "sha": "cf43b19968e72e826c88672b953fc6ab43a676df",
+          "tree": "ac56faa494843240a6b4dee6dc7091bd6f55942b",
+          "parents": [
+            "d9032303eadb7e84c69c2143c32eb7b7f67733e6"
+          ],
+          "authored": "2026-05-05T08:17:23Z",
+          "committed": "2026-05-05T08:17:23Z",
+          "title": "make Cognitive Mirror feel magical"
+        },
+        {
+          "sha": "cbcd286d1a3f990ff0231312526a4cea39ba7743",
+          "tree": "dc60f716887a31878633867d516e09ca9c5c5da0",
+          "parents": [
+            "cf43b19968e72e826c88672b953fc6ab43a676df"
+          ],
+          "authored": "2026-05-05T08:19:38Z",
+          "committed": "2026-05-05T08:19:38Z",
+          "title": "add browser narrator voice helper"
+        },
+        {
+          "sha": "f8ae55877c0aea2f4797c605c93b70522b787e84",
+          "tree": "4f2fcc354b78776f6ab78bcf5edaa13d1ed6e6c7",
+          "parents": [
+            "cbcd286d1a3f990ff0231312526a4cea39ba7743"
+          ],
+          "authored": "2026-05-05T08:20:33Z",
+          "committed": "2026-05-05T08:20:33Z",
+          "title": "add narrator voice to cognitive mirror"
+        },
+        {
+          "sha": "a1ce00cd69840be9f814d1669e59947e8e95ece8",
+          "tree": "34ea1368fe55ddf657fb9ba1c9a4618af8b1df47",
+          "parents": [
+            "f8ae55877c0aea2f4797c605c93b70522b787e84"
+          ],
+          "authored": "2026-05-05T08:26:43Z",
+          "committed": "2026-05-05T08:26:43Z",
+          "title": "add personal mirror continuity function"
+        },
+        {
+          "sha": "bee7f7ff05e970936d1ffb5908ecbc60ff55fb38",
+          "tree": "83ad56975170640d36024672318930a65cb1d4d4",
+          "parents": [
+            "a1ce00cd69840be9f814d1669e59947e8e95ece8"
+          ],
+          "authored": "2026-05-05T08:29:31Z",
+          "committed": "2026-05-05T08:29:31Z",
+          "title": "export personal mirror function"
+        },
+        {
+          "sha": "7606d3995e9698b59b6fbd7b3b8b4a0ac32031b5",
+          "tree": "6a54c2b61d0aa572a9a4066be2db208f7729d2b4",
+          "parents": [
+            "bee7f7ff05e970936d1ffb5908ecbc60ff55fb38"
+          ],
+          "authored": "2026-05-05T08:32:07Z",
+          "committed": "2026-05-05T08:32:07Z",
+          "title": "add predictive mirror forecast function"
+        },
+        {
+          "sha": "0ce7b282160e46877286e5dc8aed7f71938b20ba",
+          "tree": "8414cddab0edd3f42f3c045579f64c906019ebc1",
+          "parents": [
+            "7606d3995e9698b59b6fbd7b3b8b4a0ac32031b5"
+          ],
+          "authored": "2026-05-05T08:36:09Z",
+          "committed": "2026-05-05T08:36:09Z",
+          "title": "export predictive mirror"
+        },
+        {
+          "sha": "175f037ebad14390b500456a5e265e9f3229ba11",
+          "tree": "4d714e4d1b68f7bfe2533ea24a6bdec90474efb8",
+          "parents": [
+            "0ce7b282160e46877286e5dc8aed7f71938b20ba"
+          ],
+          "authored": "2026-05-05T08:40:06Z",
+          "committed": "2026-05-05T08:40:06Z",
+          "title": "make predictive mirror sequence aware"
+        },
+        {
+          "sha": "72f2b038d17b71da05e07cf6fce71f8e7e2cc6c6",
+          "tree": "74269164fe2b6f40899fdbe3f1ee4669aa964bd8",
+          "parents": [
+            "175f037ebad14390b500456a5e265e9f3229ba11"
+          ],
+          "authored": "2026-05-05T08:43:35Z",
+          "committed": "2026-05-05T08:43:35Z",
+          "title": "add challenge mirror callout function"
+        },
+        {
+          "sha": "2ffea6faf25f7b72be503419e1cf92d0e0ff5da9",
+          "tree": "35b16304178d59b08de14831dffadbf83c827e7b",
+          "parents": [
+            "72f2b038d17b71da05e07cf6fce71f8e7e2cc6c6"
+          ],
+          "authored": "2026-05-05T08:44:47Z",
+          "committed": "2026-05-05T08:44:47Z",
+          "title": "export challenge mirror"
+        },
+        {
+          "sha": "d8ba7649e6c72754d1aa94c52191f19ae6eba2e3",
+          "tree": "05570b780ee4a9d6ddfe0aa1f85655b357810994",
+          "parents": [
+            "2ffea6faf25f7b72be503419e1cf92d0e0ff5da9"
+          ],
+          "authored": "2026-05-05T08:51:33Z",
+          "committed": "2026-05-05T08:51:33Z",
+          "title": "add coaching mirror action function"
+        },
+        {
+          "sha": "579e0ff8194937db86281b29c45b568a5fa396c0",
+          "tree": "d7a710f99243cfe655554393c107c48175b998dd",
+          "parents": [
+            "d8ba7649e6c72754d1aa94c52191f19ae6eba2e3"
+          ],
+          "authored": "2026-05-05T08:52:27Z",
+          "committed": "2026-05-05T08:52:27Z",
+          "title": "export coaching mirror"
+        },
+        {
+          "sha": "3270dbee50c18446dd3bdf432186e39f686ad4c5",
+          "tree": "d04719eee27ed337e01de0c15dd65caf732cc1e7",
+          "parents": [
+            "579e0ff8194937db86281b29c45b568a5fa396c0"
+          ],
+          "authored": "2026-05-05T08:53:03Z",
+          "committed": "2026-05-05T08:53:03Z",
+          "title": "add full pipeline helpers"
+        },
+        {
+          "sha": "5c093930cf8e8d58af13b2fcd253198dfd41d13f",
+          "tree": "eaaf4df377fb9412519eee6195a918da5ba95bde",
+          "parents": [
+            "3270dbee50c18446dd3bdf432186e39f686ad4c5"
+          ],
+          "authored": "2026-05-05T08:55:14Z",
+          "committed": "2026-05-05T08:55:14Z",
+          "title": "add adaptive mirror feedback functions"
+        },
+        {
+          "sha": "92187d7063403047f70baaeeb84db91d76d3f698",
+          "tree": "3c00621c27637ec02fe52f19fb6fa3ad183ad053",
+          "parents": [
+            "5c093930cf8e8d58af13b2fcd253198dfd41d13f"
+          ],
+          "authored": "2026-05-05T08:59:03Z",
+          "committed": "2026-05-05T08:59:03Z",
+          "title": "export adaptive mirror"
+        },
+        {
+          "sha": "704ed2edea45d7611f3f5e7b80e98c3cdb401d48",
+          "tree": "95199f0a2026e3db8b9381230252a0a3cfbf5488",
+          "parents": [
+            "92187d7063403047f70baaeeb84db91d76d3f698"
+          ],
+          "authored": "2026-05-05T09:02:37Z",
+          "committed": "2026-05-05T09:02:37Z",
+          "title": "add full companion mirror function"
+        },
+        {
+          "sha": "84e8619e9f0250123640e48c37cfb07b7d7ac109",
+          "tree": "d770c80b4f3e5604c9914c81553534141f93cf6f",
+          "parents": [
+            "704ed2edea45d7611f3f5e7b80e98c3cdb401d48"
+          ],
+          "authored": "2026-05-05T09:05:34Z",
+          "committed": "2026-05-05T09:05:34Z",
+          "title": "export companion mirror"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-done-done-production-spine",
+      "head": "1667dfeb2c9a3d7edd4ef3e6eb9eb0230a02249a",
+      "ahead_by": 4,
+      "behind_by": 229,
+      "merge_base": "6a5ef62d8264ab23f990518b58c9ee0306a2dc26",
+      "commits": [
+        {
+          "sha": "d1d5b32fbe1df7808fc4f93289ef4f87d2757c6b",
+          "tree": "4ec879d0837a1d0bbf1649e0e94ecd584220bc4d",
+          "parents": [
+            "6a5ef62d8264ab23f990518b58c9ee0306a2dc26"
+          ],
+          "authored": "2026-06-30T04:20:00Z",
+          "committed": "2026-06-30T04:20:00Z",
+          "title": "Add system-of-systems production readiness gate"
+        },
+        {
+          "sha": "9106aaa2895d264cdc9d087c78eebba8865d949b",
+          "tree": "ced0715da548caea005d894f83201e63f207b27d",
+          "parents": [
+            "d1d5b32fbe1df7808fc4f93289ef4f87d2757c6b"
+          ],
+          "authored": "2026-06-30T04:20:51Z",
+          "committed": "2026-06-30T04:20:51Z",
+          "title": "Add URAI ecosystem integration spine"
+        },
+        {
+          "sha": "aca9bbe644a541ea0a72a9cbf8e1c3b0f5d073d2",
+          "tree": "9b6cf36ff1931105c90d2b3dafef30bae14c305f",
+          "parents": [
+            "9106aaa2895d264cdc9d087c78eebba8865d949b"
+          ],
+          "authored": "2026-06-30T04:22:06Z",
+          "committed": "2026-06-30T04:22:06Z",
+          "title": "Wire system-of-systems readiness script"
+        },
+        {
+          "sha": "1667dfeb2c9a3d7edd4ef3e6eb9eb0230a02249a",
+          "tree": "645f81214c8700135b2ab28b78d393733dc56c90",
+          "parents": [
+            "aca9bbe644a541ea0a72a9cbf8e1c3b0f5d073d2"
+          ],
+          "authored": "2026-06-30T04:22:34Z",
+          "committed": "2026-06-30T04:22:34Z",
+          "title": "Add URAI 100 percent completion plan"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-launch-validation-ping",
+      "head": "8a733d2e40f94315c516eefd10871c96e9b34a70",
+      "ahead_by": 2,
+      "behind_by": 79,
+      "merge_base": "658b36da6b239333a918396251aad6386894e78f",
+      "commits": [
+        {
+          "sha": "95a833445f09fa569f9e8e8216231a9163128dec",
+          "tree": "0dc0a36ea9a8a79e380d94b7adad3cb0c28344a7",
+          "parents": [
+            "658b36da6b239333a918396251aad6386894e78f"
+          ],
+          "authored": "2026-07-20T02:33:13Z",
+          "committed": "2026-07-20T02:33:13Z",
+          "title": "Trigger URAI launch validation workflow"
+        },
+        {
+          "sha": "8a733d2e40f94315c516eefd10871c96e9b34a70",
+          "tree": "1fdde05bd085b5394d2ccda3e2ec81e3f41491c8",
+          "parents": [
+            "95a833445f09fa569f9e8e8216231a9163128dec"
+          ],
+          "authored": "2026-07-21T19:56:48Z",
+          "committed": "2026-07-21T19:56:48Z",
+          "title": "Align legacy production authority wording with CI gate"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-main-audit-fixes",
+      "head": "e8748c3f10eadff1027550d9da0b0090d9120c70",
+      "ahead_by": 22,
+      "behind_by": 587,
+      "merge_base": "1b68b49ba55fff58021408a9b3623a921f735280",
+      "commits": [
+        {
+          "sha": "e8edc92f46a5b9120ee6df728d99d70425e069ce",
+          "tree": "c408143bed52cf7f1f1b5aa429d7e88befa9899b",
+          "parents": [
+            "1b68b49ba55fff58021408a9b3623a921f735280"
+          ],
+          "authored": "2026-06-07T07:46:29Z",
+          "committed": "2026-06-07T07:46:29Z",
+          "title": "Align intelligence state types with audit contracts"
+        },
+        {
+          "sha": "62b31508090141951fa63b382bee323dbdd98092",
+          "tree": "be46505fc943cf19e261a298a79f572782d50330",
+          "parents": [
+            "e8edc92f46a5b9120ee6df728d99d70425e069ce"
+          ],
+          "authored": "2026-06-07T07:47:40Z",
+          "committed": "2026-06-07T07:47:40Z",
+          "title": "Tighten symbolic intelligence PII redaction contracts"
+        },
+        {
+          "sha": "327006fdcfa084649f4213aed2a373edb621afee",
+          "tree": "4f38bf40f4bfd2e62b7252307300cac680b871b5",
+          "parents": [
+            "62b31508090141951fa63b382bee323dbdd98092"
+          ],
+          "authored": "2026-06-07T07:48:22Z",
+          "committed": "2026-06-07T07:48:22Z",
+          "title": "Align mood rhythm scoring with safety audit labels"
+        },
+        {
+          "sha": "a6940ab40b49402f45d533d4d4af10720d170188",
+          "tree": "2539f5852ca3842bbf28f853178201cc559bb9b1",
+          "parents": [
+            "327006fdcfa084649f4213aed2a373edb621afee"
+          ],
+          "authored": "2026-06-07T07:57:30Z",
+          "committed": "2026-06-07T07:57:30Z",
+          "title": "Make symbolic safety PII blocking deterministic"
+        },
+        {
+          "sha": "dbd7c82fee504ae06268081eee0c4c48cb15219e",
+          "tree": "60bb305e7fd0cf457189ef7540b7def83eae5055",
+          "parents": [
+            "a6940ab40b49402f45d533d4d4af10720d170188"
+          ],
+          "authored": "2026-06-07T08:00:08Z",
+          "committed": "2026-06-07T08:00:08Z",
+          "title": "Align duplicate intelligence safety test imports and redaction expectations"
+        },
+        {
+          "sha": "b90ff9119d37fb6127e2d3d6d00d2009f2f204fe",
+          "tree": "356b4638fce471d44d366e9bc49dcf72c5bd15c4",
+          "parents": [
+            "dbd7c82fee504ae06268081eee0c4c48cb15219e"
+          ],
+          "authored": "2026-06-07T08:08:46Z",
+          "committed": "2026-06-07T08:08:46Z",
+          "title": "Recognize signed decimal GPS coordinates in intelligence safety"
+        },
+        {
+          "sha": "d95ef543068a86c707913edc3d2b092f51f3a020",
+          "tree": "2742076b7f2bd5f6928cefb59475d67f9ec077a0",
+          "parents": [
+            "b90ff9119d37fb6127e2d3d6d00d2009f2f204fe"
+          ],
+          "authored": "2026-06-07T08:10:35Z",
+          "committed": "2026-06-07T08:10:35Z",
+          "title": "Fix duplicate symbolic inference test imports"
+        },
+        {
+          "sha": "09f38f52bea0a6fc30dd417a57fae84bed175ea7",
+          "tree": "78f700e454720b6b1147bcf808710d2ce68e650e",
+          "parents": [
+            "d95ef543068a86c707913edc3d2b092f51f3a020"
+          ],
+          "authored": "2026-06-07T08:11:51Z",
+          "committed": "2026-06-07T08:11:51Z",
+          "title": "Fix duplicate mood rhythm test imports"
+        },
+        {
+          "sha": "a343523f82fd4b898de1c9a5ee5503a46feff96b",
+          "tree": "1a81c1d53fb8f2fa14b4eaa5dadeb6e8d9d861a9",
+          "parents": [
+            "09f38f52bea0a6fc30dd417a57fae84bed175ea7"
+          ],
+          "authored": "2026-06-07T08:12:34Z",
+          "committed": "2026-06-07T08:12:34Z",
+          "title": "Fix duplicate intelligence destination test imports"
+        },
+        {
+          "sha": "88364bab5e1200c246486ea5df6872e244528111",
+          "tree": "67a37676209c77f6d23b7e53ee9047c1687a9d96",
+          "parents": [
+            "a343523f82fd4b898de1c9a5ee5503a46feff96b"
+          ],
+          "authored": "2026-06-07T08:17:29Z",
+          "committed": "2026-06-07T08:17:29Z",
+          "title": "Restore cloud sync provider around settings provider"
+        },
+        {
+          "sha": "363bf95b243e805ddcd0d33523fa72bf3c7eb78a",
+          "tree": "4c4e4733b066037bad2d474912cead8096246f42",
+          "parents": [
+            "88364bab5e1200c246486ea5df6872e244528111"
+          ],
+          "authored": "2026-06-07T08:19:13Z",
+          "committed": "2026-06-07T08:19:13Z",
+          "title": "Align duplicate symbolic inference test with current heuristics"
+        },
+        {
+          "sha": "449755b7f13c14cd154aee79d88da7cfe8c9f1eb",
+          "tree": "50b408d3d97eb1926613865b5e02d48e213856b2",
+          "parents": [
+            "363bf95b243e805ddcd0d33523fa72bf3c7eb78a"
+          ],
+          "authored": "2026-06-07T08:23:28Z",
+          "committed": "2026-06-07T08:23:28Z",
+          "title": "Restore safe audio and voice providers for Genesis smoke surfaces"
+        },
+        {
+          "sha": "8a2cc5bbc644ba45bce2eedc971dff3b1de1d24b",
+          "tree": "527e833b0c242e01c384276eb22e3fa5c5f7fb9b",
+          "parents": [
+            "449755b7f13c14cd154aee79d88da7cfe8c9f1eb"
+          ],
+          "authored": "2026-06-07T08:25:09Z",
+          "committed": "2026-06-07T08:25:09Z",
+          "title": "Align ritual expectation with current symbolic inference heuristics"
+        },
+        {
+          "sha": "9061e2f196887401e8640e0aebab74466f140e53",
+          "tree": "3c5325cd1c12e19438fbeb4c3921f85ab9a0cd09",
+          "parents": [
+            "8a2cc5bbc644ba45bce2eedc971dff3b1de1d24b"
+          ],
+          "authored": "2026-06-07T08:29:20Z",
+          "committed": "2026-06-07T08:29:20Z",
+          "title": "Restore required Genesis runtime providers"
+        },
+        {
+          "sha": "82db3fa03a28bc3ce56cda52f7a6b4a159b94bd5",
+          "tree": "a332649e78fbf5abaee758bac21742e4962f5405",
+          "parents": [
+            "9061e2f196887401e8640e0aebab74466f140e53"
+          ],
+          "authored": "2026-06-07T08:30:08Z",
+          "committed": "2026-06-07T08:30:08Z",
+          "title": "Mock Firebase auth modular functions in auth provider test"
+        },
+        {
+          "sha": "d4cc4176f00e51b80c43ed04d5e2bbb325da063c",
+          "tree": "947df198ff939baea64099810cba216143314a5a",
+          "parents": [
+            "82db3fa03a28bc3ce56cda52f7a6b4a159b94bd5"
+          ],
+          "authored": "2026-06-07T08:32:38Z",
+          "committed": "2026-06-07T08:32:38Z",
+          "title": "Restore context-aware companion quick prompt export"
+        },
+        {
+          "sha": "3647fd21ce7568c5c4104ef225cb220f73d83c3a",
+          "tree": "83340a75b8a62fd64c20f6ccd66c413ef76e22e8",
+          "parents": [
+            "d4cc4176f00e51b80c43ed04d5e2bbb325da063c"
+          ],
+          "authored": "2026-06-07T08:33:57Z",
+          "committed": "2026-06-07T08:33:57Z",
+          "title": "Allow multiple valid ground candidates in symbolic inference test"
+        },
+        {
+          "sha": "8d3ab44167687820cd55b6b5d13a9f1ae99a0438",
+          "tree": "2d35bdb3d5a76b2d07a6370757bb2e067e67d2bb",
+          "parents": [
+            "3647fd21ce7568c5c4104ef225cb220f73d83c3a"
+          ],
+          "authored": "2026-06-07T08:36:26Z",
+          "committed": "2026-06-07T08:36:26Z",
+          "title": "Align ritual candidate assertion with current inference output"
+        },
+        {
+          "sha": "a91453d21b6676d90a96e61f73f81e3233cd317e",
+          "tree": "40044553f839833de66ea99ccf755d0af6f4dc8b",
+          "parents": [
+            "8d3ab44167687820cd55b6b5d13a9f1ae99a0438"
+          ],
+          "authored": "2026-06-07T08:39:35Z",
+          "committed": "2026-06-07T08:39:35Z",
+          "title": "Allow multiple valid legacy candidates in symbolic inference test"
+        },
+        {
+          "sha": "18d86cd7cedef26476c012530e3ab6717a313a49",
+          "tree": "1d7e459b4ca185969e613dd2736bb254bc1aa31c",
+          "parents": [
+            "a91453d21b6676d90a96e61f73f81e3233cd317e"
+          ],
+          "authored": "2026-06-07T08:45:58Z",
+          "committed": "2026-06-07T08:45:58Z",
+          "title": "Restore full companion type contracts for audit build"
+        },
+        {
+          "sha": "5c7c294da2625005de52d5487aaa6112715381db",
+          "tree": "5af24b7dedbb63695706c41187a5f576db5f05dd",
+          "parents": [
+            "18d86cd7cedef26476c012530e3ab6717a313a49"
+          ],
+          "authored": "2026-06-07T08:47:10Z",
+          "committed": "2026-06-07T08:47:10Z",
+          "title": "Add passport compatibility type exports"
+        },
+        {
+          "sha": "e8748c3f10eadff1027550d9da0b0090d9120c70",
+          "tree": "61fae19391cf5e656a1c0eb25d064898fd55e7f3",
+          "parents": [
+            "5c7c294da2625005de52d5487aaa6112715381db"
+          ],
+          "authored": "2026-06-07T08:48:13Z",
+          "committed": "2026-06-07T08:48:13Z",
+          "title": "Mark Genesis visual shell as client component"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}

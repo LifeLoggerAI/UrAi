@@ -1,0 +1,587 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 10,
+  "records": 4,
+  "complete_records": 4,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/urai-production-polish-pass",
+      "head": "37e68d75b7b0c7faa34441f420ed7c487b998cf0",
+      "ahead_by": 6,
+      "behind_by": 1710,
+      "merge_base": "544c69243eafdf37ba36b80f0407d322fd6bcc7b",
+      "commits": [
+        {
+          "sha": "001f69714e75f58c4f5d65366756bc79f57f7ac5",
+          "tree": "597ba6ebc4d52fe51679feafad411d9a58118600",
+          "parents": [
+            "544c69243eafdf37ba36b80f0407d322fd6bcc7b"
+          ],
+          "authored": "2026-05-17T17:22:53Z",
+          "committed": "2026-05-17T17:22:53Z",
+          "title": "Complete URAI production polish pass"
+        },
+        {
+          "sha": "f81968d3196b513d0e5fc5166db885ee7133a591",
+          "tree": "0fb9f0a8faf380420100264d2ad331c2f0f6ea17",
+          "parents": [
+            "001f69714e75f58c4f5d65366756bc79f57f7ac5"
+          ],
+          "authored": "2026-05-17T17:26:04Z",
+          "committed": "2026-05-17T17:26:04Z",
+          "title": "Complete URAI production polish pass"
+        },
+        {
+          "sha": "7cf40feef7ef6f4075e4a6b258f7b2c4102ae2ed",
+          "tree": "d3fe93cfbf8a94d0f2bfc642544ef6036d4aaeb6",
+          "parents": [
+            "f81968d3196b513d0e5fc5166db885ee7133a591"
+          ],
+          "authored": "2026-05-17T17:27:40Z",
+          "committed": "2026-05-17T17:27:40Z",
+          "title": "Complete URAI production polish pass"
+        },
+        {
+          "sha": "ea97114bf494eb8be4414fd15e556551d187ec58",
+          "tree": "85b4373af6529e0da56531f46e00c8dd845d36fe",
+          "parents": [
+            "7cf40feef7ef6f4075e4a6b258f7b2c4102ae2ed"
+          ],
+          "authored": "2026-05-17T17:28:04Z",
+          "committed": "2026-05-17T17:28:04Z",
+          "title": "Complete URAI production polish pass"
+        },
+        {
+          "sha": "fa20ac2842314bef7356555e673830eec16c6b46",
+          "tree": "82efc074f237f81089aa2279463a5b5c5f233570",
+          "parents": [
+            "ea97114bf494eb8be4414fd15e556551d187ec58"
+          ],
+          "authored": "2026-05-17T17:30:01Z",
+          "committed": "2026-05-17T17:30:01Z",
+          "title": "Complete URAI production polish pass"
+        },
+        {
+          "sha": "37e68d75b7b0c7faa34441f420ed7c487b998cf0",
+          "tree": "89494831e5f27f940888dcf115b0f93d1dfcaea4",
+          "parents": [
+            "fa20ac2842314bef7356555e673830eec16c6b46"
+          ],
+          "authored": "2026-05-17T17:31:16Z",
+          "committed": "2026-05-17T17:31:16Z",
+          "title": "Complete URAI production polish pass"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-spatial-canvas-shell",
+      "head": "cabc62938f05b551a333f0793fa3dc308237c63c",
+      "ahead_by": 1,
+      "behind_by": 1260,
+      "merge_base": "3aa6f014dc21f2cdcfa81ece9ff39ab36c067698",
+      "commits": [
+        {
+          "sha": "cabc62938f05b551a333f0793fa3dc308237c63c",
+          "tree": "52a73f681c3f43a17598c00be322b1a8afe03477",
+          "parents": [
+            "3aa6f014dc21f2cdcfa81ece9ff39ab36c067698"
+          ],
+          "authored": "2026-05-21T10:29:20Z",
+          "committed": "2026-05-21T10:29:20Z",
+          "title": "Add spatial universe canvas shell"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-spatial-sacred-tech-polish",
+      "head": "58f6ccaee55cb9246de5ecddd9dd985207fb05c1",
+      "ahead_by": 27,
+      "behind_by": 1257,
+      "merge_base": "6320abca8952a4b24d7504988c2ca4e7d8be791e",
+      "commits": [
+        {
+          "sha": "3259c281d99ce972734182c803a5e61b37e717aa",
+          "tree": "e791c34610ea6883836caade643e9af55e56760d",
+          "parents": [
+            "6320abca8952a4b24d7504988c2ca4e7d8be791e"
+          ],
+          "authored": "2026-05-21T12:39:23Z",
+          "committed": "2026-05-21T12:39:23Z",
+          "title": "Add sacred-tech spatial visual system CSS"
+        },
+        {
+          "sha": "969003a2d9761ad154900e59209317e895827803",
+          "tree": "acea8344b5ab33aec7e4bb8c1133b557f6c2cc7b",
+          "parents": [
+            "3259c281d99ce972734182c803a5e61b37e717aa"
+          ],
+          "authored": "2026-05-21T12:40:32Z",
+          "committed": "2026-05-21T12:40:32Z",
+          "title": "Import sacred tech stylesheet"
+        },
+        {
+          "sha": "7e44e5c594a460599a2f921c5c4d085bd68a42fa",
+          "tree": "3dfbd38c3508679d85e7c76d6987bd1cf2495a43",
+          "parents": [
+            "969003a2d9761ad154900e59209317e895827803"
+          ],
+          "authored": "2026-05-21T12:41:36Z",
+          "committed": "2026-05-21T12:41:36Z",
+          "title": "Polish forecast card with sacred tech system"
+        },
+        {
+          "sha": "b1187a6647eb4aa2b05bab3f6f18c557dcb0fc25",
+          "tree": "69d8a8a4bac03c64da8e4b1325df68e6e89672d6",
+          "parents": [
+            "7e44e5c594a460599a2f921c5c4d085bd68a42fa"
+          ],
+          "authored": "2026-05-21T12:43:40Z",
+          "committed": "2026-05-21T12:43:40Z",
+          "title": "Polish weekly reflection card with sacred tech system"
+        },
+        {
+          "sha": "c94e6160e48974dfd334f9771f6121760e3ae7e8",
+          "tree": "0195debd9950ae1886873e3f01178e799726d2da",
+          "parents": [
+            "b1187a6647eb4aa2b05bab3f6f18c557dcb0fc25"
+          ],
+          "authored": "2026-05-21T12:47:37Z",
+          "committed": "2026-05-21T12:47:37Z",
+          "title": "Remove React namespace style from forecast card"
+        },
+        {
+          "sha": "9a44acacca9e96c8086b8b6205e20f643733b939",
+          "tree": "b09daeb9c1b448ab109d3dd97bc2dab8ebc2deac",
+          "parents": [
+            "c94e6160e48974dfd334f9771f6121760e3ae7e8"
+          ],
+          "authored": "2026-05-21T12:49:20Z",
+          "committed": "2026-05-21T12:49:20Z",
+          "title": "Remove React namespace style from reflection card"
+        },
+        {
+          "sha": "715f6ec08cb9d5ff068ad19b3b257da5da428b50",
+          "tree": "c747c18432c1dad6b7e46e8e5a596e02b86c8cea",
+          "parents": [
+            "9a44acacca9e96c8086b8b6205e20f643733b939"
+          ],
+          "authored": "2026-05-21T13:02:58Z",
+          "committed": "2026-05-21T13:02:58Z",
+          "title": "Add small orb artifact utility"
+        },
+        {
+          "sha": "90675b2e616a3fc290a162cb1e94d36b9360986a",
+          "tree": "e4ab8b83f1dec1361e862d8d1e4bd60037afa3bc",
+          "parents": [
+            "715f6ec08cb9d5ff068ad19b3b257da5da428b50"
+          ],
+          "authored": "2026-05-21T13:17:12Z",
+          "committed": "2026-05-21T13:17:12Z",
+          "title": "Apply sacred tech styling to waitlist form"
+        },
+        {
+          "sha": "0b8057294e34e8c0a19532eb8ab1594c75fa51d1",
+          "tree": "ef3fd7a251006cc8f8a60008e654c466134b0439",
+          "parents": [
+            "90675b2e616a3fc290a162cb1e94d36b9360986a"
+          ],
+          "authored": "2026-05-21T13:17:42Z",
+          "committed": "2026-05-21T13:17:42Z",
+          "title": "Apply sacred tech system to public constellation route"
+        },
+        {
+          "sha": "a59f0729d72e58a5fe7f8cc3b316a8784180f725",
+          "tree": "2f688af0225f7ac890c1bd93443a49c69370889a",
+          "parents": [
+            "0b8057294e34e8c0a19532eb8ab1594c75fa51d1"
+          ],
+          "authored": "2026-05-21T13:18:52Z",
+          "committed": "2026-05-21T13:18:52Z",
+          "title": "Add repo audit and implementation report"
+        },
+        {
+          "sha": "718df17c861dc5f4536a571444dc3b5c8a26a988",
+          "tree": "ac8087223b3bba21949f58d31d5a5204821f5afe",
+          "parents": [
+            "a59f0729d72e58a5fe7f8cc3b316a8784180f725"
+          ],
+          "authored": "2026-05-21T13:24:02Z",
+          "committed": "2026-05-21T13:24:02Z",
+          "title": "Preserve canonical home route for smoke tests"
+        },
+        {
+          "sha": "d04b3f101a050262c084ebb0eb7794316759540e",
+          "tree": "18825616f0a4f8020b25940418edc3293e8bca93",
+          "parents": [
+            "718df17c861dc5f4536a571444dc3b5c8a26a988"
+          ],
+          "authored": "2026-05-21T13:25:57Z",
+          "committed": "2026-05-21T13:25:57Z",
+          "title": "Document home route audit addendum"
+        },
+        {
+          "sha": "365707a4345d91e7c2aaa801c8b15c3f986c9507",
+          "tree": "a93aa91c879958645c6c5421f931dd04c73575db",
+          "parents": [
+            "d04b3f101a050262c084ebb0eb7794316759540e"
+          ],
+          "authored": "2026-05-21T13:33:20Z",
+          "committed": "2026-05-21T13:33:20Z",
+          "title": "Support Firestore type syntax in rules emulator"
+        },
+        {
+          "sha": "86f9fbf74ca3f731790bf6a75775c2af81d8bf76",
+          "tree": "bd5600c856f59e887dd212a8bb9547daa202fa29",
+          "parents": [
+            "365707a4345d91e7c2aaa801c8b15c3f986c9507"
+          ],
+          "authored": "2026-05-21T13:42:35Z",
+          "committed": "2026-05-21T13:42:35Z",
+          "title": "Restore canonical system helper exports"
+        },
+        {
+          "sha": "cd5fc9c7f8a410848fa2c6c9183337d80f5419d7",
+          "tree": "6ad846959b11e701734baadbb82261f6486fdc6f",
+          "parents": [
+            "86f9fbf74ca3f731790bf6a75775c2af81d8bf76"
+          ],
+          "authored": "2026-05-21T13:45:39Z",
+          "committed": "2026-05-21T13:45:39Z",
+          "title": "Restore cinematic controller compatibility exports"
+        },
+        {
+          "sha": "242ea718e4fc772d549e0c28b841f3cd330730f4",
+          "tree": "cf58f0ab253a556ab3622ea916904f78debbfa6b",
+          "parents": [
+            "cd5fc9c7f8a410848fa2c6c9183337d80f5419d7"
+          ],
+          "authored": "2026-05-21T14:22:34Z",
+          "committed": "2026-05-21T14:22:34Z",
+          "title": "Align canonical system test with ochat route"
+        },
+        {
+          "sha": "b6871a8b20a0ef00472ca8378a960365a02a642a",
+          "tree": "956c3bf3c53ffca981e1423cffeaf655b74d77aa",
+          "parents": [
+            "242ea718e4fc772d549e0c28b841f3cd330730f4"
+          ],
+          "authored": "2026-05-21T14:36:48Z",
+          "committed": "2026-05-21T14:36:48Z",
+          "title": "Update audit report after route and validation fixes"
+        },
+        {
+          "sha": "4f00a49b677b1678a9dfaf79aed76c66edd730ab",
+          "tree": "084b5164d48831c2fa3941f0c3df3cbeddfc0f19",
+          "parents": [
+            "b6871a8b20a0ef00472ca8378a960365a02a642a"
+          ],
+          "authored": "2026-05-21T14:44:32Z",
+          "committed": "2026-05-21T14:44:32Z",
+          "title": "Route home page to resolved home scene"
+        },
+        {
+          "sha": "67a462382c0efbf4bf85edffe9b9ebce7961bacc",
+          "tree": "59b11ef93e923cd6bd9e49ba4be50949976064da",
+          "parents": [
+            "4f00a49b677b1678a9dfaf79aed76c66edd730ab"
+          ],
+          "authored": "2026-05-21T14:55:32Z",
+          "committed": "2026-05-21T14:55:32Z",
+          "title": "Unlock reduced motion cinematic frames at reduced duration"
+        },
+        {
+          "sha": "38a3dc0a24dba2b4edff66952b9f269e39133bb1",
+          "tree": "e582cbc737b5960dd5a600f53949a2b05b8d1c1f",
+          "parents": [
+            "67a462382c0efbf4bf85edffe9b9ebce7961bacc"
+          ],
+          "authored": "2026-05-21T14:57:16Z",
+          "committed": "2026-05-21T14:57:16Z",
+          "title": "Include companion transitions in cinematic controller test"
+        },
+        {
+          "sha": "e511eabc585b2040a06cb830675aef698db62ef4",
+          "tree": "0cbcddf320c1006e1c046823f6f62afe5582d9d2",
+          "parents": [
+            "38a3dc0a24dba2b4edff66952b9f269e39133bb1"
+          ],
+          "authored": "2026-05-21T15:08:21Z",
+          "committed": "2026-05-21T15:08:21Z",
+          "title": "Clamp cinematic UI opacity output"
+        },
+        {
+          "sha": "cef1b1af41bf6073d2b55eda0fdd2a99c5327fe5",
+          "tree": "8214ba4d1fc4aae9891d8c865e9aae1e078786f7",
+          "parents": [
+            "e511eabc585b2040a06cb830675aef698db62ef4"
+          ],
+          "authored": "2026-05-21T15:15:22Z",
+          "committed": "2026-05-21T15:15:22Z",
+          "title": "Support nested HomeWorld paths in rules emulator"
+        },
+        {
+          "sha": "ccabeadaa5c6a0617f0964a91d95368ee567a42c",
+          "tree": "fb286f9da291bb3ef6071e96cc724253af31aa68",
+          "parents": [
+            "cef1b1af41bf6073d2b55eda0fdd2a99c5327fe5"
+          ],
+          "authored": "2026-05-21T15:30:14Z",
+          "committed": "2026-05-21T15:30:14Z",
+          "title": "Document launch commands in CI workflow contract"
+        },
+        {
+          "sha": "50ca3da71c781270174f70eecf425b2dd974f1e1",
+          "tree": "5fd054035d67d51167c3e463c1688ee67c7ef676",
+          "parents": [
+            "ccabeadaa5c6a0617f0964a91d95368ee567a42c"
+          ],
+          "authored": "2026-05-21T15:35:24Z",
+          "committed": "2026-05-21T15:35:24Z",
+          "title": "Document P1 release gate in CI workflow contract"
+        },
+        {
+          "sha": "aac071cee8d55a5dd5ab5f1061bbec44ecd7862e",
+          "tree": "1582b8f38ff2a866c6f6a7a3c7d1b086e1a3a506",
+          "parents": [
+            "50ca3da71c781270174f70eecf425b2dd974f1e1"
+          ],
+          "authored": "2026-05-21T15:45:51Z",
+          "committed": "2026-05-21T15:45:51Z",
+          "title": "Add HomeWorld smoke contract layer"
+        },
+        {
+          "sha": "47c6845bada9e52367d3f16d3a671d3ac67cf673",
+          "tree": "3613fc319ce081f80355b8d711c35f7a6ee395d2",
+          "parents": [
+            "aac071cee8d55a5dd5ab5f1061bbec44ecd7862e"
+          ],
+          "authored": "2026-05-21T15:48:36Z",
+          "committed": "2026-05-21T15:48:36Z",
+          "title": "Expose HomeWorld smoke contract on home route"
+        },
+        {
+          "sha": "58f6ccaee55cb9246de5ecddd9dd985207fb05c1",
+          "tree": "db12fb0e401132b9345230a0d2764c531b8f2972",
+          "parents": [
+            "47c6845bada9e52367d3f16d3a671d3ac67cf673"
+          ],
+          "authored": "2026-05-21T15:57:12Z",
+          "committed": "2026-05-21T15:57:12Z",
+          "title": "Redirect home route to canonical root shell"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/urai-v1-launch-shell",
+      "head": "5dbb8fe410d5c748b6f0eebcb1ff3cb2556b7006",
+      "ahead_by": 19,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "commits": [
+        {
+          "sha": "53662df21642b49bf21f7f8ff59790c7e7387955",
+          "tree": "d4f9b71d865901910007ffc93d9e1e799a7eb00d",
+          "parents": [
+            "81cb8382d914b11d781851b2d07e1526c3a0220c"
+          ],
+          "authored": "2026-07-19T04:19:10Z",
+          "committed": "2026-07-19T04:19:10Z",
+          "title": "Add URAI V1 launch shell no-ad constants"
+        },
+        {
+          "sha": "3afc4a1a030414fbf1318c0e726a7d1434f68d11",
+          "tree": "191beee73073f7d29cfe399d68057b24faae1c27",
+          "parents": [
+            "53662df21642b49bf21f7f8ff59790c7e7387955"
+          ],
+          "authored": "2026-07-19T04:58:01Z",
+          "committed": "2026-07-19T04:58:01Z",
+          "title": "Add URAI launch shell Firestore types"
+        },
+        {
+          "sha": "f47bbf065509f4779d30408b88dee492213263ef",
+          "tree": "7953f72865a10fa2dfbbe6a5486e0f8d1e2b36a4",
+          "parents": [
+            "3afc4a1a030414fbf1318c0e726a7d1434f68d11"
+          ],
+          "authored": "2026-07-19T04:58:15Z",
+          "committed": "2026-07-19T04:58:15Z",
+          "title": "Add URAI launch Firebase client helpers"
+        },
+        {
+          "sha": "2496b34c6733a60527ba9beda2fc0f91dcc2da4d",
+          "tree": "3ff307997cbd3225f9a5247deed7d8c163b9524e",
+          "parents": [
+            "f47bbf065509f4779d30408b88dee492213263ef"
+          ],
+          "authored": "2026-07-19T04:58:21Z",
+          "committed": "2026-07-19T04:58:21Z",
+          "title": "Add URAI launch payment placeholders"
+        },
+        {
+          "sha": "c1638f38789be9a1b7ed7135f25cfa42b691d90e",
+          "tree": "f19ec4d938c22b0e1934b5f6a84bf8b14cae079d",
+          "parents": [
+            "2496b34c6733a60527ba9beda2fc0f91dcc2da4d"
+          ],
+          "authored": "2026-07-19T04:59:11Z",
+          "committed": "2026-07-19T04:59:11Z",
+          "title": "Add URAI V1 launch shell pages and forms"
+        },
+        {
+          "sha": "630011f3873ffea12dc14b69dc69e10410b794f4",
+          "tree": "67c06cb091e3e3802d7d14605d1907ce627b88de",
+          "parents": [
+            "c1638f38789be9a1b7ed7135f25cfa42b691d90e"
+          ],
+          "authored": "2026-07-19T04:59:24Z",
+          "committed": "2026-07-19T04:59:24Z",
+          "title": "Route root to URAI V1 launch shell"
+        },
+        {
+          "sha": "822467eeebc271cad2cb0bbf8a1d2cd8ed5e431a",
+          "tree": "b841598d54f6902f9e250771b7fae909ce87671b",
+          "parents": [
+            "630011f3873ffea12dc14b69dc69e10410b794f4"
+          ],
+          "authored": "2026-07-19T04:59:46Z",
+          "committed": "2026-07-19T04:59:46Z",
+          "title": "Add URAI Worlds launch route"
+        },
+        {
+          "sha": "65087f0a459187a87a8c809ef3fb1d56d623a1dc",
+          "tree": "db6819a81a9f9b96533572bd611986470cdb0b11",
+          "parents": [
+            "822467eeebc271cad2cb0bbf8a1d2cd8ed5e431a"
+          ],
+          "authored": "2026-07-19T04:59:55Z",
+          "committed": "2026-07-19T04:59:55Z",
+          "title": "Add Make Mine launch route"
+        },
+        {
+          "sha": "4ea5836d2d8ff6a05544b1cc7c18daa56b9ead64",
+          "tree": "7bf5a291813b051e351e6cf6f61df47261ef4747",
+          "parents": [
+            "65087f0a459187a87a8c809ef3fb1d56d623a1dc"
+          ],
+          "authored": "2026-07-19T05:00:20Z",
+          "committed": "2026-07-19T05:00:20Z",
+          "title": "Add Founding Access launch route"
+        },
+        {
+          "sha": "ad44664db84fc60eb32ae4e6e5c06379edb9aef3",
+          "tree": "2084aecc08bfd7c21fb446478aef10d94d9eb19f",
+          "parents": [
+            "4ea5836d2d8ff6a05544b1cc7c18daa56b9ead64"
+          ],
+          "authored": "2026-07-19T05:00:31Z",
+          "committed": "2026-07-19T05:00:31Z",
+          "title": "Add Creators launch route"
+        },
+        {
+          "sha": "4fdc8fca389dfb0f46d651a20db186482cfd94ab",
+          "tree": "8cc9d1af115795ce8056d3fd7ea1ecad78dcc8f3",
+          "parents": [
+            "ad44664db84fc60eb32ae4e6e5c06379edb9aef3"
+          ],
+          "authored": "2026-07-19T05:00:37Z",
+          "committed": "2026-07-19T05:00:37Z",
+          "title": "Add Watch launch route"
+        },
+        {
+          "sha": "2f0ca74f45c8e364df9448c69d67438450025065",
+          "tree": "08080c8e6531d0b8dac62ad0a9f6e95bbddbb015",
+          "parents": [
+            "4fdc8fca389dfb0f46d651a20db186482cfd94ab"
+          ],
+          "authored": "2026-07-19T05:00:42Z",
+          "committed": "2026-07-19T05:00:42Z",
+          "title": "Add Trust Center launch route"
+        },
+        {
+          "sha": "5752cb083d13795453107123747fc404b7b4c3e8",
+          "tree": "e306daf57d33d07612629b6ad892e26902caf249",
+          "parents": [
+            "2f0ca74f45c8e364df9448c69d67438450025065"
+          ],
+          "authored": "2026-07-19T05:00:51Z",
+          "committed": "2026-07-19T05:00:51Z",
+          "title": "Route Waitlist to URAI V1 launch shell"
+        },
+        {
+          "sha": "d7ff18894bc49c43f6dee41a745183f0cae43443",
+          "tree": "d25dbe423e069447436ea8528739e11152bcb3c4",
+          "parents": [
+            "5752cb083d13795453107123747fc404b7b4c3e8"
+          ],
+          "authored": "2026-07-19T05:01:00Z",
+          "committed": "2026-07-19T05:01:00Z",
+          "title": "Route Passport to URAI V1 launch shell"
+        },
+        {
+          "sha": "2baa2bd592584393c2ad13529a9e89856dca5ac7",
+          "tree": "697dac857b6109336ae2e3295c1b98d11ed98440",
+          "parents": [
+            "d7ff18894bc49c43f6dee41a745183f0cae43443"
+          ],
+          "authored": "2026-07-19T05:01:09Z",
+          "committed": "2026-07-19T05:01:09Z",
+          "title": "Add private URAI app home shell route"
+        },
+        {
+          "sha": "44b48cf056f4f80bafd0d2cb46f015ffaf6e69a6",
+          "tree": "b94ff41ea233b866886cdf11fc86f7ad5f4164e0",
+          "parents": [
+            "2baa2bd592584393c2ad13529a9e89856dca5ac7"
+          ],
+          "authored": "2026-07-19T05:01:30Z",
+          "committed": "2026-07-19T05:01:30Z",
+          "title": "Add URAI launch admin command center"
+        },
+        {
+          "sha": "dbd5d92bdc3e4d756afb64f3daa17c840605c266",
+          "tree": "9b0ed8e1fa85c3c5578ae2b3153651d69f317ef3",
+          "parents": [
+            "44b48cf056f4f80bafd0d2cb46f015ffaf6e69a6"
+          ],
+          "authored": "2026-07-19T05:02:00Z",
+          "committed": "2026-07-19T05:02:00Z",
+          "title": "Protect private URAI app home shell route"
+        },
+        {
+          "sha": "3bada7dd3f571675cbe6626ab3ebe958951663a2",
+          "tree": "bd0f3e509435d0eb1c76293fdc8e8acf05f26870",
+          "parents": [
+            "dbd5d92bdc3e4d756afb64f3daa17c840605c266"
+          ],
+          "authored": "2026-07-19T05:02:09Z",
+          "committed": "2026-07-19T05:02:09Z",
+          "title": "Document URAI V1 launch shell implementation"
+        },
+        {
+          "sha": "5dbb8fe410d5c748b6f0eebcb1ff3cb2556b7006",
+          "tree": "147aecaf80711c6bc065e2eb090951a144193ef1",
+          "parents": [
+            "3bada7dd3f571675cbe6626ab3ebe958951663a2"
+          ],
+          "authored": "2026-07-19T05:43:15Z",
+          "committed": "2026-07-19T05:43:15Z",
+          "title": "Allow URAI V1 launch shell Firestore collections"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}

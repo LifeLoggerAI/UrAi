@@ -1,0 +1,1293 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 9,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Git metadata only; no all-byte SHA256 or complete historical ancestry.",
+  "branches": [
+    {
+      "ref": "refs/heads/copilot/fix-9b26f208-45bc-4459-b486-b1b3904581fb",
+      "head": "3c84d1592a4d5568a6b33ba604a801e505352602",
+      "tree": "3c84d1592a4d5568a6b33ba604a801e505352602",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-12cc2506-29c9-4ec1-a1b5-d6690b3f2c0d",
+      "head": "5a65e227ac0eecce5cf6dcedcba429169ecb1c62",
+      "tree": "5a65e227ac0eecce5cf6dcedcba429169ecb1c62",
+      "truncated": false,
+      "entries": 2248,
+      "blobs": 1055,
+      "bytes": 182982906,
+      "paths_added_vs_main": 17,
+      "paths_removed_vs_main": 1451,
+      "blobs_changed_same_path": 34,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "scripts/remove-console.mjs",
+          "f233403851759277ad1e5e085b308f977709a1d7",
+          687
+        ],
+        [
+          "scripts/replace-demo-user.mjs",
+          "ac7a563994caab77c7248a1abaf798f6bf638e76",
+          1396
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-31bdd213-503e-466d-a5af-e818ad461102",
+      "head": "c58d29a735de0d26a5ad84db97cc6f8d4cf78d30",
+      "tree": "c58d29a735de0d26a5ad84db97cc6f8d4cf78d30",
+      "truncated": false,
+      "entries": 2279,
+      "blobs": 1071,
+      "bytes": 182813527,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1428,
+      "blobs_changed_same_path": 43,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-98d311a8-d1cc-4bfa-88be-e7e59992b7c5",
+      "head": "33b40beef091c618b2f4645537c5a5d5f984fc75",
+      "tree": "33b40beef091c618b2f4645537c5a5d5f984fc75",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-346bd111-e126-488a-8b6b-9644d577afde",
+      "head": "d32225a886ac786a679d2c25305c86f2231b8213",
+      "tree": "d32225a886ac786a679d2c25305c86f2231b8213",
+      "truncated": false,
+      "entries": 8749,
+      "blobs": 5247,
+      "bytes": 1160332442,
+      "paths_added_vs_main": 4191,
+      "paths_removed_vs_main": 1433,
+      "blobs_changed_same_path": 62,
+      "unique_paths": [
+        [
+          ".env",
+          "3af92cbc91805f143a52710bdb8659242f921b24",
+          754
+        ],
+        [
+          ".env.local.production",
+          "50d6ed543f1915664f2b986932c9b525bc2c5a30",
+          103
+        ],
+        [
+          ".env.local.staging",
+          "a7b1c2a8a257835c46a081943022fac9d30be772",
+          94
+        ],
+        [
+          "ASSET_FOLDER_INSTRUCTIONS.md",
+          "09990fab6d4c941229550bdb08f2d4ab55f19a1b",
+          2754
+        ],
+        [
+          "CHANGELOG.md",
+          "1c41299923fc855133a27291ecf8458bd6fd3812",
+          346
+        ],
+        [
+          "DEMO.md",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "LICENSE.md",
+          "df278d3720ce04a05309f4571f6ac751095ec674",
+          11
+        ],
+        [
+          "PRIVACY.md",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "QA_CHECKLIST.md",
+          "7d51ecc28a807c4019f31c321f4a65a5a93df384",
+          1582
+        ],
+        [
+          "QA_Mode_Script.sh",
+          "959b2becd085389007fa99aff7cf137831c3e1ce",
+          1622
+        ],
+        [
+          "QA_RUNBOOK.md",
+          "2692bba0f05c120c3e3931d2a810e1b5b3cc4525",
+          4206
+        ],
+        [
+          "README_AUTOMATION.md",
+          "ec5ee156774b0caf77d07d1e77ad5356547980b6",
+          1183
+        ],
+        [
+          "README_QA_Runbook.md",
+          "c7c18479e0d788c96dd949e223aac29d339b1a18",
+          622
+        ],
+        [
+          "SETUP_KANBAN_NOTIFICATIONS.md",
+          "a7efd532f97df8f4b38670598790a577f8179f71",
+          559
+        ],
+        [
+          "TERMS.md",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "TILT_SCENE_DOCUMENTATION.md",
+          "41ff0f19a39187648ad065c2b410860e309b687d",
+          4961
+        ],
+        [
+          "URAI_Launch_Execution_Plan.md",
+          "f38b6a6a736334dafd06d3704b8b90675d1799e3",
+          3917
+        ],
+        [
+          "URAI_Master_Launch_Checklist.md",
+          "14e6d825cd7253acfcd5f100d571f3ab24da5492",
+          1349
+        ],
+        [
+          "URAI_Master_Strike_Plan.md",
+          "373072b6e729fd3f078d4ffb3a5c5cd1de2e865c",
+          6265
+        ],
+        [
+          "URAI_Strike_Cockpit.csv",
+          "f1d549cb633e1c8b11bb4bec6d65d4b0994b9ab5",
+          6070
+        ],
+        [
+          "V1_CHECKLIST.md",
+          "9ffbfe210293bb3b5291498c107fa15fee018e2d",
+          1274
+        ],
+        [
+          "api/roadmap/rateLimit.ts",
+          "bd159346d82b1838fca7f101c9a4a1f7f45f6cfc",
+          383
+        ],
+        [
+          "app/roadmap/EnterpriseAuthProvider.tsx",
+          "00158c67ce41b802e7f4dc94617e1a70adc8a052",
+          383
+        ],
+        [
+          "app/roadmap/InvestorOnboardingWizard.tsx",
+          "4acb185c5e564d65f3715a7b54c9a93c01de7548",
+          1680
+        ],
+        [
+          "app/roadmap/OrgDashboard.tsx",
+          "ecdd2449210ee906e055ea82539f7c91fe3eeb4b",
+          691
+        ],
+        [
+          "app/roadmap/investorPermissions.ts",
+          "790d4d71b850d61b495f1508257c1ee46518f1a4",
+          391
+        ],
+        [
+          "checklists/URAI_Completion_Board_Master_Checklist_All_Completed_2081-2100.md",
+          "0b8c6b1e81495f1612a8ee661678d6771814d8b5",
+          501
+        ],
+        [
+          "checklists/URAI_Completion_Board_Master_Checklist_All_Completed_2101-2120.md",
+          "cfa96a2eee68199df034e97ec9437ec5a94ca8c3",
+          3252
+        ],
+        [
+          "checklists/URAI_Completion_Board_Master_Checklist_All_Completed_2121-2140.md",
+          "7192a474ffdb3699bb2ea002a139e19dfa6f0bfa",
+          3252
+        ],
+        [
+          "checklists/URAI_Completion_Board_Master_Checklist_All_Completed_2141-2160.md",
+          "4683a84441670e51fd4caf4765fcad720d543759",
+          3252
+        ],
+        [
+          "checklists/URAI_Completion_Board_Master_Checklist_All_Completed_2161-2180.md",
+          "b94666dc9a0ed5a6ae3c376a1706e980226b46f1",
+          3252
+        ],
+        [
+          "clean-project.sh",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "cloud-run-renderer/Dockerfile",
+          "57480fe3027419c198e7616366148a942e84ed33",
+          293
+        ],
+        [
+          "cloud-run-renderer/package.json",
+          "9d45f780d822108192901c9a407006107cea7570",
+          272
+        ],
+        [
+          "cloud-run-renderer/server.js",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "components.json",
+          "7b17557fb3da212bf85f282ddb445bc8d2ab5f3c",
+          448
+        ],
+        [
+          "data/sampleAnalytics.json",
+          "cc873e7cad19b623293fe0eb994fca07c474af88",
+          308
+        ],
+        [
+          "data/sampleContributors.json",
+          "f5d901b0c25e9eab07610b13742264b5c56a0b82",
+          553
+        ],
+        [
+          "data/sampleInvestors.json",
+          "cd91e29a8d993681ff28901589f46f6bad01079e",
+          371
+        ],
+        [
+          "data/sampleOrgs.json",
+          "91786fef3c7ea1bba584da93c740871a9eb4b0e3",
+          226
+        ],
+        [
+          "data/sampleRoadmap.json",
+          "85e0a657364f16751dcd6b6a35036682ce37214e",
+          405
+        ],
+        [
+          "dataconnect-generated/js/default-connector/README.md",
+          "7369b030000c9abb2fc0d93dad6fd321b22a2401",
+          2896
+        ],
+        [
+          "dataconnect-generated/js/default-connector/esm/index.esm.js",
+          "dd8034732c03d15eb89f7c249edbdbaa6ca8cca8",
+          109
+        ],
+        [
+          "dataconnect-generated/js/default-connector/esm/package.json",
+          "7c34deb5837d8d5e168b54f95f7872b2c50eca13",
+          17
+        ],
+        [
+          "dataconnect-generated/js/default-connector/index.cjs.js",
+          "96e0f4aa8afe081130c302432db11b0362d3894d",
+          144
+        ],
+        [
+          "dataconnect-generated/js/default-connector/index.d.ts",
+          "ffa5772301f0b68ceb54fda67323311db150bcdf",
+          248
+        ],
+        [
+          "dataconnect-generated/js/default-connector/package.json",
+          "0c48c6c4a17596014a75100d72137f528889a11d",
+          860
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/README.md",
+          "0a6b13de55b2ea4c4e3d93ca6c89fe45ff4f0047",
+          5474
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/esm/index.esm.js",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/esm/package.json",
+          "7c34deb5837d8d5e168b54f95f7872b2c50eca13",
+          17
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/index.cjs.js",
+          "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+          0
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/index.d.ts",
+          "321cd30f7592a9f41662f91535a1baf56dad0404",
+          228
+        ],
+        [
+          "dataconnect-generated/js/default-connector/react/package.json",
+          "d9831c1ac211ce0cab59475ecfda4c0ec4e8d0df",
+          468
+        ],
+        [
+          "dataconnect/connector/connector.yaml",
+          "bd37957d36e943a2a0d321f2a87f08727ec1d170",
+          200
+        ],
+        [
+          "dataconnect/connector/mutations.gql",
+          "82e75e916c9f12d2a90785d578b352fabebe35b2",
+          1301
+        ],
+        [
+          "dataconnect/connector/queries.gql",
+          "1ffd510360aca4cc5e33f4d318a8d7e7a3b69660",
+          1947
+        ],
+        [
+          "dataconnect/dataconnect.yaml",
+          "d0d8a1fef7c65fe3f70e26ac304af4a4f1f8746e",
+          267
+        ],
+        [
+          "dataconnect/schema/schema.gql",
+          "ed34cea2afec76e4ded64f5a28c12d3f1cae4fcc",
+          2088
+        ],
+        [
+          "devDependencies.d.ts",
+          "ac47a019b0e2f657eeb81a077d1ddee04fae057d",
+          142
+        ],
+        [
+          "docs/COMMAND_CENTER_SETUP.md",
+          "5aad9122c7e0be56db470204a8ed7df2a8ef62bd",
+          159
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-401d711e-511c-4a0f-89c0-4fcea267c3fa",
+      "head": "9f5b44428cc03955fdb5ad927bcefe15dc74e477",
+      "tree": "9f5b44428cc03955fdb5ad927bcefe15dc74e477",
+      "truncated": false,
+      "entries": 2248,
+      "blobs": 1055,
+      "bytes": 182982906,
+      "paths_added_vs_main": 17,
+      "paths_removed_vs_main": 1451,
+      "blobs_changed_same_path": 34,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "scripts/remove-console.mjs",
+          "f233403851759277ad1e5e085b308f977709a1d7",
+          687
+        ],
+        [
+          "scripts/replace-demo-user.mjs",
+          "ac7a563994caab77c7248a1abaf798f6bf638e76",
+          1396
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-451e6405-c9c7-4393-a2f9-14e3d3a4383d",
+      "head": "8222d129e16e9071ca0df9b1ab468d19b1011a0f",
+      "tree": "8222d129e16e9071ca0df9b1ab468d19b1011a0f",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-929cd1c3-5ddc-40ef-ad58-c3e7ff2f065e",
+      "head": "4dcfd9ddecc3bdffd97513f51430f096ff94d005",
+      "tree": "4dcfd9ddecc3bdffd97513f51430f096ff94d005",
+      "truncated": false,
+      "entries": 2248,
+      "blobs": 1055,
+      "bytes": 182982906,
+      "paths_added_vs_main": 17,
+      "paths_removed_vs_main": 1451,
+      "blobs_changed_same_path": 34,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "scripts/remove-console.mjs",
+          "f233403851759277ad1e5e085b308f977709a1d7",
+          687
+        ],
+        [
+          "scripts/replace-demo-user.mjs",
+          "ac7a563994caab77c7248a1abaf798f6bf638e76",
+          1396
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-7718e777-9488-4419-964d-2889d08f5fb1",
+      "head": "898c0561c86bb0c7ff1b86c8ed78ddc0aa964161",
+      "tree": "898c0561c86bb0c7ff1b86c8ed78ddc0aa964161",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-942851da-1b00-438b-ad32-94a6a48c9721",
+      "head": "ee08dc04330746182277e41b3e4e518682f17c0b",
+      "tree": "ee08dc04330746182277e41b3e4e518682f17c0b",
+      "truncated": false,
+      "entries": 2238,
+      "blobs": 1048,
+      "bytes": 182744941,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1456,
+      "blobs_changed_same_path": 30,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "public/index.html",
+          "e9bcf2a5fab82b196ed2e750e582ce531f0fe415",
+          4606
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-aff2b0f3-1af2-423e-8299-eeab643ddbd7",
+      "head": "68351f4d5d54863d921dfc80f739518925a8ea12",
+      "tree": "68351f4d5d54863d921dfc80f739518925a8ea12",
+      "truncated": false,
+      "entries": 2387,
+      "blobs": 1159,
+      "bytes": 598724058,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1340,
+      "blobs_changed_same_path": 44,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/copilot/fix-c96d6494-bd50-4f5f-996b-4e3a6721c01e",
+      "head": "d14d5ddbdb16e308bf3e93da44ad995f424a9e75",
+      "tree": "d14d5ddbdb16e308bf3e93da44ad995f424a9e75",
+      "truncated": false,
+      "entries": 2246,
+      "blobs": 1054,
+      "bytes": 182983171,
+      "paths_added_vs_main": 17,
+      "paths_removed_vs_main": 1452,
+      "blobs_changed_same_path": 33,
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "6cb84bcad14717c5d15f3c3a117bc96114d93dd2",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "7968fac6a3cce354c2429d4a7936653560919ce6",
+          1075
+        ],
+        [
+          "functions/src/genkit-sample.ts",
+          "56dbce1e9836203885b3cff358af72e9d53e10a9",
+          3448
+        ],
+        [
+          "functions/src/index.ts",
+          "ade33ec31596b7f7b84edfa9e068be5a14f485b5",
+          1447
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "issues/V10_Cinematic_Therapeutic_OS_Platform_Expansion.md",
+          "5a5291fdc2e8aaea5e62724052f2697a3c0a0be8",
+          887
+        ],
+        [
+          "issues/V6_Commercial_Polish.md",
+          "b5037f1c4f760fb678d61ae87d5fb43971e29455",
+          797
+        ],
+        [
+          "issues/V7_Monetization_Insight_Marketplace_Launch.md",
+          "17ecdd9c5d2be0309d11b45ffb4147c5270209cb",
+          749
+        ],
+        [
+          "issues/V8_Pro_Companion_Memory_Expansion.md",
+          "8626c151998711a5229d68de8b13f9701b6f5519",
+          713
+        ],
+        [
+          "issues/V9_Collective_Constellations_Social_Community.md",
+          "b5ea87eb9f44e9f33480f266fece1f2a19b72fbd",
+          715
+        ],
+        [
+          "scripts/remove-console.mjs",
+          "f233403851759277ad1e5e085b308f977709a1d7",
+          687
+        ],
+        [
+          "scripts/replace-demo-user.mjs",
+          "ac7a563994caab77c7248a1abaf798f6bf638e76",
+          1396
+        ]
+      ]
+    }
+  ]
+}

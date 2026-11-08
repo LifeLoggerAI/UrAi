@@ -1,0 +1,222 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 12,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/chore/p0-launch-verification-20260508",
+      "head": "8e5f594a17c1ff45c5844e7f49a95e5da7ca536a",
+      "status": "diverged",
+      "ahead_by": 4,
+      "behind_by": 2056,
+      "merge_base": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241",
+      "too_large": null,
+      "reported_file_count": 3,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "scripts/p0-launch-gate.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/p1-release-hardening-20260508",
+      "head": "effc6eaab77f5ef73700d33f2b7ab92c7a19fa1f",
+      "status": "diverged",
+      "ahead_by": 4,
+      "behind_by": 2055,
+      "merge_base": "1b0e476156d24651fd98b460f7ede331e6d53b4a",
+      "too_large": null,
+      "reported_file_count": 4,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "docs/P1_RELEASE_HARDENING.md",
+        "package.json",
+        "scripts/p1-release-gate.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/p2-v1-demo-polish-20260508",
+      "head": "40a121289c0ea1923d4009dc7dec88c3ea60a84c",
+      "status": "diverged",
+      "ahead_by": 5,
+      "behind_by": 2054,
+      "merge_base": "d47ff39411c1eea5f7dcef5f78a8f1b7fdbca2f3",
+      "too_large": null,
+      "reported_file_count": 5,
+      "changed_file_sample": [
+        "src/app/u/[handle]/page.tsx",
+        "src/components/CompanionChat.tsx",
+        "src/components/HomeScene.tsx",
+        "src/components/WaitlistForm.tsx",
+        "tests/e2e/v1-smoke.spec.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-current-main-20260729",
+      "head": "1f9e53088cbb81ef1c56e560cdbed514170de472",
+      "status": "diverged",
+      "ahead_by": 14,
+      "behind_by": 79,
+      "merge_base": "658b36da6b239333a918396251aad6386894e78f",
+      "too_large": null,
+      "reported_file_count": 46,
+      "changed_file_sample": [
+        ".firebaserc",
+        ".gitattributes",
+        ".github/workflows/audit-home-xr-proof-chain.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy-home-xr.yml",
+        ".github/workflows/deploy-urai-app.yml",
+        ".github/workflows/deploy-urai.yml",
+        ".github/workflows/firebase-production-deploy.yml",
+        ".github/workflows/legacy-production-authority-guard.yml",
+        ".github/workflows/life-map-quest-production-evidence.yml",
+        ".github/workflows/p1-release-gate.yml",
+        ".github/workflows/post-deploy-verify.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-20260715",
+      "head": "b08490ec27245481ae8d163604ea2403eee0c3de",
+      "status": "diverged",
+      "ahead_by": 56,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "too_large": null,
+      "reported_file_count": 30,
+      "changed_file_sample": [
+        ".gitattributes",
+        ".github/workflows/audit-home-xr-proof-chain.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy-home-xr.yml",
+        ".github/workflows/deploy-urai-app.yml",
+        ".github/workflows/deploy-urai.yml",
+        ".github/workflows/firebase-production-deploy.yml",
+        ".github/workflows/legacy-production-authority-guard.yml",
+        ".github/workflows/life-map-quest-production-evidence.yml",
+        ".github/workflows/p1-release-gate.yml",
+        ".github/workflows/post-deploy-verify.yml",
+        ".github/workflows/production-evidence.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/quarantine-legacy-production-authority-v2-20260715",
+      "head": "5f749548a18f07a113dab33201d943ec905e0858",
+      "status": "diverged",
+      "ahead_by": 56,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "too_large": null,
+      "reported_file_count": 30,
+      "changed_file_sample": [
+        ".gitattributes",
+        ".github/workflows/audit-home-xr-proof-chain.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy-home-xr.yml",
+        ".github/workflows/deploy-urai-app.yml",
+        ".github/workflows/deploy-urai.yml",
+        ".github/workflows/firebase-production-deploy.yml",
+        ".github/workflows/legacy-production-authority-guard.yml",
+        ".github/workflows/life-map-quest-production-evidence.yml",
+        ".github/workflows/p1-release-gate.yml",
+        ".github/workflows/post-deploy-verify.yml",
+        ".github/workflows/production-evidence.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/restore-sole-production-authority-wording",
+      "head": "edeb5a84282558e836d4584745b509c3be2fba9d",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 27,
+      "merge_base": "79de45f4041500af5892de9513fadb43729a3ce3",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/ci-validation",
+      "head": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+      "status": "diverged",
+      "ahead_by": 3,
+      "behind_by": 2062,
+      "merge_base": "e7cd742984912caecdb31266d3c29d1743b79af0",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "functions/src/ancientPassiveRollups.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-and-update-import",
+      "head": "1264445d74fe5cc643c37c16535c27909f62920f",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/onboarding/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-testing-and-ci-configuration",
+      "head": "0f4281fdfbad09b43f017abb6d638d69d5d23a8d",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2271,
+      "merge_base": "96db84138f66316bcfc68da5dbefad2d98f38a5f",
+      "too_large": null,
+      "reported_file_count": 11,
+      "changed_file_sample": [
+        ".github/workflows/ci.yml",
+        "README.md",
+        "e2e/onboarding-to-life-map.spec.ts",
+        "firebase.json",
+        "jest.config.js",
+        "jest.setup.ts",
+        "package-lock.json",
+        "package.json",
+        "playwright.config.ts",
+        "tests/home.test.tsx",
+        "tests/onboarding.test.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-use-client-pragma-and-type-props",
+      "head": "8d2a837a650e22dded064ecd62c25743b1168910",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 2273,
+      "merge_base": "c4d1cb92036b94ed79bfcbcf0acabb3c65968e9e",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/components/ui/Button.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/ancient-signals-verification-ci",
+      "head": "2b64a60317cf4a2bdf9a4e0ba2435bb31e7f28f6",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2096,
+      "merge_base": "2bfbbe10bcd1f5c241760adb112555ecf0272586",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        ".github/workflows/ancient-signals-verify.yml",
+        "functions/src/ancientPassiveRollups.ts"
+      ]
+    }
+  ]
+}

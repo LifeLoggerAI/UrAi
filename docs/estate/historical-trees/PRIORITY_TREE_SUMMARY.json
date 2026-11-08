@@ -1,0 +1,331 @@
+{
+  "schema": "urai-priority-tree-summary-v1",
+  "observed": "2026-11-07",
+  "repo": "LifeLoggerAI/UrAi",
+  "source_files": [
+    {
+      "name": "priority-batch-01.json",
+      "bytes": 1932448,
+      "snapshots": 4
+    },
+    {
+      "name": "priority-batch-02.json",
+      "bytes": 2064915,
+      "snapshots": 4
+    }
+  ],
+  "source_blob_sha1s": [
+    "cb77897741ca3fcdb6270a5ddc1df9991962ba95",
+    "cf48f7f8a67c40c212ca932b6ad48f47cf5347e7"
+  ],
+  "snapshots": [
+    {
+      "tag": "2025-09-30-main",
+      "commit": "6d8acda6d8b60ca41bcd19bc3065732136ad331d",
+      "tree_sha": "7fa458aee557bbc60865069d84f3430d02c7221e",
+      "total_entries": 2463,
+      "blob_count": 1226,
+      "reported_bytes": 598895854
+    },
+    {
+      "tag": "2026-05-17-3d-home",
+      "commit": "ba4323ca0ec76f125e50c46fcbcc2815e7ad4c80",
+      "tree_sha": "8e0ef16f5f747adcc197e80cda05f2db1b4317cd",
+      "total_entries": 2818,
+      "blob_count": 1502,
+      "reported_bytes": 599942708
+    },
+    {
+      "tag": "2026-05-07-ancient-signals",
+      "commit": "925d018f03e05f3e7be7bd4c15867d15c41da2e8",
+      "tree_sha": "0f4267e057d367d548356493a56582800742d271",
+      "total_entries": 2543,
+      "blob_count": 1283,
+      "reported_bytes": 599095662
+    },
+    {
+      "tag": "2026-08-11-council-humans",
+      "commit": "9f59147b2d46b27583d02ff7a04cc47a7f727f87",
+      "tree_sha": "30672a6c3bd00a0c8d7f8a7240b77fc4aad81a54",
+      "total_entries": 4028,
+      "blob_count": 2486,
+      "reported_bytes": 604630623
+    },
+    {
+      "tag": "2025-09-26-unsafe-audio-alternate",
+      "commit": "d56a01b277ac42b2e0f9861c91e824c035969afb",
+      "tree_sha": "1c054900873068f2ca21cd909656e53ec9d9e6f5",
+      "total_entries": 2402,
+      "blob_count": 1169,
+      "reported_bytes": 598767946
+    },
+    {
+      "tag": "2026-06-03-genesis-visual-supremacy",
+      "commit": "f935befbebfca9289a74920a4fcb62411a339764",
+      "tree_sha": "922ec67e8544a9d4658fa48bce3a3b468d706ec8",
+      "total_entries": 3080,
+      "blob_count": 1710,
+      "reported_bytes": 601220285
+    },
+    {
+      "tag": "2026-06-07-genesis-safe-consolidation",
+      "commit": "d826aef23832e272abd69868c88d5df7675a4cdd",
+      "tree_sha": "9274298736056672a5f09b83aeb45d4a09fef771",
+      "total_entries": 3632,
+      "blob_count": 2153,
+      "reported_bytes": 602364142
+    },
+    {
+      "tag": "2026-07-09-asset-factory",
+      "commit": "98526c7bc2ec85906af042cc03b5929612bbd9f1",
+      "tree_sha": "c725de0cbfcb8daacf150996efb8cbd525c96503",
+      "total_entries": 4029,
+      "blob_count": 2481,
+      "reported_bytes": 605019096
+    }
+  ],
+  "unique_blob_sha1s_across_eight_snapshots": 2942,
+  "large_blobs_sample": [
+    {
+      "sha": "9aed146e314608b98d75d5e2f831a5d2fafe039d",
+      "bytes": 47344467,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/a3/54/55fca38e0d087a74ce994491996dcf8c3801f0c37dd56ece490bd329d600e4f1ca443be7180bf97baf07a211a9644a6e7fd5619ae3363bc6b37039b378f9",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/a3/54/55fca38e0d087a74ce994491996dcf8c3801f0c37dd56ece490bd329d600e4f1ca443be7180bf97baf07a211a9644a6e7fd5619ae3363bc6b37039b378f9",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/a3/54/55fca38e0d087a74ce994491996dcf8c3801f0c37dd56ece490bd329d600e4f1ca443be7180bf97baf07a211a9644a6e7fd5619ae3363bc6b37039b378f9"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "fd6b23ba382449df964fcbd42168b0b5b6c41a6d",
+      "bytes": 34780725,
+      "paths": [
+        "public/assets/sky/cosmic/sky-cosmic-09a.mp4",
+        "public/assets/sky/cosmic/sky-cosmic-09a.mp4",
+        "public/assets/sky/cosmic/sky-cosmic-09a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "dd621ba759221ad289d01446eaa5cc0a68e0f5b3",
+      "bytes": 30290670,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/1f/c3/adafb69b8f58251616c69ef52dde0cfefb4005d7e42809710199dffa68a6df745c2b9f42e903cdfa11de7ed34bdaffb1d04830fe98ea15867ded372ddefd",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/1f/c3/adafb69b8f58251616c69ef52dde0cfefb4005d7e42809710199dffa68a6df745c2b9f42e903cdfa11de7ed34bdaffb1d04830fe98ea15867ded372ddefd",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/1f/c3/adafb69b8f58251616c69ef52dde0cfefb4005d7e42809710199dffa68a6df745c2b9f42e903cdfa11de7ed34bdaffb1d04830fe98ea15867ded372ddefd"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "2b17bfe975694d07637a2c41f4b2c2fdb9fb8689",
+      "bytes": 29013200,
+      "paths": [
+        "public/assets/sky/cosmic/sky-cosmic-09.mp4",
+        "public/assets/sky/cosmic/sky-cosmic-09.mp4",
+        "public/assets/sky/cosmic/sky-cosmic-09.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "5ac22e9ddf1e224f04cf0126614dfa20db8c411b",
+      "bytes": 19012939,
+      "paths": [
+        "public/assets/ground/energy/ground-energy-15.mp4",
+        "public/assets/ground/energy/ground-energy-15.mp4",
+        "public/assets/ground/energy/ground-energy-15.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "29949daab388d3636b2447348b593fc6ec2e7bb9",
+      "bytes": 18277888,
+      "paths": [
+        "public/assets/ground/energy/ground-energy-15a.mp4",
+        "public/assets/ground/energy/ground-energy-15a.mp4",
+        "public/assets/ground/energy/ground-energy-15a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "d7683f880f979576f123849d1c51c8449621c83e",
+      "bytes": 17312959,
+      "paths": [
+        "public/assets/ground/cosmic/ground-cosmic-09.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-09.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-09.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "85e361d89d598dbd513ed9eeb9f45ff4b0df1fc5",
+      "bytes": 16368420,
+      "paths": [
+        "public/assets/ground/cosmic/ground-cosmic-09a.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-09a.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-09a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "9e8c11aa1f3bfd7787d8d0ba5764f4265f692b84",
+      "bytes": 16080896,
+      "paths": [
+        "public/assets/ground/fracture/ground-fracture-05.mp4",
+        "public/assets/ground/fracture/ground-fracture-05.mp4",
+        "public/assets/ground/fracture/ground-fracture-05.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "a35c6bd9d06fe35b8bd98e61a977be872bc65120",
+      "bytes": 15597568,
+      "paths": [
+        "public/assets/ground/fracture/ground-fracture-05a.mp4",
+        "public/assets/ground/fracture/ground-fracture-05a.mp4",
+        "public/assets/ground/fracture/ground-fracture-05a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "634890aa985689b84b818eedfbfe3ce3b84c47c9",
+      "bytes": 14352384,
+      "paths": [
+        "public/assets/ground/fracture/ground-fracture-06a.mp4",
+        "public/assets/ground/fracture/ground-fracture-06a.mp4",
+        "public/assets/ground/fracture/ground-fracture-06a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "24593edabd4a3641a7e5fc2e3ec9edc53edb29c5",
+      "bytes": 14143548,
+      "paths": [
+        "public/assets/ground/energy/ground-energy-16.mp4",
+        "public/assets/ground/energy/ground-energy-16.mp4",
+        "public/assets/ground/energy/ground-energy-16.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "79580b63528a0bebab1553be8ceb52e4c2b0dffa",
+      "bytes": 12943761,
+      "paths": [
+        "public/assets/ground/cosmic/ground-cosmic-10.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-10.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-10.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "766f345acca1b05845e3decd7bbdfeadf268450f",
+      "bytes": 12230272,
+      "paths": [
+        "public/assets/ground/cosmic/ground-cosmic-10a.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-10a.mp4",
+        "public/assets/ground/cosmic/ground-cosmic-10a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "e23b83da27083c1629629b330fe38304548c18da",
+      "bytes": 12002243,
+      "paths": [
+        "public/assets/avatar/Texture.png",
+        "public/assets/avatar/Texture.png",
+        "public/assets/avatar/Texture.png"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "cab5f17371d715d25f0b36a96238417356454686",
+      "bytes": 10404030,
+      "paths": [
+        "public/assets/sky/energy/sky-energy-15.mp4",
+        "public/assets/sky/energy/sky-energy-15.mp4",
+        "public/assets/sky/energy/sky-energy-15.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "4c49c437920c068563cb5fdea2f386e729a68f1e",
+      "bytes": 10233797,
+      "paths": [
+        "public/assets/ground/fracture/ground-fracture-06.mp4",
+        "public/assets/ground/fracture/ground-fracture-06.mp4",
+        "public/assets/ground/fracture/ground-fracture-06.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "183226e39615c387ddd316bd8f2c60961868a6ee",
+      "bytes": 9864634,
+      "paths": [
+        "public/assets/ground/energy/ground-energy-16a.mp4",
+        "public/assets/ground/energy/ground-energy-16a.mp4",
+        "public/assets/ground/energy/ground-energy-16a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "fa57aed2223d3e3ccaa1c537fcef1486a13c3cbb",
+      "bytes": 9465856,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d8/be/d2ccdd052c7c90b459b2231adc5e182eb2defbd3aee992476eaa46c8a43ba3f49cd59c1cb1b11adc45f50c1506a6deb424596d81d1fd62e3423028358855",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d8/be/d2ccdd052c7c90b459b2231adc5e182eb2defbd3aee992476eaa46c8a43ba3f49cd59c1cb1b11adc45f50c1506a6deb424596d81d1fd62e3423028358855",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d8/be/d2ccdd052c7c90b459b2231adc5e182eb2defbd3aee992476eaa46c8a43ba3f49cd59c1cb1b11adc45f50c1506a6deb424596d81d1fd62e3423028358855"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "9c9cdcf5abc3710f5098c9392a62a61a89d68d28",
+      "bytes": 9399079,
+      "paths": [
+        "public/assets/ground/bloom/ground-bloom-11.mp4",
+        "public/assets/ground/bloom/ground-bloom-11.mp4",
+        "public/assets/ground/bloom/ground-bloom-11.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "a2aef43a93fc21692c259bd4b0fe50ac91630f97",
+      "bytes": 7536349,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/49/16/0e2d1ec25cf80dcdef1a919c23a060683754e1359a2aa4e81f9cec665ac9254c655f262189a02fcba1deda34c180d634ac296335f87457e3738fea9f7ee9",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/49/16/0e2d1ec25cf80dcdef1a919c23a060683754e1359a2aa4e81f9cec665ac9254c655f262189a02fcba1deda34c180d634ac296335f87457e3738fea9f7ee9",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/49/16/0e2d1ec25cf80dcdef1a919c23a060683754e1359a2aa4e81f9cec665ac9254c655f262189a02fcba1deda34c180d634ac296335f87457e3738fea9f7ee9"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "b43616071d53892fde7cadea6cfa8b348abf50f1",
+      "bytes": 7419929,
+      "paths": [
+        "public/assets/ground/bloom/ground-bloom-11a.mp4",
+        "public/assets/ground/bloom/ground-bloom-11a.mp4",
+        "public/assets/ground/bloom/ground-bloom-11a.mp4"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "9ceebf2d6df5641288c06289adfae14005d3fb0f",
+      "bytes": 7417746,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/65/6d/c53d621cecad6c1fd1379f1206077cb7759929265327924ef3e6dbb59d2901a02830da74914c51c8e6907fdc241a24cd29773305de969ff5c90a31213d4e",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/65/6d/c53d621cecad6c1fd1379f1206077cb7759929265327924ef3e6dbb59d2901a02830da74914c51c8e6907fdc241a24cd29773305de969ff5c90a31213d4e",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/65/6d/c53d621cecad6c1fd1379f1206077cb7759929265327924ef3e6dbb59d2901a02830da74914c51c8e6907fdc241a24cd29773305de969ff5c90a31213d4e"
+      ],
+      "occurrences": 8
+    },
+    {
+      "sha": "b5fc6ad0a1b67cf81c0e9c91ccadecbf5f9c67cc",
+      "bytes": 6634313,
+      "paths": [
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d3/e0/2c71a86de2a5338f8a42a2930f5a6a00ba393c1ca8f00a968d60e3a36d8319eb94557d93ec7d9c306d68bfcd63178fac6f3ec6a2e6806212b51492b2f037",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d3/e0/2c71a86de2a5338f8a42a2930f5a6a00ba393c1ca8f00a968d60e3a36d8319eb94557d93ec7d9c306d68bfcd63178fac6f3ec6a2e6806212b51492b2f037",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/d3/e0/2c71a86de2a5338f8a42a2930f5a6a00ba393c1ca8f00a968d60e3a36d8319eb94557d93ec7d9c306d68bfcd63178fac6f3ec6a2e6806212b51492b2f037"
+      ],
+      "occurrences": 8
+    }
+  ],
+  "limits": "Git metadata not source body bytes; 8 selected snapshots, not all 3701; full historical manifest documents too large for fetch_file, fetched through GitHub contents JSON URL; no SHA256 verified"
+}

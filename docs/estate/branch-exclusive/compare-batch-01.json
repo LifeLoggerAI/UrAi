@@ -1,0 +1,257 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 0,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-harness",
+      "head": "fb9fc8dcfa53e4dea692be9003c77660f66dac42",
+      "status": "diverged",
+      "ahead_by": 59,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 55,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".github/workflows/urai-holdout-v2.yml",
+        ".gitignore",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json",
+        "bench/protocols/urai-holdout-v2-lock.json",
+        "bench/suites/smoke.jsonl",
+        "bench/suites/urai-long-horizon-v1.jsonl"
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-execution",
+      "head": "3c51d2cba5e643c254f590b20ac0cc88b5e1e038",
+      "status": "diverged",
+      "ahead_by": 62,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 50,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".gitignore",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json",
+        "bench/suites/smoke.jsonl",
+        "bench/suites/urai-long-horizon-v1.jsonl",
+        "docs/benchmarks/FRONTIER_BENCHMARKS.md",
+        "docs/benchmarks/RUN_31935227415_FORENSIC.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-freeze",
+      "head": "603a3aacc909f60350aacf626b16b9af9c93a0ba",
+      "status": "diverged",
+      "ahead_by": 69,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 55,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".github/workflows/urai-holdout-v2.yml",
+        ".gitignore",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json",
+        "bench/protocols/urai-holdout-v2-lock.json",
+        "bench/suites/smoke.jsonl",
+        "bench/suites/urai-long-horizon-v1.jsonl"
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/frontier-benchmark-v2-prereg-staging",
+      "head": "d58b88561339dafe62ed31463e3b50736b875825",
+      "status": "diverged",
+      "ahead_by": 64,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 50,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".gitignore",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json",
+        "bench/suites/smoke.jsonl",
+        "bench/suites/urai-long-horizon-v1.jsonl",
+        "docs/benchmarks/FRONTIER_BENCHMARKS.md",
+        "docs/benchmarks/RUN_31935227415_FORENSIC.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/agent/governed-asset-promotion-gate",
+      "head": "b8cd5c055409ebe2be3fd085b6fa29ace29d7631",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 81,
+      "merge_base": "81cb8382d914b11d781851b2d07e1526c3a0220c",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        ".github/workflows/governed-asset-promotion.yml",
+        "scripts/check-governed-asset-promotion.mjs"
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/attachment-canon-system-pass",
+      "head": "9e6a0abdbeb927fafe97957be09cce66f7420bcf",
+      "status": "diverged",
+      "ahead_by": 8,
+      "behind_by": 1510,
+      "merge_base": "afd285cd8793b52255c75db2332e4552555c87f0",
+      "too_large": null,
+      "reported_file_count": 8,
+      "changed_file_sample": [
+        "docs/audits/URAI_ATTACHMENT_CANON_IMPLEMENTATION_LEDGER.md",
+        "firestore.rules",
+        "src/app/focus/session/[sessionId]/page.tsx",
+        "src/app/life-map/star/[starId]/page.tsx",
+        "src/app/replay/[replayId]/page.tsx",
+        "src/components/life-map/LifeMapUniverse.tsx",
+        "src/lib/urai-canon/system.ts",
+        "tests/unit/urai-canon/system.test.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/audit/urai-v50-v200-2026-07-06",
+      "head": "907cc3eda82873ae8b17b7345ca5edb2d04850a1",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 115,
+      "merge_base": "5a3ce86542f762d5ce8a6b5c9c023246bf844150",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "docs/REPO_CANONICAL_STATUS.md",
+        "docs/audits/URAI_REPOSITORY_COMPLETION_AUDIT_2026-07-06.md"
+      ]
+    },
+    {
+      "ref": "refs/heads/audit-life-map-trust-polish",
+      "head": "40fcf4445bb53d50be359fc6100e7f76ce4dc96e",
+      "status": "diverged",
+      "ahead_by": 3,
+      "behind_by": 1911,
+      "merge_base": "aa4c1b8b653fa94f4bd80cec26f5d6eda31f7c32",
+      "too_large": null,
+      "reported_file_count": 3,
+      "changed_file_sample": [
+        "scripts/seed-demo.mjs",
+        "src/components/lifemap/LifeMapScene.tsx",
+        "src/lib/use-urai-home-state.ts"
+      ]
+    },
+    {
+      "ref": "refs/heads/bench/hard-memory-reasoning-20261014",
+      "head": "741f98a52b379955da45613e81e4ec468befe514",
+      "status": "diverged",
+      "ahead_by": 73,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 68,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-hard-development-20261014.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".github/workflows/urai-holdout-v2.yml",
+        ".github/workflows/urai-isolated-pilot-20261011.yml",
+        ".gitignore",
+        "bench/pilot-20261011/suite.jsonl",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json"
+      ]
+    },
+    {
+      "ref": "refs/heads/bench/spatial-memory-pilot-20261011",
+      "head": "d23b35dfe7be29647dbca7e26604ffa4584154aa",
+      "status": "diverged",
+      "ahead_by": 67,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 63,
+      "changed_file_sample": [
+        ".github/workflows/frontier-benchmark-fable.yml",
+        ".github/workflows/frontier-benchmark-gemini.yml",
+        ".github/workflows/frontier-benchmark-matched-compute.yml",
+        ".github/workflows/frontier-benchmark.yml",
+        ".github/workflows/urai-holdout-v1.yml",
+        ".github/workflows/urai-holdout-v2.yml",
+        ".github/workflows/urai-isolated-pilot-20261011.yml",
+        ".gitignore",
+        "bench/pilot-20261011/suite.jsonl",
+        "bench/protocols/urai-holdout-v1-lock.json",
+        "bench/protocols/urai-holdout-v2-draft.json",
+        "bench/protocols/urai-holdout-v2-lock.json"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/align-legacy-ci-boundary-20260710",
+      "head": "a0981976f421f0b6c5bf521c076c95b065658bc7",
+      "status": "diverged",
+      "ahead_by": 7,
+      "behind_by": 82,
+      "merge_base": "184eaa1c834287b2db223a58118d009bddde41fc",
+      "too_large": null,
+      "reported_file_count": 7,
+      "changed_file_sample": [
+        ".github/workflows/audit-home-xr-proof-chain.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-launch-gate.yml",
+        "package.json",
+        "scripts/block-legacy-production-deploy.mjs",
+        "scripts/deploy-urai-firebase.sh"
+      ]
+    },
+    {
+      "ref": "refs/heads/chore/disable-legacy-production-deploys-20260710",
+      "head": "35403d2b23cd18c5154f530d87fbeef56caf8db2",
+      "status": "diverged",
+      "ahead_by": 7,
+      "behind_by": 83,
+      "merge_base": "23b04ad7d6ffdaed82377726e23c9377f5139905",
+      "too_large": null,
+      "reported_file_count": 7,
+      "changed_file_sample": [
+        ".github/workflows/audit-home-xr-proof-chain.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/deploy.yml",
+        ".github/workflows/firebase-hosting-live.yml",
+        ".github/workflows/qa.yml",
+        ".github/workflows/urai-launch-gate.yml",
+        "docs/LEGACY_PRODUCTION_DEPLOY_DISABLED.md"
+      ]
+    }
+  ]
+}

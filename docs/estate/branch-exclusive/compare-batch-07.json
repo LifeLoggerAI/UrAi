@@ -1,0 +1,197 @@
+{
+  "schema": "urai-branch-main-compare-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "observed": "2026-11-07",
+  "scope": "selected historical branch tips, GitHub compare ahead/behind and example files; not all exclusive commits or contents",
+  "offset": 72,
+  "count": 12,
+  "total_branch_tips_outside_main": 112,
+  "rows": [
+    {
+      "ref": "refs/heads/fix/lifemap-triangle-header-dom",
+      "head": "688494887ac5179f7a18adfcc968a1a21a18c043",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1988,
+      "merge_base": "a9c3640f164b39a2b5d03ba2df19f901f11cf4ee",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/globals.css",
+        "src/components/lifemap/LifeMapScene.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/preflight-children-types",
+      "head": "4d89627bc4a38d8c8069dcb77e20d540a696bc2c",
+      "status": "diverged",
+      "ahead_by": 7,
+      "behind_by": 1994,
+      "merge_base": "fab97bdff09da1a66a67fce40305c5faf7b14fe5",
+      "too_large": null,
+      "reported_file_count": 6,
+      "changed_file_sample": [
+        "package.json",
+        "src/app/providers.tsx",
+        "src/components/chrono/ChronoMirrorCard.tsx",
+        "src/components/ui/Card.tsx",
+        "src/components/ui/Chip.tsx",
+        "tests/rules/rulesEmulator.js"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/root-home-smoke-labels",
+      "head": "6d98f4556f42e129d51bbdfcca84445ff4a45b9b",
+      "status": "diverged",
+      "ahead_by": 9,
+      "behind_by": 1335,
+      "merge_base": "81c599b0a95ec537c66db11fc9eed3164edc9444",
+      "too_large": null,
+      "reported_file_count": 4,
+      "changed_file_sample": [
+        "docs/launch/root-home-smoke-labels.md",
+        "scripts/check-home-lock.mjs",
+        "src/app/page.tsx",
+        "src/components/urai/UraiHomeAccessibilityLayer.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/tier1-routes",
+      "head": "74b370d2eb807a3fd97692c44d83b85d7a83dce6",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1367,
+      "merge_base": "b71af7e163a2fe1704124bfae992f4b460aa36cc",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        ".github/workflows/urai-launch-gate.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/tier2-firestore-policy-contracts",
+      "head": "19b0bb6f91df8a6176e71f5048e4a16ed78939fd",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1380,
+      "merge_base": "5fccd3fe99eae95bd6000f97adabc8935f3523db",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/home/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/urai-ci-secret-condition",
+      "head": "a586c32fa3c813581a6c965a849ca49d1257994b",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 29,
+      "merge_base": "cf497899c9943ea14d9a06a162fa842c25c3a415",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        ".github/workflows/urai-ci.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix/webgl-visual-tuning-home-route",
+      "head": "607966ae4d907ec7e65907f655316e3a181413a6",
+      "status": "diverged",
+      "ahead_by": 3,
+      "behind_by": 1990,
+      "merge_base": "45e5a0a3cacc8aff2420665952e75e710997ee99",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/home/page.tsx",
+        "src/components/lifemap/WebGLLifeMapField.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix-npm-ci-lockfile",
+      "head": "e3150973580d0150c43b65985f974fa6db9c0835",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 2056,
+      "merge_base": "e5b90a39f9ff00d05801cadc16151bf2fc1ce241",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        ".github/workflows/refresh-lockfile.yml"
+      ]
+    },
+    {
+      "ref": "refs/heads/fix-smoke-textbox-selector",
+      "head": "c59c5d0241cd867c53c7a13806b92c4c0f617b11",
+      "status": "diverged",
+      "ahead_by": 1,
+      "behind_by": 1207,
+      "merge_base": "39fbcb4743950a29bec064f9b700af24ff4e5fd7",
+      "too_large": null,
+      "reported_file_count": 1,
+      "changed_file_sample": [
+        "src/app/page.tsx"
+      ]
+    },
+    {
+      "ref": "refs/heads/fullscreen-parallax-final-lock",
+      "head": "d7d8508c905333cff99f80108203d786d7d89aab",
+      "status": "diverged",
+      "ahead_by": 2,
+      "behind_by": 1711,
+      "merge_base": "c802a034d7b26082a0f1613ec397575835f51dc3",
+      "too_large": null,
+      "reported_file_count": 2,
+      "changed_file_sample": [
+        "src/app/layout.tsx",
+        "src/styles/urai-fullscreen-final-lock.css"
+      ]
+    },
+    {
+      "ref": "refs/heads/genesis-public-launch",
+      "head": "000147f432ab309a49fe0736ed5cc4ed32ba2199",
+      "status": "diverged",
+      "ahead_by": 38,
+      "behind_by": 434,
+      "merge_base": "846323ac45b20f4e18b2d80899b1548ee0fe7fd7",
+      "too_large": null,
+      "reported_file_count": 300,
+      "changed_file_sample": [
+        ".genkit/servers/tools-18173.json",
+        ".genkit/traces_idx/genkit.metadata",
+        ".github/workflows/ci.yml",
+        ".gitignore",
+        ".modified",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/00/aa/5a6251e7f2de1255b3870b2f9be7e28a82f478bebb03f2f6efadb890269b3b7ca0d3923903af2ea38b4ad42630b49336cd78f2f0cf1abc8b2a68e35a9e58",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/00/aa/cdf7c92ec0eccc21d022cd7188f3a505068a36e822f6d5433beb7cb587f18c489e3f38753d936625b26069c92705a3fc1b2f35902413025b8f883b7ffe39",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/00/c2/ea7bac1f2119e373a16409639252385cd5f49311ff28f9cbf5368945bdb889fed53e4ea378a48ee94fe308290ccd8aae5fc4b7a190ec7ec6d0100713c929",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/00/cf/6c9af64de791b3b36c11aea78c1d53fb284f0a5a00893bf5cbe720a5cb6c45e8429ae1895ba4af9c2d2007e0d1bf021eb81eb95e8261aa5bc918c2ced5c6",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/00/e2/2049009ea62258c0fdc04671b1fb95674eed870587736c63f8e5e2f0d6faf7cc1def64b7b279dd6c0bd8676dc39cf7f4ab33233944f42b906cf8692f59a3",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/01/44/66e5fd236043b27418fb550955bc3ae378582d8437441791f574ffba98da685ce328d6ab90a89e30bc90f2459f7ea4ede4196a0e766574f1c4afd9a255e9",
+        ":USERPROFILE\npm-cache-fresh/_cacache/content-v2/sha512/01/56/f0dd42767bd6eaeb8bd2692f409b47e37b53daf296c6a934ec9977da2223299ebe4394385f24eb8b8fd49ff7964f5430147ab0df124f3c30f98f7bb50242"
+      ]
+    },
+    {
+      "ref": "refs/heads/genesis-safe-consolidation",
+      "head": "d826aef23832e272abd69868c88d5df7675a4cdd",
+      "status": "diverged",
+      "ahead_by": 8,
+      "behind_by": 580,
+      "merge_base": "d119ad18ba76f295274f6e1871848f1c9ac64fd6",
+      "too_large": null,
+      "reported_file_count": 8,
+      "changed_file_sample": [
+        "AGENTS.md",
+        "docs/URAI_DEPLOYMENT_CHECKLIST.md",
+        "docs/URAI_GENESIS_MASTER_SPEC.md",
+        "docs/URAI_SYSTEM_MAP.md",
+        "src/lib/types.ts",
+        "src/lib/urai-genesis/firestore.ts",
+        "src/lib/urai-genesis/intelligence.ts",
+        "tests/unit/urai-genesis.intelligence.test.ts"
+      ]
+    }
+  ]
+}

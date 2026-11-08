@@ -1,0 +1,1929 @@
+{
+  "schema": "urai-branch-head-tree-batch-v2",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "snapshot": "2026-11-07",
+  "batch": 3,
+  "source_api": "GitHub git/trees/{commit}?recursive=1",
+  "note": "Metadata only; full Git trees resolve via the recorded immutable tree SHA. No full history, LFS payload or independent SHA256.",
+  "branches": [
+    {
+      "ref": "refs/heads/chore/restore-sole-production-authority-wording",
+      "head": "edeb5a84282558e836d4584745b509c3be2fba9d",
+      "tree": "edeb5a84282558e836d4584745b509c3be2fba9d",
+      "truncated": false,
+      "entries": 4029,
+      "blobs": 2487,
+      "bytes": 604651825,
+      "paths_added_vs_main": 0,
+      "paths_removed_vs_main": 2,
+      "blobs_changed_same_path": 35,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 112,
+            "bytes": 415912444
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 681,
+            "bytes": 2204406
+          }
+        ],
+        [
+          "deploy",
+          {
+            "files": 65,
+            "bytes": 1653897
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 318,
+            "bytes": 857367
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 495799
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 456035
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 87,
+            "bytes": 319856
+          }
+        ],
+        [
+          "pnpm-lock.yaml",
+          {
+            "files": 1,
+            "bytes": 278606
+          }
+        ],
+        [
+          "launch-proof",
+          {
+            "files": 59,
+            "bytes": 158587
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 40,
+            "bytes": 102466
+          }
+        ],
+        [
+          "release-verification",
+          {
+            "files": 1,
+            "bytes": 78979
+          }
+        ]
+      ],
+      "unique_paths": []
+    },
+    {
+      "ref": "refs/heads/ci/openai-placeholder-launch-gate",
+      "head": "8a8954bd341b16af08b02dc79e2c7e6b8b35e1e0",
+      "tree": "8a8954bd341b16af08b02dc79e2c7e6b8b35e1e0",
+      "truncated": false,
+      "entries": 2941,
+      "blobs": 1604,
+      "bytes": 600612498,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 901,
+      "blobs_changed_same_path": 128,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 305,
+            "bytes": 1050649
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554955
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449358
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 61,
+            "bytes": 239611
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 227879
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 27,
+            "bytes": 127241
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 26,
+            "bytes": 78977
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 28,
+            "bytes": 42146
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 18347
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/ci/playwright-smoke-runner",
+      "head": "8c710b0f37c7e0994c1898f6225ce969408d39dc",
+      "tree": "8c710b0f37c7e0994c1898f6225ce969408d39dc",
+      "truncated": false,
+      "entries": 2935,
+      "blobs": 1599,
+      "bytes": 600596344,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 906,
+      "blobs_changed_same_path": 130,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 304,
+            "bytes": 1044496
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554955
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449358
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 59,
+            "bytes": 238036
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 227879
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 27,
+            "bytes": 126194
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 24,
+            "bytes": 73643
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 28,
+            "bytes": 42099
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 16349
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/ci/tier-freeze-ledger-artifact",
+      "head": "e93934631dfcca5c6d9ce5d78970942079f913c5",
+      "tree": "e93934631dfcca5c6d9ce5d78970942079f913c5",
+      "truncated": false,
+      "entries": 2941,
+      "blobs": 1604,
+      "bytes": 600611338,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 901,
+      "blobs_changed_same_path": 129,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 305,
+            "bytes": 1050409
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554955
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 449358
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 61,
+            "bytes": 239611
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 227879
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 27,
+            "bytes": 126368
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 26,
+            "bytes": 78977
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 28,
+            "bytes": 42099
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 18347
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "a0c5ddfcfbb459b2ad1bbcc67f01a83866a82088",
+          3844
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "4ba220ff58d25c40553b7908c21d188c07f756c2",
+          515503
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/ci-validation",
+      "head": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+      "tree": "b54b4adb42d00f7fa2775160b22ddbcdf21691bf",
+      "truncated": false,
+      "entries": 2597,
+      "blobs": 1328,
+      "bytes": 599235332,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1176,
+      "blobs_changed_same_path": 98,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 12,
+            "bytes": 541557
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 124,
+            "bytes": 267443
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 30,
+            "bytes": 125092
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 13,
+            "bytes": 53252
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 19,
+            "bytes": 17951
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 13831
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "797ea2da6815b9402e2c6f839e57ecf4ac9358a0",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/cinematic-integration-build-cleanup",
+      "head": "7c7c4a92d00bbbecb50db4f50d65519435eb08e4",
+      "tree": "7c7c4a92d00bbbecb50db4f50d65519435eb08e4",
+      "truncated": false,
+      "entries": 2814,
+      "blobs": 1499,
+      "bytes": 599890592,
+      "paths_added_vs_main": 16,
+      "paths_removed_vs_main": 1006,
+      "blobs_changed_same_path": 118,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 234,
+            "bytes": 668121
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 13,
+            "bytes": 554996
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 441607
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 55,
+            "bytes": 207038
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 22,
+            "bytes": 102174
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 13,
+            "bytes": 29319
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 24,
+            "bytes": 29296
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ec9ab73da40e10aa9d96a0a6cbc13a7f2a8a21d",
+          590
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "85bc542edf0b684e69914395b246046d0a5bf04a",
+          515544
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "b9a22435aaf9bd5eff8b8d89de773d39f73ae6c1",
+          733
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/src/uraiCompletionFunctions.ts",
+          "777c742cb1c9fc279057f402bfd0f0e23bd1c578",
+          5730
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/access-first-global-pricing",
+      "head": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b",
+      "tree": "6e11a7476a6fb42042aa08472b3026cbe9e1d16b",
+      "truncated": false,
+      "entries": 2656,
+      "blobs": 1368,
+      "bytes": 599393835,
+      "paths_added_vs_main": 15,
+      "paths_removed_vs_main": 1136,
+      "blobs_changed_same_path": 98,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 90,
+            "bytes": 415906550
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 12,
+            "bytes": 548834
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 440901
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 142,
+            "bytes": 280956
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 34,
+            "bytes": 143331
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "scripts",
+          {
+            "files": 15,
+            "bytes": 71992
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 22,
+            "bytes": 27655
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 5,
+            "bytes": 15478
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "b71501247dcf3826109d4c7693479b09c899f330",
+          583
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "9639cad605f1a0c606ba626f68472fcf3adf5b65",
+          568
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "85bc542edf0b684e69914395b246046d0a5bf04a",
+          515544
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/ancientCallableFunctions.ts",
+          "be5b4fe4bd8073054de8b88cdb3796074c44a8d6",
+          5054
+        ],
+        [
+          "functions/src/ancientPassiveRollups.ts",
+          "1999e6ac1051f76b365889d183d8e5054549a6e3",
+          8129
+        ],
+        [
+          "functions/src/ancientScheduledRollups.ts",
+          "96591813cc8e0d5dacfe51e14b8ac5faaffe5996",
+          4491
+        ],
+        [
+          "functions/src/ancientSignalCompute.ts",
+          "069c03e816744616b524e99537e63fe43e320add",
+          8752
+        ],
+        [
+          "functions/src/index.ts",
+          "f67f813bf9a6535af7dc0ae487a6833cbcb4cb8f",
+          301
+        ],
+        [
+          "functions/src/storyMovieRenderer.ts",
+          "9a65cfbf822bc5f53def93dbc0b65a12411c5406",
+          4245
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "82b646a645e21a351815b8593ee9ff1205d05950",
+          1418
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-app/providers.tsx-for-import-resolution",
+      "head": "1131878beab965694a226c7aa11209a7dbe7f37a",
+      "tree": "1131878beab965694a226c7aa11209a7dbe7f37a",
+      "truncated": false,
+      "entries": 2399,
+      "blobs": 1168,
+      "bytes": 598768205,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1331,
+      "blobs_changed_same_path": 51,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 85,
+            "bytes": 415905867
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 7,
+            "bytes": 515007
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 40,
+            "bytes": 49311
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 18,
+            "bytes": 15516
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 3,
+            "bytes": 10498
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 5726
+          }
+        ],
+        [
+          "URAI_APP_MASTER_ROADMAP.md",
+          {
+            "files": 1,
+            "bytes": 5540
+          }
+        ],
+        [
+          "ROADMAP_CHECKLIST.md",
+          {
+            "files": 1,
+            "bytes": 2303
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-and-update-import",
+      "head": "1264445d74fe5cc643c37c16535c27909f62920f",
+      "tree": "1264445d74fe5cc643c37c16535c27909f62920f",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598767911,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 85,
+            "bytes": 415905867
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 7,
+            "bytes": 515007
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 39,
+            "bytes": 49017
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 18,
+            "bytes": 15516
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 3,
+            "bytes": 10498
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 5726
+          }
+        ],
+        [
+          "URAI_APP_MASTER_ROADMAP.md",
+          {
+            "files": 1,
+            "bytes": 5540
+          }
+        ],
+        [
+          "ROADMAP_CHECKLIST.md",
+          {
+            "files": 1,
+            "bytes": 2303
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-to-button",
+      "head": "e4ec4b43ce1bcafa3c15b5462fbc75acdf03a0fa",
+      "tree": "e4ec4b43ce1bcafa3c15b5462fbc75acdf03a0fa",
+      "truncated": false,
+      "entries": 2427,
+      "blobs": 1191,
+      "bytes": 598844884,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1308,
+      "blobs_changed_same_path": 52,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 85,
+            "bytes": 415905867
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 7,
+            "bytes": 515007
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 40,
+            "bytes": 51941
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 11,
+            "bytes": 43798
+          }
+        ],
+        [
+          "data",
+          {
+            "files": 15,
+            "bytes": 24819
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 18,
+            "bytes": 15516
+          }
+        ],
+        [
+          "tests",
+          {
+            "files": 3,
+            "bytes": 11503
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 8297
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-client-directive-to-page-component",
+      "head": "e8bb29466f7b59f1d86664d81a28354a1c35e870",
+      "tree": "e8bb29466f7b59f1d86664d81a28354a1c35e870",
+      "truncated": false,
+      "entries": 2398,
+      "blobs": 1167,
+      "bytes": 598767971,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1332,
+      "blobs_changed_same_path": 50,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 85,
+            "bytes": 415905867
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 7,
+            "bytes": 515007
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 39,
+            "bytes": 49077
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 18,
+            "bytes": 15516
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 3,
+            "bytes": 10498
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 5726
+          }
+        ],
+        [
+          "URAI_APP_MASTER_ROADMAP.md",
+          {
+            "files": 1,
+            "bytes": 5540
+          }
+        ],
+        [
+          "ROADMAP_CHECKLIST.md",
+          {
+            "files": 1,
+            "bytes": 2303
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    },
+    {
+      "ref": "refs/heads/codex/add-loading-and-error-components-per-route",
+      "head": "487ba52cbf180de77453f529d5be4cb283d6c01c",
+      "tree": "487ba52cbf180de77453f529d5be4cb283d6c01c",
+      "truncated": false,
+      "entries": 2430,
+      "blobs": 1198,
+      "bytes": 598800114,
+      "paths_added_vs_main": 10,
+      "paths_removed_vs_main": 1301,
+      "blobs_changed_same_path": 56,
+      "roots": [
+        [
+          "public",
+          {
+            "files": 85,
+            "bytes": 415905867
+          }
+        ],
+        [
+          ":USERPROFILE\npm-cache-fresh",
+          {
+            "files": 965,
+            "bytes": 181799742
+          }
+        ],
+        [
+          "functions",
+          {
+            "files": 7,
+            "bytes": 515007
+          }
+        ],
+        [
+          "package-lock.json",
+          {
+            "files": 1,
+            "bytes": 355727
+          }
+        ],
+        [
+          "src",
+          {
+            "files": 68,
+            "bytes": 78969
+          }
+        ],
+        [
+          "tsconfig.tsbuildinfo",
+          {
+            "files": 1,
+            "bytes": 73728
+          }
+        ],
+        [
+          ".github",
+          {
+            "files": 18,
+            "bytes": 15516
+          }
+        ],
+        [
+          ".copilot-instructions.md",
+          {
+            "files": 1,
+            "bytes": 11144
+          }
+        ],
+        [
+          "docs",
+          {
+            "files": 3,
+            "bytes": 10498
+          }
+        ],
+        [
+          "firestore.rules",
+          {
+            "files": 1,
+            "bytes": 5726
+          }
+        ],
+        [
+          "URAI_APP_MASTER_ROADMAP.md",
+          {
+            "files": 1,
+            "bytes": 5540
+          }
+        ],
+        [
+          "ROADMAP_CHECKLIST.md",
+          {
+            "files": 1,
+            "bytes": 2303
+          }
+        ]
+      ],
+      "unique_paths": [
+        [
+          ".github/workflows/deploy.yml",
+          "7ed717ef55ae855fffa44a15d11ede0a6392b12a",
+          578
+        ],
+        [
+          ".github/workflows/firebase-hosting-live.yml",
+          "e342bb93a70f5768da676b1ef361044b2370e12c",
+          563
+        ],
+        [
+          "functions/.eslintrc.js",
+          "0f8e2a9b7e8531d908ebeba6c72b7246a0c94d92",
+          699
+        ],
+        [
+          "functions/.gitignore",
+          "9be0f014f4ee173a1493f89483748be60e556b34",
+          153
+        ],
+        [
+          "functions/package-lock.json",
+          "d261cd2e617dc01c0c7c5b75f3bd1c9c3a0b7cb5",
+          508267
+        ],
+        [
+          "functions/package.json",
+          "338c8ebc76949b66ea445014f09f9f4dd40c0ab1",
+          1076
+        ],
+        [
+          "functions/src/index.ts",
+          "5364c2e23f058b0f4b194394f8b4d9225cff9e2d",
+          4422
+        ],
+        [
+          "functions/tsconfig.dev.json",
+          "7560eed4ca12649b9490987855d2dd3356eb3661",
+          42
+        ],
+        [
+          "functions/tsconfig.json",
+          "bd02db4746179aa5c7c6a1933b169845bee1552c",
+          348
+        ],
+        [
+          "src/app/api/data/route.ts",
+          "e077e680d79f65da9395c2afc577cc8d09b39e30",
+          1290
+        ]
+      ]
+    }
+  ]
+}

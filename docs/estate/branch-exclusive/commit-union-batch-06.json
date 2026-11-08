@@ -1,0 +1,1316 @@
+{
+  "schema": "urai-exclusive-commits-v1",
+  "source_repo": "LifeLoggerAI/UrAi",
+  "main_base_sha": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+  "source": "GitHub REST compare/base...head?per_page=100&page=1",
+  "frozen_head_census": "docs/estate/branch-exclusive/head-census.json",
+  "batch": 6,
+  "records": 12,
+  "complete_records": 12,
+  "scope": "commit SHA/tree/parents/dates by ref; unique union pending; metadata only, no blob payloads",
+  "rows": [
+    {
+      "ref": "refs/heads/feature/sky-map-v1-latest",
+      "head": "08762e14e6399d458854ad9fb80096ccb1e8d7de",
+      "ahead_by": 1,
+      "behind_by": 2000,
+      "merge_base": "3ebffd065b3309a4879dc1fb9f8d24a2af479e76",
+      "commits": [
+        {
+          "sha": "08762e14e6399d458854ad9fb80096ccb1e8d7de",
+          "tree": "0f53f238668ec54474806c606595a1a300e80e5f",
+          "parents": [
+            "3ebffd065b3309a4879dc1fb9f8d24a2af479e76"
+          ],
+          "authored": "2026-05-14T19:49:04Z",
+          "committed": "2026-05-14T19:49:04Z",
+          "title": "Route home sky transition to Sky Map V1"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/feature/v1-visual-magic-home-ascent",
+      "head": "cd971f6c89a6fad02c77253db3b4fd05acef1efe",
+      "ahead_by": 10,
+      "behind_by": 1991,
+      "merge_base": "46fc01386969446ad440ee7207d2932317e7a49d",
+      "commits": [
+        {
+          "sha": "531fd5d54e0b5a4878239018cc2340905709613e",
+          "tree": "007fbc6e6b49c8d5b139b8f61119a3abecdbf2f9",
+          "parents": [
+            "46fc01386969446ad440ee7207d2932317e7a49d"
+          ],
+          "authored": "2026-05-14T22:33:01Z",
+          "committed": "2026-05-14T22:33:01Z",
+          "title": "feat: add orb avatar and stronger ascent to home scene"
+        },
+        {
+          "sha": "9785b7ac18d6954e9183e95d6f221d50661d5b15",
+          "tree": "45d5e0ffb9e98e533678869a5044cba651589d41",
+          "parents": [
+            "531fd5d54e0b5a4878239018cc2340905709613e"
+          ],
+          "authored": "2026-05-14T22:34:45Z",
+          "committed": "2026-05-14T22:34:45Z",
+          "title": "feat: make ground layer feel alive"
+        },
+        {
+          "sha": "287dd3b5df0b1cb0969439e112d58e774f0173da",
+          "tree": "a3f94571320b1c5be3c008e17fbb60d72900d471",
+          "parents": [
+            "9785b7ac18d6954e9183e95d6f221d50661d5b15"
+          ],
+          "authored": "2026-05-14T22:37:05Z",
+          "committed": "2026-05-14T22:37:05Z",
+          "title": "feat: add global spatial depth polish"
+        },
+        {
+          "sha": "bb07907b289bd6180cf5b6ec61112bea24daf402",
+          "tree": "5f5ea0ff44971e76a0fd6aae322eac21f3e2805b",
+          "parents": [
+            "287dd3b5df0b1cb0969439e112d58e774f0173da"
+          ],
+          "authored": "2026-05-14T22:40:29Z",
+          "committed": "2026-05-14T22:40:29Z",
+          "title": "feat: add WebGL life map starfield"
+        },
+        {
+          "sha": "818560577f5830b9aff879ec0017042ae334a86d",
+          "tree": "f81dda2f216451ac4757fd001487cc47f3490f00",
+          "parents": [
+            "bb07907b289bd6180cf5b6ec61112bea24daf402"
+          ],
+          "authored": "2026-05-14T22:41:47Z",
+          "committed": "2026-05-14T22:41:47Z",
+          "title": "feat: render Life Map depth field with WebGL"
+        },
+        {
+          "sha": "e29245657b5e8984ac6624e21c011f5d88b3b3fc",
+          "tree": "1e0c3f6b853d5e413613d39fe3e9ac9f044697ea",
+          "parents": [
+            "818560577f5830b9aff879ec0017042ae334a86d"
+          ],
+          "authored": "2026-05-14T22:47:35Z",
+          "committed": "2026-05-14T22:47:35Z",
+          "title": "feat: wire WebGL field into Life Map scene"
+        },
+        {
+          "sha": "bd87531b6a1a9db02c9beffb3ab96920ff8bb6a0",
+          "tree": "55f2735dbe0e92adee599db5f0eb897e5182fff1",
+          "parents": [
+            "e29245657b5e8984ac6624e21c011f5d88b3b3fc"
+          ],
+          "authored": "2026-05-14T22:50:25Z",
+          "committed": "2026-05-14T22:50:25Z",
+          "title": "style: position WebGL Life Map canvas"
+        },
+        {
+          "sha": "fee7796cfb1d8bb3bfa378581b934d6dd6bcd6ea",
+          "tree": "e30adf4eebae6c59edf8dc95b404835f69afa5e5",
+          "parents": [
+            "bd87531b6a1a9db02c9beffb3ab96920ff8bb6a0"
+          ],
+          "authored": "2026-05-14T22:56:49Z",
+          "committed": "2026-05-14T22:56:49Z",
+          "title": "feat: add WebGL ambient sky for home"
+        },
+        {
+          "sha": "c3ec1791df0671bc6bdb3867264555218e83fe5f",
+          "tree": "60d92e65e4f6b2f2e4d14b95f4b4bfdd6fa9f9f8",
+          "parents": [
+            "fee7796cfb1d8bb3bfa378581b934d6dd6bcd6ea"
+          ],
+          "authored": "2026-05-14T23:01:24Z",
+          "committed": "2026-05-14T23:01:24Z",
+          "title": "feat: wire WebGL ambient sky into home"
+        },
+        {
+          "sha": "cd971f6c89a6fad02c77253db3b4fd05acef1efe",
+          "tree": "31397e42f7ef8aa76182e990babdc0a27191a6e5",
+          "parents": [
+            "c3ec1791df0671bc6bdb3867264555218e83fe5f"
+          ],
+          "authored": "2026-05-14T23:02:56Z",
+          "committed": "2026-05-14T23:02:56Z",
+          "title": "style: position home WebGL sky canvas"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/final/home-lock-execution",
+      "head": "af3bd2f9fc3e5a5cf82f0e322d86589f237e2817",
+      "ahead_by": 1,
+      "behind_by": 1550,
+      "merge_base": "e95a437fa1911652bf9c945b0aa28201f50de945",
+      "commits": [
+        {
+          "sha": "af3bd2f9fc3e5a5cf82f0e322d86589f237e2817",
+          "tree": "e980315c892a889eca15b2f628c8c4d0b35e9572",
+          "parents": [
+            "e95a437fa1911652bf9c945b0aa28201f50de945"
+          ],
+          "authored": "2026-05-18T18:54:05Z",
+          "committed": "2026-05-18T18:54:05Z",
+          "title": "Clarify passed P0 launch gate next actions"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/ancient-signals-ground-layer-state",
+      "head": "f5ce77afa01eab23e2d310f37159993580cbfd51",
+      "ahead_by": 1,
+      "behind_by": 2102,
+      "merge_base": "74629c3b979578ca9a31ac688b8605c84943b7e6",
+      "commits": [
+        {
+          "sha": "f5ce77afa01eab23e2d310f37159993580cbfd51",
+          "tree": "40c636e5f915e61c8afa99c627ad3036322eea95",
+          "parents": [
+            "74629c3b979578ca9a31ac688b8605c84943b7e6"
+          ],
+          "authored": "2026-05-07T06:08:16Z",
+          "committed": "2026-05-07T06:08:16Z",
+          "title": "Let Ancient Signals drive HomeScene ground state"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/cinematic-clean-home-lifemap",
+      "head": "f9ad0bd3cb1861bf7c41914706d6fa47337b9cbe",
+      "ahead_by": 2,
+      "behind_by": 1987,
+      "merge_base": "a3adf4b2a10128f3ef457f552eb6cda4d4145498",
+      "commits": [
+        {
+          "sha": "485f4f8d1b63caab6c4e689e094ca118f6f4b17f",
+          "tree": "62be4c37f192abe63c051bd8ccadb64b472d631d",
+          "parents": [
+            "a3adf4b2a10128f3ef457f552eb6cda4d4145498"
+          ],
+          "authored": "2026-05-15T01:18:36Z",
+          "committed": "2026-05-15T01:18:36Z",
+          "title": "fix: remove noisy Life Map global rings"
+        },
+        {
+          "sha": "f9ad0bd3cb1861bf7c41914706d6fa47337b9cbe",
+          "tree": "add7fa84ad9d5d5b4fc63399c6e2776383a0d594",
+          "parents": [
+            "485f4f8d1b63caab6c4e689e094ca118f6f4b17f"
+          ],
+          "authored": "2026-05-15T01:22:35Z",
+          "committed": "2026-05-15T01:22:35Z",
+          "title": "fix: remove stale Life Map route chrome"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-composition",
+      "head": "146df72e972d7b96f7cddcf0e9c6cf7328704d60",
+      "ahead_by": 1,
+      "behind_by": 1986,
+      "merge_base": "e83f96e647611093c74ff1caca00f549708c3575",
+      "commits": [
+        {
+          "sha": "146df72e972d7b96f7cddcf0e9c6cf7328704d60",
+          "tree": "db51077e3137b2bcf1b5053282075af89995fde3",
+          "parents": [
+            "e83f96e647611093c74ff1caca00f549708c3575"
+          ],
+          "authored": "2026-05-15T01:40:30Z",
+          "committed": "2026-05-15T01:40:30Z",
+          "title": "fix: redesign home scene composition"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/home-scene-lint-gate",
+      "head": "f878b0ca4f4d39cf3fd823aa33c0fa11b25475f4",
+      "ahead_by": 1,
+      "behind_by": 1351,
+      "merge_base": "f6abe692dd24e20746cca356a0758f2a0f0686fe",
+      "commits": [
+        {
+          "sha": "f878b0ca4f4d39cf3fd823aa33c0fa11b25475f4",
+          "tree": "ad20b37640953980ac2350a1326c15aace980acd",
+          "parents": [
+            "f6abe692dd24e20746cca356a0758f2a0f0686fe"
+          ],
+          "authored": "2026-05-20T20:34:51Z",
+          "committed": "2026-05-20T20:34:51Z",
+          "title": "Clarify tier freeze evidence blockers"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/legacy-braces-installed-topology-20261009",
+      "head": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+      "ahead_by": 7,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "405e15877230f34e905f9217d38409f967c12c6d",
+          "tree": "8897d29d1d2f4be3b2abe835df0bafc6597d2b23",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-07T18:41:34Z",
+          "committed": "2026-10-07T18:41:34Z",
+          "title": "Reconcile historical cross-system canon provenance"
+        },
+        {
+          "sha": "c83a3cd0e5f10f52659a5b09011bb2ad4536b834",
+          "tree": "47bbd67cc1cffaff92b69e8b347d5627a3d010e5",
+          "parents": [
+            "405e15877230f34e905f9217d38409f967c12c6d"
+          ],
+          "authored": "2026-10-07T20:47:30Z",
+          "committed": "2026-10-07T20:47:30Z",
+          "title": "Bound Chromium installation waits while preserving browser verification gates"
+        },
+        {
+          "sha": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+          "tree": "d20822f4f16503b807f3bce9aa01e283d10bea3b",
+          "parents": [
+            "c83a3cd0e5f10f52659a5b09011bb2ad4536b834"
+          ],
+          "authored": "2026-10-07T21:21:30Z",
+          "committed": "2026-10-07T21:21:30Z",
+          "title": "Quarantine legacy OpenAI leaves before provider dispatch"
+        },
+        {
+          "sha": "ac227c2fcc08f920647665ee98b4ce6f66ffb48e",
+          "tree": "572d23555a8df72415a3eacc9d7a7eb4c038633e",
+          "parents": [
+            "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5"
+          ],
+          "authored": "2026-10-07T23:46:53Z",
+          "committed": "2026-10-07T23:46:53Z",
+          "title": "Pin quarantined legacy Next runtime to 15.5.27 in both locks"
+        },
+        {
+          "sha": "9c2788f19f656b2a37bf206d97d6896f79035675",
+          "tree": "d54044b382356b3223d670badf2a7bae2463dd9a",
+          "parents": [
+            "ac227c2fcc08f920647665ee98b4ce6f66ffb48e"
+          ],
+          "authored": "2026-10-07T23:56:09Z",
+          "committed": "2026-10-07T23:56:09Z",
+          "title": "Replace legacy diagnostic overlay with supported local R3F counters"
+        },
+        {
+          "sha": "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+          "tree": "8b547934d4f8797b41c161ceb5a09081af4d3999",
+          "parents": [
+            "9c2788f19f656b2a37bf206d97d6896f79035675"
+          ],
+          "authored": "2026-10-08T03:22:44Z",
+          "committed": "2026-10-08T03:22:44Z",
+          "title": "Repair active dual-lock dependency consumers and retain qualified brace fork review"
+        },
+        {
+          "sha": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3"
+          ],
+          "authored": "2026-10-09T06:32:43Z",
+          "committed": "2026-10-09T06:32:43Z",
+          "title": "fix(dependencies): install the admitted braces fork from its canonical directory"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/legacy-launch-gate-chromium-20261009",
+      "head": "305fc519485b867cec57b971bfcb724ca264d1f3",
+      "ahead_by": 9,
+      "behind_by": 0,
+      "merge_base": "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a",
+      "commits": [
+        {
+          "sha": "405e15877230f34e905f9217d38409f967c12c6d",
+          "tree": "8897d29d1d2f4be3b2abe835df0bafc6597d2b23",
+          "parents": [
+            "8cac3ba513830c11261d57bc2b5dd7ad8b83e85a"
+          ],
+          "authored": "2026-10-07T18:41:34Z",
+          "committed": "2026-10-07T18:41:34Z",
+          "title": "Reconcile historical cross-system canon provenance"
+        },
+        {
+          "sha": "c83a3cd0e5f10f52659a5b09011bb2ad4536b834",
+          "tree": "47bbd67cc1cffaff92b69e8b347d5627a3d010e5",
+          "parents": [
+            "405e15877230f34e905f9217d38409f967c12c6d"
+          ],
+          "authored": "2026-10-07T20:47:30Z",
+          "committed": "2026-10-07T20:47:30Z",
+          "title": "Bound Chromium installation waits while preserving browser verification gates"
+        },
+        {
+          "sha": "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5",
+          "tree": "d20822f4f16503b807f3bce9aa01e283d10bea3b",
+          "parents": [
+            "c83a3cd0e5f10f52659a5b09011bb2ad4536b834"
+          ],
+          "authored": "2026-10-07T21:21:30Z",
+          "committed": "2026-10-07T21:21:30Z",
+          "title": "Quarantine legacy OpenAI leaves before provider dispatch"
+        },
+        {
+          "sha": "ac227c2fcc08f920647665ee98b4ce6f66ffb48e",
+          "tree": "572d23555a8df72415a3eacc9d7a7eb4c038633e",
+          "parents": [
+            "81714d6ab11fc3c237ab685dd7f8956c0b9b35d5"
+          ],
+          "authored": "2026-10-07T23:46:53Z",
+          "committed": "2026-10-07T23:46:53Z",
+          "title": "Pin quarantined legacy Next runtime to 15.5.27 in both locks"
+        },
+        {
+          "sha": "9c2788f19f656b2a37bf206d97d6896f79035675",
+          "tree": "d54044b382356b3223d670badf2a7bae2463dd9a",
+          "parents": [
+            "ac227c2fcc08f920647665ee98b4ce6f66ffb48e"
+          ],
+          "authored": "2026-10-07T23:56:09Z",
+          "committed": "2026-10-07T23:56:09Z",
+          "title": "Replace legacy diagnostic overlay with supported local R3F counters"
+        },
+        {
+          "sha": "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+          "tree": "8b547934d4f8797b41c161ceb5a09081af4d3999",
+          "parents": [
+            "9c2788f19f656b2a37bf206d97d6896f79035675"
+          ],
+          "authored": "2026-10-08T03:22:44Z",
+          "committed": "2026-10-08T03:22:44Z",
+          "title": "Repair active dual-lock dependency consumers and retain qualified brace fork review"
+        },
+        {
+          "sha": "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3"
+          ],
+          "authored": "2026-10-09T06:32:43Z",
+          "committed": "2026-10-09T06:32:43Z",
+          "title": "fix(dependencies): install the admitted braces fork from its canonical directory"
+        },
+        {
+          "sha": "d916ad7cec894f2a5f81cbf24336034a7a193bd8",
+          "tree": "d43845eae8611458b5d5380a44188f14fedd1167",
+          "parents": [
+            "7bff4a56ebdbadcfa93d2ab00261e2884e501eb3",
+            "5d4b174bdc57c1c8bcf650c6388b6b14668ff2f9"
+          ],
+          "authored": "2026-10-09T07:22:05Z",
+          "committed": "2026-10-09T07:22:05Z",
+          "title": "Merge pull request #391 from LifeLoggerAI/fix/legacy-braces-installed-topology-20261009"
+        },
+        {
+          "sha": "305fc519485b867cec57b971bfcb724ca264d1f3",
+          "tree": "2f7a34b477886912bf61c9b3e3eba60ae129daea",
+          "parents": [
+            "d916ad7cec894f2a5f81cbf24336034a7a193bd8"
+          ],
+          "authored": "2026-10-09T07:39:55Z",
+          "committed": "2026-10-09T07:39:55Z",
+          "title": "Install Chromium before advisory legacy browser smoke"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/legacy-public-canon-copy-20261005",
+      "head": "5bebec58219648ccf62f0e45c8d8715175c25296",
+      "ahead_by": 9,
+      "behind_by": 1,
+      "merge_base": "e8ad784556b4b7f0909a132495000484eae45258",
+      "commits": [
+        {
+          "sha": "8d59106f70f81e10e0791aac290820e8b6b657a6",
+          "tree": "509f74a605bce313d5acf7f2553e7634410042ec",
+          "parents": [
+            "e8ad784556b4b7f0909a132495000484eae45258"
+          ],
+          "authored": "2026-10-05T18:57:32Z",
+          "committed": "2026-10-05T18:57:32Z",
+          "title": "Align src/app/changelog/page.tsx with current public canon"
+        },
+        {
+          "sha": "b7bf668ecc6ec9d0096cfa292135ba274ff4470f",
+          "tree": "111c4ae8366a7eaca9525cf91fe45a3c1c8ab8cc",
+          "parents": [
+            "8d59106f70f81e10e0791aac290820e8b6b657a6"
+          ],
+          "authored": "2026-10-05T18:57:39Z",
+          "committed": "2026-10-05T18:57:39Z",
+          "title": "Align src/app/investors/page.tsx with current public canon"
+        },
+        {
+          "sha": "d3c2ee919e94966cecfd9a6d8da282d4b3163b92",
+          "tree": "689966745db22481e220ebe3f389685d445c127d",
+          "parents": [
+            "b7bf668ecc6ec9d0096cfa292135ba274ff4470f"
+          ],
+          "authored": "2026-10-05T18:57:47Z",
+          "committed": "2026-10-05T18:57:47Z",
+          "title": "Align src/components/launch/LaunchShell.tsx with current public canon"
+        },
+        {
+          "sha": "d8bb45acacd073c951c8709e1364ebc92b9d9743",
+          "tree": "82240a676880740daedfe46342ff85c5db9406ae",
+          "parents": [
+            "d3c2ee919e94966cecfd9a6d8da282d4b3163b92"
+          ],
+          "authored": "2026-10-05T18:57:54Z",
+          "committed": "2026-10-05T18:57:54Z",
+          "title": "Align src/app/cognitive-mirror/error.tsx with current public canon"
+        },
+        {
+          "sha": "1816855d85104f518d8fa867365519430b35cde9",
+          "tree": "d89a386a71b5d1de0cf462dfc5a925f3b65302c0",
+          "parents": [
+            "d8bb45acacd073c951c8709e1364ebc92b9d9743"
+          ],
+          "authored": "2026-10-05T18:58:00Z",
+          "committed": "2026-10-05T18:58:00Z",
+          "title": "Align src/app/cognitive-mirror/loading.tsx with current public canon"
+        },
+        {
+          "sha": "7374e90061bac51ab80446310308be1945f48c52",
+          "tree": "2ffa13c15b805d14294c3e5995b4199a1e45e2d0",
+          "parents": [
+            "1816855d85104f518d8fa867365519430b35cde9"
+          ],
+          "authored": "2026-10-05T18:58:08Z",
+          "committed": "2026-10-05T18:58:08Z",
+          "title": "Align src/components/life-map/LifeMapUniverse.tsx with current public canon"
+        },
+        {
+          "sha": "a0da2c82cc998bb52a362e1c61f1f7e852a88560",
+          "tree": "a8a64ddbf77981dea82711bea805ae81fde72962",
+          "parents": [
+            "7374e90061bac51ab80446310308be1945f48c52"
+          ],
+          "authored": "2026-10-05T18:58:15Z",
+          "committed": "2026-10-05T18:58:15Z",
+          "title": "Use current Mirror label on compatibility route"
+        },
+        {
+          "sha": "8cbde5e279aaf9d268cd8b32b8b0c22646e3c12b",
+          "tree": "46e9be32648e7ee1e7c146ed249616dd43062d91",
+          "parents": [
+            "a0da2c82cc998bb52a362e1c61f1f7e852a88560"
+          ],
+          "authored": "2026-10-05T18:58:55Z",
+          "committed": "2026-10-05T18:58:55Z",
+          "title": "Remove remaining legacy memory OS copy"
+        },
+        {
+          "sha": "5bebec58219648ccf62f0e45c8d8715175c25296",
+          "tree": "59b3539e0a5972c2aadfd8801bba43a9d76836c5",
+          "parents": [
+            "8cbde5e279aaf9d268cd8b32b8b0c22646e3c12b"
+          ],
+          "authored": "2026-10-05T18:59:14Z",
+          "committed": "2026-10-05T18:59:14Z",
+          "title": "Guard legacy public canon on compatibility surfaces"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/legacy-quarantine-review-gaps-20260902",
+      "head": "9eea92d21b10092447e2a89bb02ec0aa2d48be63",
+      "ahead_by": 54,
+      "behind_by": 28,
+      "merge_base": "a6b0f16077443c22d3de1feaf5816b70ab898f46",
+      "commits": [
+        {
+          "sha": "62b577d7a5aab7d02192b0cfc426fab9e36dcacd",
+          "tree": "df929c8b6411d0a29fbff4d9c6e7c4335e16a0a5",
+          "parents": [
+            "a6b0f16077443c22d3de1feaf5816b70ab898f46"
+          ],
+          "authored": "2026-09-02T22:35:25Z",
+          "committed": "2026-09-02T22:35:25Z",
+          "title": "fix: align legacy quarantine validation for scripts/check-firebase-target.mjs"
+        },
+        {
+          "sha": "20297a90fd7f32926e19083afd2bb0ff0f4ac171",
+          "tree": "d4d983f1f746b776ead98f51ebff04df965509e1",
+          "parents": [
+            "62b577d7a5aab7d02192b0cfc426fab9e36dcacd"
+          ],
+          "authored": "2026-09-02T22:35:34Z",
+          "committed": "2026-09-02T22:35:34Z",
+          "title": "fix: align legacy quarantine validation for scripts/check-v1.mjs"
+        },
+        {
+          "sha": "db429a68e16b9c2b8385868e189637e72388118c",
+          "tree": "74671b5c0b10e2b008c8b1be2249221b5490d863",
+          "parents": [
+            "20297a90fd7f32926e19083afd2bb0ff0f4ac171"
+          ],
+          "authored": "2026-09-02T22:35:43Z",
+          "committed": "2026-09-02T22:35:43Z",
+          "title": "fix: align legacy quarantine validation for .github/workflows/webxr-foundation-audit.yml"
+        },
+        {
+          "sha": "563b4d3429549269f89e3b4b31efd98a63a4df06",
+          "tree": "351ec7040dd3e86efd01204d8f73ee121c01bb18",
+          "parents": [
+            "db429a68e16b9c2b8385868e189637e72388118c"
+          ],
+          "authored": "2026-09-02T22:52:34Z",
+          "committed": "2026-09-02T22:52:34Z",
+          "title": "fix: restore legacy Home XR fallback contract"
+        },
+        {
+          "sha": "b14da281e44646da2fc5a055f27c059c8f98384d",
+          "tree": "ce034ab18af5e04c8b3dced0e13caedfac7b80e1",
+          "parents": [
+            "563b4d3429549269f89e3b4b31efd98a63a4df06"
+          ],
+          "authored": "2026-09-02T23:08:45Z",
+          "committed": "2026-09-02T23:08:45Z",
+          "title": "test: align release smoke with current public routes"
+        },
+        {
+          "sha": "3041b1844860a4530f6e91789627ec933b859320",
+          "tree": "afafc9430e8b4aefe843291abdcb5ef4f4f1b1ce",
+          "parents": [
+            "b14da281e44646da2fc5a055f27c059c8f98384d"
+          ],
+          "authored": "2026-09-02T23:13:07Z",
+          "committed": "2026-09-02T23:13:07Z",
+          "title": "test: assert visible home scene surface"
+        },
+        {
+          "sha": "6b594268396a60c6b3928e8f16c63c621075ea85",
+          "tree": "f6679ccdd23b302b85092b069ecad083ce7b0d1a",
+          "parents": [
+            "3041b1844860a4530f6e91789627ec933b859320"
+          ],
+          "authored": "2026-09-03T03:16:27Z",
+          "committed": "2026-09-03T03:16:27Z",
+          "title": "test: prove legacy quarantine mutations fail closed"
+        },
+        {
+          "sha": "115e4e93817a973654ab804520da8aa5f650660a",
+          "tree": "3b62ac01ec1e34b06eefbf1190f9cffad7b3e159",
+          "parents": [
+            "6b594268396a60c6b3928e8f16c63c621075ea85"
+          ],
+          "authored": "2026-09-03T03:20:28Z",
+          "committed": "2026-09-03T03:20:28Z",
+          "title": "fix: restore fail-closed XR fallback copy"
+        },
+        {
+          "sha": "628b787f9cd944d4364fb5243e20d1250690fbd0",
+          "tree": "4d4ff62001b1e0764dac57438055f4454d73c10e",
+          "parents": [
+            "115e4e93817a973654ab804520da8aa5f650660a"
+          ],
+          "authored": "2026-09-03T03:26:05Z",
+          "committed": "2026-09-03T03:26:05Z",
+          "title": "test: restore stable legacy release smoke"
+        },
+        {
+          "sha": "0dcb4014cab50c86449de595a5586b02775ad80e",
+          "tree": "f8732ce0e638573072f6628eaa56db2d5e5604ce",
+          "parents": [
+            "628b787f9cd944d4364fb5243e20d1250690fbd0"
+          ],
+          "authored": "2026-09-03T11:36:02Z",
+          "committed": "2026-09-03T11:36:02Z",
+          "title": "fix: close legacy quarantine review gaps"
+        },
+        {
+          "sha": "291a9975baee0d1a172c41255b65be2acd211f52",
+          "tree": "1c76adfb7573c88f2c515ca72c2cb87b7ed5ffd9",
+          "parents": [
+            "0dcb4014cab50c86449de595a5586b02775ad80e"
+          ],
+          "authored": "2026-09-03T12:05:01Z",
+          "committed": "2026-09-03T12:05:01Z",
+          "title": "Harden legacy Firebase quarantine allowlist"
+        },
+        {
+          "sha": "5166c60175e26daf9e00c646cbe2151f1c21989e",
+          "tree": "c4956e73b034c243afb7cfe8c166c3f1d0488ac3",
+          "parents": [
+            "291a9975baee0d1a172c41255b65be2acd211f52"
+          ],
+          "authored": "2026-09-03T12:05:09Z",
+          "committed": "2026-09-03T12:05:09Z",
+          "title": "Harden legacy Firebase quarantine allowlist"
+        },
+        {
+          "sha": "93c35f8b0b395f3bff8adfc02abccd71388ae4f9",
+          "tree": "529b09061f2723b7ea82b9890b0585e8d1aa805a",
+          "parents": [
+            "5166c60175e26daf9e00c646cbe2151f1c21989e"
+          ],
+          "authored": "2026-09-03T12:05:17Z",
+          "committed": "2026-09-03T12:05:17Z",
+          "title": "Harden legacy Firebase quarantine allowlist"
+        },
+        {
+          "sha": "9c143c6413ce78fe754c313deb702a0dec665415",
+          "tree": "2d645ef2df9ab87cf6f65ddea4f3e507efed7c79",
+          "parents": [
+            "93c35f8b0b395f3bff8adfc02abccd71388ae4f9"
+          ],
+          "authored": "2026-09-03T12:56:26Z",
+          "committed": "2026-09-03T12:56:26Z",
+          "title": "Close legacy config and navigation smoke gaps"
+        },
+        {
+          "sha": "7200ddd2670c9b7921df631d267395f470688768",
+          "tree": "10bb8e2cdeaef8966cfb7a338480d7aafd15c149",
+          "parents": [
+            "9c143c6413ce78fe754c313deb702a0dec665415"
+          ],
+          "authored": "2026-09-03T12:56:32Z",
+          "committed": "2026-09-03T12:56:32Z",
+          "title": "Close legacy config and navigation smoke gaps"
+        },
+        {
+          "sha": "55cbbea631e8c1acdb3b70a015fce7f8b9b41961",
+          "tree": "68de61dd3df1bfca79ec0c6fbbf4a52471c8a0c8",
+          "parents": [
+            "7200ddd2670c9b7921df631d267395f470688768"
+          ],
+          "authored": "2026-09-03T12:56:39Z",
+          "committed": "2026-09-03T12:56:39Z",
+          "title": "Close legacy config and navigation smoke gaps"
+        },
+        {
+          "sha": "571d86e3bc2c2ec5a16a811035ef1dddeb56149c",
+          "tree": "cdb7a60dae6cbbffcd2b2e7f13250868492b64a1",
+          "parents": [
+            "55cbbea631e8c1acdb3b70a015fce7f8b9b41961"
+          ],
+          "authored": "2026-09-03T12:56:51Z",
+          "committed": "2026-09-03T12:56:51Z",
+          "title": "Close legacy config and navigation smoke gaps"
+        },
+        {
+          "sha": "c2507c58461b590c245f936a92b8c7c019d2decc",
+          "tree": "a7606bc4467af551de3efa5e9d900536072f68ec",
+          "parents": [
+            "571d86e3bc2c2ec5a16a811035ef1dddeb56149c"
+          ],
+          "authored": "2026-09-03T12:57:01Z",
+          "committed": "2026-09-03T12:57:01Z",
+          "title": "Close legacy config and navigation smoke gaps"
+        },
+        {
+          "sha": "fc585ce1aeabf421dc65ca0b26b9d7a697aec7aa",
+          "tree": "e2221cce1b4791bb71eb21f8a4545e9d36a2a6d2",
+          "parents": [
+            "c2507c58461b590c245f936a92b8c7c019d2decc"
+          ],
+          "authored": "2026-09-03T13:11:53Z",
+          "committed": "2026-09-03T13:11:53Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "d1183ee77dccd9c648f393e38c9ae8c5237cccbd",
+          "tree": "e2ef84e8550230e5848027bec6cb90ee2dafbcc4",
+          "parents": [
+            "fc585ce1aeabf421dc65ca0b26b9d7a697aec7aa"
+          ],
+          "authored": "2026-09-03T13:12:02Z",
+          "committed": "2026-09-03T13:12:02Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "9399d80472accbebc8be134bfd947585fdce8d0d",
+          "tree": "808ba957ca13024f551eb21d4dd3db92e6df076b",
+          "parents": [
+            "d1183ee77dccd9c648f393e38c9ae8c5237cccbd"
+          ],
+          "authored": "2026-09-03T13:12:09Z",
+          "committed": "2026-09-03T13:12:09Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "24c20f33bf645fe25e1373060a7896760429664b",
+          "tree": "3dce1d160f95b93f2479dc468aded20d457a4e41",
+          "parents": [
+            "9399d80472accbebc8be134bfd947585fdce8d0d"
+          ],
+          "authored": "2026-09-03T13:12:16Z",
+          "committed": "2026-09-03T13:12:16Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "b38efac53cf57c1169778791cd812f5cf840724b",
+          "tree": "23795471f344b7c4cb7a7d887862966039767c5e",
+          "parents": [
+            "24c20f33bf645fe25e1373060a7896760429664b"
+          ],
+          "authored": "2026-09-03T13:12:24Z",
+          "committed": "2026-09-03T13:12:24Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "d02d90aa90d6e367ee47fe4e52f0c2d579e4f3a5",
+          "tree": "0689a55cb72ceacd4b2d019833e187b40376773b",
+          "parents": [
+            "b38efac53cf57c1169778791cd812f5cf840724b"
+          ],
+          "authored": "2026-09-03T13:12:33Z",
+          "committed": "2026-09-03T13:12:33Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "85e3b39b685504d196d2cfbda037c07c41ea565b",
+          "tree": "ffad6e2d4115e6b33c405dedc0df6d180dde0566",
+          "parents": [
+            "d02d90aa90d6e367ee47fe4e52f0c2d579e4f3a5"
+          ],
+          "authored": "2026-09-03T13:12:43Z",
+          "committed": "2026-09-03T13:12:43Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "13406985cc17c2556a9a0537453d878fae425ac6",
+          "tree": "0ac9772f8319d5adabe5b9c30b68f2012d9c4a0a",
+          "parents": [
+            "85e3b39b685504d196d2cfbda037c07c41ea565b"
+          ],
+          "authored": "2026-09-03T13:12:53Z",
+          "committed": "2026-09-03T13:12:53Z",
+          "title": "Reconcile legacy Firebase configs and visible navigation"
+        },
+        {
+          "sha": "cccb18f42e9ca3706e358f2a41e71825046f8a25",
+          "tree": "62a7269e7c45bb0878ae7e556bd100523885783c",
+          "parents": [
+            "13406985cc17c2556a9a0537453d878fae425ac6"
+          ],
+          "authored": "2026-09-03T16:39:42Z",
+          "committed": "2026-09-03T16:39:42Z",
+          "title": "test: detect escaped private fields in Flight payloads"
+        },
+        {
+          "sha": "3b5e24819a199306ebe05640b9e761d299b96d26",
+          "tree": "6bec33df340f95bc5678bb01b95bcc7be95b4203",
+          "parents": [
+            "cccb18f42e9ca3706e358f2a41e71825046f8a25"
+          ],
+          "authored": "2026-09-03T16:53:49Z",
+          "committed": "2026-09-03T16:53:49Z",
+          "title": "fix(home): keep orbit navigation labels visibly painted"
+        },
+        {
+          "sha": "ac7b591e4f8408968e17dd3ebad1a9580ae59c67",
+          "tree": "fb5a57c4595990497e505a305917c51de912eea1",
+          "parents": [
+            "3b5e24819a199306ebe05640b9e761d299b96d26"
+          ],
+          "authored": "2026-09-03T16:54:20Z",
+          "committed": "2026-09-03T16:54:20Z",
+          "title": "test(home): assert untouched labels have painted opacity"
+        },
+        {
+          "sha": "f985321a382d3b24820110b6032d96ff1db39909",
+          "tree": "a6ff9f841a428e550d9e9b44540d473063dc79c0",
+          "parents": [
+            "ac7b591e4f8408968e17dd3ebad1a9580ae59c67"
+          ],
+          "authored": "2026-09-03T18:23:56Z",
+          "committed": "2026-09-03T18:23:56Z",
+          "title": "Give controller-free XR users actionable recovery"
+        },
+        {
+          "sha": "324bc69c0e9f0248f721fab83709496b87149785",
+          "tree": "49f69298d86c0504cdca8f58e0cde2dfaf019e22",
+          "parents": [
+            "f985321a382d3b24820110b6032d96ff1db39909"
+          ],
+          "authored": "2026-09-03T19:33:45Z",
+          "committed": "2026-09-03T19:33:45Z",
+          "title": "fix: reject Firebase authority in arbitrarily named JSON configs"
+        },
+        {
+          "sha": "d848f7981dcdd4dfc55062f6b9f85797f4972743",
+          "tree": "8e0277130d297e9fdffa167848d62b44495e8351",
+          "parents": [
+            "324bc69c0e9f0248f721fab83709496b87149785"
+          ],
+          "authored": "2026-09-03T19:33:54Z",
+          "committed": "2026-09-03T19:33:54Z",
+          "title": "fix: make V1 quarantine scan arbitrary Firebase config paths"
+        },
+        {
+          "sha": "67ffb132c61a4f5d2f38493cb28afcc4bbe70fae",
+          "tree": "f19e7f1a095b0ca9eca548ff271a1a212c1f259c",
+          "parents": [
+            "d848f7981dcdd4dfc55062f6b9f85797f4972743"
+          ],
+          "authored": "2026-09-03T19:34:15Z",
+          "committed": "2026-09-03T19:34:15Z",
+          "title": "test: prove arbitrary Firebase configs fail closed"
+        },
+        {
+          "sha": "a7112b37ed9db915ec38a0d745f5e4739476680c",
+          "tree": "1f376351ef66094f6fa7b2e40972f9329f04c11d",
+          "parents": [
+            "67ffb132c61a4f5d2f38493cb28afcc4bbe70fae"
+          ],
+          "authored": "2026-09-03T19:34:24Z",
+          "committed": "2026-09-03T19:34:24Z",
+          "title": "fix: align Home XR lock with truthful fallback copy"
+        },
+        {
+          "sha": "7eed98b0834b8380db9b3d295b358224aedeae5b",
+          "tree": "ea7567ee1c186a56c7ec40252dd2f11ddae2fe0c",
+          "parents": [
+            "a7112b37ed9db915ec38a0d745f5e4739476680c"
+          ],
+          "authored": "2026-09-03T19:34:38Z",
+          "committed": "2026-09-03T19:34:38Z",
+          "title": "fix: keep Home XR fallback lock scoped to recovery copy"
+        },
+        {
+          "sha": "e427b6f971325e414dd4b7810051f0cadf72cb62",
+          "tree": "82ed942dc60aa92f38e465ba5d65c16a0efcf586",
+          "parents": [
+            "7eed98b0834b8380db9b3d295b358224aedeae5b"
+          ],
+          "authored": "2026-09-03T19:43:50Z",
+          "committed": "2026-09-03T19:43:50Z",
+          "title": "fix(quarantine): use recursive Firebase config discovery"
+        },
+        {
+          "sha": "4b7dd312255eb8abb5639836afd2cf82b3672a97",
+          "tree": "62d0be14384e077f9af190436c34fc1b1a75ab1a",
+          "parents": [
+            "e427b6f971325e414dd4b7810051f0cadf72cb62"
+          ],
+          "authored": "2026-09-03T19:44:14Z",
+          "committed": "2026-09-03T19:44:14Z",
+          "title": "fix(quarantine): scan recursive Firebase-shaped JSON in V1 check"
+        },
+        {
+          "sha": "5926f9fa1e012626d5375cd4b78035e666c44ffc",
+          "tree": "a201bd2c6384ddff0eeb6534370905ea74ede295",
+          "parents": [
+            "4b7dd312255eb8abb5639836afd2cf82b3672a97"
+          ],
+          "authored": "2026-09-03T19:44:47Z",
+          "committed": "2026-09-03T19:44:47Z",
+          "title": "test(quarantine): cover arbitrary and nested Firebase configs"
+        },
+        {
+          "sha": "dba0c0ed36424891dc57fbc28d5d38c1f28cd9f2",
+          "tree": "08fcff2946d7cdaa6a9a85e17166c334dc2d0ce9",
+          "parents": [
+            "5926f9fa1e012626d5375cd4b78035e666c44ffc"
+          ],
+          "authored": "2026-09-03T19:45:10Z",
+          "committed": "2026-09-03T19:45:10Z",
+          "title": "fix(xr): show controller commands only when connected"
+        },
+        {
+          "sha": "0a224d5f7fa02133fa9fb380d047f80c4149d5f0",
+          "tree": "0c97ea3ca42ce8ea7e78785f6457e878a847c90e",
+          "parents": [
+            "dba0c0ed36424891dc57fbc28d5d38c1f28cd9f2"
+          ],
+          "authored": "2026-09-03T19:45:28Z",
+          "committed": "2026-09-03T19:45:28Z",
+          "title": "test(xr): lock connected-only controller instructions"
+        },
+        {
+          "sha": "ac7fdf92cae1a41f6938f076a633779fb6ee5f1f",
+          "tree": "2b3905559b48c5df21e571a47fb737c1cc96a254",
+          "parents": [
+            "0a224d5f7fa02133fa9fb380d047f80c4149d5f0"
+          ],
+          "authored": "2026-09-03T20:55:10Z",
+          "committed": "2026-09-03T20:55:10Z",
+          "title": "Fix legacy quarantine V1 diagnostic assertion"
+        },
+        {
+          "sha": "2e1b2e17108079a5ff8bddd83a300cef14f18a24",
+          "tree": "f2458c73e9bb939d324e36594e6104e1c1fbd867",
+          "parents": [
+            "ac7fdf92cae1a41f6938f076a633779fb6ee5f1f"
+          ],
+          "authored": "2026-09-03T20:55:44Z",
+          "committed": "2026-09-03T20:55:44Z",
+          "title": "Skip only verified Git LFS pointers during config discovery"
+        },
+        {
+          "sha": "00c4493b33e82043391115167424f50216cdf08a",
+          "tree": "d216e98dcc895886dcc6450d9b09aaafef36c0ae",
+          "parents": [
+            "2e1b2e17108079a5ff8bddd83a300cef14f18a24"
+          ],
+          "authored": "2026-09-03T22:02:23Z",
+          "committed": "2026-09-03T22:02:23Z",
+          "title": "fix: follow safe in-repository config symlinks"
+        },
+        {
+          "sha": "b6e096dfc3396b34e6df3042ca2649ff9d1eec21",
+          "tree": "b5ecba06322d25d7d8cabaa6558e04ec5f11df80",
+          "parents": [
+            "00c4493b33e82043391115167424f50216cdf08a"
+          ],
+          "authored": "2026-09-03T22:02:40Z",
+          "committed": "2026-09-03T22:02:40Z",
+          "title": "fix: scan safe tracked config symlinks in v1 guard"
+        },
+        {
+          "sha": "3300606ade371e9e3c36fd980782e01adc2e38fd",
+          "tree": "91ce6c20f7696f6917d888928d972534ba1cd8d1",
+          "parents": [
+            "b6e096dfc3396b34e6df3042ca2649ff9d1eec21"
+          ],
+          "authored": "2026-09-03T22:03:00Z",
+          "committed": "2026-09-03T22:03:00Z",
+          "title": "test: reject symlinked Firebase configs"
+        },
+        {
+          "sha": "498ebdbc63841aac2cd0067cb3f24f49679858bd",
+          "tree": "a0dcc2598548e87f961ada4227bc067ce06ccfc3",
+          "parents": [
+            "3300606ade371e9e3c36fd980782e01adc2e38fd"
+          ],
+          "authored": "2026-09-03T22:03:08Z",
+          "committed": "2026-09-03T22:03:08Z",
+          "title": "ci: validate checked-out legacy configuration"
+        },
+        {
+          "sha": "b80ab220308eec1bb5543f1b4f0c293fa187b3ea",
+          "tree": "c6943fca6f423e0eecfa2beaf30a8ba019e6e72b",
+          "parents": [
+            "498ebdbc63841aac2cd0067cb3f24f49679858bd"
+          ],
+          "authored": "2026-09-03T23:07:19Z",
+          "committed": "2026-09-03T23:07:19Z",
+          "title": "fix: close legacy review gap in scripts/check-firebase-target.mjs"
+        },
+        {
+          "sha": "a5a28b368aca53f21958538f17627b90d062c5a8",
+          "tree": "9198f276b17008c1ff7b8d54a0a2ba7e58d40c9e",
+          "parents": [
+            "b80ab220308eec1bb5543f1b4f0c293fa187b3ea"
+          ],
+          "authored": "2026-09-03T23:07:26Z",
+          "committed": "2026-09-03T23:07:26Z",
+          "title": "fix: close legacy review gap in scripts/check-v1.mjs"
+        },
+        {
+          "sha": "2c2cc3dc94a3f31d3ca81e2e3e748ea6272926dc",
+          "tree": "6d5f7e7d42f2da9ba4c890bb90e877c8aaadbb46",
+          "parents": [
+            "a5a28b368aca53f21958538f17627b90d062c5a8"
+          ],
+          "authored": "2026-09-03T23:07:34Z",
+          "committed": "2026-09-03T23:07:34Z",
+          "title": "fix: close legacy review gap in tests/e2e/release-smoke.spec.ts"
+        },
+        {
+          "sha": "3eac90aea881ddd0b6fe269255af9750cc751f76",
+          "tree": "441addd4b0a45c94e67465e4edd430c20700e051",
+          "parents": [
+            "2c2cc3dc94a3f31d3ca81e2e3e748ea6272926dc"
+          ],
+          "authored": "2026-09-03T23:07:42Z",
+          "committed": "2026-09-03T23:07:42Z",
+          "title": "fix: close legacy review gap in package.json"
+        },
+        {
+          "sha": "3a39c7d562a944ef466b325c605fc086f5484230",
+          "tree": "5966b0afd3e76a4d7601c05356472aab4fcc19a1",
+          "parents": [
+            "3eac90aea881ddd0b6fe269255af9750cc751f76"
+          ],
+          "authored": "2026-09-04T04:07:12Z",
+          "committed": "2026-09-04T04:07:12Z",
+          "title": "test: repair legacy public-smoke syntax"
+        },
+        {
+          "sha": "784106b0e58bec835c2777a698752b0335212784",
+          "tree": "24b765053e69795f825044348f452e99777d13aa",
+          "parents": [
+            "3a39c7d562a944ef466b325c605fc086f5484230"
+          ],
+          "authored": "2026-09-04T04:55:11Z",
+          "committed": "2026-09-04T04:55:11Z",
+          "title": "fix: discover arbitrary Firebase config filenames"
+        },
+        {
+          "sha": "189a6d54211eb4766466bb7cfb00c4a91bba233e",
+          "tree": "c1031e7025defd59a3289cef488a3e2c4476770e",
+          "parents": [
+            "784106b0e58bec835c2777a698752b0335212784"
+          ],
+          "authored": "2026-09-04T04:55:25Z",
+          "committed": "2026-09-04T04:55:25Z",
+          "title": "fix: scan Firebase-shaped configs without suffix assumptions"
+        },
+        {
+          "sha": "9eea92d21b10092447e2a89bb02ec0aa2d48be63",
+          "tree": "8d2d70a7fdd5b58906b9950c43e9fc2fe82df3e1",
+          "parents": [
+            "189a6d54211eb4766466bb7cfb00c4a91bba233e"
+          ],
+          "authored": "2026-09-04T04:55:46Z",
+          "committed": "2026-09-04T04:55:46Z",
+          "title": "test: reject arbitrary-suffix Firebase configs"
+        }
+      ],
+      "complete": true,
+      "error": null
+    },
+    {
+      "ref": "refs/heads/fix/life-map-aaa-tier4-production",
+      "head": "ea382ee47c9e3621969d8c7b692438ffdb2ad1c0",
+      "ahead_by": 21,
+      "behind_by": 1545,
+      "merge_base": "2d5de40895b50395e5d07bce61a8ced4c7d5c21f",
+      "commits": [
+        {
+          "sha": "45fe9e27120bad379c6f154ac05fb1e548a47d6c",
+          "tree": "0f211e247bb14416745bbfc20cefc729a5e1a194",
+          "parents": [
+            "2d5de40895b50395e5d07bce61a8ced4c7d5c21f"
+          ],
+          "authored": "2026-05-18T19:42:29Z",
+          "committed": "2026-05-18T19:42:29Z",
+          "title": "Add merge conflict marker guard"
+        },
+        {
+          "sha": "a11db7ee5db6d14095578432a84ad75b8b0decd4",
+          "tree": "71e4c6a20a9d87fe93123cb6deeea38ad4b212ac",
+          "parents": [
+            "45fe9e27120bad379c6f154ac05fb1e548a47d6c"
+          ],
+          "authored": "2026-05-18T19:45:25Z",
+          "committed": "2026-05-18T19:45:25Z",
+          "title": "Wire conflict marker guard into tier4 branch scripts"
+        },
+        {
+          "sha": "56e520d41616eba464907ed70ca61ced5a458118",
+          "tree": "6ddecfb955371ce46356ddf01218f7f39af31bdf",
+          "parents": [
+            "a11db7ee5db6d14095578432a84ad75b8b0decd4"
+          ],
+          "authored": "2026-05-18T19:55:47Z",
+          "committed": "2026-05-18T19:55:47Z",
+          "title": "Add Playwright browser install helper"
+        },
+        {
+          "sha": "196f97fe35f2a2d08f79cc773a014dffcb3877be",
+          "tree": "f0a6b33f502268cf61b9cea61a4d0eea96088c3f",
+          "parents": [
+            "56e520d41616eba464907ed70ca61ced5a458118"
+          ],
+          "authored": "2026-05-18T19:56:52Z",
+          "committed": "2026-05-18T19:56:52Z",
+          "title": "Clean passed P0 next actions and track Playwright install"
+        },
+        {
+          "sha": "2b989c48a3eab2d34883aecc4fe797eca0e77e6b",
+          "tree": "d24d8729e0957b6d7e1a32c519377beb3c531d60",
+          "parents": [
+            "196f97fe35f2a2d08f79cc773a014dffcb3877be"
+          ],
+          "authored": "2026-05-18T20:07:59Z",
+          "committed": "2026-05-18T20:07:59Z",
+          "title": "Silence legacy HomeScene hook dependency warning"
+        },
+        {
+          "sha": "973f8a4b7e1e2305a0ad3b5ac496a0149e8aa139",
+          "tree": "15f35da79b16a3a85433737c9d0093907c691a7e",
+          "parents": [
+            "2b989c48a3eab2d34883aecc4fe797eca0e77e6b"
+          ],
+          "authored": "2026-05-18T20:14:41Z",
+          "committed": "2026-05-18T20:14:41Z",
+          "title": "Broaden legacy HomeScene ESLint override"
+        },
+        {
+          "sha": "35cd739cc99f6f70443da63aaa9f98f0e5a9cf33",
+          "tree": "f4ae83cb2676b3b66757f119692198b92b4be999",
+          "parents": [
+            "973f8a4b7e1e2305a0ad3b5ac496a0149e8aa139"
+          ],
+          "authored": "2026-05-18T20:22:26Z",
+          "committed": "2026-05-18T20:22:26Z",
+          "title": "Disable exhaustive deps warning for launch branch"
+        },
+        {
+          "sha": "b73a6891889b35f17a30eca148929bc1883db389",
+          "tree": "caf27e5105e6dd05e431adb96f7f75541dc8ae11",
+          "parents": [
+            "35cd739cc99f6f70443da63aaa9f98f0e5a9cf33"
+          ],
+          "authored": "2026-05-18T20:28:24Z",
+          "committed": "2026-05-18T20:28:24Z",
+          "title": "Make launch branch lint gate warning-clean"
+        },
+        {
+          "sha": "afe5cecf316d4b3964f80651b6e80a6597f747fe",
+          "tree": "6044c02a82ff407a2e9d1d2a716321493d4b651d",
+          "parents": [
+            "b73a6891889b35f17a30eca148929bc1883db389"
+          ],
+          "authored": "2026-05-18T20:35:54Z",
+          "committed": "2026-05-18T20:35:54Z",
+          "title": "Skip duplicate ESLint during Next build"
+        },
+        {
+          "sha": "d44cbcb8b3651bd380b4420f27dfb79b1b4f5366",
+          "tree": "fb100dc340263d23bf3fffde44d3218f1c468a7b",
+          "parents": [
+            "afe5cecf316d4b3964f80651b6e80a6597f747fe"
+          ],
+          "authored": "2026-05-18T20:42:21Z",
+          "committed": "2026-05-18T20:42:21Z",
+          "title": "Align Firestore rules with Tier 2 policy tests"
+        },
+        {
+          "sha": "016be8c88fa21dbb0cbfbf553384e5cc6c46783e",
+          "tree": "921b4b9810afe6f880113b406eb6837f09745ea0",
+          "parents": [
+            "d44cbcb8b3651bd380b4420f27dfb79b1b4f5366"
+          ],
+          "authored": "2026-05-18T20:59:11Z",
+          "committed": "2026-05-18T20:59:11Z",
+          "title": "Add explicit P0 command proof summary"
+        },
+        {
+          "sha": "7213b0efbf58cee6fc1dbe2fafd5814067d5feda",
+          "tree": "c91d1e646bf605348ce8e6405ca52354550a309d",
+          "parents": [
+            "016be8c88fa21dbb0cbfbf553384e5cc6c46783e"
+          ],
+          "authored": "2026-05-18T21:11:28Z",
+          "committed": "2026-05-18T21:11:28Z",
+          "title": "Fix rules emulator hooks and owner-bound dreams policy"
+        },
+        {
+          "sha": "904aeb038128877f732a2babb033bb10820f212b",
+          "tree": "074a792a2d95516e656c8760500ba91a42a48637",
+          "parents": [
+            "7213b0efbf58cee6fc1dbe2fafd5814067d5feda"
+          ],
+          "authored": "2026-05-18T21:14:44Z",
+          "committed": "2026-05-18T21:14:44Z",
+          "title": "Scope public copy checks to V1 launch-facing docs"
+        },
+        {
+          "sha": "13288f95c5316e17c59ad162d9b5ccfbf107408a",
+          "tree": "d01d4283bd9e61d8bb1fc11693a0331c201b15cb",
+          "parents": [
+            "904aeb038128877f732a2babb033bb10820f212b"
+          ],
+          "authored": "2026-05-18T21:27:40Z",
+          "committed": "2026-05-18T21:27:40Z",
+          "title": "Teach rules emulator Firestore helpers used by launch rules"
+        },
+        {
+          "sha": "bf4f8140f45b09e5aaa1288c9803335c7f4852b9",
+          "tree": "735de9099667661eb40c72f75197c25d985902b7",
+          "parents": [
+            "13288f95c5316e17c59ad162d9b5ccfbf107408a"
+          ],
+          "authored": "2026-05-18T21:31:47Z",
+          "committed": "2026-05-18T21:31:47Z",
+          "title": "Add owner-bound rules for Tier 2 policy collections"
+        },
+        {
+          "sha": "f4524131c1873aeea1f831eb3d5355d67f6e4482",
+          "tree": "51d7bb11299a3ccac1a58831da4d63341e4bd90e",
+          "parents": [
+            "bf4f8140f45b09e5aaa1288c9803335c7f4852b9"
+          ],
+          "authored": "2026-05-18T21:33:14Z",
+          "committed": "2026-05-18T21:33:14Z",
+          "title": "Limit public copy check to launch-facing docs"
+        },
+        {
+          "sha": "1c70ecb5abf2fb62bbb0940edbd5916c315f2c20",
+          "tree": "a26092ccde05432de85a7ca8f0fe5b9bc5477453",
+          "parents": [
+            "f4524131c1873aeea1f831eb3d5355d67f6e4482"
+          ],
+          "authored": "2026-05-18T21:45:54Z",
+          "committed": "2026-05-18T21:45:54Z",
+          "title": "Clarify V1 therapy boundary copy"
+        },
+        {
+          "sha": "1b7a26b3be9d952bd4acd6850d47e61267526b07",
+          "tree": "3d21bf895711d0b26777052f5b4aece47ced32c2",
+          "parents": [
+            "1c70ecb5abf2fb62bbb0940edbd5916c315f2c20"
+          ],
+          "authored": "2026-05-18T21:47:16Z",
+          "committed": "2026-05-18T21:47:16Z",
+          "title": "Clarify V1 diagnosis copy boundary"
+        },
+        {
+          "sha": "63abee90ca1feaa5da77061a21534a6a7700f489",
+          "tree": "e9414b7c20f851d4562fcd2208b29322e70c14f0",
+          "parents": [
+            "1b7a26b3be9d952bd4acd6850d47e61267526b07"
+          ],
+          "authored": "2026-05-18T21:48:42Z",
+          "committed": "2026-05-18T21:48:42Z",
+          "title": "Clarify V1 out-of-scope boundaries"
+        },
+        {
+          "sha": "0a7357eaba45a892f5dbd83763b77a3eac55068f",
+          "tree": "fefe60ae0616281f32520f99152ee77d2e231a75",
+          "parents": [
+            "63abee90ca1feaa5da77061a21534a6a7700f489"
+          ],
+          "authored": "2026-05-18T22:11:13Z",
+          "committed": "2026-05-18T22:11:13Z",
+          "title": "Add completion audit Firestore collection markers"
+        },
+        {
+          "sha": "ea382ee47c9e3621969d8c7b692438ffdb2ad1c0",
+          "tree": "808373b113158888d4cd6ae4d91a255cd82bb882",
+          "parents": [
+            "0a7357eaba45a892f5dbd83763b77a3eac55068f"
+          ],
+          "authored": "2026-05-18T22:28:12Z",
+          "committed": "2026-05-18T22:28:12Z",
+          "title": "Declare Firebase Functions source for completion audit"
+        }
+      ],
+      "complete": true,
+      "error": null
+    }
+  ]
+}
