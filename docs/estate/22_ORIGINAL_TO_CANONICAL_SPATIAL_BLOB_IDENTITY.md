@@ -15,11 +15,11 @@ Full matched-source identities are in [ORIGINAL_TO_SPATIAL_MAIN_BLOB_IDENTITY.js
 | Identical Git objects found within canonical `urai-tier1/` | 40; 35,916 reported bytes |
 | Identical Git objects found only in modern audit/quarantine elsewhere | 4; 1,334,030 reported bytes |
 | Total distinct cross-repo identical Git-object reported bytes | 1,369,946 |
-| Original main MP4 positions with identical Git blob object in Spatial main | **1 / 35** |
+| Original main non-empty MP4 positions with identical Git blob object in Spatial main | **0 / 31** |
 
-**Interpretation:** Direct exact Git-object reuse of preserved original-main cinematic MP4 bytes is **not observed** in Spatial main. This does **not** establish that current Spatial is missing its own movies, visual materials, rendered derivatives, or functioning media, nor that historical assets have no value. Bitwise equality is stronger than path-name similarity but narrower than functional/visual parity.
+**Interpretation:** Direct exact Git-object reuse of preserved original-main **non-empty** cinematic MP4 bytes is **not observed** in Spatial main. This does **not** establish that current Spatial is missing its own movies, visual materials, rendered derivatives, or functioning media, nor that historical assets have no value. Bitwise equality is stronger than path-name similarity but narrower than functional/visual parity.
 
-## What moved as exact Git objects
+**Zero-byte filename caution:** the original main also contains **4 zero-byte `.mp4` placeholders**; these share the universal empty Git blob with many unrelated empty files in Spatial and must **not** be classified as video reuse. The complete crosswalk distinguishes 35 MP4 paths, 31 non-empty video objects, and 4 empty placeholders.\n\n## What moved as exact Git objects
 
 Current tier1 cross-repo byte-identical donor examples are original `deploy/free-static-launch/assets/dropins/` SVGs now present under `urai-tier1/brand/exports/svg/`, `urai-tier1/public/demo/memories/`, and `urai-tier1/public/assets/urai/lifemap/`. These include brands, sample-memory illustrations, and stylized Life Map fog/nebula/star overlay files. They are **small stored assets**, not evidence that the legacy Home/Council, emotional intelligence, private Replay, model pipelines, or security middleware were copied as runtime implementations.
 

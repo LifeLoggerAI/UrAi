@@ -30,6 +30,7 @@
   "original_main_mp4_files": 35,
   "mp4_git_blob_ids_found_anywhere_in_spatial_main": 1,
   "limitations": [
+    "CORRECTION: all apparent MP4 Git object intersections involve the universal zero-byte Git blob SHA. Four zero-byte .mp4 placeholders in original main cannot be counted as reused media. No non-empty original MP4 object matched Spatial main.",
     "Git object ID equality indicates bit-identical tracked object identity, not proof of license, current use, decoded playback, device acceptance, original ownership, or semantic equivalence.",
     "Source locations, not full raw-byte SHA256 verified. Different Git object IDs do not establish absence of functionally equivalent derivatives.",
     "The spatial source is frozen main only; open review branches and provider deployments are independent surfaces."
@@ -744,5 +745,30 @@
       "canonical_tier1_path": true,
       "audit_or_quarantine_only": false
     }
-  ]
+  ],
+  "original_main_nonempty_mp4_files": 31,
+  "original_main_zero_byte_mp4_placeholders": [
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-05.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-05a.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-06.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    },
+    {
+      "path": "public/assets/sky/fracture/sky-fracture-06a.mp4",
+      "git_blob_sha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0
+    }
+  ],
+  "nonempty_mp4_git_blob_ids_found_anywhere_in_spatial_main": 0,
+  "zero_byte_blob_is_not_media": true
 }
