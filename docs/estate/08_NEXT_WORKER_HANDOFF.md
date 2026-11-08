@@ -18,3 +18,8 @@ Original UrAi is quarantined and **cannot deploy `urai.app`**. The master regist
 
 ## Current pass/fail authority
 Complete `main` Git-tree metadata: **PASS**; 242 branch heads registration: **PASS**; selected code read: **PASS**. Full content/historical bytes, original native build/tests, cloud integrations, physical-device acceptance, production launch: **NOT VERIFIED / HOLD**.
+
+
+## R885 — NEXT NEW-CONVERSATION HANDOFF (2026-11-07)
+
+**Read [23_NEXT_CHAT_GENESIS_FORENSIC_HANDOFF_20261107.md](23_NEXT_CHAT_GENESIS_FORENSIC_HANDOFF_20261107.md) for the consolidated live next-Chalk checkpoint** (passes 1–22, original source history, exact manifests, canonical comparison, all evidence boundaries and P0–P3 actions). It is a documentation pointer, not a release authorization. Re-fetch live PR #396 and private Labs #262 heads. Production HOLD.

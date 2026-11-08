@@ -24,3 +24,8 @@ Previously verified functionality remains real; historical “LOCKED” or “DO
 
 
 **Next worker:** Start with the current repository README and active PRs, then update this entrypoint with actual source-pinned findings, not guessed certification.
+
+
+## R885 — NEXT NEW-CONVERSATION HANDOFF (2026-11-07)
+
+**Read [23_NEXT_CHAT_GENESIS_FORENSIC_HANDOFF_20261107.md](23_NEXT_CHAT_GENESIS_FORENSIC_HANDOFF_20261107.md) for the consolidated live next-Chalk checkpoint** (passes 1–22, original source history, exact manifests, canonical comparison, all evidence boundaries and P0–P3 actions). It is a documentation pointer, not a release authorization. Re-fetch live PR #396 and private Labs #262 heads. Production HOLD.
