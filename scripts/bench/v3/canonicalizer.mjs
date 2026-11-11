@@ -1,12 +1,8 @@
+import { requestedKeys } from './key-contract.mjs';
 import { extractFinalJsonValue } from '../deterministic-output.mjs';
 
 export const OUTPUT_CANONICALIZER_VERSION = 'prompt-contract-canonicalizer-v2';
 
-function requestedKeys(prompt) {
-  const match = String(prompt ?? '').match(/\bkeys?\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*(?:\s*,?\s*and\s+[A-Za-z_][A-Za-z0-9_]*)?)/i);
-  if (!match) return [];
-  return match[1].replace(/\s+and\s+/gi, ',').split(',').map((value) => value.trim()).filter(Boolean);
-}
 
 function canonicalJson(value) {
   return JSON.stringify(value);

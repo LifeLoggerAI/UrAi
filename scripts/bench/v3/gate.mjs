@@ -1,3 +1,4 @@
+import { requestedKeys } from './key-contract.mjs';
 export const BUILDER_PRESERVATION_GATE_VERSION = 'builder-preservation-gate-v3-safe-typed';
 
 const REPLACEABLE_DEFECT_TYPES = new Set([
@@ -49,11 +50,6 @@ export function answersEquivalent(left, right) {
   return normalizeAnswerForComparison(left) === normalizeAnswerForComparison(right);
 }
 
-function requestedKeys(prompt) {
-  const match = String(prompt ?? '').match(/\bkeys?\s+([A-Za-z_][A-Za-z0-9_]*(?:\s*,\s*[A-Za-z_][A-Za-z0-9_]*)*(?:\s*,?\s*and\s+[A-Za-z_][A-Za-z0-9_]*)?)/i);
-  if (!match) return [];
-  return match[1].replace(/\s+and\s+/gi, ',').split(',').map((value) => value.trim()).filter(Boolean);
-}
 
 export function validateOutputContract(taskPrompt, answer) {
   const prompt = String(taskPrompt ?? '');
