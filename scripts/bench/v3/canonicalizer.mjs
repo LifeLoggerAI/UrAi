@@ -1,29 +1,8 @@
+import { requestedKeys } from './key-contract.mjs';
 import { extractFinalJsonValue } from '../deterministic-output.mjs';
 
 export const OUTPUT_CANONICALIZER_VERSION = 'prompt-contract-canonicalizer-v2';
 
-function requestedKeys(prompt) {
-  const source = String(prompt ?? '');
-  const match = /\b(key|keys)\s+([A-Za-z_][A-Za-z0-9_]*)\b/i.exec(source);
-  if (!match) return [];
-  const keys = [match[2]];
-  // A singular "key result, an integer" contract names only one key: the
-  // following comma introduces a value-type annotation, not another key.
-  if (match[1].toLowerCase() === 'key') return keys;
-
-  // Parse only explicit plural-key list separators, rather than greedily
-  // interpreting arbitrary following prose as additional keys.
-  let remaining = source.slice(match.index + match[0].length);
-  while (true) {
-    const next = /^\s*(?:,\s*(?:and\s+)?|\s+and\s+)([A-Za-z_][A-Za-z0-9_]*)\b/i.exec(remaining);
-    if (!next) break;
-    const suffix = remaining.slice(next[0].length);
-    if (/^(?:a|an)$/i.test(next[1]) && /^\s+(?:(?:signed|unsigned)\s+)?(?:integer|number|string|boolean|array|object|float)\b/i.test(suffix)) break;
-    keys.push(next[1]);
-    remaining = suffix;
-  }
-  return keys;
-}
 
 function canonicalJson(value) {
   return JSON.stringify(value);
