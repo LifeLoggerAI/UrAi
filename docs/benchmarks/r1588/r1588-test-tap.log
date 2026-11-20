@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: treats structured and string candidate answers as semantically equivalent
+ok 1 - treats structured and string candidate answers as semantically equivalent
+  ---
+  duration_ms: 1.875269
+  type: 'test'
+  ...
+# Subtest: preserves on constraint-violation rewrites even when critics agree
+ok 2 - preserves on constraint-violation rewrites even when critics agree
+  ---
+  duration_ms: 0.191981
+  type: 'test'
+  ...
+# Subtest: preserves when independently computed candidates disagree
+ok 3 - preserves when independently computed candidates disagree
+  ---
+  duration_ms: 0.139842
+  type: 'test'
+  ...
+# Subtest: all 20 generator cases independently computable: constraint-selection
+ok 4 - all 20 generator cases independently computable: constraint-selection
+  ---
+  duration_ms: 2.531944
+  type: 'test'
+  ...
+# Subtest: all 20 correct builder cases cannot be overwritten by forged unanimous critics: constraint-selection
+ok 5 - all 20 correct builder cases cannot be overwritten by forged unanimous critics: constraint-selection
+  ---
+  duration_ms: 3.046063
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: constraint-selection
+ok 6 - all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: constraint-selection
+  ---
+  duration_ms: 0.905741
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: constraint-selection
+ok 7 - all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: constraint-selection
+  ---
+  duration_ms: 0.790447
+  type: 'test'
+  ...
+# Subtest: all 20 generator cases independently computable: filter-sort
+ok 8 - all 20 generator cases independently computable: filter-sort
+  ---
+  duration_ms: 0.616844
+  type: 'test'
+  ...
+# Subtest: all 20 correct builder cases cannot be overwritten by forged unanimous critics: filter-sort
+ok 9 - all 20 correct builder cases cannot be overwritten by forged unanimous critics: filter-sort
+  ---
+  duration_ms: 0.438654
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: filter-sort
+ok 10 - all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: filter-sort
+  ---
+  duration_ms: 0.739399
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: filter-sort
+ok 11 - all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: filter-sort
+  ---
+  duration_ms: 0.764097
+  type: 'test'
+  ...
+# Subtest: all 20 generator cases independently computable: ranking-tiebreak
+ok 12 - all 20 generator cases independently computable: ranking-tiebreak
+  ---
+  duration_ms: 0.551605
+  type: 'test'
+  ...
+# Subtest: all 20 correct builder cases cannot be overwritten by forged unanimous critics: ranking-tiebreak
+ok 13 - all 20 correct builder cases cannot be overwritten by forged unanimous critics: ranking-tiebreak
+  ---
+  duration_ms: 0.781853
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: ranking-tiebreak
+ok 14 - all 20 wrong Builder cases can be repaired only with independently correct unanimous proposal: ranking-tiebreak
+  ---
+  duration_ms: 0.610614
+  type: 'test'
+  ...
+# Subtest: all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: ranking-tiebreak
+ok 15 - all 20 wrong Builder cases: incorrect unanimous proposal remains blocked: ranking-tiebreak
+  ---
+  duration_ms: 1.04991
+  type: 'test'
+  ...
+# Subtest: 180 unsupported source tasks always decline extension
+ok 16 - 180 unsupported source tasks always decline extension
+  ---
+  duration_ms: 0.21123
+  type: 'test'
+  ...
+# Subtest: ambiguous exact ties, zero candidates, duplicate IDs and malformed lists fail closed
+ok 17 - ambiguous exact ties, zero candidates, duplicate IDs and malformed lists fail closed
+  ---
+  duration_ms: 0.166192
+  type: 'test'
+  ...
+# Subtest: wrong historical critic confidence, disagreement, missing evidence, missing verification all preserve
+ok 18 - wrong historical critic confidence, disagreement, missing evidence, missing verification all preserve
+  ---
+  duration_ms: 0.446766
+  type: 'test'
+  ...
+# Subtest: a source-accepted forged arithmetic correction is independently vetoed without trusting the critics
+ok 19 - a source-accepted forged arithmetic correction is independently vetoed without trusting the critics
+  ---
+  duration_ms: 0.176618
+  type: 'test'
+  ...
+# Subtest: original gate forged replacement against an incorrect builder is vetoed too
+ok 20 - original gate forged replacement against an incorrect builder is vetoed too
+  ---
+  duration_ms: 0.117378
+  type: 'test'
+  ...
+# Subtest: unrecognized additional source instructions are unsupported
+ok 21 - unrecognized additional source instructions are unsupported
+  ---
+  duration_ms: 0.063206
+  type: 'test'
+  ...
+# Subtest: canonicalization of independently verified correct candidate retains exact contract
+ok 22 - canonicalization of independently verified correct candidate retains exact contract
+  ---
+  duration_ms: 0.104088
+  type: 'test'
+  ...
+# Subtest: R1579: independently recompute six historical selection/filter/ranking tasks exactly
+ok 23 - R1579: independently recompute six historical selection/filter/ranking tasks exactly
+  ---
+  duration_ms: 2.400414
+  type: 'test'
+  ...
+# Subtest: R1579: preserve all fourteen historically correct answers despite forged unanimous attack
+ok 24 - R1579: preserve all fourteen historically correct answers despite forged unanimous attack
+  ---
+  duration_ms: 3.251834
+  type: 'test'
+  ...
+# Subtest: R1579: ranking-028 harmful old-gate swap is prevented on correct Builder
+ok 25 - R1579: ranking-028 harmful old-gate swap is prevented on correct Builder
+  ---
+  duration_ms: 0.342339
+  type: 'test'
+  ...
+# Subtest: R1579: four historically wrong selection and filter contracts correct only on trusted recomputation and unanimous critics
+ok 26 - R1579: four historically wrong selection and filter contracts correct only on trusted recomputation and unanimous critics
+  ---
+  duration_ms: 1.444768
+  type: 'test'
+  ...
+# Subtest: R1579: no autonomous correction without a verifying second critic
+ok 27 - R1579: no autonomous correction without a verifying second critic
+  ---
+  duration_ms: 0.498945
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 101.157232
