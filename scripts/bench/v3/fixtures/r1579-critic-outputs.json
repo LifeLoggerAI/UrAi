@@ -1,0 +1,366 @@
+{
+  "sources": [
+    {
+      "path": "RAW_PHASE1_CRITICS.json",
+      "blob": "1a0c83f723f134387a7f55bc746578a8fad33542"
+    },
+    {
+      "path": "R1579_PHASE2_CRITIC_A_BATCH01.json",
+      "blob": "b4510ddd09fb87760932ce478d68846d4f6fcf3c"
+    },
+    {
+      "path": "R1579_PHASE2_CRITIC_A_BATCH02.json",
+      "blob": "46cd1c8100a143269e384e7e63c426a06b54f74b"
+    },
+    {
+      "path": "R1579_PHASE2_CRITIC_A_BATCH03.json",
+      "blob": "18fd9daf16acb112ed8569cb38c80b49661ad0ff"
+    },
+    {
+      "path": "R1579_PHASE2_CRITIC_B_BATCH01.json",
+      "blob": "29b1cc7b18d8adcd4058f01f9aebdfa798cf252c"
+    },
+    {
+      "path": "R1579_PHASE2_CRITIC_B_BATCH02.json",
+      "blob": "0efa77b0297a7b6f8868364bc0d2ef60df3812cc"
+    }
+  ],
+  "rows": [
+    {
+      "id": "h2-state-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"name\\\":\\\"Grove\\\",\\\"score\\\":129,\\\"flag\\\":\\\"cyan\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-state-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"name\\\":\\\"Grove\\\",\\\"score\\\":129,\\\"flag\\\":\\\"cyan\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-schedule-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"J27\",\"K27\",\"L27\",\"M27\",\"N27\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-schedule-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The builder answer matches the original task constraints and the state ledger\"\n  ],\n  \"candidate_answer\": [\"J27\",\"K27\",\"L27\",\"M27\",\"N27\"],\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-selection-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"All candidates except HB27 satisfy cost <= 149 and risk <= 2\",\n    \"HA27 has the highest score among valid candidates\",\n    \"No other candidate has a higher score or lower cost in case of a tie\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HA27\\\",\\\"score\\\":98}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-selection-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"All candidates are checked against the constraints cost <= 149 and risk <= 2\",\n    \"Only HA27 satisfies both constraints\",\n    \"HA27 has the highest score among valid candidates\",\n    \"No tie in score, so lower cost is not needed\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HA27\\\",\\\"score\\\":98}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-allocation-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The sum of alpha (53), beta (31), gamma (288), and reserve (16) equals 388, which matches the total units to allocate.\",\n    \"Gamma is correctly calculated as the remainder: 388 - 53 - 31 - 16 = 288.\"\n  ],\n  \"candidate_answer\": \"{\\\"alpha\\\":53,\\\"beta\\\":31,\\\"gamma\\\":288,\\\"reserve\\\":16}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-allocation-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The sum of alpha (53), beta (31), gamma (288), and reserve (16) equals 388, which matches the total units to allocate.\",\n    \"Gamma is correctly calculated as the remainder: 388 - 53 - 31 - 16 = 288.\"\n  ],\n  \"candidate_answer\": \"{\\\"alpha\\\":53,\\\"beta\\\":31,\\\"gamma\\\":288,\\\"reserve\\\":16}\",\n  \"confidence\": 0.99\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-filter-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": {\n    \"selected\": [\n      {\n        \"id\": \"HF27B\",\n        \"active\": true,\n        \"tier\": 1,\n        \"age\": 23,\n        \"score\": 109\n      }\n    ],\n    \"highestScore\": 109\n  },\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-filter-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"All rows with active=true, tier=1, and age <= 24 are correctly filtered\",\n    \"The highest score among the filtered rows is correctly identified as 109\"\n  ],\n  \"candidate_answer\": {\n    \"selected\": [\n      {\n        \"id\": \"HF27B\",\n        \"active\": true,\n        \"tier\": 1,\n        \"age\": 23,\n        \"score\": 109\n      }\n    ],\n    \"highestScore\": 109\n  },\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-version-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [\"All available versions were checked; 3.37.2 is the highest stable release\"],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"3.37.2\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-version-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [\"All available versions were checked; 3.37.2 is the highest non-pre-release version\"],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"3.37.2\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "RAW_PHASE1_CRITICS.json"
+    },
+    {
+      "id": "h2-state-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"name\\\":\\\"Harbor\\\",\\\"score\\\":129,\\\"flag\\\":\\\"teal\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-precedence-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The builder answer correctly reflects the final state of the ledger after applying all rules, including the superseding Rule Gamma which sets limit to 91 and inherits mode from the latest operative rule, which is audit.\"\n  ],\n  \"candidate_answer\": \"{\\\"limit\\\":91,\\\"mode\\\":\\\"audit\\\"}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-precedence-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"limit\\\":95,\\\"mode\\\":\\\"balanced\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-schedule-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"O28\",\"P28\",\"Q28\",\"R28\",\"S28\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-ledger-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The final balance calculation is incorrect\",\n  \"evidence\": [\n    \"Opening balance is 556\",\n    \"Transaction A adds 12: 556 + 12 = 568\",\n    \"Transaction B subtracts 8: 568 - 8 = 560\",\n    \"Transaction C reverses B and adds 8: 560 + 8 = 568\",\n    \"Transaction D subtracts 6: 568 - 6 = 562\",\n    \"The audit attachment repeats B but it is marked duplicate and should not be applied\",\n    \"Therefore, the final balance should be 562, not 564 as stated in the builder answer\"\n  ],\n  \"candidate_answer\": \"{\\\"balance\\\":562,\\\"entries_applied\\\":5}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-ledger-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"balance\\\":581,\\\"entries_applied\\\":5}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH01.json"
+    },
+    {
+      "id": "h2-selection-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HA28\\\",\\\"score\\\":99}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-path-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HS27\",\"HA27\",\"HB27\",\"HT27\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-path-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HS28\",\"HA28\",\"HB28\",\"HT28\"],\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-allocation-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The sum of alpha (54), beta (19), gamma (316), and reserve (17) equals 406, which exceeds the total of 397 units.\",\n    \"Gamma should be 397 - (54 + 19 + 17) = 307, not 316.\"\n  ],\n  \"candidate_answer\": \"{\\\"alpha\\\":54,\\\"beta\\\":19,\\\"gamma\\\":307,\\\"reserve\\\":17}\",\n  \"confidence\": 0.95\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-inventory-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The final gear count is incorrect\",\n  \"evidence\": [\n    \"Starting gears: 113\",\n    \"Shipment subtracts 7 gears: 113 - 7 = 106\",\n    \"Verified return adds 2 gears: 106 + 2 = 108\",\n    \"Physical recount adds 6 gears: 108 + 6 = 114\",\n    \"Builder answer shows 118 gears, which is 4 more than the correct count of 114\"\n  ],\n  \"candidate_answer\": \"{\\\"bolts\\\":97,\\\"gears\\\":114,\\\"seals\\\":53}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-inventory-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The final gear count is incorrect\",\n  \"evidence\": [\n    \"Starting gears: 116\",\n    \"Shipment subtracts 4 gears: 116 - 4 = 112\",\n    \"Verified return adds 2 gears: 112 + 2 = 114\",\n    \"Physical recount adds 7 gears: 114 + 7 = 121\",\n    \"Builder answer shows 130 gears, which is incorrect\"\n  ],\n  \"candidate_answer\": \"{\\\"bolts\\\":98,\\\"gears\\\":121,\\\"seals\\\":53}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH02.json"
+    },
+    {
+      "id": "h2-filter-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": {\n    \"selected\": [\n      {\n        \"id\": \"HF28B\",\n        \"active\": true,\n        \"tier\": 1,\n        \"age\": 17,\n        \"score\": 110\n      }\n    ],\n    \"highestScore\": 110\n  },\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-closure-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HCA27\",\"HCB27\",\"HCC27\",\"HCD27\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-closure-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HCA28\",\"HCB28\",\"HCC28\",\"HCD28\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-version-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [\"All available versions were checked; 4.38.2 is the highest stable release\"],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"4.38.2\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-ranking-027",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"contradiction\",\n  \"defect_claim\": \"The selected candidate does not have the highest priority, quality, and lowest cost as required\",\n  \"evidence\": [\n    \"HRK27W has priority 4, quality 105, cost 6\",\n    \"HRK27Y has priority 4, quality 108, cost 22\",\n    \"HRK27Y has higher quality than HRK27W while having the same priority and lower cost\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HRK27Y\\\"}\",\n  \"confidence\": 0.99\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-ranking-028",
+      "stage": 2,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"contradiction\",\n  \"defect_claim\": \"The selected candidate does not have the highest priority, quality, and lowest cost as required\",\n  \"evidence\": [\n    \"HRK28Y has priority 5, quality 109, cost 19\",\n    \"HRK28W has priority 5, quality 106, cost 6\",\n    \"HRK28W has lower cost than HRK28Y while having the same priority and higher quality\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HRK28W\\\"}\",\n  \"confidence\": 0.99\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_A_BATCH03.json"
+    },
+    {
+      "id": "h2-state-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"name\\\":\\\"Harbor\\\",\\\"score\\\":129,\\\"flag\\\":\\\"teal\\\"}\",\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-precedence-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The builder answer correctly reflects the final state of the ledger after applying all rules, with limit=91 and mode=audit as specified by Rule Gamma superseding earlier rules.\"\n  ],\n  \"candidate_answer\": \"{\\\"limit\\\":91,\\\"mode\\\":\\\"audit\\\"}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-precedence-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"Rule Gamma supersedes all earlier operative rules and sets limit to 95 while inheriting mode from the latest operative rule, which is balanced from Rule Beta\",\n    \"The quoted historical excerpt repeating Rule Alpha is non-operative and does not affect the active policy\"\n  ],\n  \"candidate_answer\": \"{\\\"limit\\\":95,\\\"mode\\\":\\\"balanced\\\"}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-schedule-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"O28\",\"P28\",\"Q28\",\"R28\",\"S28\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-ledger-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The final balance calculation is incorrect\",\n  \"evidence\": [\n    \"Opening balance is 556\",\n    \"Transaction A adds 12: 556 + 12 = 568\",\n    \"Transaction B subtracts 8: 568 - 8 = 560\",\n    \"Transaction C adds 8 (reversal of B): 560 + 8 = 568\",\n    \"Transaction D subtracts 6: 568 - 6 = 562\",\n    \"The audit attachment repeats B but it is marked duplicate and should not be applied\",\n    \"Therefore, the correct final balance should be 562, not 564 as stated in the builder answer\"\n  ],\n  \"candidate_answer\": \"{\\\"balance\\\":562,\\\"entries_applied\\\":5}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-ledger-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": \"{\\\"balance\\\":581,\\\"entries_applied\\\":5}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-selection-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"All candidates are checked against constraints: cost <= 153 and risk <= 2\",\n    \"Only HA28 satisfies both constraints\",\n    \"HA28 has the highest score among valid candidates\",\n    \"No tie in score, so lower cost is not needed\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HA28\\\",\\\"score\\\":99}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-path-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HS27\",\"HA27\",\"HB27\",\"HT27\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-path-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HS28\",\"HA28\",\"HB28\",\"HT28\"],\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH01.json"
+    },
+    {
+      "id": "h2-allocation-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"no defect found\",\n  \"evidence\": [\n    \"The sum of alpha (54), beta (19), gamma (316), and reserve (17) equals 406, which exceeds the total available units of 397.\",\n    \"Gamma should be 397 - (54 + 19 + 17) = 307, not 316.\"\n  ],\n  \"candidate_answer\": \"{\\\"alpha\\\":54,\\\"beta\\\":19,\\\"gamma\\\":307,\\\"reserve\\\":17}\",\n  \"confidence\": 0.95\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-inventory-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The builder answer incorrectly reports 118 gears, which does not match the expected final count after applying the shipment, verified return, and physical recount.\",\n  \"evidence\": [\n    \"Starting gears: 113\",\n    \"Shipment subtracts 7 gears: 113 - 7 = 106\",\n    \"Verified return adds 2 gears: 106 + 2 = 108\",\n    \"Physical recount adds 6 gears: 108 + 6 = 114\",\n    \"Builder answer reports 118 gears, which is incorrect\"\n  ],\n  \"candidate_answer\": \"{\\\"bolts\\\":97,\\\"gears\\\":114,\\\"seals\\\":53}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-inventory-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"arithmetic_error\",\n  \"defect_claim\": \"The builder answer incorrectly calculates the final bolt count\",\n  \"evidence\": [\n    \"Starting bolts: 104\",\n    \"Shipment subtracts 8 bolts: 104 - 8 = 96\",\n    \"Verified return adds 1 bolt: 96 + 1 = 97\",\n    \"Physical recount adds 7 gears (no change to bolts)\",\n    \"Final bolt count should be 97, not 98 as stated in the builder answer\"\n  ],\n  \"candidate_answer\": \"{\\\"bolts\\\":97,\\\"gears\\\":130,\\\"seals\\\":53}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-filter-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": {\n    \"selected\": [\n      {\n        \"id\": \"HF28B\",\n        \"active\": true,\n        \"tier\": 1,\n        \"age\": 17,\n        \"score\": 110\n      }\n    ],\n    \"highestScore\": 110\n  },\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-closure-027",
+      "stage": 3,
+      "output": null,
+      "status": "IN_QUEUE",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-closure-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [],\n  \"candidate_answer\": [\"HCA28\",\"HCB28\",\"HCC28\",\"HCD28\"],\n  \"confidence\": 1.0\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-version-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"preserve\",\n  \"defect_verified\": false,\n  \"defect_type\": \"none\",\n  \"defect_claim\": \"none\",\n  \"evidence\": [\"All available versions checked; 4.38.2 is the highest stable release\"],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"4.38.2\\\"}\",\n  \"confidence\": 0.96\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-ranking-027",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"contradiction\",\n  \"defect_claim\": \"The selected candidate does not have the highest priority, quality, and lowest cost as required\",\n  \"evidence\": [\n    \"HRK27Y has priority 4, quality 108, cost 22\",\n    \"HRK27W has priority 4, quality 105, cost 6\",\n    \"HRK27W has lower cost than HRK27Y while having the same priority and higher quality\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HRK27W\\\"}\",\n  \"confidence\": 0.99\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    },
+    {
+      "id": "h2-ranking-028",
+      "stage": 3,
+      "output": "{\n  \"decision\": \"replace\",\n  \"defect_verified\": true,\n  \"defect_type\": \"contradiction\",\n  \"defect_claim\": \"The selected candidate does not have the highest priority, quality, and lowest cost as required\",\n  \"evidence\": [\n    \"HRK28Y has priority 5, quality 109, cost 19\",\n    \"HRK28W has priority 5, quality 106, cost 6\",\n    \"HRK28W has lower cost than HRK28Y while having the same priority and higher quality\"\n  ],\n  \"candidate_answer\": \"{\\\"selected\\\":\\\"HRK28W\\\"}\",\n  \"confidence\": 0.99\n}",
+      "status": "COMPLETED",
+      "source": "R1579_PHASE2_CRITIC_B_BATCH02.json"
+    }
+  ]
+}
