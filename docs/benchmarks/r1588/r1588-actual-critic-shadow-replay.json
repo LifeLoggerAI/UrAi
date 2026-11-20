@@ -1,0 +1,448 @@
+{
+  "schema": "one-urai.r1588.shadow-actual-critic-replay.v1",
+  "cases": 24,
+  "paired": 23,
+  "original_correct": 13,
+  "candidate_correct": 14,
+  "useful": 1,
+  "harmful": 0,
+  "replacements": 0,
+  "vetoes": 1,
+  "rows": [
+    {
+      "id": "h2-state-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "name": "Grove",
+        "score": 129,
+        "flag": "cyan"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"name\":\"Grove\",\"score\":129,\"flag\":\"cyan\"}",
+      "candidate_final": "{\"name\":\"Grove\",\"score\":129,\"flag\":\"cyan\"}"
+    },
+    {
+      "id": "h2-state-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "name": "Harbor",
+        "score": 129,
+        "flag": "teal"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"name\":\"Harbor\",\"score\":129,\"flag\":\"teal\"}",
+      "candidate_final": "{\"name\":\"Harbor\",\"score\":129,\"flag\":\"teal\"}"
+    },
+    {
+      "id": "h2-precedence-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "limit": 91,
+        "mode": "audit"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"limit\":91,\"mode\":\"audit\"}",
+      "candidate_final": "{\"limit\":91,\"mode\":\"audit\"}"
+    },
+    {
+      "id": "h2-precedence-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "limit": 95,
+        "mode": "balanced"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"limit\":95,\"mode\":\"balanced\"}",
+      "candidate_final": "{\"limit\":95,\"mode\":\"balanced\"}"
+    },
+    {
+      "id": "h2-schedule-027",
+      "stage_pairs_available": true,
+      "expected": [
+        "J27",
+        "K27",
+        "L27",
+        "M27",
+        "N27"
+      ],
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "[\"J27\",\"K27\",\"L27\",\"M27\",\"N27\"]",
+      "candidate_final": "[\"J27\",\"K27\",\"L27\",\"M27\",\"N27\"]"
+    },
+    {
+      "id": "h2-schedule-028",
+      "stage_pairs_available": true,
+      "expected": [
+        "O28",
+        "P28",
+        "Q28",
+        "R28",
+        "S28"
+      ],
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "[\"O28\",\"P28\",\"Q28\",\"R28\",\"S28\"]",
+      "candidate_final": "[\"O28\",\"P28\",\"Q28\",\"R28\",\"S28\"]"
+    },
+    {
+      "id": "h2-ledger-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "balance": 562,
+        "entries_applied": 4
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "replace",
+      "source_gate_reason": "independent_verified_defect",
+      "verifier_family": null,
+      "builder_correct": false,
+      "original_final": "{\"balance\":562,\"entries_applied\":5}",
+      "candidate_final": "{\"balance\":562,\"entries_applied\":5}"
+    },
+    {
+      "id": "h2-ledger-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "balance": 575,
+        "entries_applied": 4
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": false,
+      "original_final": "{\"balance\":581,\"entries_applied\":5}",
+      "candidate_final": "{\"balance\":581,\"entries_applied\":5}"
+    },
+    {
+      "id": "h2-selection-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HD27",
+        "score": 107
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_unverified",
+      "reason": "critics_not_unanimous_and_deterministically_correct",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": "constraint-selection",
+      "builder_correct": false,
+      "original_final": "{\"selected\":\"HA27\",\"score\":98}",
+      "candidate_final": "{\"selected\":\"HA27\",\"score\":98}"
+    },
+    {
+      "id": "h2-selection-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HD28",
+        "score": 109
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_unverified",
+      "reason": "critics_not_unanimous_and_deterministically_correct",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": "constraint-selection",
+      "builder_correct": false,
+      "original_final": "{\"selected\":\"HA28\",\"score\":99}",
+      "candidate_final": "{\"selected\":\"HA28\",\"score\":99}"
+    },
+    {
+      "id": "h2-path-027",
+      "stage_pairs_available": true,
+      "expected": [
+        "HS27",
+        "HA27",
+        "HB27",
+        "HT27"
+      ],
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "[\"HS27\",\"HA27\",\"HB27\",\"HT27\"]",
+      "candidate_final": "[\"HS27\",\"HA27\",\"HB27\",\"HT27\"]"
+    },
+    {
+      "id": "h2-path-028",
+      "stage_pairs_available": true,
+      "expected": [
+        "HS28",
+        "HA28",
+        "HB28",
+        "HT28"
+      ],
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "[\"HS28\",\"HA28\",\"HB28\",\"HT28\"]",
+      "candidate_final": "[\"HS28\",\"HA28\",\"HB28\",\"HT28\"]"
+    },
+    {
+      "id": "h2-allocation-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "alpha": 53,
+        "beta": 31,
+        "gamma": 288,
+        "reserve": 16
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"alpha\":53,\"beta\":31,\"gamma\":288,\"reserve\":16}",
+      "candidate_final": "{\"alpha\":53,\"beta\":31,\"gamma\":288,\"reserve\":16}"
+    },
+    {
+      "id": "h2-allocation-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "alpha": 54,
+        "beta": 19,
+        "gamma": 307,
+        "reserve": 17
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": false,
+      "original_final": "{\"alpha\":54,\"beta\":19,\"gamma\":316,\"reserve\":17}",
+      "candidate_final": "{\"alpha\":54,\"beta\":19,\"gamma\":316,\"reserve\":17}"
+    },
+    {
+      "id": "h2-inventory-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "bolts": 97,
+        "gears": 114,
+        "seals": 52
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "replace",
+      "source_gate_reason": "independent_verified_defect",
+      "verifier_family": null,
+      "builder_correct": false,
+      "original_final": "{\"bolts\":97,\"gears\":114,\"seals\":53}",
+      "candidate_final": "{\"bolts\":97,\"gears\":114,\"seals\":53}"
+    },
+    {
+      "id": "h2-inventory-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "bolts": 97,
+        "gears": 121,
+        "seals": 52
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "candidate_disagreement",
+      "verifier_family": null,
+      "builder_correct": false,
+      "original_final": "{\"bolts\":98,\"gears\":130,\"seals\":53}",
+      "candidate_final": "{\"bolts\":98,\"gears\":130,\"seals\":53}"
+    },
+    {
+      "id": "h2-filter-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HF27B",
+        "score": 109
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_unverified",
+      "reason": "critics_not_unanimous_and_deterministically_correct",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": "filter-sort",
+      "builder_correct": false,
+      "original_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF27B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 23,\n      \"score\": 109\n    }\n  ],\n  \"highestScore\": 109\n}",
+      "candidate_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF27B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 23,\n      \"score\": 109\n    }\n  ],\n  \"highestScore\": 109\n}"
+    },
+    {
+      "id": "h2-filter-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HF28B",
+        "score": 110
+      },
+      "old_correct": false,
+      "candidate_correct": false,
+      "decision": "preserve_unverified",
+      "reason": "critics_not_unanimous_and_deterministically_correct",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": "filter-sort",
+      "builder_correct": false,
+      "original_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF28B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 17,\n      \"score\": 110\n    }\n  ],\n  \"highestScore\": 110\n}",
+      "candidate_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF28B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 17,\n      \"score\": 110\n    }\n  ],\n  \"highestScore\": 110\n}"
+    },
+    {
+      "id": "h2-closure-027",
+      "stage_pairs_available": false
+    },
+    {
+      "id": "h2-closure-028",
+      "stage_pairs_available": true,
+      "expected": [
+        "HCA28",
+        "HCB28",
+        "HCC28",
+        "HCD28"
+      ],
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "[\"HCA28\",\"HCB28\",\"HCC28\",\"HCD28\"]",
+      "candidate_final": "[\"HCA28\",\"HCB28\",\"HCC28\",\"HCD28\"]"
+    },
+    {
+      "id": "h2-version-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "3.37.2"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"selected\":\"3.37.2\"}",
+      "candidate_final": "{\"selected\":\"3.37.2\"}"
+    },
+    {
+      "id": "h2-version-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "4.38.2"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_original",
+      "reason": "unsupported_contract_no_override",
+      "original_gate": "preserve",
+      "source_gate_reason": "replacement_not_independently_unanimous",
+      "verifier_family": null,
+      "builder_correct": true,
+      "original_final": "{\"selected\":\"4.38.2\"}",
+      "candidate_final": "{\"selected\":\"4.38.2\"}"
+    },
+    {
+      "id": "h2-ranking-027",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HRK27Y"
+      },
+      "old_correct": true,
+      "candidate_correct": true,
+      "decision": "preserve_correct_builder",
+      "reason": "independent_verifier_agrees_builder",
+      "original_gate": "preserve",
+      "source_gate_reason": "candidate_disagreement",
+      "verifier_family": "ranking-tiebreak",
+      "builder_correct": false,
+      "original_final": "{\"selected\":\"HRK27Y\"}",
+      "candidate_final": "{\"selected\":\"HRK27Y\"}"
+    },
+    {
+      "id": "h2-ranking-028",
+      "stage_pairs_available": true,
+      "expected": {
+        "selected": "HRK28Y"
+      },
+      "old_correct": false,
+      "candidate_correct": true,
+      "decision": "veto_bad_original_replacement",
+      "reason": "independent_verifier_rejected_original_candidate",
+      "original_gate": "replace",
+      "source_gate_reason": "independent_verified_defect",
+      "verifier_family": "ranking-tiebreak",
+      "builder_correct": false,
+      "original_final": "{\"selected\":\"HRK28W\"}",
+      "candidate_final": "{\"selected\":\"HRK28Y\"}"
+    }
+  ],
+  "production": "HOLD_NO_GO"
+}
