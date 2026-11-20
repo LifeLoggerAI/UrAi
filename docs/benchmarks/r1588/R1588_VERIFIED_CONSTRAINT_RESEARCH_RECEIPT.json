@@ -1,0 +1,91 @@
+{
+  "schema": "one-urai.r1588.verified-constraint-shadow-candidate.v1",
+  "date_utc": "2026-11-19",
+  "repository": "LifeLoggerAI/UrAi",
+  "research_branch": "research/r1588-verified-constraint-gate-20261119",
+  "base_source_commit": "fb9fc8dcfa53e4dea692be9003c77660f66dac42",
+  "source_gate_unchanged_sha": "05458d21d431b1cca410d4a0e90183e50910c52a",
+  "source_canonicalizer_unchanged_sha": "3b1ac1c3dbda2d067ee53b726ca0914870e59b82",
+  "research_only": true,
+  "prototype": "scripts/bench/v3/verified-constraint-candidate.mjs",
+  "verifier_support": "Only exactly recognized constraint-selection, filter-sort, ranking-tiebreak prompt formats from historical generated development tasks; unsupported or ambiguous prompts delegate to original gate unchanged. On recognized formats, independent deterministic recomputation may veto wrong source-gate replacement or permit unanimous fully checked critic correction.",
+  "test_command": "node --test scripts/bench/v3/gate.test.mjs scripts/bench/v3/verified-constraint-candidate.test.mjs scripts/bench/v3/verified-constraint-r1579-regression.test.mjs",
+  "tests": {
+    "tap_groups": 27,
+    "passed": 27,
+    "failed": 0,
+    "synthetic_generator_cases": 240,
+    "supported_family_cases": 60,
+    "unsupported_family_cases": 180,
+    "adversarial_controls": [
+      "correct Builder cannot be overwritten by forged unanimous critics",
+      "reject unknown extra instructions and malformed/ambiguous candidate lists",
+      "reject missing/low confidence/forged/inconsistent critic claims",
+      "veto wrong original source-gate replacement",
+      "preserve incomplete verification",
+      "R1579 known-correct and wrong-preserve regression cases"
+    ],
+    "test_stdout_sha256": "f21915ebcba25435d01ec0f4cd2fcc13aa5d8efdc7b63e001265c112ab58907c",
+    "stderr_empty": true
+  },
+  "observed_history_replay": {
+    "cases": 24,
+    "paired_actual_critic_outputs": 23,
+    "original_correct_on_paired": 13,
+    "shadow_candidate_correct_on_paired": 14,
+    "helpful_change_count": 1,
+    "harmful_change_count": 0,
+    "unanimous_true_corrections": 0,
+    "vetoes_of_wrong_old_gate_replacements": 1,
+    "protected_case": "h2-ranking-028",
+    "incomplete_pair_count": 1,
+    "interpretation": "One historically harmful replacement vetoed on exposed regression cases; no evidence of broad improvement or safe deployment."
+  },
+  "files": [
+    {
+      "path": "scripts/bench/v3/verified-constraint-candidate.mjs",
+      "blob_sha": "b2bab9c15a7ce3f85ea9243348d83117d4cb49b2"
+    },
+    {
+      "path": "scripts/bench/v3/verified-constraint-candidate.test.mjs",
+      "blob_sha": "20498381b925f5d5f21dc4f92ec52e6abab86da3"
+    },
+    {
+      "path": "scripts/bench/v3/verified-constraint-r1579-regression.test.mjs",
+      "blob_sha": "2e2620c4fca9cc1b5f7dc06d184d5654efc75eeb"
+    },
+    {
+      "path": "scripts/bench/v3/fixtures/r1579-historical-24.json",
+      "blob_sha": "c61bdea56464777e70bbdde6a75219eeb8888510"
+    },
+    {
+      "path": "scripts/bench/v3/fixtures/r1579-critic-outputs.json",
+      "blob_sha": "670a70c80dad411b82e925552cdefa16149c0846"
+    },
+    {
+      "path": "scripts/bench/v3/r1588-run-actual-critic-shadow.mjs",
+      "blob_sha": "8972febd62310f2faf0ddf1a578257d96cf91440"
+    },
+    {
+      "path": "docs/benchmarks/r1588/r1588-test-tap.log",
+      "blob_sha": "4760e2c55cb2d19d6b6fe2759770848a457253c5"
+    },
+    {
+      "path": "docs/benchmarks/r1588/r1588-actual-critic-shadow-replay.json",
+      "blob_sha": "2e9075ae2b4d91e18692f70cb2d7b5cb768451c5"
+    }
+  ],
+  "limitations": [
+    "Historical and generated cases are source-exposed and not independently blind.",
+    "The candidate recognizes only three exact synthetic prompt formats; semantic generalization, parser abuse and hostile prompt variations need independent security review.",
+    "No original production gate code changed. Candidate is unreferenced by any product runtime and unmerged.",
+    "The source-gate's existing allowed arithmetic/contradiction replacements remain delegated on unsupported prompts; this prototype is not a universal correctness guarantee.",
+    "23 matched original critic pairs; one incomplete historical pair excluded from paired comparison and disclosed.",
+    "No production authentication, IAM, end-to-end consent, deletion, physical device or launch test."
+  ],
+  "production": "HOLD_NO_GO",
+  "private_memory_writes": "DISABLED",
+  "independent_review": "NOT_COMPLETED",
+  "merges": false,
+  "deployments": false
+}
