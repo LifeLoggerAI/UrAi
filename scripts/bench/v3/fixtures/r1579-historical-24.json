@@ -1,0 +1,311 @@
+{
+  "source_sha": "0ba090076c73f39ee8c00c744981d54a405ef90c",
+  "results": [
+    {
+      "id": "h2-state-027",
+      "prompt": "Return only JSON with keys name, score, flag. The authoritative starting record is Grove with score 118 and flag slate. Revision One supersedes it with score 130 and flag amber. A delayed cache then repeats the starting record; it is stale and must be ignored. Revision Two supersedes the active record by setting score=129 and flag=cyan. What is the final authoritative record?",
+      "builder": "{\n  \"name\": \"Grove\",\n  \"score\": 129,\n  \"flag\": \"cyan\"\n}",
+      "expected": {
+        "name": "Grove",
+        "score": 129,
+        "flag": "cyan"
+      },
+      "original_final": "{\"name\":\"Grove\",\"score\":129,\"flag\":\"cyan\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-state-028",
+      "prompt": "Return only JSON with keys name, score, flag. The authoritative starting record is Harbor with score 121 and flag slate. Revision One supersedes it with score 127 and flag amber. A delayed cache then repeats the starting record; it is stale and must be ignored. Revision Two supersedes the active record by setting score=129 and flag=teal. What is the final authoritative record?",
+      "builder": "{\n  \"name\": \"Harbor\",\n  \"score\": 129,\n  \"flag\": \"teal\"\n}",
+      "expected": {
+        "name": "Harbor",
+        "score": 129,
+        "flag": "teal"
+      },
+      "original_final": "{\"name\":\"Harbor\",\"score\":129,\"flag\":\"teal\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-precedence-027",
+      "prompt": "Return only JSON with keys limit and mode. Rule Alpha sets limit=85, mode=legacy. Rule Beta explicitly supersedes Alpha and sets limit=96, mode=audit. A quoted historical excerpt later repeats Alpha but is non-operative. Rule Gamma supersedes all earlier operative rules, changes only limit to 91, and leaves mode inherited from the latest operative rule. Return the active policy.",
+      "builder": "{\n  \"limit\": 91,\n  \"mode\": \"audit\"\n}",
+      "expected": {
+        "limit": 91,
+        "mode": "audit"
+      },
+      "original_final": "{\"limit\":91,\"mode\":\"audit\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-precedence-028",
+      "prompt": "Return only JSON with keys limit and mode. Rule Alpha sets limit=87, mode=legacy. Rule Beta explicitly supersedes Alpha and sets limit=99, mode=balanced. A quoted historical excerpt later repeats Alpha but is non-operative. Rule Gamma supersedes all earlier operative rules, changes only limit to 95, and leaves mode inherited from the latest operative rule. Return the active policy.",
+      "builder": "{\n  \"limit\": 95,\n  \"mode\": \"balanced\"\n}",
+      "expected": {
+        "limit": 95,
+        "mode": "balanced"
+      },
+      "original_final": "{\"limit\":95,\"mode\":\"balanced\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-schedule-027",
+      "prompt": "Return only a JSON array containing the unique five-position schedule. Items: L27, N27, J27, M27, K27. Constraints: J27 must occur before K27; K27 must occur before L27; L27 must occur before M27; M27 must occur before N27.",
+      "builder": "[\n  \"J27\",\n  \"K27\",\n  \"L27\",\n  \"M27\",\n  \"N27\"\n]",
+      "expected": [
+        "J27",
+        "K27",
+        "L27",
+        "M27",
+        "N27"
+      ],
+      "original_final": "[\"J27\",\"K27\",\"L27\",\"M27\",\"N27\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-schedule-028",
+      "prompt": "Return only a JSON array containing the unique five-position schedule. Items: Q28, S28, O28, R28, P28. Constraints: O28 must occur before P28; P28 must occur before Q28; Q28 must occur before R28; R28 must occur before S28.",
+      "builder": "[\n  \"O28\",\n  \"P28\",\n  \"Q28\",\n  \"R28\",\n  \"S28\"\n]",
+      "expected": [
+        "O28",
+        "P28",
+        "Q28",
+        "R28",
+        "S28"
+      ],
+      "original_final": "[\"O28\",\"P28\",\"Q28\",\"R28\",\"S28\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-ledger-027",
+      "prompt": "Return only JSON with keys balance and entries_applied. Opening balance=556. Transaction A adds 12. Transaction B subtracts 8. Transaction C is an explicit reversal of B and therefore adds 8 back. Transaction D subtracts 6. A later audit attachment repeats B and marks it duplicate history; do not apply it. Count the reversal as an applied entry.",
+      "builder": "{\n  \"balance\": 564,\n  \"entries_applied\": 5\n}",
+      "expected": {
+        "balance": 562,
+        "entries_applied": 4
+      },
+      "original_final": "{\"balance\":562,\"entries_applied\":5}",
+      "original_correct": false,
+      "original_gate": "replace"
+    },
+    {
+      "id": "h2-ledger-028",
+      "prompt": "Return only JSON with keys balance and entries_applied. Opening balance=569. Transaction A adds 13. Transaction B subtracts 9. Transaction C is an explicit reversal of B and therefore adds 9 back. Transaction D subtracts 7. A later audit attachment repeats B and marks it duplicate history; do not apply it. Count the reversal as an applied entry.",
+      "builder": "{\n  \"balance\": 581,\n  \"entries_applied\": 5\n}",
+      "expected": {
+        "balance": 575,
+        "entries_applied": 4
+      },
+      "original_final": "{\"balance\":581,\"entries_applied\":5}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-selection-027",
+      "prompt": "Return only JSON with keys selected and score. Select exactly one candidate satisfying cost <= 149 and risk <= 2. Among valid candidates select highest score; if scores tie, select lower cost. Candidates: [{\"id\":\"HA27\",\"cost\":145,\"risk\":2,\"score\":98},{\"id\":\"HB27\",\"cost\":152,\"risk\":1,\"score\":116},{\"id\":\"HC27\",\"cost\":144,\"risk\":3,\"score\":121},{\"id\":\"HD27\",\"cost\":148,\"risk\":1,\"score\":107}]",
+      "builder": "{\n  \"selected\": {\n    \"id\": \"HA27\",\n    \"cost\": 145,\n    \"risk\": 2,\n    \"score\": 98\n  }\n}",
+      "expected": {
+        "selected": "HD27",
+        "score": 107
+      },
+      "original_final": "{\"selected\":\"HA27\",\"score\":98}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-selection-028",
+      "prompt": "Return only JSON with keys selected and score. Select exactly one candidate satisfying cost <= 153 and risk <= 2. Among valid candidates select highest score; if scores tie, select lower cost. Candidates: [{\"id\":\"HA28\",\"cost\":149,\"risk\":2,\"score\":99},{\"id\":\"HB28\",\"cost\":156,\"risk\":1,\"score\":117},{\"id\":\"HC28\",\"cost\":148,\"risk\":3,\"score\":122},{\"id\":\"HD28\",\"cost\":152,\"risk\":1,\"score\":109}]",
+      "builder": "{\n  \"selected\": {\n    \"id\": \"HA28\",\n    \"cost\": 149,\n    \"risk\": 2,\n    \"score\": 99\n  },\n  \"score\": 99\n}",
+      "expected": {
+        "selected": "HD28",
+        "score": 109
+      },
+      "original_final": "{\"selected\":\"HA28\",\"score\":99}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-path-027",
+      "prompt": "Return only a JSON array of node IDs for the unique active path from HS27 to HT27. Active graph begins with HS27->HA27, HA27->HB27, HB27->HT27, HS27->HX27, HX27->HT27. A later authoritative update removes HS27->HX27. A stale replica still lists that removed edge and must be ignored. No other edges exist.",
+      "builder": "[\"HS27\", \"HA27\", \"HB27\", \"HT27\"]",
+      "expected": [
+        "HS27",
+        "HA27",
+        "HB27",
+        "HT27"
+      ],
+      "original_final": "[\"HS27\",\"HA27\",\"HB27\",\"HT27\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-path-028",
+      "prompt": "Return only a JSON array of node IDs for the unique active path from HS28 to HT28. Active graph begins with HS28->HA28, HA28->HB28, HB28->HT28, HS28->HX28, HX28->HT28. A later authoritative update removes HS28->HX28. A stale replica still lists that removed edge and must be ignored. No other edges exist.",
+      "builder": "[\"HS28\", \"HA28\", \"HB28\", \"HT28\"]",
+      "expected": [
+        "HS28",
+        "HA28",
+        "HB28",
+        "HT28"
+      ],
+      "original_final": "[\"HS28\",\"HA28\",\"HB28\",\"HT28\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-allocation-027",
+      "prompt": "Return only JSON with keys alpha, beta, gamma, reserve. Allocate all 388 units exactly once. Alpha is fixed at 53; Beta is fixed at 31; Reserve is fixed at 16; Gamma must receive the exact remainder.",
+      "builder": "{\n  \"alpha\": 53,\n  \"beta\": 31,\n  \"gamma\": 288,\n  \"reserve\": 16\n}",
+      "expected": {
+        "alpha": 53,
+        "beta": 31,
+        "gamma": 288,
+        "reserve": 16
+      },
+      "original_final": "{\"alpha\":53,\"beta\":31,\"gamma\":288,\"reserve\":16}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-allocation-028",
+      "prompt": "Return only JSON with keys alpha, beta, gamma, reserve. Allocate all 397 units exactly once. Alpha is fixed at 54; Beta is fixed at 19; Reserve is fixed at 17; Gamma must receive the exact remainder.",
+      "builder": "{\n  \"alpha\": 54,\n  \"beta\": 19,\n  \"gamma\": 316,\n  \"reserve\": 17\n}",
+      "expected": {
+        "alpha": 54,
+        "beta": 19,
+        "gamma": 307,
+        "reserve": 17
+      },
+      "original_final": "{\"alpha\":54,\"beta\":19,\"gamma\":316,\"reserve\":17}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-inventory-027",
+      "prompt": "Return only JSON with keys bolts, gears, seals. Starting counts: {\"bolts\":102,\"gears\":113,\"seals\":54}. Shipment subtracts {\"bolts\":7,\"gears\":7,\"seals\":3}. A verified return adds {\"bolts\":2,\"gears\":2,\"seals\":1}. Physical recount then adds 6 gears. A stale snapshot from before the recount appears afterward and must be ignored. Return final inventory.",
+      "builder": "{\n  \"bolts\": 97,\n  \"gears\": 118,\n  \"seals\": 53\n}",
+      "expected": {
+        "bolts": 97,
+        "gears": 114,
+        "seals": 52
+      },
+      "original_final": "{\"bolts\":97,\"gears\":114,\"seals\":53}",
+      "original_correct": false,
+      "original_gate": "replace"
+    },
+    {
+      "id": "h2-inventory-028",
+      "prompt": "Return only JSON with keys bolts, gears, seals. Starting counts: {\"bolts\":104,\"gears\":116,\"seals\":55}. Shipment subtracts {\"bolts\":8,\"gears\":4,\"seals\":4}. A verified return adds {\"bolts\":1,\"gears\":2,\"seals\":1}. Physical recount then adds 7 gears. A stale snapshot from before the recount appears afterward and must be ignored. Return final inventory.",
+      "builder": "{\n  \"bolts\": 98,\n  \"gears\": 130,\n  \"seals\": 53\n}",
+      "expected": {
+        "bolts": 97,
+        "gears": 121,
+        "seals": 52
+      },
+      "original_final": "{\"bolts\":98,\"gears\":130,\"seals\":53}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-filter-027",
+      "prompt": "Return only JSON with keys selected and score. Keep only rows with active=true, tier=1, and age <= 24. From the survivors select the highest score. Rows: [{\"id\":\"HF27A\",\"active\":true,\"tier\":2,\"age\":22,\"score\":101},{\"id\":\"HF27B\",\"active\":true,\"tier\":1,\"age\":23,\"score\":109},{\"id\":\"HF27C\",\"active\":false,\"tier\":1,\"age\":21,\"score\":126},{\"id\":\"HF27D\",\"active\":true,\"tier\":1,\"age\":26,\"score\":118}]",
+      "builder": "{\n  \"selected\": [\n    {\n      \"id\": \"HF27B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 23,\n      \"score\": 109\n    }\n  ],\n  \"highestScore\": 109\n}",
+      "expected": {
+        "selected": "HF27B",
+        "score": 109
+      },
+      "original_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF27B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 23,\n      \"score\": 109\n    }\n  ],\n  \"highestScore\": 109\n}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-filter-028",
+      "prompt": "Return only JSON with keys selected and score. Keep only rows with active=true, tier=1, and age <= 18. From the survivors select the highest score. Rows: [{\"id\":\"HF28A\",\"active\":true,\"tier\":2,\"age\":16,\"score\":102},{\"id\":\"HF28B\",\"active\":true,\"tier\":1,\"age\":17,\"score\":110},{\"id\":\"HF28C\",\"active\":false,\"tier\":1,\"age\":15,\"score\":127},{\"id\":\"HF28D\",\"active\":true,\"tier\":1,\"age\":20,\"score\":119}]",
+      "builder": "{\n  \"selected\": [\n    {\n      \"id\": \"HF28B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 17,\n      \"score\": 110\n    }\n  ],\n  \"highestScore\": 110\n}",
+      "expected": {
+        "selected": "HF28B",
+        "score": 110
+      },
+      "original_final": "{\n  \"selected\": [\n    {\n      \"id\": \"HF28B\",\n      \"active\": true,\n      \"tier\": 1,\n      \"age\": 17,\n      \"score\": 110\n    }\n  ],\n  \"highestScore\": 110\n}",
+      "original_correct": false,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-closure-027",
+      "prompt": "Return only a JSON array sorted alphabetically. Deploying HR27 requires every transitive prerequisite. HR27 requires HCA27 and HCB27; HCA27 requires HCC27; HCB27 requires HCC27 and HCD27; HCC27 and HCD27 have no prerequisites. Exclude HR27 itself.",
+      "builder": "[\n  \"HCA27\",\n  \"HCB27\",\n  \"HCC27\",\n  \"HCD27\"\n]",
+      "expected": [
+        "HCA27",
+        "HCB27",
+        "HCC27",
+        "HCD27"
+      ],
+      "original_final": "[\"HCA27\",\"HCB27\",\"HCC27\",\"HCD27\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-closure-028",
+      "prompt": "Return only a JSON array sorted alphabetically. Deploying HR28 requires every transitive prerequisite. HR28 requires HCA28 and HCB28; HCA28 requires HCC28; HCB28 requires HCC28 and HCD28; HCC28 and HCD28 have no prerequisites. Exclude HR28 itself.",
+      "builder": "[\n  \"HCA28\",\n  \"HCB28\",\n  \"HCC28\",\n  \"HCD28\"\n]",
+      "expected": [
+        "HCA28",
+        "HCB28",
+        "HCC28",
+        "HCD28"
+      ],
+      "original_final": "[\"HCA28\",\"HCB28\",\"HCC28\",\"HCD28\"]",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-version-027",
+      "prompt": "Return only JSON with key selected. Choose the highest stable release; beta and rc builds are pre-release and not stable. Available in arbitrary order: 3.37.2-rc1, 3.37.0, 3.37.2, 3.37.1-beta, 3.37.1.",
+      "builder": "{\n  \"selected\": \"3.37.2\"\n}",
+      "expected": {
+        "selected": "3.37.2"
+      },
+      "original_final": "{\"selected\":\"3.37.2\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-version-028",
+      "prompt": "Return only JSON with key selected. Choose the highest stable release; beta and rc builds are pre-release and not stable. Available in arbitrary order: 4.38.2-rc1, 4.38.0, 4.38.2, 4.38.1-beta, 4.38.1.",
+      "builder": "{\n  \"selected\": \"4.38.2\"\n}",
+      "expected": {
+        "selected": "4.38.2"
+      },
+      "original_final": "{\"selected\":\"4.38.2\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-ranking-027",
+      "prompt": "Return only JSON with key selected. Rank candidates by highest priority, then highest quality, then lowest cost. Select the single winner. Candidates: [{\"id\":\"HRK27X\",\"priority\":4,\"quality\":108,\"cost\":28},{\"id\":\"HRK27Y\",\"priority\":4,\"quality\":108,\"cost\":22},{\"id\":\"HRK27Z\",\"priority\":3,\"quality\":120,\"cost\":8},{\"id\":\"HRK27W\",\"priority\":4,\"quality\":105,\"cost\":6}]",
+      "builder": "{\n  \"selected\": {\n    \"id\": \"HRK27Y\",\n    \"priority\": 4,\n    \"quality\": 108,\n    \"cost\": 22\n  }\n}",
+      "expected": {
+        "selected": "HRK27Y"
+      },
+      "original_final": "{\"selected\":\"HRK27Y\"}",
+      "original_correct": true,
+      "original_gate": "preserve"
+    },
+    {
+      "id": "h2-ranking-028",
+      "prompt": "Return only JSON with key selected. Rank candidates by highest priority, then highest quality, then lowest cost. Select the single winner. Candidates: [{\"id\":\"HRK28X\",\"priority\":5,\"quality\":109,\"cost\":29},{\"id\":\"HRK28Y\",\"priority\":5,\"quality\":109,\"cost\":19},{\"id\":\"HRK28Z\",\"priority\":4,\"quality\":121,\"cost\":8},{\"id\":\"HRK28W\",\"priority\":5,\"quality\":106,\"cost\":6}]",
+      "builder": "{\n  \"selected\": {\n    \"id\": \"HRK28Y\",\n    \"priority\": 5,\n    \"quality\": 109,\n    \"cost\": 19\n  }\n}",
+      "expected": {
+        "selected": "HRK28Y"
+      },
+      "original_final": "{\"selected\":\"HRK28W\"}",
+      "original_correct": false,
+      "original_gate": "replace"
+    }
+  ]
+}
